@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+	This is the Ant build script for rsyntaxtextarea.jar.
+	Available targets include:
+	
+		1. compile:         Compiles all org.fife classes into ${class-dir}.
+		2. make-jar:        Creates the jar file.
+		3. make-source-zip: Creates a source zip file.
+		3. make-javadoc:    Creates the javadoc for RSyntaxTextArea.
+
+	Author:   Robert Futrell
+	Version:  1.0
+	Date:     02jul2008
+
+-->
+
+
+<project name="RSyntaxTextArea" default="make-jar" basedir=".">
+
+	<description>RSyntaxTextArea build file</description>
+
+
+	<!-- Set global properties for this build. -->
+	<property name="version"          value="1.0"/>
+	<property name="source-dir"       location="src"/>
+	<property name="class-dir"        location="ant-classes"/>
+	<property name="dist-dir"         location="dist"/>
+	<property name="doc-dir"          location="javadoc"/>
+	<property name="debug"            value="true"/>
+	<property name="debuglevel"       value="lines,var,source"/>
+	<property name="java-level"       value="1.4"/>
+
+
+	<!-- Compiles the classes.  -->
+	<target name="compile" description="Compile the source">
+		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
+		<mkdir dir="${class-dir}"/>
+		<javac srcdir="${source-dir}" destdir="${class-dir}"
+			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
+			source="${java-level}" target="${java-level}"/>
+	</target>
+
+
+	<!-- Creates the jar file. -->
+	<target name="make-jar" depends="compile"
+			description="Create RSyntaxTextArea jar">
+		<delete includeEmptyDirs="true" quiet="true" dir="${dist-dir}"/>
+		<mkdir dir="${dist-dir}"/>
+		<jar destfile="${dist-dir}/rsyntaxtextarea.jar">
+			<fileset dir="${class-dir}"/>
+			<fileset dir="i18n"/>
+			<manifest>
+				<attribute name="Specification-Title" value="RSyntaxTextArea"/>
+				<attribute name="Specification-Version" value="${version}"/>
+				<attribute name="Implementation-Title" value="org.fife.ui"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+				<section name="RTextArea">
+					<attribute name="Specification-Title" value="RTextArea"/>
+					<attribute name="Specification-Version" value="${version}"/>
+					<attribute name="Implementation-Title" value="org.fife.ui.rtextarea"/>
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+				<section name="RSyntaxTextArea">
+					<attribute name="Specification-Title" value="RSyntaxTextArea-Core"/>
+					<attribute name="Specification-Version" value="${version}"/>
+					<attribute name="Implementation-Title" value="org.fife.ui.rsyntaxtextarea"/>
+					<attribute name="Implementation-Version" value="${version}"/>
+				</section>
+			</manifest>
+		</jar>
+		<copy todir="${dist-dir}">
+			<fileset dir="distfiles"/>
+		</copy>
+	</target>
+
+
+	<!-- Builds the source zip file. -->
+	<target name="make-source-zip" description="Builds the source zip file">
+		<zip destfile="./rsyntaxtextarea_${version}_Source.zip">
+			<fileset dir=".">
+				<include name="distfiles/**"/>
+				<include name="i18n/**"/>
+				<include name="src/**"/>
+				<include name="build.xml"/>
+			</fileset>
+		</zip>
+	</target>
+
+
+	<!-- Builds the javadoc.  -->
+	<target name="make-javadoc" depends="compile">
+		<javadoc  destdir="${doc-dir}" author="true" version="true"
+			 	breakiterator="yes">
+			<packageset dir="${source-dir}" defaultexcludes="yes">
+				<include name="org/**"/>
+			</packageset>
+		</javadoc>
+	</target>
+
+
+</project>
