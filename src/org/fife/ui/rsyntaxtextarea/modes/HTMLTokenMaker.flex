@@ -284,7 +284,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 Whitespace			= ([ \t\f])
 LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
-AmperItem				= ([&][A-Za-z]*[;]?)
+AmperItem				= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'/=>]+)
 UnclosedStringLiteral	= ([\"][^\"]*)
 StringLiteral			= ({UnclosedStringLiteral}[\"])

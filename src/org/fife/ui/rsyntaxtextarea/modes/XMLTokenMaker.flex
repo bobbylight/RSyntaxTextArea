@@ -172,6 +172,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = DTD;
 				start = text.offset;
 				break;
+			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+				state = INATTR_DOUBLE;
+				start = text.offset;
+				break;
+			case Token.LITERAL_CHAR:
+				state = INATTR_SINGLE;
+				start = text.offset;
+				break;
 			case Token.PREPROCESSOR:
 				state = PI;
 				start = text.offset;
@@ -248,12 +256,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 Whitespace			= ([ \t\f])
 LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
-AmperItem				= ([&][A-Za-z]*[;]?)
+AmperItem				= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'=>]+)
-UnclosedStringLiteral	= ([\"][^\"]*)
-StringLiteral			= ({UnclosedStringLiteral}[\"])
-UnclosedCharLiteral		= ([\'][^\']*)
-CharLiteral			= ({UnclosedCharLiteral}[\'])
 CDataBegin			= ("<![CDATA[")
 CDataEnd				= ("]]>")
 
@@ -261,12 +265,13 @@ CDataEnd				= ("]]>")
 %state PI
 %state DTD
 %state INTAG
+%state INATTR_DOUBLE
+%state INATTR_SINGLE
 %state CDATA
 
 %%
 
 <YYINITIAL> {
-
 	"<!--"						{ start = zzMarkedPos-4; yybegin(COMMENT); }
 	{CDataBegin}					{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(CDATA); }
 	"<!"							{ start = zzMarkedPos-2; yybegin(DTD); }
@@ -277,27 +282,22 @@ CDataEnd				= ("]]>")
 	{AmperItem}					{ addToken(Token.DATA_TYPE); }
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 	<<EOF>>						{ addNullToken(); return firstToken; }
-
 }
 
 <COMMENT> {
-
 	[^\n\-]+						{}
 	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	"-->"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); }
 	"-"							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-
 }
 
 <PI> {
-
 	[^\n\?]+						{}
 	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
 	"?>"							{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.PREPROCESSOR); }
 	"?"							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
-
 }
 
 <DTD> {
@@ -313,12 +313,22 @@ CDataEnd				= ("]]>")
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 	"="							{ addToken(Token.OPERATOR); }
 	">"							{ yybegin(YYINITIAL); addToken(Token.SEPARATOR); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
+	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
+	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_INTAG); return firstToken; }
 
+}
+
+<INATTR_DOUBLE> {
+	[^\"]*						{}
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+}
+
+<INATTR_SINGLE> {
+	[^\']*						{}
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 }
 
 <CDATA> {
