@@ -368,6 +368,10 @@ public class RSyntaxDocument extends RTextAreaDocument
 				tokenMaker = new LuaTokenMaker();
 				break;
 
+			case MAKEFILE_SYNTAX_STYLE:
+				tokenMaker = new MakefileTokenMaker();
+				break;
+
 			case PERL_SYNTAX_STYLE:
 				tokenMaker = new PerlTokenMaker();
 				break;
@@ -378,6 +382,10 @@ public class RSyntaxDocument extends RTextAreaDocument
 
 			case PROPERTIES_FILE_SYNTAX_STYLE:
 				tokenMaker = new PropertiesFileTokenMaker();
+				break;
+
+			case RUBY_SYNTAX_STYLE:
+				tokenMaker = new RubyTokenMaker();
 				break;
 
 			case SAS_SYNTAX_STYLE:

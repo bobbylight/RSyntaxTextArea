@@ -110,63 +110,75 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting makefiles.
+	 */
+	public static final int MAKEFILE_SYNTAX_STYLE		= 13;
+
+
+	/**
 	 * Style for highlighting Perl.
 	 */
-	public static final int PERL_SYNTAX_STYLE			= 13;
+	public static final int PERL_SYNTAX_STYLE			= 14;
 
 
 	/**
 	 * Style for highlighting properties files.
 	 */
-	public static final int PROPERTIES_FILE_SYNTAX_STYLE	= 14;
+	public static final int PROPERTIES_FILE_SYNTAX_STYLE	= 15;
 
 
 	/**
 	 * Style for highlighting Python.
 	 */
-	public static final int PYTHON_SYNTAX_STYLE			= 15;
+	public static final int PYTHON_SYNTAX_STYLE			= 16;
+
+
+	/**
+	 * Style for highlighting Ruby.
+	 */
+	public static final int RUBY_SYNTAX_STYLE			= 17;
 
 
 	/**
 	 * Style for highlighting SAS keywords.
 	 */
-	public static final int SAS_SYNTAX_STYLE			= 16;
+	public static final int SAS_SYNTAX_STYLE			= 18;
 
 
 	/**
 	 * Style for highlighting SQL.
 	 */
-	public static final int SQL_SYNTAX_STYLE			= 17;
+	public static final int SQL_SYNTAX_STYLE			= 19;
 
 
 	/**
 	 * Style for highlighting Tcl.
 	 */
-	public static final int TCL_SYNTAX_STYLE			= 18;
+	public static final int TCL_SYNTAX_STYLE			= 20;
 
 
 	/**
 	 * Style for highlighting UNIX shell keywords.
 	 */
-	public static final int UNIX_SHELL_SYNTAX_STYLE		= 19;
+	public static final int UNIX_SHELL_SYNTAX_STYLE		= 21;
 
 
 	/**
 	 * Style for highlighting Windows batch files.
 	 */
-	public static final int WINDOWS_BATCH_SYNTAX_STYLE	= 20;
+	public static final int WINDOWS_BATCH_SYNTAX_STYLE	= 22;
 
 
 	/**
 	 * Style for highlighting XML.
 	 */
-	public static final int XML_SYNTAX_STYLE			= 21;
+	public static final int XML_SYNTAX_STYLE			= 23;
 
 
 	/**
 	 * Style numbers higher than this are invalid.
 	 */
-	public static final int MAX_SYNTAX_STYLE_NUMBER		= 21;
+	public static final int MAX_SYNTAX_STYLE_NUMBER		= 23;
 
 
 }

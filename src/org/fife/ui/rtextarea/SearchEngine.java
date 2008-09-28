@@ -487,13 +487,18 @@ public class SearchEngine {
 	 *         groups matched).
 	 * @see #getNextMatchPos
 	 */
-	public static RegExReplaceInfo getRegExReplaceInfo(String regEx,
-								String searchIn, boolean goForward,
-								boolean matchCase, boolean wholeWord,
-								String replacement) {
+	protected static RegExReplaceInfo getRegExReplaceInfo(String regEx,
+									String searchIn, boolean goForward,
+									boolean matchCase, boolean wholeWord,
+									String replacement) {
+		// Can't pass null to getNextMatchPosRegExImpl or it'll think
+		// you're doing a "find" operation instead of "replace, and return a
+		// Point.
+		if (replacement==null) {
+			replacement = "";
+		}
 		return (RegExReplaceInfo)getNextMatchPosRegExImpl(regEx, searchIn,
-											goForward, matchCase,
-											wholeWord, replacement);
+						goForward, matchCase, wholeWord, replacement);
 	}
 
 
