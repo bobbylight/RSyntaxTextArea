@@ -91,6 +91,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
 	 */
 	private void addToken(int tokenType) {
 		addToken(zzStartRead, zzMarkedPos-1, tokenType);
@@ -101,10 +113,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addHyperlinkToken(int, int, int)
 	 */
 	private void addToken(int start, int end, int tokenType) {
 		int so = start + offsetShift;
-		addToken(zzBuffer, start,end, tokenType, so);
+		addToken(zzBuffer, start,end, tokenType, so, false);
 	}
 
 
@@ -117,9 +130,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @param tokenType The token's type.
 	 * @param startOffset The offset in the document at which this token
 	 *                    occurs.
+	 * @param hyperlink Whether this token is a hyperlink.
 	 */
-	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
-		super.addToken(array, start,end, tokenType, startOffset);
+	public void addToken(char[] array, int start, int end, int tokenType,
+						int startOffset, boolean hyperlink) {
+		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
 		zzStartRead = zzMarkedPos;
 	}
 
@@ -273,17 +288,20 @@ NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!
 AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
 Operator					= ({NonAssignmentOperator}|{AssignmentOperator})
 
-DocumentationKeyword		= ("author"|"deprecated"|"exception"|"link"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
+CurrentBlockTag				= ("author"|"deprecated"|"exception"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
+ProposedBlockTag			= ("category"|"example"|"tutorial"|"index"|"exclude"|"todo"|"internal"|"obsolete"|"threadsafety")
+BlockTag					= ({CurrentBlockTag}|{ProposedBlockTag})
+InlineTag					= ("code"|"docRoot"|"inheritDoc"|"link"|"linkplain"|"literal"|"value")
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
 ErrorIdentifier			= ({NonSeparator}+)
 
 Annotation				= ("@"{Identifier}?)
-/*
-URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-])
+
+URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-@])
 URLCharacters				= ({URLCharacter}+)
-URL						= (("http://"|"www."){URLCharacters})
-*/
+URL						= (("http://"|"www."|"ftp://"){URLCharacters})
+
 
 %state MLC
 %state DOCCOMMENT
@@ -490,12 +508,10 @@ URL						= (("http://"|"www."){URLCharacters})
 
 <MLC> {
 
-	[^\n\*]+					{}
-/*	[^\h\w\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
+	[^hwf\n\*]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
+
 	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
@@ -506,19 +522,19 @@ URL						= (("http://"|"www."){URLCharacters})
 
 <DOCCOMMENT> {
 
-	[^\@\n\<\*]+				{}
-/*	[^\h\w\@\n\<\*]+			{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
-	"@"{DocumentationKeyword}	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
-	"@"						{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	[^hwf\@\{\n\<\*]+			{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
+
+	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"@"							{}
+	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"{"							{}
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
 	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }
-	\<						{}
+	\<							{}
 	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
-	\*						{}
-	<<EOF>>					{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	\*							{}
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
 
 }

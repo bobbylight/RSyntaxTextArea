@@ -94,6 +94,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
 	 */
 	private void addToken(int tokenType) {
 		addToken(zzStartRead, zzMarkedPos-1, tokenType);
@@ -270,260 +282,264 @@ NonSeparator		= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\
 Identifier		= ({Letter}[A-Za-z0-9_$]*)
 ErrorIdentifier	= ({NonSeparator}+)
 
+URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-@])
+URLCharacters				= ({URLCharacter}+)
+URL						= (("http://"|"www."|"ftp://"){URLCharacters})
+
 %state MLC
 
 %%
 
-/* Keywords */
-<YYINITIAL> "auto"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "break"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "case"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "const"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "continue"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "default"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "do"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "enum"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "extern"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "goto"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "register"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sizeof"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "static"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "struct"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "switch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "typedef"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "union"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "volatile"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"					{ addToken(Token.RESERVED_WORD); }
-
-/* Data types. */
-<YYINITIAL> "char"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "div_t"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "double"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "float"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "int"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "ldiv_t"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "long"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "short"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "signed"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "size_t"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "unsigned"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "void"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "wchar_t"				{ addToken(Token.DATA_TYPE); }
-
-/* Standard functions */
-<YYINITIAL> "abort"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "abs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "acos"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "asctime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "asin"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "assert"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atan2"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atan"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atexit"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atof"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atoi"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "atol"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "bsearch"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "btowc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "calloc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ceil"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "clearerr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "clock"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "cosh"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "cos"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ctime"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "difftime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "div"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "errno"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "exit"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "exp"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fabs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fclose"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "feof"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ferror"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fflush"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fgetc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fgetpos"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fgetwc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fgets"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fgetws"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "floor"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fmod"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fopen"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fputc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fputs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fputwc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fputws"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fread"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "free"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "freopen"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "frexp"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fscanf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fseek"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fsetpos"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ftell"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fwprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fwrite"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "fwscanf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getchar"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getenv"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "gets"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getwc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getwchar"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "gmtime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isalnum"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isalpha"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "iscntrl"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isdigit"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isgraph"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "islower"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isprint"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ispunct"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isspace"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isupper"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isxdigit"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "labs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ldexp"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ldiv"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "localeconv"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "localtime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "log10"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "log"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "longjmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "malloc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mblen"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbrlen"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbrtowc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbsinit"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbsrtowcs"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbstowcs"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mbtowc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "memchr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "memcmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "memcpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "memmove"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "memset"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "mktime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "modf"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "offsetof"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "perror"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "pow"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "printf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "putchar"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "putc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "puts"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "putwc"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "putwchar"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "qsort"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "raise"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rand"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "realloc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "remove"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rename"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rewind"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "scanf"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setbuf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setjmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setlocale"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setvbuf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setvbuf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "signal"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sinh"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sin"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sqrt"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "srand"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sscanf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcat"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strchr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcoll"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strcspn"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strerror"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strftime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strlen"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strncat"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strncmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strncpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strpbrk"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strrchr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strspn"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strstr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strtod"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strtok"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strtol"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strtoul"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "strxfrm"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "swprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "swscanf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "system"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tanh"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tan"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "time"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tmpfile"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tmpnam"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tolower"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "toupper"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ungetc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ungetwc"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "va_arg"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "va_end"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "va_start"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vfprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vfwprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vsprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vswprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vwprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcrtomb"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcscat"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcschr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcscmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcscoll"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcscpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcscspn"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsftime"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcslen"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsncat"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsncmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsncpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcspbrk"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsrchr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsrtombs"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsspn"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsstr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcstod"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcstok"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcstol"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcstombs"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcstoul"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wcsxfrm"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wctob"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wctomb"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wmemchr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wmemcmp"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wmemcpy"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wmemmove"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wmemset"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wprintf"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "wscanf"				{ addToken(Token.FUNCTION); }
-
-/* Standard-defined macros. */
-<YYINITIAL> "__DATE__"				{ addToken(Token.PREPROCESSOR); }
-<YYINITIAL> "__TIME__"				{ addToken(Token.PREPROCESSOR); }
-<YYINITIAL> "__FILE__"				{ addToken(Token.PREPROCESSOR); }
-<YYINITIAL> "__LINE__"				{ addToken(Token.PREPROCESSOR); }
-<YYINITIAL> "__STDC__"				{ addToken(Token.PREPROCESSOR); }
-
 <YYINITIAL> {
+
+	/* Keywords */
+	"auto" |
+	"break" |
+	"case" |
+	"const" |
+	"continue" |
+	"default" |
+	"do" |
+	"else" |
+	"enum" |
+	"extern" |
+	"for" |
+	"goto" |
+	"if" |
+	"register" |
+	"return" |
+	"sizeof" |
+	"static" |
+	"struct" |
+	"switch" |
+	"typedef" |
+	"union" |
+	"volatile" |
+	"while"					{ addToken(Token.RESERVED_WORD); }
+
+	/* Data types. */
+	"char" |
+	"div_t" |
+	"double" |
+	"float" |
+	"int" |
+	"ldiv_t" |
+	"long" |
+	"short" |
+	"signed" |
+	"size_t" |
+	"unsigned" |
+	"void" |
+	"wchar_t"				{ addToken(Token.DATA_TYPE); }
+
+	/* Standard functions */
+	"abort" |
+	"abs" |
+	"acos" |
+	"asctime" |
+	"asin" |
+	"assert" |
+	"atan2" |
+	"atan" |
+	"atexit" |
+	"atof" |
+	"atoi" |
+	"atol" |
+	"bsearch" |
+	"btowc" |
+	"calloc" |
+	"ceil" |
+	"clearerr" |
+	"clock" |
+	"cosh" |
+	"cos" |
+	"ctime" |
+	"difftime" |
+	"div" |
+	"errno" |
+	"exit" |
+	"exp" |
+	"fabs" |
+	"fclose" |
+	"feof" |
+	"ferror" |
+	"fflush" |
+	"fgetc" |
+	"fgetpos" |
+	"fgetwc" |
+	"fgets" |
+	"fgetws" |
+	"floor" |
+	"fmod" |
+	"fopen" |
+	"fprintf" |
+	"fputc" |
+	"fputs" |
+	"fputwc" |
+	"fputws" |
+	"fread" |
+	"free" |
+	"freopen" |
+	"frexp" |
+	"fscanf" |
+	"fseek" |
+	"fsetpos" |
+	"ftell" |
+	"fwprintf" |
+	"fwrite" |
+	"fwscanf" |
+	"getchar" |
+	"getc" |
+	"getenv" |
+	"gets" |
+	"getwc" |
+	"getwchar" |
+	"gmtime" |
+	"isalnum" |
+	"isalpha" |
+	"iscntrl" |
+	"isdigit" |
+	"isgraph" |
+	"islower" |
+	"isprint" |
+	"ispunct" |
+	"isspace" |
+	"isupper" |
+	"isxdigit" |
+	"labs" |
+	"ldexp" |
+	"ldiv" |
+	"localeconv" |
+	"localtime" |
+	"log10" |
+	"log" |
+	"longjmp" |
+	"malloc" |
+	"mblen" |
+	"mbrlen" |
+	"mbrtowc" |
+	"mbsinit" |
+	"mbsrtowcs" |
+	"mbstowcs" |
+	"mbtowc" |
+	"memchr" |
+	"memcmp" |
+	"memcpy" |
+	"memmove" |
+	"memset" |
+	"mktime" |
+	"modf" |
+	"offsetof" |
+	"perror" |
+	"pow" |
+	"printf" |
+	"putchar" |
+	"putc" |
+	"puts" |
+	"putwc" |
+	"putwchar" |
+	"qsort" |
+	"raise" |
+	"rand" |
+	"realloc" |
+	"remove" |
+	"rename" |
+	"rewind" |
+	"scanf" |
+	"setbuf" |
+	"setjmp" |
+	"setlocale" |
+	"setvbuf" |
+	"setvbuf" |
+	"signal" |
+	"sinh" |
+	"sin" |
+	"sprintf" |
+	"sqrt" |
+	"srand" |
+	"sscanf" |
+	"strcat" |
+	"strchr" |
+	"strcmp" |
+	"strcmp" |
+	"strcoll" |
+	"strcpy" |
+	"strcspn" |
+	"strerror" |
+	"strftime" |
+	"strlen" |
+	"strncat" |
+	"strncmp" |
+	"strncpy" |
+	"strpbrk" |
+	"strrchr" |
+	"strspn" |
+	"strstr" |
+	"strtod" |
+	"strtok" |
+	"strtol" |
+	"strtoul" |
+	"strxfrm" |
+	"swprintf" |
+	"swscanf" |
+	"system" |
+	"tanh" |
+	"tan" |
+	"time" |
+	"tmpfile" |
+	"tmpnam" |
+	"tolower" |
+	"toupper" |
+	"ungetc" |
+	"ungetwc" |
+	"va_arg" |
+	"va_end" |
+	"va_start" |
+	"vfprintf" |
+	"vfwprintf" |
+	"vprintf" |
+	"vsprintf" |
+	"vswprintf" |
+	"vwprintf" |
+	"wcrtomb" |
+	"wcscat" |
+	"wcschr" |
+	"wcscmp" |
+	"wcscoll" |
+	"wcscpy" |
+	"wcscspn" |
+	"wcsftime" |
+	"wcslen" |
+	"wcsncat" |
+	"wcsncmp" |
+	"wcsncpy" |
+	"wcspbrk" |
+	"wcsrchr" |
+	"wcsrtombs" |
+	"wcsspn" |
+	"wcsstr" |
+	"wcstod" |
+	"wcstok" |
+	"wcstol" |
+	"wcstombs" |
+	"wcstoul" |
+	"wcsxfrm" |
+	"wctob" |
+	"wctomb" |
+	"wmemchr" |
+	"wmemcmp" |
+	"wmemcpy" |
+	"wmemmove" |
+	"wmemset" |
+	"wprintf" |
+	"wscanf"				{ addToken(Token.FUNCTION); }
+
+	/* Standard-defined macros. */
+	"__DATE__" |
+	"__TIME__" |
+	"__FILE__" |
+	"__LINE__" |
+	"__STDC__"				{ addToken(Token.PREPROCESSOR); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
@@ -548,46 +564,46 @@ ErrorIdentifier	= ({NonSeparator}+)
 	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Separators. */
-	"("							{ addToken(Token.SEPARATOR); }
-	")"							{ addToken(Token.SEPARATOR); }
-	"["							{ addToken(Token.SEPARATOR); }
-	"]"							{ addToken(Token.SEPARATOR); }
-	"{"							{ addToken(Token.SEPARATOR); }
+	"(" |
+	")" |
+	"[" |
+	"]" |
+	"{" |
 	"}"							{ addToken(Token.SEPARATOR); }
 
 	/* Operators. */
-	{Trigraph}					{ addToken(Token.OPERATOR); }
-	"="							{ addToken(Token.OPERATOR); }
-	"+"							{ addToken(Token.OPERATOR); }
-	"-"							{ addToken(Token.OPERATOR); }
-	"*"							{ addToken(Token.OPERATOR); }
-	"/"							{ addToken(Token.OPERATOR); }
-	"%"							{ addToken(Token.OPERATOR); }
-	"~"							{ addToken(Token.OPERATOR); }
-	"<"							{ addToken(Token.OPERATOR); }
-	">"							{ addToken(Token.OPERATOR); }
-	"<<"							{ addToken(Token.OPERATOR); }
-	">>"							{ addToken(Token.OPERATOR); }
-	"=="							{ addToken(Token.OPERATOR); }
-	"+="							{ addToken(Token.OPERATOR); }
-	"-="							{ addToken(Token.OPERATOR); }
-	"*="							{ addToken(Token.OPERATOR); }
-	"/="							{ addToken(Token.OPERATOR); }
-	"%="							{ addToken(Token.OPERATOR); }
-	">>="						{ addToken(Token.OPERATOR); }
-	"<<="						{ addToken(Token.OPERATOR); }
-	"^"							{ addToken(Token.OPERATOR); }
-	"&"							{ addToken(Token.OPERATOR); }
-	"&&"							{ addToken(Token.OPERATOR); }
-	"|"							{ addToken(Token.OPERATOR); }
-	"||"							{ addToken(Token.OPERATOR); }
-	"?"							{ addToken(Token.OPERATOR); }
-	":"							{ addToken(Token.OPERATOR); }
-	","							{ addToken(Token.OPERATOR); }
-	"!"							{ addToken(Token.OPERATOR); }
-	"++"							{ addToken(Token.OPERATOR); }
-	"--"							{ addToken(Token.OPERATOR); }
-	"."							{ addToken(Token.OPERATOR); }
+	{Trigraph} |
+	"=" |
+	"+" |
+	"-" |
+	"*" |
+	"/" |
+	"%" |
+	"~" |
+	"<" |
+	">" |
+	"<<" |
+	">>" |
+	"==" |
+	"+=" |
+	"-=" |
+	"*=" |
+	"/=" |
+	"%=" |
+	">>=" |
+	"<<=" |
+	"^" |
+	"&" |
+	"&&" |
+	"|" |
+	"||" |
+	"?" |
+	":" |
+	"," |
+	"!" |
+	"++" |
+	"--" |
+	"." |
 	","							{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
@@ -614,7 +630,10 @@ ErrorIdentifier	= ({NonSeparator}+)
 
 <MLC> {
 
-	[^\n\*]+						{}
+	[^hwf\n\*]+					{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]						{}
+
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	{MLCEnd}						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}

@@ -359,7 +359,7 @@ public class RTATextTransferHandler extends TransferHandler {
 				} else if (InputStream.class.equals(flavor.getRepresentationClass())) {
 					return new StringBufferInputStream(data);
 				}
-					// fall through to unsupported
+				// fall through to unsupported
 			} else if (isStringFlavor(flavor)) {
 				String data = getPlainData();
 				data = (data == null) ? "" : data;

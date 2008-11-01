@@ -24,22 +24,31 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -66,7 +75,9 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>JavaScript
  *    <li>JSP
  *    <li>Lua
+ *    <li>Make
  *    <li>Perl
+ *    <li>Ruby
  *    <li>SAS
  *    <li>SQL
  *    <li>Tcl
@@ -80,6 +91,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>Bracket matching
  *    <li>Auto-indentation
  *    <li>Copy as RTF
+ *    <li>Clickable hyperlinks (if the language parser being used supports it)
  * </ul>
  *
  * It is recommended that you use an instance of
@@ -88,7 +100,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  * to your text area.
  *
  * @author Robert Futrell
- * @version 0.2
+ * @version 0.3
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
@@ -97,6 +109,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String BRACKET_MATCHING_PROPERTY		= "RSTA.bracketMatching";
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY	= "RSTA.clearWhitespaceLines";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
+	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
 	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY			= "RSTA.syntaxStyle";
 	public static final String VISIBLE_WHITESPACE_PROPERTY		= "RSTA.visibleWhitespace";
@@ -104,7 +117,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
 	private static final Color DEFAULT_BRACKET_MATCH_BORDER_COLOR	= new Color(0,0,128);
 
-//	private static final boolean DEBUG_PARSING		= true;
 
 	/**
 	 * The syntax style to be highlighting.
@@ -157,7 +169,24 @@ Rectangle match;
 	/**
 	 * Whether we are displaying visible whitespace (spaces and tabs).
 	 */
-	private boolean whitespaceVisible = false;
+	private boolean whitespaceVisible;
+
+	/**
+	 * Whether hyperlinks are enabled (must be supported by the syntax
+	 * scheme being used).
+	 */
+	private boolean hyperlinksEnabled;
+
+	/**
+	 * The color to use when painting hyperlinks.
+	 */
+	private Color hyperlinkFG;
+
+	/**
+	 * Mask used to determine if the correct key is being held down to scan
+	 * for hyperlinks (ctrl, meta, etc.).
+	 */
+	private int linkScanningMask;
 
 	/**
 	 * Used during "Copy as RTF" operations.
@@ -178,6 +207,14 @@ Rectangle match;
 	 * List of highlights (of errors, warnings, etc.) from the parser.
 	 */
 	private List parserNoticeHighlights;
+
+	/**
+	 * Whether the editor is currently scanning for hyperlinks on mouse
+	 * movement.
+	 */
+	private boolean isScanningForLinks;
+
+	private int hoveredOverLinkOffset;
 
 	/**
 	 * Painter used to underline errors.
@@ -210,24 +247,8 @@ private void refreshFontMetrics(Graphics2D g2d) {
 private String aaHintFieldName;
 private Object aaHint;
 private boolean fractionalFontMetricsEnabled;
-public void setFractionalFontMetricsEnabled(boolean enabled) {
-	if (fractionalFontMetricsEnabled!=enabled) {
-		fractionalFontMetricsEnabled = enabled;
-		// We must be connected to a screen resource for our graphics to be
-		// non-null.
-		if (isDisplayable())
-			refreshFontMetrics(getGraphics2D(getGraphics()));
-		firePropertyChange(FRACTIONAL_FONTMETRICS_PROPERTY,
-										!enabled, enabled);
-	}
-}
-// Need to update the fontmetrics the first time we're displayed!
-public void addNotify() {
-	super.addNotify();
-	// We know we've just been connected to a screen resource (by definition),
-	// so initialize our font metrics objects.
-	refreshFontMetrics(getGraphics2D(getGraphics()));
-}
+
+
 	/**
 	 * Creates a new <code>RSyntaxTextArea</code> with the following
 	 * properties: no word wrap, INSERT_MODE, Plain white background, tab size
@@ -264,6 +285,11 @@ public void addNotify() {
 		setAutoIndentEnabled(true);
 		setClearWhitespaceLinesEnabled(true);
 
+		setHyperlinksEnabled(true);
+		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
+		setHyperlinkForeground(Color.BLUE);
+		isScanningForLinks = false;
+
 	}
 
 
@@ -281,6 +307,28 @@ public void addNotify() {
 											afterCaret);
 			getCodeTemplateManager().addTemplate(template);
 		}
+	}
+
+
+	/**
+	 * Adds a hyperlink listener to this text area.
+	 *
+	 * @param l The listener to add.
+	 * @see #removeHyperlinkListener(HyperlinkListener)
+	 */
+	public void addHyperlinkListener(HyperlinkListener l) {
+		listenerList.add(HyperlinkListener.class, l);
+	}
+
+
+	/**
+	 * Updates the fontmetrics the first time we're displayed.
+	 */
+	public void addNotify() {
+		super.addNotify();
+		// We know we've just been connected to a screen resource (by
+		// definition), so initialize our font metrics objects.
+		refreshFontMetrics(getGraphics2D(getGraphics()));
 	}
 
 
@@ -403,14 +451,14 @@ public void addNotify() {
 				else {
 					Font font = getFontForTokenType(t.type);
 					Color bg = getBackgroundForTokenType(t.type);
-					boolean underline = getUnderlineForTokenType(t.type);
+					boolean underline = getUnderlineForToken(t);
 					// Small optimization - don't print fg color if this
 					// is a whitespace color.  Saves on RTF size.
 					if (t.isWhitespace()) {
 						gen.appendToDocNoFG(t.getLexeme(), font, bg, underline);
 					}
 					else {
-						Color fg = getForegroundForTokenType(t.type);
+						Color fg = getForegroundForToken(t);
 						gen.appendToDoc(t.getLexeme(), font, fg, bg, underline);
 					}
 				}
@@ -437,6 +485,16 @@ public void addNotify() {
 	 */
 	protected Document createDefaultModel() {
 		return new RSyntaxDocument(NO_SYNTAX_STYLE);
+	}
+
+
+	/**
+	 * Returns the caret event/mouse listener for <code>RTextArea</code>s.
+	 *
+	 * @return The caret event/mouse listener.
+	 */
+	protected RTAMouseListener createMouseListener() {
+		return new RSyntaxTextAreaMutableCaretEvent(this);
 	}
 
 
@@ -486,12 +544,29 @@ public void addNotify() {
 	 * @param e The caret event.
 	 */
 	protected void fireCaretUpdate(CaretEvent e) {
-
 		super.fireCaretUpdate(e);
-
 		if (bracketMatchingEnabled)
 			doBracketMatching();
+	}
 
+
+	/**
+	 * Notifies all listeners that have registered interest for notification
+	 * on this event type.  The listener list is processed last to first.
+	 *
+	 * @param e The event to fire.
+	 * @see EventListenerList
+	 */
+	public void fireHyperlinkUpdate(HyperlinkEvent e) {
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length-2; i>=0; i-=2) {
+			if (listeners[i]==HyperlinkListener.class) {
+				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
+			}          
+		}
 	}
 
 
@@ -502,7 +577,7 @@ public void addNotify() {
 	 * @return The background color to use for that token type.  If
 	 *         this value is <code>null</code> then this token type
 	 *         has no special background color.
-	 * @see #getForegroundForTokenType(int)
+	 * @see #getForegroundForToken(Token)
 	 */
 	public Color getBackgroundForTokenType(int type) {
 		// NOTE: Defaulting to this.getBackground() if syntax
@@ -598,15 +673,19 @@ public void addNotify() {
 
 
 	/**
-	 * Returns the foreground color for tokens of the specified type.
+	 * Returns the foreground color to use when painting a token.
 	 *
-	 * @param type The type of token.
-	 * @return The foreground color to use for that token type.  This
+	 * @param t The token.
+	 * @return The foreground color to use for that token.  This
 	 *         value is never <code>null</code>.
 	 * @see #getBackgroundForTokenType(int)
 	 */
-	public Color getForegroundForTokenType(int type) {
-		Color fg = colorScheme.syntaxSchemes[type].foreground;
+	public Color getForegroundForToken(Token t) {
+		if (getHyperlinksEnabled() && t.isHyperlink() &&
+				hoveredOverLinkOffset==t.offset) {
+			return hyperlinkFG;
+		}
+		Color fg = colorScheme.syntaxSchemes[t.type].foreground;
 		return fg!=null ? fg : getForeground();
 	}
 
@@ -642,6 +721,29 @@ public void addNotify() {
 							RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		}
 		return g2d;
+	}
+
+
+	/**
+	 * Returns the color to use when painting hyperlinks.
+	 *
+	 * @return The color to use when painting hyperlinks.
+	 * @see #setHyperlinkForeground(Color)
+	 * @see #getHyperlinksEnabled()
+	 */
+	public Color getHyperlinkForeground() {
+		return hyperlinkFG;
+	}
+
+
+	/**
+	 * Returns whether hyperlinks are enabled for this text area.
+	 *
+	 * @return Whether hyperlinks are enabled for this text area.
+	 * @see #setHyperlinksEnabled(boolean)
+	 */
+	public boolean getHyperlinksEnabled() {
+		return hyperlinksEnabled;
 	}
 
 
@@ -764,6 +866,56 @@ public void addNotify() {
 
 
 	/**
+	 * Returns the token at the specified position in the view.
+	 *
+	 * @param p The position in the view.
+	 * @return The token, or <code>null</code> if no token is at that
+	 *         position.
+	 */
+	/*
+	 * TODO: This is a little inefficient.  There should be a
+	 * <code>viewToToken()</code> call that converts view coordinates to the
+	 * underlying token (if any).  The way things currently are, we're calling
+	 * getTokenListForLine() twice (once in viewToModel() and once here).
+	 */
+	private Token getTokenAt(Point p) {
+		return getTokenAtOffset(viewToModel(p));
+	}
+
+
+	/**
+	 * Returns the token at the specified position in the view.
+	 *
+	 * @param p The position in the view.
+	 * @return The token, or <code>null</code> if no token is at that
+	 *         position.
+	 */
+	/*
+	 * TODO: This is a little inefficient.  There should be a
+	 * <code>viewToToken()</code> call that converts view coordinates to the
+	 * underlying token (if any).  The way things currently are, we're calling
+	 * getTokenListForLine() twice (once in viewToModel() and once here).
+	 */
+	private Token getTokenAtOffset(int offs) {
+		if (offs>=0) {
+			try {
+				int line = getLineOfOffset(offs);
+				Token t = getTokenListForLine(line);
+				while (t!=null && t.isPaintable()) {
+					if (t.containsPosition(offs)) {
+						return t;
+					}
+					t = t.getNextToken();
+				}
+			} catch (BadLocationException ble) {
+				ble.printStackTrace(); // Never happens
+			}
+		}
+		return null;
+	}
+
+
+	/**
 	 * Returns a token list for the given range in the document.
 	 *
 	 * @param startOffs The starting offset in the document.
@@ -867,13 +1019,16 @@ public void addNotify() {
 
 
 	/**
-	 * Returns whether the specified token type should be underlined.
+	 * Returns whether the specified token should be underlined.
+	 * A token is underlined if its syntax style includes underlining,
+	 * or if it is a hyperlink ahd hyperlinks are enabled.
 	 *
-	 * @param type The token type.
-	 * @return Whether tokens of the specified type should be underlined.
+	 * @param t The token.
+	 * @return Whether the specified token should be underlined.
 	 */
-	public boolean getUnderlineForTokenType(int type) {
-		return colorScheme.syntaxSchemes[type].underline;
+	public boolean getUnderlineForToken(Token t) {
+		return (t.isHyperlink() && getHyperlinksEnabled()) ||
+				colorScheme.syntaxSchemes[t.type].underline;
 	}
 
 
@@ -954,6 +1109,17 @@ public void addNotify() {
 				ble.printStackTrace();
 			}
 		}
+	}
+
+
+	/**
+	 * Removes a hyperlink listener from this text area.
+	 *
+	 * @param l The listener to remove.
+	 * @see #addHyperlinkListener(HyperlinkListener)
+	 */
+	public void removeHyperlinkListener(HyperlinkListener l) {
+		listenerList.remove(HyperlinkListener.class, l);
 	}
 
 
@@ -1091,6 +1257,80 @@ public void addNotify() {
 			firePropertyChange("font", old, font);
 			// So parent JScrollPane will have its scrollbars updated.
 			revalidate();
+		}
+	}
+
+
+	/**
+	 * Sets whether fractional fontmetrics are enabled.  This method fires
+	 * a property change event of type {@link #FRACTIONAL_FONTMETRICS_PROPERTY}.
+	 *
+	 * @param enabled Whether fractional fontmetrics are enabled.
+	 * @see #getFractionalFontMetricsEnabled()
+	 */
+	public void setFractionalFontMetricsEnabled(boolean enabled) {
+		if (fractionalFontMetricsEnabled!=enabled) {
+			fractionalFontMetricsEnabled = enabled;
+			// We must be connected to a screen resource for our graphics to be
+			// non-null.
+			if (isDisplayable()) {
+				refreshFontMetrics(getGraphics2D(getGraphics()));
+			}
+			firePropertyChange(FRACTIONAL_FONTMETRICS_PROPERTY,
+											!enabled, enabled);
+		}
+	}
+
+
+	/**
+	 * Sets the color to use when painting hyperlinks.
+	 *
+	 * @param fg The color to use when painting hyperlinks.
+	 * @throws NullPointerException If <code>fg</code> is <code>null</code>.
+	 * @see #getHyperlinkForeground()
+	 * @see #setHyperlinksEnabled(boolean)
+	 */
+	public void setHyperlinkForeground(Color fg) {
+		if (fg==null) {
+			throw new NullPointerException("fg cannot be null");
+		}
+		hyperlinkFG = Color.BLUE;
+	}
+
+
+	/**
+	 * Sets whether hyperlinks are enabled for this text area.  This method
+	 * fires a property change event of type
+	 * {@link #HYPERLINKS_ENABLED_PROPERTY}.
+	 *
+	 * @param enabled Whether hyperlinks are enabled.
+	 * @see #getHyperlinksEnabled()
+	 */
+	public void setHyperlinksEnabled(boolean enabled) {
+		if (this.hyperlinksEnabled!=enabled) {
+			this.hyperlinksEnabled = enabled;
+			repaint();
+			firePropertyChange(HYPERLINKS_ENABLED_PROPERTY, !enabled, enabled);
+		}
+	}
+
+
+	/**
+	 * Sets the mask for the key used to toggle whether we are scanning for
+	 * hyperlinks with mouse hovering.
+	 *
+	 * @param mask The mask to use.  This should be a value such as
+	 *        {@link InputEvent#CTRL_DOWN_MASK} or
+	 *        {@link InputEvent#META_DOWN_MASK}.
+	 *        For invalid values, behavior is undefined.
+	 * @see InputEvent
+	 */
+	public void setLinkScanningMask(int mask) {
+		if (mask==InputEvent.CTRL_DOWN_MASK ||
+				mask==InputEvent.META_DOWN_MASK ||
+				mask==InputEvent.ALT_DOWN_MASK ||
+				mask==InputEvent.SHIFT_DOWN_MASK) {
+			linkScanningMask = mask;
 		}
 	}
 
@@ -1350,17 +1590,74 @@ public void addNotify() {
 
 
 	/**
-	 * This is here so subclasses such as <code>RSyntaxTextArea</code> that
-	 * have multiple fonts can define exactly what it means, for example, for
-	 * the margin line to be "80 characters" over.
+	 * Handles hyperlinks.
 	 */
-/*	protected void updateMarginLineX() {
-		if (colorScheme!=null) {
-			FontMetrics fm = getFontMetricsForTokenType(Token.IDENTIFIER);
-			if (fm!=null)
-				marginLineX = fm.charWidth('m') * marginSizeInChars;
+	private class RSyntaxTextAreaMutableCaretEvent
+					extends RTextAreaMutableCaretEvent {
+
+		protected RSyntaxTextAreaMutableCaretEvent(RTextArea textArea) {
+			super(textArea);
 		}
+
+		public void mouseClicked(MouseEvent e) {
+			if (getHyperlinksEnabled() && isScanningForLinks &&
+					hoveredOverLinkOffset>-1) {
+				Token t = getTokenAt(e.getPoint());
+				URL url = null;
+				String desc = null;
+				try {
+					String temp = t.getLexeme();
+					// URI's need "http://" prefix for web URL's to work.
+					if (temp.startsWith("www.")) {
+						temp = "http://" + temp;
+					}
+					url = new URL(temp);
+				} catch (MalformedURLException mue) {
+					desc = mue.getMessage();
+				}
+				HyperlinkEvent he = new HyperlinkEvent(this,
+						HyperlinkEvent.EventType.ACTIVATED,
+						url, desc);
+				fireHyperlinkUpdate(he);
+			}
+		}
+
+		public void mouseMoved(MouseEvent e) {
+			super.mouseMoved(e);
+			if (getHyperlinksEnabled()) {
+				if ((e.getModifiersEx()&linkScanningMask)!=0) {
+					isScanningForLinks = true;
+					Token t = getTokenAt(e.getPoint());
+					Cursor c2 = null;
+					if (t!=null && t.isHyperlink()) {
+						hoveredOverLinkOffset = t.offset;
+						c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+					}
+					else {
+						c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+						hoveredOverLinkOffset = -1;
+					}
+					if (getCursor()!=c2) {
+						setCursor(c2);
+						// TODO: Repaint just the affected line(s).
+						repaint(); // Link either left or went into.
+					}
+				}
+				else {
+					if (isScanningForLinks) {
+						Cursor c = getCursor();
+						isScanningForLinks = false;
+						hoveredOverLinkOffset = -1;
+						if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+							repaint(); // TODO: Repaint just the affected line.
+						}
+					}
+				}
+			}
+		}
+
 	}
-*/
+
 
 }

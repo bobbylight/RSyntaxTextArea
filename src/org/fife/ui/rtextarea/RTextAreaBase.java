@@ -1059,15 +1059,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 												marginSizeInChars;
 	}
 
-/*
-private java.awt.Point linkRange = new java.awt.Point();
-public java.awt.Point getLinkUnderlineRange(int start, int end) {
-	if (start>=linkRange.x && start<linkRange.y) {
-		return new java.awt.Point(start, Math.min(end, linkRange.y));
-	}
-	return null;
-}
-*/
+
 	protected class RTAMouseListener extends CaretEvent implements
 					MouseListener, MouseMotionListener, FocusListener {
 

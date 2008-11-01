@@ -187,8 +187,7 @@ public class SyntaxHighlightingColorScheme {
 	 * <code>toCommaSeparatedString</code>.  This method is useful for saving
 	 * and restoring color schemes.
 	 *
-	 * @param string A string generated from
-	 *        <code>toCommaSeparatedString</code>.
+	 * @param string A string generated from {@link #toCommaSeparatedString()}.
 	 * @return A color scheme.
 	 */
 	public static SyntaxHighlightingColorScheme loadFromString(String string) {

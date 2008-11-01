@@ -280,6 +280,9 @@ public class VisibleWhitespaceToken extends Token {
 		while (token!=null && token.isPaintable()) {
 
 			fm = textArea.getFontMetricsForTokenType(token.type);
+			if (fm==null) {
+				return rect; // Don't return null as things'll error.
+			}
 			char[] text = token.text;
 			int start = token.textOffset;
 			int end = start + token.textCount;
@@ -389,7 +392,7 @@ public class VisibleWhitespaceToken extends Token {
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = textOffset;
-		Color fg = host.getForegroundForTokenType(type);
+		Color fg = host.getForegroundForToken(this);
 		Color bg = host.getBackgroundForTokenType(type);
 		g.setFont(host.getFontForTokenType(type));
 		FontMetrics fm = host.getFontMetricsForTokenType(type);
@@ -448,7 +451,7 @@ public class VisibleWhitespaceToken extends Token {
 					// here when "smooth text" is enabled, as "width"
 					// below may well not be the width given to the space
 					// by fm.charsWidth() (it depends on how it places the
-					// space with respect to the preceeding character).
+					// space with respect to the preceding character).
 					// But, we assume the approximation is close enough for
 					// our drawing a dot for the space.
 
@@ -502,7 +505,7 @@ public class VisibleWhitespaceToken extends Token {
 			g.drawString(new String(text, flushIndex, flushLen), x,y);
 		}
 
-		if (host.getUnderlineForTokenType(type)) {
+		if (host.getUnderlineForToken(this)) {
 			g.setColor(fg);
 			int y2 = (int)(y+1);
 			g.drawLine(origX,y2, (int)nextX,y2);

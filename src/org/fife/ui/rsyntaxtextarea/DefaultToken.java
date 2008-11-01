@@ -350,7 +350,7 @@ public class DefaultToken extends Token {
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = textOffset;
-		Color fg = host.getForegroundForTokenType(type);
+		Color fg = host.getForegroundForToken(this);
 		Color bg = host.getBackgroundForTokenType(type);
 		g.setFont(host.getFontForTokenType(type));
 		FontMetrics fm = host.getFontMetricsForTokenType(type);
@@ -390,7 +390,7 @@ public class DefaultToken extends Token {
 			g.drawString(new String(text, flushIndex, flushLen), x,y);
 		}
 
-		if (host.getUnderlineForTokenType(type)) {
+		if (host.getUnderlineForToken(this)) {
 			g.setColor(fg);
 			int y2 = (int)(y+1);
 			g.drawLine(origX,y2, (int)nextX,y2);

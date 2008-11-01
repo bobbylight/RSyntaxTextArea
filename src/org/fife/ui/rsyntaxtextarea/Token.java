@@ -69,6 +69,11 @@ public abstract class Token {
 	public int type;
 
 	/**
+	 * Whether this token is a hyperlink.
+	 */
+	private boolean hyperlink;
+
+	/**
 	 * The next token in this linked list.
 	 */
 	private Token nextToken;
@@ -137,6 +142,7 @@ public abstract class Token {
 		this.textCount = -1;
 		this.type = NULL;
 		offset = -1;
+		hyperlink = false;
 		nextToken = null;
 		bgRect = new Rectangle2D.Float();
 	}
@@ -428,6 +434,17 @@ public abstract class Token {
 
 
 	/**
+	 * Returns whether this token is a hyperlink.
+	 *
+	 * @return Whether this token is a hyperlink.
+	 * @see #setHyperlink(boolean)
+	 */
+	public boolean isHyperlink() {
+		return hyperlink;
+	}
+
+
+	/**
 	 * Returns whether or not this token is "paintable;" i.e., whether or not
 	 * the type of this token is one such that it has an associated syntax
 	 * style.  What this boils down to is whether the token type is greater
@@ -562,6 +579,17 @@ public abstract class Token {
 		this.type = type;
 		this.offset = offset;
 		nextToken = null;
+	}
+
+
+	/**
+	 * Sets whether this token is a hyperlink.
+	 *
+	 * @param hyperlink Whether this token is a hyperlink.
+	 * @see #isHyperlink()
+	 */
+	public void setHyperlink(boolean hyperlink) {
+		this.hyperlink = hyperlink;
 	}
 
 

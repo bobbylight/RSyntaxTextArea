@@ -1256,9 +1256,9 @@ public class RTextArea extends RTextAreaBase
 	 * is selecting text with the mouse as well.  This class also displays the
 	 * popup menu when the user right-clicks in the text area.
 	 */
-	private class RTextAreaMutableCaretEvent extends RTAMouseListener {
+	protected class RTextAreaMutableCaretEvent extends RTAMouseListener {
 
-		RTextAreaMutableCaretEvent(RTextArea textArea) {
+		protected RTextAreaMutableCaretEvent(RTextArea textArea) {
 			super(textArea);
 		}
 
