@@ -866,56 +866,6 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the token at the specified position in the view.
-	 *
-	 * @param p The position in the view.
-	 * @return The token, or <code>null</code> if no token is at that
-	 *         position.
-	 */
-	/*
-	 * TODO: This is a little inefficient.  There should be a
-	 * <code>viewToToken()</code> call that converts view coordinates to the
-	 * underlying token (if any).  The way things currently are, we're calling
-	 * getTokenListForLine() twice (once in viewToModel() and once here).
-	 */
-	private Token getTokenAt(Point p) {
-		return getTokenAtOffset(viewToModel(p));
-	}
-
-
-	/**
-	 * Returns the token at the specified position in the view.
-	 *
-	 * @param p The position in the view.
-	 * @return The token, or <code>null</code> if no token is at that
-	 *         position.
-	 */
-	/*
-	 * TODO: This is a little inefficient.  There should be a
-	 * <code>viewToToken()</code> call that converts view coordinates to the
-	 * underlying token (if any).  The way things currently are, we're calling
-	 * getTokenListForLine() twice (once in viewToModel() and once here).
-	 */
-	private Token getTokenAtOffset(int offs) {
-		if (offs>=0) {
-			try {
-				int line = getLineOfOffset(offs);
-				Token t = getTokenListForLine(line);
-				while (t!=null && t.isPaintable()) {
-					if (t.containsPosition(offs)) {
-						return t;
-					}
-					t = t.getNextToken();
-				}
-			} catch (BadLocationException ble) {
-				ble.printStackTrace(); // Never happens
-			}
-		}
-		return null;
-	}
-
-
-	/**
 	 * Returns a token list for the given range in the document.
 	 *
 	 * @param startOffs The starting offset in the document.
@@ -1075,6 +1025,33 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean isWhitespaceVisible() {
 		return whitespaceVisible;
+	}
+
+
+	/**
+	 * Returns the token at the specified position in the model.
+	 *
+	 * @param offs The position in the model.
+	 * @return The token, or <code>null</code> if no token is at that
+	 *         position.
+	 * @see #viewToToken(Point)
+	 */
+	private Token modelToToken(int offs) {
+		if (offs>=0) {
+			try {
+				int line = getLineOfOffset(offs);
+				Token t = getTokenListForLine(line);
+				while (t!=null && t.isPaintable()) {
+					if (t.containsPosition(offs)) {
+						return t;
+					}
+					t = t.getNextToken();
+				}
+			} catch (BadLocationException ble) {
+				ble.printStackTrace(); // Never happens
+			}
+		}
+		return null;
 	}
 
 
@@ -1294,7 +1271,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (fg==null) {
 			throw new NullPointerException("fg cannot be null");
 		}
-		hyperlinkFG = Color.BLUE;
+		hyperlinkFG = fg;
 	}
 
 
@@ -1590,6 +1567,25 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the token at the specified position in the view.
+	 *
+	 * @param p The position in the view.
+	 * @return The token, or <code>null</code> if no token is at that
+	 *         position.
+	 * @see #modelToToken(int)
+	 */
+	/*
+	 * TODO: This is a little inefficient.  This should convert view
+	 * coordinates to the underlying token (if any).  The way things currently
+	 * are, we're calling getTokenListForLine() twice (once in viewToModel()
+	 * and once here).
+	 */
+	private Token viewToToken(Point p) {
+		return modelToToken(viewToModel(p));
+	}
+
+
+	/**
 	 * Handles hyperlinks.
 	 */
 	private class RSyntaxTextAreaMutableCaretEvent
@@ -1602,7 +1598,7 @@ private boolean fractionalFontMetricsEnabled;
 		public void mouseClicked(MouseEvent e) {
 			if (getHyperlinksEnabled() && isScanningForLinks &&
 					hoveredOverLinkOffset>-1) {
-				Token t = getTokenAt(e.getPoint());
+				Token t = modelToToken(hoveredOverLinkOffset);
 				URL url = null;
 				String desc = null;
 				try {
@@ -1627,7 +1623,7 @@ private boolean fractionalFontMetricsEnabled;
 			if (getHyperlinksEnabled()) {
 				if ((e.getModifiersEx()&linkScanningMask)!=0) {
 					isScanningForLinks = true;
-					Token t = getTokenAt(e.getPoint());
+					Token t = viewToToken(e.getPoint());
 					Cursor c2 = null;
 					if (t!=null && t.isHyperlink()) {
 						hoveredOverLinkOffset = t.offset;
