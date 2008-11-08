@@ -241,6 +241,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}
 
 Letter							= [A-Za-z]
+LetterOrUnderscore				= ({Letter}|"_")
 NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
@@ -250,7 +251,7 @@ AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({Letter}|"_"|"$")
+IdentifierStart					= ({LetterOrUnderscore}|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 
 LineTerminator				= (\n)
@@ -298,9 +299,13 @@ ErrorIdentifier			= ({NonSeparator}+)
 
 Annotation				= ("@"{Identifier}?)
 
-URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-@])
-URLCharacters				= ({URLCharacter}+)
-URL						= (("http://"|"www."|"ftp://"){URLCharacters})
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 %state MLC

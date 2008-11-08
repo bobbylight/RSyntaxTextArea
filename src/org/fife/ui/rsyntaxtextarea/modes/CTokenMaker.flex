@@ -236,10 +236,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
-Letter			= [A-Za-z_]
-Digit			= [0-9]
+Letter				= [A-Za-z]
+LetterOrUnderscore	= ({Letter}|[_])
+Digit				= [0-9]
 HexDigit			= {Digit}|[A-Fa-f]
-OctalDigit		= [0-7]
+OctalDigit			= [0-7]
 Exponent			= [eE][+-]?{Digit}+
 
 PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef
@@ -279,12 +280,17 @@ FloatLiteral		= ((({Digit}*[\.]{Digit}+)|({Digit}+[\.]{Digit}*)){Exponent}?[fFlL
 ErrorNumberFormat	= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 
 NonSeparator		= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#")
-Identifier		= ({Letter}[A-Za-z0-9_$]*)
+Identifier		= ({LetterOrUnderscore}({LetterOrUnderscore}|{Digit}|[$])*)
 ErrorIdentifier	= ({NonSeparator}+)
 
-URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-@])
-URLCharacters				= ({URLCharacter}+)
-URL						= (("http://"|"www."|"ftp://"){URLCharacters})
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 %state MLC
 
