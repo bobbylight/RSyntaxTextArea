@@ -290,6 +290,7 @@ private boolean fractionalFontMetricsEnabled;
 		setHyperlinkForeground(Color.BLUE);
 		isScanningForLinks = false;
 
+restoreDefaultSyntaxHighlightingColorScheme();
 	}
 
 

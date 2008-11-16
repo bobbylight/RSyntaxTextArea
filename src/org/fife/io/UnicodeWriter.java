@@ -68,6 +68,20 @@ public class UnicodeWriter extends Writer {
 												(byte)0xFF
 											};
 
+	private static final byte[] UTF32LE_BOM = new byte[] {
+												(byte)0xFF,
+												(byte)0xFE,
+												(byte)0x00,
+												(byte)0x00
+											};
+
+	private static final byte[] UTF32BE_BOM = new byte[] {
+												(byte)0x00,
+												(byte)0x00,
+												(byte)0xFE,
+												(byte)0xFF
+											};
+
 
 	/**
 	 * This is a utility constructor since the vast majority of the time, this
@@ -165,12 +179,24 @@ public class UnicodeWriter extends Writer {
 		internalOut = new OutputStreamWriter(out, encoding);
 
 		// Write the proper BOM if they specified a Unicode encoding.
-		if (encoding.equals("UTF-8"))
+		// NOTE: Creating an OutputStreamWriter with encoding "UTF-16" DOES
+		// DOES write out the BOM; "UTF-16LE", "UTF-16BE", "UTF-32", "UTF-32LE"
+		// and "UTF-32BE" don't.
+		if ("UTF-8".equals(encoding)) {
 			out.write(UTF8_BOM, 0, UTF8_BOM.length);
-		else if (encoding.equals("UTF-16LE"))
+		}
+		else if ("UTF-16LE".equals(encoding)) {
 			out.write(UTF16LE_BOM, 0, UTF16LE_BOM.length);
-		else if (encoding.equals("UTF-16") || encoding.equals("UTF-16BE"))
+		}
+		else if (/*"UTF-16".equals(encoding) || */"UTF-16BE".equals(encoding)) {
 			out.write(UTF16BE_BOM, 0, UTF16BE_BOM.length);
+		}
+		else if ("UTF-32LE".equals(encoding)) {
+			out.write(UTF32LE_BOM, 0, UTF32LE_BOM.length);
+		}
+		else if ("UTF-32".equals(encoding) || "UTF-32BE".equals(encoding)) {
+			out.write(UTF32BE_BOM, 0, UTF32BE_BOM.length);
+		}
 
 	}
 

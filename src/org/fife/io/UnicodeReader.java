@@ -124,7 +124,8 @@ public class UnicodeReader extends Reader {
 	 * used.
 	 *
 	 * @param file The file from which you want to read.
-	 * @param defaultEncoding The encoding to use if no BOM is found.
+	 * @param defaultEncoding The encoding to use if no BOM is found.  If
+	 *        this value is <code>null</code>, a system default is used.
 	 * @throws IOException If an error occurs when checking for/reading the
 	 *         BOM.
 	 * @throws FileNotFoundException If the file does not exist, is a
@@ -208,7 +209,19 @@ public class UnicodeReader extends Reader {
 		int n, unread;
 		n = tempIn.read(bom, 0, bom.length);
 
-		if ((bom[0]==(byte)0xEF) &&
+		if ((bom[0]==(byte)0x00) && (bom[1]==(byte)0x00) &&
+				(bom[2]==(byte)0xFE) && (bom[3]==(byte)0xFF)) {
+			encoding = "UTF-32BE";
+			unread = n - 4;
+		}
+
+		else if ((bom[0]==(byte)0xFF) && (bom[1]==(byte)0xFE) &&
+				(bom[2]==(byte)0x00) && (bom[3]==(byte)0x00)) {
+			encoding = "UTF-32LE";
+			unread = n - 4;
+		}
+		
+		else if ((bom[0]==(byte)0xEF) &&
 			(bom[1]==(byte)0xBB) &&
 			(bom[2]==(byte)0xBF)) {
 			encoding = "UTF-8";
@@ -225,18 +238,6 @@ public class UnicodeReader extends Reader {
 			unread = n - 2;
 		}
 
-		else if ((bom[0]==(byte)0x00) && (bom[1]==(byte)0x00) &&
-				(bom[2]==(byte)0xFE) && (bom[3]==(byte)0xFF)) {
-			encoding = "UTF-32BE";
-			unread = n - 4;
-		}
-
-		else if ((bom[0]==(byte)0xFF) && (bom[1]==(byte)0xFE) &&
-				(bom[2]==(byte)0x00) && (bom[3]==(byte)0x00)) {
-			encoding = "UTF-32LE";
-			unread = n - 4;
-		}
-		
 		else {
 			// Unicode BOM mark not found, unread all bytes
 			encoding = defaultEncoding;
@@ -253,8 +254,9 @@ public class UnicodeReader extends Reader {
 			internalIn = new InputStreamReader(tempIn);
 			encoding = internalIn.getEncoding(); // Get the default.
 		}
-		else
+		else {
 			internalIn = new InputStreamReader(tempIn, encoding);
+		}
 
 	}
 
