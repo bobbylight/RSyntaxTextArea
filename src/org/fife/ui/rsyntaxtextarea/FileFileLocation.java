@@ -100,7 +100,7 @@ class FileFileLocation extends FileLocation {
 	 * @throws IOException If the file does not exist, or some other IO error
 	 *         occurs.
 	 */
-	public InputStream getInputStream() throws IOException {
+	protected InputStream getInputStream() throws IOException {
 		return new FileInputStream(file);
 	}
 

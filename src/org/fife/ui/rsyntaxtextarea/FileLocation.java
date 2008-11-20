@@ -33,7 +33,7 @@ import java.net.URL;
  * Holds the location of a local or remote file.
  *
  * @author Robert Futrell
- * @verson 1.0
+ * @version 1.0
  */
 public abstract class FileLocation {
 
@@ -109,7 +109,7 @@ public abstract class FileLocation {
 	 * @throws IOException If the file does not exist, or some other IO error
 	 *         occurs.
 	 */
-	public abstract InputStream getInputStream() throws IOException;
+	protected abstract InputStream getInputStream() throws IOException;
 
 
 	/**

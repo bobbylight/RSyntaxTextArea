@@ -309,7 +309,6 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * Returns whether or not the text in this editor has unsaved changes.
 	 *
 	 * @return Whether or not the text has unsaved changes.
-	 * @see #setDirty(boolean)
 	 */
 	public boolean isDirty() {
 		return dirty;
@@ -375,6 +374,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *        If this value is <code>null</code>, the system default encoding
 	 *        is used.
 	 * @throws IOException If an IO error occurs.
+	 * @see #save()
+	 * @see #saveAs(FileLocation)
 	 */
 	public void load(FileLocation loc, String defaultEnc) throws IOException {
 
@@ -435,7 +436,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		}
 		setEncoding(encoding);
 		setDirty(false);
-		syncLastModifiedToActualFile();
+		syncLastSaveOrLoadTimeToActualFile();
 		discardAllEdits(); // Prevent user from being able to undo the reload
 	}
 
@@ -459,12 +460,13 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * this is a local file, its "last modified" time is updated.
 	 *
 	 * @throws IOException If an IO error occurs.
-	 * @see #saveAs(String)
+	 * @see #saveAs(FileLocation)
+	 * @see #load(FileLocation, String)
 	 */
 	public void save() throws IOException {
 		saveImpl(loc);
 		setDirty(false);
-		syncLastModifiedToActualFile();
+		syncLastSaveOrLoadTimeToActualFile();
 	}
 
 
@@ -472,19 +474,19 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * Saves this file in a new local location.  This method fires a property
 	 * change event of type {@link #FULL_PATH_PROPERTY}.
 	 *
-	 * @param fileFullPath The full path save to.
+	 * @param loc The location to save to.
 	 * @throws IOException If an IO error occurs.
 	 * @see #save()
+	 * @see #load(FileLocation, String)
 	 */
-	public void saveAs(String fileFullPath) throws IOException {
-		FileLocation loc = FileLocation.create(fileFullPath);
+	public void saveAs(FileLocation loc) throws IOException {
 		saveImpl(loc);
 		// No exception thrown - we can "rename" the file.
 		String old = getFileFullPath();
 		this.loc = loc;
 		setDirty(false);
 		lastSaveOrLoadTime = loc.getActualLastModified();
-		firePropertyChange(FULL_PATH_PROPERTY, old, fileFullPath);
+		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 	}
 
 
@@ -573,15 +575,18 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Syncs this text area's "last modified" time to that of the file
+	 * Syncs this text area's "last saved or loaded" time to that of the file
 	 * being edited, if that file is local and exists.  If the file is
 	 * remote or is local but does not yet exist, nothing happens.<p>
 	 *
-	 * You normally do not have to call this method, as the "last modified"
-	 * time for {@link TextEditorPane}s is kept up-to-date internally during
-	 * such operations as {@link #save()}, {@link #reload()}, etc.
+	 * You normally do not have to call this method, as the "last saved or
+	 * loaded" time for {@link TextEditorPane}s is kept up-to-date internally
+	 * during such operations as {@link #save()}, {@link #reload()}, etc.
+	 *
+	 * @see #getLastSaveOrLoadTime()
+	 * @see #isModifiedOutsideEditor()
 	 */
-	public void syncLastModifiedToActualFile() {
+	public void syncLastSaveOrLoadTimeToActualFile() {
 		if (loc.isLocalAndExists()) {
 			lastSaveOrLoadTime = loc.getActualLastModified();
 		}
