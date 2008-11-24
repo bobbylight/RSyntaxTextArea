@@ -24,6 +24,10 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
 
 
 /**
@@ -83,6 +87,11 @@ class CodeTemplate implements Comparable {
 	 * have to compile the regex every time this template is used.
 	 */
 	private Matcher matcher;
+
+	/**
+	 * The cached hash code for this code template.
+	 */
+	private int hash;
 
 
 	/**
@@ -158,7 +167,10 @@ class CodeTemplate implements Comparable {
 	 * @return Whether this code template is equal to another.
 	 */
 	public boolean equals(Object obj) {
-		return compareTo(obj)==0;
+		if (obj instanceof CodeTemplate) {
+			return compareTo(obj)==0;
+		}
+		return false;
 	}
 
 
@@ -194,10 +206,12 @@ class CodeTemplate implements Comparable {
 	public String getContentToInsert(String indent) {
 		// We check to avoid the regex overhead of replaceAll if there are no
 		// newlines.
-		if (containsNewline())
+		if (containsNewline()) {
 			return matcher.replaceAll("\n" + indent);
-		else
+		}
+		else {
 			return beforeCaret + afterCaret;
+		}
 	}
 
 
@@ -212,6 +226,58 @@ class CodeTemplate implements Comparable {
 	 */
 	public char[] getID() {
 		return id;
+	}
+
+
+	/**
+	 * Returns the hash code for this template.
+	 *
+	 * @return The hash code for this template.
+	 */
+	public int hashCode() {
+		if (hash==0) {
+			hash = new String(id).hashCode();
+		}
+		return hash;
+	}
+
+
+	/**
+	 * Invokes this code template.  The changes are made to the given text
+	 * area.
+	 *
+	 * @param textArea The text area to operate on.
+	 * @throws BadLocationException If something bad happens.
+	 */
+	public void invoke(RSyntaxTextArea textArea) throws BadLocationException {
+
+		Caret c = textArea.getCaret();
+		int dot = c.getDot();
+		int mark = c.getMark();
+		int p0 = Math.min(dot, mark);
+		int p1 = Math.max(dot, mark);
+		Document doc = textArea.getDocument();
+		Element map = doc.getDefaultRootElement();
+
+		int lineNum = map.getElementIndex(dot);
+		Element line = map.getElement(lineNum);
+		int start = line.getStartOffset();
+		int end = line.getEndOffset()-1; // Why always "-1"?
+		String s = textArea.getText(start,end-start);
+		int len = s.length();
+
+		// endWS is the end of the leading whitespace
+		// of the current line.
+		int endWS = 0;
+		while (endWS<len && RSyntaxUtilities.isWhitespace(s.charAt(endWS))) {
+			endWS++;
+		}
+		s = s.substring(0, endWS);
+		p0 -= getID().length;
+		s = getContentToInsert(s);
+		((RSyntaxDocument)doc).replace(p0,p1-p0, s, null);
+		textArea.setCaretPosition(p0 + getBeforeCaretText().length());
+
 	}
 
 

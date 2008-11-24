@@ -695,11 +695,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 					try {
 
-						Caret c = textArea.getCaret();
-						int dot = c.getDot();
-						int mark = c.getMark();
-						int p0 = Math.min(dot, mark);
-						int p1 = Math.max(dot, mark);
 						CodeTemplateManager manager = RSyntaxTextArea.
 											getCodeTemplateManager();
 						CodeTemplate template = 
@@ -708,26 +703,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 						// A non-null template means modify the text to insert!
 						if (template!=null) {
-							Element map = doc.getDefaultRootElement();
-							int lineNum = map.getElementIndex(dot);
-							Element line = map.getElement(lineNum);
-							int start = line.getStartOffset();
-							int end = line.getEndOffset()-1; // Why always "-1"?
-							String s = textArea.getText(start,end-start);
-							int len = s.length();
-							// endWS is the end of the leading whitespace
-							// of the current line.
-							int endWS = 0;
-							while (endWS<len && RSyntaxUtilities.
-										isWhitespace(s.charAt(endWS)))
-								endWS++;
-							s = s.substring(0, endWS);
-							p0 -= template.getID().length;
-							s = template.getContentToInsert(s);
-							((RSyntaxDocument)doc).replace(p0,p1-p0,
-										s, null);
-							textArea.setCaretPosition(p0 +
-									template.getBeforeCaretText().length());
+							template.invoke(rsta);
 						}
 
 						// No template - insert default text.  This is

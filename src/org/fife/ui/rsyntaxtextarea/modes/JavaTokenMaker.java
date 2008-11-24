@@ -129,8 +129,7 @@ public class JavaTokenMaker extends AbstractJFlexTokenMaker implements TokenMake
 
   private static int [] zzUnpackAction() {
     int [] result = new int[898];
-    int offset = 0;
-    offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+    zzUnpackAction(ZZ_ACTION_PACKED_0, 0, result);
     return result;
   }
 
@@ -269,8 +268,7 @@ public class JavaTokenMaker extends AbstractJFlexTokenMaker implements TokenMake
 
   private static int [] zzUnpackRowMap() {
     int [] result = new int[898];
-    int offset = 0;
-    offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
+    zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, 0, result);
     return result;
   }
 
@@ -2268,8 +2266,7 @@ public class JavaTokenMaker extends AbstractJFlexTokenMaker implements TokenMake
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[898];
-    int offset = 0;
-    offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
+    zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, 0, result);
     return result;
   }
 

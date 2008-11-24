@@ -232,7 +232,7 @@ public abstract class Token {
 	 */
 	private static final String getHTMLFormatForColor(Color color) {
 		if (color==null) {
-			return "#000000";
+			return "black";
 		}
 		String hexRed = Integer.toHexString(color.getRed());
 		if (hexRed.length()==1)

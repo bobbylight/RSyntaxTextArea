@@ -24,6 +24,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.Serializable;
 import java.util.*;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
@@ -493,10 +494,7 @@ class CodeTemplateManager {
 	 * parameter and a <code>Segment</code> as its second, and knows
 	 * to compare the template's ID to the segment's text.
 	 */
-	private static class TemplateComparator implements Comparator {
-
-		public TemplateComparator() {
-		}
+	private static class TemplateComparator implements Comparator, Serializable{
 
 		public int compare(Object template, Object segment) {
 

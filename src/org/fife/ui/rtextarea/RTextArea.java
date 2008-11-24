@@ -115,13 +115,11 @@ public class RTextArea extends RTextAreaBase
 	public static final int COPY_ACTION				= 0;
 	public static final int CUT_ACTION					= 1;
 	public static final int DELETE_ACTION				= 2;
-	public static final int LINE_DOWN_ACTION			= 3;
-	public static final int LINE_UP_ACTION				= 4;
-	public static final int PASTE_ACTION				= 5;
-	public static final int REDO_ACTION				= 6;
-	public static final int SELECT_ALL_ACTION			= 7;
-	public static final int UNDO_ACTION				= 8;
-	private static final int MAX_ACTION_CONSTANT			= 8;
+	public static final int PASTE_ACTION				= 3;
+	public static final int REDO_ACTION				= 4;
+	public static final int SELECT_ALL_ACTION			= 5;
+	public static final int UNDO_ACTION				= 6;
+	private static final int MAX_ACTION_CONSTANT			= 6;
 
 	private static final Color DEFAULT_MARK_ALL_COLOR		= Color.ORANGE;
 
@@ -136,8 +134,6 @@ public class RTextArea extends RTextAreaBase
 	private static RecordableTextAction copyAction;
 	private static RecordableTextAction pasteAction;
 	private static RecordableTextAction deleteAction;
-	private static RecordableTextAction lineDownAction;
-	private static RecordableTextAction lineUpAction;
 	private static RecordableTextAction undoAction;
 	private static RecordableTextAction redoAction;
 	private static RecordableTextAction selectAllAction;
@@ -473,10 +469,6 @@ public class RTextArea extends RTextAreaBase
 				return cutAction;
 			case DELETE_ACTION:
 				return deleteAction;
-			case LINE_DOWN_ACTION:
-				return lineDownAction;
-			case LINE_UP_ACTION:
-				return lineUpAction;
 			case PASTE_ACTION:
 				return pasteAction;
 			case REDO_ACTION:

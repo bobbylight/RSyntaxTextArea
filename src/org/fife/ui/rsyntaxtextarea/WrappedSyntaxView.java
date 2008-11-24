@@ -523,9 +523,8 @@ return p + 1;
 //System.err.println("... in setSharedSegment, p0/p1==" + p0 + "/" + p1);
 			document.getText(p0, p1-p0, seg);
 			//System.err.println("... in setSharedSegment: s=='" + s + "'; line/numLines==" + line + "/" + numLines);
-		} catch (BadLocationException ble) {
+		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
-			System.exit(0);
 		}
 	}
 

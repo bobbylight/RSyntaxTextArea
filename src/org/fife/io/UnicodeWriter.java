@@ -48,6 +48,16 @@ import java.io.Writer;
 public class UnicodeWriter extends Writer {
 
 	/**
+	 * If this system property evaluates to "<code>false</code>", ignoring
+	 * case, files written out as UTF-8 will not have a BOM written for them.
+	 * Otherwise (even if the property is not set), UTF-8 files will have a
+	 * BOM written.
+	 */
+	public static final String PROPERTY_WRITE_UTF8_BOM	=
+												"UnicodeWriter.writeUtf8BOM";
+
+
+	/**
 	 * The writer actually doing the writing.
 	 */
 	private OutputStreamWriter internalOut;
@@ -183,7 +193,9 @@ public class UnicodeWriter extends Writer {
 		// DOES write out the BOM; "UTF-16LE", "UTF-16BE", "UTF-32", "UTF-32LE"
 		// and "UTF-32BE" don't.
 		if ("UTF-8".equals(encoding)) {
-			out.write(UTF8_BOM, 0, UTF8_BOM.length);
+			if (writeUtf8BOM()) {
+				out.write(UTF8_BOM, 0, UTF8_BOM.length);
+			}
 		}
 		else if ("UTF-16LE".equals(encoding)) {
 			out.write(UTF16LE_BOM, 0, UTF16LE_BOM.length);
@@ -235,6 +247,20 @@ public class UnicodeWriter extends Writer {
 	 */
 	public void write(String str, int off, int len) throws IOException {
 		internalOut.write(str, off, len);
+	}
+
+
+	/**
+	 * Returns whether UTF-8 files should have a BOM in them when written.
+	 *
+	 * @return Whether to write a BOM for UTF-8 files.
+	 */
+	private boolean writeUtf8BOM() {
+		String prop = System.getProperty(PROPERTY_WRITE_UTF8_BOM);
+		if (prop!=null && Boolean.valueOf(prop).equals(Boolean.FALSE)) {
+			return false;
+		}
+		return true;
 	}
 
 
