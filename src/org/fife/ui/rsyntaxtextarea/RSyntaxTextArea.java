@@ -43,7 +43,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.EventListenerList;
@@ -261,6 +260,21 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Creates a new <code>RSyntaxTextArea</code> with the following
+	 * properties: no word wrap, INSERT_MODE, Plain white background, tab size
+	 * of 5 spaces, no syntax highlighting, and default caret color,
+	 * selection color, and syntax highlighting scmeme.
+	 *
+	 * @param doc The document to use.
+	 */
+	public RSyntaxTextArea(RSyntaxDocument doc) {
+		this(false, INSERT_MODE);
+		setDocument(doc);
+		init();
+	}
+
+
+	/**
 	 * Creates a new <code>RSyntaxTextArea</code>.
 	 *
 	 * @param wordWrapEnabled Whether to use word wrap in this text area.
@@ -268,29 +282,12 @@ private boolean fractionalFontMetricsEnabled;
 	 *        <code>OVERWRITE_MODE</code>.
 	 */
 	public RSyntaxTextArea(boolean wordWrapEnabled, int textMode) {
-
 		// NOTE:  The font passed to the super constructor below isn't
 		// actually used, so we can pass whatever we want (other than null,
 		// which may cause NPE's in other methods).
 		super(new Font("Monospaced", Font.PLAIN, 13),
 					wordWrapEnabled, textMode);
-
-		// Set some RSyntaxTextArea default values.
-		syntaxStyle = RSyntaxTextArea.NO_SYNTAX_STYLE;
-		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
-		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
-		setBracketMatchingEnabled(true);
-
-		// Set auto-indent releated stuff.
-		setAutoIndentEnabled(true);
-		setClearWhitespaceLinesEnabled(true);
-
-		setHyperlinksEnabled(true);
-		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
-		setHyperlinkForeground(Color.BLUE);
-		isScanningForLinks = false;
-
-restoreDefaultSyntaxHighlightingColorScheme();
+		init();
 	}
 
 
@@ -980,6 +977,32 @@ restoreDefaultSyntaxHighlightingColorScheme();
 	public boolean getUnderlineForToken(Token t) {
 		return (t.isHyperlink() && getHyperlinksEnabled()) ||
 				colorScheme.syntaxSchemes[t.type].underline;
+	}
+
+
+	/**
+	 * Called by constructors to initialize common properties of the text
+	 * editor.
+	 */
+	protected void init() {
+
+		// Set some RSyntaxTextArea default values.
+		syntaxStyle = RSyntaxTextArea.NO_SYNTAX_STYLE;
+		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
+		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
+		setBracketMatchingEnabled(true);
+
+		// Set auto-indent releated stuff.
+		setAutoIndentEnabled(true);
+		setClearWhitespaceLinesEnabled(true);
+
+		setHyperlinksEnabled(true);
+		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
+		setHyperlinkForeground(Color.BLUE);
+		isScanningForLinks = false;
+
+		restoreDefaultSyntaxHighlightingColorScheme();
+
 	}
 
 

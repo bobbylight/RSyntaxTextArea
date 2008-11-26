@@ -174,6 +174,20 @@ public class UnicodeWriter extends Writer {
 
 
 	/**
+	 * Returns whether UTF-8 files should have a BOM in them when written.
+	 *
+	 * @return Whether to write a BOM for UTF-8 files.
+	 */
+	public static boolean getWriteUtf8BOM() {
+		String prop = System.getProperty(PROPERTY_WRITE_UTF8_BOM);
+		if (prop!=null && Boolean.valueOf(prop).equals(Boolean.FALSE)) {
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
 	 * Initializes the internal output stream and writes the BOM if the
 	 * specified encoding is a Unicode encoding.
 	 *
@@ -193,7 +207,7 @@ public class UnicodeWriter extends Writer {
 		// DOES write out the BOM; "UTF-16LE", "UTF-16BE", "UTF-32", "UTF-32LE"
 		// and "UTF-32BE" don't.
 		if ("UTF-8".equals(encoding)) {
-			if (writeUtf8BOM()) {
+			if (getWriteUtf8BOM()) {
 				out.write(UTF8_BOM, 0, UTF8_BOM.length);
 			}
 		}
@@ -247,20 +261,6 @@ public class UnicodeWriter extends Writer {
 	 */
 	public void write(String str, int off, int len) throws IOException {
 		internalOut.write(str, off, len);
-	}
-
-
-	/**
-	 * Returns whether UTF-8 files should have a BOM in them when written.
-	 *
-	 * @return Whether to write a BOM for UTF-8 files.
-	 */
-	private boolean writeUtf8BOM() {
-		String prop = System.getProperty(PROPERTY_WRITE_UTF8_BOM);
-		if (prop!=null && Boolean.valueOf(prop).equals(Boolean.FALSE)) {
-			return false;
-		}
-		return true;
 	}
 
 

@@ -1,9 +1,9 @@
 /*
- * 01/20/2006
+ * 11/25/2008
  *
  * TextEditorPane.java - A syntax highlighting text area that has knowledge of
  * the file it is editing on disk.
- * Copyright (C) 2006 Robert Futrell
+ * Copyright (C) 2008 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
  *
@@ -40,6 +40,7 @@ import javax.swing.text.Document;
 import org.fife.io.UnicodeReader;
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextAreaEditorKit;
 
 
 /**
@@ -52,13 +53,16 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  *   <li>Is it read-only?
  *   <li>The last time it was loaded or saved to disk (local files only).
  *   <li>The file's encoding on disk.
+ *   <li>Easy access to the line separator.
  * </ul>
  *
  * Loading and saving is also built into the editor.<p>
- * Both local and remote files (e.g. ftp) are supported.
+ * Both local and remote files (e.g. ftp) are supported.  See the
+ * {@link FileLocation} class for more information.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see FileLocation
  */
 public class TextEditorPane extends RSyntaxTextArea implements
 									DocumentListener, Printable {
@@ -152,7 +156,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *        <code>OVERWRITE_MODE</code>.
 	 * @param loc The location of the text file being edited.  If this value
 	 *        is <code>null</code>, a file named "Untitled.txt" in the current
-	 *        directory is used.
+	 *        directory is used.  This file is displayed as empty even if it
+	 *        actually exists.
 	 * @param defaultEnc The default encoding to use when opening the file,
 	 *        if the file is not Unicode.  If this value is <code>null</code>,
 	 *        a system default value is used.
@@ -255,10 +260,32 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
+	 * Returns the line separator used when writing this file (e.g.
+	 * "<code>\n</code>", "<code>\r\n</code>", or "<code>\r</code>").<p>
+	 * 
+	 * Note that this value is an <code>Object</code> and not a
+	 * <code>String</code> as that is the way the {@link Document} interface
+	 * defines its property values.  If you always use
+	 * {@link #setLineSeparator(String)} to modify this value, then the value
+	 * returned from this method will always be a <code>String</code>.
+	 *
+	 * @return The line separator.  If this value is <code>null</code>, then
+	 *         the system default line separator is used (usually the value
+	 *         of <code>System.getProperty("line.separator")</code>).
+	 * @see #setLineSeparator(String)
+	 * @see #setLineSeparator(String, boolean)
+	 */
+	public Object getLineSeparator() {
+		return getDocument().getProperty(
+							RTextAreaEditorKit.EndOfLineStringProperty);
+	}
+
+
+	/**
 	 * Initializes this editor with the specified file location.
 	 *
 	 * @param loc The file location.  If this is <code>null</code>, a default
-	 *        location is used.
+	 *        location is used and an empty file is displayed.
 	 * @param defaultEnc The default encoding to use when opening the file,
 	 *        if the file is not Unicode.  If this value is <code>null</code>,
 	 *        a system default value is used.
@@ -273,6 +300,10 @@ public class TextEditorPane extends RSyntaxTextArea implements
 			// in the default case.
 			this.loc = FileLocation.create(DEFAULT_FILE_NAME);
 			charSet = defaultEnc==null ? getDefaultEncoding() : defaultEnc;
+			// Ensure that line separator always has a value, even if the file
+			// does not exist (or is the "default" file).  This makes life
+			// easier for host applications that want to display this value.
+			setLineSeparator(System.getProperty("line.separator"));
 		}
 		else {
 			load(loc, defaultEnc); // Sets this.loc
@@ -539,7 +570,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Sets the encoding to use when reading or writing this file.
+	 * Sets the encoding to use when reading or writing this file.  This
+	 * method sets the editor's dirty flag when the encoding is changed.
 	 *
 	 * @param encoding The new encoding.
 	 * @throws UnsupportedCharsetException If the encoding is not supported.
@@ -556,6 +588,65 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		}
 		if (charSet==null || !charSet.equals(encoding)) {
 			charSet = encoding;
+			setDirty(true);
+		}
+	}
+
+
+	/**
+	 * Sets the line separator sequence to use when this file is saved (e.g.
+	 * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
+	 *
+	 * Besides parameter checking, this method is preferred over
+	 * <code>getDocument().putProperty()</code> because it sets the editor's
+	 * dirty flag when the line separator is changed.
+	 *
+	 * @param separator The new line separator.
+	 * @throws NullPointerException If <code>separator</code> is
+	 *         <code>null</code>.
+	 * @throws IllegalArgumentException If <code>separator</code> is not one
+	 *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+	 * @see #getLineSeparator()
+	 */
+	public void setLineSeparator(String separator) {
+		setLineSeparator(separator, true);
+	}
+
+
+	/**
+	 * Sets the line separator sequence to use when this file is saved (e.g.
+	 * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
+	 *
+	 * Besides parameter checking, this method is preferred over
+	 * <code>getDocument().putProperty()</code> because can set the editor's
+	 * dirty flag when the line separator is changed.
+	 *
+	 * @param separator The new line separator.
+	 * @param setDirty Whether the dirty flag should be set if the line
+	 *        separator is changed.
+	 * @throws NullPointerException If <code>separator</code> is
+	 *         <code>null</code>.
+	 * @throws IllegalArgumentException If <code>separator</code> is not one
+	 *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+	 * @see #getLineSeparator()
+	 */
+	public void setLineSeparator(String separator, boolean setDirty) {
+		if (separator==null) {
+			throw new NullPointerException("terminator cannot be null");
+		}
+		if (!"\r\n".equals(separator) && !"\n".equals(separator) &&
+				!"\r".equals(separator)) {
+			throw new IllegalArgumentException("Invalid line terminator");
+		}
+		Document doc = getDocument();
+		Object old = doc.getProperty(
+						RTextAreaEditorKit.EndOfLineStringProperty);
+		if (!separator.equals(old)) {
+			doc.putProperty(RTextAreaEditorKit.EndOfLineStringProperty,
+							separator);
+			if (setDirty) {
+				setDirty(true);
+			}
 		}
 	}
 

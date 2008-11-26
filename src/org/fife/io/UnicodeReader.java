@@ -215,7 +215,8 @@ public class UnicodeReader extends Reader {
 			unread = n - 4;
 		}
 
-		else if ((bom[0]==(byte)0xFF) && (bom[1]==(byte)0xFE) &&
+		else if (n==BOM_SIZE && // Last 2 bytes are 0; could be an empty UTF-16
+				(bom[0]==(byte)0xFF) && (bom[1]==(byte)0xFE) &&
 				(bom[2]==(byte)0x00) && (bom[3]==(byte)0x00)) {
 			encoding = "UTF-32LE";
 			unread = n - 4;

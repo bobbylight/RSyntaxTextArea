@@ -185,17 +185,6 @@ public class RTextArea extends RTextAreaBase
 		// when the first RTextArea is created) as these actions are shared.
 		initActions(this);
 
-		// Set the line terminator property of the document to default to the
-		// OS value.  We do this because by default, Documents do NOT have
-		// this property set (it only gets set when the document is populated
-		// via an EditorKit.read(doc, ...) method call).  This mess up RText's
-		// "Document Properties" dialog, as it wants to display a line-terminator
-		// value even if the document is a new (unsaved) one.  So, we'll just
-		// give it a default here.
-		getDocument().putProperty(
-			RTextAreaEditorKit.EndOfLineStringProperty,
-			System.getProperty("line.separator"));
-
 		// Set the defaults for various stuff.
 		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
 		markAllHighlightPainter = new ChangableHighlightPainter(
@@ -786,14 +775,13 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public void read(Reader in, Object desc) throws IOException {
 
-		RTextAreaEditorKit kit = (RTextAreaEditorKit)getUI().
-											getEditorKit(this);
+		RTextAreaEditorKit kit = (RTextAreaEditorKit)getUI().getEditorKit(this);
 		setText(null);
 		Document doc = getDocument();
 		if (desc != null)
 			doc.putProperty(Document.StreamDescriptionProperty, desc);
 		try {
-			// NOTE:  Resets the "line terminator" property of the document.
+			// NOTE:  Resets the "line separator" property.
 			kit.read(in, doc, 0);
 		} catch (BadLocationException e) {
 			throw new IOException(e.getMessage());
