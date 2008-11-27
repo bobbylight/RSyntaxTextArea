@@ -66,13 +66,14 @@ class URLFileLocation extends FileLocation {
 
 
 	/**
-	 * Creates a "prettied-up" URL to use.
+	 * Creates a "prettied-up" URL to use.  This will be stripped of
+	 * sensitive information such as passwords.
 	 *
 	 * @return The full path to use.
 	 */
 	private String createFileFullPath() {
 		String fullPath = url.toString();
-		fullPath = fullPath.replaceFirst("://[^:]+(?:.+)@", "://");
+		fullPath = fullPath.replaceFirst("://([^:]+)(?:.+)@", "://$1@");
 		return fullPath;
 	}
 
@@ -85,7 +86,7 @@ class URLFileLocation extends FileLocation {
 	private String createFileName() {
 		String fileName = url.getPath();
 		if (fileName.startsWith("/%2F/")) { // Absolute path
-			fileName = fileName.substring(5);
+			fileName = fileName.substring(4);
 		}
 		else if (fileName.startsWith("/")) { // All others
 			fileName = fileName.substring(1);
@@ -108,7 +109,8 @@ class URLFileLocation extends FileLocation {
 
 
 	/**
-	 * Returns the full path of the URL.
+	 * Returns the full path of the URL.  This will be stripped of
+	 * sensitive information such as passwords.
 	 *
 	 * @return The full path of the URL.
 	 * @see #getFileName()

@@ -85,7 +85,8 @@ public abstract class FileLocation {
 
 
 	/**
-	 * Returns the full path to the file.
+	 * Returns the full path to the file.  This will be stripped of
+	 * sensitive information such as passwords for remote files.
 	 *
 	 * @return The full path to the file.
 	 * @see #getFileName()
