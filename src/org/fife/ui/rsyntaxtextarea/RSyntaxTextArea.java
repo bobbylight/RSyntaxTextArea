@@ -53,6 +53,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
+import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 
@@ -294,15 +295,15 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * If code templates are enabled, registers the specified template.
 	 *
-	 * @param id The identifier for the template.
-	 * @param beforeCaret The text to insert before the caret.
-	 * @param afterCaret The text to insert after the caret.
+	 * @param template The template to add.
+	 * @throws NullPointerException If <code>template</code> is
+	 *         <code>null</code>.
 	 */
-	public static void addCodeTemplate(String id, String beforeCaret,
-								String afterCaret) {
+	public static void addCodeTemplate(CodeTemplate template) {
+		if (template==null) {
+			throw new NullPointerException("template cannot be null");
+		}
 		if (getTemplatesEnabled()) {
-			CodeTemplate template = new CodeTemplate(id, beforeCaret,
-											afterCaret);
 			getCodeTemplateManager().addTemplate(template);
 		}
 	}

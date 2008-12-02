@@ -27,6 +27,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
@@ -697,9 +698,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 						CodeTemplateManager manager = RSyntaxTextArea.
 											getCodeTemplateManager();
-						CodeTemplate template = 
-							manager==null ? null :
-										manager.getTemplate(rsta);
+						CodeTemplate template =  manager==null ? null :
+													manager.getTemplate(rsta);
 
 						// A non-null template means modify the text to insert!
 						if (template!=null) {

@@ -22,21 +22,25 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+
+import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 
 
 /**
@@ -62,12 +66,9 @@ class CodeTemplateManager {
 	private TemplateComparator comparator;
 	private File directory;
 
-	private static final String AFTER_CARET		= "afterCaret";
-	private static final String BEFORE_CARET	= "beforeCaret";
-	private static final String CODE_TEMPLATE	= "codeTemplate";
-	private static final String ENCODING		= "UTF-8";
-	private static final String ID			= "id";
-	private static final String _VALUE			= "value";
+	private static final int ctrl = InputEvent.CTRL_MASK;
+	static final KeyStroke TEMPLATE_KEYSTROKE = KeyStroke.
+								getKeyStroke(KeyEvent.VK_SPACE, ctrl);
 
 
 	/**
@@ -77,9 +78,7 @@ class CodeTemplateManager {
 
 		// Default insert trigger is a space.
 		// FIXME:  See notes in RSyntaxTextAreaDefaultInputMap.
-		// Be aware that you may need to use getKeyStroke(' ') when you
-		// fix this...
-		setInsertTrigger(KeyStroke.getKeyStroke(' '));
+		setInsertTrigger(TEMPLATE_KEYSTROKE);
 
 		s = new Segment();
 		comparator = new TemplateComparator();
@@ -92,12 +91,15 @@ class CodeTemplateManager {
 	 * Registers the specified template with this template manager.
 	 *
 	 * @param template The template to register.
+	 * @throws IllegalArgumentException If <code>template</code> is
+	 *         <code>null</code>.
 	 */
 	public void addTemplate(CodeTemplate template) {
-		if (template!=null) {
-			templates.add(template);
-			sortTemplates();
+		if (template==null) {
+			throw new IllegalArgumentException("template cannot be null");
 		}
+		templates.add(template);
+		sortTemplates();
 	}
 
 
@@ -192,6 +194,18 @@ class CodeTemplateManager {
 
 
 	/**
+	 * Returns whether the specified character is a valid character for a
+	 * <code>CodeTemplate</code> id.
+	 *
+	 * @param ch The character to check.
+	 * @return Whether the character is a valid template character.
+	 */
+	public static final boolean isValidChar(char ch) {
+		return RSyntaxUtilities.isLetterOrDigit(ch) || ch=='_';
+	}
+
+
+	/**
 	 * Replaces the current set of available templates with the ones
 	 * specified.  This method exists solely so
 	 * <code>TemplateOptionPanel</code> can allow users to modify/add/remove
@@ -234,72 +248,22 @@ class CodeTemplateManager {
 		}
 
 		// Save all current templates as XML.
-		DocumentBuilder db = null;
-		try {
-			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (Exception e) {
-			return false;
-		}
-		DOMImplementation impl = db.getDOMImplementation();
 		boolean wasSuccessful = true;
 		for (Iterator i=templates.iterator(); i.hasNext(); ) {
 			CodeTemplate template = (CodeTemplate)i.next();
-			File xmlFile = new File(directory,
-								new String(template.getID()) + ".xml");
+			File xmlFile = new File(directory, template.getID() + ".xml");
 			try {
-				org.w3c.dom.Document doc = impl.createDocument(
-										null, CODE_TEMPLATE, null);
-				saveToFile(template, doc, xmlFile);
-			} catch (Exception e) {
+				XMLEncoder e = new XMLEncoder(new BufferedOutputStream(
+										new FileOutputStream(xmlFile)));
+				e.writeObject(template);
+				e.close();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 				wasSuccessful = false;
 			}
 		}
 
 		return wasSuccessful;
-
-	}
-
-
-	/**
-	 * Saves a template to a file.
-	 *
-	 * @param template The template to save.
-	 * @param doc The XML document to write to.
-	 * @param xmlFile The file in which to save the template.  If the file
-	 *        already exists, it is overwritten.
-	 * @throws Exception If an error occurs.
-	 */
-	private void saveToFile(CodeTemplate template, org.w3c.dom.Document doc,
-							File xmlFile) throws Exception {
-
-		Element root = doc.getDocumentElement();
-
-		Element elem = doc.createElement(ID);
-		elem.setAttribute(_VALUE, new String(template.getID()));
-		root.appendChild(elem);
-
-		elem = doc.createElement(BEFORE_CARET);
-		String temp = template.getBeforeCaretText();
-		if (temp!=null) {
-			elem.appendChild(doc.createCDATASection(temp));
-		}
-		root.appendChild(elem);
-
-		elem = doc.createElement(AFTER_CARET);
-		temp = template.getAfterCaretText();
-		if (temp!=null) {
-			elem.appendChild(doc.createCDATASection(temp));
-		}
-		root.appendChild(elem);
-
-		// Dump the XML out to the file.
-		StreamResult result = new StreamResult(xmlFile);
-		DOMSource source = new DOMSource(doc);
-		TransformerFactory transFac = TransformerFactory.newInstance();
-		Transformer transformer = transFac.newTransformer();
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty(OutputKeys.ENCODING, ENCODING);
-		transformer.transform(source, result);
 
 	}
 
@@ -328,7 +292,7 @@ class CodeTemplateManager {
 	public void setInsertTrigger(KeyStroke trigger) {
 		if (trigger!=null) {
 			insertTrigger = trigger;
-			insertTriggerString = trigger.getKeyChar() + "";
+			insertTriggerString = Character.toString(trigger.getKeyChar());
 		}
 	}
 
@@ -352,34 +316,29 @@ class CodeTemplateManager {
 			int newCount = files==null ? 0 : files.length;
 			int oldCount = templates.size();
 
-			if (newCount>0) {
+			List temp = new ArrayList(oldCount+newCount);
+			temp.addAll(templates);
 
-				SAXParserFactory spf = SAXParserFactory.newInstance();
-				SAXParser parser = null;
+			for (int i=0; i<newCount; i++) {
 				try {
-					parser = spf.newSAXParser();
-				} catch (Exception e) {
-					return -1;
-				}
-				Handler h = new Handler();
-
-				List temp = new ArrayList(oldCount+newCount);
-				temp.addAll(templates);
-				for (int i=0; i<newCount; i++) {
-					try {
-						parser.parse(files[i], h);
-						CodeTemplate ct = h.getCodeTemplate();
-						if (ct!=null) {
-							temp.add(ct);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					XMLDecoder d = new XMLDecoder(new BufferedInputStream(
+						new FileInputStream(files[i])));
+					Object obj = d.readObject();
+					if (!(obj instanceof CodeTemplate)) {
+						throw new IOException("Not a CodeTemplate: " +
+										files[i].getAbsolutePath());
 					}
+					temp.add((CodeTemplate)obj);
+					d.close();
+				} catch (/*IO, NoSuchElement*/Exception e) {
+					// NoSuchElementException can be thrown when reading
+					// an XML file not in the format expected by XMLDecoder.
+					// (e.g. CodeTemplates in an old format).
+					e.printStackTrace();
 				}
-				templates = temp;
-				sortTemplates();
-
 			}
+			templates = temp;
+			sortTemplates();
 
 			return getTemplateCount();
 
@@ -405,86 +364,16 @@ class CodeTemplateManager {
 		// the remaining list.
 		for (Iterator i=templates.iterator(); i.hasNext(); ) {
 			CodeTemplate temp = (CodeTemplate)i.next();
-			if (temp==null) {
+			if (temp==null || temp.getID()==null) {
 				i.remove();
 			}
 			else {
 				maxTemplateIDLength = Math.max(maxTemplateIDLength,
-										temp.getID().length);
+										temp.getID().length());
 			}
 		}
 
 		Collections.sort(templates);
-
-	}
-
-
-	/**
-	 * Loads a template from an XML file via SAX.  This class is reusable.
-	 */
-	private static class Handler extends DefaultHandler {
-
-		private CodeTemplate template;
-		private String id;
-		private String beforeCaret;
-		private String afterCaret;
-
-		private StringBuffer sb;
-		private boolean storeChars;
-
-		public Handler() {
-			sb = new StringBuffer();
-		}
-
-		public void characters(char[] ch, int start, int length)
-											throws SAXException {
-			if (storeChars) {
-				sb.append(ch, start, length);
-			}
-		}
-
-		public void endDocument() throws SAXException {
-			template = new CodeTemplate(id, beforeCaret, afterCaret);
-		}
-
-		public void endElement(String uri, String localName, String qName)
-											throws SAXException {
-			if (ID.equals(qName)) {
-				// Do nothing.
-			}
-			else if (BEFORE_CARET.equals(qName)) {
-				beforeCaret = sb.toString();
-			}
-			else if (AFTER_CARET.equals(qName)) {
-				afterCaret = sb.toString();
-			}
-		}
-
-		public CodeTemplate getCodeTemplate() {
-			return template;
-		}
-
-		public void startDocument() throws SAXException {
-			sb.setLength(0);
-			storeChars = false;
-			template = null;
-			id = beforeCaret = afterCaret = null;
-		}
-
-		public void startElement(String uri, String localName, String qName,
-							Attributes attributes) throws SAXException {
-			if (ID.equals(qName)) {
-				id = attributes.getValue(_VALUE);
-			}
-			else if (BEFORE_CARET.equals(qName)) {
-				sb.setLength(0);
-				storeChars = true;
-			}
-			else if (AFTER_CARET.equals(qName)) {
-				sb.setLength(0);
-				storeChars = true;
-			}
-		}
 
 	}
 
@@ -500,7 +389,7 @@ class CodeTemplateManager {
 
 			// Get template start index (0) and length.
 			CodeTemplate t = (CodeTemplate)template;
-			final char[] templateArray = t.getID();
+			final char[] templateArray = t.getID().toCharArray();
 			int i = 0;
 			int len1 = templateArray.length;
 
@@ -509,8 +398,9 @@ class CodeTemplateManager {
 			char[] segArray = s.array;
 			int len2 = s.count;
 			int j = s.offset + len2 - 1;
-			while (j>=s.offset && CodeTemplate.isValidChar(segArray[j]))
+			while (j>=s.offset && isValidChar(segArray[j])) {
 				j--;
+			}
 			j++;
 			int segShift = j - s.offset;
 			len2 -= segShift;
