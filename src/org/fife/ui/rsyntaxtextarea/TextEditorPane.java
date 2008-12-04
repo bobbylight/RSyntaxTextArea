@@ -112,15 +112,35 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Creates a new <code>TextEditorPane</code>.  The file will be given
-	 * a default name.
+	 * Constructor.  The file will be given a defualt name.
+	 */
+	public TextEditorPane() {
+		this(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.  The file will be given a defualt name.
 	 *
-	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
 	 */
-	public TextEditorPane(boolean wordWrapEnabled, int textMode) {
-		super(wordWrapEnabled, textMode);
+	public TextEditorPane(int textMode) {
+		this(textMode, false);
+	}
+
+
+	/**
+	 * Creates a new <code>TextEditorPane</code>.  The file will be given
+	 * a default name.
+	 *
+	 * @param textMode Either <code>INSERT_MODE</code> or
+	 *        <code>OVERWRITE_MODE</code>.
+	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
+	 */
+	public TextEditorPane(int textMode, boolean wordWrapEnabled) {
+		super(textMode);
+		setLineWrap(wordWrapEnabled);
 		try {
 			init(null, null);
 		} catch (IOException ioe) { // Never happens
@@ -132,9 +152,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	/**
 	 * Creates a new <code>TextEditorPane</code>.
 	 *
-	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
+	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
 	 * @param loc The location of the text file being edited.  If this value
 	 *        is <code>null</code>, a file named "Untitled.txt" in the current
 	 *        directory is used.
@@ -142,18 +162,18 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *         <code>loc</code>.  This of course won't happen if
 	 *         <code>loc</code> is <code>null</code>.
 	 */
-	public TextEditorPane(boolean wordWrapEnabled, int textMode,
+	public TextEditorPane(int textMode, boolean wordWrapEnabled,
 							FileLocation loc) throws IOException {
-		this(wordWrapEnabled, textMode, loc, null);
+		this(textMode, wordWrapEnabled, loc, null);
 	}
 
 
 	/**
 	 * Creates a new <code>TextEditorPane</code>.
 	 *
-	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
+	 * @param wordWrapEnabled Whether or not to use word wrap in this pane.
 	 * @param loc The location of the text file being edited.  If this value
 	 *        is <code>null</code>, a file named "Untitled.txt" in the current
 	 *        directory is used.  This file is displayed as empty even if it
@@ -165,9 +185,10 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *         <code>loc</code>.  This of course won't happen if
 	 *         <code>loc</code> is <code>null</code>.
 	 */
-	public TextEditorPane(boolean wordWrapEnabled, int textMode,
+	public TextEditorPane(int textMode, boolean wordWrapEnabled,
 				FileLocation loc, String defaultEnc) throws IOException {
-		super(wordWrapEnabled, textMode);
+		super(textMode);
+		setLineWrap(wordWrapEnabled);
 		init(loc, defaultEnc);
 	}
 

@@ -279,7 +279,7 @@ class LineNumberList extends JComponent implements CaretListener,
 		int y = actualTopY + ascent;
 
 		// Highlight the current line's line number, if desired.
-		if (textArea.isCurrentLineHighlightEnabled() && currentLine>=topLine &&
+		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
 				currentLine<bottomLine) {
 			g.setColor(textArea.getCurrentLineHighlightColor());
 			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight, cellWidth,cellHeight);
@@ -384,8 +384,7 @@ class LineNumberList extends JComponent implements CaretListener,
 			}
 
 			// Highlight the current line's line number, if desired.
-			if (textArea.isCurrentLineHighlightEnabled() &&
-					topLine==currentLine-1) {
+			if (textArea.getHighlightCurrentLine() && topLine==currentLine-1) {
 				g.setColor(textArea.getCurrentLineHighlightColor());
 				g.fillRect(0,y, cellWidth,lineEndViewPos.y+lineEndViewPos.height-y);
 				g.setColor(getForeground());
@@ -448,7 +447,7 @@ class LineNumberList extends JComponent implements CaretListener,
 		}
 
 		// If they change the current line highlight in any way...
-		else if (name.equals(RTextArea.CURRENT_LINE_HIGHLIGHT_PROPERTY) ||
+		else if (name.equals(RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY) ||
 			name.equals(RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY)) {
 			repaint();
 		}

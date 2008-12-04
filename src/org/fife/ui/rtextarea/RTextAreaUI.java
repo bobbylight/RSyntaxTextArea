@@ -203,7 +203,7 @@ protected Keymap createKeymap() {
 		ActionMap map = (ActionMap)UIManager.get(getActionMapName());
 		if (map==null) {
 			map = createRTextAreaActionMap();
-			UIManager.put(SHARED_ACTION_MAP_NAME, map);
+			UIManager.put(getActionMapName(), map);
 		}
 
 		ActionMap componentMap = new ActionMapUIResource();
@@ -368,7 +368,7 @@ protected Keymap createKeymap() {
 	 */
 	protected void paintCurrentLineHighlight(Graphics g, Rectangle visibleRect) {
 
-		if (textArea.isCurrentLineHighlightEnabled()) {
+		if (textArea.getHighlightCurrentLine()) {
 
 			Caret caret = textArea.getCaret();
 			if (caret.getDot()==caret.getMark()) {

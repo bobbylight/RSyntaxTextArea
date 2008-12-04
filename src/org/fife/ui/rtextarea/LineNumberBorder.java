@@ -361,7 +361,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 		int y2 = actualTopY + ascent;
 
 		// Highlight the current line's line number, if desired.
-		if (textArea.isCurrentLineHighlightEnabled() && currentLine>=topLine &&
+		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
 				currentLine<bottomLine) {
 			g.setColor(textArea.getCurrentLineHighlightColor());
 			g.fillRect(paintX,actualTopY+(currentLine-topLine)*cellHeight,
@@ -459,8 +459,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 		RTextAreaUI ui = (RTextAreaUI)textArea.getUI();
 		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
 		View v = ui.getRootView(textArea).getView(0);
-		boolean currentLineHighlighted = textArea.
-									isCurrentLineHighlightEnabled();
+		boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		int lineCount = root.getElementCount();
 		int topPosition = textArea.viewToModel(
 								new Point(visibleRect.x,visibleRect.y));
@@ -562,7 +561,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 		}
 
 		// If they change the current line highlight in any way...
-		else if (name.equals(RTextArea.CURRENT_LINE_HIGHLIGHT_PROPERTY) ||
+		else if (name.equals(RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY) ||
 			name.equals(RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY)) {
 			scrollPane.repaint();
 		}

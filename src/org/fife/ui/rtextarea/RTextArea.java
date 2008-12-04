@@ -24,7 +24,6 @@ package org.fife.ui.rtextarea;
 
 import java.awt.Color;
 import java.awt.ComponentOrientation;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -160,51 +159,89 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Creates a new <code>RTextArea</code> with the following properties:
-	 * 10-point monospaced font, no word wrap, INSERT_MODE, Plain white
-	 * background, tab size of 5 spaces, and font color of black.
+	 * Constructor.
 	 */
 	public RTextArea() {
-		this(null, false, INSERT_MODE);
+		init(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param doc The document for the editor.
+	 */
+	public RTextArea(RTextAreaDocument doc) {
+		super(doc);
+		init(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param text The initial text to display.
+	 */
+	public RTextArea(String text) {
+		super(text);
+		init(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextArea(int rows, int cols) {
+		super(rows, cols);
+		init(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextArea(String text, int rows, int cols) {
+		super(text, rows, cols);
+		init(INSERT_MODE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param doc The document for the editor.
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextArea(RTextAreaDocument doc, String text, int rows,
+							int cols) {
+		super(doc, text, rows, cols);
+		init(INSERT_MODE);
 	}
 
 
 	/**
 	 * Creates a new <code>RTextArea</code>.
 	 *
-	 * @param font The font to use in this text area.
-	 * @param wordWrapEnabled Whether or not to use word wrap.
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
 	 */
-	public RTextArea(Font font, boolean wordWrapEnabled, int textMode) {
-
-		super(font, wordWrapEnabled);
-
-		// Create and initialize our actions.  This will only do so once
-		// when the first RTextArea is created) as these actions are shared.
-		initActions(this);
-
-		// Set the defaults for various stuff.
-		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
-		markAllHighlightPainter = new ChangableHighlightPainter(
-										markAllHighlightColor);
-		setMarkAllHighlightColor(markAllHighlightColor);
-		carets = new int[2];
-		carets[INSERT_CARET] = ConfigurableCaret.VERTICAL_LINE_STYLE;
-		carets[OVERWRITE_CARET] = ConfigurableCaret.BLOCK_STYLE;
-		setDragEnabled(true);			// Enable drag-and-drop.
-
-		// Set values for stuff the user passed in.
-		setTextMode(textMode); // carets array must be initialized first!
-
-		// Install the undo manager.
-		undoManager = new RUndoManager(this);
-		getDocument().addUndoableEditListener(undoManager);
-
-		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
-		fixCtrlH();
-
+	public RTextArea(int textMode) {
+		init(textMode);
 	}
 
 
@@ -568,6 +605,40 @@ public class RTextArea extends RTextAreaBase
 						provideErrorFeedback(RTextArea.this);
 			}
 		}
+	}
+
+
+	/**
+	 * Initializes this text area.
+	 *
+	 * @param textMode The text mode.
+	 */
+	private void init(int textMode) {
+
+		// Create and initialize our actions.  This will only do so once
+		// when the first RTextArea is created) as these actions are shared.
+		initActions(this);
+
+		// Set the defaults for various stuff.
+		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
+		markAllHighlightPainter = new ChangableHighlightPainter(
+										markAllHighlightColor);
+		setMarkAllHighlightColor(markAllHighlightColor);
+		carets = new int[2];
+		carets[INSERT_CARET] = ConfigurableCaret.VERTICAL_LINE_STYLE;
+		carets[OVERWRITE_CARET] = ConfigurableCaret.BLOCK_STYLE;
+		setDragEnabled(true);			// Enable drag-and-drop.
+
+		// Set values for stuff the user passed in.
+		setTextMode(textMode); // carets array must be initialized first!
+
+		// Install the undo manager.
+		undoManager = new RUndoManager(this);
+		getDocument().addUndoableEditListener(undoManager);
+
+		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
+		fixCtrlH();
+
 	}
 
 

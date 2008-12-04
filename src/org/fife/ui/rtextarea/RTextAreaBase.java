@@ -24,7 +24,6 @@ package org.fife.ui.rtextarea;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -56,9 +55,9 @@ import javax.swing.text.Element;
  */
 abstract class RTextAreaBase extends JTextArea {
 
-	public static final String CURRENT_LINE_HIGHLIGHT_PROPERTY		= "RTA.currentLineHighlight";
 	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY	= "RTA.currentLineHighlightColor";
 	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY	= "RTA.currentLineHighlightFade";
+	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY		= "RTA.currentLineHighlight";
 	public static final String ROUNDED_SELECTION_PROPERTY			= "RTA.roundedSelection";
 
 	private boolean tabsEmulatedWithSpaces;		// If true, tabs will be expanded to spaces.
@@ -79,7 +78,6 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	private RTAMouseListener mouseListener;
 
 	private static final Color DEFAULT_CARET_COLOR				= new Color(255,51,51);
-	private static final Color DEFAULT_SELECTION_COLOR			= new Color(200,200,255);
 	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
 	private static final Color DEFAULT_MARGIN_LINE_COLOR			= new Color(255,224,224);
 	private static final int DEFAULT_TAB_SIZE					= 5;
@@ -88,56 +86,77 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 	/**
 	 * Constructor.
-	 *
-	 * @param font The font to use in this text area.
-	 * @param wordWrapEnabled Whether or not to use word wrap.
 	 */
-	public RTextAreaBase(Font font, boolean wordWrapEnabled) {
+	public RTextAreaBase() {
+		init();
+	}
 
-		// Sets the UI.  Note that setUI() is overridden in RTextArea to only
-		// update the popup menu; this method must be called to set the real
-		// UI.  This is done because the look and feel of an RTextArea is
-		// independent of the installed Java look and feels.
-		setRTextAreaUI(createRTextAreaUI());
 
-		// So we get notified when the component is resized.
-		enableEvents(AWTEvent.COMPONENT_EVENT_MASK|AWTEvent.KEY_EVENT_MASK);
+	/**
+	 * Constructor.
+	 *
+	 * @param doc The document for the editor.
+	 */
+	public RTextAreaBase(RTextAreaDocument doc) {
+		super(doc);
+		init();
+	}
 
-		// Defaults for various properties.
-		setCurrentLineHighlightEnabled(true);
-		setCurrentLineHighlightColor(getDefaultCurrentLineHighlightColor());
-		setMarginLineEnabled(false);
-		setMarginLineColor(getDefaultMarginLineColor());
-		setMarginLinePosition(getDefaultMarginLinePosition());
-		setBackgroundObject(Color.WHITE);
-		setWrapStyleWord(true);// We only support wrapping at word boundaries.
-		setSelectionColor(getDefaultSelectionColor());
-		setTabSize(5);
-		setForeground(Color.BLACK);
-		setTabsEmulated(false);
 
-		// Set properties the user passed in.
-		setFont(font!=null ? font : getDefaultFont());
-		setLineWrap(wordWrapEnabled);
+	/**
+	 * Constructor.
+	 *
+	 * @param text The initial text to display.
+	 */
+	public RTextAreaBase(String text) {
+		super(text);
+		init();
+	}
 
-		// Stuff needed by the caret listener below.
-		previousCaretY = currentCaretY = 0;
-		// Need this because modelToView() is called from RTextArea's
-		// constructor code and we need this component to be sized for it
-		// (still true???  22nov2004).  Also, if its width is too small
-		// (i.e., "1"), then RSyntaxTextArea's WrappedSyntaxView goes into a
-		// infinite loop trying to fit text into the 1-pixel width (although
-		// it shouldn't, but a plausable width will make its computations go
-		// much quicker)...
-		setSize(new Dimension(300,300));
 
-		// Stuff to highlight the current line.
-		mouseListener = createMouseListener();
-		// Also acts as a focus listener so we can update our shared actions
-		// (cut, copy, etc. on the popup menu).
-		addFocusListener(mouseListener);
-		addCurrentLineHighlightListeners();
+	/**
+	 * Constructor.
+	 *
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextAreaBase(int rows, int cols) {
+		super(rows, cols);
+		init();
+	}
 
+
+	/**
+	 * Constructor.
+	 *
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextAreaBase(String text, int rows, int cols) {
+		super(text, rows, cols);
+		init();
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param doc The document for the editor.
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RTextAreaBase(RTextAreaDocument doc, String text, int rows,
+							int cols) {
+		super(doc, text, rows, cols);
+		init();
 	}
 
 
@@ -366,8 +385,8 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * this highlight.
 	 *
 	 * @return The color being used to highlight the current line.
-	 * @see #isCurrentLineHighlightEnabled
-	 * @see #setCurrentLineHighlightEnabled
+	 * @see #getHighlightCurrentLine()
+	 * @see #setHighlightCurrentLine(boolean)
 	 * @see #setCurrentLineHighlightColor
 	 */
 	public Color getCurrentLineHighlightColor() {
@@ -442,19 +461,6 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 
 	/**
-	 * Returns the default selection color for this text area.  This
-	 * color was chosen because it's light and <code>RTextArea</code>
-	 * does not change text color between selected/unselected text for
-	 * contrast like regular <code>JTextArea</code>s do.
-	 *
-	 * @return The default selection color.
-	 */
-	public static Color getDefaultSelectionColor() {
-		return DEFAULT_SELECTION_COLOR;
-	}
-
-
-	/**
 	 * Returns the default tab size, in spaces.
 	 *
 	 * @return The default tab size.
@@ -472,6 +478,19 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 */
 	public boolean getFadeCurrentLineHighlight() {
 		return fadeCurrentLineHighlight;
+	}
+
+
+	/**
+	 * Returns whether or not the current line is highlighted.
+	 *
+	 * @return Whether or the current line is highlighted.
+	 * @see #setHighlightCurrentLine(boolean)
+	 * @see #getCurrentLineHighlightColor
+	 * @see #setCurrentLineHighlightColor
+	 */
+	public final boolean getHighlightCurrentLine() {
+		return highlightCurrentLine;
 	}
 
 
@@ -610,15 +629,41 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 
 	/**
-	 * Returns whether or not the current line is highlighted.
-	 *
-	 * @return Whether or the current line is highlighted.
-	 * @see #setCurrentLineHighlightEnabled
-	 * @see #getCurrentLineHighlightColor
-	 * @see #setCurrentLineHighlightColor
+	 * Initializes this text area.
 	 */
-	public final boolean isCurrentLineHighlightEnabled() {
-		return highlightCurrentLine;
+	private void init() {
+
+		// Sets the UI.  Note that setUI() is overridden in RTextArea to only
+		// update the popup menu; this method must be called to set the real
+		// UI.  This is done because the look and feel of an RTextArea is
+		// independent of the installed Java look and feels.
+		setRTextAreaUI(createRTextAreaUI());
+
+		// So we get notified when the component is resized.
+		enableEvents(AWTEvent.COMPONENT_EVENT_MASK|AWTEvent.KEY_EVENT_MASK);
+
+		// Defaults for various properties.
+		setHighlightCurrentLine(true);
+		setCurrentLineHighlightColor(getDefaultCurrentLineHighlightColor());
+		setMarginLineEnabled(false);
+		setMarginLineColor(getDefaultMarginLineColor());
+		setMarginLinePosition(getDefaultMarginLinePosition());
+		setBackgroundObject(Color.WHITE);
+		setWrapStyleWord(true);// We only support wrapping at word boundaries.
+		setTabSize(5);
+		setForeground(Color.BLACK);
+		setTabsEmulated(false);
+
+		// Stuff needed by the caret listener below.
+		previousCaretY = currentCaretY = 0;
+
+		// Stuff to highlight the current line.
+		mouseListener = createMouseListener();
+		// Also acts as a focus listener so we can update our shared actions
+		// (cut, copy, etc. on the popup menu).
+		addFocusListener(mouseListener);
+		addCurrentLineHighlightListeners();
+
 	}
 
 
@@ -722,7 +767,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		// different physical one.  So, here we force a repaint of the current
 		// line's highlight if necessary.
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED &&
-				getLineWrap()==true && isCurrentLineHighlightEnabled()) {
+				getLineWrap()==true && getHighlightCurrentLine()) {
 			previousCaretY = -1;  // So we are sure to repaint.
 			fireCaretUpdate(mouseListener);
 		}
@@ -838,8 +883,8 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 *
 	 * @param color The color to use to highlight the current line.
 	 * @throws NullPointerException if <code>color</code> is <code>null</code>.
-	 * @see #isCurrentLineHighlightEnabled
-	 * @see #setCurrentLineHighlightEnabled
+	 * @see #getHighlightCurrentLine()
+	 * @see #setHighlightCurrentLine(boolean)
 	 * @see #getCurrentLineHighlightColor
 	 */
 	public void setCurrentLineHighlightColor(Color color)
@@ -856,25 +901,6 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 
 	/**
-	 * Sets whether or not the current line is highlighted.  This method
-	 * fires a property change of type
-	 * <code>CURRENT_LINE_HIGHLIGHT_PROPERTY</code>.
-	 *
-	 * @param enabled Whether or not to highlight the current line.
-	 * @see #isCurrentLineHighlightEnabled
-	 * @see #getCurrentLineHighlightColor
-	 * @see #setCurrentLineHighlightColor
-	 */
-	public void setCurrentLineHighlightEnabled(boolean enabled) {
-		if (enabled!=highlightCurrentLine) {
-			highlightCurrentLine = enabled;
-			firePropertyChange(CURRENT_LINE_HIGHLIGHT_PROPERTY,
-							!enabled, enabled);
-		}
-	}
-
-
-	/**
 	 * Sets whether the current line highlight should have a "fade" effect.
 	 * This method fires a property change event of type
 	 * <code>CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY</code>.
@@ -885,7 +911,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	public void setFadeCurrentLineHighlight(boolean fade) {
 		if (fade!=fadeCurrentLineHighlight) {
 			fadeCurrentLineHighlight = fade;
-			if (isCurrentLineHighlightEnabled())
+			if (getHighlightCurrentLine())
 				forceCurrentLineHighlightRepaint();
 			firePropertyChange(CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY,
 							!fade, fade);
@@ -905,6 +931,24 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		updateMarginLineX();
 		if (highlightCurrentLine)
 			possiblyUpdateCurrentLineHighlightLocation();
+	}
+
+
+	/**
+	 * Sets whether or not the current line is highlighted.  This method
+	 * fires a property change of type {@link #HIGHLIGHT_CURRENT_LINE_PROPERTY}.
+	 *
+	 * @param highlight Whether or not to highlight the current line.
+	 * @see #getHighlightCurrentLine()
+	 * @see #getCurrentLineHighlightColor
+	 * @see #setCurrentLineHighlightColor
+	 */
+	public void setHighlightCurrentLine(boolean highlight) {
+		if (highlight!=highlightCurrentLine) {
+			highlightCurrentLine = highlight;
+			firePropertyChange(HIGHLIGHT_CURRENT_LINE_PROPERTY,
+							!highlight, highlight);
+		}
 	}
 
 

@@ -116,6 +116,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
 	private static final Color DEFAULT_BRACKET_MATCH_BORDER_COLOR	= new Color(0,0,128);
+	private static final Color DEFAULT_SELECTION_COLOR			= new Color(200,200,255);
 
 
 	/**
@@ -250,27 +251,75 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Creates a new <code>RSyntaxTextArea</code> with the following
-	 * properties: no word wrap, INSERT_MODE, Plain white background, tab size
-	 * of 5 spaces, no syntax highlighting, and default caret color,
-	 * selection color, and syntax highlighting scmeme.
+	 * Constructor.
 	 */
 	public RSyntaxTextArea() {
-		this(false, INSERT_MODE);
+		init();
 	}
 
 
 	/**
-	 * Creates a new <code>RSyntaxTextArea</code> with the following
-	 * properties: no word wrap, INSERT_MODE, Plain white background, tab size
-	 * of 5 spaces, no syntax highlighting, and default caret color,
-	 * selection color, and syntax highlighting scmeme.
-	 *
-	 * @param doc The document to use.
+	 * Constructor.
+	 * 
+	 * @param doc The document for the editor.
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc) {
-		this(false, INSERT_MODE);
-		setDocument(doc);
+		super(doc);
+		init();
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param text The initial text to display.
+	 */
+	public RSyntaxTextArea(String text) {
+		super(text);
+		init();
+	}
+
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RSyntaxTextArea(int rows, int cols) {
+		super(rows, cols);
+		init();
+	}
+
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RSyntaxTextArea(String text, int rows, int cols) {
+		super(text, rows, cols);
+		init();
+	}
+
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param doc The document for the editor.
+	 * @param text The initial text to display.
+	 * @param rows The number of rows to display.
+	 * @param cols The number of columns to display.
+	 * @throws IllegalArgumentException If either <code>rows</code> or
+	 *         <code>cols</code> is negative.
+	 */
+	public RSyntaxTextArea(RSyntaxDocument doc, String text,int rows,int cols) {
+		super(doc, text, rows, cols);
 		init();
 	}
 
@@ -278,16 +327,11 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Creates a new <code>RSyntaxTextArea</code>.
 	 *
-	 * @param wordWrapEnabled Whether to use word wrap in this text area.
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
 	 */
-	public RSyntaxTextArea(boolean wordWrapEnabled, int textMode) {
-		// NOTE:  The font passed to the super constructor below isn't
-		// actually used, so we can pass whatever we want (other than null,
-		// which may cause NPE's in other methods).
-		super(new Font("Monospaced", Font.PLAIN, 13),
-					wordWrapEnabled, textMode);
+	public RSyntaxTextArea(int textMode) {
+		super(textMode);
 		init();
 	}
 
@@ -631,6 +675,19 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public static final Color getDefaultBracketMatchBorderColor() {
 		return DEFAULT_BRACKET_MATCH_BORDER_COLOR;
+	}
+
+
+	/**
+	 * Returns the default selection color for this text area.  This
+	 * color was chosen because it's light and <code>RSyntaxTextArea</code>
+	 * does not change text color between selected/unselected text for
+	 * contrast like regular <code>JTextArea</code>s do.
+	 *
+	 * @return The default selection color.
+	 */
+	public static Color getDefaultSelectionColor() {
+		return DEFAULT_SELECTION_COLOR;
 	}
 
 
@@ -992,6 +1049,7 @@ private boolean fractionalFontMetricsEnabled;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
 		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
 		setBracketMatchingEnabled(true);
+		setSelectionColor(getDefaultSelectionColor());
 
 		// Set auto-indent releated stuff.
 		setAutoIndentEnabled(true);
