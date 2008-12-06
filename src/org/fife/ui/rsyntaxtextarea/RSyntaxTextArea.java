@@ -100,7 +100,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  * to your text area.
  *
  * @author Robert Futrell
- * @version 0.3
+ * @version 1.1
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
@@ -110,6 +110,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY	= "RSTA.clearWhitespaceLines";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
+	public static final String SMART_INDENT_PROPERTY			= "RSTA.smartIndent";
 	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY			= "RSTA.syntaxStyle";
 	public static final String VISIBLE_WHITESPACE_PROPERTY		= "RSTA.visibleWhitespace";
@@ -138,6 +139,11 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * Whether or not templates are enabled.
 	 */
 	private static boolean templatesEnabled;
+
+	/**
+	 * Whether smart indenting is enabled.
+	 */
+	private boolean smartIndentEnabled;
 
 	/**
 	 * The rectangle surrounding the "matched bracket" if bracket matching
@@ -578,6 +584,25 @@ private boolean fractionalFontMetricsEnabled;
 			match = null;
 		}
 
+	}
+
+
+	/**
+	 * If smart indenting is enabled, this method returns whether a "smart
+	 * indent" should be done if Enter is pressed at the end of the specified
+	 * line.
+	 *
+	 * @param line The line to check.
+	 * @return Whether a smart indent should be done at the end of the
+	 *         specified line.
+	 * @see #isSmartIndentEnabled()
+	 */
+	public boolean doSmartIndent(int line) {
+		if (isSmartIndentEnabled()) {
+			RSyntaxDocument doc = (RSyntaxDocument)getDocument();
+			return doc.doSmartIndent(line);
+		}
+		return false;
 	}
 
 
@@ -1054,6 +1079,7 @@ private boolean fractionalFontMetricsEnabled;
 		// Set auto-indent releated stuff.
 		setAutoIndentEnabled(true);
 		setClearWhitespaceLinesEnabled(true);
+		//setSmartIndentEnabled(true);
 
 		setHyperlinksEnabled(true);
 		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
@@ -1093,10 +1119,21 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return Whether or not whitespace-only lines are cleared when
 	 *         the user presses Enter on them.
-	 * @see #setClearWhitespaceLinesEnabled
+	 * @see #setClearWhitespaceLinesEnabled(boolean)
 	 */
 	public boolean isClearWhitespaceLinesEnabled() {
 		return clearWhitespaceLines;
+	}
+
+
+	/**
+	 * Returns whether smart indent is enabled.
+	 *
+	 * @return Whether smart indent is enabled.
+	 * @see #setSmartIndentEnabled(boolean)
+	 */
+	public boolean isSmartIndentEnabled() {
+		return smartIndentEnabled;
 	}
 
 
@@ -1432,8 +1469,23 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Sets whether smart indenting is enabled.  This method fires a
+	 * property change event of type {@link #SMART_INDENT_PROPERTY}.
+	 *
+	 * @param enabled Whether smart indenting should be enabled.
+	 * @see #isSmartIndentEnabled()
+	 */
+	public void setSmartIndentEnabled(boolean enabled) {
+		if (enabled!=smartIndentEnabled) {
+			smartIndentEnabled = enabled;
+			firePropertyChange(SMART_INDENT_PROPERTY, !enabled, enabled);
+		}
+	}
+
+
+	/**
 	 * Sets what type of syntax highlighting this editor is doing.  This method
-	 * fires a property change of type <code>SYNTAX_STYLE_PROPERTY</code>.
+	 * fires a property change of type {@link #SYNTAX_STYLE_PROPERTY}.
 	 *
 	 * @param style The syntax editing style to use, for example,
 	 *        <code>RSyntaxTextArea.NO_SYNTAX_STYLE</code> or

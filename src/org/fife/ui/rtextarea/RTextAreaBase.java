@@ -37,6 +37,7 @@ import java.awt.event.MouseMotionListener;
 import java.text.BreakIterator;
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -77,10 +78,10 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 	private RTAMouseListener mouseListener;
 
-	private static final Color DEFAULT_CARET_COLOR				= new Color(255,51,51);
+	private static final Color DEFAULT_CARET_COLOR				= new ColorUIResource(255,51,51);
 	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
 	private static final Color DEFAULT_MARGIN_LINE_COLOR			= new Color(255,224,224);
-	private static final int DEFAULT_TAB_SIZE					= 5;
+	private static final int DEFAULT_TAB_SIZE					= 4;
 	private static final int DEFAULT_MARGIN_LINE_POSITION			= 80;
 
 

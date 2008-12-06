@@ -309,27 +309,6 @@ public class DefaultToken extends Token {
 
 
 	/**
-	 * Makes this token start at the specified offset into the document.
-	 *
-	 * @param pos The offset into the document this token should start at.
-	 *        Note that this token must already contain this position; if
-	 *        it doesn't, an exception is thrown.
-	 * @throws IllegalArgumentException If pos is not already contained by
-	 *         this token.
-	 */
-	public void makeStartAt(int pos) {
-		if (pos<offset || pos>=(offset+textCount)) {
-			throw new IllegalArgumentException("pos " + pos +
-				" is not in range " + offset + "-" + (offset+textCount-1));
-		}
-		int shift = pos - offset;
-		offset = pos;
-		textOffset += shift;
-		textCount -= shift;
-	}
-
-
-	/**
 	 * Paints this token.
 	 *
 	 * @param g The graphics context in which to paint.

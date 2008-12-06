@@ -88,6 +88,37 @@ public class RSyntaxDocument extends RTextAreaDocument
 
 
 	/**
+	 * This method returns whether smart indentation should be done if Enter
+	 * is pressed at the end of the specified line.
+	 *
+	 * @param line The line to check.
+	 * @return Whether a smart indent should be done.
+	 */
+	public boolean doSmartIndent(int line) {
+		/*
+		// NOTE: This is for C-derivatives only!
+		// TODO: Call into tokenMaker for this information.
+		// This is also pretty crude, and only indents on curly braces
+		int initialTokenType = line==0 ? Token.NULL :
+								getLastTokenTypeOnLine(line-1);
+		if (initialTokenType==Token.NULL) { // Not an MLC
+			Token t = getTokenListForLine(line);
+			t = t.getLastPaintableToken();
+			if (t!=null && t.type==Token.SEPARATOR) {
+				if (t.textCount==1) {
+					String s2 = t.getLexeme();
+					if (s2.charAt(0)=='{') {
+						return true;
+					}
+				}
+			}
+		}
+		*/
+		return false;
+	}
+
+
+	/**
 	 * Alerts all listeners to this document of an insertion.  This is
 	 * overridden so we can update our syntax highlighting stuff.<p>
 	 * The syntax highlighting stuff has to be here instead of in

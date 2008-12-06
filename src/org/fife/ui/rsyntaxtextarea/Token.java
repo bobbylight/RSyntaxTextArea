@@ -282,6 +282,24 @@ public abstract class Token {
 
 
 	/**
+	 * Returns the last paintable token in this token list, or <code>null</code>
+	 * if there is no paintable token.
+	 *
+	 * @return The last paintable token in this token list.
+	 */
+	public Token getLastPaintableToken() {
+		Token t = this;
+		while (t.isPaintable()) {
+			if (t.nextToken==null || !t.nextToken.isPaintable()) {
+				return t;
+			}
+			t = t.nextToken;
+		}
+		return null;
+	}
+
+
+	/**
 	 * Returns the text of this token, as a string.<p>
 	 *
 	 * Note that this method isn't used much by the
@@ -488,17 +506,44 @@ public abstract class Token {
 
 
 	/**
-	 * Makes this token start at the specified offset into the document.<p>
-	 *
-	 * This method is abstract because some token implementations may need
-	 * to adjust cached values, such as widths
-	 * (such as <code>GlyphVectorToken</code>).
+	 * Makes this token start at the specified offset into the document.
 	 *
 	 * @param pos The offset into the document this token should start at.
 	 *        Note that this token must already contain this position; if
 	 *        it doesn't, an exception is thrown.
+	 * @throws IllegalArgumentException If pos is not already contained by
+	 *         this token.
+	 * @see #moveOffset(int)
 	 */
-	public abstract void makeStartAt(int pos);
+	public void makeStartAt(int pos) {
+		if (pos<offset || pos>=(offset+textCount)) {
+			throw new IllegalArgumentException("pos " + pos +
+				" is not in range " + offset + "-" + (offset+textCount-1));
+		}
+		int shift = pos - offset;
+		offset = pos;
+		textOffset += shift;
+		textCount -= shift;
+	}
+
+
+	/**
+	 * Moves the starting offset of this token.
+	 *
+	 * @param amt The amount to move the starting offset.  This should be
+	 *        between <code>0</code> and <code>textCount</code>, inclusive.
+	 * @throws IllegalArgumentException If <code>amt</code> is an invalid value.
+	 * @see #makeStartAt(int)
+	 */
+	public void moveOffset(int amt) {
+		if (amt<0 || amt>textCount) {
+			throw new IllegalArgumentException("amt " + amt +
+					" is not in range 0-" + textCount);
+		}
+		offset += amt;
+		textOffset += amt;
+		textCount -= amt;
+	}
 
 
 	/**

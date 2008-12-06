@@ -24,9 +24,9 @@ package org.fife.ui.rtextarea;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.*;
 
@@ -79,6 +79,80 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 							 		"instances of RTextArea only!");
 		}
 		this.textArea = (RTextArea)textArea;
+	}
+
+
+	/**
+	 * The Nimbus LAF (and any Synth laf might have similar issues) doesn't set
+	 * many UIManager properties that BasicLAF UI's look for.  This causes
+	 * problems for custom Basic-based UI's such as RTextAreaUI.  This method
+	 * attempts to detect if Nimbus has been installed, and if so, sets proper
+	 * values for some editor properties.
+	 *
+	 * @param editor The text area.
+	 */
+	private void correctNimbusDefaultProblems(JTextComponent editor) {
+
+		// Don't check UIManager.getLookAndFeel().getName() for "Nimbus",
+		// as other Synth-based LaFs might have not set these properties,
+		// in which case we'll need to use our fallback values.
+
+		// Check for null, but not for UIResource, for these properties,
+		// because if Nimbus was installed these values would all be given
+		// null values.  Another laf might have successfully installed
+		// UIResource values, which we don't want to override.
+
+		Color c = editor.getCaretColor();
+		if (c==null) {
+			editor.setCaretColor(RTextArea.getDefaultCaretColor());
+		}
+
+		c = editor.getSelectionColor();
+		if (c==null) {
+			c = UIManager.getColor("nimbusSelectionBackground");
+			if (c==null) { // Not Nimbus, but still need a value - fallback
+				c = UIManager.getColor("textHighlight");
+				if (c==null) {
+					c = new ColorUIResource(Color.BLUE);
+				}
+			}
+			editor.setSelectionColor(c);
+		}
+
+		c = editor.getSelectedTextColor();
+		if (c==null) {
+			c = UIManager.getColor("nimbusSelectedText");
+			if (c==null) { // Not Nimbus, but still need a value - fallback
+				c = UIManager.getColor("textHighlightText");
+				if (c==null) {
+					c = new ColorUIResource(Color.WHITE);
+				}
+			}
+			editor.setSelectedTextColor(c);
+		}
+
+		c = editor.getDisabledTextColor();
+		if (c==null) {
+			c = UIManager.getColor("nimbusDisabledText");
+			if (c==null) { // Not Nimbus, but still need a value - fallback
+				c = UIManager.getColor("textInactiveText");
+				if (c==null) {
+					c = new ColorUIResource(Color.DARK_GRAY);
+				}
+			}
+			editor.setDisabledTextColor(c);
+		}
+
+		Border border = editor.getBorder();
+		if (border==null) {
+			editor.setBorder(new BasicBorders.MarginBorder());
+		}
+
+		Insets margin = editor.getMargin();
+		if (margin==null) {
+			editor.setMargin(new InsetsUIResource(2, 2, 2, 2));
+		}
+
 	}
 
 
@@ -305,6 +379,10 @@ protected Keymap createKeymap() {
 		super.installDefaults();
 
 		JTextComponent editor = getComponent();
+
+		// Nimbus (and possibly other Synth lafs) doesn't play by BasicLaf
+		// rules and doesn't set properties needed by custom BasicTextAreaUI's.
+		correctNimbusDefaultProblems(editor);
 
 		editor.setTransferHandler(defaultTransferHandler);
 

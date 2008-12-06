@@ -531,15 +531,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					Element line = map.getElement(lineNum);
 					int start = line.getStartOffset();
 					int end = line.getEndOffset()-1; // Why always "-1"?
-					String s = sta.getText(start,end-start);
-					int len = s.length();
+					int len = end-start;
+					String s = doc.getText(start, len);
 
 					// endWS is the end of the leading whitespace of the
 					// current line.
-					int endWS = 0;
-					while (endWS<len &&
-						RSyntaxUtilities.isWhitespace(s.charAt(endWS)))
-						endWS++;
+					int endWS = getLeadingWhitespaceCount(s);
+					StringBuffer sb = new StringBuffer("\n");
+					sb.append(s.substring(0,endWS));//s, 0,endWS);
 
 					// If there is only whitespace between the caret and
 					// the EOL, pressing Enter auto-indents the new line to
@@ -550,7 +549,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						// If the line was nothing but whitespace...
 						if (endWS==len && sta.isClearWhitespaceLinesEnabled())
 							sta.replaceRange(null, start,end);
-						sta.replaceSelection("\n"+s.substring(0,endWS));
+						sta.replaceSelection(sb.toString());
 					}
 
 					// If there is non-whitespace between the caret and the
@@ -558,10 +557,18 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					// and auto-indents it to the same place as the last
 					// line.
 					else {
-						sta.replaceRange("\n" + s.substring(0,endWS) +
-								s.substring(nonWhitespacePos),
-								caretPosition, end);
+						sb.append(s.substring(nonWhitespacePos));
+						sta.replaceRange(sb.toString(), caretPosition, end);
 						sta.setCaretPosition(caretPosition + endWS + 1);
+					}
+
+					// Must do it after everything else, as the "smart indent"
+					// calculation depends on the previous line's state
+					// AFTER the Enter press (stuff may have been moved down).
+					// TODO: This causes two events => two undo/redo events.
+					// Combine into 1.
+					if (sta.doSmartIndent(lineNum)) {
+						sta.replaceSelection("\t");
 					}
 
 				} catch (BadLocationException ble) {
@@ -589,6 +596,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					return i;
 			}
 			return -1;
+		}
+
+		private static final int getLeadingWhitespaceCount(String s) {
+			int count = 0;
+			int len = s.length();
+			while (count<len && RSyntaxUtilities.isWhitespace(s.charAt(count))){
+				count++;
+			}
+			return count;
 		}
 
 		public final String getMacroID() {

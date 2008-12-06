@@ -49,7 +49,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -59,9 +58,6 @@ import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.CompoundEdit;
-import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.UndoManager;
 
 import org.fife.print.RPrintUtilities;
 import org.fife.ui.rtextarea.Macro.MacroRecord;
@@ -145,15 +141,12 @@ public class RTextArea extends RTextAreaBase
 	private String markedWord;				// Expression marked in "mark all."
 	private ChangableHighlightPainter markAllHighlightPainter;
 
-	private boolean inUndoRedo;
+	boolean inUndoRedo;
 
 	public static final int INSERT_CARET		= 0;
 	public static final int OVERWRITE_CARET		= 1;
 
 	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
-
-	private static String cantUndoText;
-	private static String cantRedoText;
 
 	private static final String RESOURCE_BUNDLE	= "org.fife.ui.rtextarea.RTextArea";
 
@@ -615,6 +608,10 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private void init(int textMode) {
 
+		// Install the undo manager.  Do this before initActions.
+		undoManager = new RUndoManager(this);
+		getDocument().addUndoableEditListener(undoManager);
+
 		// Create and initialize our actions.  This will only do so once
 		// when the first RTextArea is created) as these actions are shared.
 		initActions(this);
@@ -631,10 +628,6 @@ public class RTextArea extends RTextAreaBase
 
 		// Set values for stuff the user passed in.
 		setTextMode(textMode); // carets array must be initialized first!
-
-		// Install the undo manager.
-		undoManager = new RUndoManager(this);
-		getDocument().addUndoableEditListener(undoManager);
 
 		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
 		fixCtrlH();
@@ -657,8 +650,6 @@ public class RTextArea extends RTextAreaBase
 			first = true;
 
 			ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
-			cantUndoText = bundle.getString("CantUndo");
-			cantRedoText = bundle.getString("CantRedo");
 
 			// Create actions for right-click popup menu.
 			// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
@@ -684,10 +675,12 @@ public class RTextArea extends RTextAreaBase
 			deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, name,
 				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-			undoAction = new RTextAreaEditorKit.UndoAction(cantUndoText, null, "Undo",
+			undoAction = new RTextAreaEditorKit.UndoAction(
+					RUndoManager.getCantUndoText(), null, "Undo",
 				new Integer(KeyEvent.VK_Z), KeyStroke.getKeyStroke(KeyEvent.VK_Z, defaultModifier));
 
-			redoAction = new RTextAreaEditorKit.RedoAction(cantRedoText, null, "Redo",
+			redoAction = new RTextAreaEditorKit.RedoAction(
+				RUndoManager.getCantRedoText(), null, "Redo",
 				new Integer(KeyEvent.VK_Y), KeyStroke.getKeyStroke(KeyEvent.VK_Y, defaultModifier));
 
 			name = bundle.getString("SAActionName");
@@ -1269,14 +1262,25 @@ public class RTextArea extends RTextAreaBase
 	 * they wish to install a new UI.
 	 *
 	 * FIXME:  This method will be called once for each open
-	 * <code>RTextArea</code>, when it only needs to be called once!
+	 * <code>RTextArea</code>, when it only needs to be called once - we
+	 * only need to update the popup menu once!
 	 *
 	 * @param ui This parameter is ignored.
 	 */
 	public final void setUI(TextUI ui) {
+
 		// Update the popup menu's ui.
-		if (RTextArea.rightClickMenu!=null)
+		if (RTextArea.rightClickMenu!=null) {
 			SwingUtilities.updateComponentTreeUI(RTextArea.rightClickMenu);
+		}
+
+		// Set things like selection color, selected text color, etc. to
+		// laf defaults (if values are null or UIResource instances).
+		RTextAreaUI rtaui = (RTextAreaUI)getUI();
+		if (rtaui!=null) {
+			rtaui.installDefaults();
+		}
+
 	}
 
 
@@ -1361,183 +1365,6 @@ public class RTextArea extends RTextAreaBase
 				createRightClickMenu();
 			RTextArea.rightClickMenu.show(e.getComponent(),
 										e.getX(), e.getY());
-		}
-
-	}
-
-
-	/**
-	 * This class manages undos/redos for a particular editor pane.  It groups
-	 * all undos that occur one character position apart together, to avoid
-	 * Java's horrible "one character at a time" undo behavior.  It also
-	 * recognizes "replace" actions (i.e., text is selected, then the user
-	 * types), and treats it as a single action, instead of a remove/insert
-	 * action pair.
-	 */
-	class RUndoManager extends UndoManager {
-
-		public RCompoundEdit compoundEdit;
-		private RTextArea textArea;
-		private int lastOffset;
-		private boolean internalAtomicEdit;
-
-		public RUndoManager(RTextArea textArea) {
-			this.textArea = textArea;
-		}
-
-		/**
-		 * Begins an "atomic" edit.  This method is called when RTextArea
-		 * KNOWS that some edits should be compound automatically, such as
-		 * when the user is typing in overwrite mode (the deletion of the
-		 * current char + insertion of the new one) or the playing back of a
-		 * macro.
-		 */
-		public void beginInternalAtomicEdit() {
-			if (compoundEdit!=null)
-				compoundEdit.end();
-			compoundEdit = new RCompoundEdit();
-			internalAtomicEdit = true;
-		}
-
-		/**
-		 * Ends an "atomic" edit.
-		 */
-		public void endInternalAtomicEdit() {
-			addEdit(compoundEdit);
-			compoundEdit.end();
-			compoundEdit = null;
-			internalAtomicEdit = false;
-			updateActions();	// Needed to show the new display name.
-		}
-
-		public void undoableEditHappened(UndoableEditEvent e) {
-
-			// This happens when the first undoable edit occurs, and
-			// just after an undo.  So, we need to update our actions.
-			if (compoundEdit==null) {
-				compoundEdit = startCompoundEdit(e.getEdit());
-				updateActions();
-				return;
-			}
-
-			else if (internalAtomicEdit==true) {
-				compoundEdit.addEdit(e.getEdit());
-				return;
-			}
-
-			// This happens when there's already an undo that has occured.
-			// Test to see if these undos are on back-to-back characters,
-			// and if they are, group them as a single edit.  Since an
-			// undo has already occured, there is no need to update our
-			// actions here.
-			int diff = textArea.getCaretPosition() - lastOffset;
-			// "<=1" allows contiguous "overwrite mode" keypresses to be
-			// grouped together.
-			if (Math.abs(diff)<=1) {//==1) {
-				compoundEdit.addEdit(e.getEdit());
-				lastOffset += diff;
-				//updateActions();
-				return;
-			}
-
-			// This happens when this undoableedit didn't occur at the
-			// character just after the presious undlabeledit.  Since an
-			// undo has already occured, there is no need to update our
-			// actions here either.
-			compoundEdit.end();
-			compoundEdit = startCompoundEdit(e.getEdit());
-			//updateActions();
-
-		}
-
-		private RCompoundEdit startCompoundEdit(UndoableEdit edit) {
-			lastOffset = textArea.getCaretPosition();
-			compoundEdit = new RCompoundEdit();
-			compoundEdit.addEdit(edit);
-			addEdit(compoundEdit);
-			return compoundEdit;
-		}
-
-		public void undo() throws CannotUndoException {
-			inUndoRedo = true;
-			super.undo();
-			updateActions();
-			inUndoRedo = false;
-		}
-
-		public void redo() throws CannotRedoException {
-			inUndoRedo = true;
-			super.redo();
-			updateActions();
-			inUndoRedo = false;
-		}
-
-		/**
-		 * Ensures that undo/redo actions are enabled appropriately and have
-		 * descriptive text at all times.
-		 */
-		public void updateActions() {
-
-			String text;
-
-			if (canUndo()==true) {
-				undoAction.setEnabled(true);
-				text = getUndoPresentationName();
-undoAction.putValue(Action.NAME, text);
-undoAction.putValue(Action.SHORT_DESCRIPTION, text);
-			}
-			else {
-if (undoAction.isEnabled()) {
-				undoAction.setEnabled(false);
-				text = cantUndoText;
-undoAction.putValue(Action.NAME, text);
-undoAction.putValue(Action.SHORT_DESCRIPTION, text);
-}
-			}
-//			undoAction.putValue(Action.NAME, text);
-//			undoAction.putValue(Action.SHORT_DESCRIPTION, text);
-
-			if (canRedo()==true) {
-				redoAction.setEnabled(true);
-				text = getRedoPresentationName();
-redoAction.putValue(Action.NAME, text);
-redoAction.putValue(Action.SHORT_DESCRIPTION, text);
-			}
-			else {
-if (redoAction.isEnabled()) {
-				redoAction.setEnabled(false);
-				text = cantRedoText;
-redoAction.putValue(Action.NAME, text);
-redoAction.putValue(Action.SHORT_DESCRIPTION, text);
-}
-			}
-//			redoAction.putValue(Action.NAME, text);
-//			redoAction.putValue(Action.SHORT_DESCRIPTION, text);
-
-		}
-
-		// Action used by RUndoManager.  
-		class RCompoundEdit extends CompoundEdit {
-
-			public String getUndoPresentationName() {
-				return UIManager.getString("AbstractUndoableEdit.undoText");
-			}
-
-			public String getRedoPresentationName() {
-				return UIManager.getString("AbstractUndoableEdit.redoText");
-			}
-
-			public boolean isInProgress() {
-				return false;
-			}
-
-			public void undo() throws CannotUndoException {
-				if (compoundEdit!=null)
-					compoundEdit.end();
-				super.undo();
-				compoundEdit = null;
-			}
-
 		}
 
 	}
