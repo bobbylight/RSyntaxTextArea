@@ -101,6 +101,21 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Always returns <code>Token.NULL</code>, as there are no multiline
+	 * tokens in properties files.
+	 *
+	 * @param text The line of tokens to examine.
+	 * @param initialTokenType The token type to start with (i.e., the value
+	 *        of <code>getLastTokenTypeOnLine</code> for the line before
+	 *        <code>text</code>).
+	 * @return <code>Token.NULL</code>.
+	 */
+	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
+		return Token.NULL;
+	}
+
+
+	/**
 	 * Returns the text to place at the beginning and end of a
 	 * line to "comment" it in a this programming language.
 	 *

@@ -658,6 +658,18 @@ public class ConfigurableCaret extends Rectangle
 
 
 	/**
+	 * Returns the hash code for this caret.  This method is overridden
+	 * just to keep FindBugs happy (override <code>hashCode</code> if you
+	 * override {@link #equals(Object)}).
+	 *
+	 * @return The hash code of this object.
+	 */
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+
+	/**
 	 * Called when the UI is being installed into the interface of a
 	 * JTextComponent.  This can be used to gain access to the model
 	 * that is being navigated by the implementation of this interface.

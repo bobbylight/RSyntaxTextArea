@@ -94,7 +94,7 @@ class CodeTemplateManager {
 	 * @throws IllegalArgumentException If <code>template</code> is
 	 *         <code>null</code>.
 	 */
-	public void addTemplate(CodeTemplate template) {
+	public synchronized void addTemplate(CodeTemplate template) {
 		if (template==null) {
 			throw new IllegalArgumentException("template cannot be null");
 		}
@@ -155,7 +155,7 @@ class CodeTemplateManager {
 	 * @return A template that should be inserted, if appropriate, or
 	 *         <code>null</code> if no template should be inserted.
 	 */
-	public CodeTemplate getTemplate(RSyntaxTextArea textArea) {
+	public synchronized CodeTemplate getTemplate(RSyntaxTextArea textArea) {
 		int caretPos = textArea.getCaretPosition();
 		int charsToGet = Math.min(caretPos, maxTemplateIDLength);
 		try {
@@ -175,7 +175,7 @@ class CodeTemplateManager {
 	 *
 	 * @return The template count.
 	 */
-	public int getTemplateCount() {
+	public synchronized int getTemplateCount() {
 		return templates.size();
 	}
 
@@ -187,7 +187,7 @@ class CodeTemplateManager {
 	 *
 	 * @return The templates available.
 	 */
-	CodeTemplate[] getTemplates() {
+	synchronized CodeTemplate[] getTemplates() {
 		CodeTemplate[] temp = new CodeTemplate[templates.size()];
 		return (CodeTemplate[])templates.toArray(temp);
 	}
@@ -214,7 +214,7 @@ class CodeTemplateManager {
 	 * @param newTemplates The new set of templates.  Note that we will
 	 *        be taking a shallow copy of these and sorting them.
 	 */
-	void replaceTemplates(CodeTemplate[] newTemplates) {
+	synchronized void replaceTemplates(CodeTemplate[] newTemplates) {
 		templates.clear();
 		if (newTemplates!=null) {
 			for (int i=0; i<newTemplates.length; i++) {
@@ -230,7 +230,7 @@ class CodeTemplateManager {
 	 *
 	 * @return Whether or not the save was successful.
 	 */
-	public boolean saveTemplates() {
+	public synchronized boolean saveTemplates() {
 
 		if (templates==null)
 			return true;
@@ -306,7 +306,7 @@ class CodeTemplateManager {
 	 * @return The new number of templates in this template manager, or
 	 *         <code>-1</code> if the specified directory does not exist.
 	 */
-	public int setTemplateDirectory(File dir) {
+	public synchronized int setTemplateDirectory(File dir) {
 
 		if (dir!=null && dir.isDirectory()) {
 
@@ -354,7 +354,7 @@ class CodeTemplateManager {
 	 * any), sorts the remaining templates, and computes the new
 	 * maximum template ID length.
 	 */
-	private final void sortTemplates() {
+	private synchronized void sortTemplates() {
 
 		// Get the maximum length of a template ID.
 		maxTemplateIDLength = 0;

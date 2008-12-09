@@ -22,6 +22,8 @@
  */
 package org.fife.ui.rsyntaxtextarea.templates;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Element;
@@ -53,6 +55,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
  * @see CodeTemplate
  */
 public class StaticCodeTemplate extends AbstractCodeTemplate {
+
+	private static final long serialVersionUID = 1;
 
 	/**
 	 * The code inserted before the caret position.
@@ -98,16 +102,6 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 		super(id);
 		setBeforeCaretText(beforeCaret);
 		setAfterCaretText(afterCaret);
-	}
-
-
-	/**
-	 * Creates a deep copy of this template.
-	 *
-	 * @param Object A deep copy of this template.
-	 */
-	public Object clone() {
-		return new StaticCodeTemplate(getID(), beforeCaret, afterCaret);
 	}
 
 
@@ -222,6 +216,24 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 		doc.replace(p0,p1-p0, beforeText+afterText, null);
 		textArea.setCaretPosition(p0+beforeText.length());
 
+	}
+
+
+	/**
+	 * Called when reading a serialized version of this document.  This is
+	 * overridden to initialize the transient members of this class.
+	 *
+	 * @param in The input stream to read from.
+	 * @throws ClassNotFoundException Never.
+	 * @throws IOException If an IO error occurs.
+	 */
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException,
+											IOException  {
+		in.defaultReadObject();
+		// "Resetting" before and after text to the same values will replace
+		// nulls with empty srings, and set transient "first*Newline" values.
+		setBeforeCaretText(this.beforeCaret);
+		setAfterCaretText(this.afterCaret);
 	}
 
 

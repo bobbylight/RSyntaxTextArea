@@ -36,9 +36,19 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	/**
 	 * Creates a deep copy of this template.
 	 *
-	 * @param Object A deep copy of this template.
+	 * @return A deep copy of this template.
 	 */
-	public abstract Object clone();
+	public Object clone() {
+		// This method can't be abstract as compilers don't like concrete
+		// subclassses calling super.clone() on  an abstract super.
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError(
+				"CodeTemplate implementation not Cloneable: " +
+							getClass().getName());
+		}
+	}
 
 
 

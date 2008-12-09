@@ -390,7 +390,7 @@ public class RTATextTransferHandler extends TransferHandler {
 			}
 			if (stringCount > 0) {
 				System.arraycopy(stringFlavors, 0, flavors, pos, stringCount);
-				pos += stringCount;
+				//pos += stringCount;
 			}
 
 			return flavors;

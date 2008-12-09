@@ -61,7 +61,7 @@ public interface CodeTemplate extends Cloneable, Comparable, Serializable {
 	/**
 	 * Creates a deep copy of this template.
 	 *
-	 * @param Object A deep copy of this template.
+	 * @return A deep copy of this template.
 	 */
 	public Object clone();
 

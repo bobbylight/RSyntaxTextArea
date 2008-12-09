@@ -221,7 +221,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 				FileWriter w = new FileWriter(f);
 				encoding = w.getEncoding();
 				w.close();
-				f.delete();
+				f.deleteOnExit();//delete();  Keep FindBugs happy
 			} catch (IOException ioe) {
 				encoding = "US-ASCII";
 			}

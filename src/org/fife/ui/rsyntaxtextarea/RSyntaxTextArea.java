@@ -349,7 +349,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @throws NullPointerException If <code>template</code> is
 	 *         <code>null</code>.
 	 */
-	public static void addCodeTemplate(CodeTemplate template) {
+	public synchronized static void addCodeTemplate(CodeTemplate template) {
 		if (template==null) {
 			throw new NullPointerException("template cannot be null");
 		}
@@ -662,7 +662,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return The number of code templates registered.
 	 */
-	public static int getCodeTemplateCount() {
+	public synchronized static int getCodeTemplateCount() {
 		return getTemplatesEnabled() ?
 			codeTemplateManager.getTemplateCount() : -1;
 	}
@@ -676,7 +676,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The code template manager.
 	 * @see #enableTemplates
 	 */
-	static CodeTemplateManager getCodeTemplateManager() {
+	static synchronized CodeTemplateManager getCodeTemplateManager() {
 		return codeTemplateManager;
 	}
 
@@ -1615,10 +1615,9 @@ private boolean fractionalFontMetricsEnabled;
 	public synchronized static void setTemplatesEnabled(boolean enabled) {
 		if (enabled!=templatesEnabled) {
 			templatesEnabled = enabled;
-			if (enabled)
+			if (enabled && codeTemplateManager==null) {
 				codeTemplateManager = new CodeTemplateManager();
-			else
-				codeTemplateManager = null;
+			}
 		}
 	}
 
