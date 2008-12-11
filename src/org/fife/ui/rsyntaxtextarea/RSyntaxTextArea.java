@@ -53,7 +53,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
-import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 
@@ -339,23 +338,6 @@ private boolean fractionalFontMetricsEnabled;
 	public RSyntaxTextArea(int textMode) {
 		super(textMode);
 		init();
-	}
-
-
-	/**
-	 * If code templates are enabled, registers the specified template.
-	 *
-	 * @param template The template to add.
-	 * @throws NullPointerException If <code>template</code> is
-	 *         <code>null</code>.
-	 */
-	public synchronized static void addCodeTemplate(CodeTemplate template) {
-		if (template==null) {
-			throw new NullPointerException("template cannot be null");
-		}
-		if (getTemplatesEnabled()) {
-			getCodeTemplateManager().addTemplate(template);
-		}
 	}
 
 
@@ -657,26 +639,16 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the number of code templates registered, or
-	 * <code>-1</code> if code templates are not enabled.
-	 *
-	 * @return The number of code templates registered.
-	 */
-	public synchronized static int getCodeTemplateCount() {
-		return getTemplatesEnabled() ?
-			codeTemplateManager.getTemplateCount() : -1;
-	}
-
-
-	/**
 	 * Returns the code template manager for all instances of
-	 * <code>RSyntaxTextArea</code>.  Note that if templates
-	 * are not enabled, this will return <code>null</code>.
+	 * <code>RSyntaxTextArea</code>.  The manager is lazily created.
 	 *
 	 * @return The code template manager.
-	 * @see #enableTemplates
+	 * @see #setTemplatesEnabled(boolean)
 	 */
-	static synchronized CodeTemplateManager getCodeTemplateManager() {
+	public static synchronized CodeTemplateManager getCodeTemplateManager() {
+		if (codeTemplateManager==null) {
+			codeTemplateManager = new CodeTemplateManager();
+		}
 		return codeTemplateManager;
 	}
 
@@ -923,11 +895,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * of <code>RSyntaxTextArea</code>.
 	 *
 	 * @return Whether templates are enabled.
-	 * @see #saveTemplates
-	 * @see #setTemplateDirectory
-	 * @see #setTemplatesEnabled
+	 * @see #saveTemplates()
+	 * @see #setTemplateDirectory(String)
+	 * @see #setTemplatesEnabled(boolean)
 	 */
-	public synchronized static boolean getTemplatesEnabled() {
+	public static synchronized boolean getTemplatesEnabled() {
 		return templatesEnabled;
 	}
 
@@ -1254,10 +1226,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #setTemplateDirectory
 	 * @see #setTemplatesEnabled
 	 */
-	public synchronized static boolean saveTemplates() {
-		if (!getTemplatesEnabled() || codeTemplateManager==null)
+	public static synchronized boolean saveTemplates() {
+		if (!getTemplatesEnabled()) {
 			return false;
-		return codeTemplateManager.saveTemplates();
+		}
+		return getCodeTemplateManager().saveTemplates();
 	}
 
 
@@ -1570,17 +1543,17 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #setTemplatesEnabled
 	 * @see #saveTemplates
 	 */
-	public synchronized static boolean setTemplateDirectory(String dir) {
+	public static synchronized boolean setTemplateDirectory(String dir) {
 		if (getTemplatesEnabled() && dir!=null) {
 			File directory = new File(dir);
 			if (directory.isDirectory()) {
-				return codeTemplateManager.
+				return getCodeTemplateManager().
 						setTemplateDirectory(directory)>-1;
 			}
 			else {
 				boolean created = directory.mkdir();
 				if (created) {
-					return codeTemplateManager.
+					return getCodeTemplateManager().
 						setTemplateDirectory(directory)>-1;
 				}
 			}
@@ -1610,15 +1583,10 @@ private boolean fractionalFontMetricsEnabled;
 	 * uniformity among all text areas in an application.
 	 *
 	 * @param enabled Whether or not templates should be enabled.
-	 * @see #getTemplatesEnabled
+	 * @see #getTemplatesEnabled()
 	 */
-	public synchronized static void setTemplatesEnabled(boolean enabled) {
-		if (enabled!=templatesEnabled) {
-			templatesEnabled = enabled;
-			if (enabled && codeTemplateManager==null) {
-				codeTemplateManager = new CodeTemplateManager();
-			}
-		}
+	public static synchronized void setTemplatesEnabled(boolean enabled) {
+		templatesEnabled = enabled;
 	}
 
 

@@ -46,16 +46,16 @@ import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 /**
  * Manages "code templates."<p>
  *
- * Note that this class assumes that thread-safety is taken care of at a
- * higher level (which should be the case, as <code>AbstractDocument</code>s
- * only allow text insertions during a write-lock).  You should never have
- * to use this class directly anyway; its only client should be
- * <code>RSyntaxTextArea</code>.
+ * All methods in this class are synchronized for thread safety, but as a
+ * best practice, you should probably only modify the templates known to a
+ * <code>CodeTemplateManager</code> on the EDT.  Modifying a
+ * <code>CodeTemplate</code> retrieved from a <code>CodeTemplateManager</code>
+ * while <em>not</em> on the EDT could cause problems.
  *
  * @author Robert Futrell
  * @version 0.1
  */
-class CodeTemplateManager {
+public class CodeTemplateManager {
 
 	private int maxTemplateIDLength;
 	private List templates;
@@ -93,6 +93,8 @@ class CodeTemplateManager {
 	 * @param template The template to register.
 	 * @throws IllegalArgumentException If <code>template</code> is
 	 *         <code>null</code>.
+	 * @see #removeTemplate(CodeTemplate)
+	 * @see #removeTemplate(String)
 	 */
 	public synchronized void addTemplate(CodeTemplate template) {
 		if (template==null) {
@@ -110,8 +112,8 @@ class CodeTemplateManager {
 	 * a template matching the token ending at the caret position.
 	 *
 	 * @return The insert trigger.
-	 * @see #getInsertTriggerString
-	 * @see #setInsertTrigger
+	 * @see #getInsertTriggerString()
+	 * @see #setInsertTrigger(KeyStroke)
 	 */
 	/*
 	 * FIXME:  This text IS what's inserted if the trigger character is pressed
@@ -132,8 +134,8 @@ class CodeTemplateManager {
 	 * caret position.
 	 *
 	 * @return The insert trigger character.
-	 * @see #getInsertTrigger
-	 * @see #setInsertTrigger
+	 * @see #getInsertTrigger()
+	 * @see #setInsertTrigger(KeyStroke)
 	 */
 	/*
 	 * FIXME:  This text IS what's inserted if the trigger character is pressed
@@ -181,13 +183,11 @@ class CodeTemplateManager {
 
 
 	/**
-	 * Returns the templates currently available.  This method exists solely
-	 * so <code>TemplateOptionPanel</code> can allow users to
-	 * modify/add/remove templates.  You should never call this method.
+	 * Returns the templates currently available.
 	 *
 	 * @return The templates available.
 	 */
-	synchronized CodeTemplate[] getTemplates() {
+	public synchronized CodeTemplate[] getTemplates() {
 		CodeTemplate[] temp = new CodeTemplate[templates.size()];
 		return (CodeTemplate[])templates.toArray(temp);
 	}
@@ -206,15 +206,66 @@ class CodeTemplateManager {
 
 
 	/**
+	 * Returns the specified code template.
+	 *
+	 * @param template The template to remove.
+	 * @return <code>true</code> if the template was removed, <code>false</code>
+	 *         if the template was not in this template manager.
+	 * @throws IllegalArgumentException If <code>template</code> is
+	 *         <code>null</code>.
+	 * @see #removeTemplate(String)
+	 * @see #addTemplate(CodeTemplate)
+	 */
+	public synchronized boolean removeTemplate(CodeTemplate template) {
+
+		if (template==null) {
+			throw new IllegalArgumentException("template cannot be null");
+		}
+
+		// TODO: Do a binary search
+		return templates.remove(template);
+
+	}
+
+
+	/**
+	 * Returns the code template with the specified id.
+	 *
+	 * @param id The id to check for.
+	 * @return The code template that was removed, or <code>null</code> if
+	 *         there was no template with the specified ID.
+	 * @throws IllegalArgumentException If <code>id</code> is <code>null</code>.
+	 * @see #removeTemplate(CodeTemplate)
+	 * @see #addTemplate(CodeTemplate)
+	 */
+	public synchronized CodeTemplate removeTemplate(String id) {
+
+		if (id==null) {
+			throw new IllegalArgumentException("id cannot be null");
+		}
+
+		// TODO: Do a binary search
+		for (Iterator i=templates.iterator(); i.hasNext(); ) {
+			CodeTemplate template = (CodeTemplate)i.next();
+			if (id.equals(template.getID())) {
+				i.remove();
+				return template;
+			}
+		}
+
+		return null;
+
+	}
+
+
+	/**
 	 * Replaces the current set of available templates with the ones
-	 * specified.  This method exists solely so
-	 * <code>TemplateOptionPanel</code> can allow users to modify/add/remove
-	 * templates.  You should never call this method.
+	 * specified.
 	 *
 	 * @param newTemplates The new set of templates.  Note that we will
 	 *        be taking a shallow copy of these and sorting them.
 	 */
-	synchronized void replaceTemplates(CodeTemplate[] newTemplates) {
+	public synchronized void replaceTemplates(CodeTemplate[] newTemplates) {
 		templates.clear();
 		if (newTemplates!=null) {
 			for (int i=0; i<newTemplates.length; i++) {
@@ -279,8 +330,8 @@ class CodeTemplateManager {
 	 *        inserted; if not, the trigger character is inserted.  If this
 	 *        parameter is <code>null</code>, no change is made to the trigger
 	 *        character.
-	 * @see #getInsertTrigger
-	 * @see #getInsertTriggerString
+	 * @see #getInsertTrigger()
+	 * @see #getInsertTriggerString()
 	 */
 	/*
 	 * FIXME:  The trigger set here IS inserted when no matching template

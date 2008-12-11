@@ -124,7 +124,10 @@ public class RTextArea extends RTextAreaBase
 	private static boolean recordingMacro;		// Whether we're recording a macro.
 	private static Macro currentMacro;
 
-	private static JPopupMenu rightClickMenu;
+
+	private JPopupMenu popupMenu;
+	private boolean popupMenuCreated;
+
 	private static RecordableTextAction cutAction;
 	private static RecordableTextAction copyAction;
 	private static RecordableTextAction pasteAction;
@@ -294,6 +297,22 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Configures the popup menu for this text area.  This method is called
+	 * right before it is displayed, so a hosting application can do any
+	 * custom configuration (configuring actions, adding/removing items, etc.).
+	 * <p>
+	 *
+	 * The default implementation does nothing.
+	 *
+	 * @param popupMenu The popup menu.  This will never be <code>null</code>.
+	 * @see #createPopupMenu()
+	 * @see #setPopupMenu(JPopupMenu)
+	 */
+	protected void configurePopupMenu(JPopupMenu popupMenu) {
+	}
+
+
+	/**
 	 * Returns the document to use for an <code>RTextArea</code>.
 	 *
 	 * @return The document.
@@ -314,55 +333,58 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Initializes the right-click popup menu with appropriate actions.
+	 * Creates the right-click popup menu. Subclasses can override this method
+	 * to replace or augment the popup menu returned.
+	 *
+	 * @return The popup menu.
+	 * @see #setPopupMenu(JPopupMenu)
+	 * @see #configurePopupMenu(JPopupMenu)
 	 */
-	private static void createRightClickMenu() {
+	protected JPopupMenu createPopupMenu() {
 
-		rightClickMenu = new JPopupMenu();
+		JPopupMenu menu = new JPopupMenu();
 		JMenuItem menuItem;
 
 		menuItem = new JMenuItem(undoAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
 		menuItem = new JMenuItem(redoAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
-		rightClickMenu.addSeparator();
+		menu.addSeparator();
 
 		menuItem = new JMenuItem(cutAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
 		menuItem = new JMenuItem(copyAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
 		menuItem = new JMenuItem(pasteAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
 		menuItem = new JMenuItem(deleteAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
-		rightClickMenu.addSeparator();
+		menu.addSeparator();
 
 		menuItem = new JMenuItem(selectAllAction);
 		menuItem.setAccelerator(null);
 		menuItem.setToolTipText(null);
-		rightClickMenu.add(menuItem);
+		menu.add(menuItem);
 
-		ComponentOrientation orientation = ComponentOrientation.
-								getOrientation(Locale.getDefault());
-		rightClickMenu.applyComponentOrientation(orientation);
+		return menu;
 
 	}
 
@@ -380,7 +402,8 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Removes all undoable edits from this document's undo manager.  This
 	 * method also makes the undo/redo actions disabled.<br><br>
-	 *
+	 */
+	/*
 	 * NOTE:  For some reason, it appears I have to create an entirely new
 	 *        <code>undoManager</code> for undo/redo to continue functioning
 	 *        properly; if I don't, it only ever lets you do one undo.  Not
@@ -561,6 +584,28 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public int getMaxAscent() {
 		return getFontMetrics(getFont()).getAscent();
+	}
+
+
+	/**
+	 * Returns the popup menu for this component, lazily creating it if
+	 * necessary.
+	 *
+	 * @return The popup menu.
+	 * @see #createPopupMenu()
+	 * @see #setPopupMenu(JPopupMenu)
+	 */
+	private JPopupMenu getPopupMenu() {
+		if (!popupMenuCreated) {
+			popupMenu = createPopupMenu();
+			if (popupMenu!=null) {
+				ComponentOrientation orientation = ComponentOrientation.
+										getOrientation(Locale.getDefault());
+				popupMenu.applyComponentOrientation(orientation);
+			}
+			popupMenuCreated = true;
+		}
+		return popupMenu;
 	}
 
 
@@ -1218,6 +1263,18 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Sets the popup menu used by this text area.
+	 *
+	 * @param popupMenu The popup menu.  If this is <code>null</code>, no
+	 *        popup menu will be displayed.
+	 */
+	public void setPopupMenu(JPopupMenu popupMenu) {
+		this.popupMenu = popupMenu;
+		popupMenuCreated = true;
+	}
+
+
+	/**
 	 * Sets whether the edges of selections are rounded in this text area.
 	 * This method fires a property change of type
 	 * <code>ROUNDED_SELECTION_PROPERTY</code>.
@@ -1261,17 +1318,13 @@ public class RTextArea extends RTextAreaBase
 	 * <code>RSyntaxTextArea</code> can call <code>setRTextAreaUI</code> if
 	 * they wish to install a new UI.
 	 *
-	 * FIXME:  This method will be called once for each open
-	 * <code>RTextArea</code>, when it only needs to be called once - we
-	 * only need to update the popup menu once!
-	 *
 	 * @param ui This parameter is ignored.
 	 */
 	public final void setUI(TextUI ui) {
 
 		// Update the popup menu's ui.
-		if (RTextArea.rightClickMenu!=null) {
-			SwingUtilities.updateComponentTreeUI(RTextArea.rightClickMenu);
+		if (popupMenu!=null) {
+			SwingUtilities.updateComponentTreeUI(popupMenu);
 		}
 
 		// Set things like selection color, selected text color, etc. to
@@ -1361,10 +1414,11 @@ public class RTextArea extends RTextAreaBase
 		 * @param e The mouse event that caused this method to be called.
 		 */
 		private void showPopup(MouseEvent e) {
-			if (RTextArea.rightClickMenu==null)
-				createRightClickMenu();
-			RTextArea.rightClickMenu.show(e.getComponent(),
-										e.getX(), e.getY());
+			JPopupMenu popupMenu = getPopupMenu();
+			if (popupMenu!=null) {
+				configurePopupMenu(popupMenu);
+				popupMenu.show(e.getComponent(), e.getX(), e.getY());
+			}
 		}
 
 	}
