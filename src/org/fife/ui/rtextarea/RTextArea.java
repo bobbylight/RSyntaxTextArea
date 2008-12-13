@@ -101,31 +101,43 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public static final int OVERWRITE_MODE				= 1;
 
+	/**
+	 * The property fired when the "mark all" color changes.
+	 */
 	public static final String MARK_ALL_COLOR_PROPERTY	= "RTA.markAllColor";
 
-	/**
+	/*
 	 * Constants for all actions.
 	 */
-	private static final int MIN_ACTION_CONSTANT			= 0;
+	private static final int MIN_ACTION_CONSTANT	= 0;
 	public static final int COPY_ACTION				= 0;
-	public static final int CUT_ACTION					= 1;
-	public static final int DELETE_ACTION				= 2;
-	public static final int PASTE_ACTION				= 3;
+	public static final int CUT_ACTION				= 1;
+	public static final int DELETE_ACTION			= 2;
+	public static final int PASTE_ACTION			= 3;
 	public static final int REDO_ACTION				= 4;
-	public static final int SELECT_ALL_ACTION			= 5;
+	public static final int SELECT_ALL_ACTION		= 5;
 	public static final int UNDO_ACTION				= 6;
-	private static final int MAX_ACTION_CONSTANT			= 6;
+	private static final int MAX_ACTION_CONSTANT	= 6;
 
 	private static final Color DEFAULT_MARK_ALL_COLOR		= Color.ORANGE;
 
-	private int textMode;					// INSERT_MODE or OVERWRITE_MODE.
+	/**
+	 * The current text mode ({@link #INSERT_MODE} or {@link #OVERWRITE_MODE}).
+	 */
+	private int textMode;
 
 	// All macros are shared across all RTextAreas.
 	private static boolean recordingMacro;		// Whether we're recording a macro.
 	private static Macro currentMacro;
 
-
+	/**
+	 * This text area's popup menu.
+	 */
 	private JPopupMenu popupMenu;
+
+	/**
+	 * Whether hte popup menu has been created.
+	 */
 	private boolean popupMenuCreated;
 
 	private static RecordableTextAction cutAction;
@@ -595,7 +607,7 @@ public class RTextArea extends RTextAreaBase
 	 * @see #createPopupMenu()
 	 * @see #setPopupMenu(JPopupMenu)
 	 */
-	private JPopupMenu getPopupMenu() {
+	public JPopupMenu getPopupMenu() {
 		if (!popupMenuCreated) {
 			popupMenu = createPopupMenu();
 			if (popupMenu!=null) {
@@ -1246,7 +1258,7 @@ public class RTextArea extends RTextAreaBase
 
 	/**
 	 * Sets the color used for "mark all."  This fires a property change of
-	 * type <code>MARK_ALL_COLOR_PROPERTY</code>.
+	 * type {@link #MARK_ALL_COLOR_PROPERTY}.
 	 *
 	 * @param color The color to use for "mark all."
 	 * @see #getMarkAllHighlightColor
@@ -1267,6 +1279,7 @@ public class RTextArea extends RTextAreaBase
 	 *
 	 * @param popupMenu The popup menu.  If this is <code>null</code>, no
 	 *        popup menu will be displayed.
+	 * @see #getPopupMenu()
 	 */
 	public void setPopupMenu(JPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;

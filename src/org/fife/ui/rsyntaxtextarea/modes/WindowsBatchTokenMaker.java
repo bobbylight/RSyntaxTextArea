@@ -84,8 +84,10 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 				break;
 
 			default:
-				System.err.println("Unknown tokenType in WindowsBatchTokenMaker.addToken: '" + tokenType + "'");
-				System.exit(0);
+				new Exception("Unknown tokenType: '" + tokenType + "'").
+									printStackTrace();
+				tokenType = Token.IDENTIFIER;
+				break;
 
 		}
 

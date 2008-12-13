@@ -96,11 +96,14 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 			case Token.LITERAL_NUMBER_HEXADECIMAL:
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 			case Token.LITERAL_CHAR:
-
 				break;
+
 			default:
-				System.err.println("Unknown tokenType in JavaScriptTokenMaker.addToken: '" + tokenType + "'");
-				System.exit(0);
+				new Exception("Unknown tokenType: '" + tokenType + "'").
+												printStackTrace();
+				tokenType = Token.IDENTIFIER;
+				break;
+
 		}
 
 		super.addToken(segment, start, end, tokenType, startOffset);

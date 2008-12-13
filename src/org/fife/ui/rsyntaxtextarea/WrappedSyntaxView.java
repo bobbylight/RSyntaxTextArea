@@ -660,7 +660,6 @@ try {
 	numLines = textArea.getLineCount();
 } catch (BadLocationException ble) {
 	ble.printStackTrace();
-	System.exit(0);
 }
 System.err.println(">>> >>> calculated number of lines for this view (line " + line + "/" + numLines + ": " + nlines);
 */

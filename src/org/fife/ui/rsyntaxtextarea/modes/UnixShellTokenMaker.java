@@ -87,8 +87,10 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 				break;
 
 			default:
-				System.err.println("Unknown tokenType in UnixShellTokenMaker.addToken: '" + tokenType + "'");
-				System.exit(0);
+				new Exception("Unknown tokenType: '" + tokenType + "'").
+													printStackTrace();
+				tokenType = Token.IDENTIFIER;
+				break;
 
 		}
 
