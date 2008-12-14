@@ -24,7 +24,18 @@ package org.fife.ui.rsyntaxtextarea;
 
 
 /**
- * Constants used by <code>RSyntaxTextArea</code> and friends.
+ * Constants that define the different programming languages understood by
+ * <code>RSyntaxTextArea</code>.  These constants are the values you can pass
+ * to {@link RSyntaxTextArea#setSyntaxEditingStyle(String)} to get syntax
+ * highlighting.<p>
+ *
+ * By default, all <code>RSyntaxTextArea</code>s can render all of these
+ * languages, but this can be changed (the list can be augmented or completely
+ * overwritten) on a per-text area basis.  What languages can be rendered is
+ * actually managed by the {@link TokenMakerFactory} installed on the text
+ * area's {@link RSyntaxDocument}.  By default, all
+ * <code>RSyntaxDocumenet</code>s have a factory installed capable of handling
+ * all of these languages.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -34,151 +45,145 @@ public interface SyntaxConstants {
 	/**
 	 * Style meaning don't syntax highlight anything.
 	 */
-	public static final int NO_SYNTAX_STYLE				= 0;
+	public static final String SYNTAX_STYLE_NONE			= "text/plain";
 
 
 	/**
 	 * Style for highlighting x86 assembler.
 	 */
-	public static final int ASSEMBLER_X86_SYNTAX_STYLE	= 1;
+	public static final String SYNTAX_STYLE_ASSEMBLER_X86	= "text/asm";
 
 
 	/**
 	 * Style for highlighting C.
 	 */
-	public static final int C_SYNTAX_STYLE				= 2;
+	public static final String SYNTAX_STYLE_C				= "text/c";
 
 
 	/**
 	 * Style for highlighting C++.
 	 */
-	public static final int CPLUSPLUS_SYNTAX_STYLE		= 3;
+	public static final String SYNTAX_STYLE_CPLUSPLUS		= "text/cpp";
 
 
 	/**
 	 * Style for highlighting C#.
 	 */
-	public static final int CSHARP_SYNTAX_STYLE			= 4;
+	public static final String SYNTAX_STYLE_CSHARP			= "text/cs";
 
 
 	/**
 	 * Style for highlighting CSS.
 	 */
-	public static final int CSS_SYNTAX_STYLE			= 5;
+	public static final String SYNTAX_STYLE_CSS			= "text/css";
 
 
 	/**
 	 * Style for highlighting Fortran.
 	 */
-	public static final int FORTRAN_SYNTAX_STYLE			= 6;
+	public static final String SYNTAX_STYLE_FORTRAN			= "text/fortran";
 
 
 	/**
 	 * Style for highlighting Groovy.
 	 */
-	public static final int GROOVY_SYNTAX_STYLE			= 7;
+	public static final String SYNTAX_STYLE_GROOVY			= "text/groovy";
 
 
 	/**
 	 * Style for highlighting HTML.
 	 */
-	public static final int HTML_SYNTAX_STYLE			= 8;
+	public static final String SYNTAX_STYLE_HTML			= "text/html";
 
 
 	/**
 	 * Style for highlighting Java.
 	 */
-	public static final int JAVA_SYNTAX_STYLE			= 9;
+	public static final String SYNTAX_STYLE_JAVA			= "text/java";
 
 
 	/**
 	 * Style for highlighting JavaScript.
 	 */
-	public static final int JAVASCRIPT_SYNTAX_STYLE		= 10;
+	public static final String SYNTAX_STYLE_JAVASCRIPT		= "text/javascript";
 
 
 	/**
 	 * Style for highlighting JSP.
 	 */
-	public static final int JSP_SYNTAX_STYLE			= 11;
+	public static final String SYNTAX_STYLE_JSP			= "text/jsp";
 
 
 	/**
 	 * Style for highlighting Lua.
 	 */
-	public static final int LUA_SYNTAX_STYLE			= 12;
+	public static final String SYNTAX_STYLE_LUA			= "text/lua";
 
 
 	/**
 	 * Style for highlighting makefiles.
 	 */
-	public static final int MAKEFILE_SYNTAX_STYLE		= 13;
+	public static final String SYNTAX_STYLE_MAKEFILE		= "text/makefile";
 
 
 	/**
 	 * Style for highlighting Perl.
 	 */
-	public static final int PERL_SYNTAX_STYLE			= 14;
+	public static final String SYNTAX_STYLE_PERL			= "text/perl";
 
 
 	/**
 	 * Style for highlighting properties files.
 	 */
-	public static final int PROPERTIES_FILE_SYNTAX_STYLE	= 15;
+	public static final String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";
 
 
 	/**
 	 * Style for highlighting Python.
 	 */
-	public static final int PYTHON_SYNTAX_STYLE			= 16;
+	public static final String SYNTAX_STYLE_PYTHON			= "text/python";
 
 
 	/**
 	 * Style for highlighting Ruby.
 	 */
-	public static final int RUBY_SYNTAX_STYLE			= 17;
+	public static final String SYNTAX_STYLE_RUBY			= "text/ruby";
 
 
 	/**
 	 * Style for highlighting SAS keywords.
 	 */
-	public static final int SAS_SYNTAX_STYLE			= 18;
+	public static final String SYNTAX_STYLE_SAS			= "text/sas";
 
 
 	/**
 	 * Style for highlighting SQL.
 	 */
-	public static final int SQL_SYNTAX_STYLE			= 19;
+	public static final String SYNTAX_STYLE_SQL			= "text/sql";
 
 
 	/**
 	 * Style for highlighting Tcl.
 	 */
-	public static final int TCL_SYNTAX_STYLE			= 20;
+	public static final String SYNTAX_STYLE_TCL			= "text/tcl";
 
 
 	/**
 	 * Style for highlighting UNIX shell keywords.
 	 */
-	public static final int UNIX_SHELL_SYNTAX_STYLE		= 21;
+	public static final String SYNTAX_STYLE_UNIX_SHELL		= "text/unix";
 
 
 	/**
 	 * Style for highlighting Windows batch files.
 	 */
-	public static final int WINDOWS_BATCH_SYNTAX_STYLE	= 22;
+	public static final String SYNTAX_STYLE_WINDOWS_BATCH	= "text/bat";
 
 
 	/**
 	 * Style for highlighting XML.
 	 */
-	public static final int XML_SYNTAX_STYLE			= 23;
-
-
-	/**
-	 * Style numbers higher than this are invalid.
-	 */
-	public static final int MAX_SYNTAX_STYLE_NUMBER		= 23;
+	public static final String SYNTAX_STYLE_XML			= "text/xml";
 
 
 }

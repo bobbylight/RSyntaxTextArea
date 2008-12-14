@@ -26,7 +26,6 @@ package org.fife.ui.rsyntaxtextarea;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-import org.fife.ui.rsyntaxtextarea.modes.*;
 import org.fife.ui.rtextarea.RTextAreaDocument;
 import org.fife.util.DynamicIntArray;
 
@@ -57,6 +56,15 @@ import org.fife.util.DynamicIntArray;
 public class RSyntaxDocument extends RTextAreaDocument
 										implements SyntaxConstants {
 
+	/**
+	 * Creates a {@link TokenMaker} appropriate for a given programming
+	 * language.
+	 */
+	private transient TokenMakerFactory tokenMakerFactory;
+
+	/**
+	 * Splits text into tokens for the current programming language.
+	 */
 	private TokenMaker tokenMaker;
 
 	/**
@@ -77,12 +85,26 @@ public class RSyntaxDocument extends RTextAreaDocument
 	 *
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
-	public RSyntaxDocument(int syntaxStyle) {
+	public RSyntaxDocument(String syntaxStyle) {
+		this(null, syntaxStyle);
+	}
+
+
+	/**
+	 * Constructs a plain text document.  A default root element is created,
+	 * and the tab size set to 5.
+	 *
+	 * @param tmf The <code>TokenMakerFactory</code> for this document.  If
+	 *        this is <code>null</code>, a default factory is used.
+	 * @param syntaxStyle The syntax highlighting scheme to use.
+	 */
+	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
 		super(new GapContent());
 		putProperty(tabSizeAttribute, new Integer(5));
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
+		setTokenMakerFactory(tmf);
 		setSyntaxStyle(syntaxStyle);
 	}
 
@@ -339,119 +361,18 @@ public class RSyntaxDocument extends RTextAreaDocument
 
 	/**
 	 * Sets the syntax style being used for syntax highlighting in this
-	 * document.
+	 * document.  What styles are supported by a document is determined by its
+	 * {@link TokenMakerFactory}.  By default, all <code>RSyntaxDocument</code>s
+	 * support all languages built into <code>RSyntaxTextArea</code>. 
 	 *
 	 * @param syntaxStyle The new style to use, such as
-	 *        <code>JAVA_SYNTAX_STYLE</code>.  If this value is not one of
-	 *        the syntax constants, then <code>PLAIN_SYNTAX_STYLE</code> is
-	 *        used.
+	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.  If this style is not
+	 *        known or supported by this document, then
+	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} is used.
 	 */
-	public void setSyntaxStyle(int syntaxStyle) {
-
-		// Get the right token maker for syntax highlighting.
-		switch (syntaxStyle) {
-
-			case ASSEMBLER_X86_SYNTAX_STYLE:
-				tokenMaker = new AssemblerX86TokenMaker();
-				break;
-
-			case C_SYNTAX_STYLE:
-				tokenMaker = new CTokenMaker();
-				break;
-
-			case CPLUSPLUS_SYNTAX_STYLE:
-				tokenMaker = new CPlusPlusTokenMaker();
-				break;
-
-			case CSHARP_SYNTAX_STYLE:
-				tokenMaker = new CSharpTokenMaker();
-				break;
-
-			case CSS_SYNTAX_STYLE:
-				tokenMaker = new CSSTokenMaker();
-				break;
-
-			case FORTRAN_SYNTAX_STYLE:
-				tokenMaker = new FortranTokenMaker();
-				break;
-
-			case GROOVY_SYNTAX_STYLE:
-				tokenMaker = new GroovyTokenMaker();
-				break;
-
-			case HTML_SYNTAX_STYLE:
-				tokenMaker = new HTMLTokenMaker();
-				break;
-
-			case JAVA_SYNTAX_STYLE:
-				tokenMaker = new JavaTokenMaker();
-				break;
-
-			case JAVASCRIPT_SYNTAX_STYLE:
-				tokenMaker = new JavaScriptTokenMaker();
-				break;
-
-			case JSP_SYNTAX_STYLE:
-				tokenMaker = new JSPTokenMaker();
-				break;
-
-			case LUA_SYNTAX_STYLE:
-				tokenMaker = new LuaTokenMaker();
-				break;
-
-			case MAKEFILE_SYNTAX_STYLE:
-				tokenMaker = new MakefileTokenMaker();
-				break;
-
-			case PERL_SYNTAX_STYLE:
-				tokenMaker = new PerlTokenMaker();
-				break;
-
-			case PYTHON_SYNTAX_STYLE:
-				tokenMaker = new PythonTokenMaker();
-				break;
-
-			case PROPERTIES_FILE_SYNTAX_STYLE:
-				tokenMaker = new PropertiesFileTokenMaker();
-				break;
-
-			case RUBY_SYNTAX_STYLE:
-				tokenMaker = new RubyTokenMaker();
-				break;
-
-			case SAS_SYNTAX_STYLE:
-				tokenMaker = new SASTokenMaker();
-				break;
-
-			case SQL_SYNTAX_STYLE:
-				tokenMaker = new SQLTokenMaker();
-				break;
-
-			case TCL_SYNTAX_STYLE:
-				tokenMaker = new TclTokenMaker();
-				break;
-
-			case UNIX_SHELL_SYNTAX_STYLE:
-				tokenMaker = new UnixShellTokenMaker();
-				break;
-
-			case WINDOWS_BATCH_SYNTAX_STYLE:
-				tokenMaker = new WindowsBatchTokenMaker();
-				break;
-
-			case XML_SYNTAX_STYLE:
-				tokenMaker = new XMLTokenMaker();
-				break;
-
-			case NO_SYNTAX_STYLE:
-			default:
-				tokenMaker = new PlainTextTokenMaker();
-				break;
-
-		} // End of switch (syntaxStyle).
-
+	public void setSyntaxStyle(String styleKey) {
+		tokenMaker = tokenMakerFactory.getTokenMaker(styleKey);
 		updateSyntaxHighlightingInformation();
-
 	}
 
 
@@ -470,15 +391,24 @@ public class RSyntaxDocument extends RTextAreaDocument
 
 
 	/**
+	 * Sets the token maker factory used by this document.
+	 *
+	 * @param tmf The <code>TokenMakerFactory</code> for this document.  If
+	 *        this is <code>null</code>, a default factory is used.
+	 */
+	public void setTokenMakerFactory(TokenMakerFactory tmf) {
+		tokenMakerFactory = tmf!=null ? tmf :
+			TokenMakerFactory.getDefaultInstance();
+	}
+
+
+	/**
 	 * Sets whether whitespace is visible.  This property is actually setting
 	 * whether the tokens generated from this document "paint" something when
 	 * they represent whitespace.
 	 *
 	 * @param visible Whether whitespace should be visible.
 	 */
-//	public void setWhitespaceVisible(boolean visible) {
-//		tokenMaker.setWhitespaceVisible(visible);
-//	}
 	public void setWhitespaceVisible(boolean visible, RSyntaxTextArea textArea) {
 		tokenMaker.setWhitespaceVisible(visible, textArea);
 	}

@@ -96,7 +96,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * @return The document.
 	 */
 	public Document createDefaultDocument() {
-		return new RSyntaxDocument(SyntaxConstants.NO_SYNTAX_STYLE);
+		return new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
 	}
 
 

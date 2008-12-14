@@ -911,7 +911,7 @@ public class RTextArea extends RTextAreaBase
 	}
 
 
-	// Attempt to redo an "action" from the RTextEditorPane.
+	// Attempt to redo an action.
 	public void redoLastAction() {
 
 		// NOTE:  The try/catch block shouldn't be necessary...

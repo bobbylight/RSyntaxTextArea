@@ -120,9 +120,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 
 	/**
-	 * The syntax style to be highlighting.
+	 * The key for the syntax style to be highlighting.
 	 */
-	private int syntaxStyle;
+	private String syntaxStyleKey;
 
 	/**
 	 * The colors used for syntax highlighting.
@@ -515,7 +515,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The document.
 	 */
 	protected Document createDefaultModel() {
-		return new RSyntaxDocument(NO_SYNTAX_STYLE);
+		return new RSyntaxDocument(SYNTAX_STYLE_NONE);
 	}
 
 
@@ -868,11 +868,12 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns what type of syntax highlighting this editor is doing.
 	 *
 	 * @return The style being used, such as
-	 *         <code>RSyntaxTextArea.JAVA_SYNTAX_STYLE</code>.
-	 * @see #setSyntaxEditingStyle
+	 *         {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.
+	 * @see #setSyntaxEditingStyle(String)
+	 * @see SyntaxConstants
 	 */
-	public int getSyntaxEditingStyle() {
-		return syntaxStyle;
+	public String getSyntaxEditingStyle() {
+		return syntaxStyleKey;
 	}
 
 
@@ -1042,7 +1043,7 @@ private boolean fractionalFontMetricsEnabled;
 	protected void init() {
 
 		// Set some RSyntaxTextArea default values.
-		syntaxStyle = RSyntaxTextArea.NO_SYNTAX_STYLE;
+		syntaxStyleKey = SYNTAX_STYLE_NONE;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
 		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
 		setBracketMatchingEnabled(true);
@@ -1463,18 +1464,18 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param style The syntax editing style to use, for example,
 	 *        <code>RSyntaxTextArea.NO_SYNTAX_STYLE</code> or
 	 *        <code>RSyntaxArea.JAVA_SYNTAX_STYLE</code>.
-	 * @see #getSyntaxEditingStyle
+	 * @see #getSyntaxEditingStyle()
+	 * @see SyntaxConstants
 	 */
-	public void setSyntaxEditingStyle(int style) {
-
-		if (style<NO_SYNTAX_STYLE || style>MAX_SYNTAX_STYLE_NUMBER)
-			style = NO_SYNTAX_STYLE;
-
-		if (style != syntaxStyle) {
-			int oldStyle = syntaxStyle;
-			syntaxStyle = style;
-			((RSyntaxDocument)getDocument()).setSyntaxStyle(style);
-			firePropertyChange(SYNTAX_STYLE_PROPERTY, oldStyle, syntaxStyle);
+	public void setSyntaxEditingStyle(String styleKey) {
+		if (styleKey==null) {
+			styleKey = SYNTAX_STYLE_NONE;
+		}
+		if (styleKey!=syntaxStyleKey) {
+			String oldStyle = syntaxStyleKey;
+			syntaxStyleKey = styleKey;
+			((RSyntaxDocument)getDocument()).setSyntaxStyle(styleKey);
+			firePropertyChange(SYNTAX_STYLE_PROPERTY, oldStyle, styleKey);
 		}
 
 	}
