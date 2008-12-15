@@ -92,14 +92,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_INTAG_SCRIPT			= -2;
 
 	/**
+	 * Token type specifying we're in a double-qouted attribute in a
+	 * script tag.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -3;
+
+	/**
+	 * Token type specifying we're in a single-qouted attribute in a
+	 * script tag.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -4;
+
+	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -3;
+	public static final int INTERNAL_IN_JS					= -5;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -4;
+	public static final int INTERNAL_IN_JS_MLC				= -6;
 
 
 	/**
@@ -211,6 +223,22 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = INTAG_SCRIPT;
 				start = text.offset;
 				break;
+			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+				state = INATTR_DOUBLE;
+				start = text.offset;
+				break;
+			case Token.LITERAL_CHAR:
+				state = INATTR_SINGLE;
+				start = text.offset;
+				break;
+			case INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT:
+				state = INATTR_DOUBLE_SCRIPT;
+				start = text.offset;
+				break;
+			case INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT:
+				state = INATTR_SINGLE_SCRIPT;
+				start = text.offset;
+				break;
 			case INTERNAL_IN_JS:
 				state = JAVASCRIPT;
 				start = text.offset;
@@ -286,10 +314,6 @@ LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
 AmperItem				= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'/=>]+)
-UnclosedStringLiteral	= ([\"][^\"]*)
-StringLiteral			= ({UnclosedStringLiteral}[\"])
-UnclosedCharLiteral		= ([\'][^\']*)
-CharLiteral			= ({UnclosedCharLiteral}[\'])
 EndScriptTag			= ("</script>")
 
 
@@ -341,7 +365,11 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 %state PI
 %state DTD
 %state INTAG
+%state INATTR_DOUBLE
+%state INATTR_SINGLE
 %state INTAG_SCRIPT
+%state INATTR_DOUBLE_SCRIPT
+%state INATTR_SINGLE_SCRIPT
 %state JAVASCRIPT
 %state JS_MLC
 
@@ -495,11 +523,21 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
 	">"						{ yybegin(YYINITIAL); addToken(Token.SEPARATOR); }
-	{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); }
-	{StringLiteral}			{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedCharLiteral}		{ addToken(Token.ERROR_CHAR); }
-	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
+	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
+	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
+}
+
+<INATTR_DOUBLE> {
+	[^\"]*						{}
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+}
+
+<INATTR_SINGLE> {
+	[^\']*						{}
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
@@ -508,11 +546,21 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
 	">"						{ yybegin(JAVASCRIPT); addToken(Token.SEPARATOR); }
-	{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); }
-	{StringLiteral}			{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedCharLiteral}		{ addToken(Token.ERROR_CHAR); }
-	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
+	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT); }
+	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_SCRIPT); return firstToken; }
+}
+
+<INATTR_DOUBLE_SCRIPT> {
+	[^\"]*						{}
+	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+}
+
+<INATTR_SINGLE_SCRIPT> {
+	[^\']*						{}
+	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <JAVASCRIPT> {
