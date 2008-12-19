@@ -251,17 +251,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
-	 * Returns the default document used by <code>RTextArea</code>s.
-	 *
-	 * @return The document.
-	 */
-	public Document createDefaultDocument() {
-//		return super.createDefaultDocument();
-		return new RTextAreaDocument();
-	}
-
-
-	/**
 	 * Fetches the set of commands that can be used
 	 * on a text component that is using a model and
 	 * view produced by this kit.
@@ -708,22 +697,22 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class DefaultKeyTypedAction extends RecordableTextAction {
 
+		private Action delegate;
+
 		public DefaultKeyTypedAction() {
 			super(DefaultEditorKit.defaultKeyTypedAction, null, null, null,
 					null);
+			delegate = new DefaultEditorKit.DefaultKeyTypedAction();
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			if (!textArea.isEditable() || !textArea.isEnabled())
-				return;
-			String content = e.getActionCommand();
-			int mod = e.getModifiers();
-			if ((content != null) && (content.length() > 0) &&
-				((mod & ActionEvent.ALT_MASK) == (mod & ActionEvent.CTRL_MASK))) {
-				char c = content.charAt(0);
-				if ((c >= 0x20) && (c != 0x7F))
-					textArea.replaceSelection(content);
-			}
+			// DefaultKeyTypedAction *is* different across different JVM's
+			// (at least the OSX implementation must be different - Alt+Numbers
+			// inputs symbols such as '[', '{', etc., which is a *required*
+			// feature on MacBooks running with non-English input, such as
+			// German or Swedish Pro).  So we can't just copy the
+			// implementation, we must delegate to it.
+			delegate.actionPerformed(e);
 		}
 
 		public final String getMacroID() {

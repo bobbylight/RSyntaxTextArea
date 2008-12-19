@@ -39,6 +39,7 @@ import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.TextUI;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -98,7 +99,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 *
 	 * @param doc The document for the editor.
 	 */
-	public RTextAreaBase(RTextAreaDocument doc) {
+	public RTextAreaBase(AbstractDocument doc) {
 		super(doc);
 		init();
 	}
@@ -154,7 +155,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * @throws IllegalArgumentException If either <code>rows</code> or
 	 *         <code>cols</code> is negative.
 	 */
-	public RTextAreaBase(RTextAreaDocument doc, String text, int rows,
+	public RTextAreaBase(AbstractDocument doc, String text, int rows,
 							int cols) {
 		super(doc, text, rows, cols);
 		init();

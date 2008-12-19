@@ -50,12 +50,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.TextUI;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
+import javax.swing.text.PlainDocument;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
@@ -179,7 +181,7 @@ public class RTextArea extends RTextAreaBase
 	 *
 	 * @param doc The document for the editor.
 	 */
-	public RTextArea(RTextAreaDocument doc) {
+	public RTextArea(AbstractDocument doc) {
 		super(doc);
 		init(INSERT_MODE);
 	}
@@ -235,8 +237,7 @@ public class RTextArea extends RTextAreaBase
 	 * @throws IllegalArgumentException If either <code>rows</code> or
 	 *         <code>cols</code> is negative.
 	 */
-	public RTextArea(RTextAreaDocument doc, String text, int rows,
-							int cols) {
+	public RTextArea(AbstractDocument doc, String text, int rows, int cols) {
 		super(doc, text, rows, cols);
 		init(INSERT_MODE);
 	}
@@ -321,16 +322,6 @@ public class RTextArea extends RTextAreaBase
 	 * @see #setPopupMenu(JPopupMenu)
 	 */
 	protected void configurePopupMenu(JPopupMenu popupMenu) {
-	}
-
-
-	/**
-	 * Returns the document to use for an <code>RTextArea</code>.
-	 *
-	 * @return The document.
-	 */
-	protected Document createDefaultModel() {
-		return new RTextAreaDocument();
 	}
 
 
@@ -640,21 +631,8 @@ public class RTextArea extends RTextAreaBase
 	 * @param content The content to add.
 	 */
 	protected void handleReplaceSelection(String content) {
-		Document doc = getDocument();
-		if (doc != null) {
-			try {
-				Caret c = getCaret();
-				int dot = c.getDot();
-				int mark = c.getMark();
-				int p0 = Math.min(dot, mark);
-				int p1 = Math.max(dot, mark);
-				((RTextAreaDocument)doc).replace(p0, p1 - p0,
-										content, null);
-			} catch (BadLocationException e) {
-				UIManager.getLookAndFeel().
-						provideErrorFeedback(RTextArea.this);
-			}
-		}
+		// Call into super to handle composed text (1.5+ only though).
+		super.replaceSelection(content);
 	}
 
 
@@ -958,7 +936,7 @@ public class RTextArea extends RTextAreaBase
 				// but the first line moved down isn't there!  Doing a
 				// second undo puts it back.
 				undoManager.beginInternalAtomicEdit();
-				((RTextAreaDocument)doc).replace(start, end - start,
+				((AbstractDocument)doc).replace(start, end - start,
                                		                     str, null);
 			} catch (BadLocationException e) {
 				throw new IllegalArgumentException(e.getMessage());
@@ -1208,12 +1186,12 @@ public class RTextArea extends RTextAreaBase
 	 *
 	 * @param document The new document to use.
 	 * @throws IllegalArgumentException If the document is not an instance of
-	 *         <code>RTextAreaDocument</code>.
+	 *         {@link AbstractDocument}.
 	 */
 	public void setDocument(Document document) {
-		if (!(document instanceof RTextAreaDocument))
+		if (!(document instanceof AbstractDocument))
 			throw new IllegalArgumentException("RTextArea requires " +
-				"instances of RTextAreaDocument for its document!");
+				"instances of AbstractDocument for its document!");
 		super.setDocument(document);
 	}
 

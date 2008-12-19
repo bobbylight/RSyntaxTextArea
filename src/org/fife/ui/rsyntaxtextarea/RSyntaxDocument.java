@@ -26,7 +26,6 @@ package org.fife.ui.rsyntaxtextarea;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-import org.fife.ui.rtextarea.RTextAreaDocument;
 import org.fife.util.DynamicIntArray;
 
 
@@ -53,8 +52,7 @@ import org.fife.util.DynamicIntArray;
  * @author Robert Futrell
  * @version 0.1
  */
-public class RSyntaxDocument extends RTextAreaDocument
-										implements SyntaxConstants {
+public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 	/**
 	 * Creates a {@link TokenMaker} appropriate for a given programming
