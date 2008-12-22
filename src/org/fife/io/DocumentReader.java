@@ -202,11 +202,9 @@ public class DocumentReader extends Reader {
 			position += n;
 			return n;
 		}
-		else {
-			long temp = position;
-			position = document.getLength();
-			return document.getLength() - temp;
-		}
+		long temp = position;
+		position = document.getLength();
+		return document.getLength() - temp;
 	}
 
 

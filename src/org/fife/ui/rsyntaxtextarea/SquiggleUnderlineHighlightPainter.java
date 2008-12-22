@@ -83,6 +83,7 @@ public class SquiggleUnderlineHighlightPainter
 		else {
 			g.setColor(color);
 		}
+
 		if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset()) {
 			// Contained in view, can just use bounds.
 			Rectangle alloc;
@@ -93,20 +94,19 @@ public class SquiggleUnderlineHighlightPainter
 			paintSquiggle(g, alloc);
 			return alloc;
 		}
-		else {
-			// Should only render part of View.
-			try {
-				// --- determine locations ---
-				Shape shape = view.modelToView(offs0, Position.Bias.Forward,
-                                                   offs1,Position.Bias.Backward,
-                                                   bounds);
-				Rectangle r = (shape instanceof Rectangle) ?
-							(Rectangle)shape : shape.getBounds();
-				paintSquiggle(g, r);
-				return r;
-			} catch (BadLocationException e) {
-				// can't render
-			}
+
+		// Otherwise, should only render part of View.
+		try {
+			// --- determine locations ---
+			Shape shape = view.modelToView(offs0, Position.Bias.Forward,
+                                               offs1,Position.Bias.Backward,
+                                               bounds);
+			Rectangle r = (shape instanceof Rectangle) ?
+						(Rectangle)shape : shape.getBounds();
+			paintSquiggle(g, r);
+			return r;
+		} catch (BadLocationException e) {
+			e.printStackTrace(); // can't render
 		}
 
 		// Only if exception

@@ -66,9 +66,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 
 
 	/**
-	 * Returns the set of keys that this factory maps to token makers.
-	 *
-	 * @param The set of keys.
+	 * {@inheritDoc}
 	 */
 	public Set keySet() {
 		return tokenMakerMap.keySet();

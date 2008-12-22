@@ -140,9 +140,11 @@ public class SyntaxHighlightingColorScheme {
 	 */
 	public boolean equals(Object otherScheme) {
 
-		if (!(otherScheme instanceof SyntaxHighlightingColorScheme) ||
-				otherScheme==null)
+		// No need for null check; instanceof takes care of this for us,
+		// i.e. "if (!(null instanceof Foo))" evaluates to "true".
+		if (!(otherScheme instanceof SyntaxHighlightingColorScheme)) {
 			return false;
+		}
 
 		SyntaxScheme[] otherSchemes =
 				((SyntaxHighlightingColorScheme)otherScheme).syntaxSchemes;

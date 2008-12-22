@@ -127,8 +127,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 		//KeyStroke[] keys = shared.allKeys();
 		//for (int i=0; i<keys.length; i++)
 		//	System.err.println(keys[i] + " -> " + shared.get(keys[i]));
-		if (shared != null)
-			map.setParent(shared);
+		map.setParent(shared);
 		return map;
 	}
 

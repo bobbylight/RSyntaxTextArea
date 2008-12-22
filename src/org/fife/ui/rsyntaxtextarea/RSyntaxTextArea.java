@@ -1461,9 +1461,9 @@ private boolean fractionalFontMetricsEnabled;
 	 * Sets what type of syntax highlighting this editor is doing.  This method
 	 * fires a property change of type {@link #SYNTAX_STYLE_PROPERTY}.
 	 *
-	 * @param style The syntax editing style to use, for example,
-	 *        <code>RSyntaxTextArea.NO_SYNTAX_STYLE</code> or
-	 *        <code>RSyntaxArea.JAVA_SYNTAX_STYLE</code>.
+	 * @param styleKey The syntax editing style to use, for example,
+	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} or
+	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.
 	 * @see #getSyntaxEditingStyle()
 	 * @see SyntaxConstants
 	 */
@@ -1551,12 +1551,10 @@ private boolean fractionalFontMetricsEnabled;
 				return getCodeTemplateManager().
 						setTemplateDirectory(directory)>-1;
 			}
-			else {
-				boolean created = directory.mkdir();
-				if (created) {
-					return getCodeTemplateManager().
-						setTemplateDirectory(directory)>-1;
-				}
+			boolean created = directory.mkdir();
+			if (created) {
+				return getCodeTemplateManager().
+					setTemplateDirectory(directory)>-1;
 			}
 		}
 		return false;

@@ -379,7 +379,7 @@ public class CodeTemplateManager {
 						throw new IOException("Not a CodeTemplate: " +
 										files[i].getAbsolutePath());
 					}
-					temp.add((CodeTemplate)obj);
+					temp.add(obj);
 					d.close();
 				} catch (/*IO, NoSuchElement*/Exception e) {
 					// NoSuchElementException can be thrown when reading

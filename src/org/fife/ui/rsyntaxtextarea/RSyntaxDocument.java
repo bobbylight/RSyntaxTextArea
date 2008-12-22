@@ -363,7 +363,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * {@link TokenMakerFactory}.  By default, all <code>RSyntaxDocument</code>s
 	 * support all languages built into <code>RSyntaxTextArea</code>. 
 	 *
-	 * @param syntaxStyle The new style to use, such as
+	 * @param styleKey The new style to use, such as
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.  If this style is not
 	 *        known or supported by this document, then
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} is used.

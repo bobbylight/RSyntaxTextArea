@@ -122,7 +122,7 @@ public abstract class TokenMakerFactory {
 	/**
 	 * Returns the set of keys that this factory maps to token makers.
 	 *
-	 * @param The set of keys.
+	 * return The set of keys.
 	 */
 	public abstract Set keySet();
 
