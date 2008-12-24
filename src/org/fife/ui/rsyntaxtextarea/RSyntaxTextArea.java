@@ -1042,6 +1042,12 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	protected void init() {
 
+		// Programmer's editors should default to a monospaced font. Note
+		// that WindowsLookAndFeel defaults to a monospaced font, but other
+		// LookAndFeels don't.
+		Font font = getFont();
+		setFont(new Font("Monospaced", font.getStyle(),font.getSize()));
+
 		// Set some RSyntaxTextArea default values.
 		syntaxStyleKey = SYNTAX_STYLE_NONE;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());

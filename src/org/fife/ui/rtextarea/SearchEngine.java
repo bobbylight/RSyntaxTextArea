@@ -150,7 +150,7 @@ public class SearchEngine {
 		}
 		else { // backward
 			try {
-				findIn = textArea.getText(0, start+1);
+				findIn = textArea.getText(0, start);
 			} catch (BadLocationException ble) {
 				// Never happens; findIn will be null anyway.
 				ble.printStackTrace();

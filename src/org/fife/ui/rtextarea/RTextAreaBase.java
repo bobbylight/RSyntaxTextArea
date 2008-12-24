@@ -34,7 +34,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.text.BreakIterator;
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.ColorUIResource;
@@ -68,8 +67,8 @@ abstract class RTextAreaBase extends JTextArea {
 	private Color currentLineColor;			// The color used to highlight the current line.
 	private boolean marginLineEnabled;			// If true, paint a "margin line."
 	private Color marginLineColor;			// The color used to paint the margin line.
-	protected int marginLineX;				// The x-location of the margin line.
-	protected int marginSizeInChars;			// How many 'm' widths the margin line is over.
+	private int marginLineX;				// The x-location of the margin line.
+	private int marginSizeInChars;			// How many 'm' widths the margin line is over.
 	private boolean fadeCurrentLineHighlight;	// "Fade effect" for current line highlight.
 	private boolean roundedSelectionEdges;
 	private int previousCaretY;
@@ -442,8 +441,8 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * Returns the default color for the margin line.
 	 *
 	 * @return The default margin line color.
-	 * @see #getMarginLineColor
-	 * @see #setMarginLineColor
+	 * @see #getMarginLineColor()
+	 * @see #setMarginLineColor(Color)
 	 */
 	public static final Color getDefaultMarginLineColor() {
 		return DEFAULT_MARGIN_LINE_COLOR;
@@ -491,7 +490,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * @see #getCurrentLineHighlightColor
 	 * @see #setCurrentLineHighlightColor
 	 */
-	public final boolean getHighlightCurrentLine() {
+	public boolean getHighlightCurrentLine() {
 		return highlightCurrentLine;
 	}
 
@@ -540,7 +539,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * Returns the color used to paint the margin line.
 	 *
 	 * @return The margin line color.
-	 * @see #setMarginLineColor
+	 * @see #setMarginLineColor(Color)
 	 */
 	public Color getMarginLineColor() {
 		return marginLineColor;
@@ -594,39 +593,6 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 */
 	public boolean getTabsEmulated() {
 		return tabsEmulatedWithSpaces;
-	}
-
-
-	/**
-	 * Determines the word closest to/at the given model position.
-	 * Uses BreakIterator.getWordInstance() to actually get the words.
-	 * 
-	 * @param offs The offset in the document >= 0
-	 * @return The word closest to/at that position.
-	 * @exception BadLocationException if the offset is out of range
-	 */
-	public final String getWordAtOffset(int offs) throws BadLocationException {
-		Document doc = getDocument();
-		Element map = doc.getDefaultRootElement();
-		int lineNumber = map.getElementIndex(offs);
-		Element line = map.getElement(lineNumber);
-		int lineStart = line.getStartOffset();
-		int lineEnd = Math.min(line.getEndOffset(), doc.getLength());
-	
-		String s = doc.getText(lineStart, lineEnd - lineStart);
-		if(s != null && s.length() > 0) {
-			BreakIterator words = BreakIterator.getWordInstance();
-			words.setText(s);
-			int wordPosition = offs - lineStart;
-			if(wordPosition >= words.last()) {
-				wordPosition = words.last() - 1;
-			} 
-			//words.following(wordPosition);
-			int end = lineStart + words.following(wordPosition);
-			int start = lineStart + words.previous();
-			return doc.getText(start, end-start);
-		}
-		return null;
 	}
 
 
@@ -881,7 +847,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * Sets the color to use to highlight the current line.  Note that if
 	 * highlighting the current line is turned off, you will not be able to
 	 * see this highlight.  This method fires a property change of type
-	 * <code>CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY</code>.
+	 * {@link #CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY}.
 	 *
 	 * @param color The color to use to highlight the current line.
 	 * @throws NullPointerException if <code>color</code> is <code>null</code>.
@@ -889,8 +855,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * @see #setHighlightCurrentLine(boolean)
 	 * @see #getCurrentLineHighlightColor
 	 */
-	public void setCurrentLineHighlightColor(Color color)
-										throws NullPointerException {
+	public void setCurrentLineHighlightColor(Color color) {
 		if (color==null)
 			throw new NullPointerException();
 		if (!color.equals(currentLineColor)) {
@@ -970,8 +935,8 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * Sets the color used to paint the margin line.
 	 *
 	 * @param color The new margin line color.
-	 * @see #getDefaultMarginLineColor
-	 * @see #getMarginLineColor
+	 * @see #getDefaultMarginLineColor()
+	 * @see #getMarginLineColor()
 	 */
 	public void setMarginLineColor(Color color) {
 		marginLineColor = color;
