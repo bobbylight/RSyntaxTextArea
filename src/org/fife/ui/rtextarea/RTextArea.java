@@ -94,11 +94,15 @@ public class RTextArea extends RTextAreaBase
 
 	/**
 	 * Constant representing insert mode.
+	 *
+	 * @see #setCaretStyle(int, int)
 	 */
 	public static final int INSERT_MODE				= 0;
 
 	/**
 	 * Constant representing overwrite mode.
+	 *
+	 * @see #setCaretStyle(int, int)
 	 */
 	public static final int OVERWRITE_MODE				= 1;
 
@@ -158,9 +162,6 @@ public class RTextArea extends RTextAreaBase
 	private ChangableHighlightPainter markAllHighlightPainter;
 
 	boolean inUndoRedo;
-
-	public static final int INSERT_CARET		= 0;
-	public static final int OVERWRITE_CARET		= 1;
 
 	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
 
@@ -656,8 +657,8 @@ public class RTextArea extends RTextAreaBase
 										markAllHighlightColor);
 		setMarkAllHighlightColor(markAllHighlightColor);
 		carets = new int[2];
-		carets[INSERT_CARET] = ConfigurableCaret.VERTICAL_LINE_STYLE;
-		carets[OVERWRITE_CARET] = ConfigurableCaret.BLOCK_STYLE;
+		setCaretStyle(INSERT_MODE, ConfigurableCaret.THICK_VERTICAL_LINE_STYLE);
+		setCaretStyle(OVERWRITE_MODE, ConfigurableCaret.BLOCK_STYLE);
 		setDragEnabled(true);			// Enable drag-and-drop.
 
 		// Set values for stuff the user passed in.
@@ -1143,7 +1144,7 @@ public class RTextArea extends RTextAreaBase
 	 * This method is overridden to make sure that instances of
 	 * <code>RTextArea</code> only use <code>ConfigurableCaret</code>s.
 	 * To set the style of caret (vertical line, block, etc.) used for
-	 * insert or overwrite mode, use <code>setCaretStyle</code>.
+	 * insert or overwrite mode, use {@link #setCaretStyle(int, int)}.
 	 *
 	 * @param caret The caret to use.  If this is not an instance of
 	 *        <code>ConfigurableCaret</code>, an exception is thrown.
@@ -1156,6 +1157,9 @@ public class RTextArea extends RTextAreaBase
 			throw new IllegalArgumentException(
 						"RTextArea needs ConfigurableCaret");
 		super.setCaret(caret);
+		if (carets!=null) { // Called by setUI() before carets is initialized
+			((ConfigurableCaret)caret).setStyle(carets[getTextMode()]);
+		}
 	}
 
 
@@ -1165,7 +1169,7 @@ public class RTextArea extends RTextAreaBase
 	 * @param mode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
 	 * @param style The style for the caret (such as
-	 *        <code>ConfigurableCaret.VERTICAL_LINE_STYLE</code>).
+	 *        {@link ConfigurableCaret#VERTICAL_LINE_STYLE}).
 	 * @see org.fife.ui.rtextarea.ConfigurableCaret
 	 */
 	public void setCaretStyle(int mode, int style) {
@@ -1174,9 +1178,10 @@ public class RTextArea extends RTextAreaBase
 						style :
 						ConfigurableCaret.VERTICAL_LINE_STYLE);
 		carets[mode] = style;
-		if (mode==getTextMode())
+		if (mode==getTextMode()) {
 			// Will repaint the caret if necessary.
 			((ConfigurableCaret)getCaret()).setStyle(style);
+		}
 	}
 
 

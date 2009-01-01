@@ -591,6 +591,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 					break;
 
+				default: // Should never happen
 				case Token.IDENTIFIER:
 
 					switch (c) {
@@ -1043,11 +1044,6 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 						} // End of switch (c).
 				
 						break;
-
-				default:
-
-					System.err.println("Invalid currentTokenType: " + currentTokenType + "; c=='" + c + "'");
-					System.exit(0);
 
 			} // End of switch (currentTokenType).
 

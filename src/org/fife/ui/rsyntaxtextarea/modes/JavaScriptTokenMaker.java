@@ -389,6 +389,7 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 
 					break;
 
+				default: // Should never happen
 				case Token.IDENTIFIER:
 
 					switch (c) {
@@ -962,11 +963,6 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 						// Otherwise, we're still an unclosed string...
 
 						break;
-
-				default:
-
-					System.err.println("Invalid currentTokenType: " + currentTokenType + "; c=='" + c + "'");
-					System.exit(0);
 
 			} // End of switch (currentTokenType).
 
