@@ -555,10 +555,11 @@ private boolean fractionalFontMetricsEnabled;
 		if (pos>-1) {
 			try {
 				match = modelToView(pos);
-				repaint(match);
+				if (match!=null) { // Happens if we're not yet visible
+					repaint(match);
+				}
 			} catch (BadLocationException ble) {
-				// Shouldn't happen.
-				ble.printStackTrace();
+				ble.printStackTrace(); // Shouldn't happen.
 			}
 		}
 		else {

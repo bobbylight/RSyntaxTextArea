@@ -435,7 +435,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 		// For new local files, just go with it.
 		if (loc.isLocal() && !loc.isLocalAndExists()) {
-			this.charSet = defaultEnc;
+			this.charSet = defaultEnc!=null ? defaultEnc : getDefaultEncoding();
 			return;
 		}
 
