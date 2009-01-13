@@ -118,18 +118,14 @@ class LineNumberList extends JComponent implements CaretListener,
 	public LineNumberList(RTextArea textArea, Color numberColor) {
 
 		// Remember what text component we're keeping line numbers for.
-		this.textArea = textArea;
+		setTextArea(textArea);
 
-		if (numberColor!=null)
+		if (numberColor!=null) {
 			setForeground(numberColor);
-		else
+		}
+		else {
 			setForeground(new Color(128,128,128));
-		Color bg = textArea.getBackground();
-		setBackground(bg==null ? Color.WHITE : bg);
-
-		textArea.addCaretListener(this);
-		textArea.addPropertyChangeListener(this);
-		textArea.getDocument().addDocumentListener(this);
+		}
 
 		// Initialize currentLine; otherwise, the current line won't start
 		// off as highlighted.
@@ -199,29 +195,8 @@ class LineNumberList extends JComponent implements CaretListener,
 
 
 	public Dimension getPreferredSize() {
-		return new Dimension(cellWidth, textArea.getHeight());
-	}
-
-
-	/**
-	 * Returns the length of a string if it is drawn with the specified
-	 * graphics context.  This method assumes that there are NO tabs in
-	 * the string.<br><br>
-	 *
-	 * NOTE:  This is basically ripped off from
-	 * <code>javax.swing.text.Utilities</code>, but slightly optimized for our
-	 * situation.
-	 *
-	 * @param text The text to be painted.
-	 * @param metrics The metrics with which to do the calculating.
-	 * @return The width of the string when painted.
-	 */
-	public static final int getTextWidth(String text, FontMetrics metrics) {
-		int width = 0;
-		int end = text.length();
-		for (int i=0; i<end; i++)
-			width += metrics.charWidth(text.charAt(i));
-		return width;
+		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
+		return new Dimension(cellWidth, h);
 	}
 
 
@@ -230,9 +205,7 @@ class LineNumberList extends JComponent implements CaretListener,
 	 * we're line-numbering.
 	 */
 	public void insertUpdate(DocumentEvent e) {
-
-		int newNumLines = textArea.getDocument().getDefaultRootElement().
-												getElementCount();
+		int newNumLines = textArea!=null ? textArea.getLineCount() : 0;
 		if (newNumLines > currentNumLines) {
 			// Adjust the amount of space the line numbers take up,
 			// if necessary.
@@ -240,12 +213,19 @@ class LineNumberList extends JComponent implements CaretListener,
 				updateCellWidths();
 			currentNumLines = newNumLines;
 		}
-
 	}
 
 
-	// Returns the Component used as the JList cell.
+	/**
+	 * Paints this component.
+	 *
+	 * @param g The graphics context.
+	 */
 	public void paint(Graphics g) {
+
+		if (textArea==null) {
+			return;
+		}
 
 		Element root = textArea.getDocument().getDefaultRootElement();
 		Rectangle visibleRect = textArea.getVisibleRect();
@@ -294,7 +274,7 @@ class LineNumberList extends JComponent implements CaretListener,
 		int rhs = getBounds().width - RHS_BORDER_WIDTH;
 		for (int i=topLine; i<bottomLine; i++) {
 			String number = Integer.toString(i);
-			int width = getTextWidth(number, metrics);
+			int width = metrics.stringWidth(number);
 			g.drawString(number, rhs-width,y);
 			y += cellHeight;
 		}
@@ -314,7 +294,7 @@ class LineNumberList extends JComponent implements CaretListener,
 	 * LineNumberBorder, as it uses modelToView() a lot.  Fix it to be like
 	 * LineNumberBorder's version if you ever use this again.
 	 */
-	public void paintWrappedLineNumbers(Graphics g, Element root,
+	private void paintWrappedLineNumbers(Graphics g, Element root,
 									Rectangle visibleRect) {
 
 		// The variables we use are as follows:
@@ -392,7 +372,7 @@ class LineNumberList extends JComponent implements CaretListener,
 
 			// Paint the line number.
 			String number = Integer.toString(topLine+1);
-			int width = getTextWidth(number, metrics);
+			int width = metrics.stringWidth(number);
 			g.drawString(number, rhs-width,y+ascent);
 
 			// The next possible y-coordinate is just after the last line
@@ -460,7 +440,7 @@ class LineNumberList extends JComponent implements CaretListener,
 	 * text document we're line-numbering.
 	 */
 	public void removeUpdate(DocumentEvent e) {
-		int newNumLines = textArea.getDocument().getDefaultRootElement().getElementCount();
+		int newNumLines = textArea.getLineCount();
 		if (newNumLines < currentNumLines) { // Used to be <=
 			// Adjust the amount of space the line numbers take up, if necessary.
 			if (newNumLines/10 < currentNumLines/10)
@@ -499,14 +479,49 @@ class LineNumberList extends JComponent implements CaretListener,
 
 
 	/**
+	 * Sets the text area being displayed.
+	 *
+	 * @param textArea The text area.
+	 */
+	public void setTextArea(RTextArea textArea) {
+
+		if (this.textArea!=null) {
+			this.textArea.removeCaretListener(this);
+			this.textArea.removePropertyChangeListener(this);
+			this.textArea.getDocument().removeDocumentListener(this);
+		}
+
+		this.textArea = textArea;
+		Color bg = textArea==null ? Color.WHITE : textArea.getBackground();
+		// textArea.getBackground() may also return null (image bg)
+		setBackground(bg==null ? Color.WHITE : bg);
+
+		if (textArea!=null) {
+			textArea.addCaretListener(this);
+			textArea.addPropertyChangeListener(this);
+			textArea.getDocument().addDocumentListener(this);
+			updateCellHeights();
+			updateCellWidths();
+		}
+
+	}
+
+
+	/**
 	 * Changes the height of the cells in the JList so that they are as tall as
 	 * font. This function should be called whenever the user changes the Font
 	 * of <code>textArea</code>.
 	 */
 	public void updateCellHeights() {
-		//FontMetrics fontMetrics = textArea.getFontMetrics(textArea.getFont());
-		cellHeight = textArea.getLineHeight();//fontMetrics.getHeight();
-		ascent = textArea.getMaxAscent();//fontMetrics.getAscent();
+		if (textArea!=null) {
+			//FontMetrics fm = textArea.getFontMetrics(textArea.getFont());
+			cellHeight = textArea.getLineHeight();//fm.getHeight();
+			ascent = textArea.getMaxAscent();//fm.getAscent();
+		}
+		else {
+			cellHeight = 20; // Arbitrary number.
+			ascent = 5; // Also arbitrary
+		}
 		repaint();
 	}
 
@@ -517,17 +532,23 @@ class LineNumberList extends JComponent implements CaretListener,
 	 */
 	public void updateCellWidths() {
 
+		if (textArea==null) {
+			cellWidth = 50; // Arbitrary number
+			return;
+		}
+
 		// Adjust the amount of space the line numbers take up, if necessary.
 		Font font = getFont();
 		if (font!=null) {
 			FontMetrics fontMetrics = getFontMetrics(font);
 			int count = 0;
-			int numLines = textArea.getDocument().getDefaultRootElement().getElementCount();
+			int numLines = textArea.getLineCount();
 			while (numLines >= 10) {
 				numLines = numLines/10;
 				count++;
 			}
-			cellWidth = Math.max(fontMetrics.charWidth('9') * (count+2) + 5, MIN_CELL_WIDTH);
+			cellWidth = Math.max(fontMetrics.charWidth('9') * (count+2) + 5,
+								MIN_CELL_WIDTH);
 			revalidate();
 		}
 

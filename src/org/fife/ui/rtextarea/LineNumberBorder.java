@@ -113,17 +113,10 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 						Color numberColor) {
 
 		// Remember what text component we're keeping line numbers for.
-		this.textArea = textArea;
 		this.scrollPane = scrollPane;
+		setTextArea(textArea);
 
 		setForeground(numberColor!=null ? numberColor : DEFAULT_FOREGROUND);
-		Color bg = textArea.getBackground();
-		setBackground(bg==null ? Color.WHITE : bg);
-
-		textArea.addCaretListener(this);
-		textArea.addPropertyChangeListener(this);
-		scrollPane.getViewport().addChangeListener(this);
-		textArea.getDocument().addDocumentListener(this);
 
 		// Initialize currentLine; otherwise, the current line won't start
 		// off as highlighted.
@@ -207,7 +200,8 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 		// Check textArea's orientation, not c's, as c is the JScrollPane.
 		// The application might allow the user to toggle the text area's
 		// orientation separately from the UI's.
-		if (textArea.getComponentOrientation().isLeftToRight()) {
+		if (textArea==null ||
+				textArea.getComponentOrientation().isLeftToRight()) {
 			insets.left = cellWidth;
 			insets.right = 0;
 		}
@@ -277,9 +271,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	 * @param e The document event.
 	 */
 	public void insertUpdate(DocumentEvent e) {
-
-		int newNumLines = textArea.getDocument().getDefaultRootElement().
-												getElementCount();
+		int newNumLines = textArea!=null ? textArea.getLineCount() : 0;
 		if (newNumLines > currentNumLines) {
 			// Adjust the amount of space the line numbers take up,
 			// if necessary.
@@ -287,7 +279,6 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 				updateCellWidths();
 			currentNumLines = newNumLines;
 		}
-
 	}
 
 
@@ -316,6 +307,10 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	public void paintBorder(Component c, Graphics g, int x, int y, int width,
 						int height) {
 
+		if (textArea==null) {
+			return;
+		}
+
 		Element root = textArea.getDocument().getDefaultRootElement();
 		Rectangle visibleRect = textArea.getVisibleRect();
 
@@ -337,6 +332,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 		// Fill in the background the same color as the text component.
 		g.setColor(getBackground());
 		g.fillRect(paintX,y, paintWidth,height);
+
 		g.setFont(font);
 
 		if (textArea.getLineWrap()==true) {
@@ -411,7 +407,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	 * @param width The width of the component.
 	 * @param visibleRect The visible rectangle of the text area.
 	 */
-	public void paintWrappedLineNumbers(Graphics g, Element root, int x, int y,
+	private void paintWrappedLineNumbers(Graphics g, Element root, int x, int y,
 								int width, Rectangle visibleRect) {
 
 		// The variables we use are as follows:
@@ -580,7 +576,7 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	 * text document we're line-numbering.
 	 */
 	public void removeUpdate(DocumentEvent e) {
-		int newNumLines = textArea.getDocument().getDefaultRootElement().getElementCount();
+		int newNumLines = textArea.getLineCount();
 		if (newNumLines < currentNumLines) { // Used to be <=
 			// Adjust the amount of space the line numbers take up, if necessary.
 			if (newNumLines/10 < currentNumLines/10)
@@ -650,6 +646,38 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 
 
 	/**
+	 * Sets the text area being displayed.
+	 *
+	 * @param textArea The text area.
+	 */
+	public void setTextArea(RTextArea textArea) {
+
+		if (this.textArea!=null) {
+			scrollPane.getViewport().removeChangeListener(this);
+			this.textArea.removeCaretListener(this);
+			this.textArea.removePropertyChangeListener(this);
+			this.textArea.getDocument().removeDocumentListener(this);
+		}
+
+		this.textArea = textArea;
+		Color bg = textArea==null ? Color.WHITE : textArea.getBackground();
+		// textArea.getBackground() may also return null (image bg)
+		setBackground(bg==null ? Color.WHITE : bg);
+		scrollPane.getViewport().addChangeListener(this);
+
+		if (textArea!=null) {
+			textArea.addCaretListener(this);
+			textArea.addPropertyChangeListener(this);
+			textArea.getDocument().addDocumentListener(this);
+			updateCellHeights();
+			updateCellWidths();
+			insertUpdate(null);
+		}
+
+	}
+
+
+	/**
 	 * Messages from the viewport.
 	 *
 	 * @param change The change event.
@@ -666,8 +694,14 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	 * syntax style in an <code>RSyntaxTextArea</code>.
 	 */
 	public void updateCellHeights() {
-		cellHeight = textArea.getLineHeight();
-		ascent = textArea.getMaxAscent();
+		if (textArea!=null) {
+			cellHeight = textArea.getLineHeight();
+			ascent = textArea.getMaxAscent();
+		}
+		else {
+			cellHeight = 20; // Arbitrary number.
+			ascent = 5; // Also arbitrary
+		}
 	}
 
 
@@ -676,6 +710,11 @@ class LineNumberBorder implements Border, CaretListener, DocumentListener,
 	 * of each.
 	 */
 	public void updateCellWidths() {
+
+		if (textArea==null) {
+			cellWidth = 50; // Arbitrary number
+			return;
+		}
 
 		// Adjust the amount of space the line numbers take up, if necessary.
 		Font font = getFont();

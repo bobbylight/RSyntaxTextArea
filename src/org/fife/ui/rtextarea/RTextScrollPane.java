@@ -55,6 +55,16 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
+	 * Constructor.  If you use this constructor, you must call
+	 * {@link #setViewportView(Component)} and pass in an {@link RTextArea}
+	 * for this scroll pane to render line numbers properly.
+	 */
+	public RTextScrollPane() {
+		this(300, 300, null, true);
+	}
+
+
+	/**
 	 * Creates a scroll pane with preferred size (width, height).  A default
 	 * value will be used for line number color (gray), and the current
 	 * line's line number will be highlighted.
@@ -89,15 +99,16 @@ public class RTextScrollPane extends JScrollPane {
 		textArea = area;
 
 		// Create the line number list for this document.
+		Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
 		if (usingLineNumberList) {
 			lineNumberList = new LineNumberList(textArea, lineNumberColor);
-			lineNumberList.setFont(new Font("Monospaced", Font.PLAIN, 12));
+			lineNumberList.setFont(defaultFont);
 		}
 		else {
 			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
 			lineNumberBorder = new LineNumberBorder(this, textArea,
 											lineNumberColor);
-			lineNumberBorder.setFont(new Font("Monospaced", Font.PLAIN, 12));
+			lineNumberBorder.setFont(defaultFont);
 		}
 		setLineNumbersEnabled(lineNumbersEnabled);
 
@@ -120,6 +131,18 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
+	 * Returns the font being used to render line numbers.
+	 *
+	 * @return The line number font.
+	 * @see #setLineNumberFont(Font)
+	 */
+	public Font getLineNumberFont() {
+		return usingLineNumberList ? lineNumberList.getFont() :
+									lineNumberBorder.getFont();
+	}
+
+
+	/**
 	 * This method is overridden so that if the user clicks in the line
 	 * number border, the caret is moved.<p>
 	 *
@@ -135,6 +158,25 @@ public class RTextScrollPane extends JScrollPane {
 			textArea.setCaretPosition(pos);
 		}
 		super.processMouseEvent(e);
+	}
+
+
+	/**
+	 * Sets the font used for line numbers.
+	 *
+	 * @param font The font to use.  This cannot be <code>null</code>.
+	 * @see #getLineNumberFont()
+	 */
+	public void setLineNumberFont(Font font) {
+		if (font==null) {
+			throw new IllegalArgumentException("font cannot be null");
+		}
+		if (usingLineNumberList) {
+			lineNumberList.setFont(font);
+		}
+		else {
+			lineNumberBorder.setFont(font);
+		}
 	}
 
 
@@ -171,6 +213,26 @@ public class RTextScrollPane extends JScrollPane {
 				setViewportBorder(enabled ? lineNumberBorder : null);
 				revalidate();
 			}
+		}
+	}
+
+
+	/**
+	 * Sets the view for this scroll pane.  This must be an {@link RTextArea}.
+	 *
+	 * @param view The new view.
+	 */
+	public void setViewportView(Component view) {
+		if (!(view instanceof RTextArea)) {
+			throw new IllegalArgumentException("view must be an RTextArea");
+		}
+		super.setViewportView(view);
+		textArea = (RTextArea)view;
+		if (usingLineNumberList && lineNumberList!=null) {
+			lineNumberList.setTextArea(textArea);
+		}
+		else if (lineNumberBorder!=null) {
+			lineNumberBorder.setTextArea(textArea);
 		}
 	}
 
