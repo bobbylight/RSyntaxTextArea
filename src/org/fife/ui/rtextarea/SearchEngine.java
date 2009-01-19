@@ -356,7 +356,8 @@ public class SearchEngine {
 							String replaceStr) {
 
 		// Make a pattern that takes into account whether or not to match case.
-		int flags = matchCase ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
+		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
+		flags |= matchCase ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
 		Pattern pattern = Pattern.compile(regEx, flags);
 
 		// Make a Matcher to find the regEx instances.
