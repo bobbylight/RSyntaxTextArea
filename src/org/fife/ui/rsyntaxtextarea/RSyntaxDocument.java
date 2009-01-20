@@ -301,6 +301,19 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	boolean getMarkOccurrencesOfTokenType(int type) {
+		return tokenMaker.getMarkOccurrencesOfTokenType(type);
+	}
+
+
+	/**
 	 * Returns a token list for the specified segment of text representing
 	 * the specified line number.  This method is basically a wrapper for
 	 * <code>tokenMaker.getTokenList</code> that takes into account the last

@@ -95,6 +95,17 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	public boolean getMarkOccurrencesOfTokenType(int type);
+
+
+	/**
 	 * Returns the first token in the linked list of tokens generated
 	 * from <code>text</code>.  This method must be implemented by
 	 * subclasses so they can correctly implement syntax highlighting.

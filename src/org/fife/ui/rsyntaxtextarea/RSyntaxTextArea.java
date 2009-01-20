@@ -29,6 +29,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -198,6 +199,16 @@ Rectangle match;
 	 * Used during "Copy as RTF" operations.
 	 */
 	private RtfGenerator rtfGenerator;
+
+	/**
+	 * Handles "mark occurrences" support.
+	 */
+	private MarkOccurrencesSupport markOccurrencesSupport;
+
+	/**
+	 * The color used to render "marked occurrences."
+	 */
+	private Paint markOccurrencesColor;
 
 	/**
 	 * Metrics of the text area's font.
@@ -813,13 +824,49 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether "Mark Occurrences" is enabled.
+	 *
+	 * @return Whether "Mark Occurrences" is enabled.
+	 * @see #setMarkOccurrences(boolean)
+	 */
+	public boolean getMarkOccurrences() {
+		return markOccurrencesSupport!=null;
+	}
+
+
+	/**
+	 * Returns the color used to "mark occurrences."
+	 *
+	 * @return The mark occurrences color.
+	 * @see #setMarkOccurrencesColor(Paint)
+	 */
+	public Paint getMarkOccurrencesColor() {
+		return markOccurrencesColor;
+	}
+
+
+	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	boolean getMarkOccurrencesOfTokenType(int type) {
+		RSyntaxDocument doc = (RSyntaxDocument)getDocument();
+		return doc.getMarkOccurrencesOfTokenType(type);
+	}
+
+
+	/**
 	 * Gets the color used as the background for a matched bracket.
 	 *
 	 * @return The color used.
 	 * @see #setMatchedBracketBGColor
 	 * @see #getMatchedBracketBorderColor
 	 */
-	public final Color getMatchedBracketBGColor() {
+	public Color getMatchedBracketBGColor() {
 		return matchedBracketBGColor;
 	}
 
@@ -831,7 +878,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #setMatchedBracketBorderColor
 	 * @see #getMatchedBracketBGColor
 	 */
-	public final Color getMatchedBracketBorderColor() {
+	public Color getMatchedBracketBorderColor() {
 		return matchedBracketBorderColor;
 	}
 
@@ -1409,6 +1456,44 @@ private boolean fractionalFontMetricsEnabled;
 				mask==InputEvent.ALT_DOWN_MASK ||
 				mask==InputEvent.SHIFT_DOWN_MASK) {
 			linkScanningMask = mask;
+		}
+	}
+
+
+	/**
+	 * Toggles whether "mark occurrences" is enabled.
+	 *
+	 * @param markOccurrences Whether "Mark Occurrences" should be enabled.
+	 * @see #getMarkOccurrences()
+	 * @see #setMarkOccurrencesColor(Paint)
+	 */
+	public void setMarkOccurrences(boolean markOccurrences) {
+		if (markOccurrences) {
+			if (markOccurrencesSupport==null) {
+				markOccurrencesSupport = new MarkOccurrencesSupport();
+				markOccurrencesSupport.install(this);
+			}
+		}
+		else {
+			if (markOccurrencesSupport!=null) {
+				markOccurrencesSupport.uninstall();
+				markOccurrencesSupport = null;
+			}
+		}
+	}
+
+
+	/**
+	 * Sets the "mark occurrences" color.
+	 *
+	 * @param color The new color.  This cannot be <code>null</code>.
+	 * @see #getMarkOccurrencesColor()
+	 * @see #setMarkOccurrences(boolean)
+	 */
+	public void setMarkOccurrencesColor(Paint paint) {
+		markOccurrencesColor = paint;
+		if (markOccurrencesSupport!=null) {
+			markOccurrencesSupport.setColor(paint);
 		}
 	}
 

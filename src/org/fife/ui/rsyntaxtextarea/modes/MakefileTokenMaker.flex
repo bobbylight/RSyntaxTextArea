@@ -72,7 +72,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class MakefileTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -136,6 +135,19 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "#", null };
+	}
+
+
+	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return type==Token.IDENTIFIER || type==Token.VARIABLE;
 	}
 
 

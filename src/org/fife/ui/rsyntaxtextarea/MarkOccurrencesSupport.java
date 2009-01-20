@@ -24,6 +24,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ import org.fife.ui.rtextarea.ChangableHighlightPainter;
  * @author Robert Futrell
  * @version 1.0
  */
-public class MarkOccurrencesSupport implements CaretListener, ActionListener {
+class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
 	private javax.swing.Timer timer;
@@ -74,10 +75,24 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 *        be in milliseconds.
 	 */
 	public MarkOccurrencesSupport(int delay) {
+		this(delay, new Color(224, 224, 224));
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param delay The delay between when the caret last moves and when the
+	 *        text should be scanned for matching occurrences.  This should
+	 *        be in milliseconds.
+	 * @param paint The color to use to mark the occurrences.  This cannot be
+	 *        <code>null</code>.
+	 */
+	public MarkOccurrencesSupport(int delay, Paint paint) {
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
 		p = new ChangableHighlightPainter();
-		setColor(new Color(224,224,224));
+		setColor(paint);
 		tags = new ArrayList();
 	}
 
@@ -99,6 +114,7 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 		//System.out.println("DEBUG: Marking occurrences...");
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		long time = System.currentTimeMillis();
 		doc.readLock();
 		try {
 
@@ -111,7 +127,7 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			Token tokenList = textArea.getTokenListForLine(line);
 			int dot = c.getDot();
 			Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-			if (t==null /* End of line */ || t.type!=Token.IDENTIFIER) {
+			if (t==null /* End of line */ || isValidType(t)) {
 				// Try to the "left" of the caret.
 				dot--;
 				try {
@@ -124,14 +140,13 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			}
 
 			// Add new highlights if an identifier is selected.
-			if (t!=null && t.type==Token.IDENTIFIER) {
-				System.out.println("Identifier!");
+			if (t!=null && isValidType(t)) {
 				String lexeme = t.getLexeme();
+				int type = t.type;
 				for (int i=0; i<textArea.getLineCount(); i++) {
 					Token temp = textArea.getTokenListForLine(i);
 					while (temp!=null && temp.isPaintable()) {
-						if (temp.type==Token.IDENTIFIER &&
-								temp.getLexeme().equals(lexeme)) {
+						if (temp.type==type && temp.getLexeme().equals(lexeme)){
 							try {
 								Object tag = h.addHighlight(temp.offset,
 												temp.offset+temp.textCount, p);
@@ -147,6 +162,8 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 		} finally {
 			doc.readUnlock();
+			time = System.currentTimeMillis() - time;
+			//System.out.println("Took: " + time + " ms");
 		}
 
 	}
@@ -166,10 +183,10 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * Returns the color being used to mark occurrences.
 	 *
 	 * @return The color being used.
-	 * @see #setColor(Color)
+	 * @see #setColor(Paint)
 	 */
-	public Color getColor() {
-		return (Color)p.getPaint();
+	public Paint getColor() {
+		return p.getPaint();
 	}
 
 
@@ -200,6 +217,18 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 
 	/**
+	 * Returns whether the specified token is a type that we can do a
+	 * "mark occurrences" on.
+	 *
+	 * @param t The token.
+	 * @return Whether we should mark all occurrences of this token.
+	 */
+	private boolean isValidType(Token t) {
+		return textArea.getMarkOccurrencesOfTokenType(t.type);
+	}
+
+
+	/**
 	 * Removes all highlights added to the text area by this listener.
 	 */
 	private void removeHighlights() {
@@ -216,11 +245,15 @@ public class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	/**
 	 * Sets the color to use when marking occurrences.
 	 *
-	 * @param c The color to use.
+	 * @param panit The color to use.
 	 * @see #getColor()
 	 */
-	public void setColor(Color c) {
-		p.setPaint(c);
+	public void setColor(Paint paint) {
+		p.setPaint(paint);
+		if (textArea!=null) {
+			removeHighlights();
+			caretUpdate(null); // Force a highlight repaint.
+		}
 	}
 
 

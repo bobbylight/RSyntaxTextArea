@@ -112,6 +112,19 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 
 	/**
+	 * Returns whether tokens of the specified type should have "mark
+	 * occurrences" enabled for the current programming language.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+	}
+
+
+	/**
 	 * Returns the words to highlight for UNIX shell scripts.
 	 *
 	 * @return A <code>TokenMap</code> containing the words to highlight for
