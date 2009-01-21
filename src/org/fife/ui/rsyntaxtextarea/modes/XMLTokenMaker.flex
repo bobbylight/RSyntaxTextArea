@@ -71,7 +71,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class XMLTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -141,6 +140,19 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "<!--", "-->" };
+	}
+
+
+	/**
+	 * Always returns <tt>false</tt>, as you never want "mark occurrences"
+	 * working in XML files.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return false;
 	}
 
 
@@ -231,7 +243,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*

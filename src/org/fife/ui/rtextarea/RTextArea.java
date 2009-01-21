@@ -25,6 +25,7 @@ package org.fife.ui.rtextarea;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
+import java.awt.Paint;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -33,6 +34,8 @@ import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -141,7 +144,7 @@ public class RTextArea extends RTextAreaBase
 	private JPopupMenu popupMenu;
 
 	/**
-	 * Whether hte popup menu has been created.
+	 * Whether the popup menu has been created.
 	 */
 	private boolean popupMenuCreated;
 
@@ -624,7 +627,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Does the actual dirtywork of replacing the selected text in this
+	 * Does the actual dirty-work of replacing the selected text in this
 	 * text area (i.e., in its document).  This method provides a hook for
 	 * subclasses to handle this in a different way.
 	 *
@@ -886,6 +889,22 @@ public class RTextArea extends RTextAreaBase
 			throw new IOException(e.getMessage());
 		}
 
+	}
+
+
+	/**
+	 * Deserializes a text area.
+	 *
+	 * @param s The stream to read from.
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @see #writeObject(ObjectOutputStream)
+	 */
+	private void readObject(ObjectInputStream s)
+						throws ClassNotFoundException, IOException {
+		s.defaultReadObject();
+		Color c = new Color(s.readInt());
+		markAllHighlightPainter = new ChangableHighlightPainter(c);
 	}
 
 
@@ -1350,6 +1369,25 @@ public class RTextArea extends RTextAreaBase
 					"rtext - Error", JOptionPane.ERROR_MESSAGE);
 		}
 
+	}
+
+
+	/**
+	 * Serializes this text area.
+	 *
+	 * @param s The stream to write to.
+	 * @throws IOException If an IO error occurs.
+	 * @see #readObject(ObjectInputStream)
+	 */
+	private void writeObject(ObjectOutputStream s) throws IOException {
+		s.defaultWriteObject();
+		// Cheating here for serialization, always serialize "mark all"
+		// Paint as a Color.  Nobody probably uses any other Paint anyway...
+		Paint p = markAllHighlightPainter.getPaint();
+		if (!(p instanceof Color)) {
+			p = getDefaultMarkAllHighlightColor();
+		}
+		s.writeInt(((Color)p).getRGB());
 	}
 
 

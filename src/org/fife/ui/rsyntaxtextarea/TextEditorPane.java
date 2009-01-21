@@ -23,7 +23,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.print.Printable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,7 +64,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * @see FileLocation
  */
 public class TextEditorPane extends RSyntaxTextArea implements
-									DocumentListener, Printable {
+									DocumentListener {
 
 	private static final long serialVersionUID = 1L;
 

@@ -72,7 +72,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class CSharpTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -86,6 +85,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	public CSharpTokenMaker() {
 		super();
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
 	}
 
 
@@ -332,6 +343,15 @@ PPExpression							= ({Whitespace}?{PPOrExpression}{Whitespace}?)
 PPWord								= ("define"|"undef"|"if"|"elif"|"else"|"endif"|"line"|"error"|"warning"|"region"|"endregion")
 PPDirective							= ({Whitespace}?"#"{Whitespace}?{PPWord}{InputCharacter}*)
 
+/* URL matching, for comments (not in C# spec) */
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ([A-Za-z_]|{DecimalDigitCharacter}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|[A-Za-z0-9])
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
 
 %state DELIMITEDCOMMENT
 %state DOCUMENTCOMMENT
@@ -339,89 +359,89 @@ PPDirective							= ({Whitespace}?"#"{Whitespace}?{PPWord}{InputCharacter}*)
 
 %%
 
-/* Keywords */
-<YYINITIAL> "abstract"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "as"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "base"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "break"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "case"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "catch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "checked"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "class"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "const"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "continue"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "decimal"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "default"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "delegate"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "do"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "enum"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "event"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "explicit"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "extern"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "finally"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "fixed"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "foreach"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "goto"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "implicit"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "in"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "interface"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "internal"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "is"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lock"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "namespace"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "new"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "null"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "object"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "operator"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "out"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "override"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "params"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "private"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "protected"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "public"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "readonly"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ref"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sealed"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sizeof"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "stackalloc"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "static"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "string"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "struct"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "switch"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "this"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "throw"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "try"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "typeof"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "unchecked"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "unsafe"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "using"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "virtual"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "void"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "volatile"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"				{ addToken(Token.RESERVED_WORD); }
-
-/* Data types. */
-<YYINITIAL> "bool"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "byte"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "char"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "double"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "float"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "int"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "long"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "object"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "sbyte"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "short"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "string"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "uint"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "ulong"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "ushort"				{ addToken(Token.DATA_TYPE); }
-
-
 <YYINITIAL> {
+
+	/* Keywords */
+	"abstract" |
+	"as" |
+	"base" |
+	"break" |
+	"case" |
+	"catch" |
+	"checked" |
+	"class" |
+	"const" |
+	"continue" |
+	"decimal" |
+	"default" |
+	"delegate" |
+	"do" |
+	"else" |
+	"enum" |
+	"event" |
+	"explicit" |
+	"extern" |
+	"finally" |
+	"fixed" |
+	"for" |
+	"foreach" |
+	"goto" |
+	"if" |
+	"implicit" |
+	"in" |
+	"interface" |
+	"internal" |
+	"is" |
+	"lock" |
+	"namespace" |
+	"new" |
+	"null" |
+	"object" |
+	"operator" |
+	"out" |
+	"override" |
+	"params" |
+	"private" |
+	"protected" |
+	"public" |
+	"readonly" |
+	"ref" |
+	"return" |
+	"sealed" |
+	"sizeof" |
+	"stackalloc" |
+	"static" |
+	"string" |
+	"struct" |
+	"switch" |
+	"this" |
+	"throw" |
+	"try" |
+	"typeof" |
+	"unchecked" |
+	"unsafe" |
+	"using" |
+	"virtual" |
+	"void" |
+	"volatile" |
+	"while"								{ addToken(Token.RESERVED_WORD); }
+
+	/* Data types. */
+	"bool" |
+	"byte" |
+	"char" |
+	"double" |
+	"float" |
+	"int" |
+	"long" |
+	"object" |
+	"sbyte" |
+	"short" |
+	"string" |
+	"uint" |
+	"ulong" |
+	"ushort"							{ addToken(Token.DATA_TYPE); }
+
 
 	{NewlineCharacter}					{ addNullToken(); return firstToken; }
 
@@ -476,7 +496,9 @@ PPDirective							= ({Whitespace}?"#"{Whitespace}?{PPWord}{InputCharacter}*)
 
 <DELIMITEDCOMMENT> {
 
-	[^\n\*]+						{}
+	[^hwf\n\*]+						{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]						{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	{DelimitedCommentEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
@@ -487,7 +509,9 @@ PPDirective							= ({Whitespace}?"#"{Whitespace}?{PPWord}{InputCharacter}*)
 
 <DOCUMENTCOMMENT> {
 
-	[^\<\n]*						{}
+	[^hwf\<\n]*						{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addNullToken(); return firstToken; }
 	"<"[^\>]*">"					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }
 	"<"							{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzEndRead, Token.PREPROCESSOR); addNullToken(); return firstToken; }

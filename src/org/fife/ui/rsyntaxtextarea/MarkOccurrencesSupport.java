@@ -112,9 +112,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			return;
 		}
 
-		//System.out.println("DEBUG: Marking occurrences...");
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-		long time = System.currentTimeMillis();
+		//long time = System.currentTimeMillis();
 		doc.readLock();
 		try {
 
@@ -122,12 +121,11 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			removeHighlights();
 
 			// Get the token at the caret position.
-			Highlighter h = textArea.getHighlighter();
 			int line = textArea.getCaretLineNumber();
 			Token tokenList = textArea.getTokenListForLine(line);
 			int dot = c.getDot();
 			Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-			if (t==null /* End of line */ || isValidType(t)) {
+			if (t==null /* End of line */ || !isValidType(t) || isSemicolon(t)){
 				// Try to the "left" of the caret.
 				dot--;
 				try {
@@ -140,7 +138,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			}
 
 			// Add new highlights if an identifier is selected.
-			if (t!=null && isValidType(t)) {
+			if (t!=null && isValidType(t) && !isSemicolon(t)) {
+				Highlighter h = textArea.getHighlighter();
 				String lexeme = t.getLexeme();
 				int type = t.type;
 				for (int i=0; i<textArea.getLineCount(); i++) {
@@ -162,7 +161,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 		} finally {
 			doc.readUnlock();
-			time = System.currentTimeMillis() - time;
+			//time = System.currentTimeMillis() - time;
 			//System.out.println("Took: " + time + " ms");
 		}
 
@@ -213,6 +212,20 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 		}
 		this.textArea = textArea;
 		textArea.addCaretListener(this);
+	}
+
+
+	/**
+	 * Returns whether the specified token is a semicolon.  This is a HACK
+	 * to work around the fact that many standard token makers return
+	 * semicolons as <tt>Token.IDENTIFIER</tt>s just to make the syntax
+	 * highlighting coloring look a little better.
+	 * 
+	 * @param t The token to check.  This cannot be <tt>null</tt>.
+	 * @return Whether the token is a semicolon.
+	 */
+	private static final boolean isSemicolon(Token t) {
+		return t.textCount==1 && t.text[t.textOffset]==';';
 	}
 
 

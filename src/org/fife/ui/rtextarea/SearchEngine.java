@@ -207,7 +207,7 @@ public class SearchEngine {
 
 
 	/**
-	 * Searches <code>searchIn</code> for an occurance of
+	 * Searches <code>searchIn</code> for an occurrence of
 	 * <code>searchFor</code> either forwards or backwards, matching
 	 * case or not.
 	 *
@@ -218,7 +218,7 @@ public class SearchEngine {
 	 * @param matchCase If <code>true</code>, do a case-sensitive search for
 	 *        <code>searchFor</code>.
 	 * @param wholeWord If <code>true</code>, <code>searchFor</code>
-	 *        occurances embedded in longer words in <code>searchIn</code>
+	 *        occurrences embedded in longer words in <code>searchIn</code>
 	 *        don't count as matches.
 	 * @return The starting position of a match, or <code>-1</code> if no
 	 *         match was found.
@@ -293,7 +293,7 @@ public class SearchEngine {
 
 
 	/**
-	 * Searches <code>searchIn</code> for an occurance of <code>regEx</code>
+	 * Searches <code>searchIn</code> for an occurrence of <code>regEx</code>
 	 * either forwards or backwards, matching case or not.
 	 *
 	 * @param regEx The regular expression to look for.
@@ -303,7 +303,7 @@ public class SearchEngine {
 	 * @param matchCase Whether or not to do a case-sensitive search for
 	 *        <code>regEx</code>.
 	 * @param wholeWord If <code>true</code>, <code>regEx</code>
-	 *        occurances embedded in longer words in <code>searchIn</code>
+	 *        occurrences embedded in longer words in <code>searchIn</code>
 	 *        don't count as matches.
 	 * @return A <code>Point</code> representing the starting and ending
 	 *         position of the match, or <code>null</code> if no match was
@@ -321,7 +321,7 @@ public class SearchEngine {
 
 
 	/**
-	 * Searches <code>searchIn</code> for an occurance of <code>regEx</code>
+	 * Searches <code>searchIn</code> for an occurrence of <code>regEx</code>
 	 * either forwards or backwards, matching case or not.
 	 *
 	 * @param regEx The regular expression to look for.
@@ -331,7 +331,7 @@ public class SearchEngine {
 	 * @param matchCase Whether or not to do a case-sensitive search for
 	 *        <code>regEx</code>.
 	 * @param wholeWord If <code>true</code>, <code>regEx</code>
-	 *        occurances embedded in longer words in <code>searchIn</code>
+	 *        occurrences embedded in longer words in <code>searchIn</code>
 	 *        don't count as matches.
 	 * @param replaceStr The string that will replace the match found (if
 	 *        a match is found).  The object returned will contain the
@@ -472,7 +472,7 @@ public class SearchEngine {
 	 *        search backward.
 	 * @param matchCase Whether or not to do a case-sensitive search for
 	 *        <code>regEx</code>.
-	 * @param wholeWord If <code>true</code>, <code>regEx</code> occurrances
+	 * @param wholeWord If <code>true</code>, <code>regEx</code> occurrences
 	 *        embedded in longer words in <code>searchIn</code> don't count as
 	 *        matches.
 	 * @param replacement A template for the replacement string (e.g., this
