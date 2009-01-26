@@ -282,6 +282,35 @@ public abstract class Token {
 
 
 	/**
+	 * Returns the last token in this list that is not whitespace or a
+	 * comment.
+	 *
+	 * @return The last non-comment, non-whitespace token, or <code>null</code>
+	 *         if there isn't one.
+	 */
+	public Token getLastNonCommentNonWhitespaceToken() {
+
+		Token last = null;
+
+		for (Token t=this; t!=null && t.isPaintable(); t=t.nextToken) {
+			switch (t.type) {
+				case COMMENT_DOCUMENTATION:
+				case COMMENT_EOL:
+				case COMMENT_MULTILINE:
+				case WHITESPACE:
+					break;
+				default:
+					last = t;
+					break;
+			}
+		}
+
+		return last;
+
+	}
+
+
+	/**
 	 * Returns the last paintable token in this token list, or <code>null</code>
 	 * if there is no paintable token.
 	 *

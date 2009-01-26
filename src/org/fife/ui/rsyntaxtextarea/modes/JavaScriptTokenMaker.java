@@ -124,7 +124,7 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 
 
 	/**
-	 * Returns the words to highlightfor the JavaScript programming language.
+	 * Returns the words to highlight for the JavaScript programming language.
 	 *
 	 * @return A <code>TokenMap</code> containing the words to highlight for
 	 *         the JavaScript programming language.
@@ -207,6 +207,33 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 
 
 	/**
+	 * Returns <code>true</code> always as JavaScript uses curly braces
+	 * to denote code blocks.
+	 *
+	 * @return <code>true</code> always.
+	 */
+	public boolean getCurlyBracesDenoteCodeBlocks() {
+		return true;
+	}
+
+
+	/**
+	 * Returns <code>true</code> if the specified token is a '<tt>{</tt>' or
+	 * '<tt>(</tt>' separator.
+	 *
+	 * @param token The token the previous line ends with.
+	 * @return Whether the next line should be indented after this token.
+	 */
+	public boolean getShouldIndentNextLineAfter(Token t) {
+		if (t!=null && t.textCount==1) {
+			char ch = t.text[t.textOffset];
+			return ch=='{' || ch=='(';
+		}
+		return false;
+	}
+
+
+	/**
 	 * Returns the first token in the linked list of tokens generated
 	 * from <code>text</code>.  This method must be implemented by
 	 * subclasses so they can correctly implement syntax highlighting.
@@ -214,7 +241,7 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 	 * @param text The text from which to get tokens.
 	 * @param initialTokenType The token type we should start with.
 	 * @param startOffset The offset into the document at which
-	 *                    <code>text</code> starts.
+	 *        <code>text</code> starts.
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
@@ -232,7 +259,7 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 		// See, when we find a token, its starting position is always of the
 		// form: 'startOffset + (currentTokenStart-offset)'; but since
 		// startOffset and offset are constant, tokens' starting positions
-		// become: 'newStartOffset+currentTokenStart' for one less subraction
+		// become: 'newStartOffset+currentTokenStart' for one less subtraction
 		// operation.
 		int newStartOffset = startOffset - offset;
 

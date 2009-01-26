@@ -193,7 +193,7 @@ public class Macro {
 	 *
 	 * @param node The root node of the parsed XML document.
 	 * @return <code>true</code> if the macro initialization went okay;
-	 *         <code>false</code> if an error occured.
+	 *         <code>false</code> if an error occurred.
 	 */
 	private boolean initializeFromXMLFile(Element root) {
 

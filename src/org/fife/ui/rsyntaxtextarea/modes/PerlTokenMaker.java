@@ -69,7 +69,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  */
 
-public class PerlTokenMaker extends AbstractJFlexTokenMaker {
+public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -1444,9 +1444,8 @@ public class PerlTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -1461,7 +1460,7 @@ public class PerlTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*

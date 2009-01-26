@@ -70,8 +70,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class GroovyTokenMaker
-%extends AbstractJFlexTokenMaker
-%implements TokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 

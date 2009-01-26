@@ -100,7 +100,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  * to your text area.
  *
  * @author Robert Futrell
- * @version 1.1
+ * @version 1.2
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
@@ -110,7 +110,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY	= "RSTA.clearWhitespaceLines";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
-	public static final String SMART_INDENT_PROPERTY			= "RSTA.smartIndent";
 	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY			= "RSTA.syntaxStyle";
 	public static final String VISIBLE_WHITESPACE_PROPERTY		= "RSTA.visibleWhitespace";
@@ -139,11 +138,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * Whether or not templates are enabled.
 	 */
 	private static boolean templatesEnabled;
-
-	/**
-	 * Whether smart indenting is enabled.
-	 */
-	private boolean smartIndentEnabled;
 
 	/**
 	 * The rectangle surrounding the "matched bracket" if bracket matching
@@ -582,26 +576,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * If smart indenting is enabled, this method returns whether a "smart
-	 * indent" should be done if Enter is pressed at the end of the specified
-	 * line.
-	 *
-	 * @param line The line to check.
-	 * @return Whether a smart indent should be done at the end of the
-	 *         specified line.
-	 * @see #isSmartIndentEnabled()
-	 */
-	public boolean doSmartIndent(int line) {
-		if (isSmartIndentEnabled()) {
-			RSyntaxDocument doc = (RSyntaxDocument)getDocument();
-			return doc.doSmartIndent(line);
-		}
-		return false;
-	}
-
-
-	/**
-	 * Notifies all listeners that a caret change has occured.
+	 * Notifies all listeners that a caret change has occurred.
 	 *
 	 * @param e The caret event.
 	 */
@@ -704,7 +679,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns the "default" syntax highlighting color scheme.  The colors
 	 * used are somewhat standard among syntax highlighting text editors.
 	 *
-	 * @return The default syntax highlighting color scheem.
+	 * @return The default syntax highlighting color scheme.
 	 */
 	public SyntaxHighlightingColorScheme getDefaultSyntaxHighlightingColorScheme() {
 		return new SyntaxHighlightingColorScheme(true);
@@ -756,9 +731,9 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns whether fractional fontmetrics are enabled for this text area.
+	 * Returns whether fractional font metrics are enabled for this text area.
 	 *
-	 * @return Whether fractional fontmetrics are enabled.
+	 * @return Whether fractional font metrics are enabled.
 	 * @see #setFractionalFontMetricsEnabled
 	 * @see #getTextAntiAliasHint
 	 */
@@ -909,6 +884,33 @@ private boolean fractionalFontMetricsEnabled;
 			rtfGenerator.reset();
 		}
 		return rtfGenerator;
+	}
+
+
+	/**
+	 * If auto-indent is enabled, this method returns whether a new line after
+	 * this one should be indented (based on the standard indentation rules for
+	 * the current programming language). For example, in Java, for a line
+	 * containing:
+	 * 
+	 * <pre>
+	 * for (int i=0; i<10; i++) {
+	 * </pre>
+	 * 
+	 * the following line should be indented.
+	 *
+	 * @param line The line to check.
+	 * @return Whether a line inserted after this one should be auto-indented.
+	 *         If auto-indentation is disabled, this will always return
+	 *         <code>false</code>.
+	 * @see #isAutoIndentEnabled()
+	 */
+	public boolean getShouldIndentNextLine(int line) {
+		if (isAutoIndentEnabled()) {
+			RSyntaxDocument doc = (RSyntaxDocument)getDocument();
+			return doc.getShouldIndentNextLine(line);
+		}
+		return false;
 	}
 
 
@@ -1103,10 +1105,9 @@ private boolean fractionalFontMetricsEnabled;
 		setBracketMatchingEnabled(true);
 		setSelectionColor(getDefaultSelectionColor());
 
-		// Set auto-indent releated stuff.
+		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);
 		setClearWhitespaceLinesEnabled(true);
-		//setSmartIndentEnabled(true);
 
 		setHyperlinksEnabled(true);
 		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
@@ -1122,7 +1123,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns whether or not auto-indent is enabled.
 	 *
 	 * @return Whether or not auto-indent is enabled.
-	 * @see #setAutoIndentEnabled
+	 * @see #setAutoIndentEnabled(boolean)
 	 */
 	public boolean isAutoIndentEnabled() {
 		return autoIndentEnabled;
@@ -1150,17 +1151,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean isClearWhitespaceLinesEnabled() {
 		return clearWhitespaceLines;
-	}
-
-
-	/**
-	 * Returns whether smart indent is enabled.
-	 *
-	 * @return Whether smart indent is enabled.
-	 * @see #setSmartIndentEnabled(boolean)
-	 */
-	public boolean isSmartIndentEnabled() {
-		return smartIndentEnabled;
 	}
 
 
@@ -1291,10 +1281,10 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets whether or not auto-indent is enabled.  This fires a property
-	 * change event of type <code>AUTO_INDENT_PROPERTY</code>.
+	 * change event of type {@link #AUTO_INDENT_PROPERTY}.
 	 *
 	 * @param enabled Whether or not auto-indent is enabled.
-	 * @see #isAutoIndentEnabled
+	 * @see #isAutoIndentEnabled()
 	 */
 	public void setAutoIndentEnabled(boolean enabled) {
 		if (autoIndentEnabled!=enabled) {
@@ -1531,21 +1521,6 @@ private boolean fractionalFontMetricsEnabled;
 			parserManager = new ParserManager(this);
 		clearParserNoticeHighlights();
 		parserManager.setParser(parser);
-	}
-
-
-	/**
-	 * Sets whether smart indenting is enabled.  This method fires a
-	 * property change event of type {@link #SMART_INDENT_PROPERTY}.
-	 *
-	 * @param enabled Whether smart indenting should be enabled.
-	 * @see #isSmartIndentEnabled()
-	 */
-	public void setSmartIndentEnabled(boolean enabled) {
-		if (enabled!=smartIndentEnabled) {
-			smartIndentEnabled = enabled;
-			firePropertyChange(SMART_INDENT_PROPERTY, !enabled, enabled);
-		}
 	}
 
 

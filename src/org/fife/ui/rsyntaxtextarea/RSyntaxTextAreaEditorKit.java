@@ -38,6 +38,8 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * programming-specific stuff.  There are currently subclasses to handle:
  *
  * <ul>
+ *   <li>Aligning "closing" curly braces with their matches, if the current
+ *       programming language uses curly braces to identify code blocks.</li>
  *   <li>Copying the current selection as RTF.</li>
  *   <li>Block indentation (increasing the indent of one or multiple lines)</li>
  *   <li>Block un-indentation (decreasing the indent of one or multiple lines)
@@ -58,6 +60,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
 	public static final String rstaCopyAsRtfAction			= "RSTA.CopyAsRtfAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
@@ -70,6 +73,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * <code>RTextAreaEditorKit</code>.
 	 */
 	private static final Action[] defaultActions = {
+		new CloseCurlyBraceAction(),
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
@@ -114,11 +118,89 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
+	 * Action that (optionally) aligns a closing curly brace with the line
+	 * containing its matching opening curly brace.
+	 */
+	public static class CloseCurlyBraceAction extends RecordableTextAction {
+		
+		private static final long serialVersionUID = 1L;
+
+		private Segment seg;
+
+		public CloseCurlyBraceAction() {
+			super(rstaCloseCurlyBraceAction);
+			seg = new Segment();
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			textArea.replaceSelection("}");
+
+			// If the user wants to align curly braces...
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
+			if (rsta.isAutoIndentEnabled() &&
+					doc.getCurlyBracesDenoteCodeBlocks()) {
+
+				Element root = doc.getDefaultRootElement();
+				int dot = rsta.getCaretPosition() - 1; // Start before '{'
+				int line = root.getElementIndex(dot);
+				Element elem = root.getElement(line);
+				int start = elem.getStartOffset();
+
+				// Get the current line's text up to the '}' entered.
+				try {
+					doc.getText(start, dot-start, seg);
+				} catch (BadLocationException ble) { // Never happens
+					ble.printStackTrace();
+					return;
+				}
+
+				// Only attempt to align if there's only whitespace up to the
+				// '}' entered.
+				for (int i=0; i<seg.count; i++) {
+					char ch = seg.array[seg.offset+i];
+					if (!Character.isWhitespace(ch)) {
+						return;
+					}
+				}
+
+				// Locate the matching '{' bracket, and replace the leading
+				// whitespace for the '}' to match that of the '{' char's line.
+				int match = RSyntaxUtilities.getMatchingBracketPosition(rsta);
+				if (match>-1) {
+					elem = root.getElement(root.getElementIndex(match));
+					int start2 = elem.getStartOffset();
+					int end = elem.getEndOffset() - 1;
+					String text = null;
+					try {
+						text = doc.getText(start2, end-start2);
+					} catch (BadLocationException ble) { // Never happens
+						ble.printStackTrace();
+						return;
+					}
+					String ws = RSyntaxUtilities.getLeadingWhitespace(text);
+					rsta.replaceRange(ws, start, dot);
+				}
+
+			}
+
+		}
+
+		public final String getMacroID() {
+			return rstaCloseCurlyBraceAction;
+		}
+
+	}
+
+
+	/**
 	 * Action for copying text as RTF.
 	 */
 	public static class CopyAsRtfAction extends RecordableTextAction {
 
- 
+		private static final long serialVersionUID = 1L;
+
 		public CopyAsRtfAction() {
 			super(rstaCopyAsRtfAction);
 		}
@@ -520,61 +602,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// If we're in insert-mode and auto-indenting...
 			if (sta.getTextMode()==RTextArea.INSERT_MODE && 
-				sta.isAutoIndentEnabled()) {
-
-				try {
-
-					int caretPosition = textArea.getCaretPosition();
-					Document doc = textArea.getDocument();
-					Element map = doc.getDefaultRootElement();
-					int lineNum = map.getElementIndex(caretPosition);
-					Element line = map.getElement(lineNum);
-					int start = line.getStartOffset();
-					int end = line.getEndOffset()-1; // Why always "-1"?
-					int len = end-start;
-					String s = doc.getText(start, len);
-
-					// endWS is the end of the leading whitespace of the
-					// current line.
-					int endWS = getLeadingWhitespaceCount(s);
-					StringBuffer sb = new StringBuffer("\n");
-					sb.append(s.substring(0,endWS));//s, 0,endWS);
-
-					// If there is only whitespace between the caret and
-					// the EOL, pressing Enter auto-indents the new line to
-					// the same place as the previous line.
-					int nonWhitespacePos = atEndOfLine(caretPosition-start,
-												s, len);
-					if (nonWhitespacePos==-1) {
-						// If the line was nothing but whitespace...
-						if (endWS==len && sta.isClearWhitespaceLinesEnabled())
-							sta.replaceRange(null, start,end);
-						sta.replaceSelection(sb.toString());
-					}
-
-					// If there is non-whitespace between the caret and the
-					// EOL, pressing Enter takes that text to the next line
-					// and auto-indents it to the same place as the last
-					// line.
-					else {
-						sb.append(s.substring(nonWhitespacePos));
-						sta.replaceRange(sb.toString(), caretPosition, end);
-						sta.setCaretPosition(caretPosition + endWS + 1);
-					}
-
-					// Must do it after everything else, as the "smart indent"
-					// calculation depends on the previous line's state
-					// AFTER the Enter press (stuff may have been moved down).
-					// TODO: This causes two events => two undo/redo events.
-					// Combine into 1.
-					if (sta.doSmartIndent(lineNum)) {
-						sta.replaceSelection("\t");
-					}
-
-				} catch (BadLocationException ble) {
-					sta.replaceSelection("\n");
-				}
-
+					sta.isAutoIndentEnabled()) {
+				insertNewlineWithAutoIndent(sta);
 			}
 
 			// Otherwise, we're in overwrite-mode or not auto-indenting.
@@ -598,17 +627,74 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			return -1;
 		}
 
-		private static final int getLeadingWhitespaceCount(String s) {
-			int count = 0;
-			int len = s.length();
-			while (count<len && RSyntaxUtilities.isWhitespace(s.charAt(count))){
-				count++;
-			}
-			return count;
-		}
-
 		public final String getMacroID() {
 			return DefaultEditorKit.insertBreakAction;
+		}
+
+		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {
+
+			try {
+
+				int caretPosition = sta.getCaretPosition();
+				Document doc = sta.getDocument();
+				Element map = doc.getDefaultRootElement();
+				int lineNum = map.getElementIndex(caretPosition);
+				Element line = map.getElement(lineNum);
+				int start = line.getStartOffset();
+				int end = line.getEndOffset()-1; // Why always "-1"?
+				int len = end-start;
+				String s = doc.getText(start, len);
+
+				// endWS is the end of the leading whitespace of the
+				// current line.
+				String leadingWS = RSyntaxUtilities.getLeadingWhitespace(s);
+				StringBuffer sb = new StringBuffer("\n");
+				sb.append(leadingWS);
+
+				// If there is only whitespace between the caret and
+				// the EOL, pressing Enter auto-indents the new line to
+				// the same place as the previous line.
+				int nonWhitespacePos = atEndOfLine(caretPosition-start, s, len);
+				if (nonWhitespacePos==-1) {
+					// If the line was nothing but whitespace...
+					if (leadingWS.length()==len &&
+							sta.isClearWhitespaceLinesEnabled()) {
+						sta.replaceRange(null, start,end);
+					}
+					sta.replaceSelection(sb.toString());
+				}
+
+				// If there is non-whitespace between the caret and the
+				// EOL, pressing Enter takes that text to the next line
+				// and auto-indents it to the same place as the last
+				// line.
+				else {
+					sb.append(s.substring(nonWhitespacePos));
+					sta.replaceRange(sb.toString(), caretPosition, end);
+					sta.setCaretPosition(caretPosition + leadingWS.length()+1);
+				}
+
+				// Must do it after everything else, as the "smart indent"
+				// calculation depends on the previous line's state
+				// AFTER the Enter press (stuff may have been moved down).
+				// TODO: This causes two events => two undo/redo events.
+				// Combine into 1.
+				if (sta.getShouldIndentNextLine(lineNum)) {
+					sta.replaceSelection("\t");
+				}
+
+//				if (sta.getCloseCurlyBraces()) {
+//					int dot = sta.getCaretPosition();
+//					String str = "\n" + leadingWS + "}";
+//					sta.replaceRange(str, dot, dot);
+//					sta.setCaretPosition(dot);
+//				}
+
+			} catch (BadLocationException ble) { // Never happens
+				sta.replaceSelection("\n");
+				ble.printStackTrace();
+			}
+
 		}
 
 	}

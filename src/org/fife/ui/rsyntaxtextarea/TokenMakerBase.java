@@ -100,7 +100,7 @@ abstract class TokenMakerBase implements TokenMaker {
 	 * @param tokenType The token's type.
 	 * @param startOffset The offset in the document at which this token
 	 *        occurs.
-	 * @param hyperlink Whether this token is a hpyerlink.
+	 * @param hyperlink Whether this token is a hyperlink.
 	 */
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
@@ -123,6 +123,20 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns whether this programming language uses curly braces
+	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.<p>
+	 *
+	 * The default implementation returns <code>false</code>; subclasses can
+	 * override this method if necessary.
+	 *
+	 * @return Whether curly braces denote code blocks.
+	 */
+	public boolean getCurlyBracesDenoteCodeBlocks() {
+		return false;
+	}
+
+
+	/**
 	 * Returns the last token on this line's type if the token is "unfinished",
 	 * or <code>Token.NULL</code> if it was finished.  For example, if C-style
 	 * syntax highlighting is being implemented, and <code>text</code>
@@ -140,7 +154,7 @@ abstract class TokenMakerBase implements TokenMaker {
 	 */
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
 
-		// Last param doesn't matter if we're not painting.
+		// Last parameter doesn't matter if we're not painting.
 		Token t = getTokenList(text, initialTokenType, 0);
 
 		while (t.getNextToken()!=null)
@@ -179,6 +193,18 @@ abstract class TokenMakerBase implements TokenMaker {
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER;
+	}
+
+
+	/**
+	 * The default implementation returns <code>false</code> always.  Languages
+	 * that wish to better support auto-indentation can override this method.
+	 *
+	 * @param token The token the previous line ends with.
+	 * @return Whether the next line should be indented.
+	 */
+	public boolean getShouldIndentNextLineAfter(Token token) {
+		return false;
 	}
 
 

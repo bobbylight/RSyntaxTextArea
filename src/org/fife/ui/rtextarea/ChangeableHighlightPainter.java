@@ -52,7 +52,7 @@ import javax.swing.text.View;
  * @author Robert Futrell
  * @version 0.6
  */
-public class ChangableHighlightPainter extends LayeredHighlighter.LayerPainter {
+public class ChangeableHighlightPainter extends LayeredHighlighter.LayerPainter {
 
 	/**
 	 * The <code>Paint</code>/<code>Color</code> of this highlight.
@@ -88,7 +88,7 @@ public class ChangableHighlightPainter extends LayeredHighlighter.LayerPainter {
 	 * <code>javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 	 * </code>).
 	 */
-	public ChangableHighlightPainter() {
+	public ChangeableHighlightPainter() {
 		this(null);
 	}
 
@@ -101,7 +101,7 @@ public class ChangableHighlightPainter extends LayeredHighlighter.LayerPainter {
 	 *        <code>java.awt.Color</code>) with which to paint the
 	 *        highlights.
 	 */
-	public ChangableHighlightPainter(Paint paint) {
+	public ChangeableHighlightPainter(Paint paint) {
 		this(paint, false);
 	}
 
@@ -114,7 +114,7 @@ public class ChangableHighlightPainter extends LayeredHighlighter.LayerPainter {
 	 *        highlights.
 	 * @param rounded Whether to use rounded edges on the highlights.
 	 */
-	public ChangableHighlightPainter(Paint paint, boolean rounded) {
+	public ChangeableHighlightPainter(Paint paint, boolean rounded) {
 		this(paint, rounded, 1.0f);
 	}
 
@@ -130,7 +130,7 @@ public class ChangableHighlightPainter extends LayeredHighlighter.LayerPainter {
 	 *        value should be in the range <code>0.0f</code> (completely
 	 *        transparent) through <code>1.0f</code> (opaque).
 	 */
-	public ChangableHighlightPainter(Paint paint, boolean rounded,
+	public ChangeableHighlightPainter(Paint paint, boolean rounded,
 											float alpha) {
 		setPaint(paint);
 		setRoundedEdges(rounded);

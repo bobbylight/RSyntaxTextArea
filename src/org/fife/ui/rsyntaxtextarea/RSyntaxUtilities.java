@@ -83,6 +83,22 @@ public class RSyntaxUtilities implements SwingConstants {
 
 
 	/**
+	 * Returns the leading whitespace of a string.
+	 *
+	 * @param text The String to check.
+	 * @return The leading whitespace.
+	 */
+	public static String getLeadingWhitespace(String text) {
+		int count = 0;
+		int len = text.length();
+		while (count<len && RSyntaxUtilities.isWhitespace(text.charAt(count))) {
+			count++;
+		}
+		return text.substring(0, count);
+	}
+
+
+	/**
 	 * Returns the bounding box (in the current view) of a specified position
 	 * in the model.  This method is designed for line-wrapped views to use,
 	 * as it allows you to specify a "starting position" in the line, from
@@ -172,8 +188,8 @@ public class RSyntaxUtilities implements SwingConstants {
 				Element line;
 				int start, end;
 
-				RSyntaxDocument document = (RSyntaxDocument)textArea.getDocument();
-				document.getText(caretPosition,1, charSegment);
+				RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+				doc.getText(caretPosition,1, charSegment);
 
 				// First, see if the previous char was a bracket
 				// ('{', '}', '(', ')', '[', ']').
@@ -190,14 +206,15 @@ public class RSyntaxUtilities implements SwingConstants {
 					case '[':
 
 						// Ensure this bracket isn't in a comment.
-						map = document.getDefaultRootElement();
+						map = doc.getDefaultRootElement();
 						curLine = map.getElementIndex(caretPosition);
 						line = map.getElement(curLine);
 						start = line.getStartOffset();
 						end = line.getEndOffset();
-						token = document.getTokenListForLine(curLine);
+						token = doc.getTokenListForLine(curLine);
 						token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
-						if (token.type!=Token.SEPARATOR) { // All brackets are always returned as "sepatarors."
+						// All brackets are always returned as "separators."
+						if (token.type!=Token.SEPARATOR) {
 							return -1;
 						}
 						bracketMatch = bracket=='{' ? '}' : (bracket=='(' ? ')' : ']');
@@ -209,14 +226,15 @@ public class RSyntaxUtilities implements SwingConstants {
 					case ']':
 
 						// Ensure this bracket isn't in a comment.
-						map = document.getDefaultRootElement();
+						map = doc.getDefaultRootElement();
 						curLine = map.getElementIndex(caretPosition);
 						line = map.getElement(curLine);
 						start = line.getStartOffset();
 						end = line.getEndOffset();
-						token = document.getTokenListForLine(curLine);
+						token = doc.getTokenListForLine(curLine);
 						token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
-						if (token.type!=Token.SEPARATOR) { // All brackets are always returned as "sepatarors."
+						// All brackets are always returned as "separators."
+						if (token.type!=Token.SEPARATOR) {
 							return -1;
 						}
 						bracketMatch = bracket=='}' ? '{' : (bracket==')' ? '(' : '[');
@@ -240,7 +258,7 @@ public class RSyntaxUtilities implements SwingConstants {
 
 					while (true) {
 
-						document.getText(start,end-start, charSegment);
+						doc.getText(start,end-start, charSegment);
 						int segOffset = charSegment.offset;
 
 						for (int i=segOffset; i<segOffset+charSegment.count; i++) {
@@ -249,17 +267,18 @@ public class RSyntaxUtilities implements SwingConstants {
 
 							if (ch==bracket) {
 								if (haveTokenList==false) {
-									token = document.getTokenListForLine(curLine);
+									token = doc.getTokenListForLine(curLine);
 									haveTokenList = true;
 								}
-								token = RSyntaxUtilities.getTokenAtOffset(token, start+(i-segOffset));
+								int offset = start + (i-segOffset);
+								token = RSyntaxUtilities.getTokenAtOffset(token, offset);
 								if (token.type==Token.SEPARATOR)
 									numEmbedded++;
 							}
 
 							else if (ch==bracketMatch) {
 								if (haveTokenList==false) {
-									token = document.getTokenListForLine(curLine);
+									token = doc.getTokenListForLine(curLine);
 									haveTokenList = true;
 								}
 								int offset = start + (i-segOffset);
@@ -302,7 +321,7 @@ public class RSyntaxUtilities implements SwingConstants {
 
 					while (true) {
 
-						document.getText(start,end-start, charSegment);
+						doc.getText(start,end-start, charSegment);
 						int segOffset = charSegment.offset;
 						int iStart = segOffset + charSegment.count - 1;
 
@@ -312,17 +331,18 @@ public class RSyntaxUtilities implements SwingConstants {
 
 							if (ch==bracket) {
 								if (haveTokenList==false) {
-									token = document.getTokenListForLine(curLine);
+									token = doc.getTokenListForLine(curLine);
 									haveTokenList = true;
 								}
-								t2 = RSyntaxUtilities.getTokenAtOffset(token, start+(i-segOffset));
+								int offset = start + (i-segOffset);
+								t2 = RSyntaxUtilities.getTokenAtOffset(token, offset);
 								if (t2.type==Token.SEPARATOR)
 									numEmbedded++;
 							}
 
 							else if (ch==bracketMatch) {
 								if (haveTokenList==false) {
-									token = document.getTokenListForLine(curLine);
+									token = doc.getTokenListForLine(curLine);
 									haveTokenList = true;
 								}
 								int offset = start + (i-segOffset);

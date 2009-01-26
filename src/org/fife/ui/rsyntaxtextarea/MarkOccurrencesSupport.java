@@ -36,7 +36,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Highlighter;
 
-import org.fife.ui.rtextarea.ChangableHighlightPainter;
+import org.fife.ui.rtextarea.ChangeableHighlightPainter;
 
 
 /**
@@ -50,7 +50,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
 	private javax.swing.Timer timer;
-	private ChangableHighlightPainter p;
+	private ChangeableHighlightPainter p;
 	private List tags;
 
 	/**
@@ -91,7 +91,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	public MarkOccurrencesSupport(int delay, Paint paint) {
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
-		p = new ChangableHighlightPainter();
+		p = new ChangeableHighlightPainter();
 		setColor(paint);
 		tags = new ArrayList();
 	}
@@ -125,7 +125,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			Token tokenList = textArea.getTokenListForLine(line);
 			int dot = c.getDot();
 			Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-			if (t==null /* End of line */ || !isValidType(t) || isSemicolon(t)){
+			if (t==null /* EOL */ || !isValidType(t) || isNonWordChar(t)) {
 				// Try to the "left" of the caret.
 				dot--;
 				try {
@@ -138,7 +138,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			}
 
 			// Add new highlights if an identifier is selected.
-			if (t!=null && isValidType(t) && !isSemicolon(t)) {
+			if (t!=null && isValidType(t) && !isNonWordChar(t)) {
 				Highlighter h = textArea.getHighlighter();
 				String lexeme = t.getLexeme();
 				int type = t.type;
@@ -216,16 +216,18 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 
 	/**
-	 * Returns whether the specified token is a semicolon.  This is a HACK
-	 * to work around the fact that many standard token makers return
-	 * semicolons as <tt>Token.IDENTIFIER</tt>s just to make the syntax
-	 * highlighting coloring look a little better.
+	 * Returns whether the specified token is a single non-word char (e.g. not
+	 * in <tt>[A-Za-z]</tt>.  This is a HACK to work around the fact that many
+	 * standard token makers return things like semicolons and periods as
+	 * {@link Token#IDENTIFIER}s just to make the syntax highlighting coloring
+	 * look a little better.
 	 * 
 	 * @param t The token to check.  This cannot be <tt>null</tt>.
-	 * @return Whether the token is a semicolon.
+	 * @return Whether the token is a single non-word char.
 	 */
-	private static final boolean isSemicolon(Token t) {
-		return t.textCount==1 && t.text[t.textOffset]==';';
+	private static final boolean isNonWordChar(Token t) {
+		return t.textCount==1 &&
+				!RSyntaxUtilities.isLetter(t.text[t.textOffset]);
 	}
 
 

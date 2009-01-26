@@ -63,12 +63,21 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns whether this programming language uses curly braces
+	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.
+	 *
+	 * @return Whether curly braces denote code blocks.
+	 */
+	public boolean getCurlyBracesDenoteCodeBlocks();
+
+
+	/**
 	 * Returns the last token on this line's type if the token is "unfinished",
 	 * or <code>Token.NULL</code> if it was finished.  For example, if C-style
 	 * syntax highlighting is being implemented, and <code>text</code>
 	 * contained a line of code that contained the beginning of a comment but
 	 * no end-comment marker ("*\/"), then this method would return
-	 * <code>Token.COMMENT_MULTILINE</code> for that line.  This is useful
+	 * {@link Token#COMMENT_MULTILINE} for that line.  This is useful
 	 * for doing syntax highlighting.
 	 *
 	 * @param text The line of tokens to examine.
@@ -103,6 +112,16 @@ public interface TokenMaker {
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type);
+
+
+	/**
+	 * If a line ends in the specified token, this method returns whether
+	 * a new line inserted after that line should be indented.
+	 *
+	 * @param token The token the previous line ends with.
+	 * @return Whether the next line should be indented.
+	 */
+	public boolean getShouldIndentNextLineAfter(Token token);
 
 
 	/**

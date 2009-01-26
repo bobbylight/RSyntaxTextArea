@@ -154,13 +154,13 @@ class RUndoManager extends UndoManager {
 			return;
 		}
 
-		// This happens when there's already an undo that has occured.
+		// This happens when there's already an undo that has occurred.
 		// Test to see if these undos are on back-to-back characters,
 		// and if they are, group them as a single edit.  Since an
-		// undo has already occured, there is no need to update our
+		// undo has already occurred, there is no need to update our
 		// actions here.
 		int diff = textArea.getCaretPosition() - lastOffset;
-		// "<=1" allows contiguous "overwrite mode" keypresses to be
+		// "<=1" allows contiguous "overwrite mode" key presses to be
 		// grouped together.
 		if (Math.abs(diff)<=1) {//==1) {
 			compoundEdit.addEdit(e.getEdit());

@@ -71,7 +71,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class CSharpTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 

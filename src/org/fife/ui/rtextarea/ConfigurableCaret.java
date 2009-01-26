@@ -151,7 +151,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	public ConfigurableCaret(int style) {
 		seg = new Segment();
 		setStyle(style);
-		selectionPainter = new ChangableHighlightPainter();
+		selectionPainter = new ChangeableHighlightPainter();
 	}
 
 
@@ -236,7 +236,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @see #setRoundedSelectionEdges
 	 */
 	public boolean getRoundedSelectionEdges() {
-		return ((ChangableHighlightPainter)getSelectionPainter()).
+		return ((ChangeableHighlightPainter)getSelectionPainter()).
 								getRoundedEdges();
 	}
 
@@ -501,7 +501,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @see #getRoundedSelectionEdges()
 	 */
 	public void setRoundedSelectionEdges(boolean rounded) {
-		((ChangableHighlightPainter)getSelectionPainter()).
+		((ChangeableHighlightPainter)getSelectionPainter()).
 								setRoundedEdges(rounded);
 	}
 

@@ -162,7 +162,7 @@ public class RTextArea extends RTextAreaBase
 
 	private ArrayList markAllHighlights;		// Highlights from "mark all".
 	private String markedWord;				// Expression marked in "mark all."
-	private ChangableHighlightPainter markAllHighlightPainter;
+	private ChangeableHighlightPainter markAllHighlightPainter;
 
 	boolean inUndoRedo;
 
@@ -444,7 +444,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Notifies all listeners that a caret change has occured.
+	 * Notifies all listeners that a caret change has occurred.
 	 *
 	 * @param e The caret event.
 	 */
@@ -656,7 +656,7 @@ public class RTextArea extends RTextAreaBase
 
 		// Set the defaults for various stuff.
 		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
-		markAllHighlightPainter = new ChangableHighlightPainter(
+		markAllHighlightPainter = new ChangeableHighlightPainter(
 										markAllHighlightColor);
 		setMarkAllHighlightColor(markAllHighlightColor);
 		carets = new int[2];
@@ -904,7 +904,7 @@ public class RTextArea extends RTextAreaBase
 						throws ClassNotFoundException, IOException {
 		s.defaultReadObject();
 		Color c = new Color(s.readInt());
-		markAllHighlightPainter = new ChangableHighlightPainter(c);
+		markAllHighlightPainter = new ChangeableHighlightPainter(c);
 	}
 
 

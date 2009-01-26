@@ -108,37 +108,6 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
-	 * This method returns whether smart indentation should be done if Enter
-	 * is pressed at the end of the specified line.
-	 *
-	 * @param line The line to check.
-	 * @return Whether a smart indent should be done.
-	 */
-	public boolean doSmartIndent(int line) {
-		/*
-		// NOTE: This is for C-derivatives only!
-		// TODO: Call into tokenMaker for this information.
-		// This is also pretty crude, and only indents on curly braces
-		int initialTokenType = line==0 ? Token.NULL :
-								getLastTokenTypeOnLine(line-1);
-		if (initialTokenType==Token.NULL) { // Not an MLC
-			Token t = getTokenListForLine(line);
-			t = t.getLastPaintableToken();
-			if (t!=null && t.type==Token.SEPARATOR) {
-				if (t.textCount==1) {
-					String s2 = t.getLexeme();
-					if (s2.charAt(0)=='{') {
-						return true;
-					}
-				}
-			}
-		}
-		*/
-		return false;
-	}
-
-
-	/**
 	 * Alerts all listeners to this document of an insertion.  This is
 	 * overridden so we can update our syntax highlighting stuff.<p>
 	 * The syntax highlighting stuff has to be here instead of in
@@ -216,7 +185,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * structure, we can update our token elements and "last tokens on
 	 * lines" structure.
 	 *
-	 * @param chng The change that occured.
+	 * @param chng The change that occurred.
 	 * @see #removeUpdate
 	 */
 	protected void fireRemoveUpdate(DocumentEvent chng) {
@@ -274,6 +243,17 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns whether the current programming language uses curly braces
+	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.
+	 *
+	 * @return Whether curly braces denote code blocks.
+	 */
+	public boolean getCurlyBracesDenoteCodeBlocks() {
+		return tokenMaker.getCurlyBracesDenoteCodeBlocks();
+	}
+
+
+	/**
 	 * Returns the token type of the last token on the given line.
 	 *
 	 * @param line The line to inspect.
@@ -310,6 +290,20 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 */
 	boolean getMarkOccurrencesOfTokenType(int type) {
 		return tokenMaker.getMarkOccurrencesOfTokenType(type);
+	}
+
+
+	/**
+	 * This method returns whether auto indentation should be done if Enter
+	 * is pressed at the end of the specified line.
+	 *
+	 * @param line The line to check.
+	 * @return Whether an extra indentation should be done.
+	 */
+	public boolean getShouldIndentNextLine(int line) {
+		Token t = getTokenListForLine(line);
+		t = t.getLastNonCommentNonWhitespaceToken();
+		return tokenMaker.getShouldIndentNextLineAfter(t);
 	}
 
 

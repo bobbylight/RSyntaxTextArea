@@ -37,6 +37,9 @@ import org.fife.ui.rtextarea.RTADefaultInputMap;
  *   <li>Shift+Tab indents the current line or currently selected lines
  *       to the left.
  * </ul>
+ *
+ * @author Robert Futrell
+ * @version 1.0
  */
 public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
@@ -50,6 +53,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		//int alt = InputEvent.ALT_MASK;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),	RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
+		put(KeyStroke.getKeyStroke('}'),						RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
 
 		// FIXME:  The keystroke associated with this action should be dynamic and
 		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's

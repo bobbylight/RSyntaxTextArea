@@ -69,7 +69,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  */
 
-public class JSPTokenMaker extends AbstractJFlexTokenMaker implements TokenMaker {
+public class JSPTokenMaker extends AbstractJFlexCTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -2837,9 +2837,8 @@ public class JSPTokenMaker extends AbstractJFlexTokenMaker implements TokenMaker
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -2854,7 +2853,7 @@ public class JSPTokenMaker extends AbstractJFlexTokenMaker implements TokenMaker
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*

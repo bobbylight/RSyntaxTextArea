@@ -70,7 +70,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class PerlTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
