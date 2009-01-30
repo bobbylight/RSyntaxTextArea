@@ -373,14 +373,24 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 
-	/* Standard functions */
+	/* java.lang stuff */
+	"Appendable" |
+	"CharSequence" |
+	"Cloneable" |
+	"Comparable" |
+	"Iterable" |
+	"Readable" |
+	"Runnable" |
 	"Boolean" |
 	"Byte" |
 	"Character" |
+	"Character.Subset" | 
+	"Character.UnicodeBlock" | 
 	"Class" |
 	"ClassLoader" |
 	"Compiler" |
 	"Double" |
+	"Enum" |
 	"Float" |
 	"InheritableThreadLocal" |
 	"Integer" |
@@ -390,6 +400,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Object" |
 	"Package" |
 	"Process" |
+	"ProcessBuilder" |
 	"Runtime" |
 	"RuntimePermission" |
 	"SecurityManager" |
@@ -398,18 +409,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"StrictMath" |
 	"String" |
 	"StringBuffer" |
+	"StringBuilder" |
 	"System" |
 	"Thread" |
 	"ThreadGroup" |
 	"ThreadLocal" |
 	"Throwable" |
 	"Void" |
+	"Thread.State" |
 	"ArithmeticException" |
 	"ArrayIndexOutOfBoundsException" |
 	"ArrayStoreException" |
 	"ClassCastException" |
 	"ClassNotFoundException" |
 	"CloneNotSupportedException" |
+	"EnumConstantNotPresentException" |
 	"Exception" |
 	"IllegalAccessException" |
 	"IllegalArgumentException" |
@@ -427,6 +441,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"RuntimeException" |
 	"SecurityException" |
 	"StringIndexOutOfBoundsException" |
+	"TypeNotPresentException" |
 	"UnsupportedOperationException" |
 	"AbstractMethodError" |
 	"AssertionError" |
@@ -435,8 +450,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Error" |
 	"ExceptionInInitializerError" |
 	"IllegalAccessError" |
-	"IllegalAccessError" |
 	"IncompatibleClassChangeError" |
+	"InstantiationError" |
 	"InternalError" |
 	"LinkageError" |
 	"NoClassDefFoundError" |
@@ -449,15 +464,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" |
-	"CharSequence" |
-	"Cloneable" |
-	"Comparable" |
-	"Runnable"						{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
 
-}
-
-<YYINITIAL> {
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 

@@ -45,6 +45,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		map.put(SYNTAX_STYLE_LUA,				pkg + "LuaTokenMaker");
 		map.put(SYNTAX_STYLE_MAKEFILE,			pkg + "MakefileTokenMaker");
 		map.put(SYNTAX_STYLE_PERL,				pkg + "PerlTokenMaker");
+		map.put(SYNTAX_STYLE_PHP,				pkg + "PHPTokenMaker");
 		map.put(SYNTAX_STYLE_PROPERTIES_FILE,	pkg + "PropertiesFileTokenMaker");
 		map.put(SYNTAX_STYLE_PYTHON,			pkg + "PythonTokenMaker");
 		map.put(SYNTAX_STYLE_RUBY,				pkg + "RubyTokenMaker");

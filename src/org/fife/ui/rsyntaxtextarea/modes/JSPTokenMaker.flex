@@ -314,9 +314,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -331,7 +330,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -845,14 +844,24 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 
-	/* Standard functions */
+	/* java.lang stuff */
+	"Appendable" |
+	"CharSequence" |
+	"Cloneable" |
+	"Comparable" |
+	"Iterable" |
+	"Readable" |
+	"Runnable" |
 	"Boolean" |
 	"Byte" |
 	"Character" |
+	"Character.Subset" | 
+	"Character.UnicodeBlock" | 
 	"Class" |
 	"ClassLoader" |
 	"Compiler" |
 	"Double" |
+	"Enum" |
 	"Float" |
 	"InheritableThreadLocal" |
 	"Integer" |
@@ -862,6 +871,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"Object" |
 	"Package" |
 	"Process" |
+	"ProcessBuilder" |
 	"Runtime" |
 	"RuntimePermission" |
 	"SecurityManager" |
@@ -870,18 +880,21 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"StrictMath" |
 	"String" |
 	"StringBuffer" |
+	"StringBuilder" |
 	"System" |
 	"Thread" |
 	"ThreadGroup" |
 	"ThreadLocal" |
 	"Throwable" |
 	"Void" |
+	"Thread.State" |
 	"ArithmeticException" |
 	"ArrayIndexOutOfBoundsException" |
 	"ArrayStoreException" |
 	"ClassCastException" |
 	"ClassNotFoundException" |
 	"CloneNotSupportedException" |
+	"EnumConstantNotPresentException" |
 	"Exception" |
 	"IllegalAccessException" |
 	"IllegalArgumentException" |
@@ -899,6 +912,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"RuntimeException" |
 	"SecurityException" |
 	"StringIndexOutOfBoundsException" |
+	"TypeNotPresentException" |
 	"UnsupportedOperationException" |
 	"AbstractMethodError" |
 	"AssertionError" |
@@ -907,8 +921,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"Error" |
 	"ExceptionInInitializerError" |
 	"IllegalAccessError" |
-	"IllegalAccessError" |
 	"IncompatibleClassChangeError" |
+	"InstantiationError" |
 	"InternalError" |
 	"LinkageError" |
 	"NoClassDefFoundError" |
@@ -921,11 +935,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" |
-	"CharSequence" |
-	"Cloneable" |
-	"Comparable" |
-	"Runnable"						{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
 
 }
 

@@ -113,7 +113,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * Used for fastest-possible retrieval of the character at the
 	 * caret's position in the document.
 	 */
-	private Segment seg;
+	private transient Segment seg;
 
 	/**
 	 * Whether the caret is a vertical line, a horizontal line, or a block.
@@ -124,7 +124,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * The selection painter.  By default this paints selections with the
 	 * text area's selection color.
 	 */
-	private Highlighter.HighlightPainter selectionPainter;
+	private ChangeableHighlightPainter selectionPainter;
 
 	/**
 	 * Whether this is Java 1.4.
@@ -457,11 +457,13 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @param s The stream to read from.
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @see #writeObject(ObjectOutputStream)
 	 */
 	private void readObject(ObjectInputStream s)
 						throws ClassNotFoundException, IOException {
 		s.defaultReadObject();
 		setStyle(s.readInt());
+		seg = new Segment();
 	}
 
 
@@ -594,6 +596,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 *
 	 * @param s The stream to write to.
 	 * @throws IOException If an IO error occurs.
+	 * @see #readObject(ObjectInputStream)
 	 */
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();

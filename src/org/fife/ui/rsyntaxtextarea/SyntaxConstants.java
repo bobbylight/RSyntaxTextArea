@@ -133,6 +133,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting PHP.
+	 */
+	public static final String SYNTAX_STYLE_PHP				= "text/php";
+
+
+	/**
 	 * Style for highlighting properties files.
 	 */
 	public static final String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";

@@ -23,6 +23,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
@@ -332,6 +334,20 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 		int initialTokenType = line==0 ? Token.NULL :
 								getLastTokenTypeOnLine(line-1);
 		return tokenMaker.getTokenList(s, initialTokenType, startOffset);
+	}
+
+
+	/**
+	 * Deserializes a document.
+	 *
+	 * @param s The stream to read from.
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	private void readObject(ObjectInputStream s)
+						throws ClassNotFoundException, IOException {
+		s.defaultReadObject();
+		this.s = new Segment();
 	}
 
 

@@ -25,7 +25,6 @@ package org.fife.ui.rtextarea;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Graphics;
-import java.awt.Paint;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -158,7 +157,7 @@ public class RTextArea extends RTextAreaBase
 
 	private static IconGroup iconGroup;		// Info on icons for actions.
 
-	private RUndoManager undoManager;
+	private transient RUndoManager undoManager;
 
 	private ArrayList markAllHighlights;		// Highlights from "mark all".
 	private String markedWord;				// Expression marked in "mark all."
@@ -902,9 +901,14 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private void readObject(ObjectInputStream s)
 						throws ClassNotFoundException, IOException {
+
 		s.defaultReadObject();
-		Color c = new Color(s.readInt());
-		markAllHighlightPainter = new ChangeableHighlightPainter(c);
+
+		// UndoManagers cannot be serialized without Exceptions.  See
+		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4275892
+		undoManager = new RUndoManager(this);
+		getDocument().addUndoableEditListener(undoManager);
+
 	}
 
 
@@ -1380,14 +1384,13 @@ public class RTextArea extends RTextAreaBase
 	 * @see #readObject(ObjectInputStream)
 	 */
 	private void writeObject(ObjectOutputStream s) throws IOException {
+
+		// UndoManagers cannot be serialized without Exceptions.  See
+		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4275892
+		getDocument().removeUndoableEditListener(undoManager);
 		s.defaultWriteObject();
-		// Cheating here for serialization, always serialize "mark all"
-		// Paint as a Color.  Nobody probably uses any other Paint anyway...
-		Paint p = markAllHighlightPainter.getPaint();
-		if (!(p instanceof Color)) {
-			p = getDefaultMarkAllHighlightColor();
-		}
-		s.writeInt(((Color)p).getRGB());
+		getDocument().addUndoableEditListener(undoManager);
+
 	}
 
 

@@ -2,7 +2,7 @@
  * 11/10/2004
  *
  * ChangableHighlightPainter.java - A highlight painter whose color you can
- *                                  change.
+ * change.
  * Copyright (C) 2004 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
@@ -24,12 +24,18 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.SystemColor;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -52,7 +58,9 @@ import javax.swing.text.View;
  * @author Robert Futrell
  * @version 0.6
  */
-public class ChangeableHighlightPainter extends LayeredHighlighter.LayerPainter {
+public class ChangeableHighlightPainter
+		extends LayeredHighlighter.LayerPainter implements Serializable {
+
 
 	/**
 	 * The <code>Paint</code>/<code>Color</code> of this highlight.
@@ -67,7 +75,7 @@ public class ChangeableHighlightPainter extends LayeredHighlighter.LayerPainter 
 	/**
 	 * The alpha composite used to render with translucency.
 	 */
-	private AlphaComposite alphaComposite;
+	private transient AlphaComposite alphaComposite;
 
 	/**
 	 * The alpha value used in computing translucency.  This should stay in the
@@ -345,6 +353,25 @@ public class ChangeableHighlightPainter extends LayeredHighlighter.LayerPainter 
 
 
 	/**
+	 * Deserializes a painter.
+	 *
+	 * @param s The stream to read from.
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @see #writeObject(ObjectOutputStream)
+	 */
+	private void readObject(ObjectInputStream s)
+						throws ClassNotFoundException, IOException {
+		s.defaultReadObject();
+		// We cheat and always serialize the Paint as a Color.  "-1" means
+		// no Paint (i.e. use system selection color when painting).
+		int rgb = s.readInt();
+		paint = rgb==-1 ? null : new Color(rgb);
+		alphaComposite = null; // Keep FindBugs happy.  This will get set later
+	}
+
+
+	/**
 	 * Sets the alpha value used in rendering highlights.  If this value is
 	 * <code>1.0f</code> (the default), the highlights are rendered completely
 	 * opaque.  This behavior matches that of
@@ -384,6 +411,27 @@ public class ChangeableHighlightPainter extends LayeredHighlighter.LayerPainter 
 	 */
 	public void setRoundedEdges(boolean rounded) {
 		roundedEdges = rounded;
+	}
+
+
+	/**
+	 * Serializes this painter.
+	 *
+	 * @param s The stream to write to.
+	 * @throws IOException If an IO error occurs.
+	 * @see #readObject(ObjectInputStream)
+	 */
+	private void writeObject(ObjectOutputStream s) throws IOException {
+		s.defaultWriteObject();
+		int rgb = -1; // No Paint -> Use JTextComponent's selection color
+		if (paint!=null) {
+			// NOTE: We cheat and always serialize the Paint as a Color.
+			// This is (practically) always the case anyway.
+			Color c = (paint instanceof Color) ? ((Color)paint) :
+											SystemColor.textHighlight;
+			rgb = c.getRGB();
+		}
+		s.writeInt(rgb);
 	}
 
 
