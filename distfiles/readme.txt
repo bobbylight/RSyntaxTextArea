@@ -1,5 +1,9 @@
 RSyntaxTextArea Readme
 ----------------------
+Please contact me if you are using RSyntaxTextArea in your project!  I like
+to know when people are finding it useful.  Please send mail to:
+robert -at- fifesoft dot com.
+
 
 * About RSyntaxTextArea
 
