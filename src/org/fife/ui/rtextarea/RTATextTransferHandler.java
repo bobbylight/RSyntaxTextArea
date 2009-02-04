@@ -47,11 +47,12 @@ import javax.swing.text.*;
  * @version 0.1
  */
 public class RTATextTransferHandler extends TransferHandler {
-        
+
 	private JTextComponent exportComp;
 	private boolean shouldRemove;
 	private int p0;
 	private int p1;
+	private boolean withinSameComponent;
 
 
 	/**
@@ -176,6 +177,10 @@ public class RTATextTransferHandler extends TransferHandler {
 
 		} // End of while ((nch = in.read(buff, 0, buff.length)) != -1).
 
+		if (withinSameComponent) {
+			((RTextArea)c).beginAtomicEdit();
+		}
+
 		if (lastWasCR)
 			sbuff.append('\n');
 		c.replaceSelection(sbuff != null ? sbuff.toString() : "");
@@ -226,7 +231,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 *
 	 * @param source The component that was the source of the data.
 	 * @param data   The data that was transferred or possibly null
-      *               if the action is <code>NONE</code>.
+     *               if the action is <code>NONE</code>.
 	 * @param action The actual action that was performed.  
 	 */
 	protected void exportDone(JComponent source, Transferable data, int action) {
@@ -235,6 +240,10 @@ public class RTATextTransferHandler extends TransferHandler {
 		if (shouldRemove && action == MOVE) {
 			TextTransferable t = (TextTransferable)data;
 			t.removeText();
+			if (withinSameComponent) {
+				((RTextArea)source).endAtomicEdit();
+				withinSameComponent = false;
+			}
 		}
 		exportComp = null;
 	}
@@ -254,12 +263,13 @@ public class RTATextTransferHandler extends TransferHandler {
 	public boolean importData(JComponent comp, Transferable t) {
 
 		JTextComponent c = (JTextComponent)comp;
+		withinSameComponent = c==exportComp;
 
 		// if we are importing to the same component that we exported from
 		// then don't actually do anything if the drop location is inside
 		// the drag location and set shouldRemove to false so that exportDone
 		// knows not to remove any data
-		if (c==exportComp && c.getCaretPosition()>=p0 && c.getCaretPosition()<=p1) {
+		if (withinSameComponent && c.getCaretPosition()>=p0 && c.getCaretPosition()<=p1) {
 			shouldRemove = false;
 			return true;
 		}

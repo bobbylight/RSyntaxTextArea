@@ -152,7 +152,7 @@ public class DocumentReader extends Reader {
 			document.getText((int)position, k, segment);
 			position += k;
 			System.arraycopy(segment.array,segment.offset,
-							cbuf,0,
+							cbuf,off,
 							k);
 			return k;
 		} catch (BadLocationException ble) {

@@ -128,10 +128,13 @@ class ParserManager implements DocumentListener {
 				//}
 			}
 			*/
-			for (Iterator i=parser.getNoticeIterator(); i.hasNext(); ) {
-				ParserNotice notice = (ParserNotice)i.next();
-				if (notice.containsPosition(pos)) {
-					return notice.getMessage();
+			Iterator i = parser.getNoticeIterator();
+			if (i!=null) {
+				while (i.hasNext()) {
+					ParserNotice notice = (ParserNotice)i.next();
+					if (notice.containsPosition(pos)) {
+						return notice.getMessage();
+					}
 				}
 			}
 //		} catch (BadLocationException ble) {

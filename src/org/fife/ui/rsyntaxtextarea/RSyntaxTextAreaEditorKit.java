@@ -134,55 +134,69 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			textArea.replaceSelection("}");
-
-			// If the user wants to align curly braces...
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
-			if (rsta.isAutoIndentEnabled() &&
-					doc.getCurlyBracesDenoteCodeBlocks()) {
+			boolean alignCurlyBraces = rsta.isAutoIndentEnabled() &&
+										doc.getCurlyBracesDenoteCodeBlocks();
 
-				Element root = doc.getDefaultRootElement();
-				int dot = rsta.getCaretPosition() - 1; // Start before '{'
-				int line = root.getElementIndex(dot);
-				Element elem = root.getElement(line);
-				int start = elem.getStartOffset();
+			if (alignCurlyBraces) {
+				textArea.beginAtomicEdit();
+			}
 
-				// Get the current line's text up to the '}' entered.
-				try {
-					doc.getText(start, dot-start, seg);
-				} catch (BadLocationException ble) { // Never happens
-					ble.printStackTrace();
-					return;
-				}
+			try {
 
-				// Only attempt to align if there's only whitespace up to the
-				// '}' entered.
-				for (int i=0; i<seg.count; i++) {
-					char ch = seg.array[seg.offset+i];
-					if (!Character.isWhitespace(ch)) {
-						return;
-					}
-				}
+				textArea.replaceSelection("}");
 
-				// Locate the matching '{' bracket, and replace the leading
-				// whitespace for the '}' to match that of the '{' char's line.
-				int match = RSyntaxUtilities.getMatchingBracketPosition(rsta);
-				if (match>-1) {
-					elem = root.getElement(root.getElementIndex(match));
-					int start2 = elem.getStartOffset();
-					int end = elem.getEndOffset() - 1;
-					String text = null;
+				// If the user wants to align curly braces...
+				if (alignCurlyBraces) {
+
+					Element root = doc.getDefaultRootElement();
+					int dot = rsta.getCaretPosition() - 1; // Start before '{'
+					int line = root.getElementIndex(dot);
+					Element elem = root.getElement(line);
+					int start = elem.getStartOffset();
+
+					// Get the current line's text up to the '}' entered.
 					try {
-						text = doc.getText(start2, end-start2);
+						doc.getText(start, dot-start, seg);
 					} catch (BadLocationException ble) { // Never happens
 						ble.printStackTrace();
 						return;
 					}
-					String ws = RSyntaxUtilities.getLeadingWhitespace(text);
-					rsta.replaceRange(ws, start, dot);
+
+					// Only attempt to align if there's only whitespace up to
+					// the '}' entered.
+					for (int i=0; i<seg.count; i++) {
+						char ch = seg.array[seg.offset+i];
+						if (!Character.isWhitespace(ch)) {
+							return;
+						}
+					}
+
+					// Locate the matching '{' bracket, and replace the leading
+					// whitespace for the '}' to match that of the '{' char's line.
+					int match = RSyntaxUtilities.getMatchingBracketPosition(rsta);
+					if (match>-1) {
+						elem = root.getElement(root.getElementIndex(match));
+						int start2 = elem.getStartOffset();
+						int end = elem.getEndOffset() - 1;
+						String text = null;
+						try {
+							text = doc.getText(start2, end-start2);
+						} catch (BadLocationException ble) { // Never happens
+							ble.printStackTrace();
+							return;
+						}
+						String ws = RSyntaxUtilities.getLeadingWhitespace(text);
+						rsta.replaceRange(ws, start, dot);
+					}
+
 				}
 
+			} finally {
+				if (alignCurlyBraces) {
+					textArea.endAtomicEdit();
+				}
 			}
 
 		}
@@ -677,8 +691,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// Must do it after everything else, as the "smart indent"
 				// calculation depends on the previous line's state
 				// AFTER the Enter press (stuff may have been moved down).
-				// TODO: This causes two events => two undo/redo events.
-				// Combine into 1.
 				if (sta.getShouldIndentNextLine(lineNum)) {
 					sta.replaceSelection("\t");
 				}
@@ -899,6 +911,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				}
 			}
 
+			textArea.beginAtomicEdit();
 			try {
 				boolean add = getDoAdd(doc,map, start,end, startEnd);
 				for (line1=start; line1<=end; line1++) {
@@ -908,6 +921,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			} catch (BadLocationException ble) {
 				ble.printStackTrace();
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+			} finally {
+				textArea.endAtomicEdit();
 			}
 
 		}

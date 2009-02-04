@@ -270,6 +270,30 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Begins an "atomic edit."  All text editing operations between this call
+	 * and the next call to <tt>endAtomicEdit()</tt> will be treated as a
+	 * single operation by the undo manager.<p>
+	 *
+	 * Using this method should be done with great care.  You should probably
+	 * wrap the call to <tt>endAtomicEdit()</tt> in a <tt>finally</tt> block:
+	 *
+	 * <pre>
+	 * textArea.beginAtomicEdit();
+	 * try {
+	 *    // Do editing
+	 * } finally {
+	 *    textArea.endAtomicEdit();
+	 * }
+	 * </pre>
+	 *
+	 * @see #endAtomicEdit()
+	 */
+	public void beginAtomicEdit() {
+		undoManager.beginInternalAtomicEdit();
+	}
+
+
+	/**
 	 * Begins recording a macro.  After this method is called, all input/caret
 	 * events, etc. are recorded until <code>endMacroRecording</code> is
 	 * called.  If this method is called but the text component is already
@@ -420,6 +444,16 @@ public class RTextArea extends RTextAreaBase
 		undoManager = new RUndoManager(this);
 		getDocument().addUndoableEditListener(undoManager);
 		undoManager.updateActions();
+	}
+
+
+	/**
+	 * Completes an "atomic" edit.
+	 *
+	 * @see #beginAtomicEdit()
+	 */
+	public void endAtomicEdit() {
+		undoManager.endInternalAtomicEdit();
 	}
 
 
