@@ -147,6 +147,14 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private boolean popupMenuCreated;
 
+	/**
+	 * Can return tool tips for this text area.  Subclasses can install a
+	 * supplier as a means of adding custom tool tips without subclassing
+	 * <tt>RTextArea</tt>.  {@link #getToolTipText()} checks this supplier
+	 * before calling the super class's version.
+	 */
+	private ToolTipSupplier toolTipSupplier;
+
 	private static RecordableTextAction cutAction;
 	private static RecordableTextAction copyAction;
 	private static RecordableTextAction pasteAction;
@@ -656,6 +664,39 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public final int getTextMode() {
 		return textMode;
+	}
+
+
+	/**
+	 * Returns the tool tip supplier.
+	 *
+	 * @return The tool tip supplier, or <code>null</code> if one isn't
+	 *         installed.
+	 * @see #setToolTipSupplier(ToolTipSupplier)
+	 */
+	public ToolTipSupplier getToolTipSupplier() {
+		return toolTipSupplier;
+	}
+
+
+	/**
+	 * Returns the tooltip to display for a mouse event at the given
+	 * location.  This method is overridden to check for a
+	 * {@link ToolTipSupplier}; if there is one installed, it is queried for
+	 * tool tip text before using the super class's implementation of this
+	 * method.
+	 *
+	 * @param e The mouse event.
+	 * @return The tool tip text, or <code>null</code> if none.
+	 * @see #getToolTipSupplier()
+	 * @see #setToolTipSupplier(ToolTipSupplier)
+	 */
+	public String getToolTipText(MouseEvent e) {
+		String tip = null;
+		if (getToolTipSupplier()!=null) {
+			tip = getToolTipSupplier().getToolTipText(this, e);
+		}
+		return tip!=null ? tip : super.getToolTipText();
 	}
 
 
@@ -1359,6 +1400,18 @@ public class RTextArea extends RTextAreaBase
 			textMode = mode;
 		}
 
+	}
+
+
+	/**
+	 * Sets the tool tip supplier.
+	 *
+	 * @param supplier The new tool tip supplier, or <code>null</code> if
+	 *        there is to be no supplier.
+	 * @see #getToolTipSupplier()
+	 */
+	public void setToolTipSupplier(ToolTipSupplier supplier) {
+		this.toolTipSupplier = supplier;
 	}
 
 

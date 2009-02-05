@@ -111,7 +111,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Constructor.  The file will be given a defualt name.
+	 * Constructor.  The file will be given a default name.
 	 */
 	public TextEditorPane() {
 		this(INSERT_MODE);
@@ -119,7 +119,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Constructor.  The file will be given a defualt name.
+	 * Constructor.  The file will be given a default name.
 	 *
 	 * @param textMode Either <code>INSERT_MODE</code> or
 	 *        <code>OVERWRITE_MODE</code>.
@@ -676,6 +676,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * This fires a property change event of type {@link #READ_ONLY_PROPERTY}.
 	 *
 	 * @param readOnly Whether or not the document is read-only.
+	 * @see #isReadOnly()
 	 */
 	public void setReadOnly(boolean readOnly) {
 		if (this.readOnly!=readOnly) {

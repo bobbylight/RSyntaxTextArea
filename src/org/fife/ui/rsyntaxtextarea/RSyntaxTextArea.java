@@ -1211,16 +1211,19 @@ private boolean fractionalFontMetricsEnabled;
 		clearParserNoticeHighlights();
 		if (parserNoticeHighlights==null)
 			parserNoticeHighlights = new ArrayList();
-		Highlighter h = getHighlighter();
-		while (parserNoticeIterator.hasNext()) {
-			ParserNotice notice = (ParserNotice)parserNoticeIterator.next();
-			int start = notice.getOffset();
-			int length = notice.getLength();
-			try {
-				parserNoticeHighlights.add(h.addHighlight(start,start+length,
-									parserErrorHighlightPainter));
-			} catch (BadLocationException ble) {
-				ble.printStackTrace();
+		if (parserNoticeIterator!=null) {
+			Highlighter h = getHighlighter();
+			while (parserNoticeIterator.hasNext()) {
+				ParserNotice notice = (ParserNotice)parserNoticeIterator.next();
+				int start = notice.getOffset();
+				int length = notice.getLength();
+				try {
+					parserNoticeHighlights.add(
+										h.addHighlight(start,start+length,
+										parserErrorHighlightPainter));
+				} catch (BadLocationException ble) {
+					ble.printStackTrace();
+				}
 			}
 		}
 	}
