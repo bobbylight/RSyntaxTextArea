@@ -71,7 +71,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class SQLTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %ignorecase
 %type org.fife.ui.rsyntaxtextarea.Token
@@ -192,9 +191,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -209,7 +207,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -237,7 +235,7 @@ Digit			= ([0-9])
 Whitespace		= ([ \t]+)
 
 IdentifierStart	= ({Letter})
-IdentifierPart		= ({IdentifierStart}|{Digit})
+IdentifierPart		= ({IdentifierStart}|{Digit}|[_])
 Identifier		= ({IdentifierStart}{IdentifierPart}*)
 
 Operator			= (">="|"<="|"<>"|">"|"<"|"="|"+"|"-"|"*"|"/")
@@ -260,156 +258,160 @@ MLCEnd			= "*/"
 
 %%
 
-/* Keywords */
-<YYINITIAL> "ADD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALTER"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AND"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ANY"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ASC"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AUTOINCREMENT"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AVA"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BETWEEN"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BINARY"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BIT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BOOLEAN"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BY"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BY CREATE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BYTE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CHAR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CHARACTER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COLUMN"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CONSTRAINT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COUNT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COUNTER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CURRENCY"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATABASE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATETIME"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DELETE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DESC"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DISALLOW"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DISTINCT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DISTINCTROW"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DOUBLE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DROP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "EXISTS"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOAT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOAT4"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOAT8"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FOREIGN"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FROM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "GENERAL"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "GROUP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "GUID"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "HAVING"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INNER"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INSERT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IGNORE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IMP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INDEX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTEGER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTEGER1"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTEGER2"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTEGER4"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTO"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "JOIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "KEY"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LEFT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LEVEL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LIKE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LOGICAL"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LONG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LONGBINARY"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LONGTEXT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MAX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MEMO"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MOD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MONEY"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NOT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NULL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NUMBER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NUMERIC"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OLEOBJECT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ON PIVOT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OPTION PRIMARY"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ORDER"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OUTER"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OWNERACCESS"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PARAMETERS"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PERCENT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PRIMARY"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REAL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REFERENCES"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "RIGHT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SELECT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SET"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SHORT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SINGLE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SMALLINT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SOME"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "STDEV"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "STDEVP"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "STRING"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SUM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TABLE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TABLEID"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TEXT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TIME"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TIMESTAMP"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TOP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TRANSFORM"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "UNION"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "UNIQUE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "UPDATE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VALUE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VALUES"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VAR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VARBINARY"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VARCHAR"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "VARP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "WHERE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "WITH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "YESNO"					{ addToken(Token.RESERVED_WORD); }
-
-/* SQL99 aggregate functions */
-<YYINITIAL> "AVG"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "COUNT"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "MIN"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "MAX"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SUM"					{ addToken(Token.FUNCTION); }
-
-/* SQL99 built-in scalar functions */
-<YYINITIAL> "CURRENT_DATE"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CURRENT_TIME"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CURRENT_TIMESTAMP"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CURRENT_USER"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SESSION_USER"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SYSTEM_USER"			{ addToken(Token.FUNCTION); }
-
-/* SQL99 numeric scalar functions */
-<YYINITIAL> "BIT_LENGTH"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CHAR_LENGTH"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "EXTRACT"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "OCTET_LENGTH"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "POSITION"				{ addToken(Token.FUNCTION); }
-
-/* SQL99 string functions */
-<YYINITIAL> "CONCATENATE"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CONVERT"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "LOWER"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SUBSTRING"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "TRANSLATE"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "TRIM"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "UPPER"					{ addToken(Token.FUNCTION); }
-
 <YYINITIAL> {
+
+	/* Keywords */
+	"ADD" |
+	"ALL" |
+	"ALTER" |
+	"AND" |
+	"ANY" |
+	"AS" |
+	"ASC" |
+	"AUTOINCREMENT" |
+	"AVA" |
+	"BETWEEN" |
+	"BINARY" |
+	"BIT" |
+	"BOOLEAN" |
+	"BY" |
+	"BYTE" |
+	"CHAR" |
+	"CHARACTER" |
+	"COLUMN" |
+	"CONSTRAINT" |
+	"COUNT" |
+	"COUNTER" |
+	"CREATE" |
+	"CURRENCY" |
+	"DATABASE" |
+	"DATE" |
+	"DATETIME" |
+	"DELETE" |
+	"DESC" |
+	"DISALLOW" |
+	"DISTINCT" |
+	"DISTINCTROW" |
+	"DOUBLE" |
+	"DROP" |
+	"EXISTS" |
+	"FLOAT" |
+	"FLOAT4" |
+	"FLOAT8" |
+	"FOREIGN" |
+	"FROM" |
+	"GENERAL" |
+	"GROUP" |
+	"GUID" |
+	"HAVING" |
+	"INNER" |
+	"INSERT" |
+	"IGNORE" |
+	"IMP" |
+	"IN" |
+	"INDEX" |
+	"INT" |
+	"INTEGER" |
+	"INTEGER1" |
+	"INTEGER2" |
+	"INTEGER4" |
+	"INTO" |
+	"IS" |
+	"JOIN" |
+	"KEY" |
+	"LEFT" |
+	"LEVEL" |
+	"LIKE" |
+	"LOGICAL" |
+	"LONG" |
+	"LONGBINARY" |
+	"LONGTEXT" |
+	"MAX" |
+	"MEMO" |
+	"MIN" |
+	"MOD" |
+	"MONEY" |
+	"NOT" |
+	"NULL" |
+	"NUMBER" |
+	"NUMERIC" |
+	"OLEOBJECT" |
+	"ON" |
+	"OPTION" |
+	"OR" |
+	"ORDER" |
+	"OUTER" |
+	"OWNERACCESS" |
+	"PARAMETERS" |
+	"PASSWORD" |
+	"PERCENT" |
+	"PIVOT" |
+	"PRIMARY" |
+	"REAL" |
+	"REFERENCES" |
+	"RIGHT" |
+	"SELECT" |
+	"SET" |
+	"SHORT" |
+	"SINGLE" |
+	"SMALLINT" |
+	"SOME" |
+	"STDEV" |
+	"STDEVP" |
+	"STRING" |
+	"SUM" |
+	"TABLE" |
+	"TABLEID" |
+	"TEXT" |
+	"TIME" |
+	"TIMESTAMP" |
+	"TOP" |
+	"TRANSFORM" |
+	"TYPE" |
+	"UNION" |
+	"UNIQUE" |
+	"UPDATE" |
+	"USER" |
+	"VALUE" |
+	"VALUES" |
+	"VAR" |
+	"VARBINARY" |
+	"VARCHAR" |
+	"VARP" |
+	"WHERE" |
+	"WITH" |
+	"YESNO"					{ addToken(Token.RESERVED_WORD); }
+
+	/* SQL99 aggregate functions */
+	"AVG" |
+	"COUNT" |
+	"MIN" |
+	"MAX" |
+	"SUM"					{ addToken(Token.FUNCTION); }
+
+	/* SQL99 built-in scalar functions */
+	"CURRENT_DATE" |
+	"CURRENT_TIME" |
+	"CURRENT_TIMESTAMP" |
+	"CURRENT_USER" |
+	"SESSION_USER" |
+	"SYSTEM_USER"			{ addToken(Token.FUNCTION); }
+
+	/* SQL99 numeric scalar functions */
+	"BIT_LENGTH" |
+	"CHAR_LENGTH" |
+	"EXTRACT" |
+	"OCTET_LENGTH" |
+	"POSITION"				{ addToken(Token.FUNCTION); }
+
+	/* SQL99 string functions */
+	"CONCATENATE" |
+	"CONVERT" |
+	"LOWER" |
+	"SUBSTRING" |
+	"TRANSLATE" |
+	"TRIM" |
+	"UPPER"					{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
