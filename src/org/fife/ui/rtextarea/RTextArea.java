@@ -167,6 +167,8 @@ public class RTextArea extends RTextAreaBase
 
 	private transient RUndoManager undoManager;
 
+	private transient LineHighlightManager lineHighlightManager;
+
 	private ArrayList markAllHighlights;		// Highlights from "mark all".
 	private String markedWord;				// Expression marked in "mark all."
 	private ChangeableHighlightPainter markAllHighlightPainter;
@@ -274,6 +276,25 @@ public class RTextArea extends RTextAreaBase
 	static synchronized void addToCurrentMacro(String id,
 											String actionCommand) {
 		currentMacro.addMacroRecord(new Macro.MacroRecord(id, actionCommand));
+	}
+
+
+	/**
+	 * Adds a line highlight.
+	 *
+	 * @param line The line to highlight.  This is zero-based.
+	 * @param color The color to highlight the line with.
+	 * @throws BadLocationException If <code>line</code> is an invalid line
+	 *         number.
+	 * @see #removeLineHighlight(Object)
+	 * @see #removeAllLineHighlights()
+	 */
+	public Object addLineHighlight(int line, Color color)
+										throws BadLocationException {
+		if (lineHighlightManager==null) {
+			lineHighlightManager = new LineHighlightManager(this);
+		}
+		return lineHighlightManager.addLineHighlight(line, color);
 	}
 
 
@@ -605,6 +626,16 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public static IconGroup getIconGroup() {
 		return iconGroup;
+	}
+
+
+	/**
+	 * Returns the line highlight manager.
+	 *
+	 * @return The line highlight manager.  This may be <code>null</code>.
+	 */
+	LineHighlightManager getLineHighlightManager() {
+		return lineHighlightManager;
 	}
 
 
@@ -984,6 +1015,8 @@ public class RTextArea extends RTextAreaBase
 		undoManager = new RUndoManager(this);
 		getDocument().addUndoableEditListener(undoManager);
 
+		lineHighlightManager = null; // Keep FindBugs happy.
+
 	}
 
 
@@ -998,6 +1031,32 @@ public class RTextArea extends RTextAreaBase
 			f.printStackTrace();
 		}
 
+	}
+
+
+	/**
+	 * Removes all line highlights.
+	 *
+	 * @see #removeLineHighlight(Object)
+	 */
+	public void removeAllLineHighlights() {
+		if (lineHighlightManager!=null) {
+			lineHighlightManager.removeAllLineHighlights();
+		}
+	}
+
+
+	/**
+	 * Removes a line highlight.
+	 *
+	 * @param tag The tag of the line highlight to remove.
+	 * @see #removeAllLineHighlights()
+	 * @see #addLineHighlight(int, Color)
+	 */
+	public void removeLineHighlight(Object tag) {
+		if (lineHighlightManager!=null) {
+			lineHighlightManager.removeLineHighlight(tag);
+		}
 	}
 
 

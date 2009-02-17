@@ -1245,7 +1245,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void removeNotify() {
 		if (parserManager!=null) {
-			parserManager.stopParsing();
+			parserManager.setParser(null);
 		}
 		super.removeNotify();
 	}
@@ -1519,9 +1519,16 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
+	/**
+	 * Sets the parser to "validate" the source code in this text area.
+	 *
+	 * @param parser The new parser.  A value of <code>null</code> will disable
+	 *        parsing.
+	 */
 	public void setParser(Parser parser) {
-		if (parserManager==null)
+		if (parserManager==null) {
 			parserManager = new ParserManager(this);
+		}
 		clearParserNoticeHighlights();
 		parserManager.setParser(parser);
 	}

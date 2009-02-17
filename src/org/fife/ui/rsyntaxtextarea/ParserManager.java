@@ -23,11 +23,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -41,17 +41,20 @@ import org.fife.io.DocumentReader;
  * @author Robert Futrell
  * @version 0.1
  */
-class ParserManager implements DocumentListener {
+class ParserManager implements DocumentListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
 	private Parser parser;
 	private Timer timer;
-	private TimerTask task;
 	private boolean needsReparsing;
 
 	private static final boolean DEBUG_PARSING	= true;
 
-	private static final int TIMER_DELAY_MS		= 3000;
+	/**
+	 * The default delay between the last key press and when the document
+	 * is parsed, in milliseconds.
+	 */
+	private static final int DEFAULT_DELAY_MS		= 1500;
 
 
 	/**
@@ -61,22 +64,61 @@ class ParserManager implements DocumentListener {
 	 *        parsing.
 	 */
 	public ParserManager(RSyntaxTextArea textArea) {
-		this.textArea = textArea;
-		ToolTipManager.sharedInstance().registerComponent(textArea);
-		textArea.getDocument().addDocumentListener(this);
-		// TODO: Name this timer in 1.5.
-		timer = new Timer();//"ParserManager-timer");
+		this(DEFAULT_DELAY_MS, textArea);
 	}
 
 
 	/**
-	 * Cancels the currently-running parsing task, if any.
+	 * Constructor.
+	 *
+	 * @param delay The delay between the last key press and when the document
+	 *        is parsed.
+	 * @param textArea The text area whose document the parser will be
+	 *        parsing.
 	 */
-	private void cancelTask() {
-		if (task!=null) {
-			task.cancel();
-			task = null;
+	public ParserManager(int delay, RSyntaxTextArea textArea) {
+		this.textArea = textArea;
+		timer = new Timer(delay, this);
+		timer.setRepeats(false);
+	}
+
+
+	public void actionPerformed(ActionEvent e) {
+
+		if (parser==null) { // Sanity check
+			return;
 		}
+
+		if (!needsReparsing) {
+			if (DEBUG_PARSING) {
+				System.err.println("Parsing skipped; not needed");
+			}
+			return;
+		}
+
+		long begin = 0;
+		if (DEBUG_PARSING) {
+			begin = System.currentTimeMillis();
+		}
+
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		doc.readLock();
+		try {
+			DocumentReader r = new DocumentReader(doc);
+			parser.parse(r);
+			needsReparsing = false;
+			r.close();
+		} finally {
+			doc.readUnlock();
+		}
+
+		if (DEBUG_PARSING) {
+			float time = (System.currentTimeMillis()-begin)/1000f;
+			System.err.println("Parsing took: "+time+" seconds");
+		}
+
+		textArea.refreshParserNoticeHighlights(parser.getNoticeIterator());
+
 	}
 
 
@@ -86,7 +128,6 @@ class ParserManager implements DocumentListener {
 	 * @param e The document event.
 	 */
 	public void changedUpdate(DocumentEvent e) {
-		handleDocumentEvent(e);
 	}
 
 
@@ -102,9 +143,9 @@ class ParserManager implements DocumentListener {
 
 
 	/**
-	 * Returns the tooltip to display for a mouse event at the given
+	 * Returns the tool tip to display for a mouse event at the given
 	 * location.  This method is overridden to give a registered parser a
-	 * chance to display a tooltip (such as an error description when the
+	 * chance to display a tool tip (such as an error description when the
 	 * mouse is over an error highlight).
 	 *
 	 * @param e The mouse event.
@@ -154,8 +195,7 @@ class ParserManager implements DocumentListener {
 			needsReparsing = true;
 		}
 		else {
-			cancelTask();
-			scheduleTask();
+			timer.restart();
 		}
 	}
 
@@ -181,97 +221,33 @@ class ParserManager implements DocumentListener {
 
 
 	/**
-	 * Schedules the parsing task for the appropraite time and delay.
-	 */
-	private void scheduleTask() {
-		task = new ParseDocumentTask();
-		timer.schedule(task, TIMER_DELAY_MS);
-	}
-
-
-	/**
 	 * Sets the parser.
 	 *
-	 * @param parser The new parser.
-	 * @see #getParser
+	 * @param parser The new parser.  If this is <code>null</code>, no more
+	 *        parsing is done.
+	 * @see #getParser()
 	 */
 	public void setParser(Parser parser) {
 
 		// Clean up old timer, if necessary.
-		cancelTask();
+		if (this.parser!=null) {
+			timer.stop();
+			// Don't unregister the text area as the user might have
+			// registered it themselves to supply tool tips other ways, such
+			// as ToolTipSupplier.
+			//ToolTipManager.sharedInstance().unregisterComponent(textArea);
+			textArea.getDocument().removeDocumentListener(this);
+		}
 
 		// Set the new parser.
 		this.parser = parser;
 
 		// Set up timer, if necessary.
 		if (parser!=null) {
+			ToolTipManager.sharedInstance().registerComponent(textArea);
+			textArea.getDocument().addDocumentListener(this);
 			needsReparsing = true;
-			scheduleTask();
-		}
-
-	}
-
-
-	/**
-	 * Terminates the timer used to schedule parsing.  This method is called
-	 * by <code>RSyntaxTextArea</code> when it is being removed from a GUI
-	 * (via <code>removeNotify()</code>) to "clean up."
-	 */
-	public void stopParsing() {
-		textArea.getDocument().removeDocumentListener(this);
-		ToolTipManager.sharedInstance().unregisterComponent(textArea);
-		setParser(null);
-	}
-
-
-	private class ParseDocumentTask extends TimerTask {
-
-		public void run() {
-
-			if (!needsReparsing) {
-				if (DEBUG_PARSING) {
-					System.err.println("Parsing skipped; not needed");
-				}
-				return;
-			}
-
-			long begin = 0;
-			if (DEBUG_PARSING) {
-				begin = System.currentTimeMillis();
-			}
-
-			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-			doc.readLock();
-			try {
-				DocumentReader r = new DocumentReader(doc);
-				parser.parse(r);
-				needsReparsing = false;
-				r.close();
-			} finally {
-				doc.readUnlock();
-			}
-
-			if (DEBUG_PARSING) {
-				float time = (System.currentTimeMillis()-begin)/1000f;
-				System.err.println("Parsing took: "+time+" seconds");
-			}
-
-			// Update the GUI on the EDT.
-			SwingUtilities.invokeLater(new UpdateTextAreaRunnable());
-
-		}
-
-	}
-
-
-	/**
-	 * Notifies the <code>RSyntaxTextArea</code> that it needs to update
-	 * its parser highlights.
-	 */
-	class UpdateTextAreaRunnable implements Runnable {
-
-		public void run() {
-			textArea.refreshParserNoticeHighlights(parser.getNoticeIterator());
+			timer.start();
 		}
 
 	}

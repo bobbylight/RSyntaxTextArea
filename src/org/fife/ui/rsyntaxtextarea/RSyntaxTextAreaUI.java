@@ -197,4 +197,26 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	}
 
 
+	/**
+	 * Returns the y-coordinate of the line containing a specified offset.<p>
+	 *
+	 * This is faster than calling <code>modelToView(offs).y</code>, so it is
+	 * preferred if you do not need the actual bounding box.
+	 *
+	 * @param offs The offset info the document.
+	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
+	 *         into the document.
+	 */
+	public int yForLineContaining(int offs) throws BadLocationException {
+		Rectangle alloc = getVisibleEditorRect();
+		if (alloc!=null) {
+			RSTAView view = (RSTAView)getRootView(textArea).getView(0);
+			return view.yForLineContaining(alloc, offs);
+		}
+		return -1;
+	}
+
+
 }

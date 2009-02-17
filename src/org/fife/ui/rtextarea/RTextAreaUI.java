@@ -431,6 +431,8 @@ protected Keymap createKeymap() {
 		}
 
 		Rectangle visibleRect = textArea.getVisibleRect();
+
+		paintLineHighlights(g);
 		paintCurrentLineHighlight(g, visibleRect);
 		paintMarginLine(g, visibleRect);
 
@@ -486,6 +488,19 @@ protected Keymap createKeymap() {
 
 
 	/**
+	 * Paints any line highlights.
+	 *
+	 * @param g The graphics context.
+	 */
+	protected void paintLineHighlights(Graphics g) {
+		LineHighlightManager lhm = textArea.getLineHighlightManager();
+		if (lhm!=null) {
+			lhm.paintLineHighlights(g);
+		}
+	}
+
+
+	/**
 	 * Draws the "margin line" if enabled.
 	 *
 	 * @param g The graphics context to paint with.
@@ -500,6 +515,33 @@ protected Keymap createKeymap() {
 			g.drawLine(marginLineX,visibleRect.y,
 						marginLineX,visibleRect.y+visibleRect.height);
 		}
+	}
+
+
+	/**
+	 * Returns the y-coordinate of the line containing an offset.<p>
+	 *
+	 * The default implementation is equivalent to:
+	 * <pre>
+	 * int line = textArea.getLineOfOffset(offs);
+	 * int startOffs = textArea.getLineStartOffset(line);
+	 * return modelToView(startOffs).y</code>
+	 * </pre>
+	 *
+	 * Subclasses that can calculate this value more quickly than traditional
+	 * {@link #modelToView(int)} calls should override this method to do so.
+	 * This method may be used when the entire bounding box isn't needed, to
+	 * speed up rendering.
+	 *
+	 * @param offs The offset info the document.
+	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
+	 *         into the document.
+	 */
+	public int yForLineContaining(int offs) throws BadLocationException {
+		Rectangle r = modelToView(textArea, offs);
+		return r!=null ? r.y : -1;
 	}
 
 

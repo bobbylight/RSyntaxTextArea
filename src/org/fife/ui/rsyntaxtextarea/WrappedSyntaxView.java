@@ -24,6 +24,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
+
 import javax.swing.text.*;
 import javax.swing.event.*;
 
@@ -37,7 +38,8 @@ import javax.swing.event.*;
  * @author Robert Futrell
  * @version 0.2
  */
-public class WrappedSyntaxView extends BoxView implements TabExpander {
+public class WrappedSyntaxView extends BoxView implements TabExpander,
+												RSTAView {
 
 	boolean widthChanging;
 	int tabBase;
@@ -175,7 +177,7 @@ return p + 1;
 
 		float x = r.x;
 
-		LayeredHighlighter dh = (LayeredHighlighter)host.getHighlighter();
+		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
 
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = getElement();
@@ -193,7 +195,7 @@ return p + 1;
 		// null token.  In this case, the line highlight will be skipped in
 		// the loop below, so unfortunately we must manually do it here.
 		if (token!=null && token.type==Token.NULL) {
-			dh.paintLayeredHighlights(g, p0,p1, r, host, this);
+			h.paintLayeredHighlights(g, p0,p1, r, host, this);
 			return;
 		}
 
@@ -202,7 +204,7 @@ return p + 1;
 
 			int p = calculateBreakPosition(p0, token, x);
 
-			dh.paintLayeredHighlights(g, p0,p, r, host, this);
+			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
 			while (token!=null && token.isPaintable() && token.offset+token.textCount-1<p) {//<=p) {
 				x = token.paint(g, x,y, host, this);
@@ -297,7 +299,8 @@ return p + 1;
 	 * @return the tab size
 	 */
 	protected int getTabSize() {
-		Integer i = (Integer) getDocument().getProperty(PlainDocument.tabSizeAttribute);
+		Integer i = (Integer) getDocument().
+							getProperty(PlainDocument.tabSizeAttribute);
 		int size = (i != null) ? i.intValue() : 5;
 		return size;
 	}
@@ -327,7 +330,7 @@ return p + 1;
 	/**
 	 * Loads all of the children to initialize the view.
 	 * This is called by the <code>setParent</code> method.
-	 * Subclasses can reimplement this to initialize their
+	 * Subclasses can re-implement this to initialize their
 	 * child views in a different manner.  The default
 	 * implementation creates a child view for each 
 	 * child element.
@@ -599,6 +602,25 @@ return p + 1;
 		Font f = host.getFont();
 		metrics = host.getFontMetrics(f); // Metrics for the default font.
 		tabSize = getTabSize() * metrics.charWidth('m');
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int yForLineContaining(Rectangle alloc, int offs)
+								throws BadLocationException {
+
+		// line coordinates
+		Element map = getElement();
+		int line = map.getElementIndex(offs);
+
+		if (isAllocationValid()) {
+			return alloc.y + getOffset(Y_AXIS, line);
+		}
+
+		return -1;
+
 	}
 
 
@@ -914,5 +936,6 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 		}
 
 	}
+
 
 }

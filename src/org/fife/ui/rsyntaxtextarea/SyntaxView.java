@@ -46,7 +46,7 @@ import javax.swing.text.*;
  * @version 0.3
  */
 public class SyntaxView extends View implements TabExpander,
-											TokenOrientedView {
+											TokenOrientedView, RSTAView {
 
 	/**
 	 * The default font used by the text area.  If this changes we need to
@@ -542,7 +542,8 @@ public class SyntaxView extends View implements TabExpander,
 		int lineCount = map.getElementCount();
 		int endLine = Math.min(lineCount, linesTotal - linesBelow);
 
-		LayeredHighlighter dh = (LayeredHighlighter)host.getHighlighter();
+		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
+
 		Graphics2D g2d = (Graphics2D)g;
 		Token token;
 		//System.err.println("Painting lines: " + linesAbove + " to " + (endLine-1));
@@ -557,7 +558,7 @@ public class SyntaxView extends View implements TabExpander,
 			//							lineElement.getEndOffset()-1);
 			int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
 
-			dh.paintLayeredHighlights(g2d, startOffset, endOffset,
+			h.paintLayeredHighlights(g2d, startOffset, endOffset,
 									a, host, this);
 	
 			// Paint a line of text.
@@ -767,6 +768,30 @@ public class SyntaxView extends View implements TabExpander,
 		} // End of else.
 
 	} 
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int yForLineContaining(Rectangle alloc, int offs)
+							throws BadLocationException {
+		// line coordinates
+		Element map = getElement();
+		int line = map.getElementIndex(offs);
+
+		//Rectangle lineArea = lineToRect(alloc, lineIndex);
+		updateMetrics();
+		if (metrics != null) {
+			// NOTE:  lineHeight is not initially set here, leading to the
+			// current line not being highlighted when a document is first
+			// opened.  So, we set it here just in case.
+			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
+			return alloc.y + line*lineHeight;
+		}
+
+		return -1;
+
+	}
 
 
 }

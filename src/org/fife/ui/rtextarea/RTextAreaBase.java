@@ -623,7 +623,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		setTabsEmulated(false);
 
 		// Stuff needed by the caret listener below.
-		previousCaretY = currentCaretY = 0;
+		previousCaretY = currentCaretY = getInsets().top;
 
 		// Stuff to highlight the current line.
 		mouseListener = createMouseListener();
@@ -682,16 +682,17 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		int width = getWidth();
 		int lineHeight = getLineHeight();
-		int caretPos = getCaretPosition();
+		int dot = getCaretPosition();
 
 		// If we're wrapping lines we need to check the actual y-coordinate
 		// of the caret, not just the line number, since a single logical
 		// line can span multiple physical lines.
 		if (getLineWrap()) {
 			try {
-				Rectangle temp = modelToView(caretPos);
-				if (temp!=null)
+				Rectangle temp = modelToView(dot);
+				if (temp!=null) {
 					currentCaretY = temp.y;
+				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Should never happen.
 			}
@@ -702,7 +703,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 			Document doc = getDocument();
 			if (doc!=null) {
 				Element map = doc.getDefaultRootElement();
-				int caretLine = map.getElementIndex(caretPos);
+				int caretLine = map.getElementIndex(dot);
 				Rectangle alloc = ((RTextAreaUI)getUI()).
 											getVisibleEditorRect();
 				if (alloc!=null)
@@ -712,9 +713,16 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		// Repaint current line (to fill in entire highlight), and old line
 		// (to erase entire old highlight) if necessary.
-		repaint(0,currentCaretY, width,lineHeight);
-		if (currentCaretY!=previousCaretY)
+		if (currentCaretY!=previousCaretY) {
+			repaint(0,currentCaretY, width,lineHeight);
 			repaint(0,previousCaretY, width,lineHeight);
+		}
+		else if (getCaret().getDot()!=getCaret().getMark()) {
+			// Needed to ensure line highlight isn't painted when there's
+			// a selection.
+			repaint(0,currentCaretY, width,lineHeight);
+		}
+
 		previousCaretY = currentCaretY;
 
 	}
@@ -1068,6 +1076,32 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	protected void updateMarginLineX() {
 		marginLineX = getFontMetrics(getFont()).charWidth('m') *
 												marginSizeInChars;
+	}
+
+
+	/**
+	 * Returns the y-coordinate of the line containing an offset.<p>
+	 *
+	 * The default implementation is equivalent to:
+	 * <pre>
+	 * int line = textArea.getLineOfOffset(offs);
+	 * int startOffs = textArea.getLineStartOffset(line);
+	 * return modelToView(startOffs).y</code>
+	 * </pre>
+	 *
+	 * Subclasses that can calculate this value more quickly than traditional
+	 * {@link #modelToView(int)} calls should override this method to do so.
+	 * This method may be used when the entire bounding box isn't needed, to
+	 * speed up rendering.
+	 *
+	 * @param offs The offset info the document.
+	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
+	 *         into the document.
+	 */
+	public int yForLineContaining(int offs) throws BadLocationException {
+		return ((RTextAreaUI)getUI()).yForLineContaining(offs);
 	}
 
 

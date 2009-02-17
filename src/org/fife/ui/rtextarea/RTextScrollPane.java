@@ -24,34 +24,24 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 
 
 /**
- * An extension of <code>org.fife.ui.RScrollPane</code> that will only take
+ * An extension of <code>javax.swing.JScrollPane</code> that will only take
  * <code>RTextArea</code>s for its view.  This class has the ability to show
- * line numbers for its text component view.<p>
- *
- * NOTE:  This class has two different implementations of line numbers,
- * <code>LineNumberList</code> and <code>LineNumberBorder</code>.
- * Currently, <code>LineNumberBorder</code> is used as it is much faster;
- * however, <code>LineNumberList</code> is more "object-oriented" and
- * would allow for more user-interaction with the line numbers...
+ * line numbers for its text component view, as well as per-line icons (for
+ * bookmarks, debugging breakpoints, error markers, etc.).
  *
  * @author Robert Futrell
- * @version 0.5
+ * @version 0.8
  */
 public class RTextScrollPane extends JScrollPane {
 
 	public RTextArea textArea;
 
-	// NOTE:  Change which line numbering scheme you use by changing the
-	// boolean below.
-	private LineNumberList lineNumberList;		// More OO-ish.
-	private LineNumberBorder lineNumberBorder;	// Faster.
-	private static final boolean usingLineNumberList = false;
-	private boolean lineNumbersEnabled;
+	private Gutter gutter;
 
 
 	/**
@@ -95,21 +85,13 @@ public class RTextScrollPane extends JScrollPane {
 		super(area);
 		setPreferredSize(new Dimension(width, height));
 
-		// Create the text area and set it inside this scrollbar area.
+		// Create the text area and set it inside this scroll bar area.
 		textArea = area;
 
 		// Create the line number list for this document.
 		Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
-		if (usingLineNumberList) {
-			lineNumberList = new LineNumberList(textArea, lineNumberColor);
-			lineNumberList.setFont(defaultFont);
-		}
-		else {
-			enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-			lineNumberBorder = new LineNumberBorder(this, textArea,
-											lineNumberColor);
-			lineNumberBorder.setFont(defaultFont);
-		}
+		gutter = new Gutter(textArea, lineNumberColor);
+		gutter.setFont(defaultFont);
 		setLineNumbersEnabled(lineNumbersEnabled);
 
 		// Set miscellaneous properties.
@@ -120,13 +102,78 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
-	 * Returns <code>true</code> if the line numbers are enabled and visible.
+	 * Adds an icon that tracks a given line in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking lines for
+	 * bookmarks, debugging breakpoints, etc.
 	 *
-	 * @return Whether or not line numbers are visible.
-	 * @see #setLineNumbersEnabled(boolean)
+	 * @param line The line to track.
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @return A tag for this icon.
+	 * @throws BadLocationException If <code>line</code> is an invalid line
+	 *         number for the text area.
+	 * @see #removeTrackingIcon(Object)
+	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
-	public boolean areLineNumbersEnabled() {
-		return lineNumbersEnabled;
+	public Object addLineTrackingIcon(int line, Icon icon)
+										throws BadLocationException {
+		int offs = textArea.getLineStartOffset(line);
+		return addOffsetTrackingIcon(offs, icon);
+	}
+
+
+	/**
+	 * Adds an icon that tracks an offset in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking things such
+	 * as source code errors.
+	 *
+	 * @param offs The offset to track.
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @return A tag for this icon.
+	 * @throws BadLocationException If <code>offs</code> is an invalid offset
+	 *         into the text area.
+	 * @see #removeTrackingIcon(Object)
+	 * @see #addLineTrackingIcon(int, Icon)
+	 */
+	public Object addOffsetTrackingIcon(int offs, Icon icon)
+										throws BadLocationException {
+		return gutter.addOffsetTrackingIcon(offs, icon);
+	}
+
+
+	/**
+	 * Ensures the gutter is visible if it's showing anything.
+	 */
+	private void checkGutterVisibility() {
+		if (gutter.getShowLineNumbers() || gutter.getShowIcons()) {
+			if (getRowHeader()==null || getRowHeader().getView()==null) {
+				setRowHeaderView(gutter);
+			}
+		}
+		else {
+			setRowHeaderView(null);
+		}
+	}
+
+
+	/**
+	 * Returns the color of the "border" line.
+	 *
+	 * @return The color.
+	 * @see #setBorderColor(Color)
+	 */
+	public Color getBorderColor() {
+		return gutter.getBorderColor();
+	}
+
+
+	/**
+	 * Returns the color to use to paint line numbers.
+	 *
+	 * @return The color used when painting line numbers.
+	 * @see #setLineNumberColor
+	 */
+	public Color getLineNumberColor() {
+		return gutter.getLineNumberColor();
 	}
 
 
@@ -137,27 +184,89 @@ public class RTextScrollPane extends JScrollPane {
 	 * @see #setLineNumberFont(Font)
 	 */
 	public Font getLineNumberFont() {
-		return usingLineNumberList ? lineNumberList.getFont() :
-									lineNumberBorder.getFont();
+		return gutter.getFont();
 	}
 
 
 	/**
-	 * This method is overridden so that if the user clicks in the line
-	 * number border, the caret is moved.<p>
+	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
-	 * This method will ONLY work if LineNumberBorder is used
-	 * (not LineNumberList).
-	 *
-	 * @param e The mouse event.
+	 * @return Whether or not line numbers are visible.
+	 * @see #setLineNumbersEnabled(boolean)
 	 */
-	protected void processMouseEvent(MouseEvent e) {
-		if (e.getID()==MouseEvent.MOUSE_CLICKED) {
-			int y = getViewport().getViewPosition().y + e.getY();
-			int pos = textArea.viewToModel(new Point(0, y));
-			textArea.setCaretPosition(pos);
-		}
-		super.processMouseEvent(e);
+	public boolean getLineNumbersEnabled() {
+		return gutter.getShowLineNumbers();
+	}
+
+
+	/**
+	 * Returns whether the icon row header is enabled.
+	 *
+	 * @return Whether the icon row header is enabled.
+	 * @see #setIconRowHeaderEnabled(boolean)
+	 */
+	public boolean isIconRowHeaderEnabled() {
+		return gutter.getShowIcons();
+	}
+
+
+	/**
+	 * Removes the specified tracking icon.
+	 *
+	 * @param tag A tag for a tracking icon.
+	 * @see #removeAllTrackingIcons()
+	 * @see #addLineTrackingIcon(int, Icon)
+	 * @see #addOffsetTrackingIcon(int, Icon)
+	 */
+	public void removeTrackingIcon(Object tag) {
+		gutter.removeTrackingIcon(tag);
+	}
+
+
+	/**
+	 * Removes all tracking icons.
+	 *
+	 * @see #removeTrackingIcon(Object)
+	 * @see #addLineTrackingIcon(int, Icon)
+	 * @see #addOffsetTrackingIcon(int, Icon)
+	 */
+	public void removeAllTrackingIcons() {
+		gutter.removeAllTrackingIcons();
+	}
+
+
+	/**
+	 * Sets the color for the "border" line.
+	 *
+	 * @param color The new color.
+	 * @see #getBorderColor()
+	 */
+	public void setBorderColor(Color color) {
+		gutter.setBorderColor(color);
+	}
+
+
+	/**
+	 * Toggles whether the icon row header (used for breakpoints, bookmarks,
+	 * etc.) is enabled.
+	 *
+	 * @param enabled Whether the icon row header is enabled.
+	 * @see #isIconRowHeaderEnabled()
+	 */
+	public void setIconRowHeaderEnabled(boolean enabled) {
+		gutter.setShowIcons(enabled);
+		checkGutterVisibility();
+	}
+
+
+	/**
+	 * Sets the color to use to paint line numbers.
+	 *
+	 * @param color The color to use when painting line numbers.
+	 * @see #getLineNumberColor()
+	 */
+	public void setLineNumberColor(Color color) {
+		gutter.setLineNumberColor(color);
 	}
 
 
@@ -171,12 +280,7 @@ public class RTextScrollPane extends JScrollPane {
 		if (font==null) {
 			throw new IllegalArgumentException("font cannot be null");
 		}
-		if (usingLineNumberList) {
-			lineNumberList.setFont(font);
-		}
-		else {
-			lineNumberBorder.setFont(font);
-		}
+		gutter.setFont(font);
 	}
 
 
@@ -184,36 +288,11 @@ public class RTextScrollPane extends JScrollPane {
 	 * Toggles whether or not line numbers are visible.
 	 *
 	 * @param enabled Whether or not line numbers should be visible.
-	 * @see #areLineNumbersEnabled()
+	 * @see #getLineNumbersEnabled()
 	 */
 	public void setLineNumbersEnabled(boolean enabled) {
-		if (enabled!=this.lineNumbersEnabled) {
-			this.lineNumbersEnabled = enabled;
-			if (usingLineNumberList) {
-				if (enabled) {
-					lineNumberList.updateCellWidths();
-					JViewport viewport = new JViewport() {
-							public void setViewPosition(Point p) {
-								Component c = getView();
-								if (c!=null)
-									c.repaint();
-								//getView().setLocation(-p.x, -p.y);
-								//fireStateChanged();
-							}
-						};
-					viewport.setView(lineNumberList);
-					setRowHeader(viewport);
-					//setRowHeaderView(lineNumberList);
-				}
-				else {
-					setRowHeaderView(null);
-				}
-			}
-			else { // lineNumberBorder
-				setViewportBorder(enabled ? lineNumberBorder : null);
-				revalidate();
-			}
-		}
+		gutter.setShowLineNumbers(enabled);
+		checkGutterVisibility();
 	}
 
 
@@ -228,11 +307,8 @@ public class RTextScrollPane extends JScrollPane {
 		}
 		super.setViewportView(view);
 		textArea = (RTextArea)view;
-		if (usingLineNumberList && lineNumberList!=null) {
-			lineNumberList.setTextArea(textArea);
-		}
-		else if (lineNumberBorder!=null) {
-			lineNumberBorder.setTextArea(textArea);
+		if (gutter!=null) {
+			gutter.setTextArea(textArea);
 		}
 	}
 
