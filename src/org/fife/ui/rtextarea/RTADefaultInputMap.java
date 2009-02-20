@@ -46,6 +46,9 @@ import javax.swing.text.DefaultEditorKit;
  *   <li>Ctrl+Z is undo and Ctrl+Y is redo.
  *   <li>Ctrl+Up and Ctrl+Down shift the visible area of the text area up and
  *       down one line, respectively.
+ *   <li>F2 and Shift+F2 moves to the next and previous bookmarks,
+ *       respectively.
+ *   <li>Ctrl+F2 toggles whether a bookmark is on the current line.
  *   <li>etc.
  * </ul>
  */
@@ -121,6 +124,10 @@ public class RTADefaultInputMap extends InputMap {
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,      defaultModifier),			RTextAreaEditorKit.rtaUndoAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,      defaultModifier),			RTextAreaEditorKit.rtaRedoAction);
+
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		0),							RTextAreaEditorKit.rtaNextBookmarkAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		shift),						RTextAreaEditorKit.rtaPrevBookmarkAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		defaultModifier),			RTextAreaEditorKit.rtaToggleBookmarkAction);
 
 		/* NOTE:  Currently, macros aren't part of the default input map for */
 		/* RTextArea, as they display their own popup windows, etc. which    */

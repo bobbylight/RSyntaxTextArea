@@ -1,7 +1,8 @@
 /*
- * 02/11/2009
+ * 02/17/2009
  *
- * LineNumberList.java - Renders line numbers in an RTextScrollPane.
+ * Gutter.java - Manages line numbers, icons, etc. on the left-hand side of
+ * an RTextArea.
  * Copyright (C) 2009 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
@@ -22,142 +23,78 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.awt.event.MouseListener;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.MouseInputListener;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.Position;
-import javax.swing.text.View;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
 /**
  * The gutter is the component on the left-hand side of the text area that
- * displays optional information such as line numbers, icons (for bookmarks,
+ * displays optional information such as line numbers and icons (for bookmarks,
  * debugging breakpoints, error markers, etc.).
  *
  * @author Robert Futrell
  * @version 1.0
  */
-class Gutter extends JComponent implements MouseInputListener {
+public class Gutter extends JComponent {
 
+	/**
+	 * The text area.
+	 */
 	private RTextArea textArea;
 
-	private int currentLine;	// The last line the caret was on.
-	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
-
-	private int cellHeight;		// Height of a line number "cell" when word wrap is off.
-	private int cellWidth;		// The width used for all line number cells.
-	private int ascent;			// The ascent to use when painting line numbers.
-
-	private int currentNumLines;
-
-	private Color borderColor;
-
-	private int mouseDragStartOffset;
-
 	/**
-	 * Listens for events from the current text area.
+	 * Renders line numbers.
 	 */
-	private Listener l;
+	private LineNumberList lineNumberList;
 
 	/**
-	 * Whether the line icons (bookmarks, errors markers, breakpoints, etc.)
-	 * are shown.
+	 * Renders bookmark icons, breakpoints, error icons, etc.
 	 */
-	private boolean showLineIcons;
+	private IconRowHeader iconArea;
 
 	/**
-	 * Whether line numbers are visible.
+	 * Listens for events in our text area.
 	 */
-	private boolean showLineNumbers;
-
-	/**
-	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
-	 * each paint.
-	 */
-	private Insets textAreaInsets;
-
-	/**
-	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
-	 * each paint.
-	 */
-	private Rectangle visibleRect;
-
-	private List trackingIcons;
-
-	private static final int RHS_BORDER_WIDTH	= 8;
-	private static final int ICON_AREA_WIDTH	= 18;
+	private TextAreaListener listener;
 
 
 	/**
-	 * Constructs a new <code>LineNumberList</code> using default values for
-	 * line number color (gray) and highlighting the current line.
+	 * Constructor.
 	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
+	 * @param textArea The parent text area.
 	 */
 	public Gutter(RTextArea textArea) {
-		this(textArea, Color.GRAY);
+		this.textArea = textArea;
+		listener = new TextAreaListener();
+		textArea.addComponentListener(listener);
+		lineNumberList = new LineNumberList(textArea);
+		iconArea = new IconRowHeader(textArea);
+		setLayout(new BorderLayout());
+		add(lineNumberList);
+		//add(iconArea, BorderLayout.LINE_START);
+		setBorder(new GutterBorder(0, 0, 0, 1)); // Assume ltr
 	}
 
 
 	/**
-	 * Constructs a new <code>LineNumberList</code>.
+	 * Adds a mouse listener to the icon area of the gutter.
 	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
-	 * @param numberColor The color to use for the line numbers.
+	 * @param listener The listener.
+	 * @see #removeIconAreaMouseListener(MouseListener)
 	 */
-	public Gutter(RTextArea textArea, Color numberColor) {
-
-		// Remember what text component we're keeping line numbers for.
-		l = new Listener();
-		setTextArea(textArea);
-
-		if (numberColor!=null) {
-			setForeground(numberColor);
-		}
-		else {
-			setForeground(Color.GRAY);
-		}
-		borderColor = new Color(221, 221, 221);
-
-		// Initialize currentLine; otherwise, the current line won't start
-		// off as highlighted.
-		currentLine = 0;
-
-		visibleRect = new Rectangle(); // Must be initialized
-
-		addMouseListener(this);
-		addMouseMotionListener(this);
-
-		setShowLineNumbers(true);
-		setShowIcons(true);
-
+	public void addIconAreaMouseListener(MouseListener listener) {
+		iconArea.addMouseListener(listener);
 	}
 
 
@@ -171,33 +108,56 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @return A tag for this icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
+	 * @see #addOffsetTrackingIcon(int, Icon)
 	 * @see #removeTrackingIcon(Object)
 	 */
-	public Object addOffsetTrackingIcon(int offs, Icon icon)
-										throws BadLocationException {
-		Position pos = textArea.getDocument().createPosition(offs);
-		TrackingIcon ti = new TrackingIcon(icon, pos);
-		if (trackingIcons==null) {
-			trackingIcons = new ArrayList(1); // Usually small
-		}
-		int index = Collections.binarySearch(trackingIcons, ti);
-		if (index<0) {
-			index = -(index+1);
-		}
-		trackingIcons.add(index, ti);
-		return ti;
+	public GutterIconInfo addLineTrackingIcon(int line, Icon icon)
+											throws BadLocationException {
+		int offs = textArea.getLineStartOffset(line);
+		return addOffsetTrackingIcon(offs, icon);
 	}
 
 
 	/**
-	 * Overridden to set width of this component correctly when we are first
-	 * displayed (as keying off of the RTextArea gives us (0,0) when it isn't
-	 * yet displayed.
+	 * Adds an icon that tracks an offset in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking things such
+	 * as source code errors.
+	 *
+	 * @param offs The offset to track.
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @return A tag for this icon.
+	 * @throws BadLocationException If <code>offs</code> is an invalid offset
+	 *         into the text area.
+	 * @see #addLineTrackingIcon(int, Icon)
+	 * @see #removeTrackingIcon(Object)
 	 */
-	public void addNotify() {
-		super.addNotify();
-		updateCellWidths();
-		updateCellHeights();
+	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon)
+												throws BadLocationException {
+		return iconArea.addOffsetTrackingIcon(offs, icon);
+	}
+
+
+	/**
+	 * Returns the icon to use for bookmarks.
+	 *
+	 * @return The icon to use for bookmarks.  If this is <code>null</code>,
+	 *         bookmarking is effectively disabled.
+	 * @see #setBookmarkIcon(Icon)
+	 * @see #isBookmarkingEnabled()
+	 */
+	public Icon getBookmarkIcon() {
+		return iconArea.getBookmarkIcon();
+	}
+
+
+	/**
+	 * Returns the bookmarks known to this gutter.
+	 *
+	 * @return The bookmarks.  If there are no bookmarks, an empty array is
+	 *         returned.
+	 */
+	public GutterIconInfo[] getBookmarks() {
+		return iconArea.getBookmarks();
 	}
 
 
@@ -208,25 +168,7 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @see #setBorderColor(Color)
 	 */
 	public Color getBorderColor() {
-		return borderColor;
-	}
-
-
-	/**
-	 * Returns the bounds of a child view as a rectangle, since
-	 * <code>View</code>s tend to use <code>Shape</code>.
-	 *
-	 * @param parent The parent view of the child whose bounds we're getting.
-	 * @param line The index of the child view.
-	 * @param editorRect Returned from the text area's
-	 *        <code>getVisibleEditorRect</code> method.
-	 * @return The child view's bounds.
-	 */
-	private static final Rectangle getChildViewBounds(View parent, int line,
-										Rectangle editorRect) {
-		Shape alloc = parent.getChildAllocation(line, editorRect);
-		return alloc instanceof Rectangle ? (Rectangle)alloc :
-										alloc.getBounds();
+		return ((GutterBorder)getBorder()).getColor();
 	}
 
 
@@ -234,380 +176,79 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * Returns the color to use to paint line numbers.
 	 *
 	 * @return The color used when painting line numbers.
-	 * @see #setLineNumberColor
+	 * @see #setLineNumberColor(Color)
 	 */
 	public Color getLineNumberColor() {
-		return getForeground();
+		return lineNumberList.getForeground();
 	}
 
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public Dimension getPreferredSize() {
-		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
-		return new Dimension(cellWidth, h);
-	}
-
-
-	/**
-	 * Returns whether the icons are visible.
+	 * Returns the font used for line numbers.
 	 *
-	 * @return Whether the icons are is visible.
-	 * @see #setShowIcons(boolean)
+	 * @return The font used for line numbers.
+	 * @see #setLineNumberFont(Font)
 	 */
-	public boolean getShowIcons() {
-		return showLineIcons;
+	public Font getLineNumberFont() {
+		return lineNumberList.getFont();
 	}
 
 
 	/**
-	 * Returns whether line numbers are visible.
+	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
-	 * @return Whether line numbers are visible.
-	 * @see #setShowLineNumbers(boolean)
+	 * @return Whether or not line numbers are visible.
+	 * @see #setLineNumbersEnabled(boolean)
 	 */
-	public boolean getShowLineNumbers() {
-		return showLineNumbers;
-	}
-
-
-	public void mouseClicked(MouseEvent e) {
-	}
-
-
-	public void mouseDragged(MouseEvent e) {
-		int pos = textArea.viewToModel(new Point(0, e.getY()));
-		if (pos>=0) { // Not -1
-			textArea.setCaretPosition(mouseDragStartOffset);
-			textArea.moveCaretPosition(pos);
+	public boolean getLineNumbersEnabled() {
+		for (int i=0; i<getComponentCount(); i++) {
+			if (getComponent(i)==lineNumberList) {
+				return true;
+			}
 		}
-	}
-
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-
-	public void mouseMoved(MouseEvent e) {
-	}
-
-
-	public void mousePressed(MouseEvent e) {
-		int pos = textArea.viewToModel(new Point(0, e.getY()));
-		if (pos>=0) { // Not -1
-			textArea.setCaretPosition(pos);
-		}
-		mouseDragStartOffset = pos;
-	}
-
-
-	public void mouseReleased(MouseEvent e) {
+		return false;
 	}
 
 
 	/**
-	 * Paints the border line.
+	 * Returns the tracking icons at the specified line.
 	 *
-	 * @param g The graphics context.
-	 * @param visibleRect The rectangle to render in.
-	 * @param ltr Whether this component is left-to-right.
+	 * @param line The line.
+	 * @return The tracking icons at that line.  If there are no tracking
+	 *         icons there, this will be an empty array.
+	 * @throws BadLocationException If <code>line</code> is invalid.
 	 */
-	private void paintBorderLine(Graphics g, Rectangle visibleRect,
-							boolean ltr) {
-		g.setColor(borderColor);
-		int x = ltr ? (cellWidth-1) : 0;
-		g.drawLine(x,visibleRect.y, x,visibleRect.y+visibleRect.height);
+	public Object[] getTrackingIcons(Point p) throws BadLocationException {
+		int offs = textArea.viewToModel(new Point(0, p.y));
+		int line = textArea.getLineOfOffset(offs);
+		return iconArea.getTrackingIcons(line);
 	}
 
 
 	/**
-	 * Paints this component.
+	 * Returns whether bookmarking is enabled.
 	 *
-	 * @param g The graphics context.
+	 * @return Whether bookmarking is enabled.
+	 * @see #setBookmarkingEnabled(boolean)
 	 */
-	protected void paintComponent(Graphics g) {
-
-		if (textArea==null) {
-			return;
-		}
-
-		visibleRect = g.getClipBounds(visibleRect);
-		if (visibleRect==null) { // ???
-			visibleRect = getVisibleRect();
-		}
-		//System.out.println("Gutter repainting: " + visibleRect);
-		if (visibleRect==null) {
-			return;
-		}
-
-		// Fill in the background the same color as the text component.
-		g.setColor(getBackground());
-		g.fillRect(0,visibleRect.y, cellWidth,visibleRect.height);
-
-		Document doc = textArea.getDocument();
-		Element root = doc.getDefaultRootElement();
-		boolean ltr = getComponentOrientation().isLeftToRight();
-
-		if (textArea.getLineWrap()) {
-			paintWrappedLineNumbers(g, visibleRect, ltr);
-			return;
-		}
-
-		// Get the first and last lines to paint.
-		int topLine = visibleRect.y/cellHeight;
-		int bottomLine = Math.min(topLine+visibleRect.height/cellHeight,
-							root.getElementCount());
-
-		// Get where to start painting (top of the row), and where to paint
-		// the line number (drawString expects y==baseline).
-		// We need to be "scrolled up" up just enough for the missing part of
-		// the first line.
-		int actualTopY = topLine*cellHeight;
-		textAreaInsets = textArea.getInsets(textAreaInsets);
-		if (textAreaInsets!=null) {
-			actualTopY += textAreaInsets.top;
-		}
-		int y = actualTopY + ascent;
-
-		// Highlight the current line's line number, if desired.
-		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
-				currentLine<bottomLine) {
-			g.setColor(textArea.getCurrentLineHighlightColor());
-			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight,
-						cellWidth,cellHeight);
-		}
-
-		paintBorderLine(g, visibleRect, ltr);
-
-		int rhs;
-		if (ltr) {
-			rhs = getWidth() - RHS_BORDER_WIDTH;
-			if (showLineIcons) {
-				rhs -= ICON_AREA_WIDTH;
-			}
-		}
-		else { // rtl
-			rhs = RHS_BORDER_WIDTH;
-		}
-
-		// Paint any icons, if they are enabled.  We assume there is
-		// relatively small number of icons; we just iterate through them.
-		if (showLineIcons && trackingIcons!=null) {
-			int lastLine = bottomLine;
-			for (int i=trackingIcons.size()-1; i>=0; i--) { // Last to first
-				TrackingIcon ti = (TrackingIcon)trackingIcons.get(i);
-				int offs = ti.getMarkedOffset();
-				if (offs>=0 && offs<=doc.getLength()) {
-					int line = root.getElementIndex(offs);
-					if (line<=lastLine-1 && line>topLine-1) {
-						Icon icon = ti.getIcon();
-						if (icon!=null) {
-							int y2 = y + (line-topLine)*cellHeight - ascent;
-							y2 += (cellHeight-icon.getIconHeight())/2;
-							ti.getIcon().paintIcon(this, g, rhs+2, y2);
-							lastLine = line-1; // Paint only 1 icon per line
-						}
-					}
-					else if (line<=topLine-1) {
-						break;
-					}
-				}
-			}
-		}
-
-		// Paint line numbers
-		if (showLineNumbers) {
-			g.setColor(getForeground());
-			if (ltr) {
-				FontMetrics metrics = g.getFontMetrics();
-				for (int i=topLine+1; i<=bottomLine; i++) {
-					String number = Integer.toString(i);
-					int width = metrics.stringWidth(number);
-					g.drawString(number, rhs-width,y);
-					y += cellHeight;
-				}
-			}
-			else { // rtl
-				int x = RHS_BORDER_WIDTH;
-				if (showLineIcons) {
-					x += ICON_AREA_WIDTH;
-				}
-				for (int i=topLine+1; i<=bottomLine; i++) {
-					String number = Integer.toString(i);
-					g.drawString(number, x, y);
-					y += cellHeight;
-				}
-			}
-		}
-
+	public boolean isBookmarkingEnabled() {
+		return iconArea.isBookmarkingEnabled();
 	}
 
 
 	/**
-	 * Paints line numbers for text areas with line wrap enabled.
+	 * Returns whether the icon row header is enabled.
 	 *
-	 * @param g The graphics context.
-	 * @param visibleRect The visible rectangle of these line numbers.
-	 * @param ltr Whether the orientation is left-to-right.
+	 * @return Whether the icon row header is enabled.
+	 * @see #setIconRowHeaderEnabled(boolean)
 	 */
-	private void paintWrappedLineNumbers(Graphics g, Rectangle visibleRect,
-										boolean ltr) {
-
-		// The variables we use are as follows:
-		// - visibleRect is the "visible" area of the text area; e.g.
-		// [0,100, 300,100+(numLines*cellHeight)-1].
-		// actualTop.y is the topmost-pixel in the first logical line we
-		// paint.  Note that we may well not paint this part of the logical
-		// line, as it may be broken into many physical lines, with the first
-		// few physical lines scrolled past.  Note also that this is NOT the
-		// visible rect of this line number list; this line number list has
-		// visible rect == [0,0, insets.left-1,visibleRect.height-1].
-		// - offset (<=0) is the y-coordinate at which we begin painting when
-		// we begin painting with the first logical line.  This can be
-		// negative, signifying that we've scrolled past the actual topmost
-		// part of this line.
-
-		// The algorithm is as follows:
-		// - Get the starting y-coordinate at which to paint.  This may be
-		//   above the first visible y-coordinate as we're in line-wrapping
-		//   mode, but we always paint entire logical lines.
-		// - Paint that line's line number and highlight, if appropriate.
-		//   Increment y to be just below the are we just painted (i.e., the
-		//   beginning of the next logical line's view area).
-		// - Get the ending visual position for that line.  We can now loop
-		//   back, paint this line, and continue until our y-coordinate is
-		//   past the last visible y-value.
-
-		// We avoid using modelToView/viewToModel where possible, as these
-		// methods trigger a parsing of the line into syntax tokens, which is
-		// costly.  It's cheaper to just grab the child views' bounds.
-
-		// Some variables we'll be using.
-		int width = getWidth();
-
-		RTextAreaUI ui = (RTextAreaUI)textArea.getUI();
-		View v = ui.getRootView(textArea).getView(0);
-		boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
-		Document doc = textArea.getDocument();
-		Element root = doc.getDefaultRootElement();
-		int lineCount = root.getElementCount();
-		int topPosition = textArea.viewToModel(
-								new Point(visibleRect.x,visibleRect.y));
-		int topLine = root.getElementIndex(topPosition);
-
-		// Compute the y at which to begin painting text, taking into account
-		// that 1 logical line => at least 1 physical line, so it may be that
-		// y<0.  The computed y-value is the y-value of the top of the first
-		// (possibly) partially-visible view.
-		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
-		Rectangle r = Gutter.getChildViewBounds(v, topLine,
-												visibleEditorRect);
-		int y = r.y;
-
-		int rhs;
-		if (ltr) {
-			rhs = width - RHS_BORDER_WIDTH;
-			if (showLineIcons) {
-				rhs -= ICON_AREA_WIDTH;
+	public boolean isIconRowHeaderEnabled() {
+		for (int i=0; i<getComponentCount(); i++) {
+			if (getComponent(i)==iconArea) {
+				return true;
 			}
 		}
-		else { // rtl
-			rhs = RHS_BORDER_WIDTH;
-		}
-		int visibleBottom = y + visibleRect.height;
-		FontMetrics metrics = g.getFontMetrics();
-
-		// Get the first possibly visible icon index.
-		int currentIcon = -1;
-		if (showLineIcons && trackingIcons!=null) {
-			for (int i=0; i<trackingIcons.size(); i++) {
-				TrackingIcon icon = (TrackingIcon)trackingIcons.get(i);
-				int offs = icon.getMarkedOffset();
-				if (offs>=0 && offs<=doc.getLength()) {
-					int line = root.getElementIndex(offs);
-					if (line>=topLine) {
-						currentIcon = i;
-						break;
-					}
-				}
-			}
-		}
-
-		// Keep painting lines until our y-coordinate is past the visible
-		// end of the text area.
-		g.setColor(getForeground());
-		while (y < visibleBottom) {
-
-			r = Gutter.getChildViewBounds(v, topLine, visibleEditorRect);
-			int lineEndY = r.y+r.height;
-
-			// Highlight the current line's line number, if desired.
-			if (currentLineHighlighted && topLine==currentLine) {
-				g.setColor(textArea.getCurrentLineHighlightColor());
-				g.fillRect(0,y, width,lineEndY-y);
-				g.setColor(getForeground());
-			}
-
-			// Paint the line number.
-			String number = Integer.toString(topLine+1);
-			if (ltr) {
-				int strWidth = metrics.stringWidth(number);
-				g.drawString(number, rhs-strWidth,y+ascent);
-			}
-			else {
-				int x = RHS_BORDER_WIDTH;
-				if (showLineIcons) {
-					x += ICON_AREA_WIDTH;
-				}
-				g.drawString(number, x, y+ascent);
-			}
-
-			// Possibly paint an icon.
-			if (currentIcon>-1) {
-				// We want to paint the last icon added for this line.
-				TrackingIcon toPaint = null;
-				while (currentIcon<trackingIcons.size()) {
-					TrackingIcon ti = (TrackingIcon)trackingIcons.get(currentIcon);
-					int offs = ti.getMarkedOffset();
-					if (offs>=0 && offs<=doc.getLength()) {
-						int line = root.getElementIndex(offs);
-						if (line==topLine) {
-							toPaint = ti;
-						}
-						else if (line>topLine) {
-							break;
-						}
-					}
-					currentIcon++;
-				}
-				if (toPaint!=null) {
-					Icon icon = toPaint.getIcon();
-					if (icon!=null) {
-						int y2 = y + (cellHeight-icon.getIconHeight())/2;
-						icon.paintIcon(this, g, rhs+2, y2);
-					}
-				}
-			}
-
-			// The next possible y-coordinate is just after the last line
-			// painted.
-			y += r.height;
-
-			// Update topLine (we're actually using it for our "current line"
-			// variable now).
-			topLine++;
-			if (topLine>=lineCount)
-				break;
-
-		}
-
-		paintBorderLine(g, visibleRect, ltr);
-
+		return false;
 	}
 
 
@@ -618,10 +259,8 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @see #removeAllTrackingIcons()
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
-	public void removeTrackingIcon(Object tag) {
-		if (trackingIcons!=null && trackingIcons.remove(tag) && showLineIcons) {
-			repaint();
-		}
+	public void removeTrackingIcon(GutterIconInfo tag) {
+		iconArea.removeTrackingIcon(tag);
 	}
 
 
@@ -632,41 +271,48 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
 	public void removeAllTrackingIcons() {
-		if (trackingIcons!=null && trackingIcons.size()>0) {
-			trackingIcons.clear();
-			if (showLineIcons) {
-				repaint();
-			}
-		}
+		iconArea.removeAllTrackingIcons();
 	}
 
 
 	/**
-	 * Repaints a single line in this list.
+	 * Removes a mouse listener from the icon area of the gutter.
 	 *
-	 * @param line The line to repaint.
+	 * @param listener The listener to remove.
+	 * @see #addIconAreaMouseListener(MouseListener)
 	 */
-	private void repaintLine(int line) {
-		int y = textArea.getInsets().top;
-		y += line*cellHeight;
-		repaint(0,y, cellWidth,cellHeight);
+	public void removeIconAreaMouseListener(MouseListener listener) {
+		iconArea.removeMouseListener(listener);
 	}
 
 
 	/**
-	 * Sets the font used to render the line numbers.
+	 * Sets the icon to use for bookmarks.
 	 *
-	 * @param font The <code>java.awt.Font</code> to use to to render the line
-	 *        numbers.  If <code>null</code>, a 10-point monospaced font
-	 *        will be used.
-	 * @see #getFont()
+	 * @param icon The new bookmark icon.  If this is <code>null</code>,
+	 *        bookmarking is effectively disabled.
+	 * @see #getBookmarkIcon()
+	 * @see #isBookmarkingEnabled()
 	 */
-	public void setFont(Font font) {
-		if (font==null) {
-			font = new Font("Monospaced", Font.PLAIN, 10);
+	public void setBookmarkIcon(Icon icon) {
+		iconArea.setBookmarkIcon(icon);
+	}
+
+
+	/**
+	 * Sets whether bookmarking is enabled.  Note that a bookmarking icon
+	 * must be set via {@link #setBookmarkIcon(Icon)} before bookmarks are
+	 * truly enabled.
+	 *
+	 * @param enabled Whether bookmarking is enabled.
+	 * @see #isBookmarkingEnabled()
+	 * @see #setBookmarkIcon(Icon)
+	 */
+	public void setBookmarkingEnabled(boolean enabled) {
+		iconArea.setBookmarkingEnabled(enabled);
+		if (enabled && !isIconRowHeaderEnabled()) {
+			setIconRowHeaderEnabled(true);
 		}
-		super.setFont(font);
-		repaint();
 	}
 
 
@@ -677,37 +323,40 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @see #getBorderColor()
 	 */
 	public void setBorderColor(Color color) {
-		borderColor = color;
+		((GutterBorder)getBorder()).setColor(color);
 		repaint();
 	}
 
 
 	/**
-	 * Toggles whether icons (used for breakpoints, bookmarks, etc.) are
-	 * enabled.
-	 *
-	 * @param show Whether the icons should be visible.
-	 * @see #getShowIcons()
+	 * {@inheritDoc}
 	 */
-	public void setShowIcons(boolean show) {
-		if (show!=showLineIcons) {
-			showLineIcons = show;
-			updateCellWidths(); // Will also cause a revalidate()
+	public void setComponentOrientation(ComponentOrientation o) {
+		if (o.isLeftToRight()) {
+			setBorder(new GutterBorder(0, 0, 0, 1));
 		}
+		else {
+			setBorder(new GutterBorder(0, 1, 0, 0));
+		}
+		super.setComponentOrientation(o);
 	}
 
 
 	/**
-	 * Toggles whether line numbers are enabled.
+	 * Toggles whether the icon row header (used for breakpoints, bookmarks,
+	 * etc.) is enabled.
 	 *
-	 * @param show Whether line numbers should be visible.
-	 * @see #getShowLineNumbers()
+	 * @param enabled Whether the icon row header is enabled.
+	 * @see #isIconRowHeaderEnabled()
 	 */
-	public void setShowLineNumbers(boolean show) {
-		if (show!=showLineNumbers) {
-			showLineNumbers = show;
-			updateCellWidths(); // Will also cause a revalidate()
+	public void setIconRowHeaderEnabled(boolean enabled) {
+		if (enabled) {
+			add(iconArea, BorderLayout.LINE_START);
 		}
+		else {
+			remove(iconArea);
+		}
+		revalidate();
 	}
 
 
@@ -718,246 +367,124 @@ class Gutter extends JComponent implements MouseInputListener {
 	 * @see #getLineNumberColor()
 	 */
 	public void setLineNumberColor(Color color) {
-		setForeground(color);
-		repaint();
+		lineNumberList.setForeground(color);
 	}
 
 
 	/**
-	 * Sets the text area being displayed.
+	 * Sets the font used for line numbers.
+	 *
+	 * @param font The font to use.  This cannot be <code>null</code>.
+	 * @see #getLineNumberFont()
+	 */
+	public void setLineNumberFont(Font font) {
+		if (font==null) {
+			throw new IllegalArgumentException("font cannot be null");
+		}
+		lineNumberList.setFont(font);
+	}
+
+
+	/**
+	 * Toggles whether or not line numbers are visible.
+	 *
+	 * @param enabled Whether or not line numbers should be visible.
+	 * @see #getLineNumbersEnabled()
+	 */
+	public void setLineNumbersEnabled(boolean enabled) {
+		if (enabled) {
+			add(lineNumberList);
+		}
+		else {
+			remove(lineNumberList);
+		}
+		revalidate();
+	}
+
+
+	/**
+	 * Sets the text area being displayed.  This will clear any tracking
+	 * icons currently displayed.
 	 *
 	 * @param textArea The text area.
 	 */
-	public void setTextArea(RTextArea textArea) {
-
+	void setTextArea(RTextArea textArea) {
 		if (this.textArea!=null) {
-			l.uninstall(textArea);
+			this.textArea.removeComponentListener(listener);
 		}
-
+		textArea.addComponentListener(listener);
+		lineNumberList.setTextArea(textArea);
+		iconArea.setTextArea(textArea);
 		this.textArea = textArea;
-		Color bg = textArea==null ? Color.WHITE : textArea.getBackground();
-		// textArea.getBackground() may also return null (image bg)
-		setBackground(bg==null ? Color.WHITE : bg);
+	}
 
-		if (textArea!=null) {
-			l.install(textArea);
-			updateCellHeights();
-			updateCellWidths();
+
+	/**
+	 * Programatically toggles whether there is a bookmark for the specified
+	 * line.  If bookmarking is not enabled, this method does nothing.
+	 *
+	 * @param line The line.
+	 * @return Whether a bookmark is now at the specified line.
+	 * @throws BadLocationException If <code>line</code> is an invalid line
+	 *         number in the text area.
+	 */
+	public boolean toggleBookmark(int line) throws BadLocationException {
+		return iconArea.toggleBookmark(line);
+	}
+
+
+	/**
+	 * The border used by the gutter.
+	 */
+	private static class GutterBorder extends EmptyBorder {
+
+		private Color color;
+
+		public GutterBorder(int top, int left, int bottom, int right) {
+			super(top, left, bottom, right);
+			color = new Color(221, 221, 221);
+		}
+
+		public Color getColor() {
+			return color;
+		}
+
+		public void paintBorder(Component c, Graphics g, int x, int y,
+								int width, int height) {
+			g.setColor(color);
+			if (left==1) {
+				g.drawLine(0,0, 0,height);
+			}
+			else {
+				g.drawLine(width-1,0, width-1,height);
+			}
+		}
+
+		public void setColor(Color color) {
+			this.color = color;
 		}
 
 	}
 
 
 	/**
-	 * Changes the height of the cells in the JList so that they are as tall as
-	 * font. This function should be called whenever the user changes the Font
-	 * of <code>textArea</code>.
+	 * Listens for the text area resizing.
 	 */
-	private void updateCellHeights() {
-		if (textArea!=null) {
-			cellHeight = textArea.getLineHeight();
-			ascent = textArea.getMaxAscent();
-		}
-		else {
-			cellHeight = 20; // Arbitrary number.
-			ascent = 5; // Also arbitrary
-		}
-		repaint();
-	}
-
-
-	/**
-	 * Changes the width of the cells in the JList so you can see every digit
-	 * of each.
+	/*
+	 * This is necessary to keep child components the same height as the text
+	 * area.  The worse case is when the user toggles word-wrap and it changes
+	 * the height of the text area. In that case, if we listen for the
+	 * "lineWrap" property change, we get notified BEFORE the text area
+	 * decides on its new size, thus we cannot resize properly.  We listen
+	 * instead for ComponentEvents so we change size after the text area has
+	 * resized.
 	 */
-	private void updateCellWidths() {
-
-		int oldCellWidth = cellWidth;
-		cellWidth = RHS_BORDER_WIDTH;
-		cellWidth += showLineIcons ? ICON_AREA_WIDTH : 0;
-
-		// Adjust the amount of space the line numbers take up, if necessary.
-		if (textArea!=null && showLineNumbers) {
-			Font font = getFont();
-			if (font!=null) {
-				FontMetrics fontMetrics = getFontMetrics(font);
-				int count = 0;
-				int numLines = textArea.getLineCount();
-				while (numLines >= 10) {
-					numLines = numLines/10;
-					count++;
-				}
-				cellWidth += fontMetrics.charWidth('9')*(count+2) + 5;
-			}
-		}
-
-		if (cellWidth!=oldCellWidth) { // Always true
-			revalidate();
-		}
-
-	}
-
-
-	/**
-	 * Listens for events in the text area we're interested in.
-	 */
-	private class Listener extends ComponentAdapter implements CaretListener,
-						DocumentListener, PropertyChangeListener {
-
-		public void caretUpdate(CaretEvent e) {
-
-			int dot = textArea.getCaretPosition();
-
-			// We separate the line wrap/no line wrap cases because word wrap
-			// can make a single line from the model (document) be on multiple
-			// lines on the screen (in the view); thus, we have to enhance the
-			// logic for that case a bit - we check the actual y-coordinate of
-			// the caret when line wrap is enabled.  For the no-line-wrap case,
-			// getting the line number of the caret suffices.  This increases
-			// efficiency in the no-line-wrap case.
-
-			if (textArea.getLineWrap()==false) {
-				int line = textArea.getDocument().getDefaultRootElement().
-										getElementIndex(dot);
-				if (currentLine!=line) {
-					repaintLine(line);
-					repaintLine(currentLine);
-					currentLine = line;
-				}
-			}
-			else { // lineWrap enabled; must check actual y position of caret
-				try {
-					int y = textArea.yForLineContaining(dot);
-					if (y!=lastY) {
-						lastY = y;
-						currentLine = textArea.getDocument().
-								getDefaultRootElement().getElementIndex(dot);
-						repaint(); // *Could* be optimized...
-					}
-				} catch (BadLocationException ble) {
-					ble.printStackTrace();
-				}
-			}
-
-		}
-
-		public void changedUpdate(DocumentEvent e) {}
+	private class TextAreaListener extends ComponentAdapter {
 
 		public void componentResized(java.awt.event.ComponentEvent e) {
-			setPreferredSize(new Dimension(cellWidth,
-								e.getComponent().getHeight()));
 			revalidate();
 		}
 
-		public void insertUpdate(DocumentEvent e) {
-			int newNumLines = textArea!=null ? textArea.getLineCount() : 0;
-			if (newNumLines > currentNumLines) {
-				// Adjust the amount of space the line numbers take up,
-				// if necessary.
-				if (newNumLines/10 > currentNumLines/10)
-					updateCellWidths();
-				currentNumLines = newNumLines;
-				repaint();
-			}
-		}
-
-		public void install(RTextArea textArea) {
-			textArea.addCaretListener(this);
-			textArea.addPropertyChangeListener(this);
-			textArea.getDocument().addDocumentListener(this);
-			textArea.addComponentListener(this);
-		}
-
-		public void propertyChange(PropertyChangeEvent e) {
-
-			String name = e.getPropertyName();
-
-			// If they changed the background color of the text area.
-			if ("background".equals(name)) {
-				Color bg = textArea.getBackground();
-				setBackground(bg==null ? Color.WHITE : bg);
-				repaint();
-			}
-
-			// If they changed the background to an image.
-			else if ("background.image".equals(name)) {
-				setBackground(Color.WHITE);
-				repaint();
-			}
-
-			// If they change the text area's font, we need to update cell
-			// heights to match the font's height.
-			else if ("font".equals(name)) {
-				updateCellHeights();
-			}
-
-			// If they change the current line highlight in any way...
-			else if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
-				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
-				repaint();
-			}
-
-			// If they change the text area's syntax scheme (i.e., it is an
-			// RSyntaxTextArea), update cell heights.
-			else if (RSyntaxTextArea.SYNTAX_SCHEME_PROPERTY.equals(name)) {
-				updateCellHeights();
-			}
-
-		}
-
-		public void removeUpdate(DocumentEvent e) {
-			int newNumLines = textArea.getLineCount();
-			if (newNumLines < currentNumLines) { // Used to be <
-				// Adjust amount of space the line numbers take up, if necessary.
-				if (newNumLines/10 < currentNumLines/10)
-					updateCellWidths();
-				currentNumLines = newNumLines;
-				repaint();
-			}
-		}
-
-		public void uninstall(RTextArea textArea) {
-			textArea.removeCaretListener(this);
-			textArea.removePropertyChangeListener(this);
-			textArea.getDocument().removeDocumentListener(this);
-			textArea.removeComponentListener(this);
-		}
-
-	}
-
-
-	static class TrackingIcon implements Comparable {
-
-		private Icon icon;
-		private Position pos;
-
-		public TrackingIcon(Icon icon, Position pos) {
-			this.icon = icon;
-			this.pos = pos;
-		}
-
-		public int compareTo(Object o) {
-			if (o instanceof TrackingIcon) {
-				return pos.getOffset() - ((TrackingIcon)o).getMarkedOffset();
-			}
-			return -1;
-		}
-
-		public boolean equals(Object o) {
-			return o==this;
-		}
-
-		public Icon getIcon() {
-			return icon;
-		}
-
-		public int getMarkedOffset() {
-			return pos.getOffset();
-		}
-
-		public int hashCode() {
-			return icon.hashCode(); // FindBugs
-		}
 
 	}
 

@@ -1,16 +1,15 @@
-package org.fife.ui.rsyntaxtextarea.modes;
+package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
-import org.fife.ui.rsyntaxtextarea.Token;
 
 
 /**
- * Base class for JFlex-based token makers using C-style syntax.
+ * Base class for JFlex-based token makers using C-style syntax.  This class
+ * knows how to auto-indent after opening braces and parens.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
+public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	/**

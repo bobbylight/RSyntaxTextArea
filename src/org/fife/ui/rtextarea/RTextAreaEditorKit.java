@@ -100,6 +100,16 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static final String rtaLowerSelectionCaseAction		= "RTA.LowerCaseAction";
 
 	/**
+	 * Action to jump to the next bookmark.
+	 */
+	public static final String rtaNextBookmarkAction		= "RTA.NextBookmarkAction";
+
+	/**
+	 * Action to jump to the previous bookmark.
+	 */
+	public static final String rtaPrevBookmarkAction		= "RTA.PrevBookmarkAction";
+
+	/**
 	 * The name of the action that "plays back" the last macro.
 	 */
 	public static final String rtaPlaybackLastMacroAction		= "RTA.PlaybackLastMacroAction";
@@ -145,6 +155,12 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * The name of the action for inserting a time/date stamp.
 	 */
 	public static final String rtaTimeDateAction				= "RTA.TimeDateAction";
+
+	/**
+	 * Toggles whether the current line has a bookmark, if this text area
+	 * is in an {@link RTextScrollPane}.
+	 */
+	public static final String rtaToggleBookmarkAction		= "RTA.ToggleBookmarkAction";
 
 	/**
 	 * The name of the action taken when the user hits the Insert key (thus
@@ -202,6 +218,8 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new LowerSelectionCaseAction(),
 		new LineMoveAction(rtaLineUpAction, -1),
 		new LineMoveAction(rtaLineDownAction, 1),
+		new NextBookmarkAction(rtaNextBookmarkAction, true),
+		new NextBookmarkAction(rtaPrevBookmarkAction, false),
 		new NextVisualPositionAction(forwardAction, false, SwingConstants.EAST),
 		new NextVisualPositionAction(backwardAction, false, SwingConstants.WEST),
 		new NextVisualPositionAction(selectionForwardAction, true, SwingConstants.EAST),
@@ -226,6 +244,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new SelectWordAction(),
 		new SetReadOnlyAction(),
 		new SetWritableAction(),
+		new ToggleBookmarkAction(),
 		new ToggleTextModeAction(),
 		new UndoAction(),
 		new UnselectAction(),
@@ -1376,12 +1395,101 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Action that moves the caret to the next (or previous) bookmark.
+	 */
+	public static class NextBookmarkAction extends RecordableTextAction {
+
+		private boolean forward;
+
+		public NextBookmarkAction(String name, boolean forward) {
+			super(name);
+			this.forward = forward;
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			Container parent = textArea.getParent();
+			if (parent instanceof JViewport) {
+
+				parent = parent.getParent();
+				if (parent instanceof RTextScrollPane) {
+
+					RTextScrollPane sp = (RTextScrollPane)parent;
+					Gutter gutter = sp.getGutter();
+					if (gutter!=null) { // Always true
+
+						try {
+
+							GutterIconInfo[] bookmarks = gutter.getBookmarks();
+							if (bookmarks.length==0) {
+								UIManager.getLookAndFeel().
+											provideErrorFeedback(textArea);
+								return;
+							}
+
+							GutterIconInfo moveTo = null;
+							int curLine = textArea.getCaretLineNumber();
+
+							if (forward) {
+								for (int i=0; i<bookmarks.length; i++) {
+									GutterIconInfo bookmark = bookmarks[i];
+									int offs = bookmark.getMarkedOffset();
+									int line = textArea.getLineOfOffset(offs);
+									if (line>curLine) {
+										moveTo = bookmark;
+										break;
+									}
+								}
+								if (moveTo==null) { // Loop back to beginning
+									moveTo = bookmarks[0];
+								}
+							}
+							else {
+								for (int i=bookmarks.length-1; i>=0; i--) {
+									GutterIconInfo bookmark = bookmarks[i];
+									int offs = bookmark.getMarkedOffset();
+									int line = textArea.getLineOfOffset(offs);
+									if (line<curLine) {
+										moveTo = bookmark;
+										break;
+									}
+								}
+								if (moveTo==null) { // Loop back to end
+									moveTo = bookmarks[bookmarks.length-1];
+								}
+							}
+
+							int offs = moveTo.getMarkedOffset();
+							int line = textArea.getLineOfOffset(offs);
+							offs = textArea.getLineStartOffset(line);
+							textArea.setCaretPosition(offs);
+
+						} catch (BadLocationException ble) { // Never happens
+							UIManager.getLookAndFeel().
+										provideErrorFeedback(textArea);
+							ble.printStackTrace();
+						}
+					}
+
+				}
+
+			}
+
+		}
+
+		public final String getMacroID() {
+			return getName();
+		}
+
+	}
+
+
+	/**
 	 * Action to move the selection and/or caret. Constructor indicates
 	 * direction to use.
 	 */
 	public static class NextVisualPositionAction extends RecordableTextAction {
 
- 
 		private boolean select;
 		private int direction;
 
@@ -1925,10 +2033,44 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Toggles whether the current line has a bookmark.
+	 */
+	public static class ToggleBookmarkAction extends RecordableTextAction {
+ 
+		public ToggleBookmarkAction() {
+			super(rtaToggleBookmarkAction);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			Container parent = textArea.getParent();
+			if (parent instanceof JViewport) {
+				parent = parent.getParent();
+				if (parent instanceof RTextScrollPane) {
+					RTextScrollPane sp = (RTextScrollPane)parent;
+					Gutter gutter = sp.getGutter();
+					int line = textArea.getCaretLineNumber();
+					try {
+						gutter.toggleBookmark(line);
+					} catch (BadLocationException ble) { // Never happens
+						UIManager.getLookAndFeel().
+									provideErrorFeedback(textArea);
+						ble.printStackTrace();
+					}
+				}
+			}
+		}
+
+		public final String getMacroID() {
+			return rtaToggleBookmarkAction;
+		}
+
+	}
+
+
+	/**
 	 * The action for the insert key toggling insert/overwrite modes.
 	 */
 	public static class ToggleTextModeAction extends RecordableTextAction {
-
  
 		public ToggleTextModeAction() {
 			super(rtaToggleTextModeAction);
