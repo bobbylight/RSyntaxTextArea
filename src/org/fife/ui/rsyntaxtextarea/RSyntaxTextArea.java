@@ -77,6 +77,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>Lua
  *    <li>Make
  *    <li>Perl
+ *    <li>PHP
  *    <li>Ruby
  *    <li>SAS
  *    <li>SQL
@@ -127,7 +128,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/**
 	 * The colors used for syntax highlighting.
 	 */
-	private SyntaxHighlightingColorScheme colorScheme;
+	private SyntaxScheme syntaxScheme;
 
 	/**
 	 * Handles code templates.
@@ -239,21 +240,6 @@ private int maxAscent;
 
 public int getMaxAscent() {
 	return maxAscent;
-}
-private void refreshFontMetrics(Graphics2D g2d) {
-	// It is assumed that any rendering hints are already applied to g2d.
-	defaultFontMetrics = g2d.getFontMetrics(getFont());
-	for (int i=0; i<colorScheme.syntaxSchemes.length; i++) {
-		SyntaxScheme ss = colorScheme.syntaxSchemes[i];
-		if (ss!=null) {
-			ss.fontMetrics = ss.font==null ? null : g2d.getFontMetrics(ss.font);
-		}
-	}
-	if (getLineWrap()==false) {
-		// HORRIBLE HACK!  The un-wrapped view needs to refresh its cached
-		// longest line information.
-		((SyntaxView)getUI().getRootView(this).getView(0)).calculateLongestLine();
-	}
 }
 private String aaHintFieldName;
 private Object aaHint;
@@ -376,9 +362,9 @@ private boolean fractionalFontMetricsEnabled;
 
 		lineHeight = maxAscent = 0;
 
-		// Each tokeh style.
-		for (int i=0; i<colorScheme.syntaxSchemes.length; i++) {
-			SyntaxScheme ss = colorScheme.syntaxSchemes[i];
+		// Each token style.
+		for (int i=0; i<syntaxScheme.styles.length; i++) {
+			Style ss = syntaxScheme.styles[i];
 			if (ss!=null && ss.font!=null) {
 				FontMetrics fm = getFontMetrics(ss.font);
 				int height = fm.getHeight();
@@ -617,11 +603,9 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getForegroundForToken(Token)
 	 */
 	public Color getBackgroundForTokenType(int type) {
-		// NOTE: Defaulting to this.getBackground() if syntax
-		// scheme's background is null causes VERY slow painting
-		// on OSX... it appears to repaint the entire text area
-		// with every redraw???
-		return colorScheme.syntaxSchemes[type].background;
+		// Don't default to this.getBackground(), as Tokens simply don't
+		// paint a background if they get a null Color.
+		return syntaxScheme.styles[type].background;
 	}
 
 
@@ -681,8 +665,8 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return The default syntax highlighting color scheme.
 	 */
-	public SyntaxHighlightingColorScheme getDefaultSyntaxHighlightingColorScheme() {
-		return new SyntaxHighlightingColorScheme(true);
+	public SyntaxScheme getDefaultSyntaxHighlightingColorScheme() {
+		return new SyntaxScheme(true);
 	}
 
 
@@ -694,7 +678,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getFontMetricsForTokenType(int)
 	 */
 	public Font getFontForTokenType(int type) {
-		Font f = colorScheme.syntaxSchemes[type].font;
+		Font f = syntaxScheme.styles[type].font;
 		return f!=null ? f : getFont();
 	}
 
@@ -707,7 +691,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getFontForTokenType(int)
 	 */
 	public FontMetrics getFontMetricsForTokenType(int type) {
-		FontMetrics fm = colorScheme.syntaxSchemes[type].fontMetrics;
+		FontMetrics fm = syntaxScheme.styles[type].fontMetrics;
 		return fm!=null ? fm : defaultFontMetrics;
 	}
 
@@ -725,7 +709,7 @@ private boolean fractionalFontMetricsEnabled;
 				hoveredOverLinkOffset==t.offset) {
 			return hyperlinkFG;
 		}
-		Color fg = colorScheme.syntaxSchemes[t.type].foreground;
+		Color fg = syntaxScheme.styles[t.type].foreground;
 		return fg!=null ? fg : getForeground();
 	}
 
@@ -931,13 +915,12 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns all of the colors currently being used in syntax highlighting
 	 * by this text component.
 	 *
-	 * @return An instance of <code>SyntaxHighlightingColorScheme</code> that
-	 *         represents the colors currently being used for syntax
-	 *         highlighting.
-	 * @see #setSyntaxHighlightingColorScheme
+	 * @return An instance of <code>SyntaxScheme</code> that represents
+	 *         the colors currently being used for syntax highlighting.
+	 * @see #setSyntaxScheme(SyntaxScheme)
 	 */
-	public SyntaxHighlightingColorScheme getSyntaxHighlightingColorScheme() {
-		return colorScheme;
+	public SyntaxScheme getSyntaxScheme() {
+		return syntaxScheme;
 	}
 
 
@@ -1082,7 +1065,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean getUnderlineForToken(Token t) {
 		return (t.isHyperlink() && getHyperlinksEnabled()) ||
-				colorScheme.syntaxSchemes[t.type].underline;
+				syntaxScheme.styles[t.type].underline;
 	}
 
 
@@ -1201,6 +1184,19 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
+	private void refreshFontMetrics(Graphics2D g2d) {
+		// It is assumed that any rendering hints are already applied to g2d.
+		defaultFontMetrics = g2d.getFontMetrics(getFont());
+		syntaxScheme.refreshFontMetrics(g2d);
+		if (getLineWrap()==false) {
+			// HORRIBLE HACK!  The un-wrapped view needs to refresh its cached
+			// longest line information.
+			SyntaxView sv = (SyntaxView)getUI().getRootView(this).getView(0);
+			sv.calculateLongestLine();
+		}
+	}
+
+
 	/**
 	 * Refreshes the highlights in the text area from the parser.
 	 *
@@ -1255,7 +1251,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Sets the colors used for syntax highlighting to their defaults.
 	 */
 	public void restoreDefaultSyntaxHighlightingColorScheme() {
-		setSyntaxHighlightingColorScheme(getDefaultSyntaxHighlightingColorScheme());
+		setSyntaxScheme(getDefaultSyntaxHighlightingColorScheme());
 	}
 
 
@@ -1567,20 +1563,18 @@ private boolean fractionalFontMetricsEnabled;
 	 * This method fires a property change event of type
 	 * <code>SYNTAX_SCHEME_PROPERTY</code>.
 	 *
-	 * @param colorScheme The instance of
-	 *        <code>SyntaxHighlightingColorScheme</code> to use.
-	 * @see #getSyntaxHighlightingColorScheme
+	 * @param scheme The instance of <code>SyntaxScheme</code> to use.
+	 * @see #getSyntaxScheme()
 	 */
-	public void setSyntaxHighlightingColorScheme(final
-							SyntaxHighlightingColorScheme colorScheme) {
+	public void setSyntaxScheme(SyntaxScheme scheme) {
 
 		// NOTE:  We don't check whether colorScheme is the same as the
 		// current scheme because DecreaseFontSizeAction and
 		// IncreaseFontSizeAction need it this way.
 		// FIXME:  Find a way around this.
 
-		SyntaxHighlightingColorScheme old = this.colorScheme;
-		this.colorScheme = colorScheme;
+		SyntaxScheme old = this.syntaxScheme;
+		this.syntaxScheme = scheme;
 
 		// Recalculate the line height.  We do this here instead of in
 		// refreshFontMetrics() as this method is called less often and we
@@ -1601,7 +1595,7 @@ private boolean fractionalFontMetricsEnabled;
 		// So encompassing JScrollPane will have its scrollbars updated.
 		revalidate();
 
-		firePropertyChange(SYNTAX_SCHEME_PROPERTY, old, this.colorScheme);
+		firePropertyChange(SYNTAX_SCHEME_PROPERTY, old, this.syntaxScheme);
 
 	}
 

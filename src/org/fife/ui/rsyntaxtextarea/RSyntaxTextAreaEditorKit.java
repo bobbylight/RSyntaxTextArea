@@ -256,8 +256,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-			SyntaxHighlightingColorScheme scheme = rsta.
-									getSyntaxHighlightingColorScheme();
+			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
 			// All we need to do is update all of the fonts in syntax
 			// schemes, then call setSyntaxHighlightingColorScheme with the
@@ -266,9 +265,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// from the old scheme before updating.
 
 			boolean changed = false;
-			int count = scheme.syntaxSchemes.length;
+			int count = scheme.styles.length;
 			for (int i=0; i<count; i++) {
-				SyntaxScheme ss = scheme.syntaxSchemes[i];
+				Style ss = scheme.styles[i];
 				if (ss!=null) {
 					Font font = ss.font;
 					if (font!=null) {
@@ -308,7 +307,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// If we updated at least one font, update the screen.  If
 			// all of the fonts were already the minimum size, beep.
 			if (changed) {
-				rsta.setSyntaxHighlightingColorScheme(scheme);
+				rsta.setSyntaxScheme(scheme);
 				// NOTE:  This is a hack to get an encompassing
 				// RTextScrollPane to repaint its line numbers to account
 				// for a change in line height due to a font change.  I'm
@@ -516,8 +515,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-			SyntaxHighlightingColorScheme scheme = rsta.
-									getSyntaxHighlightingColorScheme();
+			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
 			// All we need to do is update all of the fonts in syntax
 			// schemes, then call setSyntaxHighlightingColorScheme with the
@@ -526,9 +524,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// from the old scheme before updating.
 
 			boolean changed = false;
-			int count = scheme.syntaxSchemes.length;
+			int count = scheme.styles.length;
 			for (int i=0; i<count; i++) {
-				SyntaxScheme ss = scheme.syntaxSchemes[i];
+				Style ss = scheme.styles[i];
 				if (ss!=null) {
 					Font font = ss.font;
 					if (font!=null) {
@@ -568,7 +566,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// If we updated at least one font, update the screen.  If
 			// all of the fonts were already the minimum size, beep.
 			if (changed) {
-				rsta.setSyntaxHighlightingColorScheme(scheme);
+				rsta.setSyntaxScheme(scheme);
 				// NOTE:  This is a hack to get an encompassing
 				// RTextScrollPane to repaint its line numbers to account
 				// for a change in line height due to a font change.  I'm

@@ -71,7 +71,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class HTMLTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -269,9 +268,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -286,7 +284,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -314,7 +312,7 @@ LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
 AmperItem				= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'/=>]+)
-EndScriptTag			= ("</script>")
+EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
 
 
 // JavaScript stuff.
@@ -542,6 +540,11 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 
 <INTAG_SCRIPT> {
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
+	"/>"					{
+								addToken(zzMarkedPos-2, zzMarkedPos-2, Token.RESERVED_WORD);
+								addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+								yybegin(YYINITIAL);
+							}
 	"/"						{ addToken(Token.RESERVED_WORD); } // Won't appear in valid HTML.
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }

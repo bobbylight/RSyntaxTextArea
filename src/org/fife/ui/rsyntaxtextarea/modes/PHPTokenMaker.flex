@@ -352,7 +352,7 @@ LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
 AmperItem				= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'/=>]+)
-EndScriptTag			= ("</script>")
+EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
 
 
 // JavaScript stuff.
@@ -583,6 +583,11 @@ PHP_LineCommentBegin		= ("//"|[#])
 
 <INTAG_SCRIPT> {
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
+	"/>"					{
+								addToken(zzMarkedPos-2, zzMarkedPos-2, Token.RESERVED_WORD);
+								addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+								yybegin(YYINITIAL);
+							}
 	"/"						{ addToken(Token.RESERVED_WORD); } // Won't appear in valid HTML.
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }

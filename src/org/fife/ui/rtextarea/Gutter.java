@@ -31,7 +31,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.MouseListener;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
@@ -84,17 +83,6 @@ public class Gutter extends JComponent {
 		add(lineNumberList);
 		//add(iconArea, BorderLayout.LINE_START);
 		setBorder(new GutterBorder(0, 0, 0, 1)); // Assume ltr
-	}
-
-
-	/**
-	 * Adds a mouse listener to the icon area of the gutter.
-	 *
-	 * @param listener The listener.
-	 * @see #removeIconAreaMouseListener(MouseListener)
-	 */
-	public void addIconAreaMouseListener(MouseListener listener) {
-		iconArea.addMouseListener(listener);
 	}
 
 
@@ -272,17 +260,6 @@ public class Gutter extends JComponent {
 	 */
 	public void removeAllTrackingIcons() {
 		iconArea.removeAllTrackingIcons();
-	}
-
-
-	/**
-	 * Removes a mouse listener from the icon area of the gutter.
-	 *
-	 * @param listener The listener to remove.
-	 * @see #addIconAreaMouseListener(MouseListener)
-	 */
-	public void removeIconAreaMouseListener(MouseListener listener) {
-		iconArea.removeMouseListener(listener);
 	}
 
 

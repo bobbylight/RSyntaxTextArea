@@ -362,7 +362,7 @@ UnclosedStringLiteral	= ([\"][^\"]*)
 StringLiteral			= ({UnclosedStringLiteral}[\"])
 UnclosedCharLiteral		= ([\'][^\']*)
 CharLiteral			= ({UnclosedCharLiteral}[\'])
-EndScriptTag			= ("</script>")
+EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
 
 
 // Java stuff.
@@ -635,6 +635,11 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 <INTAG_SCRIPT> {
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
+	"/>"					{
+								addToken(zzMarkedPos-2, zzMarkedPos-2, Token.RESERVED_WORD);
+								addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+								yybegin(YYINITIAL);
+							}
 	"/"						{ addToken(Token.RESERVED_WORD); } // Won't appear in valid HTML.
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
