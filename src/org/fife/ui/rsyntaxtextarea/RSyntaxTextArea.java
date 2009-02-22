@@ -1482,7 +1482,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets the "mark occurrences" color.
 	 *
-	 * @param color The new color.  This cannot be <code>null</code>.
+	 * @param paint The new color.  This cannot be <code>null</code>.
 	 * @see #getMarkOccurrencesColor()
 	 * @see #setMarkOccurrences(boolean)
 	 */

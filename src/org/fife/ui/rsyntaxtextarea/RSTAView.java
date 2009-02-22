@@ -37,10 +37,11 @@ interface RSTAView {
 
 
 	/**
-	 * Returns the y-coordinate of the line containing a specified offset.
+	 * Returns the y-coordinate of the line containing a specified offset.<p>
 	 *
-	 * This method is quicker than using traditional {@link #modelToView(int)}
-	 * calls, as the entire bounding box isn't computed.
+	 * This method is quicker than using traditional
+	 * <code>modelToView(int)</code> calls, as the entire bounding box isn't
+	 * computed.
 	 *
 	 * @param alloc The area the text area can render into.
 	 * @param offs The offset info the document.

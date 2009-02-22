@@ -91,13 +91,13 @@ public class Gutter extends JComponent {
 	 * adjacent to the line numbers.  This is useful for marking things such
 	 * as source code errors.
 	 *
-	 * @param offs The offset to track.
+	 * @param line The line to track (zero-based).
 	 * @param icon The icon to display.  This should be small (say 16x16).
 	 * @return A tag for this icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
 	 * @see #addOffsetTrackingIcon(int, Icon)
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addLineTrackingIcon(int line, Icon icon)
 											throws BadLocationException {
@@ -117,7 +117,7 @@ public class Gutter extends JComponent {
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
 	 * @see #addLineTrackingIcon(int, Icon)
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon)
 												throws BadLocationException {
@@ -199,12 +199,12 @@ public class Gutter extends JComponent {
 
 
 	/**
-	 * Returns the tracking icons at the specified line.
+	 * Returns the tracking icons at the specified view position.
 	 *
-	 * @param line The line.
-	 * @return The tracking icons at that line.  If there are no tracking
+	 * @param p The view position.
+	 * @return The tracking icons at that position.  If there are no tracking
 	 *         icons there, this will be an empty array.
-	 * @throws BadLocationException If <code>line</code> is invalid.
+	 * @throws BadLocationException If <code>p</code> is invalid.
 	 */
 	public Object[] getTrackingIcons(Point p) throws BadLocationException {
 		int offs = textArea.viewToModel(new Point(0, p.y));
@@ -255,7 +255,7 @@ public class Gutter extends JComponent {
 	/**
 	 * Removes all tracking icons.
 	 *
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
 	public void removeAllTrackingIcons() {

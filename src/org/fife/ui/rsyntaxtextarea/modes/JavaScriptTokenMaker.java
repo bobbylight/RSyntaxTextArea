@@ -221,7 +221,7 @@ public class JavaScriptTokenMaker extends AbstractTokenMaker {
 	 * Returns <code>true</code> if the specified token is a '<tt>{</tt>' or
 	 * '<tt>(</tt>' separator.
 	 *
-	 * @param token The token the previous line ends with.
+	 * @param t The token the previous line ends with.
 	 * @return Whether the next line should be indented after this token.
 	 */
 	public boolean getShouldIndentNextLineAfter(Token t) {

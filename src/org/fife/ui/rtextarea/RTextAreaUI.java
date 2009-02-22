@@ -529,9 +529,9 @@ protected Keymap createKeymap() {
 	 * </pre>
 	 *
 	 * Subclasses that can calculate this value more quickly than traditional
-	 * {@link #modelToView(int)} calls should override this method to do so.
-	 * This method may be used when the entire bounding box isn't needed, to
-	 * speed up rendering.
+	 * {@link #modelToView(JTextComponent, int)} calls should override this
+	 * method to do so. This method may be used when the entire bounding box
+	 * isn't needed, to speed up rendering.
 	 *
 	 * @param offs The offset info the document.
 	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if

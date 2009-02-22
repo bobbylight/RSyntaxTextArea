@@ -457,7 +457,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @param s The stream to read from.
 	 * @throws ClassNotFoundException
 	 * @throws IOException
-	 * @see #writeObject(ObjectOutputStream)
 	 */
 	private void readObject(ObjectInputStream s)
 						throws ClassNotFoundException, IOException {
@@ -596,7 +595,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	 *
 	 * @param s The stream to write to.
 	 * @throws IOException If an IO error occurs.
-	 * @see #readObject(ObjectInputStream)
 	 */
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
