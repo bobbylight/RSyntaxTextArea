@@ -70,6 +70,7 @@ public class SyntaxScheme implements Cloneable {
 			cnse.printStackTrace();
 			return null;
 		}
+		shcs.styles = new Style[Token.NUM_TOKEN_TYPES];
 		for (int i=0; i<Token.NUM_TOKEN_TYPES; i++) {
 			Style s = styles[i];
 			if (s!=null) {

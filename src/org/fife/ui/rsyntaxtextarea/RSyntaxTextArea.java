@@ -664,8 +664,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * used are somewhat standard among syntax highlighting text editors.
 	 *
 	 * @return The default syntax highlighting color scheme.
+	 * @see #restoreDefaultSyntaxScheme()
+	 * @see #getSyntaxScheme()
+	 * @see #setSyntaxScheme(SyntaxScheme)
 	 */
-	public SyntaxScheme getDefaultSyntaxHighlightingColorScheme() {
+	public SyntaxScheme getDefaultSyntaxScheme() {
 		return new SyntaxScheme(true);
 	}
 
@@ -1097,7 +1100,7 @@ private boolean fractionalFontMetricsEnabled;
 		setHyperlinkForeground(Color.BLUE);
 		isScanningForLinks = false;
 
-		restoreDefaultSyntaxHighlightingColorScheme();
+		restoreDefaultSyntaxScheme();
 
 	}
 
@@ -1249,9 +1252,13 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets the colors used for syntax highlighting to their defaults.
+	 *
+	 * @see #setSyntaxScheme(SyntaxScheme)
+	 * @see #getSyntaxScheme()
+	 * @see #getDefaultSyntaxScheme()
 	 */
-	public void restoreDefaultSyntaxHighlightingColorScheme() {
-		setSyntaxScheme(getDefaultSyntaxHighlightingColorScheme());
+	public void restoreDefaultSyntaxScheme() {
+		setSyntaxScheme(getDefaultSyntaxScheme());
 	}
 
 

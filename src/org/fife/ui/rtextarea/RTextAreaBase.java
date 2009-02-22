@@ -712,15 +712,11 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		}
 
 		// Repaint current line (to fill in entire highlight), and old line
-		// (to erase entire old highlight) if necessary.
-		if (currentCaretY!=previousCaretY) {
-			repaint(0,currentCaretY, width,lineHeight);
+		// (to erase entire old highlight) if necessary.  Always repaint
+		// current line in case selection is added or removed.
+		repaint(0,currentCaretY, width,lineHeight);
+		if (previousCaretY!=currentCaretY) {
 			repaint(0,previousCaretY, width,lineHeight);
-		}
-		else if (getCaret().getDot()!=getCaret().getMark()) {
-			// Needed to ensure line highlight isn't painted when there's
-			// a selection.
-			repaint(0,currentCaretY, width,lineHeight);
 		}
 
 		previousCaretY = currentCaretY;
