@@ -74,14 +74,14 @@ public class Gutter extends JComponent {
 	 * @param textArea The parent text area.
 	 */
 	public Gutter(RTextArea textArea) {
-		this.textArea = textArea;
 		listener = new TextAreaListener();
-		textArea.addComponentListener(listener);
-		lineNumberList = new LineNumberList(textArea);
-		iconArea = new IconRowHeader(textArea);
+		setTextArea(textArea);
 		setLayout(new BorderLayout());
-		add(lineNumberList);
-		//add(iconArea, BorderLayout.LINE_START);
+		if (this.textArea!=null) {
+			// Enable line numbers our first time through if they give us
+			// a text area.
+			setLineNumbersEnabled(true);
+		}
 		setBorder(new GutterBorder(0, 0, 0, 1)); // Assume ltr
 	}
 
@@ -327,13 +327,15 @@ public class Gutter extends JComponent {
 	 * @see #isIconRowHeaderEnabled()
 	 */
 	public void setIconRowHeaderEnabled(boolean enabled) {
-		if (enabled) {
-			add(iconArea, BorderLayout.LINE_START);
+		if (iconArea!=null) {
+			if (enabled) {
+				add(iconArea, BorderLayout.LINE_START);
+			}
+			else {
+				remove(iconArea);
+			}
+			revalidate();
 		}
-		else {
-			remove(iconArea);
-		}
-		revalidate();
 	}
 
 
@@ -369,13 +371,15 @@ public class Gutter extends JComponent {
 	 * @see #getLineNumbersEnabled()
 	 */
 	public void setLineNumbersEnabled(boolean enabled) {
-		if (enabled) {
-			add(lineNumberList);
+		if (lineNumberList!=null) {
+			if (enabled) {
+				add(lineNumberList);
+			}
+			else {
+				remove(lineNumberList);
+			}
+			revalidate();
 		}
-		else {
-			remove(lineNumberList);
-		}
-		revalidate();
 	}
 
 
@@ -389,9 +393,21 @@ public class Gutter extends JComponent {
 		if (this.textArea!=null) {
 			this.textArea.removeComponentListener(listener);
 		}
-		textArea.addComponentListener(listener);
-		lineNumberList.setTextArea(textArea);
-		iconArea.setTextArea(textArea);
+		if (lineNumberList==null) {
+			lineNumberList = new LineNumberList(textArea);
+		}
+		else {
+			lineNumberList.setTextArea(textArea);
+		}
+		if (iconArea==null) {
+			iconArea = new IconRowHeader(textArea);
+		}
+		else {
+			iconArea.setTextArea(textArea);
+		}
+		if (textArea!=null) {
+			textArea.addComponentListener(listener);
+		}
 		this.textArea = textArea;
 	}
 

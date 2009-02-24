@@ -178,6 +178,9 @@ class LineNumberList extends AbstractGutterComponent
 
 
 	public void mousePressed(MouseEvent e) {
+		if (textArea==null) {
+			return;
+		}
 		if (e.getButton()==MouseEvent.BUTTON1) {
 			int pos = textArea.viewToModel(new Point(0, e.getY()));
 			if (pos>=0) { // Not -1
