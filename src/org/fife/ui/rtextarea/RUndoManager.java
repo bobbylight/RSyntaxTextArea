@@ -112,10 +112,8 @@ class RUndoManager extends UndoManager {
 	 * {@inheritDoc}
 	 */
 	public void redo() throws CannotRedoException {
-		textArea.inUndoRedo = true;
 		super.redo();
 		updateActions();
-		textArea.inUndoRedo = false;
 	}
 
 
@@ -132,10 +130,8 @@ class RUndoManager extends UndoManager {
 	 * {@inheritDoc}
 	 */
 	public void undo() throws CannotUndoException {
-		textArea.inUndoRedo = true;
 		super.undo();
 		updateActions();
-		textArea.inUndoRedo = false;
 	}
 
 

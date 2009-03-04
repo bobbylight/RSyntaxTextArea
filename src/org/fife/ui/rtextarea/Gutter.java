@@ -31,10 +31,16 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
 /**
@@ -309,11 +315,12 @@ public class Gutter extends JComponent {
 	 * {@inheritDoc}
 	 */
 	public void setComponentOrientation(ComponentOrientation o) {
+		// Reuse the border to preserve its color.
 		if (o.isLeftToRight()) {
-			setBorder(new GutterBorder(0, 0, 0, 1));
+			((GutterBorder)getBorder()).setEdges(0, 0, 0, 1);
 		}
 		else {
-			setBorder(new GutterBorder(0, 1, 0, 0));
+			((GutterBorder)getBorder()).setEdges(0, 1, 0, 0);
 		}
 		super.setComponentOrientation(o);
 	}
@@ -326,7 +333,7 @@ public class Gutter extends JComponent {
 	 * @param enabled Whether the icon row header is enabled.
 	 * @see #isIconRowHeaderEnabled()
 	 */
-	public void setIconRowHeaderEnabled(boolean enabled) {
+	void setIconRowHeaderEnabled(boolean enabled) {
 		if (iconArea!=null) {
 			if (enabled) {
 				add(iconArea, BorderLayout.LINE_START);
@@ -370,7 +377,7 @@ public class Gutter extends JComponent {
 	 * @param enabled Whether or not line numbers should be visible.
 	 * @see #getLineNumbersEnabled()
 	 */
-	public void setLineNumbersEnabled(boolean enabled) {
+	void setLineNumbersEnabled(boolean enabled) {
 		if (lineNumberList!=null) {
 			if (enabled) {
 				add(lineNumberList);
@@ -391,7 +398,7 @@ public class Gutter extends JComponent {
 	 */
 	void setTextArea(RTextArea textArea) {
 		if (this.textArea!=null) {
-			this.textArea.removeComponentListener(listener);
+			listener.uninstall();
 		}
 		if (lineNumberList==null) {
 			lineNumberList = new LineNumberList(textArea);
@@ -406,7 +413,7 @@ public class Gutter extends JComponent {
 			iconArea.setTextArea(textArea);
 		}
 		if (textArea!=null) {
-			textArea.addComponentListener(listener);
+			listener.install(textArea);
 		}
 		this.textArea = textArea;
 	}
@@ -457,6 +464,13 @@ public class Gutter extends JComponent {
 			this.color = color;
 		}
 
+		public void setEdges(int top, int left, int bottom, int right) {
+			this.top = top;
+			this.left = left;
+			this.bottom = bottom;
+			this.right = right;
+		}
+
 	}
 
 
@@ -472,12 +486,67 @@ public class Gutter extends JComponent {
 	 * instead for ComponentEvents so we change size after the text area has
 	 * resized.
 	 */
-	private class TextAreaListener extends ComponentAdapter {
+	private class TextAreaListener extends ComponentAdapter
+						implements DocumentListener, PropertyChangeListener {
+
+		private boolean installed;
+
+		public void changedUpdate(DocumentEvent e) {}
 
 		public void componentResized(java.awt.event.ComponentEvent e) {
 			revalidate();
 		}
 
+		protected void handleDocumentEvent(DocumentEvent e) {
+			for (int i=0; i<getComponentCount(); i++) {
+				AbstractGutterComponent agc =
+							(AbstractGutterComponent)getComponent(i);
+				agc.handleDocumentEvent(e);
+			}
+		}
+
+		public void insertUpdate(DocumentEvent e) {
+			handleDocumentEvent(e);
+		}
+
+		public void install(RTextArea textArea) {
+			if (installed) {
+				uninstall();
+			}
+			textArea.addComponentListener(this);
+			textArea.getDocument().addDocumentListener(this);
+			textArea.addPropertyChangeListener(this);
+			installed = true;
+		}
+
+		public void propertyChange(PropertyChangeEvent e) {
+
+			String name = e.getPropertyName();
+
+			// If they change the text area's font, we need to update cell
+			// heights to match the font's height.
+			if ("font".equals(name) ||
+					RSyntaxTextArea.SYNTAX_SCHEME_PROPERTY.equals(name)) {
+				for (int i=0; i<getComponentCount(); i++) {
+					AbstractGutterComponent agc =
+								(AbstractGutterComponent)getComponent(i);
+					agc.lineHeightsChanged();
+				}
+			}
+
+		}
+
+		public void removeUpdate(DocumentEvent e) {
+			handleDocumentEvent(e);
+		}
+
+		public void uninstall() {
+			if (installed) {
+				textArea.removeComponentListener(this);
+				textArea.getDocument().removeDocumentListener(this);
+				installed = false;
+			}
+		}
 
 	}
 

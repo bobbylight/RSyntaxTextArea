@@ -614,7 +614,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// If we're in insert-mode and auto-indenting...
 			if (sta.getTextMode()==RTextArea.INSERT_MODE && 
-					sta.isAutoIndentEnabled()) {
+					sta.isAutoIndentEnabled() &&
+					sta.getSelectionStart()==sta.getSelectionEnd()) {
 				insertNewlineWithAutoIndent(sta);
 			}
 

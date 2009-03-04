@@ -35,7 +35,7 @@ import javax.swing.text.*;
 /**
  * The caret used by {@link RTextArea}.  This caret has all of the properties
  * that <code>javax.swing.text.DefaultCaret</code> does, as well as adding the
- * following nicities:
+ * following niceties:
  *
  * <ul>
  *   <li>This caret can paint itself several different ways:

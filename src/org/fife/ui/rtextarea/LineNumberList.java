@@ -36,14 +36,11 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.View;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
 /**
@@ -53,7 +50,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @version 1.0
  */
 class LineNumberList extends AbstractGutterComponent
-							implements MouseInputListener {
+								implements MouseInputListener {
 
 	private int currentLine;	// The last line the caret was on.
 	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
@@ -147,6 +144,31 @@ class LineNumberList extends AbstractGutterComponent
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
 		return new Dimension(cellWidth, h);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	void handleDocumentEvent(DocumentEvent e) {
+		int newLineCount = textArea!=null ? textArea.getLineCount() : 0;
+		if (newLineCount!=currentLineCount) {
+			// Adjust the amount of space the line numbers take up,
+			// if necessary.
+			if (newLineCount/10 != currentLineCount/10) {
+				updateCellWidths();
+			}
+			currentLineCount = newLineCount;
+			repaint();
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	void lineHeightsChanged() {
+		updateCellHeights();
 	}
 
 
@@ -287,7 +309,7 @@ class LineNumberList extends AbstractGutterComponent
 
 		// The variables we use are as follows:
 		// - visibleRect is the "visible" area of the text area; e.g.
-		// [0,100, 300,100+(numLines*cellHeight)-1].
+		// [0,100, 300,100+(lineCount*cellHeight)-1].
 		// actualTop.y is the topmost-pixel in the first logical line we
 		// paint.  Note that we may well not paint this part of the logical
 		// line, as it may be broken into many physical lines, with the first
@@ -473,9 +495,9 @@ class LineNumberList extends AbstractGutterComponent
 			if (font!=null) {
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
-				int numLines = textArea.getLineCount();
-				while (numLines >= 10) {
-					numLines = numLines/10;
+				int lineCount = textArea.getLineCount();
+				while (lineCount >= 10) {
+					lineCount = lineCount/10;
 					count++;
 				}
 				cellWidth += fontMetrics.charWidth('9')*(count+1) + 5;
@@ -492,10 +514,8 @@ class LineNumberList extends AbstractGutterComponent
 	/**
 	 * Listens for events in the text area we're interested in.
 	 */
-	private class Listener implements CaretListener, DocumentListener,
-							PropertyChangeListener {
+	private class Listener implements CaretListener, PropertyChangeListener {
 
-		private int currentNumLines;
 		private boolean installed;
 
 		public void caretUpdate(CaretEvent e) {
@@ -535,27 +555,11 @@ class LineNumberList extends AbstractGutterComponent
 
 		}
 
-		public void changedUpdate(DocumentEvent e) {}
-
-		public void insertUpdate(DocumentEvent e) {
-			int newNumLines = textArea!=null ? textArea.getLineCount() : 0;
-			if (newNumLines > currentNumLines) {
-				// Adjust the amount of space the line numbers take up,
-				// if necessary.
-				if (newNumLines/10 > currentNumLines/10)
-					updateCellWidths();
-				currentNumLines = newNumLines;
-				repaint();
-			}
-		}
-
 		public void install(RTextArea textArea) {
 			if (!installed) {
 				//System.out.println("Installing");
 				textArea.addCaretListener(this);
 				textArea.addPropertyChangeListener(this);
-				textArea.getDocument().addDocumentListener(this);
-				currentNumLines = textArea.getLineCount();
 				caretUpdate(null); // Force current line highlight repaint
 				installed = true;
 			}
@@ -573,40 +577,17 @@ class LineNumberList extends AbstractGutterComponent
 			}
 
 			// If they changed the background to an image.
-			else if ("background.image".equals(name)) {
+			else if (RTextArea.BACKGROUND_IMAGE_PROPERTY.equals(name)) {
 				setBackground(Color.WHITE);
 				repaint();
-			}
-
-			// If they change the text area's font, we need to update cell
-			// heights to match the font's height.
-			else if ("font".equals(name)) {
-				updateCellHeights();
 			}
 
 			// If they change the current line highlight in any way...
 			else if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
 				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
-				repaint();
+				repaintLine(currentLine);
 			}
 
-			// If they change the text area's syntax scheme (i.e., it is an
-			// RSyntaxTextArea), update cell heights.
-			else if (RSyntaxTextArea.SYNTAX_SCHEME_PROPERTY.equals(name)) {
-				updateCellHeights();
-			}
-
-		}
-
-		public void removeUpdate(DocumentEvent e) {
-			int newNumLines = textArea.getLineCount();
-			if (newNumLines < currentNumLines) { // Used to be <
-				// Adjust space the line numbers take up, if necessary.
-				if (newNumLines/10 < currentNumLines/10)
-					updateCellWidths();
-				currentNumLines = newNumLines;
-				repaint();
-			}
 		}
 
 		public void uninstall(RTextArea textArea) {
@@ -614,7 +595,6 @@ class LineNumberList extends AbstractGutterComponent
 				//System.out.println("Uninstalling");
 				textArea.removeCaretListener(this);
 				textArea.removePropertyChangeListener(this);
-				textArea.getDocument().removeDocumentListener(this);
 				installed = false;
 			}
 		}

@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.Icon;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -164,13 +165,14 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 
 	/**
-	 * Returns whether bookmarking is enabled.
-	 *
-	 * @return Whether bookmarking is enabled.
-	 * @see #setBookmarkingEnabled(boolean)
+	 * {@inheritDoc}
 	 */
-	public boolean isBookmarkingEnabled() {
-		return bookmarkingEnabled;
+	void handleDocumentEvent(DocumentEvent e) {
+		int newLineCount = textArea.getLineCount();
+		if (newLineCount!=currentLineCount) {
+			currentLineCount = newLineCount;
+			repaint();
+		}
 	}
 
 
@@ -204,6 +206,9 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		if (trackingIcons!=null) {
 			int start = textArea.getLineStartOffset(line);
 			int end = textArea.getLineEndOffset(line);
+			if (line==textArea.getLineCount()-1) {
+				end++; // Hack
+			}
 			for (int i=0; i<trackingIcons.size(); i++) {
 				GutterIconImpl ti = getTrackingIcon(i);
 				int offs = ti.getMarkedOffset();
@@ -219,6 +224,25 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		GutterIconImpl[] array = new GutterIconImpl[retVal.size()];
 		return (GutterIconImpl[])retVal.toArray(array);
 
+	}
+
+
+	/**
+	 * Returns whether bookmarking is enabled.
+	 *
+	 * @return Whether bookmarking is enabled.
+	 * @see #setBookmarkingEnabled(boolean)
+	 */
+	public boolean isBookmarkingEnabled() {
+		return bookmarkingEnabled;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	void lineHeightsChanged() {
+		repaint();
 	}
 
 
@@ -333,7 +357,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 		// The variables we use are as follows:
 		// - visibleRect is the "visible" area of the text area; e.g.
-		// [0,100, 300,100+(numLines*cellHeight)-1].
+		// [0,100, 300,100+(lineCount*cellHeight)-1].
 		// actualTop.y is the topmost-pixel in the first logical line we
 		// paint.  Note that we may well not paint this part of the logical
 		// line, as it may be broken into many physical lines, with the first

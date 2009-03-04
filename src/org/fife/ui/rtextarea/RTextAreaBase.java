@@ -56,6 +56,7 @@ import javax.swing.text.Element;
  */
 abstract class RTextAreaBase extends JTextArea {
 
+	public static final String BACKGROUND_IMAGE_PROPERTY			= "background.image";
 	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY	= "RTA.currentLineHighlightColor";
 	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY	= "RTA.currentLineHighlightFade";
 	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY		= "RTA.currentLineHighlight";
@@ -781,7 +782,8 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 
 	/**
-	 * Sets this image as the background image.<p>
+	 * Sets this image as the background image.  This method fires a
+	 * property change event of type {@link #BACKGROUND_IMAGE_PROPERTY}.<p>
 	 *
 	 * NOTE:  the opaque property is set to <code>true</code> when the
 	 * background is set to a color.  When an image is used for the
@@ -809,7 +811,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 			backgroundPainter = strategy;
 		}
 		setOpaque(false);
-		firePropertyChange("background.image", oldBG, image);
+		firePropertyChange(BACKGROUND_IMAGE_PROPERTY, oldBG, image);
 		repaint();
 	}
 
@@ -919,6 +921,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 			highlightCurrentLine = highlight;
 			firePropertyChange(HIGHLIGHT_CURRENT_LINE_PROPERTY,
 							!highlight, highlight);
+			repaint(); // Repaint entire width of line.
 		}
 	}
 

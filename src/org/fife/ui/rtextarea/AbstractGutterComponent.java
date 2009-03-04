@@ -25,6 +25,7 @@ package org.fife.ui.rtextarea;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.JComponent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.View;
 
 
@@ -40,6 +41,11 @@ abstract class AbstractGutterComponent extends JComponent {
 	 * The text area whose lines we are marking with icons.
 	 */
 	protected RTextArea textArea;
+
+	/**
+	 * The number of lines in the text area.
+	 */
+	protected int currentLineCount;
 
 
 	/**
@@ -71,12 +77,34 @@ abstract class AbstractGutterComponent extends JComponent {
 
 
 	/**
-	 * Sets the text area being displayed.  Subclasses can override.
+	 * Called when text is inserted to or removed from the text area.
+	 * Implementations can take this opportunity to repaint, revalidate, etc.
+	 *
+	 * @param e The document event.
+	 */
+	abstract void handleDocumentEvent(DocumentEvent e);
+
+
+	/**
+	 * Called when the line heights of the text area change.  This is usually
+	 * the result of one or more of the fonts in the editor changing.
+	 */
+	abstract void lineHeightsChanged();
+
+
+	/**
+	 * Sets the text area being displayed.  Subclasses can override, but
+	 * should call the super implementation.
 	 *
 	 * @param textArea The text area.
 	 */
 	public void setTextArea(RTextArea textArea) {
 		this.textArea = textArea;
+		int lineCount = textArea==null ? 0 : textArea.getLineCount();
+		if (currentLineCount!=lineCount) {
+			currentLineCount = lineCount;
+			repaint();
+		}
 	}
 
 

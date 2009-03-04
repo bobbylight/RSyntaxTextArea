@@ -173,8 +173,6 @@ public class RTextArea extends RTextAreaBase
 	private String markedWord;				// Expression marked in "mark all."
 	private ChangeableHighlightPainter markAllHighlightPainter;
 
-	boolean inUndoRedo;
-
 	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
 
 	private static final String RESOURCE_BUNDLE	= "org.fife.ui.rtextarea.RTextArea";
@@ -835,25 +833,6 @@ public class RTextArea extends RTextAreaBase
 
 		} // End of if (!first).
 
-	}
-
-
-	/**
-	 * Returns whether or not RText is in the middle of an undo or redo
-	 * operation.  This method is package-private so that
-	 * <code>ConfigurableCaret</code> can know whether an insert or
-	 * removal is part of an undo or redo.  This method is also a giant HACK
-	 * to get around the fact that there is no way for a Caret to know that
-	 * an event is coming from an undo/redo unless the DocumentEvent passed
-	 * to it says so.  In J2SE5.0, DefaultCaret knows because the event is of
-	 * type UndoRedoDocumentEvent, but that class is (of course) package-
-	 * private, so we can't get to it.  So we work around it by having the
-	 * caret poll the text area directly.
-	 *
-	 *@return Whether the text area is currently doing an undo or redo.
-	 */
-	boolean inUndoRedo() {
-		return inUndoRedo;
 	}
 
 
