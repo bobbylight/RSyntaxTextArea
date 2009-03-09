@@ -192,7 +192,6 @@ public class Gutter extends JComponent {
 	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
 	 * @return Whether or not line numbers are visible.
-	 * @see #setLineNumbersEnabled(boolean)
 	 */
 	public boolean getLineNumbersEnabled() {
 		for (int i=0; i<getComponentCount(); i++) {
@@ -234,7 +233,6 @@ public class Gutter extends JComponent {
 	 * Returns whether the icon row header is enabled.
 	 *
 	 * @return Whether the icon row header is enabled.
-	 * @see #setIconRowHeaderEnabled(boolean)
 	 */
 	public boolean isIconRowHeaderEnabled() {
 		for (int i=0; i<getComponentCount(); i++) {
