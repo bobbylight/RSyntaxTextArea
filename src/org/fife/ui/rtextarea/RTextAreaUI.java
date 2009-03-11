@@ -388,20 +388,36 @@ protected Keymap createKeymap() {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected void installKeyboardActions() {
 
-		super.installKeyboardActions();
+		// NOTE: Don't call super.installKeyboardActions(), as that causes
+		// JTextAreas to stop responding to certain keystrokes if an RTextArea
+		// is the first-instantiated text area.  This is because of the code
+		// path installKeyboardActions() -> getActionMap() -> createActionMap().
+		// In BasicTextUI#createActionMap(), "editor.getActions()" is called,
+		// and the current editor's returned Actions are used to create the
+		// ActionMap, which is then cached and used in all future J/RTextAreas.
+		// Unfortunately, RTextArea actions don't worn in JTextAreas.
+		//super.installKeyboardActions();
+
+		RTextArea textArea = getRTextArea();
+
+		// backward compatibility support... keymaps for the UI
+		// are now installed in the more friendly input map.
+		textArea.setKeymap(createKeymap()); 
 
 		// Since BasicTextUI.getInputMap() is package-private, instead use
 		// our own version here.
 		InputMap map = getRTextAreaInputMap();
-		SwingUtilities.replaceUIInputMap(getRTextArea(),
-										JComponent.WHEN_FOCUSED, map);
+		SwingUtilities.replaceUIInputMap(textArea,JComponent.WHEN_FOCUSED,map);
 
 		// Same thing here with action map.
 		ActionMap am = getRTextAreaActionMap();
 		if (am!=null) {
-		    SwingUtilities.replaceUIActionMap(getRTextArea(), am);
+		    SwingUtilities.replaceUIActionMap(textArea, am);
 		}
 
 

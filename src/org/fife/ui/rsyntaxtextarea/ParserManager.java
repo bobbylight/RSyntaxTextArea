@@ -39,14 +39,13 @@ import org.fife.io.DocumentReader;
  * Manages running a parser object for an <code>RSyntaxTextArea</code>.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.2
  */
 class ParserManager implements DocumentListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
 	private Parser parser;
 	private Timer timer;
-	private boolean needsReparsing;
 
 	private static final boolean DEBUG_PARSING	= true;
 
@@ -54,7 +53,7 @@ class ParserManager implements DocumentListener, ActionListener {
 	 * The default delay between the last key press and when the document
 	 * is parsed, in milliseconds.
 	 */
-	private static final int DEFAULT_DELAY_MS		= 1500;
+	private static final int DEFAULT_DELAY_MS		= 1250;
 
 
 	/**
@@ -89,13 +88,6 @@ class ParserManager implements DocumentListener, ActionListener {
 			return;
 		}
 
-		if (!needsReparsing) {
-			if (DEBUG_PARSING) {
-				System.err.println("Parsing skipped; not needed");
-			}
-			return;
-		}
-
 		long begin = 0;
 		if (DEBUG_PARSING) {
 			begin = System.currentTimeMillis();
@@ -106,7 +98,6 @@ class ParserManager implements DocumentListener, ActionListener {
 		try {
 			DocumentReader r = new DocumentReader(doc);
 			parser.parse(r);
-			needsReparsing = false;
 			r.close();
 		} finally {
 			doc.readUnlock();
@@ -132,10 +123,22 @@ class ParserManager implements DocumentListener, ActionListener {
 
 
 	/**
+	 * Returns the delay between the last "concurrent" edit and when the
+	 * document is reparsed.
+	 *
+	 * @return The delay, in milliseconds.
+	 * @see #setDelay(int)
+	 */
+	public int getDelay() {
+		return timer.getDelay();
+	}
+
+
+	/**
 	 * Returns the parser.
 	 *
 	 * @return The parser.
-	 * @see #setParser
+	 * @see #setParser(Parser)
 	 */
 	public Parser getParser() {
 		return parser;
@@ -191,12 +194,7 @@ class ParserManager implements DocumentListener, ActionListener {
 	 * @param e The document event.
 	 */
 	public void handleDocumentEvent(DocumentEvent e) {
-		if (!needsReparsing) {
-			needsReparsing = true;
-		}
-		else {
-			timer.restart();
-		}
+		timer.restart();
 	}
 
 
@@ -217,6 +215,24 @@ class ParserManager implements DocumentListener, ActionListener {
 	 */
 	public void removeUpdate(DocumentEvent e) {
 		handleDocumentEvent(e);
+	}
+
+
+	/**
+	 * Sets the delay between the last "concurrent" edit and when the document
+	 * is re-parsed.
+	 *
+	 * @param millis The new delay, in milliseconds.  This must be greater
+	 *        than <code>0</code>.
+	 * @see #getDelay()
+	 */
+	public void setDelay(int millis) {
+		boolean running = timer.isRunning();
+		timer.stop();
+		timer.setDelay(millis);
+		if (running) {
+			timer.start();
+		}
 	}
 
 
@@ -246,7 +262,6 @@ class ParserManager implements DocumentListener, ActionListener {
 		if (parser!=null) {
 			ToolTipManager.sharedInstance().registerComponent(textArea);
 			textArea.getDocument().addDocumentListener(this);
-			needsReparsing = true;
 			timer.start();
 		}
 

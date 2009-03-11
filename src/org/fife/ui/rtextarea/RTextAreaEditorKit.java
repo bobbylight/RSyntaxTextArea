@@ -1133,6 +1133,16 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			return DefaultEditorKit.insertBreakAction;
 		}
 
+		/*
+		 * Overridden for Sun bug 4515750.  Sun fixed this in a more complicated
+		 * way, but I'm not sure why.  See BasicTextUI#getActionMap() and
+		 * BasicTextUI.TextActionWrapper.
+		 */
+		public boolean isEnabled() {
+			JTextComponent tc = getTextComponent(null);
+			return (tc==null || tc.isEditable()) ? super.isEnabled() : false;
+		}
+
 	}
 
 

@@ -595,13 +595,10 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * Action for when the user presses the Enter key.  This is here so we can
 	 * be smart and "auto-indent" for programming languages.
 	 */
-	public static class InsertBreakAction extends RecordableTextAction {
+	public static class InsertBreakAction
+							extends RTextAreaEditorKit.InsertBreakAction {
 
 		private static final long serialVersionUID = 1L;
-
-		public InsertBreakAction() {
-			super(DefaultEditorKit.insertBreakAction);
-		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
@@ -638,10 +635,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					return i;
 			}
 			return -1;
-		}
-
-		public final String getMacroID() {
-			return DefaultEditorKit.insertBreakAction;
 		}
 
 		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {
