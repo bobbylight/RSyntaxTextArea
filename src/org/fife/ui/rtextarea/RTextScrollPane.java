@@ -23,8 +23,11 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.JScrollPane;
 
 
 /**
@@ -43,7 +46,7 @@ import javax.swing.*;
  */
 public class RTextScrollPane extends JScrollPane {
 
-	public RTextArea textArea;
+	private RTextArea textArea;
 	private Gutter gutter;
 
 
@@ -58,9 +61,8 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
-	 * Creates a scroll pane with preferred size (width, height).  A default
-	 * value will be used for line number color (gray), and the current
-	 * line's line number will be highlighted.
+	 * Creates a scroll pane.  A default value will be used for line number
+	 * color (gray), and the current line's line number will be highlighted.
 	 *
 	 * @param textArea The text area this scroll pane will contain.
 	 */
@@ -70,18 +72,36 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
+	 * Creates a scroll pane.  A default value will be used for line number
+	 * color (gray), and the current line's line number will be highlighted.
+	 *
+	 * @param area The text area this scroll pane will contain.  If this is
+	 *        <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an
+	 *        {@link RTextArea}.
+	 * @param lineNumbers Whether line numbers should be enabled.
+	 */
+	public RTextScrollPane(RTextArea textArea, boolean lineNumbers) {
+		this(300, 300, textArea, lineNumbers);
+	}
+
+
+	/**
 	 * Creates a scroll pane with preferred size (width, height).  A default
 	 * value will be used for line number color (gray), and the current
 	 * line's line number will be highlighted.
 	 *
 	 * @param width The preferred width of <code>area</code>.
 	 * @param height The preferred height of <code>area</code>.
-	 * @param area The text area this scroll pane will contain.
-	 * @param lineNumbersEnabled Whether line numbers are initially enabled.
+	 * @param area The text area this scroll pane will contain.  If this is
+	 *        <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an
+	 *        {@link RTextArea}.
+	 * @param lineNumbers Whether line numbers are initially enabled.
 	 */
 	public RTextScrollPane(int width, int height, RTextArea area,
-						boolean lineNumbersEnabled) {
-		this(width, height, area, lineNumbersEnabled, Color.GRAY);
+							boolean lineNumbers) {
+		this(width, height, area, lineNumbers, Color.GRAY);
 	}
 
 
@@ -90,12 +110,15 @@ public class RTextScrollPane extends JScrollPane {
 	 *
 	 * @param width The preferred width of <code>area</code>.
 	 * @param height The preferred height of <code>area</code>.
-	 * @param area The text area this scroll pane will contain.
-	 * @param lineNumbersEnabled Whether line numbers are initially enabled.
+	 * @param area The text area this scroll pane will contain.  If this is
+	 *        <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an
+	 *        {@link RTextArea}.
+	 * @param lineNumbers Whether line numbers are initially enabled.
 	 * @param lineNumberColor The color to use for line numbers.
 	 */
 	public RTextScrollPane(int width, int height, RTextArea area,
-					boolean lineNumbersEnabled, Color lineNumberColor) {
+							boolean lineNumbers, Color lineNumberColor) {
 
 		super(area);
 		setPreferredSize(new Dimension(width, height));
@@ -107,7 +130,8 @@ public class RTextScrollPane extends JScrollPane {
 		Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
 		gutter = new Gutter(textArea);
 		gutter.setLineNumberFont(defaultFont);
-		setLineNumbersEnabled(lineNumbersEnabled);
+		gutter.setLineNumberColor(lineNumberColor);
+		setLineNumbersEnabled(lineNumbers);
 
 		// Set miscellaneous properties.
 		setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);

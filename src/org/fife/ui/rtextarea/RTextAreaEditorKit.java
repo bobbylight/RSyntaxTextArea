@@ -54,6 +54,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static final String rtaDecreaseFontSizeAction		= "RTA.DecreaseFontSizeAction";
 
 	/**
+	 * The name of the action that deletes the current line.
+	 */
+	public static final String rtaDeleteLineAction			= "RTA.DeleteLineAction";
+
+	/**
 	 * The name of the action to delete the word before the caret.
 	 */
 	public static final String rtaDeletePrevWordAction		= "RTA.DeletePrevWordAction";
@@ -199,6 +204,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new CopyAction(),
 		new CutAction(),
 		new DefaultKeyTypedAction(),
+		new DeleteLineAction(),
 		new DeleteNextCharAction(),
 		new DeletePrevCharAction(),
 		new DeletePrevWordAction(),
@@ -742,12 +748,60 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Deletes the current line(s).
+	 */
+	public static class DeleteLineAction extends RecordableTextAction {
+
+		public DeleteLineAction() {
+			super(RTextAreaEditorKit.rtaDeleteLineAction, null, null, null,
+						null);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			int selStart = textArea.getSelectionStart();
+			int selEnd   = textArea.getSelectionEnd();
+
+			try {
+
+				int line1     = textArea.getLineOfOffset(selStart);
+				int startOffs = textArea.getLineStartOffset(line1);
+				int line2     = textArea.getLineOfOffset(selEnd);
+				int endOffs   = textArea.getLineEndOffset(line2);
+
+				// Don't remove the last line if no actual chars are selected
+				if (line2>line1) {
+					if (selEnd==textArea.getLineStartOffset(line2)) {
+						endOffs = selEnd;
+					}
+				}
+
+				textArea.replaceRange(null, startOffs, endOffs);
+
+			} catch (BadLocationException ble) {
+				ble.printStackTrace(); // Never happens
+			}
+
+		}
+
+		public final String getMacroID() {
+			return RTextAreaEditorKit.rtaDeleteLineAction;
+		}
+
+	}
+
+
+	/**
 	 * Deletes the character of content that follows the current caret
 	 * position.
 	 */
 	public static class DeleteNextCharAction extends RecordableTextAction {
 
- 
 		public DeleteNextCharAction() {
 			super(DefaultEditorKit.deleteNextCharAction, null, null,
 												null, null);

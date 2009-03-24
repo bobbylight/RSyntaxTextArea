@@ -33,7 +33,7 @@ import javax.swing.text.TextAction;
 
 /**
  * The base action used by the actions defined in
- * <code>RTextAreaEditorKit</code>.  This action is what allows instances of
+ * {@link RTextAreaEditorKit}.  This action is what allows instances of
  * <code>RTextArea</code> to record keystrokes into "macros;" if an action is
  * recordable and occurs while the user is recording a macro, it adds itself to
  * the currently-being-recorded macro.
@@ -64,7 +64,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 *
 	 * @param text The text (name) associated with the action.
 	 * @param icon The icon associated with the action.
-	 * @param desc The description of the action (used in tooltips???).
+	 * @param desc The description of the action.
 	 * @param mnemonic The mnemonic for the action.
 	 * @param accelerator The accelerator key for the action.
 	 */
