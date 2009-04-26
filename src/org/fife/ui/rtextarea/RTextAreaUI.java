@@ -73,7 +73,6 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 	 *         instance of <code>RTextArea</code>.
 	 */
 	public RTextAreaUI(JComponent textArea) {
-		super();
 		if (!(textArea instanceof RTextArea)) {
 			throw new IllegalArgumentException("RTextAreaUI is for " +
 							 		"instances of RTextArea only!");
@@ -172,6 +171,43 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 
 
 	/**
+	 * Returns the default caret for an <code>RTextArea</code>.  This caret is
+	 * capable of displaying itself differently for insert/overwrite modes.
+	 *
+	 * @return The caret.
+	 */
+	protected Caret createCaret() {
+		Caret caret = new ConfigurableCaret();
+		caret.setBlinkRate(500);
+		return caret;
+	}
+
+
+	/**
+	 * Creates the keymap for this text area.  This takes the super class's
+	 * keymap, but sets the default keystroke to be RTextAreaEditorKit's
+	 * DefaultKeyTypedAction.  This must be done to override the default
+	 * keymap's default key-typed action.
+	 *
+	 * @return The keymap.
+	 */
+	protected Keymap createKeymap() {
+
+		// Load the keymap we'll be using (it's saved by
+		// JTextComponent.addKeymap).
+		Keymap map = JTextComponent.getKeymap(RTEXTAREA_KEYMAP_NAME);
+		if (map==null) {
+			Keymap parent = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
+			map = JTextComponent.addKeymap(RTEXTAREA_KEYMAP_NAME, parent);
+			map.setDefaultAction(new RTextAreaEditorKit.DefaultKeyTypedAction());
+		}
+
+		return map;
+
+	}
+
+
+	/**
 	 * Creates a default action map.  This action map contains actions for all
 	 * basic text area work - cut, copy, paste, select, caret motion, etc.<p>
 	 *
@@ -194,7 +230,6 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 			map.put(a.getValue(Action.NAME), a);
 		}
 
-
 		// Not sure if we need these; not sure they are ever called
 		// (check their NAMEs).
 		map.put(TransferHandler.getCutAction().getValue(Action.NAME),
@@ -205,87 +240,6 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 									TransferHandler.getPasteAction());
 
 		return map;
-
-	}
-
-
-	/**
-	 * Returns the default caret for an <code>RTextArea</code>.  This caret is
-	 * capable of displaying itself differently for insert/overwrite modes.
-	 *
-	 * @return The caret.
-	 */
-	protected Caret createCaret() {
-		Caret caret = createCaretImpl();
-		caret.setBlinkRate(500);
-		return caret;
-	}
-
-
-	/**
-	 * Creates and returns a new configurable caret.  Subclasses can override
-	 * this method to return special subclasses of
-	 * <code>ConfigurableCaret</code>.
-	 *
-	 * @return The caret.
-	 */
-	protected ConfigurableCaret createCaretImpl() {
-		return new ConfigurableCaret();
-	}
-
-
-/**
- * Creates the keymap for this text area.  This takes the super class's
- * keymap, but sets the default keystroke to be RTextAreaEditorKit's
- * DefaultKeyTypedAction.  This must be done to override the default keymap's
- * default key-typed action.
- *
- * @return The keymap.
- */
-protected Keymap createKeymap() {
-
-	// Load the keymap we'll be using (it's saved by
-	// JTextComponent.addKeymap).
-	Keymap map = JTextComponent.getKeymap(RTEXTAREA_KEYMAP_NAME);
-	if (map==null) {
-		Keymap parent = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
-		map = JTextComponent.addKeymap(RTEXTAREA_KEYMAP_NAME, parent);
-		map.setDefaultAction(new RTextAreaEditorKit.DefaultKeyTypedAction());
-	}
-
-	return map;
-
-}
-
-
-	/**
-	 * Returns an action map to use by a text area.<p>
-	 *
-	 * This method is not named <code>getActionMap()</code> because there is
-	 * a package-private method in <code>BasicTextAreaUI</code> with that name.
-	 * Thus, creating a new method with that name causes certain compilers to
-	 * issue warnings that you are not actually overriding the original method
-	 * (since it is package-private).
-	 *
-	 * @return The action map.
-	 * @see #createRTextAreaActionMap()
-	 */
-	private ActionMap getRTextAreaActionMap() {
-
-		// Get the UIManager-cached action map; if this is the first
-		// RTextArea created, create the action map and cache it.
-		ActionMap map = (ActionMap)UIManager.get(getActionMapName());
-		if (map==null) {
-			map = createRTextAreaActionMap();
-			UIManager.put(getActionMapName(), map);
-		}
-
-		ActionMap componentMap = new ActionMapUIResource();
-		componentMap.put("requestFocus", new FocusAction());
-
-		if (map != null)
-			componentMap.setParent(map);
-		return componentMap;
 
 	}
 
@@ -321,6 +275,38 @@ protected Keymap createKeymap() {
 	 */
 	public RTextArea getRTextArea() {
 		return textArea;
+	}
+
+
+	/**
+	 * Returns an action map to use by a text area.<p>
+	 *
+	 * This method is not named <code>getActionMap()</code> because there is
+	 * a package-private method in <code>BasicTextAreaUI</code> with that name.
+	 * Thus, creating a new method with that name causes certain compilers to
+	 * issue warnings that you are not actually overriding the original method
+	 * (since it is package-private).
+	 *
+	 * @return The action map.
+	 * @see #createRTextAreaActionMap()
+	 */
+	private ActionMap getRTextAreaActionMap() {
+
+		// Get the UIManager-cached action map; if this is the first
+		// RTextArea created, create the action map and cache it.
+		ActionMap map = (ActionMap)UIManager.get(getActionMapName());
+		if (map==null) {
+			map = createRTextAreaActionMap();
+			UIManager.put(getActionMapName(), map);
+		}
+
+		ActionMap componentMap = new ActionMapUIResource();
+		componentMap.put("requestFocus", new FocusAction());
+
+		if (map != null)
+			componentMap.setParent(map);
+		return componentMap;
+
 	}
 
 

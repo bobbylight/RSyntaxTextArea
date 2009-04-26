@@ -580,11 +580,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	/**
 	 * Positions the caret at the beginning of the word.
 	 */
-	public static class BeginWordAction extends RecordableTextAction {
+	protected static class BeginWordAction extends RecordableTextAction {
 
  		private boolean select;
 
-		BeginWordAction(String name, boolean select) {
+		protected BeginWordAction(String name, boolean select) {
 			super(name);
 			this.select = select;
 		}
@@ -592,18 +592,23 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			try {
 				int offs = textArea.getCaretPosition();
-				int begOffs = Utilities.getWordStart(textArea, offs);
+				int begOffs = getWordStart(textArea, offs);
 				if (select)
 					textArea.moveCaretPosition(begOffs);
 				else
 					textArea.setCaretPosition(begOffs);
-			} catch (BadLocationException bl) {
+			} catch (BadLocationException ble) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
 		}
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getWordStart(RTextArea textArea, int offs)
+										throws BadLocationException {
+			return Utilities.getWordStart(textArea, offs);
 		}
 
 	}
@@ -1082,11 +1087,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	/**
 	 * Positions the caret at the end of the word.
 	 */
-	static class EndWordAction extends RecordableTextAction {
+	protected static class EndWordAction extends RecordableTextAction {
 
  		private boolean select;
 
-		EndWordAction(String name, boolean select) {
+		protected EndWordAction(String name, boolean select) {
 			super(name);
 			this.select = select;
 		}
@@ -1094,18 +1099,23 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			try {
 				int offs = textArea.getCaretPosition();
-				int endOffs = Utilities.getWordEnd(textArea, offs);
+				int endOffs = getWordEnd(textArea, offs);
 				if (select)
 					textArea.moveCaretPosition(endOffs);
 				else
 					textArea.setCaretPosition(endOffs);
-			} catch (BadLocationException bl) {
+			} catch (BadLocationException ble) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
 		}
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getWordEnd(RTextArea textArea, int offs)
+									throws BadLocationException {
+			return Utilities.getWordEnd(textArea, offs);
 		}
 
 	}
@@ -1657,21 +1667,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 			int offs = textArea.getCaretPosition();
 			int oldOffs = offs;
-			// FIXME:  Replace Utilities call with custom version to
-			// cut down on all of the modelToViews, as each call causes
-			// a getTokenList => expensive!
-			Element curPara =
-					Utilities.getParagraphElement(textArea, offs);
+			Element curPara = Utilities.getParagraphElement(textArea, offs);
 
 			try {
-				offs = Utilities.getNextWord(textArea, offs);
+				offs = getNextWord(textArea, offs);
 				if(offs >= curPara.getEndOffset() &&
 							oldOffs != curPara.getEndOffset() - 1) {
-					// we should first move to the end of current
-					// paragraph (bug #4278839)
+					// we should first move to the end of current paragraph
+					// http://bugs.sun.com/view_bug.do?bug_id=4278839
 					offs = curPara.getEndOffset() - 1;
 				}
-			} catch (BadLocationException bl) {
+			} catch (BadLocationException ble) {
 				int end = textArea.getDocument().getLength();
 				if (offs != end) {
 					if(oldOffs != curPara.getEndOffset() - 1)
@@ -1690,6 +1696,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getNextWord(RTextArea textArea, int offs)
+									throws BadLocationException {
+			return Utilities.getNextWord(textArea, offs);
 		}
 
 	}
@@ -1829,9 +1840,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			boolean failed = false;
 			try {
 
-                    // FIXME:  Replace Utilities call with custom version to
-                    // cut down on all of the modelToViews, as each call causes
-                    // a getTokenList => expensive!
 				Element curPara = Utilities.getParagraphElement(textArea, offs);
 				offs = Utilities.getPreviousWord(textArea, offs);
 				if(offs < curPara.getStartOffset()) {
@@ -1865,7 +1873,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
-	 * Redoes the last action undone.
+	 * Re-does the last action undone.
 	 */
 	public static class RedoAction extends RecordableTextAction {
 
@@ -1992,8 +2000,8 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class SelectWordAction extends RecordableTextAction {
 
- 		private Action start;
-		private Action end;
+ 		protected Action start;
+		protected Action end;
 
 		public SelectWordAction() {
 			super(selectWordAction);

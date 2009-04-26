@@ -34,9 +34,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
-import javax.swing.text.Highlighter;
 
-import org.fife.ui.rtextarea.ChangeableHighlightPainter;
 
 
 /**
@@ -50,7 +48,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
 	private javax.swing.Timer timer;
-	private ChangeableHighlightPainter p;
+	private MarkOccurrencesHighlightPainter p;
 	private List tags;
 
 	/**
@@ -85,14 +83,14 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @param delay The delay between when the caret last moves and when the
 	 *        text should be scanned for matching occurrences.  This should
 	 *        be in milliseconds.
-	 * @param paint The color to use to mark the occurrences.  This cannot be
+	 * @param color The color to use to mark the occurrences.  This cannot be
 	 *        <code>null</code>.
 	 */
-	public MarkOccurrencesSupport(int delay, Paint paint) {
+	public MarkOccurrencesSupport(int delay, Color color) {
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
-		p = new ChangeableHighlightPainter();
-		setColor(paint);
+		p = new MarkOccurrencesHighlightPainter();
+		setColor(color);
 		tags = new ArrayList();
 	}
 
@@ -139,7 +137,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 			// Add new highlights if an identifier is selected.
 			if (t!=null && isValidType(t) && !isNonWordChar(t)) {
-				Highlighter h = textArea.getHighlighter();
+				RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.
+															getHighlighter();
 				String lexeme = t.getLexeme();
 				int type = t.type;
 				for (int i=0; i<textArea.getLineCount(); i++) {
@@ -147,9 +146,13 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 					while (temp!=null && temp.isPaintable()) {
 						if (temp.type==type && temp.getLexeme().equals(lexeme)){
 							try {
-								Object tag = h.addHighlight(temp.offset,
-												temp.offset+temp.textCount, p);
+								int end = temp.offset + temp.textCount;
+Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
+//								end--; // HACK to prevent typed chars from being added
+//								Object tag = h.addHighlight(temp.offset, end,p);
 								tags.add(tag);
+//								// HACK again, to ensure repaint of last char rendered.
+//								textArea.getUI().damageRange(textArea, end+1, end+1);
 							} catch (BadLocationException ble) {
 								ble.printStackTrace(); // Never happens
 							}
@@ -184,8 +187,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @return The color being used.
 	 * @see #setColor(Paint)
 	 */
-	public Paint getColor() {
-		return p.getPaint();
+	public Color getColor() {
+		return p.getColor();
 	}
 
 
@@ -248,9 +251,9 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 */
 	private void removeHighlights() {
 		if (textArea!=null) {
-			Highlighter h = textArea.getHighlighter();
+			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.getHighlighter();
 			for (int i=0; i<tags.size(); i++) {
-				h.removeHighlight(tags.get(i));
+				h.removeMarkOccurrencesHighlight(tags.get(i));
 			}
 		}
 		tags.clear();
@@ -260,11 +263,11 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	/**
 	 * Sets the color to use when marking occurrences.
 	 *
-	 * @param panit The color to use.
+	 * @param color The color to use.
 	 * @see #getColor()
 	 */
-	public void setColor(Paint paint) {
-		p.setPaint(paint);
+	public void setColor(Color color) {
+		p.setColor(color);
 		if (textArea!=null) {
 			removeHighlights();
 			caretUpdate(null); // Force a highlight repaint.

@@ -45,7 +45,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -73,7 +72,7 @@ import org.fife.ui.rtextarea.Macro.MacroRecord;
  *    <li>A right-click popup menu with standard editing options
  *    <li>Macro support
  *    <li>"Mark all" functionality.
- *    <li>A way to change the background to an image (gif/jpg)
+ *    <li>A way to change the background to an image (gif/png/jpg)
  *    <li>Highlight the current line (can be toggled)
  *    <li>An easy way to print its text (implements Printable)
  *    <li>Hard/soft (emulated with spaces) tabs
@@ -326,8 +325,8 @@ public class RTextArea extends RTextAreaBase
 	 * called.  If this method is called but the text component is already
 	 * recording a macro, nothing happens (but the macro keeps recording).
 	 *
-	 * @see #isRecordingMacro
-	 * @see #endRecordingMacro
+	 * @see #isRecordingMacro()
+	 * @see #endRecordingMacro()
 	 */
 	public static synchronized void beginRecordingMacro() {
 		if (isRecordingMacro()) {
@@ -488,8 +487,8 @@ public class RTextArea extends RTextAreaBase
 	 * Ends recording a macro.  If this method is called but the text component
 	 * is not recording a macro, nothing happens.
 	 *
-	 * @see #isRecordingMacro
-	 * @see #beginRecordingMacro
+	 * @see #isRecordingMacro()
+	 * @see #beginRecordingMacro()
 	 */
 	/*
 	 * FIXME:  This should throw an exception if we're not recording a macro.
@@ -562,7 +561,7 @@ public class RTextArea extends RTextAreaBase
 	 * method is global across all <code>RTextArea</code> editors in your
 	 * application.
 	 *
-	 * @param action The action to retrieve, such as <code>CUT_ACTION</code>.
+	 * @param action The action to retrieve, such as {@link #CUT_ACTION}.
 	 *        If the action name is invalid, <code>null</code> is returned.
 	 * @return The action, or <code>null</code> if an invalid action is
 	 *         requested.
@@ -597,7 +596,7 @@ public class RTextArea extends RTextAreaBase
 	 *
 	 * @return The current macro, or <code>null</code> if no macro has been
 	 *         recorded/loaded.
-	 * @see #loadMacro
+	 * @see #loadMacro(Macro)
 	 */
 	public static synchronized Macro getCurrentMacro() {
 		return currentMacro;
@@ -608,8 +607,8 @@ public class RTextArea extends RTextAreaBase
 	 * Returns the default color used for "mark all."
 	 *
 	 * @return The color.
-	 * @see #getMarkAllHighlightColor
-	 * @see #setMarkAllHighlightColor
+	 * @see #getMarkAllHighlightColor()
+	 * @see #setMarkAllHighlightColor(Color)
 	 */
 	public static final Color getDefaultMarkAllHighlightColor() {
 		return DEFAULT_MARK_ALL_COLOR;
@@ -620,7 +619,7 @@ public class RTextArea extends RTextAreaBase
 	 * Returns the icon group being used for the actions of this text area.
 	 *
 	 * @return The icon group.
-	 * @see #setIconGroup
+	 * @see #setIconGroup(IconGroup)
 	 */
 	public static IconGroup getIconGroup() {
 		return iconGroup;
@@ -641,7 +640,7 @@ public class RTextArea extends RTextAreaBase
 	 * Returns the color used in "mark all."
 	 *
 	 * @return The color.
-	 * @see #setMarkAllHighlightColor
+	 * @see #setMarkAllHighlightColor(Color)
 	 */
 	public Color getMarkAllHighlightColor() {
 		return (Color)markAllHighlightPainter.getPaint();
@@ -688,8 +687,8 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Returns the text mode this editor pane is currently in.
 	 *
-	 * @return Either <code>RTextArea.INSERT_MODE</code> or
-	 *         <code>RTextArea.OVERWRITE_MODE</code>.
+	 * @return Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
+	 * @see #setTextMode(int)
 	 */
 	public final int getTextMode() {
 		return textMode;
@@ -840,8 +839,8 @@ public class RTextArea extends RTextAreaBase
 	 * Returns whether or not a macro is being recorded.
 	 *
 	 * @return Whether or not a macro is being recorded.
-	 * @see #beginRecordingMacro
-	 * @see #endRecordingMacro
+	 * @see #beginRecordingMacro()
+	 * @see #endRecordingMacro()
 	 */
 	public static synchronized boolean isRecordingMacro() {
 		return recordingMacro;
@@ -853,7 +852,7 @@ public class RTextArea extends RTextAreaBase
 	 * application.
 	 *
 	 * @param macro The macro to load.
-	 * @see #getCurrentMacro
+	 * @see #getCurrentMacro()
 	 */
 	public static synchronized void loadMacro(Macro macro) {
 		currentMacro = macro;
@@ -998,17 +997,19 @@ public class RTextArea extends RTextAreaBase
 	}
 
 
-	// Attempt to redo an action.
+	/**
+	 * Attempt to redo the last action.
+	 *
+	 * @see #undoLastAction()
+	 */
 	public void redoLastAction() {
-
 		// NOTE:  The try/catch block shouldn't be necessary...
 		try {
 			if (undoManager.canRedo())
 				undoManager.redo();
-		} catch (CannotRedoException f) {
-			f.printStackTrace();
+		} catch (CannotRedoException cre) {
+			cre.printStackTrace();
 		}
-
 	}
 
 
@@ -1054,8 +1055,8 @@ public class RTextArea extends RTextAreaBase
 	 * @param end the end position >= start
 	 * @exception IllegalArgumentException  if part of the range is an
 	 *  invalid position in the model
-	 * @see #insert
-	 * @see #replaceRange
+	 * @see #insert(String, int)
+	 * @see #replaceRange(String, int, int)
 	 */
 	public void replaceRange(String str, int start, int end) {
 		if (end < start)
@@ -1085,7 +1086,7 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * This method overrides <code>JTextComponent</code>'s
 	 * <code>replaceSelection</code>, so that if <code>textMode</code> is
-	 * <code>OVERWRITE_MODE</code>, it actually overwrites.
+	 * {@link #OVERWRITE_MODE}, it actually overwrites.
 	 *
 	 * @param text The content to replace the selection with.
 	 */
@@ -1163,7 +1164,7 @@ public class RTextArea extends RTextAreaBase
 	 * Replaces all instances of the tab character in <code>text</code> with
 	 * the number of spaces equivalent to a tab in this text area.<p>
 	 *
-	 * This method should only be called from threadsafe methods, such as
+	 * This method should only be called from thread-safe methods, such as
 	 * {@link replaceSelection(String)}.
 	 *
 	 * @param text The <code>java.lang.String</code> in which to replace tabs
@@ -1219,8 +1220,7 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Sets the properties of one of the actions this text area owns.
 	 *
-	 * @param action The action to modify; for example,
-	 *        <code>CUT_ACTION</code>.
+	 * @param action The action to modify; for example, {@link #CUT_ACTION}.
 	 * @param name The new name for the action.
 	 * @param mnemonic The new mnemonic for the action.
 	 * @param accelerator The new accelerator key for the action.
@@ -1234,8 +1234,7 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Sets the properties of one of the actions this text area owns.
 	 *
-	 * @param action The action to modify; for example,
-	 *        <code>CUT_ACTION</code>.
+	 * @param action The action to modify; for example, {@link #CUT_ACTION}.
 	 * @param name The new name for the action.
 	 * @param mnemonic The new mnemonic for the action.
 	 * @param accelerator The new accelerator key for the action.
@@ -1277,7 +1276,7 @@ public class RTextArea extends RTextAreaBase
 
 	/**
 	 * This method is overridden to make sure that instances of
-	 * <code>RTextArea</code> only use <code>ConfigurableCaret</code>s.
+	 * <code>RTextArea</code> only use {@link ConfigurableCaret}s.
 	 * To set the style of caret (vertical line, block, etc.) used for
 	 * insert or overwrite mode, use {@link #setCaretStyle(int, int)}.
 	 *
@@ -1285,12 +1284,13 @@ public class RTextArea extends RTextAreaBase
 	 *        <code>ConfigurableCaret</code>, an exception is thrown.
 	 * @throws IllegalArgumentException If the specified caret is not an
 	 *         <code>ConfigurableCaret</code>.
-	 * @see #setCaretStyle
+	 * @see #setCaretStyle(int, int)
 	 */
 	public void setCaret(Caret caret) {
-		if (!(caret instanceof ConfigurableCaret))
+		if (!(caret instanceof ConfigurableCaret)) {
 			throw new IllegalArgumentException(
 						"RTextArea needs ConfigurableCaret");
+		}
 		super.setCaret(caret);
 		if (carets!=null) { // Called by setUI() before carets is initialized
 			((ConfigurableCaret)caret).setStyle(carets[getTextMode()]);
@@ -1301,8 +1301,7 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Sets the style of caret used when in insert or overwrite mode.
 	 *
-	 * @param mode Either <code>INSERT_MODE</code> or
-	 *        <code>OVERWRITE_MODE</code>.
+	 * @param mode Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
 	 * @param style The style for the caret (such as
 	 *        {@link ConfigurableCaret#VERTICAL_LINE_STYLE}).
 	 * @see org.fife.ui.rtextarea.ConfigurableCaret
@@ -1310,8 +1309,7 @@ public class RTextArea extends RTextAreaBase
 	public void setCaretStyle(int mode, int style) {
 		style = (style>=ConfigurableCaret.MIN_STYLE &&
 					style<=ConfigurableCaret.MAX_STYLE ?
-						style :
-						ConfigurableCaret.VERTICAL_LINE_STYLE);
+						style : ConfigurableCaret.THICK_VERTICAL_LINE_STYLE);
 		carets[mode] = style;
 		if (mode==getTextMode()) {
 			// Will repaint the caret if necessary.
@@ -1330,7 +1328,7 @@ public class RTextArea extends RTextAreaBase
 	public void setDocument(Document document) {
 		if (!(document instanceof AbstractDocument))
 			throw new IllegalArgumentException("RTextArea requires " +
-				"instances of AbstractDocument for its document!");
+				"instances of AbstractDocument for its document");
 		super.setDocument(document);
 	}
 
@@ -1352,7 +1350,7 @@ public class RTextArea extends RTextAreaBase
 	 * not have an icon.
 	 *
 	 * @param group The icon group to load.
-	 * @see #getIconGroup
+	 * @see #getIconGroup()
 	 */
 	public static synchronized void setIconGroup(IconGroup group) {
 		Icon icon = group.getIcon("cut");
@@ -1378,7 +1376,7 @@ public class RTextArea extends RTextAreaBase
 	 * type {@link #MARK_ALL_COLOR_PROPERTY}.
 	 *
 	 * @param color The color to use for "mark all."
-	 * @see #getMarkAllHighlightColor
+	 * @see #getMarkAllHighlightColor()
 	 */
 	public void setMarkAllHighlightColor(Color color) {
 		Color old = (Color)markAllHighlightPainter.getPaint();
@@ -1405,12 +1403,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Sets whether the edges of selections are rounded in this text area.
-	 * This method fires a property change of type
-	 * <code>ROUNDED_SELECTION_PROPERTY</code>.
-	 *
-	 * @param rounded Whether selection edges should be rounded.
-	 * @see #getRoundedSelectionEdges
+	 * {@inheritDoc}
 	 */
 	public void setRoundedSelectionEdges(boolean rounded) {
 		if (getRoundedSelectionEdges()!=rounded) {
@@ -1423,8 +1416,7 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Sets the text mode for this editor pane.
 	 *
-	 * @param mode Either <code>RTextArea.INSERT_MODE</code> or
-	 *        <code>RTextArea.OVERWRITE_MODE</code>.
+	 * @param mode Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
 	 */
 	public void setTextMode(int mode) {
 
@@ -1481,22 +1473,18 @@ public class RTextArea extends RTextAreaBase
 
 	/**
 	 * Attempt to undo an "action" done in this text area.
+	 *
+	 * @see #redoLastAction()
 	 */
 	public void undoLastAction() {
-
 		// NOTE: that the try/catch block shouldn't be necessary...
-
 		try {
 			if (undoManager.canUndo())
 				undoManager.undo();
 		}
-		catch (CannotUndoException f) {
-			JOptionPane.showMessageDialog(this, "Error doing Undo: " + f +
-					"\nPlease report this at " +
-					"http://sourceforge.net/projects/rtext",
-					"rtext - Error", JOptionPane.ERROR_MESSAGE);
+		catch (CannotUndoException cre) {
+			cre.printStackTrace();
 		}
-
 	}
 
 

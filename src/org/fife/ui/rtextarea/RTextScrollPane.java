@@ -75,7 +75,7 @@ public class RTextScrollPane extends JScrollPane {
 	 * Creates a scroll pane.  A default value will be used for line number
 	 * color (gray), and the current line's line number will be highlighted.
 	 *
-	 * @param area The text area this scroll pane will contain.  If this is
+	 * @param textArea The text area this scroll pane will contain.  If this is
 	 *        <code>null</code>, you must call
 	 *        {@link #setViewportView(Component)}, passing in an
 	 *        {@link RTextArea}.

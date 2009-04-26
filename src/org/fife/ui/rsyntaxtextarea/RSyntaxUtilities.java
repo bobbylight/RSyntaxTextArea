@@ -29,6 +29,7 @@ import java.awt.Shape;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
@@ -95,6 +96,17 @@ public class RSyntaxUtilities implements SwingConstants {
 			count++;
 		}
 		return text.substring(0, count);
+	}
+
+
+	private static final Element getLineElem(Document d, int offs) {
+		Element map = d.getDefaultRootElement();
+		int index = map.getElementIndex(offs);
+		Element elem = map.getElement(index);
+		if ((offs>=elem.getStartOffset()) && (offs<elem.getEndOffset())) {
+			return elem;
+		}
+		return null;
 	}
 
 
@@ -566,6 +578,94 @@ public class RSyntaxUtilities implements SwingConstants {
 				return t;
 		}
 		return null;
+	}
+
+
+	/**
+	 * Returns the end of the word at the given offset.
+	 *
+	 * @param textArea The text area.
+	 * @param offs The offset into the text area's content.
+	 * @return The end offset of the word.
+	 * @throws BadLocationException If <code>offs</code> is invalid.
+	 * @see #getWordStart(RSyntaxTextArea, int)
+	 */
+	public static int getWordEnd(RSyntaxTextArea textArea, int offs)
+										throws BadLocationException {
+
+		Document doc = textArea.getDocument();
+		int endOffs = textArea.getLineEndOffsetOfCurrentLine();
+		int lineEnd = Math.min(endOffs, doc.getLength());
+		if (offs == lineEnd) { // End of the line.
+			return offs;
+		}
+
+		String s = doc.getText(offs, lineEnd-offs-1);
+		if (s!=null && s.length()>0) { // Should always be true
+			int i = 0;
+			int count = s.length();
+			char ch = s.charAt(i);
+			if (Character.isWhitespace(ch)) {
+				while (i<count && Character.isWhitespace(s.charAt(i++)));
+			}
+			else if (Character.isLetterOrDigit(ch)) {
+				while (i<count && Character.isLetterOrDigit(s.charAt(i++)));
+			}
+			else {
+				i = 2;
+			}
+			offs += i - 1;
+		}
+
+		return offs;
+
+	}
+
+	/**
+	 * Returns the start of the word at the given offset.
+	 *
+	 * @param textArea The text area.
+	 * @param offs The offset into the text area's content.
+	 * @return The start offset of the word.
+	 * @throws BadLocationException If <code>offs</code> is invalid.
+	 * @see #getWordEnd(RSyntaxTextArea, int)
+	 */
+	public static int getWordStart(RSyntaxTextArea textArea, int offs)
+											throws BadLocationException {
+
+		Document doc = textArea.getDocument();
+		Element line = getLineElem(doc, offs);
+		if (line == null) {
+			throw new BadLocationException("No word at " + offs, offs);
+		}
+
+		int lineStart = line.getStartOffset();
+		if (offs==lineStart) { // Start of the line.
+			return offs;
+		}
+
+		int endOffs = Math.min(offs+1, doc.getLength());
+		String s = doc.getText(lineStart, endOffs-lineStart);
+		if(s != null && s.length() > 0) {
+			int i = s.length() - 1;
+			char ch = s.charAt(i);
+			if (Character.isWhitespace(ch)) {
+				while (i>0 && Character.isWhitespace(s.charAt(i-1))) {
+					i--;
+				}
+				offs = lineStart + i;
+			}
+			else if (Character.isLetterOrDigit(ch)) {
+				while (i>0 && Character.isLetterOrDigit(s.charAt(i-1))) {
+					i--;
+				}
+				offs = lineStart + i;
+			}
+
+		}
+
+		return offs;
+
 	}
 
 

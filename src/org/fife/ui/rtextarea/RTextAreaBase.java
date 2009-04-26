@@ -577,7 +577,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * Returns whether selection edges are rounded in this text area.
 	 *
 	 * @return Whether selection edges are rounded.
-	 * @see #setRoundedSelectionEdges
+	 * @see #setRoundedSelectionEdges(boolean)
 	 */
 	public boolean getRoundedSelectionEdges() {
 		return roundedSelectionEdges;
@@ -992,10 +992,10 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	/**
 	 * Sets whether the edges of selections are rounded in this text area.
 	 * This method fires a property change of type
-	 * <code>ROUNDED_SELECTION_PROPERTY</code>.
+	 * {@link #ROUNDED_SELECTION_PROPERTY}.
 	 *
 	 * @param rounded Whether selection edges should be rounded.
-	 * @see #getRoundedSelectionEdges
+	 * @see #getRoundedSelectionEdges()
 	 */
 	public void setRoundedSelectionEdges(boolean rounded) {
 		if (roundedSelectionEdges!=rounded) {

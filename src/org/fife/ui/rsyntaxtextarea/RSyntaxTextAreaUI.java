@@ -85,6 +85,16 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 
 
 	/**
+	 * Creates the highlighter to use for syntax text areas.
+	 *
+	 * @return The highlighter.
+	 */
+	protected Highlighter createHighlighter() {
+		return new RSyntaxTextAreaHighlighter();
+	}
+
+
+	/**
 	 * Returns the name to use to cache/fetch the shared action map.  This
 	 * should be overridden by subclasses if the subclass has its own custom
 	 * editor kit to install, so its actions get picked up.

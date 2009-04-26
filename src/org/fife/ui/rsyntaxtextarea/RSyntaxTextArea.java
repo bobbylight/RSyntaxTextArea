@@ -29,7 +29,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -203,7 +202,7 @@ Rectangle match;
 	/**
 	 * The color used to render "marked occurrences."
 	 */
-	private Paint markOccurrencesColor;
+	private Color markOccurrencesColor;
 
 	/**
 	 * Metrics of the text area's font.
@@ -344,7 +343,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Updates the fontmetrics the first time we're displayed.
+	 * Updates the font metrics the first time we're displayed.
 	 */
 	public void addNotify() {
 		super.addNotify();
@@ -800,9 +799,9 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns the color used to "mark occurrences."
 	 *
 	 * @return The mark occurrences color.
-	 * @see #setMarkOccurrencesColor(Paint)
+	 * @see #setMarkOccurrencesColor(Color)
 	 */
-	public Paint getMarkOccurrencesColor() {
+	public Color getMarkOccurrencesColor() {
 		return markOccurrencesColor;
 	}
 
@@ -1383,10 +1382,10 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets whether fractional fontmetrics are enabled.  This method fires
+	 * Sets whether fractional font metrics are enabled.  This method fires
 	 * a property change event of type {@link #FRACTIONAL_FONTMETRICS_PROPERTY}.
 	 *
-	 * @param enabled Whether fractional fontmetrics are enabled.
+	 * @param enabled Whether fractional font metrics are enabled.
 	 * @see #getFractionalFontMetricsEnabled()
 	 */
 	public void setFractionalFontMetricsEnabled(boolean enabled) {
@@ -1400,6 +1399,22 @@ private boolean fractionalFontMetricsEnabled;
 			firePropertyChange(FRACTIONAL_FONTMETRICS_PROPERTY,
 											!enabled, enabled);
 		}
+	}
+
+
+	/**
+	 * Sets the highlighter used by this text area.
+	 *
+	 * @param h The highlighter.
+	 * @throws IllegalArgumentException If <code>h</code> is not an instance
+	 *         of {@link RSyntaxTextAreaHighlighter}.
+	 */
+	public void setHighlighter(Highlighter h) {
+		if (!(h instanceof RSyntaxTextAreaHighlighter)) {
+			throw new IllegalArgumentException("RSyntaxTextArea requires " +
+				"an RSyntaxTextAreaHighlighter for its Highlighter");
+		}
+		super.setHighlighter(h);
 	}
 
 
@@ -1461,7 +1476,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param markOccurrences Whether "Mark Occurrences" should be enabled.
 	 * @see #getMarkOccurrences()
-	 * @see #setMarkOccurrencesColor(Paint)
+	 * @see #setMarkOccurrencesColor(Color)
 	 */
 	public void setMarkOccurrences(boolean markOccurrences) {
 		if (markOccurrences) {
@@ -1482,14 +1497,14 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets the "mark occurrences" color.
 	 *
-	 * @param paint The new color.  This cannot be <code>null</code>.
+	 * @param color The new color.  This cannot be <code>null</code>.
 	 * @see #getMarkOccurrencesColor()
 	 * @see #setMarkOccurrences(boolean)
 	 */
-	public void setMarkOccurrencesColor(Paint paint) {
-		markOccurrencesColor = paint;
+	public void setMarkOccurrencesColor(Color color) {
+		markOccurrencesColor = color;
 		if (markOccurrencesSupport!=null) {
-			markOccurrencesSupport.setColor(paint);
+			markOccurrencesSupport.setColor(color);
 		}
 	}
 
@@ -1551,7 +1566,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (styleKey==null) {
 			styleKey = SYNTAX_STYLE_NONE;
 		}
-		if (styleKey!=syntaxStyleKey) {
+		if (!styleKey.equals(syntaxStyleKey)) {
 			String oldStyle = syntaxStyleKey;
 			syntaxStyleKey = styleKey;
 			((RSyntaxDocument)getDocument()).setSyntaxStyle(styleKey);
@@ -1668,7 +1683,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets the rendering hint to use when antialiasing text in this
+	 * Sets the rendering hint to use when anti-aliasing text in this
 	 * editor.
 	 *
 	 * @param aaHintFieldName The name of a field in
@@ -1683,7 +1698,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		//System.out.println("Trying to set AA hint to: " + aaHintFieldName);
 
-		// If the new AA hint is null, disable text antialiasing.
+		// If the new AA hint is null, disable text anti-aliasing.
 		if (aaHintFieldName==null && this.aaHintFieldName!=null) {
 			String old = this.aaHintFieldName;
 			this.aaHint = null;
@@ -1697,7 +1712,7 @@ private boolean fractionalFontMetricsEnabled;
 			repaint();
 		}
 
-		// Otherwise, if they're speicfying a new hint type, use it instead.
+		// Otherwise, if they're specifying a new hint type, use it instead.
 		else if (aaHintFieldName!=null &&
 				!aaHintFieldName.equals(this.aaHintFieldName)) {
 			String old = this.aaHintFieldName;
@@ -1728,7 +1743,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets whether whitespace is visible.  This method fires a property change
-	 * of type <code>VISIBLE_WHITESPACE_PROPERTY</code>.
+	 * of type {@link #VISIBLE_WHITESPACE_PROPERTY}.
 	 *
 	 * @param visible Whether whitespace should be visible.
 	 * @see #isWhitespaceVisible
