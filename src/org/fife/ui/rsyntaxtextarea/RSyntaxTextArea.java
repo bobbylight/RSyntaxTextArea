@@ -100,7 +100,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  * to your text area.
  *
  * @author Robert Futrell
- * @version 1.2
+ * @version 1.3
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
