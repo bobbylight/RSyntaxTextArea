@@ -508,6 +508,18 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
+	 * Overridden to always render the selection, even when the text component
+	 * loses focus.
+	 *
+	 * @param visible Whether the selection should be visible.  This parameter
+	 *        is ignored.
+	 */
+	public void setSelectionVisible(boolean visible) {
+		super.setSelectionVisible(true);
+	}
+
+
+	/**
 	 * Sets the style used when painting the caret.
 	 *
 	 * @param style The style to use.  If this isn't one of
