@@ -174,7 +174,7 @@ public class RTextArea extends RTextAreaBase
 
 	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
 
-	private static final String RESOURCE_BUNDLE	= "org.fife.ui.rtextarea.RTextArea";
+	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
 
 
 	/**
@@ -456,7 +456,7 @@ public class RTextArea extends RTextAreaBase
 
 	/**
 	 * Removes all undoable edits from this document's undo manager.  This
-	 * method also makes the undo/redo actions disabled.<br><br>
+	 * method also makes the undo/redo actions disabled.
 	 */
 	/*
 	 * NOTE:  For some reason, it appears I have to create an entirely new
@@ -748,13 +748,9 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private void init(int textMode) {
 
-		// Install the undo manager.  Do this before initActions.
+		// Install the undo manager.
 		undoManager = new RUndoManager(this);
 		getDocument().addUndoableEditListener(undoManager);
-
-		// Create and initialize our actions.  This will only do so once
-		// when the first RTextArea is created) as these actions are shared.
-		initActions(this);
 
 		// Set the defaults for various stuff.
 		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
@@ -771,66 +767,6 @@ public class RTextArea extends RTextAreaBase
 
 		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
 		fixCtrlH();
-
-	}
-
-
-	private static boolean first = false;
-	/**
-	 * Creates and localizes our shared actions.
-	 *
-	 * @param ta The text area being created.
-	 */
-	private static final synchronized void initActions(RTextArea ta) {
-
-		// We only need to initialize the actions for the first created
-		// text area, since they're shared among all text areas.
-		if (!first) {
-
-			first = true;
-
-			ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
-
-			// Create actions for right-click popup menu.
-			// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
-			int defaultModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
-			String name = bundle.getString("CutActionName");
-			char mnemonic = bundle.getString("CutActionMnemonic").charAt(0);
-			cutAction = new RTextAreaEditorKit.CutAction(name, null, name,
-				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_X, defaultModifier));
-
-			name = bundle.getString("CopyActionName");
-			mnemonic = bundle.getString("CopyActionMnemonic").charAt(0);
-			copyAction = new RTextAreaEditorKit.CopyAction(name, null, name,
-				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_C, defaultModifier));
-
-			name = bundle.getString("PasteActionName");
-			mnemonic = bundle.getString("PasteActionMnemonic").charAt(0);
-			pasteAction = new RTextAreaEditorKit.PasteAction(name, null, name,
-				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_V, defaultModifier));
-
-			name = bundle.getString("DeleteActionName");
-			mnemonic = bundle.getString("DeleteActionMnemonic").charAt(0);
-			deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, name,
-				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-
-			undoAction = new RTextAreaEditorKit.UndoAction(
-					RUndoManager.getCantUndoText(), null, "Undo",
-				new Integer(KeyEvent.VK_Z), KeyStroke.getKeyStroke(KeyEvent.VK_Z, defaultModifier));
-
-			redoAction = new RTextAreaEditorKit.RedoAction(
-				RUndoManager.getCantRedoText(), null, "Redo",
-				new Integer(KeyEvent.VK_Y), KeyStroke.getKeyStroke(KeyEvent.VK_Y, defaultModifier));
-
-			name = bundle.getString("SAActionName");
-			mnemonic = bundle.getString("SAActionMnemonic").charAt(0);
-			selectAllAction = new RTextAreaEditorKit.SelectAllAction(name, null, name,
-				new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_A, defaultModifier));
-
-			bundle = null;
-
-		} // End of if (!first).
 
 	}
 
@@ -1501,6 +1437,59 @@ public class RTextArea extends RTextAreaBase
 		getDocument().removeUndoableEditListener(undoManager);
 		s.defaultWriteObject();
 		getDocument().addUndoableEditListener(undoManager);
+
+	}
+
+
+	static {
+
+		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
+
+		// Create actions for right-click popup menu.
+		// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
+		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+		String name = bundle.getString("CutName");
+		char mnemonic = bundle.getString("CutMnemonic").charAt(0);
+		String desc = bundle.getString("CutDesc");
+		cutAction = new RTextAreaEditorKit.CutAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_X, mod));
+
+		name = bundle.getString("CopyName");
+		mnemonic = bundle.getString("CopyMnemonic").charAt(0);
+		desc = bundle.getString("CopyDesc");
+		copyAction = new RTextAreaEditorKit.CopyAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
+
+		name = bundle.getString("PasteName");
+		mnemonic = bundle.getString("PasteMnemonic").charAt(0);
+		desc = bundle.getString("PasteDesc");
+		pasteAction = new RTextAreaEditorKit.PasteAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
+
+		name = bundle.getString("DeleteName");
+		mnemonic = bundle.getString("DeleteMnemonic").charAt(0);
+		desc = bundle.getString("DeleteDesc");
+		deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
+		name = bundle.getString("CantUndoName");
+		mnemonic = bundle.getString("UndoMnemonic").charAt(0);
+		desc = bundle.getString("UndoDesc");
+		undoAction = new RTextAreaEditorKit.UndoAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
+
+		name = bundle.getString("CantRedoName");
+		mnemonic = bundle.getString("RedoMnemonic").charAt(0);
+		desc = bundle.getString("RedoDesc");
+		redoAction = new RTextAreaEditorKit.RedoAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
+
+		name = bundle.getString("SAName");
+		mnemonic = bundle.getString("SAMnemonic").charAt(0);
+		desc = bundle.getString("SelectAllDesc");
+		selectAllAction = new RTextAreaEditorKit.SelectAllAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
 
 	}
 

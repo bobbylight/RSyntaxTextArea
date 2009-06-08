@@ -2168,8 +2168,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class UndoAction extends RecordableTextAction {
 
- 
-		public UndoAction() {
+ 		public UndoAction() {
 			super(rtaUndoAction);
 		}
 

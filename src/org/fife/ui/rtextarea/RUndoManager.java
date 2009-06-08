@@ -27,13 +27,12 @@ class RUndoManager extends UndoManager {
 	public RCompoundEdit compoundEdit;
 	private RTextArea textArea;
 	private int lastOffset;
+	private String cantUndoText;
+	private String cantRedoText;
 
 	private int internalAtomicEditDepth;
 
-	private static String cantUndoText;
-	private static String cantRedoText;
-
-	private static final String MSG	= "org.fife.ui.rtextarea.RUndoManager";
+	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
 
 
 	/**
@@ -43,13 +42,9 @@ class RUndoManager extends UndoManager {
 	 */
 	public RUndoManager(RTextArea textArea) {
 		this.textArea = textArea;
-		synchronized (RUndoManager.class) {
-			if (cantUndoText==null) {
-				ResourceBundle msg = ResourceBundle.getBundle(MSG);
-				cantUndoText = msg.getString("CantUndo");
-				cantRedoText = msg.getString("CantRedo");
-			}
-		}
+		ResourceBundle msg = ResourceBundle.getBundle(MSG);
+		cantUndoText = msg.getString("CantUndoName");
+		cantRedoText = msg.getString("CantRedoName");
 	}
 
 
@@ -92,7 +87,7 @@ class RUndoManager extends UndoManager {
 	 * @return The localized "Can't Redo" string.
 	 * @see #getCantUndoText()
 	 */
-	public static String getCantRedoText() {
+	public String getCantRedoText() {
 		return cantRedoText;
 	}
 
@@ -103,7 +98,7 @@ class RUndoManager extends UndoManager {
 	 * @return The localized "Can't Undo" string.
 	 * @see #getCantRedoText()
 	 */
-	public static String getCantUndoText() {
+	public String getCantUndoText() {
 		return cantUndoText;
 	}
 
@@ -165,9 +160,9 @@ class RUndoManager extends UndoManager {
 			return;
 		}
 
-		// This happens when this undoableedit didn't occur at the
-		// character just after the presious undlabeledit.  Since an
-		// undo has already occured, there is no need to update our
+		// This happens when this UndoableEdit didn't occur at the
+		// character just after the previous undlabeledit.  Since an
+		// undo has already occurred, there is no need to update our
 		// actions here either.
 		compoundEdit.end();
 		compoundEdit = startCompoundEdit(e.getEdit());
