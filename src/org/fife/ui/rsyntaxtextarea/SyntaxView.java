@@ -29,18 +29,17 @@ import javax.swing.text.*;
 
 
 /**
- * The <code>javax.swing.text.View</code> object used by
- * {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextArea} when word wrap is
- * disabled.  It implements syntax highlighting for programming languages using
- * the colors and font styles specified by the <code>RSyntaxTextArea</code>.<p>
+ * The <code>javax.swing.text.View</code> object used by {@link RSyntaxTextArea}
+ * when word wrap is disabled.  It implements syntax highlighting for
+ * programming languages using the colors and font styles specified by the
+ * <code>RSyntaxTextArea</code>.<p>
  *
  * You don't really have to do anything to use this class, as
- * {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaUI} automatically sets the
- * text area's view to be an instance of this class if word wrap is disabled.<p>
+ * {@link RSyntaxTextAreaUI} automatically sets the text area's view to be
+ * an instance of this class if word wrap is disabled.<p>
  *
  * The tokens that specify how to paint the syntax-highlighted text are gleaned
- * from the text area's
- * {@link org.fife.ui.rsyntaxtextarea.RSyntaxDocument}.
+ * from the text area's {@link RSyntaxDocument}.
  *
  * @author Robert Futrell
  * @version 0.3

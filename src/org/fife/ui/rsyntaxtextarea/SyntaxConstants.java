@@ -115,6 +115,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Lisp.
+	 */
+	public static final String SYNTAX_STYLE_LISP		= "text/lisp";
+
+
+	/**
 	 * Style for highlighting Lua.
 	 */
 	public static final String SYNTAX_STYLE_LUA			= "text/lua";

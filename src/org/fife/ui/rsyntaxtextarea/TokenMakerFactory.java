@@ -41,7 +41,8 @@ public abstract class TokenMakerFactory {
 	 * If this system property is set, a custom <code>TokenMakerFactory</code>
 	 * of the specified class will be used as the default token maker factory.
 	 */
-	public static final String PROPERTY_DEFAULT_TOKENMAKER	= "TokenMaker";
+	public static final String PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY	=
+														"TokenMakerFactory";
 
 	/**
 	 * The singleton default <code>TokenMakerFactory</code> instance.
@@ -71,7 +72,7 @@ public abstract class TokenMakerFactory {
 		if (DEFAULT_INSTANCE==null) {
 			String clazz = null;
 			try {
-				clazz = System.getProperty(PROPERTY_DEFAULT_TOKENMAKER);
+				clazz= System.getProperty(PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY);
 			} catch (java.security.AccessControlException ace) {
 				clazz = null; // We're in an applet; take default.
 			}

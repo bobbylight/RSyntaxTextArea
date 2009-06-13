@@ -73,6 +73,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>Java
  *    <li>JavaScript
  *    <li>JSP
+ *    <li>Lisp
  *    <li>Lua
  *    <li>Make
  *    <li>Perl
@@ -96,8 +97,8 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *
  * It is recommended that you use an instance of
  * {@link org.fife.ui.rtextarea.RTextScrollPane} instead of a regular
- * <code>JScrollPane</code> as this class allows you to add line numbers easily
- * to your text area.
+ * <code>JScrollPane</code> as this class allows you to add line numbers and
+ * bookmarks easily to your text area.
  *
  * @author Robert Futrell
  * @version 1.3
@@ -407,7 +408,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Clones a token list.  This is necessary as tokens are reused in
-	 * <code>RSyntaxDocument</code> so we can't simply use the ones we
+	 * {@link RSyntaxDocument}, so we can't simply use the ones we
 	 * are handed from it.
 	 *
 	 * @param t The token list to clone.
