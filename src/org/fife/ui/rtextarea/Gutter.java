@@ -189,6 +189,18 @@ public class Gutter extends JComponent {
 
 
 	/**
+	 * Returns the starting line's line number.  The default value is
+	 * <code>1</code>.
+	 *
+	 * @return The index
+	 * @see #setLineNumberingStartIndex(int)
+	 */
+	public int getLineNumberingStartIndex() {
+		return lineNumberList.getLineNumberingStartIndex();
+	}
+
+
+	/**
 	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
 	 * @return Whether or not line numbers are visible.
@@ -366,6 +378,19 @@ public class Gutter extends JComponent {
 			throw new IllegalArgumentException("font cannot be null");
 		}
 		lineNumberList.setFont(font);
+	}
+
+
+	/**
+	 * Sets the starting line's line number.  The default value is
+	 * <code>1</code>.  Applications can call this method to change this value
+	 * if they are displaying a subset of lines in a file, for example.
+	 *
+	 * @param index The new index.
+	 * @see #getLineNumberingStartIndex()
+	 */
+	public void setLineNumberingStartIndex(int index) {
+		lineNumberList.setLineNumberingStartIndex(index);
 	}
 
 

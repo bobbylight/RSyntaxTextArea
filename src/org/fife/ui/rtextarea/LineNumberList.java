@@ -78,6 +78,13 @@ class LineNumberList extends AbstractGutterComponent
 	 */
 	private Rectangle visibleRect;
 
+	/**
+	 * The index at which line numbering should start.  The default value is
+	 * <code>1</code>, but applications can change this if, for example, they
+	 * are displaying a subset of lines in a file.
+	 */
+	private int lineNumberingStartIndex;
+
 	private static final int RHS_BORDER_WIDTH	= 8;
 
 
@@ -114,6 +121,7 @@ class LineNumberList extends AbstractGutterComponent
 		// Initialize currentLine; otherwise, the current line won't start
 		// off as highlighted.
 		currentLine = 0;
+		setLineNumberingStartIndex(1);
 
 		visibleRect = new Rectangle(); // Must be initialized
 
@@ -135,6 +143,18 @@ class LineNumberList extends AbstractGutterComponent
 		}
 		updateCellWidths();
 		updateCellHeights();
+	}
+
+
+	/**
+	 * Returns the starting line's line number.  The default value is
+	 * <code>1</code>.
+	 *
+	 * @return The index
+	 * @see #setLineNumberingStartIndex(int)
+	 */
+	public int getLineNumberingStartIndex() {
+		return lineNumberingStartIndex;
 	}
 
 
@@ -282,7 +302,8 @@ class LineNumberList extends AbstractGutterComponent
 			FontMetrics metrics = g.getFontMetrics();
 			int rhs = getWidth() - RHS_BORDER_WIDTH;
 			for (int i=topLine+1; i<=bottomLine; i++) {
-				String number = Integer.toString(i);
+				int index = i + getLineNumberingStartIndex() - 1;
+				String number = Integer.toString(index);
 				int width = metrics.stringWidth(number);
 				g.drawString(number, rhs-width,y);
 				y += cellHeight;
@@ -290,7 +311,8 @@ class LineNumberList extends AbstractGutterComponent
 		}
 		else { // rtl
 			for (int i=topLine+1; i<=bottomLine; i++) {
-				String number = Integer.toString(i);
+				int index = i + getLineNumberingStartIndex() - 1;
+				String number = Integer.toString(index);
 				g.drawString(number, RHS_BORDER_WIDTH, y);
 				y += cellHeight;
 			}
@@ -385,7 +407,8 @@ class LineNumberList extends AbstractGutterComponent
 			}
 
 			// Paint the line number.
-			String number = Integer.toString(topLine+1);
+			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
+			String number = Integer.toString(index);
 			if (ltr) {
 				int strWidth = metrics.stringWidth(number);
 				g.drawString(number, rhs-strWidth,y+ascent);
@@ -430,6 +453,19 @@ class LineNumberList extends AbstractGutterComponent
 		int y = textArea.getInsets().top;
 		y += line*cellHeight;
 		repaint(0,y, cellWidth,cellHeight);
+	}
+
+
+	/**
+	 * Sets the starting line's line number.  The default value is
+	 * <code>1</code>.  Applications can call this method to change this value
+	 * if they are displaying a subset of lines in a file, for example.
+	 *
+	 * @param index The new index.
+	 * @see #getLineNumberingStartIndex()
+	 */
+	public void setLineNumberingStartIndex(int index) {
+		lineNumberingStartIndex = index;
 	}
 
 
