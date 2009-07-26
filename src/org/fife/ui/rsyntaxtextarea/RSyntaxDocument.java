@@ -99,13 +99,25 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
 	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
-		super(new GapContent());
+		super(new RGapContent());
 		putProperty(tabSizeAttribute, new Integer(5));
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
 		setTokenMakerFactory(tmf);
 		setSyntaxStyle(syntaxStyle);
+	}
+
+
+	/**
+	 * Returns the character in the document at the specified offset.
+	 *
+	 * @param offset The offset of the character.
+	 * @return The character.
+	 * @throws BadLocationException If the offset is invalid.
+	 */
+	public char charAt(int offset) throws BadLocationException {
+		return ((RGapContent)getContent()).charAt(offset);
 	}
 
 
@@ -527,6 +539,32 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 		// Let everybody know that syntax styles have (probably) changed.
 		fireChangedUpdate(new DefaultDocumentEvent(
 						0, numLines-1, DocumentEvent.EventType.CHANGE));
+
+	}
+
+
+	/**
+	 * Document content that provides access to individual characters.
+	 *
+	 * @author Robert Futrell
+	 * @version 1.0
+	 */
+	private static class RGapContent extends GapContent {
+
+		public RGapContent() {
+		}
+
+		public char charAt(int offset) throws BadLocationException {
+			if (offset<0 || offset>=length()) {
+				throw new BadLocationException("Invalid offset", offset);
+			}
+			int g0 = getGapStart();
+			char[] array = (char[]) getArray();
+			if (offset<g0) { // below gap
+				return array[offset];
+			}
+			return array[getGapEnd() + offset - g0]; // above gap
+		}
 
 	}
 

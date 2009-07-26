@@ -22,8 +22,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.io.Reader;
-import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -36,23 +35,27 @@ public interface Parser {
 
 
 	/**
-	 * Parses input from the specified <code>Reader</code>.
+	 * Parses input from the specified document.
 	 *
-	 * @param r The input stream from which to parse.
-	 * @see #getNoticeIterator()
+	 * @param doc The document to parse.  This document is in a read lock,
+	 *        so it cannot be modified while parsing is occurring.
+	 * @param style The language being rendered, such as
+	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.
+	 * @see #getNotices()
 	 */
-	public void parse(Reader r);
+	public void parse(RSyntaxDocument doc, String style);
 
 
 	/**
-	 * Returns an iterator over the <code>ParserNotice</code>s received
-	 * from this parser during the call to {@link #parse}.
+	 * Returns a list of the {@link ParserNotice}s received from this
+	 * parser during the last call to {@link #parse(RSyntaxDocument)}.
 	 *
-	 * @return An iterator over the <code>ParserNotice</code>s.
+	 * @return The list of <code>ParserNotice</code>s.  This is guaranteed
+	 *         to be non-<code>null</code>.
 	 * @see ParserNotice
-	 * @see #parse(Reader r)
+	 * @see #parse(RSyntaxDocument)
 	 */
-	public Iterator getNoticeIterator();
+	public List getNotices();
 
 
 }

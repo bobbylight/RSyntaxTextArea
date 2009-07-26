@@ -47,7 +47,7 @@ import javax.swing.text.Caret;
 class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 	private RSyntaxTextArea textArea;
-	private javax.swing.Timer timer;
+	private Timer timer;
 	private MarkOccurrencesHighlightPainter p;
 	private List tags;
 
@@ -251,7 +251,8 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 	 */
 	private void removeHighlights() {
 		if (textArea!=null) {
-			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.getHighlighter();
+			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+													textArea.getHighlighter();
 			for (int i=0; i<tags.size(); i++) {
 				h.removeMarkOccurrencesHighlight(tags.get(i));
 			}

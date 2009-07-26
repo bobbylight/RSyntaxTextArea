@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -65,12 +66,18 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 */
 	private List markedOccurrences;
 
+	/**
+	 * Highlights from document parsers.  These should be painted "on top of"
+	 * all other highlights to ensure they are always above the selection.
+	 */
+	private List parserHighlights;
 
 	/**
 	 * Constructor.
 	 */
 	public RSyntaxTextAreaHighlighter() {
 		markedOccurrences = new ArrayList();
+		parserHighlights = new ArrayList(0); // Often unused
 	}
 
 
@@ -88,8 +95,8 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 			MarkOccurrencesHighlightPainter p) throws BadLocationException {
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
-		HighlightInfo i = getDrawsLayeredHighlights() ?
-						new LayeredHighlightInfo() : new HighlightInfo();
+		// Always layered highlights for marked occurrences.
+		HighlightInfo i = new LayeredHighlightInfo();
 		i.painter = p;
 		i.p0 = doc.createPosition(start);
 		// HACK: Use "end-1" to prevent chars the user types at the "end" of
@@ -103,11 +110,70 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 
 	/**
+	 * Adds a special "marked occurrence" highlight.
+	 *
+	 * @param start
+	 * @param end
+	 * @param color
+	 * @param p
+	 * @return
+	 * @throws BadLocationException
+	 * @see {@link #clearParserHighlights()}
+	 */
+	Object addParserHighlight(int start, int end, Color color,
+			HighlightPainter p) throws BadLocationException {
+		Document doc = textArea.getDocument();
+		TextUI mapper = textArea.getUI();
+		// Always layered highlights for parser highlights.
+		HighlightInfo i = new LayeredHighlightInfo();
+		i.painter = p;
+		i.p0 = doc.createPosition(start);
+		i.p1 = doc.createPosition(end);
+		i.color = color;
+		parserHighlights.add(i);
+		mapper.damageRange(textArea, start, end);
+		return i;
+	}
+
+
+	/**
+	 * Removes all parser highlights.
+	 *
+	 * @see #addParserHighlight(int, int, Color, javax.swing.text.Highlighter.HighlightPainter)
+	 */
+	void clearParserHighlights() {
+
+		for (int i=0; i<parserHighlights.size(); i++) {
+
+			Object tag = parserHighlights.get(i);
+
+			if (tag instanceof LayeredHighlightInfo) {
+				LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
+			    if (lhi.width > 0 && lhi.height > 0) {
+			    	textArea.repaint(lhi.x, lhi.y, lhi.width, lhi.height);
+			    }
+			}
+			else {
+				HighlightInfo info = (HighlightInfo) tag;
+				TextUI ui = textArea.getUI();
+				ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
+				//safeDamageRange(info.p0, info.p1);
+			}
+
+		}
+
+		parserHighlights.clear();
+
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void deinstall(JTextComponent c) {
 		this.textArea = null;
 		markedOccurrences.clear();
+		parserHighlights.clear();
 	}
 
 
@@ -126,10 +192,18 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @param g the graphics context
 	 */
 	public void paint(Graphics g) {
+		paintList(g, markedOccurrences);
+		super.paint(g);
+		paintList(g, parserHighlights);
+	}
 
-		int len = markedOccurrences.size();
+
+	private void paintList(Graphics g, List highlights) {
+
+		int len = highlights.size();
+
 		for (int i = 0; i < len; i++) {
-			HighlightInfo info = (HighlightInfo) markedOccurrences.get(i);
+			HighlightInfo info = (HighlightInfo)highlights.get(i);
 			if (!(info instanceof LayeredHighlightInfo)) {
 				// Avoid allocating unless we need it.
 				Rectangle a = textArea.getBounds();
@@ -142,14 +216,15 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 					info = (HighlightInfo)markedOccurrences.get(i);
 					if (!(info instanceof LayeredHighlightInfo)) {
 						Highlighter.HighlightPainter p = info.getPainter();
+						if (info.color!=null && p instanceof ChangeableColorHighlightPainter) {
+							((ChangeableColorHighlightPainter)p).setColor(info.color);
+						}
 						p.paint(g, info.getStartOffset(), info.getEndOffset(),
 								a, textArea);
 					}
 				}
 		    }
 		}
-
-		super.paint(g);
 
 	}
 
@@ -168,9 +243,16 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 */
 	public void paintLayeredHighlights(Graphics g, int p0, int p1,
 						Shape viewBounds, JTextComponent editor, View view) {
+		paintListLayered(g, p0,p1, viewBounds, editor, view, markedOccurrences);
+		super.paintLayeredHighlights(g, p0, p1, viewBounds, editor, view);
+		paintListLayered(g, p0,p1, viewBounds, editor, view, parserHighlights);
+	}
 
-		for (int i=markedOccurrences.size()-1; i>=0; i--) {
-			Object tag = markedOccurrences.get(i);
+
+	private void paintListLayered(Graphics g, int p0, int p1, Shape viewBounds,
+						JTextComponent editor, View view, List highlights) {
+		for (int i=highlights.size()-1; i>=0; i--) {
+			Object tag = highlights.get(i);
 			if (tag instanceof LayeredHighlightInfo) {
 				LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
 				int start = lhi.getStartOffset();
@@ -182,9 +264,6 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 				}
 			}
 		}
-
-		super.paintLayeredHighlights(g, p0, p1, viewBounds, editor, view);
-
 	}
 
 
@@ -216,6 +295,11 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		private Position p0;
 		private Position p1;
 		protected Highlighter.HighlightPainter painter;
+		private Color color; // Used only by Parser highlights.
+
+		public Color getColor() {
+			return color;
+		}
 
 		public int getStartOffset() {
 			return p0.getOffset();
@@ -273,6 +357,10 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 			// Restrict the region to what we represent
 			p0 = Math.max(start, p0);
 			p1 = Math.min(end, p1);
+			if (getColor()!=null &&
+					(painter instanceof ChangeableColorHighlightPainter)) {
+				((ChangeableColorHighlightPainter)painter).setColor(getColor());
+			}
 			// Paint the appropriate region using the painter and union
 			// the effected region with our bounds.
 			union(((LayeredHighlighter.LayerPainter)painter).paintLayer

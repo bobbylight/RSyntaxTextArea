@@ -29,7 +29,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.View;
@@ -46,18 +45,19 @@ import javax.swing.text.View;
  * @version 1.0
  */
 public class SquiggleUnderlineHighlightPainter
-				extends DefaultHighlighter.DefaultHighlightPainter {
+				extends ChangeableColorHighlightPainter {
 
 	private static final int AMT			= 2;
-
 
 	/**
 	 * Constructor.
 	 *
-	 * @param color The color of the squiggle.
+	 * @param color The color of the squiggle.  This cannot be
+	 *        <code>null</code>.
 	 */
 	public SquiggleUnderlineHighlightPainter(Color color) {
 		super(color);
+		setColor(color);
 	}
 
 
@@ -76,13 +76,7 @@ public class SquiggleUnderlineHighlightPainter
 	public Shape paintLayer(Graphics g, int offs0, int offs1,
 						Shape bounds, JTextComponent c, View view) {
 
-		Color color = getColor();
-		if (color == null) {
-			g.setColor(c.getSelectionColor());
-		}
-		else {
-			g.setColor(color);
-		}
+		g.setColor(getColor());
 
 		if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset()) {
 			// Contained in view, can just use bounds.

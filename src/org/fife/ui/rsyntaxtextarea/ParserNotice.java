@@ -36,7 +36,7 @@ public class ParserNotice {
 	private int line;
 	private int column;
 	private String message;
-
+	private String toolTipText;
 
 	/**
 	 * Constructor.
@@ -132,6 +132,31 @@ public class ParserNotice {
 	 */
 	public int getOffset() {
 		return offset;
+	}
+
+
+	/**
+	 * Returns the tooltip text to display for this notice.
+	 *
+	 * @return The tool tip text.  If none has been explicitly set, this
+	 *         method returns the same text as {@link #getMessage()}.
+	 * @see #setToolTipText(String)
+	 */
+	public String getToolTipText() {
+		return toolTipText!=null ? toolTipText : getMessage();
+	}
+
+
+	/**
+	 * Sets the tooltip text to display for this notice.
+	 *
+	 * @param text The new tooltip text.  This can be HTML.  If this is
+	 *        <code>null</code>, then tooltips will return the same text as
+	 *        {@link #getMessage()}.
+	 * @see #getToolTipText()
+	 */
+	public void setToolTipText(String text) {
+		this.toolTipText = text;
 	}
 
 

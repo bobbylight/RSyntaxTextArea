@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.View;
@@ -22,16 +21,9 @@ import javax.swing.text.View;
  * does not extend it to include the newly-typed chars, which is the standard
  * behavior of Swing Highlights.
  */
-class MarkOccurrencesHighlightPainter extends
-							DefaultHighlighter.DefaultHighlightPainter {
+class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 
-	/**
-	 * DefaultHighlightPainter doesn't allow changing color, so we must cache
-	 * ours here.
-	 */
-	private Color color;
 
-	
 	/**
 	 * Constructor.
 	 *
@@ -40,17 +32,6 @@ class MarkOccurrencesHighlightPainter extends
 	 */
 	public MarkOccurrencesHighlightPainter() {
 		super(Color.BLUE);
-	}
-
-
-	/**
-	 * Returns the color to paint with.
-	 *
-	 * @return The color.
-	 * @see #setColor(Color)
-	 */
-	public Color getColor() {
-		return color;
 	}
 
 
@@ -107,20 +88,6 @@ class MarkOccurrencesHighlightPainter extends
 			return null;
 		}
 
-	}
-
-
-	/**
-	 * Sets the color to paint the bounding boxes with.
-	 *
-	 * @param color The new color.  This cannot be <code>null</code>.
-	 * @see #getColor()
-	 */
-	public void setColor(Color color) {
-		if (color==null) {
-			throw new IllegalArgumentException("color cannot be null");
-		}
-		this.color = color;
 	}
 
 

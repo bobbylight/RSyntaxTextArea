@@ -1,7 +1,9 @@
 package org.fife.ui.rsyntaxtextarea;
 
-import java.io.Reader;
-import java.util.Iterator;
+import java.util.List;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.Segment;
 
 
 /**
@@ -16,28 +18,34 @@ class TestParser implements Parser {
 
 
 	/**
-	 * Parses input from the specified <code>Reader</code>.
-	 *
-	 * @param r The input stream from which to parse.
-	 * @see #getNoticeIterator()
+	 * {@inheritDoc}
 	 */
-	private static final int BUF_LENGTH = 1024;
-	public void parse(Reader r) {
+	public void parse(RSyntaxDocument doc, String style) {
+
 		noticeList.clear();
-		char[] buf = new char[BUF_LENGTH];
-		int readerPos = 0;
-		boolean moreToGo = true;
+		Segment seg = new Segment();
+		int lineCount = doc.getDefaultRootElement().getElementCount();
+		int offs = 0;
+
 		try {
-			do {
-				moreToGo = r.read(buf)==BUF_LENGTH;
-				int pos = 0;
-				while (pos<BUF_LENGTH-4) {
+			for (int i=0; i<lineCount; i++) {
+				Element elem = doc.getDefaultRootElement().getElement(i);
+				int start = elem.getStartOffset();
+				int end = elem.getEndOffset();
+				if (i==lineCount-1) {
+					end--;
+				}
+				int len = end - start;
+				doc.getText(start, len, seg);
+				char[] buf = seg.array;
+				int pos = seg.offset;
+				while (pos<seg.offset+seg.count-4) {
 					if (buf[pos]=='w') {
 						if (buf[pos+1]=='h') {
 							if (buf[pos+2]=='i') {
 								if (buf[pos+3]=='l') {
 									if (buf[pos+4]=='e') {
-										noticeList.add(new ParserNotice("Test 'while' notice", readerPos+pos,5));
+										noticeList.add(new ParserNotice("Test 'while' notice", offs+pos-seg.offset,5));
 										pos += 5;
 									}
 									else pos += 4;
@@ -50,31 +58,26 @@ class TestParser implements Parser {
 					}
 					else if (buf[pos]=='i') {
 						if (buf[pos+1]=='f') {
-							noticeList.add(new ParserNotice("Test 'if' notice", readerPos+pos,2));
+							noticeList.add(new ParserNotice("Test 'if' notice", offs+pos-seg.offset,2));
 							pos += 2;
 						}
 						else pos += 1;
 					}
 					else pos += 1;
 				}
-				readerPos += BUF_LENGTH;
-			} while (moreToGo);
-		} catch (java.io.IOException ioe) {
-			ioe.printStackTrace();
+				offs += end;
+			}
+		} catch (BadLocationException ble) {
+			ble.printStackTrace(); // Never happens
 		}
 	}
 
 
 	/**
-	 * Returns an iterator over the <code>ParserNotice</code>s received
-	 * from this parser during the call to {@link #parse}.
-	 *
-	 * @return An iterator over the <code>ParserNotice</code>s.
-	 * @see ParserNotice
-	 * @see #parse(Reader r)
+	 * {@inheritDoc}
 	 */
-	public Iterator getNoticeIterator() {
-		return noticeList.iterator();
+	public List getNotices() {
+		return noticeList;
 	}
 
 

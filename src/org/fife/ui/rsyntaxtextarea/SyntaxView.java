@@ -541,7 +541,8 @@ public class SyntaxView extends View implements TabExpander,
 		int lineCount = map.getElementCount();
 		int endLine = Math.min(lineCount, linesTotal - linesBelow);
 
-		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
+		RSyntaxTextAreaHighlighter h =
+					(RSyntaxTextAreaHighlighter)host.getHighlighter();
 
 		Graphics2D g2d = (Graphics2D)g;
 		Token token;
@@ -549,16 +550,13 @@ public class SyntaxView extends View implements TabExpander,
 
 		for (int line = linesAbove; line < endLine; line++) {
 
-			// Paint the highlights (both selection and "mark all").
-
 			Element lineElement = map.getElement(line);
 			int startOffset = lineElement.getStartOffset();
 			//int endOffset = (line==lineCount ? lineElement.getEndOffset()-1 :
 			//							lineElement.getEndOffset()-1);
 			int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
-
 			h.paintLayeredHighlights(g2d, startOffset, endOffset,
-									a, host, this);
+								a, host, this);
 	
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);

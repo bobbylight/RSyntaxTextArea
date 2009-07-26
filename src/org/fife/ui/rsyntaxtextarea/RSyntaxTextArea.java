@@ -40,9 +40,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.EventListenerList;
@@ -216,23 +213,12 @@ Rectangle match;
 	private ParserManager parserManager;
 
 	/**
-	 * List of highlights (of errors, warnings, etc.) from the parser.
-	 */
-	private List parserNoticeHighlights;
-
-	/**
 	 * Whether the editor is currently scanning for hyperlinks on mouse
 	 * movement.
 	 */
 	private boolean isScanningForLinks;
 
 	private int hoveredOverLinkOffset;
-
-	/**
-	 * Painter used to underline errors.
-	 */
-	private SquiggleUnderlineHighlightPainter parserErrorHighlightPainter =
-						new SquiggleUnderlineHighlightPainter(Color.RED);
 
 
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
@@ -388,21 +374,6 @@ private boolean fractionalFontMetricsEnabled;
 			maxAscent = ascent;
 		}
 
-	}
-
-
-	/**
-	 * Removes all highlights in the document from the parser.
-	 */
-	protected void clearParserNoticeHighlights() {
-		Highlighter h = getHighlighter();
-		if (h!=null && parserNoticeHighlights!=null) {
-			int count = parserNoticeHighlights.size();
-			for (int i=0; i<count; i++)
-				h.removeHighlight(parserNoticeHighlights.get(i));
-			parserNoticeHighlights.clear();
-		}
-		repaint();
 	}
 
 
@@ -1061,7 +1032,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Returns whether the specified token should be underlined.
 	 * A token is underlined if its syntax style includes underlining,
-	 * or if it is a hyperlink ahd hyperlinks are enabled.
+	 * or if it is a hyperlink and hyperlinks are enabled.
 	 *
 	 * @param t The token.
 	 * @return Whether the specified token should be underlined.
@@ -1201,34 +1172,6 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Refreshes the highlights in the text area from the parser.
-	 *
-	 * @param parserNoticeIterator An iterator over new parser notices.
-	 * @see #clearParserNoticeHighlights
-	 */
-	void refreshParserNoticeHighlights(Iterator parserNoticeIterator) {
-		clearParserNoticeHighlights();
-		if (parserNoticeHighlights==null)
-			parserNoticeHighlights = new ArrayList();
-		if (parserNoticeIterator!=null) {
-			Highlighter h = getHighlighter();
-			while (parserNoticeIterator.hasNext()) {
-				ParserNotice notice = (ParserNotice)parserNoticeIterator.next();
-				int start = notice.getOffset();
-				int length = notice.getLength();
-				try {
-					parserNoticeHighlights.add(
-										h.addHighlight(start,start+length,
-										parserErrorHighlightPainter));
-				} catch (BadLocationException ble) {
-					ble.printStackTrace();
-				}
-			}
-		}
-	}
-
-
-	/**
 	 * Removes a hyperlink listener from this text area.
 	 *
 	 * @param l The listener to remove.
@@ -1244,7 +1187,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void removeNotify() {
 		if (parserManager!=null) {
-			parserManager.setParser(null);
+			parserManager.clearParsers();
 		}
 		super.removeNotify();
 	}
@@ -1548,8 +1491,9 @@ private boolean fractionalFontMetricsEnabled;
 		if (parserManager==null) {
 			parserManager = new ParserManager(this);
 		}
-		clearParserNoticeHighlights();
-		parserManager.setParser(parser);
+		parserManager.clearParserNoticeHighlights();
+		parserManager.clearParsers();
+		parserManager.addParser(parser);
 	}
 
 

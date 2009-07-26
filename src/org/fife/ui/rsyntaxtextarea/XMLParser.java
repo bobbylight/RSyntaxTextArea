@@ -1,6 +1,5 @@
 package org.fife.ui.rsyntaxtextarea;
 
-import java.io.Reader;
 import java.util.*;
 import javax.swing.text.BadLocationException;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -8,6 +7,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
+
+import org.fife.io.DocumentReader;
 
 
 
@@ -37,12 +38,15 @@ public class XMLParser implements Parser {
 	}
 
 
-	public Iterator getNoticeIterator() {
-		return noticeList.iterator();
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getNotices() {
+		return noticeList;
 	}
 
 
-	public void parse(Reader r) {
+	public void parse(RSyntaxDocument doc, String style) {
 
 		noticeList.clear();
 
@@ -53,8 +57,10 @@ public class XMLParser implements Parser {
 		try {
 			SAXParser sp = spf.newSAXParser();
 			Handler handler = new Handler();
+			DocumentReader r = new DocumentReader(doc);
 			InputSource input = new InputSource(r);
 			sp.parse(input, handler);
+			r.close();
 		} catch (SAXParseException spe) {
 			// A fatal parse error - ignore; a ParserNotice was already created.
 		} catch (Exception e) {
