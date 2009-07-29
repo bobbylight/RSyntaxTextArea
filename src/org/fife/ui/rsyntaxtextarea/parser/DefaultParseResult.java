@@ -1,8 +1,8 @@
 /*
- * 09/23/2005
+ * 07/27/2009
  *
- * Parser.java - An interface for the parser in a compiler.
- * Copyright (C) 2005 Robert Futrell
+ * DefaultParseResult.java - A basic implementation of a ParseResult.
+ * Copyright (C) 2009 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
  *
@@ -20,42 +20,65 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA.
  */
-package org.fife.ui.rsyntaxtextarea;
+package org.fife.ui.rsyntaxtextarea.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * An interface for a parser.
+ * A basic implementation of {@link ParseResult}.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
-public interface Parser {
+public class DefaultParseResult implements ParseResult {
+
+	private Parser parser;
+	private List notices;
+
+
+	public DefaultParseResult(Parser parser) {
+		this.parser = parser;
+		notices = new ArrayList();
+	}
 
 
 	/**
-	 * Parses input from the specified document.
+	 * Adds a parser notice.
 	 *
-	 * @param doc The document to parse.  This document is in a read lock,
-	 *        so it cannot be modified while parsing is occurring.
-	 * @param style The language being rendered, such as
-	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.
-	 * @see #getNotices()
+	 * @param notice The new notice.
+	 * @see #clearNotices()
 	 */
-	public void parse(RSyntaxDocument doc, String style);
+	public void addNotice(ParserNotice notice) {
+		notices.add(notice);
+	}
 
 
 	/**
-	 * Returns a list of the {@link ParserNotice}s received from this
-	 * parser during the last call to {@link #parse(RSyntaxDocument)}.
+	 * Clears any parser notices in this result.
 	 *
-	 * @return The list of <code>ParserNotice</code>s.  This is guaranteed
-	 *         to be non-<code>null</code>.
-	 * @see ParserNotice
-	 * @see #parse(RSyntaxDocument)
+	 * @see #addNotice(ParserNotice)
 	 */
-	public List getNotices();
+	public void clearNotices() {
+		notices.clear();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List getNotices() {
+		return notices;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Parser getParser() {
+		return parser;
+	}
 
 
 }

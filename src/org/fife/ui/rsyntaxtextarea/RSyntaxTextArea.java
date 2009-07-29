@@ -50,8 +50,10 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
+import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
+
 
 
 /**
@@ -89,7 +91,9 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>Bracket matching
  *    <li>Auto-indentation
  *    <li>Copy as RTF
- *    <li>Clickable hyperlinks (if the language parser being used supports it)
+ *    <li>Clickable hyperlinks (if the language scanner being used supports it)
+ *    <li>A pluggable "parser" system that can be used to implement syntax
+ *        validation, spell checking, etc.
  * </ul>
  *
  * It is recommended that you use an instance of
@@ -341,6 +345,25 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Adds the parser to "validate" the source code in this text area.  This
+	 * can be anything from a spell checker to a "compiler" that verifies
+	 * source code.
+	 *
+	 * @param parser The new parser.  A value of <code>null</code> will
+	 *        do nothing.
+	 * @see #getParser(int)
+	 * @see #getParserCount()
+	 * @see #removeParser(Parser)
+	 */
+	public void addParser(Parser parser) {
+		if (parserManager==null) {
+			parserManager = new ParserManager(this);
+		}
+		parserManager.addParser(parser);
+	}
+
+
+	/**
 	 * Recalculates the height of a line in this text area and the
 	 * maximum ascent of all fonts displayed.
 	 */
@@ -374,6 +397,19 @@ private boolean fractionalFontMetricsEnabled;
 			maxAscent = ascent;
 		}
 
+	}
+
+
+	/**
+	 * Removes all parsers from this text area.
+	 *
+	 * @see #removeParser(Parser)
+	 */
+	public void clearParsers() {
+		if (parserManager!=null) {
+			parserManager.clearParserNoticeHighlights();
+			parserManager.clearParsers();
+		}
 	}
 
 
@@ -829,6 +865,30 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the specified parser.
+	 *
+	 * @param index The {@link Parser} to retrieve.
+	 * @return The <code>Parser</code>.
+	 * @see #getParserCount()
+	 * @see #addParser(Parser)
+	 */
+	public Parser getParser(int index) {
+		return parserManager.getParser(index);
+	}
+
+
+	/**
+	 * Returns the number of parsers operating on this text area.
+	 *
+	 * @return The parser count.
+	 * @see #addParser(Parser)
+	 */
+	public int getParserCount() {
+		return parserManager==null ? 0 : parserManager.getParserCount();
+	}
+
+
+	/**
 	 * Returns the RTF generator for this text area, lazily creating it
 	 * if necessary.
 	 *
@@ -1183,13 +1243,31 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Overridden so we stop this text area's parser, if any.
+	 * Overridden so we stop this text area's parsers, if any.
 	 */
 	public void removeNotify() {
 		if (parserManager!=null) {
 			parserManager.clearParsers();
 		}
 		super.removeNotify();
+	}
+
+
+	/**
+	 * Removes a parser from this text area.
+	 *
+	 * @param parser The {@link Parser} to remove.
+	 * @return Whether the parser was found and removed.
+	 * @see #clearParsers()
+	 * @see #addParser(Parser)
+	 * @see #getParser(int)
+	 */
+	public boolean removeParser(Parser parser) {
+		boolean removed = false;
+		if (parserManager!=null) {
+			removed = parserManager.removeParser(parser);
+		}
+		return removed;
 	}
 
 
@@ -1478,22 +1556,6 @@ private boolean fractionalFontMetricsEnabled;
 		matchedBracketBorderColor = color;
 		if (match!=null)
 			repaint();
-	}
-
-
-	/**
-	 * Sets the parser to "validate" the source code in this text area.
-	 *
-	 * @param parser The new parser.  A value of <code>null</code> will disable
-	 *        parsing.
-	 */
-	public void setParser(Parser parser) {
-		if (parserManager==null) {
-			parserManager = new ParserManager(this);
-		}
-		parserManager.clearParserNoticeHighlights();
-		parserManager.clearParsers();
-		parserManager.addParser(parser);
 	}
 
 

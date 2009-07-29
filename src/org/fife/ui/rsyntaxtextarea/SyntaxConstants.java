@@ -79,6 +79,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Delphi/Pascal.
+	 */
+	public static final String SYNTAX_STYLE_DELPHI			= "text/delphi";
+
+
+	/**
 	 * Style for highlighting Fortran.
 	 */
 	public static final String SYNTAX_STYLE_FORTRAN			= "text/fortran";

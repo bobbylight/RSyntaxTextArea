@@ -20,7 +20,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA.
  */
-package org.fife.ui.rsyntaxtextarea;
+package org.fife.ui.rsyntaxtextarea.parser;
+
+import java.awt.Color;
 
 
 /**
@@ -29,46 +31,67 @@ package org.fife.ui.rsyntaxtextarea;
  * @author Robert Futrell
  * @version 0.1
  */
-public class ParserNotice {
+public class ParserNotice implements Comparable {
 
+	private Parser parser;
+	private int line;
 	private int offset;
 	private int length;
-	private int line;
-	private int column;
+	private Color color;
 	private String message;
 	private String toolTipText;
+
 
 	/**
 	 * Constructor.
 	 *
-	 * @param message The message.
-	 * @param offset The offset in the input stream of the code the
-	 *        message is concerned with.
-	 * @param length The length of the code the message is concerned with.
+	 * @param parser The parser that created this notice.
+	 * @param msg The text of the message.
+	 * @param line The line number for the message.
 	 */
-	public ParserNotice(String message, int offset, int length) {
-		this(message, offset,length, -1,-1);
+	public ParserNotice(Parser parser, String msg, int line) {
+		this(parser, msg, line, -1, -1);
 	}
 
 
 	/**
 	 * Constructor.
 	 *
+	 * @param parser The parser that created this notice.
 	 * @param message The message.
+	 * @param line The line number corresponding to the message.
 	 * @param offset The offset in the input stream of the code the
-	 *        message is concerned with.
-	 * @param length The length of the code the message is concerned with.
-	 * @param line The line number of the notice, <code>-1</code> if none.
-	 * @param column The character-offset into the line of the notice,
-	 *        <code>-1</code> if none.
+	 *        message is concerned with, or <code>-1</code> if unknown.
+	 * @param length The length of the code the message is concerned with,
+	 *        or <code>-1</code> if unknown.
 	 */
-	public ParserNotice(String message, int offset, int length,
-					int line, int column) {
+	public ParserNotice(Parser parser, String message, int line, int offset,
+						int length) {
+		this.parser = parser;
 		this.message = message;
+		this.line = line;
 		this.offset = offset;
 		this.length = length;
-		this.line = line;
-		this.column = column;
+	}
+
+
+	/**
+	 * Compares this parser notice to another.
+	 *
+	 * @param obj Another parser notice.
+	 * @return How the two parser notices should be sorted relative to one
+	 *         another.
+	 */
+	public int compareTo(Object obj) {
+		int diff = -1;
+		if (obj instanceof ParserNotice) {
+			ParserNotice p2 = (ParserNotice)obj;
+			diff = line - p2.line;
+			if (diff==0) {
+				diff = message.compareTo(p2.message);
+			}
+		}
+		return diff;
 	}
 
 
@@ -77,7 +100,9 @@ public class ParserNotice {
 	 * in the document.
 	 *
 	 * @param pos The position in the document.
-	 * @return Whether the position is contained.
+	 * @return Whether the position is contained.  This will always return
+	 *         <code>false</code> if {@link #getOffset()} returns
+	 *         <code>-1</code>.
 	 */
 	public boolean containsPosition(int pos) {
 		return offset<=pos && pos<(offset+length);
@@ -85,20 +110,34 @@ public class ParserNotice {
 
 
 	/**
-	 * Returns the character offset into the line of the parser notice,
-	 * if any.
+	 * Returns whether this parser notice is equal to another one.
 	 *
-	 * @return The column.
+	 * @param obj Another parser notice.
+	 * @return Whether the two notices are equal.
 	 */
-	public int getColumn() {
-		return column;
+	public boolean equals(Object obj) {
+		return compareTo(obj)==0;
+	}
+
+
+	/**
+	 * Returns the color to use when painting this notice.
+	 *
+	 * @return The color.
+	 * @see #setColor(Color)
+	 */
+	public Color getColor() {
+		return color;
 	}
 
 
 	/**
 	 * Returns the length of the code the message is concerned with.
 	 *
- 	 * @return The length of the code the message is concerned with.
+ 	 * @return The length of the code the message is concerned with, or
+ 	 *         <code>-1</code> if unknown.
+ 	 * @see #getOffset()
+ 	 * @see #getLine()
 	 */
 	public int getLength() {
 		return length;
@@ -106,7 +145,7 @@ public class ParserNotice {
 
 
 	/**
-	 * Returns the line number the notice is about, if any.
+	 * Returns the line number the notice is about.
 	 *
 	 * @return The line number.
 	 */
@@ -128,10 +167,22 @@ public class ParserNotice {
 	/**
 	 * Returns the offset of the code the message is concerned with.
 	 *
-	 * @return The offset.
+	 * @return The offset, or <code>-1</code> if unknown.
+	 * @see #getLength()
+	 * @see #getLine()
 	 */
 	public int getOffset() {
 		return offset;
+	}
+
+
+	/**
+	 * Returns the parser that created this message.
+	 *
+	 * @return The parser.
+	 */
+	public Parser getParser() {
+		return parser;
 	}
 
 
@@ -144,6 +195,27 @@ public class ParserNotice {
 	 */
 	public String getToolTipText() {
 		return toolTipText!=null ? toolTipText : getMessage();
+	}
+
+
+	/**
+	 * Returns the hash code for this notice.
+	 *
+	 * @return The hash code.
+	 */
+	public int hashCode() {
+		return (line<<16) | offset;
+	}
+
+
+	/**
+	 * Sets the color to use when painting this notice.
+	 *
+	 * @param color The color to use.
+	 * @see #getColor()
+	 */
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 
@@ -166,7 +238,7 @@ public class ParserNotice {
 	 * @return This parser notice as a string.
 	 */
 	public String toString() {
-		return "Offset " + getOffset() + ": " +
+		return "Line " + getLine() + ": " +
 				getMessage();
 	}
 

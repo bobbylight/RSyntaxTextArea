@@ -39,6 +39,8 @@ import javax.swing.text.LayeredHighlighter;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.RTextArea;
 
 
@@ -71,6 +73,12 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * all other highlights to ensure they are always above the selection.
 	 */
 	private List parserHighlights;
+
+	/**
+	 * The default color used for parser notices when none is specified.
+	 */
+	private static final Color DEFAULT_PARSER_NOTICE_COLOR	= Color.RED;
+
 
 	/**
 	 * Constructor.
@@ -112,27 +120,33 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	/**
 	 * Adds a special "marked occurrence" highlight.
 	 *
-	 * @param start
-	 * @param end
-	 * @param color
-	 * @param p
-	 * @return
+	 * @param notice The notice from a {@link Parser}.
+	 * @return A tag with which to reference the highlight.
 	 * @throws BadLocationException
 	 * @see {@link #clearParserHighlights()}
 	 */
-	Object addParserHighlight(int start, int end, Color color,
+	Object addParserHighlight(ParserNotice notice,
 			HighlightPainter p) throws BadLocationException {
+
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
+		int start = notice.getOffset();
+		int end = start + notice.getLength();
+
 		// Always layered highlights for parser highlights.
 		HighlightInfo i = new LayeredHighlightInfo();
 		i.painter = p;
 		i.p0 = doc.createPosition(start);
 		i.p1 = doc.createPosition(end);
-		i.color = color;
+		i.color = notice.getColor();
+		if (i.color==null) {
+			i.color = DEFAULT_PARSER_NOTICE_COLOR;
+		}
+
 		parserHighlights.add(i);
 		mapper.damageRange(textArea, start, end);
 		return i;
+
 	}
 
 
@@ -267,13 +281,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	/**
-	 * Removes a "marked occurrences" highlight from the view.
-	 *
-	 * @param tag The reference to the highlight
-	 * @see #addMarkedOccurrenceHighlight(int, int, javax.swing.text.Highlighter.HighlightPainter)
-	 */
-	void removeMarkOccurrencesHighlight(Object tag) {
+	private void removeListHighlight(List list, Object tag) {
 		if (tag instanceof LayeredHighlightInfo) {
 			LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
 		    if (lhi.width > 0 && lhi.height > 0) {
@@ -286,8 +294,30 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 			ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
 			//safeDamageRange(info.p0, info.p1);
 		}
-		markedOccurrences.remove(tag);
+		list.remove(tag);
+	}
+
+
+	/**
+	 * Removes a "marked occurrences" highlight from the view.
+	 *
+	 * @param tag The reference to the highlight
+	 * @see #addMarkedOccurrenceHighlight(int, int, javax.swing.text.Highlighter.HighlightPainter)
+	 */
+	void removeMarkOccurrencesHighlight(Object tag) {
+		removeListHighlight(markedOccurrences, tag);
     }
+
+
+	/**
+	 * Removes a parser highlight from this view.
+	 *
+	 * @param tag The reference to the highlight.
+	 * @see #addParserHighlight(int, int, Color, javax.swing.text.Highlighter.HighlightPainter)
+	 */
+	void removeParserHighlight(Object tag) {
+		removeListHighlight(parserHighlights, tag);
+	}
 
 
 	private static class HighlightInfo implements Highlighter.Highlight {

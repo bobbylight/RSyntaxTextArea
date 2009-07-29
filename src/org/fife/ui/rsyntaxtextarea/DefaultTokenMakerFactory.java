@@ -36,6 +36,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		map.put(SYNTAX_STYLE_CPLUSPLUS,			pkg + "CPlusPlusTokenMaker");
 		map.put(SYNTAX_STYLE_CSHARP,			pkg + "CSharpTokenMaker");
 		map.put(SYNTAX_STYLE_CSS,				pkg + "CSSTokenMaker");
+		map.put(SYNTAX_STYLE_DELPHI,			pkg + "DelphiTokenMaker");
 		map.put(SYNTAX_STYLE_FORTRAN,			pkg + "FortranTokenMaker");
 		map.put(SYNTAX_STYLE_GROOVY,			pkg + "GroovyTokenMaker");
 		map.put(SYNTAX_STYLE_HTML,				pkg + "HTMLTokenMaker");

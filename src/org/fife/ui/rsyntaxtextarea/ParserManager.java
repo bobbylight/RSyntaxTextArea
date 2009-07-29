@@ -28,13 +28,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
+import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
+
 
 
 /**
@@ -48,7 +55,7 @@ class ParserManager implements DocumentListener, ActionListener {
 	private RSyntaxTextArea textArea;
 	private List parsers;
 	private Timer timer;
-	private List parserNoticeHighlights;
+	private Map noticesToHighlights;
 /*
 	private Position firstOffsetModded;
 	private Position lastOffsetModded;
@@ -114,7 +121,7 @@ class ParserManager implements DocumentListener, ActionListener {
 			begin = System.currentTimeMillis();
 		}
 
-		clearParserNoticeHighlights();
+//		clearParserNoticeHighlights();
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 /*
 		Element root = doc.getDefaultRootElement();
@@ -128,8 +135,8 @@ class ParserManager implements DocumentListener, ActionListener {
 		try {
 			for (int i=0; i<parserCount; i++) {
 				Parser parser = getParser(i);
-				parser.parse(doc, style);
-				addParserNoticeHighlights(parser.getNotices());
+				ParseResult res = parser.parse(doc, style);
+				addParserNoticeHighlights(res);
 			}
 		} finally {
 			doc.readUnlock();
@@ -149,45 +156,52 @@ class ParserManager implements DocumentListener, ActionListener {
 	 * @param parser The new parser.  If this is <code>null</code>, nothing
 	 *        happens.
 	 * @see #getParser(int)
+	 * @see #removeParser(Parser)
 	 */
 	public void addParser(Parser parser) {
-		timer.stop();
-		parsers.add(parser);
-		if (parsers.size()==1) {
-			// Okay to call more than once.
-			ToolTipManager.sharedInstance().registerComponent(textArea);
+		if (parser!=null && !parsers.contains(parser)) {
+			timer.stop();
+			parsers.add(parser);
+			if (parsers.size()==1) {
+				// Okay to call more than once.
+				ToolTipManager.sharedInstance().registerComponent(textArea);
+			}
+			timer.restart();
 		}
-		timer.restart();
 	}
 
 
 	/**
 	 * Adds highlights for a list of parser notices.
 	 *
-	 * @param notices A list of {@link ParserNotice}s.
+	 * @param res The result of a parsing.
 	 * @see #clearParserNoticeHighlights()
 	 */
-	private void addParserNoticeHighlights(List notices) {
+	private void addParserNoticeHighlights(ParseResult res) {
 
-		if (parserNoticeHighlights==null) {
-			parserNoticeHighlights = new ArrayList();
+		if (noticesToHighlights==null) {
+			noticesToHighlights = new HashMap();
 		}
 
+		removeParserNotices(res);
+
+		List notices = res.getNotices();
 		if (notices.size()>0) { // Guaranteed non-null
+
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 													textArea.getHighlighter();
+
 			for (Iterator i=notices.iterator(); i.hasNext(); ) {
 				ParserNotice notice = (ParserNotice)i.next();
-				int start = notice.getOffset();
-				int length = notice.getLength();
 				try {
-					parserNoticeHighlights.add(
-							h.addParserHighlight(start,start+length,
-									Color.BLUE, parserErrorHighlightPainter));
-				} catch (BadLocationException ble) {
+					Object highlight = h.addParserHighlight(notice,
+											parserErrorHighlightPainter);
+					noticesToHighlights.put(notice, highlight);
+				} catch (BadLocationException ble) { // Never happens
 					ble.printStackTrace();
 				}
 			}
+
 		}
 
 	}
@@ -219,7 +233,6 @@ class ParserManager implements DocumentListener, ActionListener {
 		if (h!=null) {
 			h.clearParserHighlights();
 		}
-		//repaint();
 	}
 
 
@@ -242,6 +255,7 @@ class ParserManager implements DocumentListener, ActionListener {
 	 * @return The parser.
 	 * @see #getParserCount()
 	 * @see #addParser(Parser)
+	 * @see #removeParser(Parser)
 	 */
 	public Parser getParser(int index) {
 		return (Parser)parsers.get(index);
@@ -285,10 +299,9 @@ class ParserManager implements DocumentListener, ActionListener {
 				//}
 			}
 			*/
-			for (int i=0; i<parsers.size(); i++) {
-				Parser parser = (Parser)parsers.get(i);
-				List notices = parser.getNotices();
-				for (Iterator j=notices.iterator(); j.hasNext(); ) {
+			if (noticesToHighlights!=null) {
+				for (Iterator j=noticesToHighlights.keySet().iterator();
+						j.hasNext(); ) {
 					ParserNotice notice = (ParserNotice)j.next();
 					if (notice.containsPosition(pos)) {
 						return notice.getToolTipText();
@@ -338,6 +351,48 @@ class ParserManager implements DocumentListener, ActionListener {
 */
 		handleDocumentEvent(e);
 
+	}
+
+
+	/**
+	 * Removes any currently stored notices from the same Parser as in the
+	 * results.
+	 *
+	 * @param res The results.
+	 */
+	private void removeParserNotices(ParseResult res) {
+
+		if (noticesToHighlights!=null) {
+
+			Parser parser = res.getParser();
+			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+												textArea.getHighlighter();
+
+			for (Iterator i=noticesToHighlights.entrySet().iterator();
+					i.hasNext(); ) {
+				Map.Entry entry = (Map.Entry)i.next();
+				ParserNotice notice = (ParserNotice)entry.getKey();
+				if (notice.getParser()==parser) {
+					h.removeParserHighlight(entry.getValue());
+					i.remove();
+				}
+			}
+
+		}
+
+	}
+
+
+	/**
+	 * Removes a parser.
+	 *
+	 * @param parser The parser to remove.
+	 * @return Whether the parser was found.
+	 * @see #addParser(Parser)
+	 * @see #getParser(int)
+	 */
+	public boolean removeParser(Parser parser) {
+		return parsers.remove(parser);
 	}
 
 
