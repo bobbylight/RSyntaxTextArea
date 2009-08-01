@@ -50,7 +50,9 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
+import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 
@@ -110,6 +112,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String AUTO_INDENT_PROPERTY			= "RSTA.autoIndent";
 	public static final String BRACKET_MATCHING_PROPERTY		= "RSTA.bracketMatching";
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY	= "RSTA.clearWhitespaceLines";
+	public static final String FOCUSABLE_TIPS_PROPERTY			= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
 	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
@@ -223,6 +226,11 @@ Rectangle match;
 	private boolean isScanningForLinks;
 
 	private int hoveredOverLinkOffset;
+
+	/**
+	 * Whether "focusable" tool tips are used instead of standard ones.
+	 */
+	private boolean useFocusableTips;
 
 
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
@@ -1075,17 +1083,45 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the tooltip to display for a mouse event at the given
+	 * Returns the tool tip to display for a mouse event at the given
 	 * location.  This method is overridden to give a registered parser a
-	 * chance to display a tooltip (such as an error description when the
+	 * chance to display a tool tip (such as an error description when the
 	 * mouse is over an error highlight).
 	 *
 	 * @param e The mouse event.
 	 */
 	public String getToolTipText(MouseEvent e) {
-		String toolTip = parserManager==null ? null :
-						parserManager.getToolTipText(e);
-		return toolTip!=null ? toolTip : super.getToolTipText(e);
+
+		// Check parsers for tool tips first.
+		String tip = null;
+		URL imageBase = null;
+		if (parserManager!=null) {
+			ToolTipInfo info = parserManager.getToolTipText(e);
+			if (info!=null) { // Should always be true
+				tip = info.getToolTipText(); // May be null
+				imageBase = info.getImageBase(); // May be null
+			}
+		}
+		if (tip==null) {
+			tip = super.getToolTipText(e);
+		}
+
+		// Do we want to use "focusable" tips?
+		if (tip!=null && getUseFocusableTips()) {
+			FocusableTip ft = new FocusableTip(this, parserManager);
+			if (imageBase!=null) {
+				ft.setImageBase(imageBase);
+			}
+			int start = 0;
+			int end = 0;
+			start = viewToModel(e.getPoint()) - 10;
+			end = start + 20;
+			ft.toolTipRequested(e, tip, start, end);
+			return null;
+		}
+
+		return tip; // Standard tool tips
+
 	}
 
 
@@ -1100,6 +1136,38 @@ private boolean fractionalFontMetricsEnabled;
 	public boolean getUnderlineForToken(Token t) {
 		return (t.isHyperlink() && getHyperlinksEnabled()) ||
 				syntaxScheme.styles[t.type].underline;
+	}
+
+
+	/**
+	 * Returns whether "focusable" tool tips are used instead of standard
+	 * ones.  Focusable tool tips are tool tips that the user can click on,
+	 * resize, copy from, and click links in.
+	 *
+	 * @return Whether to use focusable tool tips.
+	 * @see #setUseFocusableTips(boolean)
+	 * @see FocusableTip
+	 */
+	public boolean getUseFocusableTips() {
+		return useFocusableTips;
+	}
+
+
+	/**
+	 * Sets whether "focusable" tool tips are used instead of standard ones.
+	 * Focusable tool tips are tool tips that the user can click on,
+	 * resize, copy from, and clink links in.  This method fires a property
+	 * change event of type {@link #FOCUSABLE_TIPS_PROPERTY}.
+	 *
+	 * @param use Whether to use focusable tool tips.
+	 * @see #getUseFocusableTips()
+	 * @see FocusableTip
+	 */
+	public void setUseFocusableTips(boolean use) {
+		if (use!=useFocusableTips) {
+			useFocusableTips = use;
+			firePropertyChange(FOCUSABLE_TIPS_PROPERTY, !use, use);
+		}
 	}
 
 
@@ -1130,6 +1198,7 @@ private boolean fractionalFontMetricsEnabled;
 		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
 		setHyperlinkForeground(Color.BLUE);
 		isScanningForLinks = false;
+		setUseFocusableTips(true);
 
 		restoreDefaultSyntaxScheme();
 
@@ -1323,10 +1392,10 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets whether bracket matching is enabled.  This fires a property change
-	 * event of type <code>BRACKET_MATCHING_PROPERTY</code>.
+	 * event of type {@link #BRACKET_MATCHING_PROPERTY}.
 	 *
 	 * @param enabled Whether or not bracket matching should be enabled.
-	 * @see #isBracketMatchingEnabled
+	 * @see #isBracketMatchingEnabled()
 	 */
 	public void setBracketMatchingEnabled(boolean enabled) {
 		if (enabled!=bracketMatchingEnabled) {
@@ -1340,12 +1409,11 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets whether or not lines containing nothing but whitespace are made
 	 * into blank lines when Enter is pressed in them.  This method fires
-	 * a property change event of type
-	 * <code>CLEAR_WHITESPACE_LINES_PROPERTY</code>.
+	 * a property change event of type {@link #CLEAR_WHITESPACE_LINES_PROPERTY}.
 	 *
 	 * @param enabled Whether or not whitespace-only lines are cleared when
 	 *        the user presses Enter on them.
-	 * @see #isClearWhitespaceLinesEnabled
+	 * @see #isClearWhitespaceLinesEnabled()
 	 */
 	public void setClearWhitespaceLinesEnabled(boolean enabled) {
 		if (enabled!=clearWhitespaceLines) {
@@ -1590,7 +1658,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * properties changed simultaneously.<p>
 	 *
 	 * This method fires a property change event of type
-	 * <code>SYNTAX_SCHEME_PROPERTY</code>.
+	 * {@link #SYNTAX_SCHEME_PROPERTY}.
 	 *
 	 * @param scheme The instance of <code>SyntaxScheme</code> to use.
 	 * @see #getSyntaxScheme()

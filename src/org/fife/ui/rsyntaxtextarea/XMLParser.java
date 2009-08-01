@@ -8,12 +8,10 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
 import org.fife.io.DocumentReader;
+import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
-import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
-
-
 
 
 /**
@@ -25,7 +23,7 @@ import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 /*
  * TODO: Figure out why this is buggy...
  */
-public class XMLParser implements Parser {
+public class XMLParser extends AbstractParser {
 
 	private SAXParserFactory spf;
 	private RSyntaxTextArea textArea;
@@ -43,6 +41,9 @@ public class XMLParser implements Parser {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 
 		result.clearNotices();

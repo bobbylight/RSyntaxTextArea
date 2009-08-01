@@ -1,7 +1,7 @@
 /*
  * 09/23/2005
  *
- * Parser.java - An interface for the parser in a compiler.
+ * Parser.java - An interface for a parser for RSyntaxTextArea.
  * Copyright (C) 2005 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
@@ -22,17 +22,44 @@
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 
+import java.net.URL;
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 
 
 /**
- * An interface for a parser.
+ * An interface for a parser for content in an {@link RSyntaxTextArea}.
+ * A <code>Parser</code> returns a list of issues it finds in the text area's
+ * content, which the text area can flag (e.g. squiggle underline).  It can
+ * also return descriptions of the issues, to be used in tool tips.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 0.5
+ * @see AbstractParser
  */
 public interface Parser {
+
+
+	/**
+	 * Returns the listener for hyperlink events from {@link FocusableTip}s,
+	 * or <code>null</code> if none.
+	 *
+	 * @return The listener.
+	 */
+	public ExtendedHyperlinkListener getHyperlinkListener();
+
+
+	/**
+	 * Returns the base URL for any images displayed in returned
+	 * {@link ParserNotice} HTML text.  Note that if a parser notice's text
+	 * is not HTML, this URL is not used.
+	 *
+	 * @return The URL.  This may be <code>null</code>.
+	 */
+	public URL getImageBase();
 
 
 	/**

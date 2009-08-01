@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,11 +37,15 @@ import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
 
+import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
+import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 
 
 
@@ -50,12 +55,14 @@ import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
  * @author Robert Futrell
  * @version 0.2
  */
-class ParserManager implements DocumentListener, ActionListener {
+class ParserManager implements DocumentListener, ActionListener,
+								HyperlinkListener {
 
 	private RSyntaxTextArea textArea;
 	private List parsers;
 	private Timer timer;
 	private Map noticesToHighlights;
+	private Parser parserForTip;
 /*
 	private Position firstOffsetModded;
 	private Position lastOffsetModded;
@@ -279,8 +286,14 @@ class ParserManager implements DocumentListener, ActionListener {
 	 * mouse is over an error highlight).
 	 *
 	 * @param e The mouse event.
+	 * @return The tool tip to display, and possibly a hyperlink event handler. 
 	 */
-	public String getToolTipText(MouseEvent e) {
+	public ToolTipInfo getToolTipText(MouseEvent e) {
+
+		String tip = null;
+		HyperlinkListener listener = null;
+		parserForTip = null;
+
 //		try {
 			int pos = textArea.viewToModel(e.getPoint());
 			/*
@@ -304,14 +317,23 @@ class ParserManager implements DocumentListener, ActionListener {
 						j.hasNext(); ) {
 					ParserNotice notice = (ParserNotice)j.next();
 					if (notice.containsPosition(pos)) {
-						return notice.getToolTipText();
+						tip = notice.getToolTipText();
+						parserForTip = notice.getParser();
+						if (notice.getParser() instanceof HyperlinkListener) {
+							listener = (HyperlinkListener)notice.getParser();
+						}
+						break;
 					}
 				}
 			}
 //		} catch (BadLocationException ble) {
 //			ble.printStackTrace();	// Should never happen.
 //		}
-		return null;
+
+		URL imageBase = parserForTip==null ? null :
+							parserForTip.getImageBase();
+		return new ToolTipInfo(tip, listener, imageBase);
+
 	}
 
 
@@ -438,6 +460,19 @@ class ParserManager implements DocumentListener, ActionListener {
 		timer.setDelay(millis);
 		if (running) {
 			timer.start();
+		}
+	}
+
+
+	/**
+	 * Called when the user clicks a hyperlink in a {@link FocusableTip}.
+	 * 
+	 *
+	 * @param e The event.
+	 */
+	public void hyperlinkUpdate(HyperlinkEvent e) {
+		if (parserForTip!=null && parserForTip.getHyperlinkListener()!=null) {
+			parserForTip.getHyperlinkListener().linkClicked(textArea, e);
 		}
 	}
 

@@ -238,8 +238,7 @@ public class ParserNotice implements Comparable {
 	 * @return This parser notice as a string.
 	 */
 	public String toString() {
-		return "Line " + getLine() + ": " +
-				getMessage();
+		return "Line " + getLine() + ": " + getMessage();
 	}
 
 
