@@ -224,21 +224,25 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Removes all parsers.
+	 * Removes all parsers and any highlights they have created.
 	 *
 	 * @see #addParser(Parser)
 	 */
 	public void clearParsers() {
 		timer.stop();
+		clearParserNoticeHighlights();
 		parsers.clear();
 	}
 
 
-	void clearParserNoticeHighlights() {
+	private void clearParserNoticeHighlights() {
 		RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 											textArea.getHighlighter();
 		if (h!=null) {
 			h.clearParserHighlights();
+		}
+		if (noticesToHighlights!=null) {
+			noticesToHighlights.clear();
 		}
 	}
 
@@ -330,8 +334,7 @@ class ParserManager implements DocumentListener, ActionListener,
 //			ble.printStackTrace();	// Should never happen.
 //		}
 
-		URL imageBase = parserForTip==null ? null :
-							parserForTip.getImageBase();
+		URL imageBase = parserForTip==null ? null : parserForTip.getImageBase();
 		return new ToolTipInfo(tip, listener, imageBase);
 
 	}
@@ -377,8 +380,51 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Removes any currently stored notices from the same Parser as in the
-	 * results.
+	 * Removes a parser.
+	 *
+	 * @param parser The parser to remove.
+	 * @return Whether the parser was found.
+	 * @see #addParser(Parser)
+	 * @see #getParser(int)
+	 */
+	public boolean removeParser(Parser parser) {
+		removeParserNotices(parser);
+		return parsers.remove(parser);
+	}
+
+
+	/**
+	 * Removes all parser notices (and clears highlights in the editor) from
+	 * a particular parser.
+	 *
+	 * @param parser The parser.
+	 */
+	private void removeParserNotices(Parser parser) {
+
+		if (noticesToHighlights!=null) {
+
+			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+												textArea.getHighlighter();
+
+			for (Iterator i=noticesToHighlights.entrySet().iterator();
+					i.hasNext(); ) {
+				Map.Entry entry = (Map.Entry)i.next();
+				ParserNotice notice = (ParserNotice)entry.getKey();
+				if (notice.getParser()==parser) {
+					h.removeParserHighlight(entry.getValue());
+					i.remove();
+				}
+			}
+
+		}
+
+	}
+
+
+	/**
+	 * Removes any currently stored notices (and the corresponding highlights
+	 * from the editor) from the same Parser, and in the given line range,
+	 * as in the results.
 	 *
 	 * @param res The results.
 	 */
@@ -402,19 +448,6 @@ class ParserManager implements DocumentListener, ActionListener,
 
 		}
 
-	}
-
-
-	/**
-	 * Removes a parser.
-	 *
-	 * @param parser The parser to remove.
-	 * @return Whether the parser was found.
-	 * @see #addParser(Parser)
-	 * @see #getParser(int)
-	 */
-	public boolean removeParser(Parser parser) {
-		return parsers.remove(parser);
 	}
 
 

@@ -199,16 +199,14 @@ public class RSyntaxUtilities implements SwingConstants {
 				int curLine;
 				Element line;
 				int start, end;
-
 				RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-				doc.getText(caretPosition,1, charSegment);
+				char bracket  = doc.charAt(caretPosition);
 
 				// First, see if the previous char was a bracket
 				// ('{', '}', '(', ')', '[', ']').
 				// If it was, then make sure this bracket isn't sitting in
 				// the middle of a comment or string.  If it isn't, then
 				// initialize some stuff so we can continue on.
-				char bracket = charSegment.array[charSegment.offset];
 				char bracketMatch;
 				boolean goForward;
 				switch (bracket) {

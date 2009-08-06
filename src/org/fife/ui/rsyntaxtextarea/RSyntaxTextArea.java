@@ -415,7 +415,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void clearParsers() {
 		if (parserManager!=null) {
-			parserManager.clearParserNoticeHighlights();
 			parserManager.clearParsers();
 		}
 	}
