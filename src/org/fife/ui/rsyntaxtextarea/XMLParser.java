@@ -1,6 +1,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -47,6 +48,8 @@ public class XMLParser extends AbstractParser {
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 
 		result.clearNotices();
+		Element root = doc.getDefaultRootElement();
+		result.setParsedLines(0, root.getElementCount()-1);
 
 		if (spf==null) {
 			return result;

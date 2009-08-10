@@ -23,6 +23,8 @@
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -40,7 +42,6 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.text.BadLocationException;
 
 
 /**
@@ -58,7 +59,17 @@ public class FocusableTip {
 	private TextAreaListener textAreaListener;
 	private HyperlinkListener hyperlinkListener;
 	private String lastText;
+
+	/**
+	 * The screen bounds in which the mouse has to stay for the currently
+	 * displayed tip to stay visible.
+	 */
 	private Rectangle tipVisibleBounds;
+
+	/**
+	 * Margin from mouse cursor at which to draw focusable tip.
+	 */
+	private static final int MARGIN = 10;
 
 	private static final String MSG =
 		"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip";
@@ -73,29 +84,23 @@ public class FocusableTip {
 	}
 
 
-	private void computeTipVisibleBounds(int start, int end) {
+	/**
+	 * Compute the bounds in which the user can move the mouse without the
+	 * tip window disappearing.
+	 */
+	private void computeTipVisibleBounds() {
 		// Compute area that the mouse can move in without hiding the
 		// tip window. Note that Java 1.4 can only detect mouse events
 		// in Java windows, not globally.
-		try {
-
-			Rectangle r = tipWindow.getBounds();
-			Point p = r.getLocation();
-			SwingUtilities.convertPointFromScreen(p, textArea);
-			r.setLocation(p);
-			tipVisibleBounds.setBounds(r);
-			tipVisibleBounds = tipVisibleBounds.union(textArea.modelToView(start));
-			tipVisibleBounds = tipVisibleBounds.union(textArea.modelToView(end));
-
-		} catch (BadLocationException ble) { // Never happens
-			ble.printStackTrace();
-			tipVisibleBounds.setBounds(-1, -1, 0, 0);
-		}
-
+		Rectangle r = tipWindow.getBounds();
+		Point p = r.getLocation();
+		SwingUtilities.convertPointFromScreen(p, textArea);
+		r.setLocation(p);
+		tipVisibleBounds.setBounds(r.x,r.y-15, r.width,r.height+15*2);
 	}
 
 
-	private void createAndShowTipWindow(final MouseEvent e, final String text) {
+	private void createAndShowTipWindow(final MouseEvent e, final String text){
 
 		Window owner = SwingUtilities.getWindowAncestor(textArea);
 		tipWindow = new TipWindow(owner, this, text);
@@ -108,15 +113,42 @@ public class FocusableTip {
 		// for a discussion.
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+
+				// If a new FocusableTip is requested while another one is
+				// *focused* and visible, the focused tip (i.e. "tipWindow")
+				// will be disposed of.  If this Runnable is run after the
+				// dispose(), tipWindow will be null.  All of this is done on
+				// the EDT so no synchronization should be necessary.
+				if (tipWindow==null) {
+					return;
+				}
+
 				tipWindow.fixSize();
+				ComponentOrientation o = textArea.getComponentOrientation();
+
 				Point p = e.getPoint();
 				SwingUtilities.convertPointToScreen(p, textArea);
-				int x = p.x - 10;
-				int y = p.y - tipWindow.getHeight() - 10;
+				int x = o.isLeftToRight() ? (p.x-10) :
+										(p.x - tipWindow.getWidth() + MARGIN);
+				int y = p.y + MARGIN;
+
+				// Ensure tooltip is in the window bounds.
+				Dimension ss = tipWindow.getToolkit().getScreenSize();
+				x = Math.max(x, 0);
+				if (x+tipWindow.getWidth()>=ss.width) {
+					x = ss.width - tipWindow.getWidth();
+				}
+				if (y+tipWindow.getHeight()>=ss.height) { // Go above cursor
+					y = p.y - tipWindow.getHeight() - MARGIN;
+				}
+
 				tipWindow.setLocation(x, y);
 				tipWindow.setVisible(true);
+
+				computeTipVisibleBounds(); // Do after tip is visible
 				textAreaListener.install(textArea);
 				lastText = text;
+
 			}
 		});
 
@@ -145,7 +177,10 @@ public class FocusableTip {
 	}
 
 
-	void possiblyDisposeOfTipWindow() {
+	/**
+	 * Disposes of the focusable tip currently displayed, if any.
+	 */
+	public void possiblyDisposeOfTipWindow() {
 		if (tipWindow != null) {
 			tipWindow.dispose();
 			tipWindow = null;
@@ -181,19 +216,18 @@ public class FocusableTip {
 	}
 
 
-	public void toolTipRequested(MouseEvent e, String text, int start, int end) {
+	public void toolTipRequested(MouseEvent e, String text) {
 
-		if (text == null || text.length() == 0) {
+		if (text==null || text.length()==0) {
 			possiblyDisposeOfTipWindow();
 			lastText = text;
 			return;
 		}
 
-		if (lastText == null || text.length() != lastText.length()
+		if (lastText==null || text.length()!=lastText.length()
 				|| !text.equals(lastText)) {
 			possiblyDisposeOfTipWindow();
 			createAndShowTipWindow(e, text);
-			computeTipVisibleBounds(start, end);
 		}
 
 	}
@@ -257,11 +291,9 @@ public class FocusableTip {
 				possiblyDisposeOfTipWindow();
 			}
 			else if (e.getKeyCode()==KeyEvent.VK_F2) {
-System.out.println("here - " + tipWindow.getFocusableWindowState());
 				if (tipWindow!=null && !tipWindow.getFocusableWindowState()) {
 					tipWindow.actionPerformed(null);
 					e.consume(); // Don't do bookmarking stuff
-					System.out.println("hi!");
 				}
 			}
 		}

@@ -40,6 +40,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.EventListenerList;
@@ -115,6 +117,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String FOCUSABLE_TIPS_PROPERTY			= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
+	public static final String PARSER_NOTICES_PROPERTY			= "RSTA.parserNotices";
 	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY			= "RSTA.syntaxStyle";
 	public static final String VISIBLE_WHITESPACE_PROPERTY		= "RSTA.visibleWhitespace";
@@ -232,6 +235,10 @@ Rectangle match;
 	 */
 	private boolean useFocusableTips;
 
+	/**
+	 * The last focusable tip displayed.
+	 */
+	private FocusableTip focusableTip;
 
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
@@ -594,7 +601,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param e The event to fire.
 	 * @see EventListenerList
 	 */
-	public void fireHyperlinkUpdate(HyperlinkEvent e) {
+	private void fireHyperlinkUpdate(HyperlinkEvent e) {
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 		// Process the listeners last to first, notifying
@@ -604,6 +611,15 @@ private boolean fractionalFontMetricsEnabled;
 				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
 			}          
 		}
+	}
+
+
+	/**
+	 * Fires a notification that the parser notices for this text area have
+	 * changed.
+	 */
+	void fireParserNoticesChange() {
+		firePropertyChange(PARSER_NOTICES_PROPERTY, null, null);
 	}
 
 
@@ -896,6 +912,20 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns a list of the current parser notices for this text area.
+	 * This method (like most Swing methods) should only be called on the
+	 * EDT.
+	 *
+	 * @return The list of notices.  This will be an empty list if there are
+	 *         none.
+	 */
+	public List getParserNotices() {
+		return parserManager==null ? new ArrayList(0) :
+									parserManager.getParserNotices();
+	}
+
+
+	/**
 	 * Returns the RTF generator for this text area, lazily creating it
 	 * if necessary.
 	 *
@@ -1092,34 +1122,37 @@ private boolean fractionalFontMetricsEnabled;
 	public String getToolTipText(MouseEvent e) {
 
 		// Check parsers for tool tips first.
-		String tip = null;
+		String text = null;
 		URL imageBase = null;
 		if (parserManager!=null) {
 			ToolTipInfo info = parserManager.getToolTipText(e);
 			if (info!=null) { // Should always be true
-				tip = info.getToolTipText(); // May be null
+				text = info.getToolTipText(); // May be null
 				imageBase = info.getImageBase(); // May be null
 			}
 		}
-		if (tip==null) {
-			tip = super.getToolTipText(e);
+		if (text==null) {
+			text = super.getToolTipText(e);
 		}
 
 		// Do we want to use "focusable" tips?
-		if (tip!=null && getUseFocusableTips()) {
-			FocusableTip ft = new FocusableTip(this, parserManager);
-			if (imageBase!=null) {
-				ft.setImageBase(imageBase);
+		if (getUseFocusableTips()) {
+			if (text!=null) {
+				if (focusableTip==null) {
+					focusableTip = new FocusableTip(this, parserManager);
+				}
+				focusableTip.setImageBase(imageBase);
+				focusableTip.toolTipRequested(e, text);
 			}
-			int start = 0;
-			int end = 0;
-			start = viewToModel(e.getPoint()) - 10;
-			end = start + 20;
-			ft.toolTipRequested(e, tip, start, end);
+			// No tooltip text at new location - hide tip window if one is
+			// currently visible
+			else if (focusableTip!=null) {
+				focusableTip.possiblyDisposeOfTipWindow();
+			}
 			return null;
 		}
 
-		return tip; // Standard tool tips
+		return text; // Standard tool tips
 
 	}
 

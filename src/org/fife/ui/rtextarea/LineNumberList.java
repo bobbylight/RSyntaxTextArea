@@ -457,6 +457,19 @@ class LineNumberList extends AbstractGutterComponent
 
 
 	/**
+	 * Overridden to ensure line number cell sizes are updated with the
+	 * font size change.
+	 *
+	 * @param font The new font to use for line numbers.
+	 */
+	public void setFont(Font font) {
+		super.setFont(font);
+		updateCellWidths();
+		updateCellHeights();
+	}
+
+
+	/**
 	 * Sets the starting line's line number.  The default value is
 	 * <code>1</code>.  Applications can call this method to change this value
 	 * if they are displaying a subset of lines in a file, for example.

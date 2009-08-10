@@ -40,6 +40,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.Position;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
@@ -63,10 +65,9 @@ class ParserManager implements DocumentListener, ActionListener,
 	private Timer timer;
 	private Map noticesToHighlights;
 	private Parser parserForTip;
-/*
 	private Position firstOffsetModded;
 	private Position lastOffsetModded;
-*/
+
 	/**
 	 * Painter used to underline errors.
 	 */
@@ -130,13 +131,13 @@ class ParserManager implements DocumentListener, ActionListener,
 
 //		clearParserNoticeHighlights();
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-/*
+
 		Element root = doc.getDefaultRootElement();
 		int firstLine = firstOffsetModded==null ? 0 : root.getElementIndex(firstOffsetModded.getOffset());
 		int lastLine = lastOffsetModded==null ? root.getElementCount()-1 : root.getElementIndex(lastOffsetModded.getOffset());
 		firstOffsetModded = lastOffsetModded = null;
-		System.out.println("[DEBUG]: Lines to parse: " + firstLine + "-" + lastLine);
-*/
+		System.out.println("[DEBUG]: Minimum lines to parse: " + firstLine + "-" + lastLine);
+
 		String style = textArea.getSyntaxEditingStyle();
 		doc.readLock();
 		try {
@@ -145,6 +146,7 @@ class ParserManager implements DocumentListener, ActionListener,
 				ParseResult res = parser.parse(doc, style);
 				addParserNoticeHighlights(res);
 			}
+			textArea.fireParserNoticesChange();
 		} finally {
 			doc.readUnlock();
 		}
@@ -284,6 +286,24 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
+	 * Returns a list of the current parser notices for this text area.
+	 * This method (like most Swing methods) should only be called on the
+	 * EDT.
+	 *
+	 * @return The list of notices.  This will be an empty list if there are
+	 *         none.
+	 */
+	public List getParserNotices() {
+		List notices = new ArrayList();
+		for (Iterator i=noticesToHighlights.keySet().iterator(); i.hasNext(); ){
+			ParserNotice notice = (ParserNotice)i.next();
+			notices.add(notice);
+		}
+		return notices;
+	}
+
+
+	/**
 	 * Returns the tool tip to display for a mouse event at the given
 	 * location.  This method is overridden to give a registered parser a
 	 * chance to display a tool tip (such as an error description when the
@@ -358,7 +378,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param e The document event.
 	 */
 	public void insertUpdate(DocumentEvent e) {
-/*
+
 		// Keep track of the first and last offset modified.  Some parsers are
 		// smart and will only re-parse this section of the file.
 		try {
@@ -373,7 +393,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		} catch (BadLocationException ble) {
 			ble.printStackTrace(); // Shouldn't happen
 		}
-*/
+
 		handleDocumentEvent(e);
 
 	}
@@ -432,7 +452,6 @@ class ParserManager implements DocumentListener, ActionListener,
 
 		if (noticesToHighlights!=null) {
 
-			Parser parser = res.getParser();
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 												textArea.getHighlighter();
 
@@ -440,7 +459,7 @@ class ParserManager implements DocumentListener, ActionListener,
 					i.hasNext(); ) {
 				Map.Entry entry = (Map.Entry)i.next();
 				ParserNotice notice = (ParserNotice)entry.getKey();
-				if (notice.getParser()==parser) {
+				if (shouldRemoveNotice(notice, res)) {
 					h.removeParserHighlight(entry.getValue());
 					i.remove();
 				}
@@ -457,7 +476,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param e The document event.
 	 */
 	public void removeUpdate(DocumentEvent e) {
-/*
+
 		// Keep track of the first and last offset modified.  Some parsers are
 		// smart and will only re-parse this section of the file.  Note that
 		// for removals, only the line at the removal start needs to be
@@ -473,7 +492,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		} catch (BadLocationException ble) { // Neer happens
 			ble.printStackTrace();
 		}
-*/
+
 		handleDocumentEvent(e);
 
 	}
@@ -494,6 +513,22 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (running) {
 			timer.start();
 		}
+	}
+
+
+	/**
+	 * Returns whether a parser notice should be removed, based on a parse
+	 * result.
+	 *
+	 * @param notice The notice in question.
+	 * @param res The result.
+	 * @return Whether the notice should be removed.
+	 */
+	private final boolean shouldRemoveNotice(ParserNotice notice,
+											ParseResult res) {
+		return notice.getParser()==res.getParser() &&
+				notice.getLine()>=res.getFirstLineParsed() &&
+				notice.getLine()<=res.getLastLineParsed();
 	}
 
 

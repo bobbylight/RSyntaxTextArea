@@ -37,6 +37,24 @@ public interface ParseResult {
 
 
 	/**
+	 * Returns the first line parsed.
+	 *
+	 * @return The first line parsed.
+	 * @see #getLastLineParsed()
+	 */
+	public int getFirstLineParsed();
+
+
+	/**
+	 * Returns the last line parsed.
+	 *
+	 * @return The last line parsed.
+	 * @see #getFirstLineParsed()
+	 */
+	public int getLastLineParsed();
+
+
+	/**
 	 * Returns the notices for the parsed section.
 	 *
 	 * @return The notices.

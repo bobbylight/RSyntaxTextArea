@@ -35,6 +35,8 @@ import java.util.List;
 public class DefaultParseResult implements ParseResult {
 
 	private Parser parser;
+	private int firstLineParsed;
+	private int lastLineParsed;
 	private List notices;
 
 
@@ -68,6 +70,22 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	public int getFirstLineParsed() {
+		return firstLineParsed;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getLastLineParsed() {
+		return lastLineParsed;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public List getNotices() {
 		return notices;
 	}
@@ -78,6 +96,20 @@ public class DefaultParseResult implements ParseResult {
 	 */
 	public Parser getParser() {
 		return parser;
+	}
+
+
+	/**
+	 * Sets the line range parsed.
+	 *
+	 * @param first The first line parsed, inclusive.
+	 * @param last The last line parsed, inclusive.
+	 * @see #getFirstLineParsed()
+	 * @see #getLastLineParsed()
+	 */
+	public void setParsedLines(int first, int last) {
+		firstLineParsed = first;
+		lastLineParsed = last;
 	}
 
 
