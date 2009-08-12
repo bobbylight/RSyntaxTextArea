@@ -11,6 +11,7 @@ import org.xml.sax.helpers.*;
 import org.fife.io.DocumentReader;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult;
+import org.fife.ui.rsyntaxtextarea.parser.DefaultParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 
@@ -66,7 +67,7 @@ public class XMLParser extends AbstractParser {
 			// A fatal parse error - ignore; a ParserNotice was already created.
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.addNotice(new ParserNotice(this,
+			result.addNotice(new DefaultParserNotice(this,
 					"Error parsing XML: " + e.getMessage(), 0, -1, -1));
 		}
 
@@ -82,7 +83,7 @@ public class XMLParser extends AbstractParser {
 			try {
 				int offs = textArea.getLineStartOffset(line);
 				int len = textArea.getLineEndOffset(line) - offs + 1;
-				ParserNotice pn = new ParserNotice(XMLParser.this,
+				ParserNotice pn = new DefaultParserNotice(XMLParser.this,
 											e.getMessage(), line, offs, len);
 				result.addNotice(pn);
 				System.err.println(">>> " + offs + "-" + len + " -> "+ pn);

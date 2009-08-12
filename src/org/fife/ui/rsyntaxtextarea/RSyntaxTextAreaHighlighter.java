@@ -28,6 +28,7 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.plaf.TextUI;
 import javax.swing.plaf.basic.BasicTextUI.BasicHighlighter;
@@ -125,8 +126,8 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @throws BadLocationException
 	 * @see {@link #clearParserHighlights()}
 	 */
-	Object addParserHighlight(ParserNotice notice,
-			HighlightPainter p) throws BadLocationException {
+	Object addParserHighlight(ParserNotice notice, HighlightPainter p)
+								throws BadLocationException {
 
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
@@ -188,6 +189,25 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		this.textArea = null;
 		markedOccurrences.clear();
 		parserHighlights.clear();
+	}
+
+
+	/**
+	 * Returns a list of "marked occurrences" in the text area.  If there are
+	 * no marked occurrences, this will be an empty list.
+	 *
+	 * @return The list of marked occurrences.
+	 */
+	public List getMarkedOccurrences() {
+		List list = new ArrayList(markedOccurrences.size());
+		for (Iterator i=markedOccurrences.iterator(); i.hasNext(); ) {
+			HighlightInfo info = (HighlightInfo)i.next();
+			int start = info.getStartOffset();
+			int end = info.getEndOffset() + 1; // HACK
+			DocumentRange range = new DocumentRangeImpl(start, end);
+			list.add(range);
+		}
+		return list;
 	}
 
 
@@ -317,6 +337,27 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 */
 	void removeParserHighlight(Object tag) {
 		removeListHighlight(parserHighlights, tag);
+	}
+
+
+	private static class DocumentRangeImpl implements DocumentRange {
+
+		private int startOffs;
+		private int endOffs;
+
+		public DocumentRangeImpl(int startOffs, int endOffs) {
+			this.startOffs = startOffs;
+			this.endOffs = endOffs;
+		}
+
+		public int getEndOffset() {
+			return endOffs;
+		}
+
+		public int getStartOffset() {
+			return startOffs;
+		}
+
 	}
 
 

@@ -203,8 +203,11 @@ class ParserManager implements DocumentListener, ActionListener,
 			for (Iterator i=notices.iterator(); i.hasNext(); ) {
 				ParserNotice notice = (ParserNotice)i.next();
 				try {
-					Object highlight = h.addParserHighlight(notice,
+					Object highlight = null;
+					if (notice.getShowInEditor()) {
+						highlight = h.addParserHighlight(notice,
 											parserErrorHighlightPainter);
+					}
 					noticesToHighlights.put(notice, highlight);
 				} catch (BadLocationException ble) { // Never happens
 					ble.printStackTrace();
@@ -251,7 +254,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 	/**
 	 * Returns the delay between the last "concurrent" edit and when the
-	 * document is reparsed.
+	 * document is re-parsed.
 	 *
 	 * @return The delay, in milliseconds.
 	 * @see #setDelay(int)
@@ -295,9 +298,12 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	public List getParserNotices() {
 		List notices = new ArrayList();
-		for (Iterator i=noticesToHighlights.keySet().iterator(); i.hasNext(); ){
-			ParserNotice notice = (ParserNotice)i.next();
-			notices.add(notice);
+		if (noticesToHighlights!=null) {
+			Iterator i = noticesToHighlights.keySet().iterator();
+			while (i.hasNext()) {
+				ParserNotice notice = (ParserNotice)i.next();
+				notices.add(notice);
+			}
 		}
 		return notices;
 	}
@@ -430,7 +436,7 @@ class ParserManager implements DocumentListener, ActionListener,
 					i.hasNext(); ) {
 				Map.Entry entry = (Map.Entry)i.next();
 				ParserNotice notice = (ParserNotice)entry.getKey();
-				if (notice.getParser()==parser) {
+				if (notice.getParser()==parser && entry.getValue()!=null) {
 					h.removeParserHighlight(entry.getValue());
 					i.remove();
 				}
@@ -460,7 +466,9 @@ class ParserManager implements DocumentListener, ActionListener,
 				Map.Entry entry = (Map.Entry)i.next();
 				ParserNotice notice = (ParserNotice)entry.getKey();
 				if (shouldRemoveNotice(notice, res)) {
-					h.removeParserHighlight(entry.getValue());
+					if (entry.getValue()!=null) {
+						h.removeParserHighlight(entry.getValue());
+					}
 					i.remove();
 				}
 			}
@@ -489,7 +497,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			if (lastOffsetModded==null || offs>lastOffsetModded.getOffset()) {
 				lastOffsetModded = e.getDocument().createPosition(offs);
 			}
-		} catch (BadLocationException ble) { // Neer happens
+		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
 		}
 

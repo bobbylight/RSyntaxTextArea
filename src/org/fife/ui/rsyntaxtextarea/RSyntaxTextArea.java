@@ -110,17 +110,19 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
-	public static final String ANTIALIAS_PROPERTY			= "RSTA.antiAlias";
-	public static final String AUTO_INDENT_PROPERTY			= "RSTA.autoIndent";
-	public static final String BRACKET_MATCHING_PROPERTY		= "RSTA.bracketMatching";
-	public static final String CLEAR_WHITESPACE_LINES_PROPERTY	= "RSTA.clearWhitespaceLines";
-	public static final String FOCUSABLE_TIPS_PROPERTY			= "RSTA.focusableTips";
-	public static final String FRACTIONAL_FONTMETRICS_PROPERTY	= "RSTA.fractionalFontMetrics";
-	public static final String HYPERLINKS_ENABLED_PROPERTY		= "RSTA.hyperlinksEnabled";
-	public static final String PARSER_NOTICES_PROPERTY			= "RSTA.parserNotices";
-	public static final String SYNTAX_SCHEME_PROPERTY			= "RSTA.syntaxScheme";
-	public static final String SYNTAX_STYLE_PROPERTY			= "RSTA.syntaxStyle";
-	public static final String VISIBLE_WHITESPACE_PROPERTY		= "RSTA.visibleWhitespace";
+	public static final String ANTIALIAS_PROPERTY					= "RSTA.antiAlias";
+	public static final String AUTO_INDENT_PROPERTY					= "RSTA.autoIndent";
+	public static final String BRACKET_MATCHING_PROPERTY			= "RSTA.bracketMatching";
+	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
+	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
+	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
+	public static final String HYPERLINKS_ENABLED_PROPERTY			= "RSTA.hyperlinksEnabled";
+	public static final String MARK_OCCURRENCES_PROPERTY			= "RSTA.markOccurrences";
+	public static final String MARKED_OCCURRENCES_CHANGED_PROPERTY	= "RSTA.markedOccurrencesChanged";
+	public static final String PARSER_NOTICES_PROPERTY				= "RSTA.parserNotices";
+	public static final String SYNTAX_SCHEME_PROPERTY				= "RSTA.syntaxScheme";
+	public static final String SYNTAX_STYLE_PROPERTY				= "RSTA.syntaxStyle";
+	public static final String VISIBLE_WHITESPACE_PROPERTY			= "RSTA.visibleWhitespace";
 
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
 	private static final Color DEFAULT_BRACKET_MATCH_BORDER_COLOR	= new Color(0,0,128);
@@ -615,6 +617,16 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Notifies listeners that the marked occurrences for this text area
+	 * have changed.
+	 */
+	void fireMarkedOccurrencesChanged() {
+		firePropertyChange(RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY,
+							null, null);
+	}
+
+
+	/**
 	 * Fires a notification that the parser notices for this text area have
 	 * changed.
 	 */
@@ -812,6 +824,18 @@ private boolean fractionalFontMetricsEnabled;
 	public int getLineHeight() {
 		//System.err.println("... getLineHeight() returning " + lineHeight);
 		return lineHeight;
+	}
+
+
+	/**
+	 * Returns a list of "marked occurrences" in the text area.  If there are
+	 * no marked occurrences, this will be an empty list.
+	 *
+	 * @return The list of marked occurrences.
+	 */
+	public List getMarkedOccurrences() {
+		return ((RSyntaxTextAreaHighlighter)getHighlighter()).
+											getMarkedOccurrences();
 	}
 
 
@@ -1594,7 +1618,8 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Toggles whether "mark occurrences" is enabled.
+	 * Toggles whether "mark occurrences" is enabled.  This method fires a
+	 * property change event of type {@link #MARK_OCCURRENCES_PROPERTY}.
 	 *
 	 * @param markOccurrences Whether "Mark Occurrences" should be enabled.
 	 * @see #getMarkOccurrences()
@@ -1605,12 +1630,14 @@ private boolean fractionalFontMetricsEnabled;
 			if (markOccurrencesSupport==null) {
 				markOccurrencesSupport = new MarkOccurrencesSupport();
 				markOccurrencesSupport.install(this);
+				firePropertyChange(MARK_OCCURRENCES_PROPERTY, false, true);
 			}
 		}
 		else {
 			if (markOccurrencesSupport!=null) {
 				markOccurrencesSupport.uninstall();
 				markOccurrencesSupport = null;
+				firePropertyChange(MARK_OCCURRENCES_PROPERTY, true, false);
 			}
 		}
 	}

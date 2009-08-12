@@ -168,6 +168,8 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 			//System.out.println("Took: " + time + " ms");
 		}
 
+		textArea.fireMarkedOccurrencesChanged();
+
 	}
 
 
