@@ -30,7 +30,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.SystemColor;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,16 +89,13 @@ class TipWindow extends JWindow implements ActionListener {
 		cp.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createLineBorder(Color.BLACK), BorderFactory
 				.createEmptyBorder()));
-		cp.setBackground(getToolTipBackground());
+		cp.setBackground(TipUtil.getToolTipBackground());
 		textArea = new JEditorPane("text/html", msg);
-		tweakEditorPane();
+		TipUtil.tweakTipEditorPane(textArea);
 		if (ft.getImageBase()!=null) { // Base URL for images
 			((HTMLDocument)textArea.getDocument()).setBase(ft.getImageBase());
 		}
 		textArea.addMouseListener(tipListener);
-		textArea.setOpaque(false);
-		textArea.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		textArea.setEditable(false);
 		textArea.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
@@ -142,7 +138,6 @@ class TipWindow extends JWindow implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (!getFocusableWindowState()) {
-			System.out.println("Turn into a real window!");
 			setFocusableWindowState(true);
 			setBottomPanel();
 			textArea.removeMouseListener(tipListener);
@@ -156,7 +151,6 @@ class TipWindow extends JWindow implements ActionListener {
 			if (e==null) { // Didn't get here via our mouseover timer
 				requestFocus();
 			}
-			System.out.println("Made focusable...");
 		}
 
 	}
@@ -212,11 +206,6 @@ class TipWindow extends JWindow implements ActionListener {
 	}
 
 
-	public Color getToolTipBackground() {
-		return SystemColor.info;
-	}
-
-
 	private void setBottomPanel() {
 
 		final JPanel panel = new JPanel(new BorderLayout());
@@ -261,6 +250,9 @@ class TipWindow extends JWindow implements ActionListener {
 			if (fg==null) { // Non BasicLookAndFeel-derived Looks
 				fg = Color.GRAY;
 			}
+			label.setOpaque(true);
+			Color bg = TipUtil.getToolTipBackground();
+			label.setBackground(bg);
 			label.setForeground(fg);
 			label.setHorizontalAlignment(SwingConstants.TRAILING);
 			label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -290,43 +282,6 @@ class TipWindow extends JWindow implements ActionListener {
 
 	public void setHyperlinkListener(HyperlinkListener listener) {
 		textArea.addHyperlinkListener(listener);
-	}
-
-
-	/**
-	 * Tweaks the description text area to look good in the current Look and
-	 * Feel. This was ripped off from AutoComplete.
-	 */
-	private void tweakEditorPane() {
-
-		// Jump through a few hoops to get things looking nice in Nimbus
-		if (UIManager.getLookAndFeel().getName().equals("Nimbus")) {
-			Color selBG = textArea.getSelectionColor();
-			Color selFG = textArea.getSelectedTextColor();
-			textArea.setUI(new javax.swing.plaf.basic.BasicEditorPaneUI());
-			textArea.setSelectedTextColor(selFG);
-			textArea.setSelectionColor(selBG);
-		}
-
-		textArea.setEditable(false); // Required for links to work!
-
-		// Make selection visible even though we are not focusable.
-		textArea.getCaret().setSelectionVisible(true);
-
-		// Make it use "tool tip" background color.
-		textArea.setBackground(getToolTipBackground());
-
-		// Force JEditorPane to use a certain font even in HTML.
-		// All standard LookAndFeels, even Nimbus (!), define Label.font.
-		Font font = UIManager.getFont("Label.font");
-		if (font == null) { // Try to make a sensible default
-			font = new Font("SansSerif", Font.PLAIN, 12);
-		}
-		HTMLDocument doc = (HTMLDocument) textArea.getDocument();
-		doc.getStyleSheet().addRule(
-				"body { font-family: " + font.getFamily() + "; font-size: "
-						+ font.getSize() + "pt; }");
-
 	}
 
 

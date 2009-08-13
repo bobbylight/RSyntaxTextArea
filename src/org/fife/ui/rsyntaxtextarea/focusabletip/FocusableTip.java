@@ -100,7 +100,7 @@ public class FocusableTip {
 	}
 
 
-	private void createAndShowTipWindow(final MouseEvent e, final String text){
+	private void createAndShowTipWindow(final MouseEvent e, final String text) {
 
 		Window owner = SwingUtilities.getWindowAncestor(textArea);
 		tipWindow = new TipWindow(owner, this, text);
