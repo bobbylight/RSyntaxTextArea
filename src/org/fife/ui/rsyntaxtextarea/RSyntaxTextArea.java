@@ -354,10 +354,19 @@ private boolean fractionalFontMetricsEnabled;
 	 * Updates the font metrics the first time we're displayed.
 	 */
 	public void addNotify() {
+
 		super.addNotify();
+
 		// We know we've just been connected to a screen resource (by
 		// definition), so initialize our font metrics objects.
 		refreshFontMetrics(getGraphics2D(getGraphics()));
+
+		// Re-start parsing if we were removed from one container and added
+		// to another
+		if (parserManager!=null) {
+			parserManager.restartParsing();
+		}
+
 	}
 
 
@@ -1372,7 +1381,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void removeNotify() {
 		if (parserManager!=null) {
-			parserManager.clearParsers();
+			parserManager.stopParsing();
 		}
 		super.removeNotify();
 	}

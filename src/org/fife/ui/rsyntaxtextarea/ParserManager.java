@@ -55,7 +55,7 @@ import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
  * Manages running a parser object for an <code>RSyntaxTextArea</code>.
  *
  * @author Robert Futrell
- * @version 0.2
+ * @version 0.8
  */
 class ParserManager implements DocumentListener, ActionListener,
 								HyperlinkListener {
@@ -63,6 +63,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	private RSyntaxTextArea textArea;
 	private List parsers;
 	private Timer timer;
+	private boolean running;
 	private Map noticesToHighlights;
 	private Parser parserForTip;
 	private Position firstOffsetModded;
@@ -108,6 +109,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		parsers = new ArrayList(1); // Usually small
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
+		running = true;
 	}
 
 
@@ -169,13 +171,17 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	public void addParser(Parser parser) {
 		if (parser!=null && !parsers.contains(parser)) {
-			timer.stop();
+			if (running) {
+				timer.stop();
+			}
 			parsers.add(parser);
 			if (parsers.size()==1) {
 				// Okay to call more than once.
 				ToolTipManager.sharedInstance().registerComponent(textArea);
 			}
-			timer.restart();
+			if (running) {
+				timer.restart();
+			}
 		}
 	}
 
@@ -372,8 +378,20 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param e The document event.
 	 */
 	public void handleDocumentEvent(DocumentEvent e) {
-		if (parsers.size()>0) {
+		if (running && parsers.size()>0) {
 			timer.restart();
+		}
+	}
+
+
+	/**
+	 * Called when the user clicks a hyperlink in a {@link FocusableTip}.
+	 *
+	 * @param e The event.
+	 */
+	public void hyperlinkUpdate(HyperlinkEvent e) {
+		if (parserForTip!=null && parserForTip.getHyperlinkListener()!=null) {
+			parserForTip.getHyperlinkListener().linkClicked(textArea, e);
 		}
 	}
 
@@ -507,6 +525,17 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
+	 * Restarts parsing the document.
+	 *
+	 * @see #stopParsing()
+	 */
+	public void restartParsing() {
+		timer.restart();
+		running = true;
+	}
+
+
+	/**
 	 * Sets the delay between the last "concurrent" edit and when the document
 	 * is re-parsed.
 	 *
@@ -515,8 +544,9 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @see #getDelay()
 	 */
 	public void setDelay(int millis) {
-		boolean running = timer.isRunning();
-		timer.stop();
+		if (running) {
+			timer.stop();
+		}
 		timer.setDelay(millis);
 		if (running) {
 			timer.start();
@@ -541,15 +571,13 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Called when the user clicks a hyperlink in a {@link FocusableTip}.
-	 * 
+	 * Stops parsing the document.
 	 *
-	 * @param e The event.
+	 * @see #restartParsing()
 	 */
-	public void hyperlinkUpdate(HyperlinkEvent e) {
-		if (parserForTip!=null && parserForTip.getHyperlinkListener()!=null) {
-			parserForTip.getHyperlinkListener().linkClicked(textArea, e);
-		}
+	public void stopParsing() {
+		timer.stop();
+		running = false;
 	}
 
 

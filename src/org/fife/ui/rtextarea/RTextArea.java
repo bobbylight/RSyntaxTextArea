@@ -843,6 +843,21 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public void paste() {
+		// Treat paste operations as atomic, otherwise the removal and
+		// insertion are treated as two separate undo-able operations.
+		beginAtomicEdit();
+		try {
+			super.paste();
+		} finally {
+			endAtomicEdit();
+		}
+	}
+
+
+	/**
 	 * "Plays back" the last recorded macro in this text area.
 	 */
 	public synchronized void playbackLastMacro() {
@@ -1081,7 +1096,7 @@ public class RTextArea extends RTextAreaBase
 
 			} catch (BadLocationException ble) {
 				/* This should never happen. */
-				UIManager.getLookAndFeel().provideErrorFeedback(RTextArea.this);
+				UIManager.getLookAndFeel().provideErrorFeedback(this);
 				ble.printStackTrace();
 			}
 
