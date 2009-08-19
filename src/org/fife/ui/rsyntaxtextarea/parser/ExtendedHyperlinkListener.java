@@ -23,8 +23,8 @@
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.util.EventListener;
-
 import javax.swing.event.HyperlinkEvent;
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 

@@ -80,6 +80,7 @@ public class Gutter extends JComponent {
 	 * @param textArea The parent text area.
 	 */
 	public Gutter(RTextArea textArea) {
+
 		listener = new TextAreaListener();
 		setTextArea(textArea);
 		setLayout(new BorderLayout());
@@ -88,7 +89,15 @@ public class Gutter extends JComponent {
 			// a text area.
 			setLineNumbersEnabled(true);
 		}
+
 		setBorder(new GutterBorder(0, 0, 0, 1)); // Assume ltr
+
+		Color bg = null;
+		if (textArea!=null) {
+			bg = textArea.getBackground(); // May return null if image bg
+		}
+		setBackground(bg!=null ? bg : Color.WHITE);
+
 	}
 
 

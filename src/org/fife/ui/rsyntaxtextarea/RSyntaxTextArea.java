@@ -645,6 +645,24 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Forces the given {@link Parser} to re-parse the content of this text
+	 * area.<p>
+	 * 
+	 * This method can be useful when a <code>Parser</code> can be configured
+	 * as to what notices it returns.  For example, if a Java language parser
+	 * can be configured to set whether no serialVersionUID is a warning,
+	 * error, or ignored, this method can be called after changing the expected
+	 * notice type to have the document re-parsed.
+	 *
+	 * @param parser The index of the <code>Parser</code> to re-run.
+	 * @see #getParser(int)
+	 */
+	public void forceReparsing(int parser) {
+		parserManager.forceReparsing(parser);
+	}
+
+
+	/**
 	 * Returns the background color for tokens of the specified type.
 	 *
 	 * @param type The type of token.

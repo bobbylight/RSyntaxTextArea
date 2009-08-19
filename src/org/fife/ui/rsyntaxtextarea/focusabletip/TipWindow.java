@@ -68,6 +68,7 @@ class TipWindow extends JWindow implements ActionListener {
 	private JEditorPane textArea;
 	private String text;
 	private TipListener tipListener;
+	private HyperlinkListener userHyperlinkListener;
 
 	private static TipWindow visibleInstance;
 
@@ -280,8 +281,21 @@ class TipWindow extends JWindow implements ActionListener {
 	}
 
 
+	/**
+	 * Sets the listener for hyperlink events in this tip window.
+	 *
+	 * @param listener The new listener.  The old listener (if any) is
+	 *        removed.  A value of <code>null</code> means "no listener."
+	 */
 	public void setHyperlinkListener(HyperlinkListener listener) {
-		textArea.addHyperlinkListener(listener);
+		// We've added a separate listener, so remove only the user's.
+		if (userHyperlinkListener!=null) {
+			textArea.removeHyperlinkListener(userHyperlinkListener);
+		}
+		userHyperlinkListener = listener;
+		if (userHyperlinkListener!=null) {
+			textArea.addHyperlinkListener(userHyperlinkListener);
+		}
 	}
 
 

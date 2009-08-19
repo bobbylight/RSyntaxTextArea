@@ -260,8 +260,11 @@ class LineNumberList extends AbstractGutterComponent
 			return;
 		}
 
-		// Fill in the background the same color as the text component.
-		g.setColor(getBackground());
+		Color bg = getBackground();
+		if (getGutter()!=null) { // Should always be true
+			bg = getGutter().getBackground();
+		}
+		g.setColor(bg);
 		g.fillRect(0,visibleRect.y, cellWidth,visibleRect.height);
 		g.setFont(getFont());
 
@@ -498,9 +501,6 @@ class LineNumberList extends AbstractGutterComponent
 		}
 
 		super.setTextArea(textArea);
-		Color bg = textArea==null ? Color.WHITE : textArea.getBackground();
-		// textArea.getBackground() may also return null (image bg)
-		setBackground(bg==null ? Color.WHITE : bg);
 
 		if (textArea!=null) {
 			l.install(textArea); // Won't double-install
@@ -618,21 +618,8 @@ class LineNumberList extends AbstractGutterComponent
 
 			String name = e.getPropertyName();
 
-			// If they changed the background color of the text area.
-			if ("background".equals(name)) {
-				Color bg = textArea.getBackground();
-				setBackground(bg==null ? Color.WHITE : bg);
-				repaint();
-			}
-
-			// If they changed the background to an image.
-			else if (RTextArea.BACKGROUND_IMAGE_PROPERTY.equals(name)) {
-				setBackground(Color.WHITE);
-				repaint();
-			}
-
 			// If they change the current line highlight in any way...
-			else if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
+			if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
 				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
 				repaintLine(currentLine);
 			}

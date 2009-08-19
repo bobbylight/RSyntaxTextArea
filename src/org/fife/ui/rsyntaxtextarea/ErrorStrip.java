@@ -405,11 +405,16 @@ private static final Color COLOR = new Color(220, 220, 220);
 		}
 
 		public int compareTo(Object o) {
-			return 0;
+			return 0; // Value doesn't matter
 		}
 
 		public boolean containsPosition(int pos) {
 			return pos>=range.getStartOffset() && pos<range.getEndOffset();
+		}
+
+		public boolean equals(Object o) {
+			// FindBugs - Define equals() when defining compareTo()
+			return compareTo(o)==0;
 		}
 
 		public Color getColor() {
@@ -460,6 +465,10 @@ private static final Color COLOR = new Color(220, 220, 220);
 
 		public String getToolTipText() {
 			return null;
+		}
+
+		public int hashCode() { // FindBugs, since we override equals()
+			return 0; // Value doesn't matter for us.
 		}
 
 	}

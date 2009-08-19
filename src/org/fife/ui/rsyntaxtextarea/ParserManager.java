@@ -131,7 +131,6 @@ class ParserManager implements DocumentListener, ActionListener,
 			begin = System.currentTimeMillis();
 		}
 
-//		clearParserNoticeHighlights();
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 
 		Element root = doc.getDefaultRootElement();
@@ -187,7 +186,8 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Adds highlights for a list of parser notices.
+	 * Adds highlights for a list of parser notices.  Any current notices
+	 * from the same Parser, in the same parsed range, are removed.
 	 *
 	 * @param res The result of a parsing.
 	 * @see #clearParserNoticeHighlights()
@@ -234,6 +234,18 @@ class ParserManager implements DocumentListener, ActionListener,
 	}
 
 
+	private void clearParserNoticeHighlights() {
+		RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+											textArea.getHighlighter();
+		if (h!=null) {
+			h.clearParserHighlights();
+		}
+		if (noticesToHighlights!=null) {
+			noticesToHighlights.clear();
+		}
+	}
+
+
 	/**
 	 * Removes all parsers and any highlights they have created.
 	 *
@@ -246,14 +258,30 @@ class ParserManager implements DocumentListener, ActionListener,
 	}
 
 
-	private void clearParserNoticeHighlights() {
-		RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
-											textArea.getHighlighter();
-		if (h!=null) {
-			h.clearParserHighlights();
-		}
-		if (noticesToHighlights!=null) {
-			noticesToHighlights.clear();
+	/**
+	 * Forces the given {@link Parser} to re-parse the content of this text
+	 * area.<p>
+	 * 
+	 * This method can be useful when a <code>Parser</code> can be configured
+	 * as to what notices it returns.  For example, if a Java language parser
+	 * can be configured to set whether no serialVersionUID is a warning,
+	 * error, or ignored, this method can be called after changing the expected
+	 * notice type to have the document re-parsed.
+	 *
+	 * @param parser The index of the <code>Parser</code> to re-run.
+	 * @see #getParser(int)
+	 */
+	public void forceReparsing(int parser) {
+		Parser p = getParser(parser);
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		String style = textArea.getSyntaxEditingStyle();
+		doc.readLock();
+		try {
+			ParseResult res = p.parse(doc, style);
+			addParserNoticeHighlights(res);
+			textArea.fireParserNoticesChange();
+		} finally {
+			doc.readUnlock();
 		}
 	}
 

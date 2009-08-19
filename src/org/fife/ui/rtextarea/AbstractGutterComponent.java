@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.JComponent;
@@ -73,6 +74,17 @@ abstract class AbstractGutterComponent extends JComponent {
 		Shape alloc = parent.getChildAllocation(line, editorRect);
 		return alloc instanceof Rectangle ? (Rectangle)alloc :
 										alloc.getBounds();
+	}
+
+
+	/**
+	 * Returns the parent <code>Gutter</code> component.
+	 *
+	 * @return The parent <code>Gutter</code>.
+	 */
+	protected Gutter getGutter() {
+		Container parent = getParent();
+		return (parent instanceof Gutter) ? (Gutter)parent : null;
 	}
 
 

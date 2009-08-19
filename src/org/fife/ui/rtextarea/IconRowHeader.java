@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -34,6 +35,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.Icon;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -90,10 +93,20 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 * @param textArea The parent text area.
 	 */
 	public IconRowHeader(RTextArea textArea) {
+
 		super(textArea);
 		visibleRect = new Rectangle();
 		width = 16;
 		addMouseListener(this);
+
+		// Must explicitly set our background color, otherwise we inherit that
+		// of the parent Gutter.
+		Color bg = UIManager.getColor("Panel.background");
+		if (bg==null) { // UIManager properties aren't guaranteed to exist
+			bg = new JPanel().getBackground();
+		}
+		setBackground(bg);
+
 	}
 
 
@@ -295,7 +308,6 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			return;
 		}
 
-		// Fill in the background the same color as the text component.
 		g.setColor(getBackground());
 		g.fillRect(0,visibleRect.y, width,visibleRect.height);
 
