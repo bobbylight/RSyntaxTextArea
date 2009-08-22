@@ -27,18 +27,17 @@ import javax.swing.text.Segment;
 
 
 /**
- * A hash table for reserved words, etc. defined by a
- * <code>org.fife.ui.rsyntaxtextarea.TokenMaker</code>.  This class is designed
- * for the quick lookup of tokens, as it can compare <code>Segment</code>s
- * without the need to allocate a new string.<p>
+ * A hash table for reserved words, etc. defined by a {@link TokenMaker}.
+ * This class is designed for the quick lookup of tokens, as it can compare
+ * <code>Segment</code>s without the need to allocate a new string.<p>
+ *
  * The <code>org.fife.ui.rsyntaxtextarea</code> package uses this class to help
  * identify reserved words in programming languages.  An instance of
- * <code>{@link org.fife.ui.rsyntaxtextarea.TokenMaker}</code> will create and
- * initialize an instance of this class containing all reserved words, data
- * types, and all other words that need to be syntax-highlighted for that
- * particular language.  When the token maker parses a line and identifies an
- * individual token, it is looked up in the <code>TokenMap</code> to see if it
- * should be syntax-highlighted.
+ * {@link TokenMaker} will create and initialize an instance of this class
+ * containing all reserved words, data types, and all other words that need to
+ * be syntax-highlighted for that particular language.  When the token maker
+ * parses a line and identifies an individual token, it is looked up in the
+ * <code>TokenMap</code> to see if it should be syntax-highlighted.
  *
  * @author Robert Futrell
  * @version 0.6
@@ -263,8 +262,8 @@ public class TokenMap {
 
 	/**
 	 * The "token" used by a token map.  Note that this isn't the same thing
-	 * as the <code>org.fife.ui.rsyntaxtextarea.Token</code> class, but it's
-	 * basically a 1-1 correspondance for reserved words, etc.
+	 * as the {@link Token} class, but it's basically a 1-1 correspondence
+	 * for reserved words, etc.
 	 */
 	private static class TokenMapToken {
 

@@ -175,6 +175,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Scala.
+	 */
+	public static final String SYNTAX_STYLE_SCALA		= "text/scala";
+
+
+	/**
 	 * Style for highlighting SQL.
 	 */
 	public static final String SYNTAX_STYLE_SQL			= "text/sql";

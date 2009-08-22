@@ -1,3 +1,25 @@
+/*
+ * 08/26/2004
+ *
+ * TokenMakerBase.java - A base class for token makers.
+ * Copyright (C) 2004 Robert Futrell
+ * robert_futrell at users.sourceforge.net
+ * http://fifesoft.com/rsyntaxtextarea
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA.
+ */
 package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.Segment;
@@ -44,7 +66,7 @@ abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * Adds a null token to the end of the current linked list of tokens.
 	 * This should be put at the end of the linked list whenever the last
-	 * token on the current line is NOT a multiline token.
+	 * token on the current line is NOT a multi-line token.
 	 */
 	public void addNullToken() {
 		if (firstToken==null) {
@@ -138,18 +160,18 @@ abstract class TokenMakerBase implements TokenMaker {
 
 	/**
 	 * Returns the last token on this line's type if the token is "unfinished",
-	 * or <code>Token.NULL</code> if it was finished.  For example, if C-style
+	 * or {@link Token#NULL} if it was finished.  For example, if C-style
 	 * syntax highlighting is being implemented, and <code>text</code>
 	 * contained a line of code that contained the beginning of a comment but
 	 * no end-comment marker ("*\/"), then this method would return
-	 * <code>Token.COMMENT_MULTILINE</code> for that line.  This is useful
+	 * {@link Token#COMMENT_MULTILINE} for that line.  This is useful
 	 * for doing syntax highlighting.
 	 *
 	 * @param text The line of tokens to examine.
 	 * @param initialTokenType The token type to start with (i.e., the value
 	 *        of <code>getLastTokenTypeOnLine</code> for the line before
 	 *        <code>text</code>).
-	 * @return The last token on this line's type, or <code>Token.NULL</code>
+	 * @return The last token on this line's type, or {@link Token#NULL}
 	 *         if the line was completed.
 	 */
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
@@ -173,7 +195,7 @@ abstract class TokenMakerBase implements TokenMaker {
 	 *         it out.  A <code>null</code> value for either means there
 	 *         is no string to add for that part.  A value of
 	 *         <code>null</code> for the array means this language
-	 *         does not support commenting/uncommenting lines.
+	 *         does not support commenting/un-commenting lines.
 	 */
 	public String[] getLineCommentStartAndEnd() {
 		return null;
@@ -211,8 +233,9 @@ abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * Deletes the linked list of tokens so we can begin anew.  This should
 	 * never have to be called by the programmer, as it is automatically
-	 * called whenever the user calls <code>getLastTokenTypeOnLine</code> or
-	 * <code>getTokenList</code>.
+	 * called whenever the user calls
+	 * {@link #getLastTokenTypeOnLine(Segment, int)} or
+	 * {@link #getTokenList(Segment, int, int)}.
 	 */
 	protected void resetTokenList() {
 		firstToken = currentToken = previousToken = null;

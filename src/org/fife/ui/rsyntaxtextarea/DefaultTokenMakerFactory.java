@@ -52,6 +52,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		map.put(SYNTAX_STYLE_PYTHON,			pkg + "PythonTokenMaker");
 		map.put(SYNTAX_STYLE_RUBY,				pkg + "RubyTokenMaker");
 		map.put(SYNTAX_STYLE_SAS,				pkg + "SASTokenMaker");
+		map.put(SYNTAX_STYLE_SCALA,				pkg + "ScalaTokenMaker");
 		map.put(SYNTAX_STYLE_SQL,				pkg + "SQLTokenMaker");
 		map.put(SYNTAX_STYLE_TCL,				pkg + "TclTokenMaker");
 		map.put(SYNTAX_STYLE_UNIX_SHELL,		pkg + "UnixShellTokenMaker");

@@ -70,7 +70,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class ScalaTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -83,17 +83,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * no-parameter constructor.
 	 */
 	public ScalaTokenMaker() {
-	}
-
-
-	/**
-	 * Adds the token specified to the current linked list of tokens as an
-	 * "end token;" that is, at <code>zzMarkedPos</code>.
-	 *
-	 * @param tokenType The token's type.
-	 */
-	private void addEndToken(int tokenType) {
-		addToken(zzMarkedPos,zzMarkedPos, tokenType);
 	}
 
 
@@ -224,7 +213,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) throws IOException {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -247,48 +236,50 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}
 
 
-***** BEGIN SCALA-SPECIFIC CHANGES *********
-Upper						= [A-Z\$\_] /* Plus Unicode category Lu */
-Lower						= [a-z]     /* Plus Unicode category Ll */
+/***** BEGIN SCALA-SPECIFIC CHANGES *********/
+Upper						= ([A-Z\$\_]) /* Plus Unicode category Lu */
+Lower						= ([a-z])     /* Plus Unicode category Ll */
 Letter						= ({Upper}|{Lower}) /*Plus Unicode categories Lo, Lt, Nl */
 Digit						= ([0-9])
-OpChar						= ([^A-Z\$\_a-z0-9\(\[\]\)\.])
+OpChar						= ([^A-Z\$\_a-z0-9\(\[\]\)\. \t\f])
 Op							= ({OpChar}+)
-VarId						= ({Lower}{IdRest})
-PlainId						= ({Upper}{IdRest}|{VarId}|{Op})
-Id							= ({PlainId}|[\']{StringLit}[\'])
 IdRest						= (({Letter}|{Digit})*([\_]{Op})?)
-IntegerLiteral				= ({Digit}+[Ll]?)
-HexLiteral					= ("0x"{HexDigit}+)
-HexDigit					= ({Digit}|[A-Fa-f])
+VarId						= ({Lower}{IdRest})
+PlainId						= ({Upper}{IdRest}|{VarId}) /*|{Op})*/
+Id							= ({PlainId}) /*({PlainId}|[\']{StringLit}[\'])*/
 
+IntegerLiteral				= ({Digit}+[Ll]?)
+HexDigit					= ({Digit}|[A-Fa-f])
+HexLiteral					= ("0x"{HexDigit}+)
+
+ExponentPart				= ([Ee][+\-]?{Digit}+)
+FloatType					= ([FfDd])
 FloatingPointLiteral		= ({Digit}+[\.]{Digit}*{ExponentPart}?{FloatType}? |
 							  [\.]{Digit}+{ExponentPart}?{FloatType}? |
 							  {Digit}+{ExponentPart}{FloatType}? |
 							  {Digit}+{ExponentPart}?{FloatType})
-ExponentPart				= ([Ee][+\-]?{Digit}+)
-FloatType					= ([FfDd])
 
-BooleanLiteral				= ("true"|"false")
-
-UnclosedCharacterLiteral	= ([\']([\\].|[^\\\'])*[^\']?)
+UnclosedCharLiteral			= ([\']([\\].|[^\\\'])*[^\']?)
 CharLiteral					= ({UnclosedCharLiteral}[\'])
 UnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
 StringLiteral				= ({UnclosedStringLiteral}[\"])
+UnclosedBacktickLiteral		= ([\`][^\`]+)
+BacktickLiteral				= ({UnclosedBacktickLiteral}[\`])
 /* TODO: Multiline strings */
 
 MLCBegin					= ("/*")
 MLCEnd						= ("*/")
 LineCommentBegin			= ("//")
 
-***** END SCALA-SPECIFIC CHANGES *********
+/***** END SCALA-SPECIFIC CHANGES *********/
 
 Whitespace				= ([ \t\f]+)
 LineTerminator			= ([\n])
+Separator				= ([\(\)\{\}\[\]])
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
-URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLUnreserved			= ({Letter}|[\_]|{Digit}|[\-\.\~])
 URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
 URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
@@ -303,41 +294,71 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	/* Keywords */
-	"array" |
-	"xor" 					{ addToken(Token.RESERVED_WORD); }
-
-	/* Data types. */
-	"shortint" |
-	"pointer"					{ addToken(Token.DATA_TYPE); }
-
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	"abstract" |
+	"case" |
+	"catch" |
+	"class" |
+	"def" |
+	"do" |
+	"else" |
+	"extends" |
+	"false" |
+	"final" |
+	"finally" |
+	"for" |
+	"forSome" |
+	"if" |
+	"implicit" |
+	"import" |
+	"lazy" |
+	"match" |
+	"new" |
+	"null" |
+	"object" |
+	"override" |
+	"package" |
+	"private" |
+	"protected" |
+	"requires" |
+	"return" |
+	"sealed" |
+	"super" |
+	"this" |
+	"throw" |
+	"trait" |
+	"try" |
+	"true" |
+	"type" |
+	"val" |
+	"var" |
+	"while" |
+	"with" |
+	"yield" 			{ addToken(Token.RESERVED_WORD); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Id}						{ addToken(Token.IDENTIFIER); }
 
-	{WhiteSpace}					{ addToken(Token.WHITESPACE); }
+	{Whitespace}					{ addToken(Token.WHITESPACE); }
 
 	/* String/Character literals. */
 	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
 	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
 	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedBacktickLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{BacktickLiteral}				{ addToken(Token.LITERAL_BACKQUOTE); }
 
 	/* Comment literals. */
-	{MLCBegin}					{ start = zzMarkedPos-1; yybegin(MLC); }
+	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
 	{LineCommentBegin}				{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
-/*
+
 	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}					{ addToken(Token.IDENTIFIER); }
-	{Operator}					{ addToken(Token.OPERATOR); }
-*/
+
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
 	{FloatingPointLiteral}			{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-/*
-	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
-*/
+
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
@@ -367,5 +388,4 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[hwf]					{}
 	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
-
 }
