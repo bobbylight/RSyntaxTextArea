@@ -892,7 +892,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Method called when it's time to print this badboy (the oldschool,
+	 * Method called when it's time to print this badboy (the old-school,
 	 * AWT way).
 	 *
 	 * @param g The context into which the page is drawn.
@@ -927,7 +927,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Deserializes a text area.
+	 * De-serializes a text area.
 	 *
 	 * @param s The stream to read from.
 	 * @throws ClassNotFoundException
@@ -1054,7 +1054,7 @@ public class RTextArea extends RTextAreaBase
 		}
 
 		// If the user wants to overwrite text...
-		if (textMode==OVERWRITE_MODE) {
+		if (textMode==OVERWRITE_MODE && !"\n".equals(text)) {
 
 			Caret caret = getCaret();
 			int caretPos = caret.getDot();
@@ -1065,28 +1065,11 @@ public class RTextArea extends RTextAreaBase
 
 			try {
 
-				// If the user hit Enter, just go to the next line.
-				if (text.equals("\n")) {
-
-					if (curLine==lastLine) {
-						setCaretPosition(getLineEndOffset(curLine));
-						// Okay because undoManager will still work, as
-						// it's definitely not a replace.
-						handleReplaceSelection(text);
-					}
-					else {
-						setCaretPosition(getLineStartOffset(curLine+1));
-					}
-
-					return;
-
-				} // End of if (text.equals("\n")).
-
 				// If we're not at the end of a line, select the characters
 				// that will be overwritten (otherwise JTextArea will simply
 				// insert in front of them).
 				int curLineEnd = getLineEndOffset(curLine);
-				if (caretPos==caret.getMark() && caretPos!=curLineEnd) {//!getText(caretPos,1).equals("\n")) {
+				if (caretPos==caret.getMark() && caretPos!=curLineEnd) {
 					if (curLine==lastLine)
 						caretPos = Math.min(caretPos+text.length(), curLineEnd);
 					else
@@ -1094,8 +1077,7 @@ public class RTextArea extends RTextAreaBase
 					caret.moveDot(caretPos);//moveCaretPosition(caretPos);
 				}
 
-			} catch (BadLocationException ble) {
-				/* This should never happen. */
+			} catch (BadLocationException ble) { // Never happens
 				UIManager.getLookAndFeel().provideErrorFeedback(this);
 				ble.printStackTrace();
 			}

@@ -70,6 +70,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>C++
  *    <li>CSS
  *    <li>C#
+ *    <li>Delphi
  *    <li>Fortran
  *    <li>Groovy
  *    <li>HTML
@@ -83,6 +84,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>PHP
  *    <li>Ruby
  *    <li>SAS
+ *    <li>Scala
  *    <li>SQL
  *    <li>Tcl
  *    <li>UNIX shell scripts
@@ -114,6 +116,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String AUTO_INDENT_PROPERTY					= "RSTA.autoIndent";
 	public static final String BRACKET_MATCHING_PROPERTY			= "RSTA.bracketMatching";
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
+	public static final String CLOSE_CURLY_BRACES_PROPERTY			= "RSTA.closeCurlyBraces";
 	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY			= "RSTA.hyperlinksEnabled";
@@ -171,6 +174,12 @@ Rectangle match;
 	 * Whether or not auto-indent is on.
 	 */
 	private boolean autoIndentEnabled;
+
+	/**
+	 * Whether curly braces should be closed on Enter key presses, (if the
+	 * current language supports it).
+	 */
+	private boolean closeCurlyBraces;
 
 	/**
 	 * Whether or not lines with nothing but whitespace are "made empty."
@@ -675,6 +684,20 @@ private boolean fractionalFontMetricsEnabled;
 		// Don't default to this.getBackground(), as Tokens simply don't
 		// paint a background if they get a null Color.
 		return syntaxScheme.styles[type].background;
+	}
+
+
+	/**
+	 * Returns whether curly braces should be automatically closed when a
+	 * newline is entered after an opening curly brace.  Note that this
+	 * property is only honored for languages that use curly braces to denote
+	 * code blocks.
+	 *
+	 * @return Whether curly braces should be automatically closed.
+	 * @see #setCloseCurlyBraces(boolean)
+	 */
+	public boolean getCloseCurlyBraces() {
+		return closeCurlyBraces;
 	}
 
 
@@ -1275,6 +1298,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);
+		setCloseCurlyBraces(true);
 		setClearWhitespaceLinesEnabled(true);
 
 		setHyperlinksEnabled(true);
@@ -1503,6 +1527,26 @@ private boolean fractionalFontMetricsEnabled;
 			clearWhitespaceLines = enabled;
 			firePropertyChange(CLEAR_WHITESPACE_LINES_PROPERTY,
 							!enabled, enabled);
+		}
+	}
+
+
+	/**
+	 * Toggles whether curly braces should be automatically closed when a
+	 * newline is entered after an opening curly brace.  Note that this
+	 * property is only honored for languages that use curly braces to denote
+	 * code blocks.<p>
+	 *
+	 * This method fires a property change event of type
+	 * {@link #CLOSE_CURLY_BRACES_PROPERTY}.
+	 *
+	 * @param close Whether curly braces should be automatically closed.
+	 * @see #getCloseCurlyBraces()
+	 */
+	public void setCloseCurlyBraces(boolean close) {
+		if (close!=closeCurlyBraces) {
+			closeCurlyBraces = close;
+			firePropertyChange(CLOSE_CURLY_BRACES_PROPERTY, !close, close);
 		}
 	}
 

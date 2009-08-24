@@ -608,18 +608,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
+			boolean noSelection= sta.getSelectionStart()==sta.getSelectionEnd();
 
-			// If we're in insert-mode and auto-indenting...
-			if (sta.getTextMode()==RTextArea.INSERT_MODE && 
-					sta.isAutoIndentEnabled() &&
-					sta.getSelectionStart()==sta.getSelectionEnd()) {
+			// If we're auto-indenting...
+			if (noSelection && sta.isAutoIndentEnabled()) {
 				insertNewlineWithAutoIndent(sta);
 			}
-
-			// Otherwise, we're in overwrite-mode or not auto-indenting.
 			else {
 				textArea.replaceSelection("\n");
+				if (noSelection) {
+					possiblyCloseCurlyBrace(sta, null);
+				}
 			}
+
 
 		}
 
@@ -637,14 +638,36 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			return -1;
 		}
 
+		private static final int getOpenBraceCount(RSyntaxDocument doc) {
+			int openCount = 0;
+			Element root = doc.getDefaultRootElement();
+			int lineCount = root.getElementCount();
+			for (int i=0; i<lineCount; i++) {
+				Token t = doc.getTokenListForLine(i);
+				while (t!=null && t.isPaintable()) {
+					if (t.type==Token.SEPARATOR && t.textCount==1) {
+						char ch = t.text[t.textOffset];
+						if (ch=='{') {
+							openCount++;
+						}
+						else if (ch=='}') {
+							openCount--;
+						}
+					}
+					t = t.getNextToken();
+				}
+			}
+			return openCount;
+		}
+
 		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {
 
 			try {
 
-				int caretPosition = sta.getCaretPosition();
+				int caretPos = sta.getCaretPosition();
 				Document doc = sta.getDocument();
 				Element map = doc.getDefaultRootElement();
-				int lineNum = map.getElementIndex(caretPosition);
+				int lineNum = map.getElementIndex(caretPos);
 				Element line = map.getElement(lineNum);
 				int start = line.getStartOffset();
 				int end = line.getEndOffset()-1; // Why always "-1"?
@@ -660,12 +683,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// If there is only whitespace between the caret and
 				// the EOL, pressing Enter auto-indents the new line to
 				// the same place as the previous line.
-				int nonWhitespacePos = atEndOfLine(caretPosition-start, s, len);
+				int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
 				if (nonWhitespacePos==-1) {
-					// If the line was nothing but whitespace...
 					if (leadingWS.length()==len &&
 							sta.isClearWhitespaceLinesEnabled()) {
-						sta.replaceRange(null, start,end);
+						// If the line was nothing but whitespace, select it
+						// so its contents get removed.
+						sta.setSelectionStart(start);
+						sta.setSelectionEnd(end);
 					}
 					sta.replaceSelection(sb.toString());
 				}
@@ -676,8 +701,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// line.
 				else {
 					sb.append(s.substring(nonWhitespacePos));
-					sta.replaceRange(sb.toString(), caretPosition, end);
-					sta.setCaretPosition(caretPosition + leadingWS.length()+1);
+					sta.replaceRange(sb.toString(), caretPos, end);
+					sta.setCaretPosition(caretPos + leadingWS.length()+1);
 				}
 
 				// Must do it after everything else, as the "smart indent"
@@ -687,16 +712,51 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					sta.replaceSelection("\t");
 				}
 
-//				if (sta.getCloseCurlyBraces()) {
-//					int dot = sta.getCaretPosition();
-//					String str = "\n" + leadingWS + "}";
-//					sta.replaceRange(str, dot, dot);
-//					sta.setCaretPosition(dot);
-//				}
+				possiblyCloseCurlyBrace(sta, leadingWS);
 
 			} catch (BadLocationException ble) { // Never happens
 				sta.replaceSelection("\n");
 				ble.printStackTrace();
+			}
+
+		}
+
+		private void possiblyCloseCurlyBrace(RSyntaxTextArea textArea,
+											String leadingWS) {
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+
+			if (textArea.getCloseCurlyBraces() &&
+					doc.getCurlyBracesDenoteCodeBlocks()) {
+
+				int line = textArea.getCaretLineNumber();
+				Token t = doc.getTokenListForLine(line-1);
+				t = t.getLastNonCommentNonWhitespaceToken();
+
+				if (t!=null && t.type==Token.SEPARATOR &&
+						t.textCount==1 && t.text[t.textOffset]=='{') {
+
+					if (getOpenBraceCount(doc)>0) {
+						StringBuffer sb = new StringBuffer();
+						if (line==textArea.getLineCount()-1) {
+							sb.append('\n');
+						}
+						if (leadingWS!=null) {
+							sb.append(leadingWS);
+						}
+						sb.append("}\n");
+						int dot = textArea.getCaretPosition();
+						int end = textArea.getLineEndOffsetOfCurrentLine();
+						// Insert at end of line, not at dot: they may have
+						// pressed Enter in the middle of the line and brought
+						// some text (though it must be whitespace and/or
+						// comments) down onto the new line.
+						textArea.insert(sb.toString(), end);
+						textArea.setCaretPosition(dot); // Caret may have moved
+					}
+
+				}
+
 			}
 
 		}
