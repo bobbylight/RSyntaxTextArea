@@ -73,7 +73,7 @@ public interface TokenMaker {
 
 	/**
 	 * Returns the last token on this line's type if the token is "unfinished",
-	 * or <code>Token.NULL</code> if it was finished.  For example, if C-style
+	 * or {@link Token#NULL} if it was finished.  For example, if C-style
 	 * syntax highlighting is being implemented, and <code>text</code>
 	 * contained a line of code that contained the beginning of a comment but
 	 * no end-comment marker ("*\/"), then this method would return
@@ -84,7 +84,7 @@ public interface TokenMaker {
 	 * @param initialTokenType The token type to start with (i.e., the value
 	 *        of <code>getLastTokenTypeOnLine</code> for the line before
 	 *        <code>text</code>).
-	 * @return The last token on this line's type, or <code>Token.NULL</code>
+	 * @return The last token on this line's type, or {@link Token#NULL}
 	 *         if the line was completed.
 	 */
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType);

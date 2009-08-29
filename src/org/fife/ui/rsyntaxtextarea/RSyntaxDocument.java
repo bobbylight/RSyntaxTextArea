@@ -315,6 +315,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * @return Whether an extra indentation should be done.
 	 */
 	public boolean getShouldIndentNextLine(int line) {
+		
 		Token t = getTokenListForLine(line);
 		t = t.getLastNonCommentNonWhitespaceToken();
 		return tokenMaker.getShouldIndentNextLineAfter(t);

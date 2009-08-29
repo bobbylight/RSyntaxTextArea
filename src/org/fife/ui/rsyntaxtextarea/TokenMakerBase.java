@@ -64,9 +64,7 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Adds a null token to the end of the current linked list of tokens.
-	 * This should be put at the end of the linked list whenever the last
-	 * token on the current line is NOT a multi-line token.
+	 * {@inheritDoc}
 	 */
 	public void addNullToken() {
 		if (firstToken==null) {
@@ -98,14 +96,7 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param array The character array.
-	 * @param start The starting offset in the array.
-	 * @param end The ending offset in the array.
-	 * @param tokenType The token's type.
-	 * @param startOffset The offset in the document at which this token
-	 *        occurs.
+	 * {@inheritDoc}
 	 */
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset) {
@@ -159,20 +150,7 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Returns the last token on this line's type if the token is "unfinished",
-	 * or {@link Token#NULL} if it was finished.  For example, if C-style
-	 * syntax highlighting is being implemented, and <code>text</code>
-	 * contained a line of code that contained the beginning of a comment but
-	 * no end-comment marker ("*\/"), then this method would return
-	 * {@link Token#COMMENT_MULTILINE} for that line.  This is useful
-	 * for doing syntax highlighting.
-	 *
-	 * @param text The line of tokens to examine.
-	 * @param initialTokenType The token type to start with (i.e., the value
-	 *        of <code>getLastTokenTypeOnLine</code> for the line before
-	 *        <code>text</code>).
-	 * @return The last token on this line's type, or {@link Token#NULL}
-	 *         if the line was completed.
+	 * {@inheritDoc}
 	 */
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
 
@@ -188,14 +166,7 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Returns the text to place at the beginning and end of a
-	 * line to "comment" it in a this programming language.
-	 *
-	 * @return The start and end strings to add to a line to "comment"
-	 *         it out.  A <code>null</code> value for either means there
-	 *         is no string to add for that part.  A value of
-	 *         <code>null</code> for the array means this language
-	 *         does not support commenting/un-commenting lines.
+	 * {@inheritDoc}
 	 */
 	public String[] getLineCommentStartAndEnd() {
 		return null;
@@ -244,9 +215,7 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Sets whether tokens are generated that "show" whitespace.
-	 *
-	 * @param visible Whether whitespace should be visible.
+	 * {@inheritDoc}
 	 */
 	public void setWhitespaceVisible(boolean visible, RSyntaxTextArea textArea) {
 		// FIXME:  Initialize with the proper sizes.
