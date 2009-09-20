@@ -147,7 +147,7 @@ public class Style implements Cloneable {
 	 *         scheme.
 	 */
 	public boolean equals(Object o2) {
-		if (o2!=null && o2 instanceof Style) {
+		if (o2 instanceof Style) {
 			Style ss2 = (Style)o2;
 			if (this.underline==ss2.underline &&
 				areEqual(foreground, ss2.foreground) &&

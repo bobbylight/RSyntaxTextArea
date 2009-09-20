@@ -97,8 +97,7 @@ public class SyntaxScheme implements Cloneable {
 			return false;
 		}
 
-		Style[] otherSchemes =
-				((SyntaxScheme)otherScheme).styles;
+		Style[] otherSchemes = ((SyntaxScheme)otherScheme).styles;
 
 		int length = styles.length;
 		for (int i=0; i<length; i++) {
@@ -129,7 +128,7 @@ public class SyntaxScheme implements Cloneable {
 		int count = styles.length;
 		for (int i=0; i<count; i++) {
 			if (styles[i]!=null) {
-				hashCode = styles[i].hashCode();
+				hashCode ^= styles[i].hashCode();
 				break;
 			}
 		}
@@ -172,9 +171,13 @@ public class SyntaxScheme implements Cloneable {
 						throw new Exception("Expected " + i + ", found " + integer);
 
 					Color fg = null; String temp = tokens[pos+1];
-					fg = "-".equals(temp) ? null : new Color(Integer.parseInt(temp));
+					if (!"-".equals(temp)) { // "-" => keep fg as null
+						fg = stringToColor(temp);
+					}
 					Color bg = null; temp = tokens[pos+2];
-					bg = "-".equals(temp) ? null : new Color(Integer.parseInt(temp));
+					if (!"-".equals(temp)) { // "-" => keep bg as null
+						bg = stringToColor(temp);
+					}
 
 					// Check for "true" or "false" since we don't want to
 					// accidentally suck in an int representing the next
@@ -182,7 +185,7 @@ public class SyntaxScheme implements Cloneable {
 					temp = tokens[pos+3];
 					if (!"t".equals(temp) && !"f".equals(temp))
 						throw new Exception("Expected 't' or 'f', found " + temp);
-					boolean underline = "t".equals(temp) ? true : false;
+					boolean underline = "t".equals(temp);
 
 					Font font = null;
 					String family = tokens[pos+4];
@@ -285,6 +288,28 @@ public class SyntaxScheme implements Cloneable {
 
 
 	/**
+	 * Returns the color represented by a string.  If the first char in the
+	 * string is '<code>$</code>', it is assumed to be in hex, otherwise it is
+	 * assumed to be decimal.  So, for example, both of these:
+	 * <pre>
+	 * "$00ff00"
+	 * "65280"
+	 * </pre>
+	 * will return <code>new Color(0, 255, 0)</code>.
+	 *
+	 * @param s The string to evaluate.
+	 * @return The color.
+	 */
+	private static final Color stringToColor(String s) {
+		// Check for decimal as well as hex, for backward
+		// compatibility (fix from GwynEvans on forums)
+		return new Color(s.charAt(0)=='$' ?
+				Integer.parseInt(s.substring(1),16) :
+				Integer.parseInt(s));
+	}
+
+
+	/**
 	 * Returns this syntax highlighting scheme as a comma-separated list of
 	 * values as follows:
 	 * <ul>
@@ -312,38 +337,52 @@ public class SyntaxScheme implements Cloneable {
 	 */
 	public String toCommaSeparatedString() {
 
-		String retVal = "";
+		StringBuffer sb = new StringBuffer();
 
 		for (int i=0; i<Token.NUM_TOKEN_TYPES; i++) {
 
-			retVal += i + ",";
+			sb.append(i).append(',');
 
 			Style ss = styles[i];
 			if (ss==null) { // Only true for i==0 (NULL token)
-				retVal += "-,-,f,-,,,";
+				sb.append("-,-,f,-,,,");
 				continue;
 			}
 
 			Color c = ss.foreground;
-			retVal += c!=null ? (c.getRGB()+",") : "-,";
+			sb.append(c!=null ? (getHexString(c) + ",") : "-,");
 			c = ss.background;
-			retVal += c!=null ? (c.getRGB()+",") : "-,";
+			sb.append(c!=null ? (getHexString(c) + ",") : "-,");
 
-			retVal += ss.underline ? "t," : "f,";
+			sb.append(ss.underline ? "t," : "f,");
 
 			Font font = ss.font;
 			if (font!=null) {
-				retVal += font.getFamily() + "," + font.getStyle() + "," +
-						font.getSize() + ",";
+				sb.append(font.getFamily()).append(',').
+					append(font.getStyle()).append(',').
+						append(font.getSize()).append(',');
 			}
 			else {
-				retVal += "-,,,";
+				sb.append("-,,,");
 			}
 
 		}
 
-		return retVal.substring(0,retVal.length()-1); // Take off final ','.
+		return sb.substring(0,sb.length()-1); // Take off final ','.
 
+	}
+
+
+	/**
+	 * Returns a hex string representing an RGB color, of the form
+	 * <code>"$rrggbb"</code>.
+	 *
+	 * @param c The color.
+	 * @return The string representation of the color.
+	 */
+	private static final String getHexString(Color c) {
+		return "$" + Integer.toHexString((c.getRGB() & 0xffffff)+0x1000000).
+									substring(1);
 	}
 
 

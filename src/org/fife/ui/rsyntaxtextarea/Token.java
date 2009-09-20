@@ -434,7 +434,7 @@ public abstract class Token {
 		}
 
 		// If we got here, the whole token fit in (endBeforeX-startX) pixels.
-		return stop-1;
+		return offset + textCount - 1;
 
 	}
 

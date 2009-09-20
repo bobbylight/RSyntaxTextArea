@@ -1119,17 +1119,13 @@ private boolean fractionalFontMetricsEnabled;
 			if (tokenList==null) {
 				tokenList = t;
 				lastToken = tokenList;
-				while (lastToken.getNextToken()!=null &&
-						lastToken.getNextToken().isPaintable()) {
-					lastToken = lastToken.getNextToken();
-				}
 			}
 			else {
 				lastToken.setNextToken(t);
-				while (lastToken.getNextToken()!=null &&
-						lastToken.getNextToken().isPaintable()) {
-					lastToken = lastToken.getNextToken();
-				}
+			}
+			while (lastToken.getNextToken()!=null &&
+					lastToken.getNextToken().isPaintable()) {
+				lastToken = lastToken.getNextToken();
 			}
 			if (line<endLine) {
 				// Document offset MUST be correct to prevent exceptions
