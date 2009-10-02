@@ -165,14 +165,21 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 		if (rsta.isBracketMatchingEnabled()) {
 			Rectangle match = rsta.match;
 			if (match!=null) {
-				g.setColor(rsta.getMatchedBracketBGColor());
-				g.fillRect(match.x,match.y, match.width,match.height-1);
-				g.setColor(rsta.getMatchedBracketBorderColor());
-				g.drawRect(match.x,match.y, match.width,match.height-1);
+				if (rsta.getAnimateBracketMatching()) {
+					g.setColor(rsta.getMatchedBracketBGColor());
+					g.fillRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
+					g.setColor(rsta.getMatchedBracketBorderColor());
+					g.drawRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
+				}
+				else {
+					g.setColor(rsta.getMatchedBracketBGColor());
+					g.fillRect(match.x,match.y, match.width,match.height-1);
+					g.setColor(rsta.getMatchedBracketBorderColor());
+					g.drawRect(match.x,match.y, match.width,match.height-1);
+				}
 			}
 		}
 	}
-
 
 	/**
 	 * Gets called whenever a bound property is changed on this UI's

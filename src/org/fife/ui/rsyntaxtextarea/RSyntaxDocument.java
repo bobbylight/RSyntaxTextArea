@@ -532,8 +532,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 		int lastTokenType = Token.NULL;
 		for (int i=0; i<numLines; i++) {
 			setSharedSegment(i);
-			lastTokenType = tokenMaker.getLastTokenTypeOnLine(
-												s, lastTokenType);
+			lastTokenType = tokenMaker.getLastTokenTypeOnLine(s, lastTokenType);
 			lastTokensOnLines.set(i, lastTokenType);
 		}
 

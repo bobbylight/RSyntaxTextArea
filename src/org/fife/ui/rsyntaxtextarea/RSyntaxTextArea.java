@@ -34,6 +34,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -42,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.EventListenerList;
@@ -112,6 +115,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
+	public static final String ANIMATE_BRACKET_MATCHING_PROPERTY	= "RSTA.animateBracketMatching";
 	public static final String ANTIALIAS_PROPERTY					= "RSTA.antiAlias";
 	public static final String AUTO_INDENT_PROPERTY					= "RSTA.autoIndent";
 	public static final String BRACKET_MATCHING_PROPERTY			= "RSTA.bracketMatching";
@@ -166,9 +170,21 @@ Rectangle match;
 	private Color matchedBracketBorderColor;
 
 	/**
+	 * The location of the last matched bracket.
+	 */
+	private int lastBracketMatchPos;
+
+	/**
 	 * Whether or not bracket matching is enabled.
 	 */
 	private boolean bracketMatchingEnabled;
+
+	/**
+	 * Whether or not bracket matching is animated.
+	 */
+	private boolean animateBracketMatching;
+
+	private BracketMatchingTimer bracketRepaintTimer;
 
 	/**
 	 * Whether or not auto-indent is on.
@@ -579,25 +595,31 @@ private boolean fractionalFontMetricsEnabled;
 
 		// We always need to repaint the "matched bracket" highlight if it
 		// exists.
-		if (match!=null)
+		if (match!=null) {
 			repaint(match);
+		}
 
 		// If a matching bracket is found, get its bounds and paint it!
 		int pos = RSyntaxUtilities.getMatchingBracketPosition(this);
-		if (pos>-1) {
+		if (pos>-1 && pos!=lastBracketMatchPos) {
 			try {
 				match = modelToView(pos);
 				if (match!=null) { // Happens if we're not yet visible
+					if (getAnimateBracketMatching()) {
+						bracketRepaintTimer.restart();
+					}
 					repaint(match);
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Shouldn't happen.
 			}
 		}
-		else {
+		else if (pos==-1) {
 			// Set match to null so the old value isn't still repainted.
 			match = null;
+			bracketRepaintTimer.stop();
 		}
+		lastBracketMatchPos = pos;
 
 	}
 
@@ -609,8 +631,9 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	protected void fireCaretUpdate(CaretEvent e) {
 		super.fireCaretUpdate(e);
-		if (bracketMatchingEnabled)
+		if (isBracketMatchingEnabled()) {
 			doBracketMatching();
+		}
 	}
 
 
@@ -668,6 +691,17 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void forceReparsing(int parser) {
 		parserManager.forceReparsing(parser);
+	}
+
+
+	/**
+	 * Returns whether bracket matching should be animated.
+	 *
+	 * @return Whether bracket matching should be animated.
+	 * @see #setAnimateBracketMatching(boolean)
+	 */
+	public boolean getAnimateBracketMatching() {
+		return animateBracketMatching;
 	}
 
 
@@ -1256,24 +1290,6 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets whether "focusable" tool tips are used instead of standard ones.
-	 * Focusable tool tips are tool tips that the user can click on,
-	 * resize, copy from, and clink links in.  This method fires a property
-	 * change event of type {@link #FOCUSABLE_TIPS_PROPERTY}.
-	 *
-	 * @param use Whether to use focusable tool tips.
-	 * @see #getUseFocusableTips()
-	 * @see FocusableTip
-	 */
-	public void setUseFocusableTips(boolean use) {
-		if (use!=useFocusableTips) {
-			useFocusableTips = use;
-			firePropertyChange(FOCUSABLE_TIPS_PROPERTY, !use, use);
-		}
-	}
-
-
-	/**
 	 * Called by constructors to initialize common properties of the text
 	 * editor.
 	 */
@@ -1290,6 +1306,8 @@ private boolean fractionalFontMetricsEnabled;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
 		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
 		setBracketMatchingEnabled(true);
+		setAnimateBracketMatching(true);
+		lastBracketMatchPos = -1;
 		setSelectionColor(getDefaultSelectionColor());
 
 		// Set auto-indent related stuff.
@@ -1475,6 +1493,25 @@ private boolean fractionalFontMetricsEnabled;
 			return false;
 		}
 		return getCodeTemplateManager().saveTemplates();
+	}
+
+
+	/**
+	 * Sets whether bracket matching should be animated.  This fires a property
+	 * change event of type {@link #ANIMATE_BRACKET_MATCHING_PROPERTY}.
+	 *
+	 * @param animate Whether to animate bracket matching.
+	 * @see #getAnimateBracketMatching()
+	 */
+	public void setAnimateBracketMatching(boolean animate) {
+		if (animate!=animateBracketMatching) {
+			animateBracketMatching = animate;
+			if (animate && bracketRepaintTimer==null) {
+				bracketRepaintTimer = new BracketMatchingTimer();
+			}
+			firePropertyChange(ANIMATE_BRACKET_MATCHING_PROPERTY,
+								!animate, animate);
+		}
 	}
 
 
@@ -1943,6 +1980,24 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Sets whether "focusable" tool tips are used instead of standard ones.
+	 * Focusable tool tips are tool tips that the user can click on,
+	 * resize, copy from, and clink links in.  This method fires a property
+	 * change event of type {@link #FOCUSABLE_TIPS_PROPERTY}.
+	 *
+	 * @param use Whether to use focusable tool tips.
+	 * @see #getUseFocusableTips()
+	 * @see FocusableTip
+	 */
+	public void setUseFocusableTips(boolean use) {
+		if (use!=useFocusableTips) {
+			useFocusableTips = use;
+			firePropertyChange(FOCUSABLE_TIPS_PROPERTY, !use, use);
+		}
+	}
+
+
+	/**
 	 * Sets whether whitespace is visible.  This method fires a property change
 	 * of type {@link #VISIBLE_WHITESPACE_PROPERTY}.
 	 *
@@ -1977,6 +2032,58 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	private Token viewToToken(Point p) {
 		return modelToToken(viewToModel(p));
+	}
+
+
+	/**
+	 * A timer that animates the "bracket matching" animation.
+	 */
+	private class BracketMatchingTimer extends Timer implements ActionListener {
+
+		private int pulseCount;
+
+		public BracketMatchingTimer() {
+			super(20, null);
+			addActionListener(this);
+			setCoalesce(false);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			if (isBracketMatchingEnabled()) {
+				if (match!=null) {
+					if (pulseCount<5) {
+						pulseCount++;
+						match.x--;
+						match.y--;
+						match.width += 2;
+						match.height += 2;
+						repaint(match.x,match.y, match.width,match.height);
+					}
+					else if (pulseCount<7) {
+						pulseCount++;
+						match.x++;
+						match.y++;
+						match.width -= 2;
+						match.height -= 2;
+						repaint(match.x-2,match.y-2, match.width+5,match.height+5);
+					}
+					else {
+						stop();
+						pulseCount = 0;
+					}
+				}
+			}
+		}
+
+		public void start() {
+			match.x += 3;
+			match.y += 3;
+			match.width -= 6;
+			match.height -= 6; // So animation can "grow" match
+			pulseCount = 0;
+			super.start();
+		}
+
 	}
 
 
