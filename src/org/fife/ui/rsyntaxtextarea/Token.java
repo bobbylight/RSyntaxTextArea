@@ -64,7 +64,7 @@ public abstract class Token {
 	public int offset;
 
 	/**
-	 * The type of token this is; for example, <code>Token.FUNCTION</code>.
+	 * The type of token this is; for example, {@link #FUNCTION}.
 	 */
 	public int type;
 

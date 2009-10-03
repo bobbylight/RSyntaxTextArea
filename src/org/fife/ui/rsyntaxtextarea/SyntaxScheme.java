@@ -40,6 +40,8 @@ public class SyntaxScheme implements Cloneable {
 
 	public Style[] styles;
 
+	private static final String VERSION			= "*ver1";
+
 
 	/**
 	 * Creates a color scheme that either has all color values set to
@@ -152,9 +154,15 @@ public class SyntaxScheme implements Cloneable {
 
 			if (string!=null) {
 
-				int tokenTypeCount = Token.NUM_TOKEN_TYPES;
-				int tokenCount = tokenTypeCount*7;
 				String[] tokens = string.split(",", -1);
+
+				// Check the version string, use defaults if incompatible
+				if (tokens.length==0 || !VERSION.equals(tokens[0])) {
+					return scheme; // Still set to defaults
+				}
+
+				int tokenTypeCount = Token.NUM_TOKEN_TYPES;
+				int tokenCount = tokenTypeCount*7 + 1; // Version string
 				if (tokens.length!=tokenCount) {
 					throw new Exception(
 						"Not enough tokens in packed color scheme: expected " +
@@ -163,12 +171,14 @@ public class SyntaxScheme implements Cloneable {
 
 				// Loop through each token style.  Format:
 				// "index,(fg|-),(bg|-),(t|f),((font,style,size)|(-,,))"
-				for (int i=0; i<tokenTypeCount; i++) {
+				for (int i=1; i<tokenTypeCount; i++) {
 
-					int pos = i*7;
+					int index = i-1;
+					int pos = index*7;
 					int integer = Integer.parseInt(tokens[pos]); // == i.
-					if (integer!=i)
-						throw new Exception("Expected " + i + ", found " + integer);
+					if (integer!=index)
+						throw new Exception("Expected " + index + ", found " +
+											integer);
 
 					Color fg = null; String temp = tokens[pos+1];
 					if (!"-".equals(temp)) { // "-" => keep fg as null
@@ -194,7 +204,7 @@ public class SyntaxScheme implements Cloneable {
 							Integer.parseInt(tokens[pos+5]),	// style
 							Integer.parseInt(tokens[pos+6]));	// size
 					}
-					scheme.styles[i] = new Style(fg, bg, font, underline);
+					scheme.styles[index] = new Style(fg, bg, font, underline);
 
 				}
 
@@ -246,13 +256,11 @@ public class SyntaxScheme implements Cloneable {
 		Font commentFont = italicFont;//temp.deriveFont(Font.ITALIC);
 		Font keywordFont = boldFont;//temp.deriveFont(Font.BOLD);
 
-//		styles[Token.COMMENT]					= null;
 		styles[Token.COMMENT_EOL]				= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
 		styles[Token.RESERVED_WORD]				= new Style(keyword, null, keywordFont);
 		styles[Token.FUNCTION]					= new Style(function, null);
-//		styles[Token.LITERAL]					= null;
 		styles[Token.LITERAL_BOOLEAN]			= new Style(literalNumber, null);
 		styles[Token.LITERAL_NUMBER_DECIMAL_INT]	= new Style(literalNumber, null);
 		styles[Token.LITERAL_NUMBER_FLOAT]		= new Style(literalNumber, null);
@@ -337,7 +345,8 @@ public class SyntaxScheme implements Cloneable {
 	 */
 	public String toCommaSeparatedString() {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(VERSION);
+		sb.append(',');
 
 		for (int i=0; i<Token.NUM_TOKEN_TYPES; i++) {
 
