@@ -70,7 +70,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class XMLTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractMarkupTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -128,18 +128,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
 		super.addToken(array, start,end, tokenType, startOffset);
 		zzStartRead = zzMarkedPos;
-	}
-
-
-	/**
-	 * Returns the text to place at the beginning and end of a
-	 * line to "comment" it in a this programming language.
-	 *
-	 * @return The start and end strings to add to a line to "comment"
-	 *         it out.
-	 */
-	public String[] getLineCommentStartAndEnd() {
-		return new String[] { "<!--", "-->" };
 	}
 
 
@@ -226,9 +214,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -269,7 +256,7 @@ Whitespace			= ([ \t\f])
 LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
 AmperItem				= ([&][^; \t]*[;]?)
-InTagIdentifier		= ([^ \t\n\"\'=>]+)
+InTagIdentifier		= ([^ \t\n\"\'=\/>]+)
 CDataBegin			= ("<![CDATA[")
 CDataEnd				= ("]]>")
 
@@ -288,7 +275,8 @@ CDataEnd				= ("]]>")
 	{CDataBegin}					{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(CDATA); }
 	"<!"							{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?"							{ start = zzMarkedPos-2; yybegin(PI); }
-	"<"							{ addToken(Token.SEPARATOR); yybegin(INTAG); }
+	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
 	{AmperItem}					{ addToken(Token.DATA_TYPE); }
@@ -320,15 +308,15 @@ CDataEnd				= ("]]>")
 }
 
 <INTAG> {
-
 	{InTagIdentifier}				{ addToken(Token.RESERVED_WORD); }
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 	"="							{ addToken(Token.OPERATOR); }
-	">"							{ yybegin(YYINITIAL); addToken(Token.SEPARATOR); }
+	"/"							{ addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */ }
+	"/>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"							{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_INTAG); return firstToken; }
-
 }
 
 <INATTR_DOUBLE> {
@@ -344,10 +332,8 @@ CDataEnd				= ("]]>")
 }
 
 <CDATA> {
-
 	[^\]]+						{}
 	{CDataEnd}					{ int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.VARIABLE); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
 	"]"							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
-
 }

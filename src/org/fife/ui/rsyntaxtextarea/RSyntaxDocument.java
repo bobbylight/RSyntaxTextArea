@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.modes.AbstractMarkupTokenMaker;
 import org.fife.util.DynamicIntArray;
 
 
@@ -257,6 +258,21 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns whether closing markup tags should be automatically completed.
+	 * This method only returns <code>true</code> if
+	 * {@link #getLanguageIsMarkup()} also returns <code>true</code>.
+	 *
+	 * @return Whether markup closing tags should be automatically completed.
+	 * @see #getLanguageIsMarkup()
+	 */
+	public boolean getCompleteMarkupCloseTags() {
+		// TODO: Remove terrible dependency on AbstractMarkupTokenMaker
+		return getLanguageIsMarkup() &&
+				((AbstractMarkupTokenMaker)tokenMaker).getCompleteCloseTags();
+	}
+
+
+	/**
 	 * Returns whether the current programming language uses curly braces
 	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.
 	 *
@@ -264,6 +280,17 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 */
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return tokenMaker.getCurlyBracesDenoteCodeBlocks();
+	}
+
+
+	/**
+	 * Returns whether the current language is a markup language, such as
+	 * HTML, XML or PHP.
+	 *
+	 * @return Whether the current language is a markup language.
+	 */
+	public boolean getLanguageIsMarkup() {
+		return tokenMaker.isMarkupLanguage();
 	}
 
 

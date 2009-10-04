@@ -54,7 +54,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),	RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
 		put(KeyStroke.getKeyStroke('}'),						RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
-//		put(KeyStroke.getKeyStroke('/'), RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		put(KeyStroke.getKeyStroke('/'), 						RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 
 		// FIXME:  The keystroke associated with this action should be dynamic and
 		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's

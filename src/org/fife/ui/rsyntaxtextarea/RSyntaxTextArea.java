@@ -121,6 +121,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String BRACKET_MATCHING_PROPERTY			= "RSTA.bracketMatching";
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
 	public static final String CLOSE_CURLY_BRACES_PROPERTY			= "RSTA.closeCurlyBraces";
+	public static final String CLOSE_MARKUP_TAGS_PROPERTY			= "RSTA.closeMarkupTags";
 	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY			= "RSTA.hyperlinksEnabled";
@@ -196,6 +197,13 @@ Rectangle match;
 	 * current language supports it).
 	 */
 	private boolean closeCurlyBraces;
+
+	/**
+	 * Whether closing markup tags should be automatically completed when
+	 * "<code>&lt;/</code>" is typed (if the current language is a markup
+	 * language).
+	 */
+	private boolean closeMarkupTags;
 
 	/**
 	 * Whether or not lines with nothing but whitespace are "made empty."
@@ -732,6 +740,19 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean getCloseCurlyBraces() {
 		return closeCurlyBraces;
+	}
+
+
+	/**
+	 * Returns whether closing markup tags should be automatically completed
+	 * when "<code>&lt;/</code>" is typed.  Note that this property is only
+	 * honored for markup languages, such as HTML, XML and PHP.
+	 *
+	 * @return Whether closing markup tags should be automatically completed.
+	 * @see #setCloseMarkupTags(boolean)
+	 */
+	public boolean getCloseMarkupTags() {
+		return closeMarkupTags;
 	}
 
 
@@ -1313,6 +1334,7 @@ private boolean fractionalFontMetricsEnabled;
 		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);
 		setCloseCurlyBraces(true);
+		setCloseMarkupTags(true);
 		setClearWhitespaceLinesEnabled(true);
 
 		setHyperlinksEnabled(true);
@@ -1580,6 +1602,26 @@ private boolean fractionalFontMetricsEnabled;
 		if (close!=closeCurlyBraces) {
 			closeCurlyBraces = close;
 			firePropertyChange(CLOSE_CURLY_BRACES_PROPERTY, !close, close);
+		}
+	}
+
+
+	/**
+	 * Sets whether closing markup tags should be automatically completed
+	 * when "<code>&lt;/</code>" is typed.  Note that this property is only
+	 * honored for markup languages, such as HTML, XML and PHP.<p>
+	 *
+	 * This method fires a property change event of type
+	 * {@link #CLOSE_MARKUP_TAGS_PROPERTY}.
+	 *
+	 * @param close Whether closing markup tags should be automatically
+	 *        completed.
+	 * @see #getCloseMarkupTags()
+	 */
+	public void setCloseMarkupTags(boolean close) {
+		if (close!=closeMarkupTags) {
+			closeMarkupTags = close;
+			firePropertyChange(CLOSE_MARKUP_TAGS_PROPERTY, !close, close);
 		}
 	}
 

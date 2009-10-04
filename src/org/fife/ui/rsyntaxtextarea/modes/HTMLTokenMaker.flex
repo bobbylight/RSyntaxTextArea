@@ -70,7 +70,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class HTMLTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractMarkupTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -111,6 +111,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
 	public static final int INTERNAL_IN_JS_MLC				= -6;
+
+	/**
+	 * Whether closing markup tags are automatically completed for HTML.
+	 */
+	private static boolean completeCloseTags;
 
 
 	/**
@@ -171,14 +176,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Returns the text to place at the beginning and end of a
-	 * line to "comment" it in a this programming language.
+	 * Sets whether markup close tags should be completed.  You might not want
+	 * this to be the case, since some tags in standard HTML aren't usually
+	 * closed.
 	 *
-	 * @return The start and end strings to add to a line to "comment"
-	 *         it out.
+	 * @return Whether closing markup tags are completed.
+	 * @see #setCompleteCloseTags(boolean)
 	 */
-	public String[] getLineCommentStartAndEnd() {
-		return new String[] { "<!--", "-->" };
+	public boolean getCompleteCloseTags() {
+		return completeCloseTags;
 	}
 
 
@@ -260,6 +266,19 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return new DefaultToken();
 		}
 
+	}
+
+
+	/**
+	 * Sets whether markup close tags should be completed.  You might not want
+	 * this to be the case, since some tags in standard HTML aren't usually
+	 * closed.
+	 *
+	 * @param complete Whether closing markup tags are completed.
+	 * @see #getCompleteCloseTags()
+	 */
+	public static void setCompleteCloseTags(boolean complete) {
+		completeCloseTags = complete;
 	}
 
 
@@ -377,13 +396,14 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 <YYINITIAL> {
 	"<!--"					{ start = zzMarkedPos-4; yybegin(COMMENT); }
 	"<script"					{
-							  addToken(zzStartRead,zzStartRead, Token.SEPARATOR);
+							  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 							  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.RESERVED_WORD);
 							  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
 							}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?"						{ start = zzMarkedPos-2; yybegin(PI); }
-	"<"						{ addToken(Token.SEPARATOR); yybegin(INTAG); }
+	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
 	{Identifier}				{ addToken(Token.IDENTIFIER); } // Catches everything.
 	{AmperItem}				{ addToken(Token.DATA_TYPE); }
@@ -515,12 +535,13 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 	[tT][tT] |
 	[uU] |
 	[uU][lL] |
-	[vV][aA][rR] |
-	"/"						{ addToken(Token.RESERVED_WORD); }
+	[vV][aA][rR]            { addToken(Token.RESERVED_WORD); }
+	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	">"						{ yybegin(YYINITIAL); addToken(Token.SEPARATOR); }
+	"/>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
@@ -540,15 +561,11 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 
 <INTAG_SCRIPT> {
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
-	"/>"					{
-								addToken(zzMarkedPos-2, zzMarkedPos-2, Token.RESERVED_WORD);
-								addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
-								yybegin(YYINITIAL);
-							}
-	"/"						{ addToken(Token.RESERVED_WORD); } // Won't appear in valid HTML.
+	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	">"						{ yybegin(JAVASCRIPT); addToken(Token.SEPARATOR); }
+	">"						{ yybegin(JAVASCRIPT); addToken(Token.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_SCRIPT); return firstToken; }
@@ -568,34 +585,29 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 
 <JAVASCRIPT> {
 
-	/*
-	 * NOTE: This state is essentially RText's Java token maker
-	 * copy-and-pasted.
-	 */
-
-	{EndScriptTag}					{
+	{EndScriptTag}				{
 								  yybegin(YYINITIAL);
-								  addToken(zzStartRead,zzStartRead, Token.SEPARATOR);
-								  addToken(zzMarkedPos-8,zzMarkedPos-2, Token.RESERVED_WORD);
-								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.SEPARATOR);
+								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.RESERVED_WORD);
+								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 								}
 
 	// ECMA keywords.
-	"break"						{ addToken(Token.RESERVED_WORD); }
-	"continue"					{ addToken(Token.RESERVED_WORD); }
-	"delete"						{ addToken(Token.RESERVED_WORD); }
-	"else"						{ addToken(Token.RESERVED_WORD); }
-	"for"						{ addToken(Token.RESERVED_WORD); }
-	"function"					{ addToken(Token.RESERVED_WORD); }
-	"if"							{ addToken(Token.RESERVED_WORD); }
-	"in"							{ addToken(Token.RESERVED_WORD); }
-	"new"						{ addToken(Token.RESERVED_WORD); }
-	"return"						{ addToken(Token.RESERVED_WORD); }
-	"this"						{ addToken(Token.RESERVED_WORD); }
-	"typeof"						{ addToken(Token.RESERVED_WORD); }
-	"var"						{ addToken(Token.RESERVED_WORD); }
-	"void"						{ addToken(Token.RESERVED_WORD); }
-	"while"						{ addToken(Token.RESERVED_WORD); }
+	"break" |
+	"continue" |
+	"delete" |
+	"else" |
+	"for" |
+	"function" |
+	"if" |
+	"in" |
+	"new" |
+	"return" |
+	"this" |
+	"typeof" |
+	"var" |
+	"void" |
+	"while" |
 	"with"						{ addToken(Token.RESERVED_WORD); }
 
 	// Reserved (but not yet used) ECMA keywords.

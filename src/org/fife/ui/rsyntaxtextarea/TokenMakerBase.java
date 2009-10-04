@@ -202,6 +202,18 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * The default implementation returns <code>false</code> always.
+	 * Subclasses that are highlighting a markup language should override this
+	 * method to return <code>true</code>.
+	 *
+	 * @return <code>false</code> always.
+	 */
+	public boolean isMarkupLanguage() {
+		return false;
+	}
+
+
+	/**
 	 * Deletes the linked list of tokens so we can begin anew.  This should
 	 * never have to be called by the programmer, as it is automatically
 	 * called whenever the user calls

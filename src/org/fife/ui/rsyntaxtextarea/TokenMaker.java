@@ -141,6 +141,14 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns whether this language is a markup language.
+	 *
+	 * @return Whether this language is markup.
+	 */
+	public boolean isMarkupLanguage();
+
+
+	/**
 	 * Sets whether tokens are generated that "show" whitespace.
 	 *
 	 * @param visible Whether whitespace should be visible.

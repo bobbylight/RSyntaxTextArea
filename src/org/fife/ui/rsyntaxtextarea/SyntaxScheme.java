@@ -275,6 +275,7 @@ public class SyntaxScheme implements Cloneable {
 		styles[Token.SEPARATOR]				= new Style(Color.RED, null);
 		styles[Token.OPERATOR]					= new Style(new Color(128,64,64), null);
 		styles[Token.PREPROCESSOR]				= new Style(new Color(128,128,128), null);
+		styles[Token.MARKUP_TAG_DELIMITER]		= new Style(Color.RED, null);
 //		styles[Token.ERROR]					= null;
 		styles[Token.ERROR_IDENTIFIER]			= new Style(error, null);
 		styles[Token.ERROR_NUMBER_FORMAT]		= new Style(error, null);

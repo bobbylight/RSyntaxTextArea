@@ -24,6 +24,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Stack;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -61,6 +62,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	private static final long serialVersionUID = 1L;
 
 	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
+	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
 	public static final String rstaCopyAsRtfAction			= "RSTA.CopyAsRtfAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
@@ -74,6 +76,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	private static final Action[] defaultActions = {
 		new CloseCurlyBraceAction(),
+		new CloseMarkupTagAction(),
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
@@ -203,6 +206,132 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public final String getMacroID() {
 			return rstaCloseCurlyBraceAction;
+		}
+
+	}
+
+
+	/**
+	 * (Optionally) completes a closing markup tag.
+	 */
+	public static class CloseMarkupTagAction extends RecordableTextAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public CloseMarkupTagAction() {
+			super(rstaCloseMarkupTagAction);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
+
+			Caret c = rsta.getCaret();
+			boolean selection = c.getDot()!=c.getMark();
+			rsta.replaceSelection("/");
+
+			// Don't automatically complete a tag if there was a selection
+			int dot = c.getDot();
+
+			if (doc.getLanguageIsMarkup() && 
+					doc.getCompleteMarkupCloseTags() &&
+					!selection && rsta.getCloseMarkupTags() && dot>1) {
+
+				try {
+
+					if (doc.charAt(dot-2)=='<') {
+
+						Token t = doc.getTokenListForLine(
+											rsta.getCaretLineNumber());
+						t = RSyntaxUtilities.getTokenAtOffset(t, dot-1);
+						if (t!=null && t.type==Token.MARKUP_TAG_DELIMITER) {
+							//System.out.println("Huzzah - closing tag!");
+							String tagName = discoverTagName(doc, dot);
+							if (tagName!=null) {
+								rsta.replaceSelection(tagName + ">");
+							}
+						}
+
+					}
+
+				} catch (BadLocationException ble) { // Never happens
+					UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+					ble.printStackTrace();
+				}
+
+			}
+
+		}
+
+		/**
+		 * Discovers the name of the tag being closed.  Assumes standard
+		 * SGML-style markup tags.
+		 *
+		 * @param doc The document to parse.
+		 * @param dot The location of the caret.  This should be right after
+		 *        the start of a closing tag token (e.g. "<code>&lt;/</code>").
+		 * @return The name of the tag to close, or <code>null</code> if it
+		 *         could not be determined.
+		 */
+		private String discoverTagName(RSyntaxDocument doc, int dot) {
+
+			Stack stack = new Stack();
+
+			Element root = doc.getDefaultRootElement();
+			int curLine = root.getElementIndex(dot);
+
+			for (int i=0; i<=curLine; i++) {
+
+				Token t = doc.getTokenListForLine(i);
+				while (t!=null && t.isPaintable()) {
+
+					if (t.type==Token.MARKUP_TAG_DELIMITER) {
+						if (t.textCount==1 && t.text[t.textOffset]=='<') {
+							t = t.getNextToken();
+							while (t!=null && t.isPaintable()) {
+								if (t.type==Token.RESERVED_WORD ||
+										t.type==Token.IDENTIFIER) {
+									stack.push(t.getLexeme());
+									break;
+								}
+							}
+						}
+						else if (t.textCount==2 && t.text[t.textOffset]=='/' &&
+								t.text[t.textOffset+1]=='>') {
+							if (!stack.isEmpty()) { // Always true for valid XML
+								stack.pop();
+							}
+						}
+						else if (t.textCount==2 && t.text[t.textOffset]=='<' &&
+								t.text[t.textOffset+1]=='/') {
+							String tagName = null;
+							if (!stack.isEmpty()) { // Always true for valid XML
+								tagName = (String)stack.pop();
+							}
+							if (t.offset+t.textCount>=dot) {
+								return tagName;
+							}
+						}
+					}
+
+					t = t.getNextToken();
+
+				}
+
+			}
+
+			return null; // Should never happen
+
+		}
+
+		public String getMacroID() {
+			return getName();
 		}
 
 	}

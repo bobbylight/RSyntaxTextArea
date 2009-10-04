@@ -120,18 +120,20 @@ public abstract class Token {
 
 	public static final int PREPROCESSOR					= 19;
 
-	public static final int ERROR_IDENTIFIER				= 20;
-	public static final int ERROR_NUMBER_FORMAT				= 21;
-	public static final int ERROR_STRING_DOUBLE 				= 22;
-	public static final int ERROR_CHAR						= 23;	// Char or single-quote string.
+	public static final int MARKUP_TAG_DELIMITER			= 20;
 
-	public static final int NUM_TOKEN_TYPES					= 24;
+	public static final int ERROR_IDENTIFIER				= 21;
+	public static final int ERROR_NUMBER_FORMAT				= 22;
+	public static final int ERROR_STRING_DOUBLE 			= 23;
+	public static final int ERROR_CHAR						= 24;	// Char or single-quote string.
+
+	public static final int NUM_TOKEN_TYPES					= 25;
 
 
 	/**
 	 * Creates a "null token."  The token itself is not null; rather, it
 	 * signifies that it is the last token in a linked list of tokens and
-	 * that it is not part of a "multiline token."
+	 * that it is not part of a "multi-line token."
 	 */
 	public Token() {
 		this.text = null;
