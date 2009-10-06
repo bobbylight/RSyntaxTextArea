@@ -252,6 +252,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
+LetterOrDigit		= ([A-Za-z0-9])
 Whitespace			= ([ \t\f])
 LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
@@ -275,6 +276,18 @@ CDataEnd				= ("]]>")
 	{CDataBegin}					{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(CDATA); }
 	"<!"							{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?"							{ start = zzMarkedPos-2; yybegin(PI); }
+	"<"{LetterOrDigit}+			{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									yybegin(INTAG);
+								}
+	"</"{LetterOrDigit}+		{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									yybegin(INTAG);
+								}
 	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}				{ addNullToken(); return firstToken; }
@@ -308,7 +321,7 @@ CDataEnd				= ("]]>")
 }
 
 <INTAG> {
-	{InTagIdentifier}				{ addToken(Token.RESERVED_WORD); }
+	{InTagIdentifier}				{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 	"="							{ addToken(Token.OPERATOR); }
 	"/"							{ addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */ }

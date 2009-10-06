@@ -428,6 +428,7 @@ PHP_LineCommentBegin		= ("//"|[#])
 %state COMMENT
 %state DTD
 %state INTAG
+%state INTAG_CHECK_TAG_NAME
 %state INATTR_DOUBLE
 %state INATTR_SINGLE
 %state INTAG_SCRIPT
@@ -447,12 +448,24 @@ PHP_LineCommentBegin		= ("//"|[#])
 	"<!--"					{ start = zzMarkedPos-4; yybegin(COMMENT); }
 	"<script"					{
 							  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-							  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.RESERVED_WORD);
+							  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 							  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
 							}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?php"						{ addToken(Token.SEPARATOR); yybegin(PHP); }
 	"<?"						{ addToken(Token.SEPARATOR); yybegin(PHP); }
+	"<"({Letter}|{Digit})+		{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									zzMarkedPos -= (count-1); //yypushback(count-1);
+									yybegin(INTAG_CHECK_TAG_NAME);
+								}
+	"</"({Letter}|{Digit})+		{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									zzMarkedPos -= (count-2); //yypushback(count-2);
+									yybegin(INTAG_CHECK_TAG_NAME);
+								}
 	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
@@ -477,13 +490,16 @@ PHP_LineCommentBegin		= ("//"|[#])
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
 }
 
-<INTAG> {
+<INTAG_CHECK_TAG_NAME> {
 	[Aa] |
 	[aA][bB][bB][rR] |
 	[aA][cC][rR][oO][nN][yY][mM] |
 	[aA][dD][dD][rR][eE][sS][sS] |
 	[aA][pP][pP][lL][eE][tT] |
 	[aA][rR][eE][aA] |
+	[aA][rR][tT][iI][cC][lL][eE] |
+	[aA][sS][iI][dD][eE] |
+	[aA][uU][dD][iI][oO] |
 	[bB] |
 	[bB][aA][sS][eE] |
 	[bB][aA][sS][eE][fF][oO][nN][tT] |
@@ -495,29 +511,40 @@ PHP_LineCommentBegin		= ("//"|[#])
 	[bB][oO][dD][yY] |
 	[bB][rR] |
 	[bB][uU][tT][tT][oO][nN] |
+	[cC][aA][nN][vV][aA][sS] |
 	[cC][aA][pP][tT][iI][oO][nN] |
 	[cC][eE][nN][tT][eE][rR] |
 	[cC][iI][tT][eE] |
 	[cC][oO][dD][eE] |
 	[cC][oO][lL] |
 	[cC][oO][lL][gG][rR][oO][uU][pP] |
+	[cC][oO][mM][mM][aA][nN][dD] |
 	[cC][oO][mM][mM][eE][nN][tT] |
 	[dD][dD] |
+	[dD][aA][tT][aA][gG][rR][iI][dD] |
+	[dD][aA][tT][aA][lL][iI][sS][tT] |
+	[dD][aA][tT][aA][tT][eE][mM][pP][lL][aA][tT][eE] |
 	[dD][eE][lL] |
+	[dD][eE][tT][aA][iI][lL][sS] |
 	[dD][fF][nN] |
+	[dD][iI][aA][lL][oO][gG] |
 	[dD][iI][rR] |
 	[dD][iI][vV] |
 	[dD][lL] |
 	[dD][tT] |
 	[eE][mM] |
 	[eE][mM][bB][eE][dD] |
+	[eE][vV][eE][nN][tT][sS][oO][uU][rR][cC][eE] |
 	[fF][iI][eE][lL][dD][sS][eE][tT] |
+	[fF][iI][gG][uU][rR][eE] |
 	[fF][oO][nN][tT] |
+	[fF][oO][oO][tT][eE][rR] |
 	[fF][oO][rR][mM] |
 	[fF][rR][aA][mM][eE] |
 	[fF][rR][aA][mM][eE][sS][eE][tT] |
 	[hH][123456] |
 	[hH][eE][aA][dD] |
+	[hH][eE][aA][dD][eE][rR] |
 	[hH][rR] |
 	[hH][tT][mM][lL] |
 	[iI] |
@@ -535,10 +562,14 @@ PHP_LineCommentBegin		= ("//"|[#])
 	[lL][iI] |
 	[lL][iI][nN][kK] |
 	[mM][aA][pP] |
+	[mM][aA][rR][kK] |
 	[mM][aA][rR][qQ][uU][eE][eE] |
 	[mM][eE][nN][uU] |
 	[mM][eE][tT][aA] |
+	[mM][eE][tT][eE][rR] |
 	[mM][uU][lL][tT][iI][cC][oO][lL] |
+	[nN][aA][vV] |
+	[nN][eE][sS][tT] |
 	[nN][oO][bB][rR] |
 	[nN][oO][eE][mM][bB][eE][dD] |
 	[nN][oO][fF][rR][aA][mM][eE][sS] |
@@ -548,17 +579,22 @@ PHP_LineCommentBegin		= ("//"|[#])
 	[oO][lL] |
 	[oO][pP][tT][gG][rR][oO][uU][pP] |
 	[oO][pP][tT][iI][oO][nN] |
+	[oO][uU][tT][pP][uU][tT] |
 	[pP] |
 	[pP][aA][rR][aA][mM] |
 	[pP][lL][aA][iI][nN][tT][eE][xX][tT] |
 	[pP][rR][eE] |
+	[pP][rR][oO][gG][rR][eE][sS][sS] |
 	[qQ] |
+	[rR][uU][lL][eE] |
 	[sS] |
 	[sS][aA][mM][pP] |
 	[sS][cC][rR][iI][pP][tT] |
+	[sS][eE][cC][tT][iI][oO][nN] |
 	[sS][eE][lL][eE][cC][tT] |
 	[sS][eE][rR][vV][eE][rR] |
 	[sS][mM][aA][lL][lL] |
+	[sS][oO][uU][rR][cC][eE] |
 	[sS][pP][aA][cC][eE][rR] |
 	[sS][pP][aA][nN] |
 	[sS][tT][rR][iI][kK][eE] |
@@ -573,14 +609,22 @@ PHP_LineCommentBegin		= ("//"|[#])
 	[tT][fF][oO][oO][tT] |
 	[tT][hH] |
 	[tT][hH][eE][aA][dD] |
+	[tT][iI][mM][eE] |
 	[tT][iI][tT][lL][eE] |
 	[tT][rR] |
 	[tT][tT] |
 	[uU] |
 	[uU][lL] |
-	[vV][aA][rR]            { addToken(Token.RESERVED_WORD); }
+	[vV][aA][rR] |
+	[vV][iI][dD][eE][oO]    { addToken(Token.MARKUP_TAG_NAME); }
+	{InTagIdentifier}		{ /* A non-recognized HTML tag name */ yypushback(yylength()); yybegin(INTAG); }
+	.						{ /* Shouldn't happen */ yypushback(1); yybegin(INTAG); }
+	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
+}
+
+<INTAG> {
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
-	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
+	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
 	"/>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
@@ -631,7 +675,7 @@ PHP_LineCommentBegin		= ("//"|[#])
 	{EndScriptTag}					{
 								  yybegin(YYINITIAL);
 								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.RESERVED_WORD);
+								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 								}
 

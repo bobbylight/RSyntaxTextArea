@@ -295,11 +295,16 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						if (t.textCount==1 && t.text[t.textOffset]=='<') {
 							t = t.getNextToken();
 							while (t!=null && t.isPaintable()) {
-								if (t.type==Token.RESERVED_WORD ||
-										t.type==Token.IDENTIFIER) {
+								if (t.type==Token.MARKUP_TAG_NAME ||
+										// Being lenient here and also checking
+										// for attributes, in case they
+										// (incorrectly) have whitespace between
+										// the '<' char and the element name.
+										t.type==Token.MARKUP_TAG_ATTRIBUTE) {
 									stack.push(t.getLexeme());
 									break;
 								}
+								t = t.getNextToken();
 							}
 						}
 						else if (t.textCount==2 && t.text[t.textOffset]=='/' &&

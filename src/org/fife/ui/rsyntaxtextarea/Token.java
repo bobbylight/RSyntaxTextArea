@@ -121,13 +121,15 @@ public abstract class Token {
 	public static final int PREPROCESSOR					= 19;
 
 	public static final int MARKUP_TAG_DELIMITER			= 20;
+	public static final int MARKUP_TAG_NAME					= 21;
+	public static final int MARKUP_TAG_ATTRIBUTE			= 22;
 
-	public static final int ERROR_IDENTIFIER				= 21;
-	public static final int ERROR_NUMBER_FORMAT				= 22;
-	public static final int ERROR_STRING_DOUBLE 			= 23;
-	public static final int ERROR_CHAR						= 24;	// Char or single-quote string.
+	public static final int ERROR_IDENTIFIER				= 23;
+	public static final int ERROR_NUMBER_FORMAT				= 24;
+	public static final int ERROR_STRING_DOUBLE 			= 25;
+	public static final int ERROR_CHAR						= 26;	// Char or single-quote string.
 
-	public static final int NUM_TOKEN_TYPES					= 25;
+	public static final int NUM_TOKEN_TYPES					= 27;
 
 
 	/**
