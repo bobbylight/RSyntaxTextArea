@@ -493,6 +493,30 @@ public abstract class Token {
 
 
 	/**
+	 * Returns whether this token is a {@link #SEPARATOR} representing a single
+	 * left curly brace.
+	 *
+	 * @return Whether this token is a left curly brace.
+	 * @see #isRightCurly()
+	 */
+	public boolean isLeftCurly() {
+		return type==SEPARATOR && isSingleChar('{');
+	}
+
+
+	/**
+	 * Returns whether this token is a {@link #SEPARATOR} representing a single
+	 * right curly brace.
+	 *
+	 * @return Whether this token is a right curly brace.
+	 * @see #isLeftCurly()
+	 */
+	public boolean isRightCurly() {
+		return type==SEPARATOR && isSingleChar('}');
+	}
+
+
+	/**
 	 * Returns whether or not this token is "paintable;" i.e., whether or not
 	 * the type of this token is one such that it has an associated syntax
 	 * style.  What this boils down to is whether the token type is greater
@@ -502,6 +526,17 @@ public abstract class Token {
 	 */
 	public boolean isPaintable() {
 		return type>Token.NULL;
+	}
+
+
+	/**
+	 * Returns whether this token is the specified single character.
+	 *
+	 * @param ch The character to check for.
+	 * @return Whether this token's lexeme is the single character specified.
+	 */
+	public boolean isSingleChar(char ch) {
+		return textCount==1 && text[textOffset]==ch;
 	}
 
 

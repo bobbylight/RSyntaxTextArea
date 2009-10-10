@@ -171,13 +171,12 @@ public class SyntaxScheme implements Cloneable {
 
 				// Loop through each token style.  Format:
 				// "index,(fg|-),(bg|-),(t|f),((font,style,size)|(-,,))"
-				for (int i=1; i<tokenTypeCount; i++) {
+				for (int i=0; i<tokenTypeCount; i++) {
 
-					int index = i-1;
-					int pos = index*7;
-					int integer = Integer.parseInt(tokens[pos]); // == i.
-					if (integer!=index)
-						throw new Exception("Expected " + index + ", found " +
+					int pos = i*7 + 1;
+					int integer = Integer.parseInt(tokens[pos]); // == i
+					if (integer!=i)
+						throw new Exception("Expected " + i + ", found " +
 											integer);
 
 					Color fg = null; String temp = tokens[pos+1];
@@ -204,7 +203,7 @@ public class SyntaxScheme implements Cloneable {
 							Integer.parseInt(tokens[pos+5]),	// style
 							Integer.parseInt(tokens[pos+6]));	// size
 					}
-					scheme.styles[index] = new Style(fg, bg, font, underline);
+					scheme.styles[i] = new Style(fg, bg, font, underline);
 
 				}
 
