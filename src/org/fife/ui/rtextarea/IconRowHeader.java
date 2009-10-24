@@ -101,11 +101,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 		// Must explicitly set our background color, otherwise we inherit that
 		// of the parent Gutter.
-		Color bg = UIManager.getColor("Panel.background");
-		if (bg==null) { // UIManager properties aren't guaranteed to exist
-			bg = new JPanel().getBackground();
-		}
-		setBackground(bg);
+		updateBackground();
 
 	}
 
@@ -627,6 +623,29 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 		return !found;
 
+	}
+
+
+	/**
+	 * Sets our background color to that of standard "panels" in this
+	 * LookAndFeel.  This is necessary because, otherwise, we'd inherit the
+	 * background color of our parent component (the Gutter).
+	 */
+	private void updateBackground() {
+		Color bg = UIManager.getColor("Panel.background");
+		if (bg==null) { // UIManager properties aren't guaranteed to exist
+			bg = new JPanel().getBackground();
+		}
+		setBackground(bg);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void updateUI() {
+		super.updateUI(); // Does nothing
+		updateBackground();
 	}
 
 

@@ -102,8 +102,7 @@ public class TaskTagParser extends AbstractParser {
 				text = text.substring(start);
 				// TODO: Strip off end of MLC's if they're there.
 				int len = text.length();
-				DefaultParserNotice pn = new DefaultParserNotice(this, text,
-										line, offs, len);
+				TaskNotice pn = new TaskNotice(this, text, line, offs, len);
 				pn.setLevel(ParserNotice.INFO);
 				pn.setShowInEditor(false);
 				pn.setColor(COLOR);
@@ -133,6 +132,19 @@ public class TaskTagParser extends AbstractParser {
 		else {
 			taskPattern = Pattern.compile(pattern);
 		}
+	}
+
+
+	/**
+	 * A parser notice that signifies a task.
+	 */
+	public static class TaskNotice extends DefaultParserNotice {
+
+		public TaskNotice(Parser parser, String message, int line, int offs,
+							int length) {
+			super(parser, message, line, offs, length);
+		}
+
 	}
 
 

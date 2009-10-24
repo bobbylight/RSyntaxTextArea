@@ -255,6 +255,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		timer.stop();
 		clearParserNoticeHighlights();
 		parsers.clear();
+		textArea.fireParserNoticesChange();
 	}
 
 

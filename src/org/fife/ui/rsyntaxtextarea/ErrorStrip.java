@@ -46,6 +46,7 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
+import org.fife.ui.rsyntaxtextarea.parser.TaskTagParser.TaskNotice;
 
 
 /**
@@ -100,6 +101,12 @@ public class ErrorStrip extends JComponent {
 	private Map brighterColors;
 
 	/**
+	 * Only notices of this severity (or worse) will be displayed in this
+	 * error strip.
+	 */
+	private int levelThreshold;
+
+	/**
 	 * The preferred width of this component.
 	 */
 	private static final int PREFERRED_WIDTH = 14;
@@ -126,6 +133,7 @@ public class ErrorStrip extends JComponent {
 		setLayout(null); // Manually layout Markers as they can overlap
 		addMouseListener(listener);
 		setShowMarkedOccurrences(true);
+		setLevelThreshold(ParserNotice.WARNING);
 	}
 
 
@@ -174,6 +182,18 @@ public class ErrorStrip extends JComponent {
 
 
 	/**
+	 * Returns the minimum severity a parser notice must be for it to be
+	 * displayed in this error strip.
+	 *
+	 * @return The minimum severity.
+	 * @see #setLevelThreshold(int)
+	 */
+	public int getLevelThreshold() {
+		return levelThreshold;
+	}
+
+
+	/**
 	 * Returns whether marked occurrences are shown in this error strip.
 	 *
 	 * @return Whether marked occurrences are shown.
@@ -192,9 +212,9 @@ public class ErrorStrip extends JComponent {
 		int line = yToLine(e.getY());
 		if (line>-1) {
 			text = msg.getString("Line");
-			// 1.5: Use Integer.valueOf(line)
+			// TODO: 1.5: Use Integer.valueOf(line)
 			text = MessageFormat.format(text,
-					new Object[] { new Integer(line) });
+						new Object[] { new Integer(line) });
 		}
 		return text;
 	}
@@ -234,23 +254,26 @@ public class ErrorStrip extends JComponent {
 	 */
 	private void refreshMarkers() {
 
-		removeAll();
+		removeAll(); // listener is removed in Marker.removeNotify()
 		Map markerMap = new HashMap();
 
 		List notices = textArea.getParserNotices();
 		for (Iterator i=notices.iterator(); i.hasNext(); ) {
 			ParserNotice notice = (ParserNotice)i.next();
-			// 1.5: Use Integer.valueOf(notice.getLine())
-			Integer key = new Integer(notice.getLine());
-			Marker m = (Marker)markerMap.get(key);
-			if (m==null) {
-				m = new Marker(notice);
-				m.addMouseListener(listener);
-				markerMap.put(key, m);
-				add(m);
-			}
-			else {
-				m.addNotice(notice);
+			if (notice.getLevel()<=levelThreshold ||
+					(notice instanceof TaskNotice)) {
+				// 1.5: Use Integer.valueOf(notice.getLine())
+				Integer key = new Integer(notice.getLine());
+				Marker m = (Marker)markerMap.get(key);
+				if (m==null) {
+					m = new Marker(notice);
+					m.addMouseListener(listener);
+					markerMap.put(key, m);
+					add(m);
+				}
+				else {
+					m.addNotice(notice);
+				}
 			}
 		}
 
@@ -299,6 +322,21 @@ public class ErrorStrip extends JComponent {
 				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
 		textArea.removePropertyChangeListener(
 				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
+	}
+
+
+	/**
+	 * Sets the minimum severity a parser notice must be for it to be displayed
+	 * in this error strip.  The default value is {@link ParserNotice#WARNING}.
+	 *
+	 * @param level The new severity threshold.
+	 * @see #getLevelThreshold()
+	 */
+	public void setLevelThreshold(int level) {
+		levelThreshold = level;
+		if (isDisplayable()) {
+			refreshMarkers();
+		}
 	}
 
 
@@ -505,7 +543,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 		}
 
 		public Color getColor() {
-			// Return the color for the hightest-level parser.
+			// Return the color for the highest-level parser.
 			Color c = null;
 			int lowestLevel = Integer.MAX_VALUE; // ERROR is 0
 			for (Iterator i=notices.iterator(); i.hasNext(); ) {
