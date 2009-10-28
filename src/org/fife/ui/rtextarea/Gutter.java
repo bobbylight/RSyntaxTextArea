@@ -141,6 +141,16 @@ public class Gutter extends JComponent {
 
 
 	/**
+	 * Clears the active line range.
+	 *
+	 * @see #setActiveLineRange(int, int)
+	 */
+	public void clearActiveLineRange() {
+		iconArea.clearActiveLineRange();
+	}
+
+
+	/**
 	 * Returns the icon to use for bookmarks.
 	 *
 	 * @return The icon to use for bookmarks.  If this is <code>null</code>,
@@ -285,6 +295,19 @@ public class Gutter extends JComponent {
 	 */
 	public void removeAllTrackingIcons() {
 		iconArea.removeAllTrackingIcons();
+	}
+
+
+	/**
+	 * Highlights a range of lines in the icon area.  This, of course, will
+	 * only be visible if the icon area is visible.
+	 *
+	 * @param startLine The start of the line range.
+	 * @param endLine The end of the line range.
+	 * @see #clearActiveLineRange()
+	 */
+	public void setActiveLineRange(int startLine, int endLine) {
+		iconArea.setActiveLineRange(startLine, endLine);
 	}
 
 

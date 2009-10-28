@@ -42,6 +42,8 @@ import java.util.ResourceBundle;
 import javax.swing.JComponent;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
@@ -107,6 +109,21 @@ public class ErrorStrip extends JComponent {
 	private int levelThreshold;
 
 	/**
+	 * Whether the caret marker's location should be rendered.
+	 */
+	private boolean followCaret;
+
+	/**
+	 * The color to use for the caret marker.
+	 */
+	private Color caretMarkerColor;
+
+	/**
+	 * Where we paint the caret marker.
+	 */
+	private int caretLineY;
+
+	/**
 	 * The preferred width of this component.
 	 */
 	private static final int PREFERRED_WIDTH = 14;
@@ -123,6 +140,7 @@ public class ErrorStrip extends JComponent {
 	public ErrorStrip(RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		listener = new Listener();
+		textArea.addCaretListener(listener);
 		textArea.addPropertyChangeListener(
 				RSyntaxTextArea.PARSER_NOTICES_PROPERTY, listener);
 		textArea.addPropertyChangeListener(
@@ -134,6 +152,8 @@ public class ErrorStrip extends JComponent {
 		addMouseListener(listener);
 		setShowMarkedOccurrences(true);
 		setLevelThreshold(ParserNotice.WARNING);
+		setFollowCaret(true);
+		setCaretMarkerColor(Color.BLACK);
 	}
 
 
@@ -169,6 +189,28 @@ public class ErrorStrip extends JComponent {
 			brighterColors.put(c, brighter);
 		}
 		return brighter;
+	}
+
+
+	/**
+	 * returns the color to use when painting the caret marker.
+	 *
+	 * @return The caret marker color.
+	 * @see #setCaretMarkerColor(Color)
+	 */
+	public Color getCaretMarkerColor() {
+		return caretMarkerColor;
+	}
+
+
+	/**
+	 * Returns whether the caret's position should be drawn.
+	 *
+	 * @return Whether the caret's position should be drawn.
+	 * @see #setFollowCaret(boolean)
+	 */
+	public boolean getFollowCaret() {
+		return followCaret;
 	}
 
 
@@ -232,6 +274,20 @@ public class ErrorStrip extends JComponent {
 		int h = textArea.getVisibleRect().height;
 		float lineCount = textArea.getLineCount();
 		return (int)((line/lineCount) * h) - 2;		
+	}
+
+
+	/**
+	 * Overridden to (possibly) draw the caret's position.
+	 *
+	 * @param g The graphics context.
+	 */
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (caretLineY>-1) {
+			g.setColor(getCaretMarkerColor());
+			g.fillRect(0, caretLineY, getWidth(), 2);
+		}
 	}
 
 
@@ -316,12 +372,45 @@ public class ErrorStrip extends JComponent {
 	 */
 	public void removeNotify() {
 		super.removeNotify();
+		textArea.removeCaretListener(listener);
 		textArea.removePropertyChangeListener(
 				RSyntaxTextArea.PARSER_NOTICES_PROPERTY, listener);
 		textArea.removePropertyChangeListener(
 				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
 		textArea.removePropertyChangeListener(
 				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
+	}
+
+
+	/**
+	 * Sets the color to use when painting the caret marker.
+	 *
+	 * @param color The new caret marker color.
+	 * @see #getCaretMarkerColor()
+	 */
+	public void setCaretMarkerColor(Color color) {
+		if (color!=null) {
+			caretMarkerColor = color;
+			listener.caretUpdate(null); // Force repaint
+		}
+	}
+
+
+	/**
+	 * Toggles whether the caret's current location should be drawn.
+	 *
+	 * @param follow Whether the caret's current location should be followed.
+	 * @see #getFollowCaret()
+	 */
+	public void setFollowCaret(boolean follow) {
+		if (followCaret!=follow) {
+			if (followCaret) {
+				repaint(0,caretLineY, getWidth(),2); // Erase
+			}
+			caretLineY = -1;
+			followCaret = follow;
+			listener.caretUpdate(null); // Possibly repaint
+		}
 	}
 
 
@@ -379,7 +468,19 @@ public class ErrorStrip extends JComponent {
 	 * Listens for events in the error strip and its markers.
 	 */
 	private class Listener extends MouseAdapter
-							implements PropertyChangeListener {
+					implements PropertyChangeListener, CaretListener {
+
+		public void caretUpdate(CaretEvent e) {
+			if (getFollowCaret()) {
+				if (caretLineY>-1) { // Erase old position
+					repaint(0,caretLineY, getWidth(),2);
+				}
+				int line = textArea.getCaretLineNumber();
+				float percent = line / ((float)textArea.getLineCount());
+				caretLineY = (int)(getHeight()*percent);
+				repaint(0,caretLineY, getWidth(),2);
+			}
+		}
 
 		public void mouseClicked(MouseEvent e) {
 

@@ -139,10 +139,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		i.painter = p;
 		i.p0 = doc.createPosition(start);
 		i.p1 = doc.createPosition(end);
-		i.color = notice.getColor();
-		if (i.color==null) {
-			i.color = DEFAULT_PARSER_NOTICE_COLOR;
-		}
+		i.notice = notice;//i.color = notice.getColor();
 
 		parserHighlights.add(i);
 		mapper.damageRange(textArea, start, end);
@@ -249,9 +246,10 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 				for (; i < len; i++) {
 					info = (HighlightInfo)markedOccurrences.get(i);
 					if (!(info instanceof LayeredHighlightInfo)) {
+						Color c = info.getColor();
 						Highlighter.HighlightPainter p = info.getPainter();
-						if (info.color!=null && p instanceof ChangeableColorHighlightPainter) {
-							((ChangeableColorHighlightPainter)p).setColor(info.color);
+						if (c!=null && p instanceof ChangeableColorHighlightPainter) {
+							((ChangeableColorHighlightPainter)p).setColor(c);
 						}
 						p.paint(g, info.getStartOffset(), info.getEndOffset(),
 								a, textArea);
@@ -366,9 +364,14 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		private Position p0;
 		private Position p1;
 		protected Highlighter.HighlightPainter painter;
-		private Color color; // Used only by Parser highlights.
+		private ParserNotice notice;//Color color; // Used only by Parser highlights.
 
 		public Color getColor() {
+			//return color;
+			Color color = notice.getColor();
+			if (color==null) {
+				color = DEFAULT_PARSER_NOTICE_COLOR;
+			}
 			return color;
 		}
 

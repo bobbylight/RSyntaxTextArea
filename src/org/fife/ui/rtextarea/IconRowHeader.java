@@ -86,6 +86,16 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 */
 	private Insets textAreaInsets;
 
+	/**
+	 * The first line in the active line range.
+	 */
+	private int activeLineRangeStart;
+
+	/**
+	 * The end line in the active line range.
+	 */
+	private int activeLineRangeEnd;
+
 
 	/**
 	 * Constructor.
@@ -132,6 +142,19 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		trackingIcons.add(index, ti);
 		repaint();
 		return ti;
+	}
+
+
+	/**
+	 * Clears the active line range.
+	 *
+	 * @see #setActiveLineRange(int, int)
+	 */
+	public void clearActiveLineRange() {
+		if (activeLineRangeStart!=-1 || activeLineRangeEnd!=-1) {
+			activeLineRangeStart = activeLineRangeEnd = -1;
+			repaint();
+		}
 	}
 
 
@@ -330,6 +353,28 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			y += textAreaInsets.top;
 		}
 
+		if ((activeLineRangeStart>=topLine&&activeLineRangeStart<=bottomLine) ||
+			(activeLineRangeEnd>=topLine && activeLineRangeEnd<=bottomLine) ||
+			(activeLineRangeStart<=topLine && activeLineRangeEnd>=bottomLine)) {
+			g.setColor(new Color(51,153,255));
+			int y1 = Math.max(activeLineRangeStart, topLine) * cellHeight;
+			int y2 = (Math.min(activeLineRangeEnd, bottomLine)+1) * cellHeight;
+			//g.fillRect(0, y1, getWidth(), y2-y1);
+			int j = y1;
+			while (j<=y2) {
+				int yEnd = Math.min(y2, j+getWidth());
+				int xEnd = yEnd-j;
+				g.drawLine(0,j, xEnd,yEnd);
+				j += 2;
+			}
+			int i = 2;
+			while (i<getWidth()) {
+				int yEnd = y1 + getWidth() - i;
+				g.drawLine(i,y1, getWidth(),yEnd);
+				i += 2;
+			}
+		}
+
 		if (trackingIcons!=null) {
 			int lastLine = bottomLine;
 			for (int i=trackingIcons.size()-1; i>=0; i--) { // Last to first
@@ -500,6 +545,20 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		if (trackingIcons!=null && trackingIcons.remove(tag)) {
 			repaint();
 		}
+	}
+
+
+	/**
+	 * Highlights a range of lines in the icon area.
+	 *
+	 * @param startLine The start of the line range.
+	 * @param endLine The end of the line range.
+	 * @see #clearActiveLineRange()
+	 */
+	public void setActiveLineRange(int startLine, int endLine) {
+		activeLineRangeStart = startLine;
+		activeLineRangeEnd = endLine;
+		repaint();
 	}
 
 
