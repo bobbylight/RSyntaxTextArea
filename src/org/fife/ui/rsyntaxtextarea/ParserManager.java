@@ -462,7 +462,11 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	public boolean removeParser(Parser parser) {
 		removeParserNotices(parser);
-		return parsers.remove(parser);
+		boolean removed = parsers.remove(parser);
+		if (removed) {
+			textArea.fireParserNoticesChange();
+		}
+		return removed;
 	}
 
 
