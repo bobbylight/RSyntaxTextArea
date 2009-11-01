@@ -49,7 +49,7 @@ import javax.swing.event.MouseInputAdapter;
  * can click in the tip and it becomes a "real," resizable window.
  *
  * @author Robert Futrell
- * @vesrion 1.0
+ * @version 1.0
  */
 public class FocusableTip {
 
@@ -264,16 +264,19 @@ public class FocusableTip {
 
 		public void focusLost(FocusEvent e) {
 			// Only dispose of tip if it wasn't the TipWindow that was clicked
+			// "c" can be null, at least on OS X, so we must check that before
+			// calling SwingUtilities.getWindowAncestor() to guard against an
+			// NPE.
 			Component c = e.getOppositeComponent();
 			boolean tipClicked = (c instanceof TipWindow) ||
-					(SwingUtilities.getWindowAncestor(c) instanceof TipWindow);
+				(c!=null &&
+					SwingUtilities.getWindowAncestor(c) instanceof TipWindow);
 			if (!tipClicked) {
 				possiblyDisposeOfTipWindow();
 			}
 		}
 
 		private void handleComponentEvent(ComponentEvent e) {
-			System.out.println("DEBUG: ComponentEvent!");
 			possiblyDisposeOfTipWindow();
 		}
 

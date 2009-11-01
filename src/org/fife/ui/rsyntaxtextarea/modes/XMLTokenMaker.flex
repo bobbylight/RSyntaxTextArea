@@ -86,11 +86,21 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Whether closing markup tags are automatically completed for HTML.
+	 */
+	private static boolean completeCloseTags;
+
+
+	/**
 	 * Constructor.  This must be here because JFlex does not generate a
 	 * no-parameter constructor.
 	 */
 	public XMLTokenMaker() {
-		super();
+	}
+
+
+	static {
+		completeCloseTags = true;
 	}
 
 
@@ -128,6 +138,31 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
 		super.addToken(array, start,end, tokenType, startOffset);
 		zzStartRead = zzMarkedPos;
+	}
+
+
+	/**
+	 * Returns whether markup close tags should be completed.  For XML, the
+	 * default value is <code>true</code>.
+	 *
+	 * @return Whether closing markup tags are completed.
+	 * @see #setCompleteCloseTags(boolean)
+	 */
+	public boolean getCompleteCloseTags() {
+		return completeCloseTags;
+	}
+
+
+	/**
+	 * Static version of {@link #getCompleteCloseTags()}.  This hack is
+	 * unfortunately needed for applications to be able to query this value
+	 * without instantiating this class.
+	 *
+	 * @return Whether closing markup tags are completed.
+	 * @see #setCompleteCloseTags(boolean)
+	 */
+	public static boolean getCompleteCloseMarkupTags() {
+		return completeCloseTags;
 	}
 
 
@@ -206,6 +241,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return new DefaultToken();
 		}
 
+	}
+
+
+	/**
+	 * Sets whether markup close tags should be completed.
+	 *
+	 * @param complete Whether closing markup tags are completed.
+	 * @see #getCompleteCloseTags()
+	 */
+	public static void setCompleteCloseTags(boolean complete) {
+		completeCloseTags = complete;
 	}
 
 

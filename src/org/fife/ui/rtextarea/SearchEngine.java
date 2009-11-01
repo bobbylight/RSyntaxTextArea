@@ -796,6 +796,9 @@ public class SearchEngine {
 		int count = 0;
 
 		if (regex) {
+			if (replaceWith==null) {
+				replaceWith = ""; // Needed by getReplacementText() below.
+			}
 			// NOTE: This is a high-memory operation.  First me make a copy
 			// of the current document in a string, then we build yet a
 			// third copy in a StringBuffer with replacements substituted.

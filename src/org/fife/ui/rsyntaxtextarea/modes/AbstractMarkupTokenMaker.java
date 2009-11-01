@@ -52,9 +52,7 @@ public abstract class AbstractMarkupTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return Whether closing markup tags are to be completed.
 	 */
-	public boolean getCompleteCloseTags() {
-		return true;
-	}
+	public abstract boolean getCompleteCloseTags();
 
 
 	/**
