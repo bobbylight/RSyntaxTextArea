@@ -368,9 +368,12 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 		public Color getColor() {
 			//return color;
-			Color color = notice.getColor();
-			if (color==null) {
-				color = DEFAULT_PARSER_NOTICE_COLOR;
+			Color color = null;
+			if (notice!=null) {
+				color = notice.getColor();
+				if (color==null) {
+					color = DEFAULT_PARSER_NOTICE_COLOR;
+				}
 			}
 			return color;
 		}

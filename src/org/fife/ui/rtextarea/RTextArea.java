@@ -445,6 +445,63 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Creates the actions used in the popup menu and retrievable by
+	 * {@link #getAction(int)}.
+	 */
+	private static void createPopupMenuActions() {
+
+		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
+
+		// Create actions for right-click popup menu.
+		// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
+		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+		String name = bundle.getString("CutName");
+		char mnemonic = bundle.getString("CutMnemonic").charAt(0);
+		String desc = bundle.getString("CutDesc");
+		cutAction = new RTextAreaEditorKit.CutAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_X, mod));
+
+		name = bundle.getString("CopyName");
+		mnemonic = bundle.getString("CopyMnemonic").charAt(0);
+		desc = bundle.getString("CopyDesc");
+		copyAction = new RTextAreaEditorKit.CopyAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
+
+		name = bundle.getString("PasteName");
+		mnemonic = bundle.getString("PasteMnemonic").charAt(0);
+		desc = bundle.getString("PasteDesc");
+		pasteAction = new RTextAreaEditorKit.PasteAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
+
+		name = bundle.getString("DeleteName");
+		mnemonic = bundle.getString("DeleteMnemonic").charAt(0);
+		desc = bundle.getString("DeleteDesc");
+		deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
+		name = bundle.getString("CantUndoName");
+		mnemonic = bundle.getString("UndoMnemonic").charAt(0);
+		desc = bundle.getString("UndoDesc");
+		undoAction = new RTextAreaEditorKit.UndoAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
+
+		name = bundle.getString("CantRedoName");
+		mnemonic = bundle.getString("RedoMnemonic").charAt(0);
+		desc = bundle.getString("RedoDesc");
+		redoAction = new RTextAreaEditorKit.RedoAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
+
+		name = bundle.getString("SAName");
+		mnemonic = bundle.getString("SAMnemonic").charAt(0);
+		desc = bundle.getString("SelectAllDesc");
+		selectAllAction = new RTextAreaEditorKit.SelectAllAction(name, null, desc,
+			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
+
+	}
+
+
+	/**
 	 * Returns the a real UI to install on this text area.
 	 *
 	 * @return The UI.
@@ -523,7 +580,7 @@ public class RTextArea extends RTextAreaBase
 		// or copy.  The condition here should speed things up, because this
 		// way, we will only enable the actions the first time the selection
 		// becomes nothing.
-		else if (cutAction.isEnabled()==true) {
+		else if (cutAction.isEnabled()) {
 			cutAction.setEnabled(false);
 			copyAction.setEnabled(false);
 		}
@@ -747,6 +804,16 @@ public class RTextArea extends RTextAreaBase
 	 * @param textMode The text mode.
 	 */
 	private void init(int textMode) {
+
+		// NOTE: Our actions are created here instead of in a static block
+		// so they are only created when the first RTextArea is instantiated,
+		// not before.  There have been reports of users calling static getters
+		// (e.g. RSyntaxTextArea.getDefaultBracketMatchBGColor()) which would
+		// cause these actions to be created and (possibly) incorrectly
+		// localized, if they were in a static block.
+		if (cutAction==null) {
+			createPopupMenuActions();
+		}
 
 		// Install the undo manager.
 		undoManager = new RUndoManager(this);
@@ -1434,59 +1501,6 @@ public class RTextArea extends RTextAreaBase
 		getDocument().removeUndoableEditListener(undoManager);
 		s.defaultWriteObject();
 		getDocument().addUndoableEditListener(undoManager);
-
-	}
-
-
-	static {
-
-		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
-
-		// Create actions for right-click popup menu.
-		// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
-		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
-		String name = bundle.getString("CutName");
-		char mnemonic = bundle.getString("CutMnemonic").charAt(0);
-		String desc = bundle.getString("CutDesc");
-		cutAction = new RTextAreaEditorKit.CutAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_X, mod));
-
-		name = bundle.getString("CopyName");
-		mnemonic = bundle.getString("CopyMnemonic").charAt(0);
-		desc = bundle.getString("CopyDesc");
-		copyAction = new RTextAreaEditorKit.CopyAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
-
-		name = bundle.getString("PasteName");
-		mnemonic = bundle.getString("PasteMnemonic").charAt(0);
-		desc = bundle.getString("PasteDesc");
-		pasteAction = new RTextAreaEditorKit.PasteAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
-
-		name = bundle.getString("DeleteName");
-		mnemonic = bundle.getString("DeleteMnemonic").charAt(0);
-		desc = bundle.getString("DeleteDesc");
-		deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-
-		name = bundle.getString("CantUndoName");
-		mnemonic = bundle.getString("UndoMnemonic").charAt(0);
-		desc = bundle.getString("UndoDesc");
-		undoAction = new RTextAreaEditorKit.UndoAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
-
-		name = bundle.getString("CantRedoName");
-		mnemonic = bundle.getString("RedoMnemonic").charAt(0);
-		desc = bundle.getString("RedoDesc");
-		redoAction = new RTextAreaEditorKit.RedoAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
-
-		name = bundle.getString("SAName");
-		mnemonic = bundle.getString("SAMnemonic").charAt(0);
-		desc = bundle.getString("SelectAllDesc");
-		selectAllAction = new RTextAreaEditorKit.SelectAllAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
 
 	}
 

@@ -165,6 +165,7 @@ public class ErrorStrip extends JComponent {
 			Marker m = (Marker)getComponent(i);
 			m.updateLocation();
 		}
+		listener.caretUpdate(null); // Force recalculation of caret line pos
 	}
 
 
@@ -477,7 +478,7 @@ public class ErrorStrip extends JComponent {
 				}
 				int line = textArea.getCaretLineNumber();
 				float percent = line / ((float)textArea.getLineCount());
-				caretLineY = (int)(getHeight()*percent);
+				caretLineY = (int)(textArea.getVisibleRect().height*percent);
 				repaint(0,caretLineY, getWidth(),2);
 			}
 		}
