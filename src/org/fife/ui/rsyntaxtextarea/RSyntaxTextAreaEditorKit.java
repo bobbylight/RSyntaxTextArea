@@ -245,7 +245,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 				try {
 
-					if (doc.charAt(dot-2)=='<') {
+					// Check actual char before token type, since it's quicker
+					char ch = doc.charAt(dot-2);
+					if (ch=='<' || ch=='[') {
 
 						Token t = doc.getTokenListForLine(
 											rsta.getCaretLineNumber());
@@ -254,7 +256,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 							//System.out.println("Huzzah - closing tag!");
 							String tagName = discoverTagName(doc, dot);
 							if (tagName!=null) {
-								rsta.replaceSelection(tagName + ">");
+								rsta.replaceSelection(tagName + (char)(ch+2));
 							}
 						}
 
@@ -275,7 +277,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 *
 		 * @param doc The document to parse.
 		 * @param dot The location of the caret.  This should be right after
-		 *        the start of a closing tag token (e.g. "<code>&lt;/</code>").
+		 *        the start of a closing tag token (e.g. "<code>&lt;/</code>"
+		 *        or "<code>[</code>" in the case of BBCode).
 		 * @return The name of the tag to close, or <code>null</code> if it
 		 *         could not be determined.
 		 */
@@ -292,7 +295,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				while (t!=null && t.isPaintable()) {
 
 					if (t.type==Token.MARKUP_TAG_DELIMITER) {
-						if (t.textCount==1 && t.text[t.textOffset]=='<') {
+						if (t.isSingleChar('<') || t.isSingleChar('[')) {
 							t = t.getNextToken();
 							while (t!=null && t.isPaintable()) {
 								if (t.type==Token.MARKUP_TAG_NAME ||
@@ -308,12 +311,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 							}
 						}
 						else if (t.textCount==2 && t.text[t.textOffset]=='/' &&
-								t.text[t.textOffset+1]=='>') {
+								(t.text[t.textOffset+1]=='>' ||
+										t.text[t.textOffset+1]==']')) {
 							if (!stack.isEmpty()) { // Always true for valid XML
 								stack.pop();
 							}
 						}
-						else if (t.textCount==2 && t.text[t.textOffset]=='<' &&
+						else if (t.textCount==2 && 
+								(t.text[t.textOffset]=='<' || t.text[t.textOffset]=='[') &&
 								t.text[t.textOffset+1]=='/') {
 							String tagName = null;
 							if (!stack.isEmpty()) { // Always true for valid XML

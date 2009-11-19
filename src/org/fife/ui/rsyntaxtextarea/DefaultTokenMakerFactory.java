@@ -32,6 +32,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 
 		map.put(SYNTAX_STYLE_NONE,				pkg + "PlainTextTokenMaker");
 		map.put(SYNTAX_STYLE_ASSEMBLER_X86,		pkg + "AssemblerX86TokenMaker");
+		map.put(SYNTAX_STYLE_BBCODE,			pkg + "BBCodeTokenMaker");
 		map.put(SYNTAX_STYLE_C,					pkg + "CTokenMaker");
 		map.put(SYNTAX_STYLE_CPLUSPLUS,			pkg + "CPlusPlusTokenMaker");
 		map.put(SYNTAX_STYLE_CSHARP,			pkg + "CSharpTokenMaker");

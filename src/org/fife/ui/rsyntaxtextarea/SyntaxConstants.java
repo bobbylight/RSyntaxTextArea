@@ -55,6 +55,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting BBCode.
+	 */
+	public static final String SYNTAX_STYLE_BBCODE			= "text/bbcode";
+
+
+	/**
 	 * Style for highlighting C.
 	 */
 	public static final String SYNTAX_STYLE_C				= "text/c";

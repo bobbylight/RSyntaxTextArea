@@ -36,6 +36,14 @@ public abstract class AbstractMarkupTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	/**
+	 * Returns whether markup close tags should be completed.
+	 *
+	 * @return Whether closing markup tags are to be completed.
+	 */
+	public abstract boolean getCompleteCloseTags();
+
+
+	/**
 	 * Returns the text to place at the beginning and end of a
 	 * line to "comment" it in a this programming language.
 	 *
@@ -45,14 +53,6 @@ public abstract class AbstractMarkupTokenMaker extends AbstractJFlexTokenMaker {
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "<!--", "-->" };
 	}
-
-
-	/**
-	 * Returns whether markup close tags should be completed.
-	 *
-	 * @return Whether closing markup tags are to be completed.
-	 */
-	public abstract boolean getCompleteCloseTags();
 
 
 	/**

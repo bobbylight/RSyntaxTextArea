@@ -129,8 +129,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * @param textArea The text area "receiving" the action.
 	 * @see #actionPerformed
 	 */
-	public abstract void actionPerformedImpl(ActionEvent e,
-									RTextArea textArea);
+	public abstract void actionPerformedImpl(ActionEvent e, RTextArea textArea);
 
 
 	/**
