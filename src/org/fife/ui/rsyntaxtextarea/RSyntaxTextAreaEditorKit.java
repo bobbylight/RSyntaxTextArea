@@ -80,12 +80,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
-		//new GoToMatchingBracketAction(),
+		new GoToMatchingBracketAction(),
 		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
 		new InsertTabAction(),
 		new PossiblyInsertTemplateAction(),
-		//new ToggleCommentAction(),
+		new ToggleCommentAction(),
 	};
 
 

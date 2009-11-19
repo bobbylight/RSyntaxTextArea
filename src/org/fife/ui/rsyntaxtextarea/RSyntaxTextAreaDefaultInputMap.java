@@ -48,13 +48,16 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 	 */
 	public RSyntaxTextAreaDefaultInputMap() {
 
+		int defaultMod = getDefaultModifier();
 		//int ctrl = InputEvent.CTRL_MASK;
 		int shift = InputEvent.SHIFT_MASK;
 		//int alt = InputEvent.ALT_MASK;
 
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),	RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
-		put(KeyStroke.getKeyStroke('}'),						RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
-		put(KeyStroke.getKeyStroke('/'), 						RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),				RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
+		put(KeyStroke.getKeyStroke('}'),									RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
+		put(KeyStroke.getKeyStroke('/'), 									RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, defaultMod),			RSyntaxTextAreaEditorKit.rstaToggleCommentAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, defaultMod),	RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
 
 		// FIXME:  The keystroke associated with this action should be dynamic and
 		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's
