@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -122,6 +123,11 @@ public class ErrorStrip extends JComponent {
 	 * Where we paint the caret marker.
 	 */
 	private int caretLineY;
+
+	/**
+	 * The last location of the caret marker.
+	 */
+	private int lastLineY;
 
 	/**
 	 * The preferred width of this component.
@@ -409,6 +415,7 @@ public class ErrorStrip extends JComponent {
 				repaint(0,caretLineY, getWidth(),2); // Erase
 			}
 			caretLineY = -1;
+			lastLineY = -1;
 			followCaret = follow;
 			listener.caretUpdate(null); // Possibly repaint
 		}
@@ -471,15 +478,19 @@ public class ErrorStrip extends JComponent {
 	private class Listener extends MouseAdapter
 					implements PropertyChangeListener, CaretListener {
 
+		private Rectangle visibleRect = new Rectangle();
+
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
-				if (caretLineY>-1) { // Erase old position
-					repaint(0,caretLineY, getWidth(),2);
-				}
 				int line = textArea.getCaretLineNumber();
 				float percent = line / ((float)textArea.getLineCount());
-				caretLineY = (int)(textArea.getVisibleRect().height*percent);
-				repaint(0,caretLineY, getWidth(),2);
+				textArea.computeVisibleRect(visibleRect);
+				caretLineY = (int)(visibleRect.height*percent);
+				if (caretLineY!=lastLineY) {
+					repaint(0,lastLineY, getWidth(), 2); // Erase old position
+					repaint(0,caretLineY, getWidth(), 2);
+					lastLineY = caretLineY;
+				}
 			}
 		}
 

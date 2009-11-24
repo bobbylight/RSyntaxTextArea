@@ -1326,10 +1326,21 @@ public class RTextArea extends RTextAreaBase
 	 *         {@link AbstractDocument}.
 	 */
 	public void setDocument(Document document) {
-		if (!(document instanceof AbstractDocument))
+		if (!(document instanceof AbstractDocument)) {
 			throw new IllegalArgumentException("RTextArea requires " +
 				"instances of AbstractDocument for its document");
+		}
+		if (undoManager!=null) { // First time through, undoManager==null
+			Document old = getDocument();
+			if (old!=null) {
+				old.removeUndoableEditListener(undoManager);
+			}
+		}
 		super.setDocument(document);
+		if (undoManager!=null) {
+			document.addUndoableEditListener(undoManager);
+			discardAllEdits();
+		}
 	}
 
 
