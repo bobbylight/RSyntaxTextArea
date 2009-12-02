@@ -161,12 +161,13 @@ class TipWindow extends JWindow implements ActionListener {
 	 * Disposes of this window.
 	 */
 	public void dispose() {
-		System.out.println("[DEBUG]: Disposing...");
+		//System.out.println("[DEBUG]: Disposing...");
 		Container cp = getContentPane();
 		for (int i=0; i<cp.getComponentCount(); i++) {
 			// Okay if listener is already removed
 			cp.getComponent(i).removeMouseListener(tipListener);
 		}
+		ft.removeListeners();
 		super.dispose();
 	}
 

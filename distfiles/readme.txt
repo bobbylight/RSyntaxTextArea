@@ -10,7 +10,8 @@ robert -at- fifesoft dot com.
   RSyntaxTextArea is a syntax highlighting text component, written in Swing.
   It allows applications to easily embed syntax highlighting for most common
   programming languages.  Most other standard programmer's editor features are
-  built-in: auto-indent, bracket matching, undo/redo, etc.
+  built-in: auto-indent, bracket matching, undo/redo, etc.  Auto-completion
+  is available as an add-on library (see http://fifesoft.com/autocomplete).
 
 * License
 

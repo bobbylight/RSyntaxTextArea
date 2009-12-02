@@ -75,7 +75,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	private SquiggleUnderlineHighlightPainter parserErrorHighlightPainter =
 						new SquiggleUnderlineHighlightPainter(Color.RED);
 
-	private static final boolean DEBUG_PARSING	= true;
+	private static final boolean DEBUG_PARSING	= false;
 
 	/**
 	 * The default delay between the last key press and when the document
@@ -137,7 +137,9 @@ class ParserManager implements DocumentListener, ActionListener,
 		int firstLine = firstOffsetModded==null ? 0 : root.getElementIndex(firstOffsetModded.getOffset());
 		int lastLine = lastOffsetModded==null ? root.getElementCount()-1 : root.getElementIndex(lastOffsetModded.getOffset());
 		firstOffsetModded = lastOffsetModded = null;
-		System.out.println("[DEBUG]: Minimum lines to parse: " + firstLine + "-" + lastLine);
+		if (DEBUG_PARSING) {
+			System.out.println("[DEBUG]: Minimum lines to parse: " + firstLine + "-" + lastLine);
+		}
 
 		String style = textArea.getSyntaxEditingStyle();
 		doc.readLock();

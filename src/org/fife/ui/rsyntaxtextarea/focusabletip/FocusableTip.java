@@ -193,7 +193,7 @@ public class FocusableTip {
 
 
 	void removeListeners() {
-		System.out.println("DEBUG: Removing text area listeners");
+		//System.out.println("DEBUG: Removing text area listeners");
 		textAreaListener.uninstall();
 	}
 

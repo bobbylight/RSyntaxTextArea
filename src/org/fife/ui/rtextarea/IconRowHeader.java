@@ -108,6 +108,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		visibleRect = new Rectangle();
 		width = 16;
 		addMouseListener(this);
+		activeLineRangeStart = activeLineRangeEnd = -1;
 
 		// Must explicitly set our background color, otherwise we inherit that
 		// of the parent Gutter.
