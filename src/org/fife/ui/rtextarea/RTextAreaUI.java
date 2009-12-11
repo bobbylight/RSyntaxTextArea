@@ -364,6 +364,7 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 		super.installDefaults();
 
 		JTextComponent editor = getComponent();
+		editor.setFont(RTextAreaBase.getDefaultFont());
 
 		// Nimbus (and possibly other Synth lafs) doesn't play by BasicLaf
 		// rules and doesn't set properties needed by custom BasicTextAreaUI's.

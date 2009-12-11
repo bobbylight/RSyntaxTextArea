@@ -424,7 +424,27 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * @return The default font.
 	 */
 	public static final Font getDefaultFont() {
-		return new Font("Monospaced", Font.PLAIN, 13);
+
+		Font font = null;
+
+		if (isOSX()) {
+			// Snow Leopard (1.6) uses Menlo as default monospaced font,
+			// pre-Snow Leopard used Monaco.
+			font = new Font("Menlo", Font.PLAIN, 12);
+			if (!"Menlo".equals(font.getFamily())) {
+				font = new Font("Monaco", Font.PLAIN, 12);
+				if (!"Monaco".equals(font.getFamily())) { // Shouldn't happen
+					font = new Font("Monospaced", Font.PLAIN, 13);
+				}
+			}
+		}
+		else {
+			font = new Font("Monospaced", Font.PLAIN, 13);
+		}
+
+		System.out.println(font.getFamily() + ", " + font.getName());
+		return font;
+
 	}
 
 
@@ -644,6 +664,19 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 */
 	public boolean isMarginLineEnabled() {
 		return marginLineEnabled;
+	}
+
+
+	/**
+	 * Returns whether the OS we're running on is OS X.
+	 *
+	 * @return Whether the OS we're running on is OS X.
+	 */
+	public static boolean isOSX() {
+		// Recommended at:
+		// http://developer.apple.com/mac/library/technotes/tn2002/tn2110.html
+		String osName = System.getProperty("os.name").toLowerCase();
+		return osName.startsWith("mac os x");
 	}
 
 

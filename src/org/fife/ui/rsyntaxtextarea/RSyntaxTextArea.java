@@ -816,7 +816,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #setSyntaxScheme(SyntaxScheme)
 	 */
 	public SyntaxScheme getDefaultSyntaxScheme() {
-		return new SyntaxScheme(true);
+		return new SyntaxScheme(getFont());
 	}
 
 
@@ -1316,12 +1316,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	protected void init() {
 
-		// Programmer's editors should default to a monospaced font. Note
-		// that WindowsLookAndFeel defaults to a monospaced font, but other
-		// LookAndFeels don't.
-		Font font = getFont();
-		setFont(new Font("Monospaced", font.getStyle(),font.getSize()));
-
 		// Set some RSyntaxTextArea default values.
 		syntaxStyleKey = SYNTAX_STYLE_NONE;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
@@ -1652,13 +1646,22 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param font The font.
 	 */
 	public void setFont(Font font) {
+
 		Font old = super.getFont();
 		super.setFont(font); // Do this first.
+
+		// Usually programmers keep a single font for all token types, but
+		// may use bold or italic for styling some.
+		SyntaxScheme scheme = getSyntaxScheme();
+		if (scheme!=null && old!=null) {
+			scheme.changeBaseFont(old, font);
+			calculateLineHeight();
+		}
+
 		// We must be connected to a screen resource for our
 		// graphics to be non-null.
 		if (isDisplayable()) {
 			refreshFontMetrics(getGraphics2D(getGraphics()));
-			calculateLineHeight();
 			// Updates the margin line.
 			updateMarginLineX();
 			// Force the current line highlight to be repainted, even
@@ -1670,6 +1673,7 @@ private boolean fractionalFontMetricsEnabled;
 			// So parent JScrollPane will have its scrollbars updated.
 			revalidate();
 		}
+
 	}
 
 

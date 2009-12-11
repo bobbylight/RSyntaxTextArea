@@ -146,13 +146,6 @@ public class ErrorStrip extends JComponent {
 	public ErrorStrip(RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		listener = new Listener();
-		textArea.addCaretListener(listener);
-		textArea.addPropertyChangeListener(
-				RSyntaxTextArea.PARSER_NOTICES_PROPERTY, listener);
-		textArea.addPropertyChangeListener(
-				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
-		textArea.addPropertyChangeListener(
-				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
 		ToolTipManager.sharedInstance().registerComponent(this);
 		setLayout(null); // Manually layout Markers as they can overlap
 		addMouseListener(listener);
@@ -160,6 +153,23 @@ public class ErrorStrip extends JComponent {
 		setLevelThreshold(ParserNotice.WARNING);
 		setFollowCaret(true);
 		setCaretMarkerColor(Color.BLACK);
+	}
+
+
+	/**
+	 * Overridden so we only start listening for parser notices when this
+	 * component (and presumably the text area) are visible.
+	 */
+	public void addNotify() {
+		super.addNotify();
+		textArea.addCaretListener(listener);
+		textArea.addPropertyChangeListener(
+				RSyntaxTextArea.PARSER_NOTICES_PROPERTY, listener);
+		textArea.addPropertyChangeListener(
+				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
+		textArea.addPropertyChangeListener(
+				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
+		refreshMarkers();
 	}
 
 

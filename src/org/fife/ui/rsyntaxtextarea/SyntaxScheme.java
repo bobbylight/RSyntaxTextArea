@@ -26,7 +26,16 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import javax.swing.text.StyleContext;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -54,7 +63,47 @@ public class SyntaxScheme implements Cloneable {
 	public SyntaxScheme(boolean useDefaults) {
 		styles = new Style[Token.NUM_TOKEN_TYPES];
 		if (useDefaults) {
-			restoreDefaults();
+			restoreDefaults(null);
+		}
+	}
+
+
+	/**
+	 * Creates a default color scheme.
+	 *
+	 * @param baseFont The base font to use.  Keywords will be a bold version
+	 *        of this font, and comments will be an italicized version of this
+	 *        font.
+	 */
+	public SyntaxScheme(Font baseFont) {
+		styles = new Style[Token.NUM_TOKEN_TYPES];
+		restoreDefaults(baseFont);
+	}
+
+
+	/**
+	 * Changes the "base font" for this syntax scheme.  This is called by
+	 * <code>RSyntaxTextArea</code> when its font changes via
+	 * <code>setFont()</code>.  This looks for tokens that use a derivative of
+	 * the text area's old font (but bolded and/or italicized) and make them
+	 * use the new font with those stylings instead.  This is desirable because
+	 * most programmers prefer a single font to be used in their text editor,
+	 * but might want bold (say for keywords) or italics.
+	 *
+	 * @param old The old font of the text area.
+	 * @param font The new font of the text area.
+	 */
+	void changeBaseFont(Font old, Font font) {
+		for (int i=0; i<styles.length; i++) {
+			Style style = styles[i];
+			if (style!=null && style.font!=null) {
+				if (style.font.getFamily().equals(old.getFamily()) &&
+						style.font.getSize()==old.getSize()) {
+					int s = style.font.getStyle(); // Keep bold or italic
+					StyleContext sc = StyleContext.getDefaultStyleContext();
+					style.font= sc.getFont(font.getFamily(), s, font.getSize());
+				}
+			}
 		}
 	}
 
@@ -118,6 +167,19 @@ public class SyntaxScheme implements Cloneable {
 
 
 	/**
+	 * Returns a hex string representing an RGB color, of the form
+	 * <code>"$rrggbb"</code>.
+	 *
+	 * @param c The color.
+	 * @return The string representation of the color.
+	 */
+	private static final String getHexString(Color c) {
+		return "$" + Integer.toHexString((c.getRGB() & 0xffffff)+0x1000000).
+									substring(1);
+	}
+
+
+	/**
 	 * This is implemented to be consistent with {@link #equals(Object)}.
 	 * This is a requirement to keep FindBugs happy.
 	 *
@@ -135,6 +197,25 @@ public class SyntaxScheme implements Cloneable {
 			}
 		}
 		return hashCode;
+	}
+
+
+	/**
+	 * Loads a syntax scheme from an input stream.
+	 *
+	 * @param baseFont The font to use as the "base" for the syntax scheme.
+	 *        If this is <code>null</code>, a default monospaced font is used.
+	 * @param in The stream to load from.  It is up to the caller to close this
+	 *        stream when they are done.
+	 * @return The syntax scheme.
+	 * @throws IOException If an IO error occurs.
+	 */
+	public static SyntaxScheme load(Font baseFont, InputStream in)
+									throws IOException {
+		if (baseFont==null) {
+			baseFont = RSyntaxTextArea.getDefaultFont();
+		}
+		return XmlParser.load(baseFont, in);
 	}
 
 
@@ -232,8 +313,12 @@ public class SyntaxScheme implements Cloneable {
 
 	/**
 	 * Restores all colors and fonts to their default values.
+	 *
+	 * @param baseFont The base font to use when creating this scheme.  If
+	 *        this is <code>null</code>, then a default monospaced font is
+	 *        used.
 	 */
-	public void restoreDefaults() {
+	public void restoreDefaults(Font baseFont) {
 
 		// Colors used by tokens.
 		Color comment			= new Color(0,128,0);
@@ -245,15 +330,17 @@ public class SyntaxScheme implements Cloneable {
 		Color error			= new Color(148,148,0);
 
 		// Special fonts.
-		Font temp = RSyntaxTextArea.getDefaultFont();
+		if (baseFont==null) {
+			baseFont = RSyntaxTextArea.getDefaultFont();
+		}
 		// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		Font boldFont = sc.getFont(temp.getFamily(), Font.BOLD,
-							temp.getSize());
-		Font italicFont = sc.getFont(temp.getFamily(), Font.ITALIC,
-							temp.getSize());
-		Font commentFont = italicFont;//temp.deriveFont(Font.ITALIC);
-		Font keywordFont = boldFont;//temp.deriveFont(Font.BOLD);
+		Font boldFont = sc.getFont(baseFont.getFamily(), Font.BOLD,
+				baseFont.getSize());
+		Font italicFont = sc.getFont(baseFont.getFamily(), Font.ITALIC,
+				baseFont.getSize());
+		Font commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
+		Font keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
 
 		styles[Token.COMMENT_EOL]				= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
@@ -313,7 +400,8 @@ public class SyntaxScheme implements Cloneable {
 	private static final Color stringToColor(String s) {
 		// Check for decimal as well as hex, for backward
 		// compatibility (fix from GwynEvans on forums)
-		return new Color(s.charAt(0)=='$' ?
+		char ch = s.charAt(0);
+		return new Color((ch=='$' || ch=='#') ?
 				Integer.parseInt(s.substring(1),16) :
 				Integer.parseInt(s));
 	}
@@ -385,15 +473,128 @@ public class SyntaxScheme implements Cloneable {
 
 
 	/**
-	 * Returns a hex string representing an RGB color, of the form
-	 * <code>"$rrggbb"</code>.
-	 *
-	 * @param c The color.
-	 * @return The string representation of the color.
+	 * Loads a <code>SyntaxScheme</code> from an XML file.
 	 */
-	private static final String getHexString(Color c) {
-		return "$" + Integer.toHexString((c.getRGB() & 0xffffff)+0x1000000).
-									substring(1);
+	private static class XmlParser extends DefaultHandler {
+
+		private Font baseFont;
+		private SyntaxScheme scheme;
+
+		public XmlParser(Font baseFont) {
+			scheme = new SyntaxScheme(baseFont);
+		}
+
+		/**
+		 * Creates the XML reader to use.  Note that in 1.4 JRE's, the reader
+		 * class wasn't defined by default, but in 1.5+ it is.
+		 *
+		 * @return The XML reader to use.
+		 */
+		private static XMLReader createReader() throws IOException {
+			XMLReader reader = null;
+			try {
+				reader = XMLReaderFactory.createXMLReader();
+			} catch (SAXException e) {
+				// Happens in JRE 1.4.x; 1.5+ define the reader class properly
+				try {
+					reader = XMLReaderFactory.createXMLReader(
+							"org.apache.crimson.parser.XMLReaderImpl");
+				} catch (SAXException se) {
+					throw new IOException(se.toString());
+				}
+			}
+			return reader;
+		}
+
+		public static SyntaxScheme load(Font baseFont,
+										InputStream in) throws IOException {
+			XMLReader reader = createReader();
+			XmlParser parser = new XmlParser(baseFont);
+			parser.baseFont = baseFont;
+			reader.setContentHandler(parser);
+			InputSource is = new InputSource(in);
+			is.setEncoding("UTF-8");
+			try {
+				reader.parse(is);
+			} catch (SAXException se) {
+				throw new IOException(se.toString());
+			}
+			return parser.scheme;
+		}
+
+		public void startElement(String uri, String localName, String qName,
+								Attributes attrs) {
+
+			if ("style".equals(qName)) {
+
+				String type = attrs.getValue("token");
+				Field field = null;
+				try {
+					field = Token.class.getField(type);
+				} catch (RuntimeException re) {
+					throw re; // FindBugs
+				} catch (Exception e) {
+					System.err.println("Invalid token type: " + type);
+					return;
+				}
+
+				if (field.getType()==int.class) {
+
+					int index = 0;
+					try {
+						index = field.getInt(scheme);
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+						return;
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+						return;
+					}
+
+					String fgStr = attrs.getValue("fg");
+					if (fgStr!=null) {
+						Color fg = stringToColor(fgStr);
+						scheme.styles[index].foreground = fg;
+					}
+
+					String bgStr = attrs.getValue("bg");
+					if (bgStr!=null) {
+						Color bg = stringToColor(bgStr);
+						scheme.styles[index].background = bg;
+					}
+
+					boolean styleSpecified = false;
+					boolean bold = false;
+					boolean italic = false;
+					String boldStr = attrs.getValue("bold");
+					if (boldStr!=null) {
+						bold = Boolean.valueOf(boldStr).booleanValue();
+						styleSpecified = true;
+					}
+					String italicStr = attrs.getValue("italic");
+					if (italicStr!=null) {
+						italic = Boolean.valueOf(italicStr).booleanValue();
+						styleSpecified = true;
+					}
+					if (styleSpecified) {
+						int style = 0;
+						if (bold) { style |= Font.BOLD; }
+						if (italic) { style |= Font.ITALIC; }
+						scheme.styles[index].font = baseFont.deriveFont(style);
+					}
+
+					String ulineStr = attrs.getValue("underline");
+					if (ulineStr!=null) {
+						boolean uline= Boolean.valueOf(ulineStr).booleanValue();
+						scheme.styles[index].underline = uline;
+					}
+
+				}
+
+			}
+
+		}
+
 	}
 
 
