@@ -1567,10 +1567,10 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		private boolean select;
 		private int direction;
 
-		public NextVisualPositionAction(String nm, boolean select, int direction) {
+		public NextVisualPositionAction(String nm, boolean select, int dir) {
 			super(nm);
 			this.select = select;
-			this.direction = direction;
+			this.direction = dir;
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
@@ -1841,7 +1841,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			try {
 
 				Element curPara = Utilities.getParagraphElement(textArea, offs);
-				offs = Utilities.getPreviousWord(textArea, offs);
+				offs = getPreviousWord(textArea, offs);
 				if(offs < curPara.getStartOffset()) {
 					offs = Utilities.getParagraphElement(textArea, offs).
 												getEndOffset() - 1;
@@ -1867,6 +1867,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getPreviousWord(RTextArea textArea, int offs)
+										throws BadLocationException {
+			return Utilities.getPreviousWord(textArea, offs);
 		}
 
 	}
@@ -2005,13 +2010,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public SelectWordAction() {
 			super(selectWordAction);
-			start = new BeginWordAction("pigdog", false);
-			end = new EndWordAction("pigdog", true);
+			createActions();
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			start.actionPerformed(e);
 			end.actionPerformed(e);
+		}
+
+		protected void createActions() {
+			start = new BeginWordAction("pigdog", false);
+			end = new EndWordAction("pigdog", true);
 		}
 
 		public final String getMacroID() {

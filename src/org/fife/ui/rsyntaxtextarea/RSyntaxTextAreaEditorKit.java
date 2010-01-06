@@ -55,7 +55,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.3
+ * @version 0.4
  */
 public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
@@ -84,7 +84,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
 		new InsertTabAction(),
+		new NextWordAction(nextWordAction, false),
+		new NextWordAction(selectionNextWordAction, true),
 		new PossiblyInsertTemplateAction(),
+		new PreviousWordAction(previousWordAction, false),  
+		new PreviousWordAction(selectionPreviousWordAction, true),
 		new ToggleCommentAction(),
 	};
 
@@ -93,7 +97,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * Constructor.
 	 */
 	public RSyntaxTextAreaEditorKit() {
-		super();
 	}
 
 
@@ -975,6 +978,87 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
+	 * Action to move the selection and/or caret. Constructor indicates
+	 * direction to use.  This class overrides the behavior defined in
+	 * {@link RTextAreaEditorKit} to better skip "words" in source code.
+	 */
+	public static class NextWordAction
+						extends RTextAreaEditorKit.NextWordAction {
+
+		private Segment seg;
+
+		public NextWordAction(String nm, boolean select) {
+			super(nm, select);
+			seg = new Segment();
+		}
+
+		/**
+		 * Overridden to do better with skipping "words" in code.
+		 */
+		protected int getNextWord(RTextArea textArea, int offs)
+									throws BadLocationException {
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			if (offs==doc.getLength()) {
+				return offs;
+			}
+
+			int line = textArea.getLineOfOffset(offs);
+			int end = textArea.getLineEndOffset(line);
+			if (offs==end) {
+				return offs+1; // Start of next line.
+			}
+			doc.getText(offs, end-offs, seg);
+
+			// Determine the "type" of char at offs - lower case, upper case,
+			// whitespace or other
+			char ch = seg.first();
+
+			// Skip the group of lower-case letters and/or digits
+			if (isLowerOrDigit(ch)) {
+				do {
+					ch = seg.next();
+				} while (isLowerOrDigit(ch));
+			}
+
+			// Skip any upper-case chars, then lower-case and/or digits
+			else if (Character.isUpperCase(ch)) {
+				do {
+					ch = seg.next();
+				} while (Character.isUpperCase(ch));
+				while (isLowerOrDigit(ch)) {
+					ch = seg.next();
+				}
+			}
+
+			// Skip groups of "anything else" (operators, etc.).
+			else if (!Character.isWhitespace(ch)) {
+				do {
+					ch = seg.next();
+				} while (ch!=Segment.DONE &&
+						!(isLowerOrDigit(ch) || Character.isUpperCase(ch) ||
+								Character.isWhitespace(ch)));
+			}
+
+			// Skip any trailing whitespace
+			while (Character.isWhitespace(ch)) {
+				ch = seg.next();
+			}
+
+			offs += seg.getIndex() - seg.getBeginIndex();
+
+			return offs;
+
+		}
+
+		private static final boolean isLowerOrDigit(char ch) {
+			return Character.isLowerCase(ch) || Character.isDigit(ch) || ch=='_';
+		}
+
+	}
+
+
+	/**
 	 * Action for when the user tries to insert a template (that is,
 	 * they've typed a template ID and pressed the trigger character
 	 * (a space) in an attempt to do the substitution).
@@ -1054,6 +1138,93 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public final String getMacroID() {
 			return rstaPossiblyInsertTemplateAction;
+		}
+
+	}
+
+
+	/**
+	 * Action to move the selection and/or caret. Constructor indicates
+	 * direction to use.  This class overrides the behavior defined in
+	 * {@link RTextAreaEditorKit} to better skip "words" in source code.
+	 */
+	public static class PreviousWordAction
+						extends RTextAreaEditorKit.PreviousWordAction {
+
+		private Segment seg;
+
+		public PreviousWordAction(String nm, boolean select) {
+			super(nm, select);
+			seg = new Segment();
+		}
+
+		/**
+		 * Overridden to do better with skipping "words" in code.
+		 */
+		protected int getPreviousWord(RTextArea textArea, int offs)
+										throws BadLocationException {
+
+			if (offs==0) {
+				return offs;
+			}
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			int line = textArea.getLineOfOffset(offs);
+			int start = textArea.getLineStartOffset(line);
+			if (offs==start) {
+				return start-1; // End of previous line.
+			}
+			doc.getText(start, offs-start, seg);
+
+			// Determine the "type" of char at offs - lower case, upper case,
+			// whitespace or other
+			char ch = seg.last();
+
+			// Skip any "leading" whitespace
+			while (Character.isWhitespace(ch)) {
+				ch = seg.previous();
+			}
+
+			// Skip the group of lower-case letters and/or digits
+			if (isLowerOrDigit(ch)) {
+				do {
+					ch = seg.previous();
+				} while (isLowerOrDigit(ch));
+				if (Character.isUpperCase(ch)) {
+					ch = seg.previous(); // Skip first capital
+				}
+			}
+
+			// Skip any upper-case chars, then lower-case and/or digits
+			else if (Character.isUpperCase(ch)) {
+				do {
+					ch = seg.previous();
+				} while (Character.isUpperCase(ch));
+				while (isLowerOrDigit(ch)) {
+					ch = seg.previous();
+				}
+			}
+
+			// Skip groups of "anything else" (operators, etc.).
+			else if (!Character.isWhitespace(ch)) {
+				do {
+					ch = seg.previous();
+				} while (ch!=Segment.DONE &&
+						!(isLowerOrDigit(ch) || Character.isUpperCase(ch) ||
+								Character.isWhitespace(ch)));
+			}
+
+			offs -= seg.getEndIndex() - seg.getIndex();
+			if (ch!=Segment.DONE) {
+				offs++;
+			}
+
+			return offs;
+
+		}
+
+		private static final boolean isLowerOrDigit(char ch) {
+			return Character.isLowerCase(ch) || Character.isDigit(ch) || ch=='_';
 		}
 
 	}
