@@ -122,6 +122,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
 	public static final String CLOSE_CURLY_BRACES_PROPERTY			= "RSTA.closeCurlyBraces";
 	public static final String CLOSE_MARKUP_TAGS_PROPERTY			= "RSTA.closeMarkupTags";
+	public static final String EOL_VISIBLE_PROPERTY					= "RSTA.eolMarkersVisible";
 	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
 	public static final String HYPERLINKS_ENABLED_PROPERTY			= "RSTA.hyperlinksEnabled";
@@ -214,6 +215,11 @@ Rectangle match;
 	 * Whether we are displaying visible whitespace (spaces and tabs).
 	 */
 	private boolean whitespaceVisible;
+
+	/**
+	 * Whether EOL markers should be visible at the end of each line.
+	 */
+	private boolean eolMarkersVisible;
 
 	/**
 	 * Whether hyperlinks are enabled (must be supported by the syntax
@@ -821,6 +827,17 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether an EOL marker should be drawn at the end of each line.
+	 *
+	 * @return Whether EOL markers should be visible.
+	 * @see #setEOLMarkersVisible(boolean)
+	 * @see #isWhitespaceVisible()
+	 */
+	public boolean getEOLMarkersVisible() {
+		return eolMarkersVisible;
+	}
+
+	/**
 	 * Returns the font for tokens of the specified type.
 	 *
 	 * @param type The type of token.
@@ -859,7 +876,21 @@ private boolean fractionalFontMetricsEnabled;
 				hoveredOverLinkOffset==t.offset) {
 			return hyperlinkFG;
 		}
-		Color fg = syntaxScheme.styles[t.type].foreground;
+		return getForegroundForTokenType(t.type);
+	}
+
+
+	/**
+	 * Returns the foreground color to use when painting a token.  This does
+	 * not take into account whether the token is a hyperlink.
+	 *
+	 * @param type The token type.
+	 * @return The foreground color to use for that token.  This
+	 *         value is never <code>null</code>.
+	 * @see #getForegroundForToken(Token)
+	 */
+	public Color getForegroundForTokenType(int type) {
+		Color fg = syntaxScheme.styles[type].foreground;
 		return fg!=null ? fg : getForeground();
 	}
 
@@ -1381,7 +1412,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns whether whitespace (spaces and tabs) is visible.
 	 *
 	 * @return Whether whitespace is visible.
-	 * @see #setWhitespaceVisible
+	 * @see #setWhitespaceVisible(boolean)
+	 * @see #getEOLMarkersVisible()
 	 */
 	public boolean isWhitespaceVisible() {
 		return whitespaceVisible;
@@ -1635,6 +1667,23 @@ private boolean fractionalFontMetricsEnabled;
 					"RSyntaxTextArea must be instances of " +
 					"RSyntaxDocument!");
 		super.setDocument(document);
+	}
+
+
+	/**
+	 * Sets whether EOL markers are visible at the end of each line.  This
+	 * method fires a property change of type {@link #EOL_VISIBLE_PROPERTY}.
+	 *
+	 * @param visible Whether EOL markers are visible.
+	 * @see #getEOLMarkersVisible()
+	 * @see #setWhitespaceVisible(boolean)
+	 */
+	public void setEOLMarkersVisible(boolean visible) {
+		if (visible!=eolMarkersVisible) {
+			eolMarkersVisible = visible;
+			repaint();
+			firePropertyChange(EOL_VISIBLE_PROPERTY, !visible, visible);
+		}
 	}
 
 

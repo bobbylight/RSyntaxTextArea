@@ -203,6 +203,7 @@ return p + 1;
 		while (token!=null && token.isPaintable()) {
 
 			int p = calculateBreakPosition(p0, token, x);
+			x = r.x;
 
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
@@ -222,10 +223,17 @@ return p + 1;
 			}
 
 			p0 = (p==p0) ? p1 : p;
-			x = r.x;
 			y += fontHeight;
 			
 		} // End of while (token!=null && token.isPaintable()).
+
+		// NOTE: We should re-use code from Token (paintBackground()) here,
+		// but don't because I'm just too lazy.
+		if (host.getEOLMarkersVisible()) {
+			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
+			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
+			g.drawString("\u00B6", x, y-fontHeight);
+		}
 
 	}
 
@@ -247,7 +255,11 @@ return p + 1;
 	 */
 	public float getMaximumSpan(int axis) {
 		updateMetrics();
-		return super.getMaximumSpan(axis);
+		float span = super.getPreferredSpan(axis);
+		if (axis==View.X_AXIS) { // EOL marker
+			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+		}
+		return span;
 	}
 
 
@@ -268,7 +280,11 @@ return p + 1;
 	 */
 	public float getMinimumSpan(int axis) {
 		updateMetrics();
-		return super.getMinimumSpan(axis);
+		float span = super.getPreferredSpan(axis);
+		if (axis==View.X_AXIS) { // EOL marker
+			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+		}
+		return span;
 	}
 
 
@@ -289,7 +305,11 @@ return p + 1;
 	 */
 	public float getPreferredSpan(int axis) {
 		updateMetrics();
-		return super.getPreferredSpan(axis);
+		float span = super.getPreferredSpan(axis);
+		if (axis==View.X_AXIS) { // EOL marker
+			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+		}
+		return span;
 	}
 
 

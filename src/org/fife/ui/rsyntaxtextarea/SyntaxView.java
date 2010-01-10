@@ -184,10 +184,13 @@ public class SyntaxView extends View implements TabExpander,
 			token = token.getNextToken();
 		}
 
-		//// Paint the "end-of-line" marker if desired.
-		//if (true/*host.areEndOfLineMarkersPainted()*/) {
-		//	drawTabbedText(eolMarker, nextX,y, g, 0, new Color(170, 205,205), null);
-		//}
+		// NOTE: We should re-use code from Token (paintBackground()) here,
+		// but don't because I'm just too lazy.
+		if (host.getEOLMarkersVisible()) {
+			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
+			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
+			g.drawString("\u00B6", nextX, y);
+		}
 
 		// Return the x-coordinate at the end of the painted text.
 		return nextX;
@@ -251,7 +254,10 @@ public class SyntaxView extends View implements TabExpander,
 		updateMetrics();
 		switch (axis) {
 			case View.X_AXIS:
-				return longLineWidth + 10; // "fudge factor."
+				float span = longLineWidth + 10; // "fudge factor."
+				if (host.getEOLMarkersVisible()) {
+					span += metrics.charWidth('\u00B6');
+				}
 			case View.Y_AXIS:
 				// We update lineHeight here as when this method is first
 				// called, lineHeight isn't initialized.  If we don't do it
