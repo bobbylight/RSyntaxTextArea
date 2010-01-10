@@ -52,10 +52,14 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  *   <li>Moving the caret to the "matching bracket" of the one at the current
  *       caret position</li>
  *   <li>Toggling whether the currently selected lines are commented out.</li>
+ *   <li>Better selection of "words" on mouse double-clicks for programming
+ *       languages.</li>
+ *   <li>Better keyboard navigation via Ctrl+arrow keys for programming
+ *       languages.</li>
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.4
+ * @version 0.5
  */
 public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
@@ -77,9 +81,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	private static final Action[] defaultActions = {
 		new CloseCurlyBraceAction(),
 		new CloseMarkupTagAction(),
+		new BeginWordAction(beginWordAction, false),
+		new BeginWordAction(selectionBeginWordAction, true),
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
+		new EndWordAction(endWordAction, false),
+		new EndWordAction(endWordAction, true),
 		new GoToMatchingBracketAction(),
 		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
@@ -89,6 +97,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new PossiblyInsertTemplateAction(),
 		new PreviousWordAction(previousWordAction, false),  
 		new PreviousWordAction(selectionPreviousWordAction, true),
+		new SelectWordAction(),
 		new ToggleCommentAction(),
 	};
 
@@ -120,6 +129,84 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public Action[] getActions() {
 		return TextAction.augmentList(super.getActions(),
 							RSyntaxTextAreaEditorKit.defaultActions);
+	}
+
+
+	/**
+	 * Positions the caret at the beginning of the word.  This class is here
+	 * to better handle finding the "beginning of the word" for programming
+	 * languages.
+	 */
+	protected static class BeginWordAction
+							extends RTextAreaEditorKit.BeginWordAction {
+
+		private Segment seg;
+
+		protected BeginWordAction(String name, boolean select) {
+			super(name, select);
+			seg = new Segment();
+		}
+
+		protected int getWordStart(RTextArea textArea, int offs)
+										throws BadLocationException {
+
+			if (offs==0) {
+				return offs;
+			}
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			int line = textArea.getLineOfOffset(offs);
+			int start = textArea.getLineStartOffset(line);
+			if (offs==start) {
+				return start;
+			}
+			int end = textArea.getLineEndOffset(line);
+			if (line!=textArea.getLineCount()-1) {
+				end--;
+			}
+			doc.getText(start, end-start, seg);
+
+			// Determine the "type" of char at offs - lower case, upper case,
+			// whitespace or other.  We take special care here as we're starting
+			// in the middle of the Segment to check whether we're already at
+			// the "beginning" of a word.
+			int firstIndex = seg.getBeginIndex() + (offs-start) - 1;
+			seg.setIndex(firstIndex);
+			char ch = seg.current();
+			char nextCh = offs==end ? 0 : seg.array[seg.getIndex() + 1];
+
+			// The "word" is a group of letters and/or digits
+			if (Character.isLetterOrDigit(ch)) {
+				if (offs!=end && !Character.isLetterOrDigit(nextCh)) {
+					return offs;
+				}
+				do {
+					ch = seg.previous();
+				} while (Character.isLetterOrDigit(ch));
+			}
+
+			// The "word" is whitespace
+			else if (Character.isWhitespace(ch)) {
+				if (offs!=end && !Character.isWhitespace(nextCh)) {
+					return offs;
+				}
+				do {
+					ch = seg.previous();
+				} while (Character.isWhitespace(ch));
+			}
+
+			// Otherwise, the "word" a single "something else" char (operator,
+			// etc.).
+
+			offs -= firstIndex - seg.getIndex() + 1;//seg.getEndIndex() - seg.getIndex();
+			if (ch!=Segment.DONE && nextCh!='\n') {
+				offs++;
+			}
+
+			return offs;
+
+		}
+
 	}
 
 
@@ -600,6 +687,68 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
+	 * Positions the caret at the end of the word.  This class is here to
+	 * better handle finding the "end of the word" in programming languages.
+	 */
+	protected static class EndWordAction
+							extends RTextAreaEditorKit.EndWordAction {
+
+ 		private Segment seg;
+
+		protected EndWordAction(String name, boolean select) {
+			super(name, select);
+			seg = new Segment();
+		}
+
+		protected int getWordEnd(RTextArea textArea, int offs)
+									throws BadLocationException {
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			if (offs==doc.getLength()) {
+				return offs;
+			}
+
+			int line = textArea.getLineOfOffset(offs);
+			int end = textArea.getLineEndOffset(line);
+			if (line!=textArea.getLineCount()-1) {
+				end--; // Hide newline
+			}
+			if (offs==end) {
+				return end;
+			}
+			doc.getText(offs, end-offs, seg);
+
+			// Determine the "type" of char at offs - letter/digit,
+			// whitespace or other
+			char ch = seg.first();
+
+			// The "word" is a group of letters and/or digits
+			if (Character.isLetterOrDigit(ch)) {
+				do {
+					ch = seg.next();
+				} while (Character.isLetterOrDigit(ch));
+			}
+
+			// The "word" is whitespace.
+			else if (Character.isWhitespace(ch)) {
+
+				do {
+					ch = seg.next();
+				} while (Character.isWhitespace(ch));
+			}
+
+			// Otherwise, the "word" is a single character of some other type
+			// (operator, etc.).
+
+			offs += seg.getIndex() - seg.getBeginIndex();
+			return offs;
+
+		}
+
+	}
+
+
+	/**
 	 * Action for moving the caret to the "matching bracket" of the bracket
 	 * at the caret position (either before or after).
 	 */
@@ -1010,25 +1159,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 			doc.getText(offs, end-offs, seg);
 
-			// Determine the "type" of char at offs - lower case, upper case,
+			// Determine the "type" of char at offs - letter/digit,
 			// whitespace or other
 			char ch = seg.first();
 
-			// Skip the group of lower-case letters and/or digits
-			if (isLowerOrDigit(ch)) {
+			// Skip the group of letters and/or digits
+			if (Character.isLetterOrDigit(ch)) {
 				do {
 					ch = seg.next();
-				} while (isLowerOrDigit(ch));
-			}
-
-			// Skip any upper-case chars, then lower-case and/or digits
-			else if (Character.isUpperCase(ch)) {
-				do {
-					ch = seg.next();
-				} while (Character.isUpperCase(ch));
-				while (isLowerOrDigit(ch)) {
-					ch = seg.next();
-				}
+				} while (Character.isLetterOrDigit(ch));
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
@@ -1036,7 +1175,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.next();
 				} while (ch!=Segment.DONE &&
-						!(isLowerOrDigit(ch) || Character.isUpperCase(ch) ||
+						!(Character.isLetterOrDigit(ch) ||
 								Character.isWhitespace(ch)));
 			}
 
@@ -1046,13 +1185,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			offs += seg.getIndex() - seg.getBeginIndex();
-
 			return offs;
 
-		}
-
-		private static final boolean isLowerOrDigit(char ch) {
-			return Character.isLowerCase(ch) || Character.isDigit(ch) || ch=='_';
 		}
 
 	}
@@ -1185,24 +1319,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				ch = seg.previous();
 			}
 
-			// Skip the group of lower-case letters and/or digits
-			if (isLowerOrDigit(ch)) {
+			// Skip the group of letters and/or digits
+			if (Character.isLetterOrDigit(ch)) {
 				do {
 					ch = seg.previous();
-				} while (isLowerOrDigit(ch));
-				if (Character.isUpperCase(ch)) {
-					ch = seg.previous(); // Skip first capital
-				}
-			}
-
-			// Skip any upper-case chars, then lower-case and/or digits
-			else if (Character.isUpperCase(ch)) {
-				do {
-					ch = seg.previous();
-				} while (Character.isUpperCase(ch));
-				while (isLowerOrDigit(ch)) {
-					ch = seg.previous();
-				}
+				} while (Character.isLetterOrDigit(ch));
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
@@ -1210,7 +1331,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.previous();
 				} while (ch!=Segment.DONE &&
-						!(isLowerOrDigit(ch) || Character.isUpperCase(ch) ||
+						!(Character.isLetterOrDigit(ch) ||
 								Character.isWhitespace(ch)));
 			}
 
@@ -1223,8 +1344,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
-		private static final boolean isLowerOrDigit(char ch) {
-			return Character.isLowerCase(ch) || Character.isDigit(ch) || ch=='_';
+	}
+
+
+	/**
+	 * Selects the word around the caret.  This class is here to better
+	 * handle selecting "words" in programming languages.
+	 */
+	public static class SelectWordAction
+					extends RTextAreaEditorKit.SelectWordAction {
+
+		protected void createActions() {
+			start = new BeginWordAction("pigdog", false);
+			end = new EndWordAction("pigdog", true);
 		}
 
 	}
