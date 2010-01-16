@@ -66,9 +66,9 @@ public class CodeTemplateManager {
 	private TemplateComparator comparator;
 	private File directory;
 
-	private static final int ctrl = InputEvent.CTRL_MASK;
+	private static final int mask = InputEvent.CTRL_MASK|InputEvent.SHIFT_MASK;
 	static final KeyStroke TEMPLATE_KEYSTROKE = KeyStroke.
-								getKeyStroke(KeyEvent.VK_SPACE, ctrl);
+								getKeyStroke(KeyEvent.VK_SPACE, mask);
 
 
 	/**
@@ -336,7 +336,7 @@ public class CodeTemplateManager {
 	/*
 	 * FIXME:  The trigger set here IS inserted when no matching template
 	 * is found, but a space character (" ") is always used as the "trigger"
-	 * to look for templates.  This is because it is hardcoded in
+	 * to look for templates.  This is because it is hard-coded in
 	 * RSyntaxTextArea's input map this way.  We need to change this.
 	 * See RSyntaxTextAreaDefaultInputMap.java.
 	 */

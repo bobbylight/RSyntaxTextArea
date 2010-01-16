@@ -25,6 +25,7 @@ package org.fife.ui.rtextarea;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.util.Date;
 import javax.swing.*;
@@ -68,6 +69,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * the caret position to the end of the line).
 	 */
 	public static final String rtaDeleteRestOfLineAction		= "RTA.DeleteRestOfLineAction";
+
+	/**
+	 * The name of the action that completes the word at the caret position
+	 * with the last word in the document that starts with the text up to the
+	 * caret.
+	 */
+	public static final String rtaDumbCompleteWordAction		= "RTA.DumbCompleteWordAction";
 
 	/**
 	 * The name of the action that ends recording a macro.
@@ -209,6 +217,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new DeletePrevCharAction(),
 		new DeletePrevWordAction(),
 		new DeleteRestOfLineAction(),
+		new DumbCompleteWordAction(),
 		new EndAction(endAction, false),
 		new EndAction(selectionEndAction, true),
 		new EndLineAction(endLineAction, false),
@@ -990,6 +999,88 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Finds the most recent word in the document that matches the "word" up
+	 * to the current caret position, and auto-completes the rest.  Repeatedly
+	 * calling this action at the same location in the document goes one
+	 * match back each time it is called.
+	 */
+	public static class DumbCompleteWordAction extends RecordableTextAction {
+
+		private int lastWordStart;
+		private int lastDot;
+		private int searchOffs;
+		private String lastPrefix;
+
+		public DumbCompleteWordAction() {
+			super(rtaDumbCompleteWordAction);
+			lastWordStart = searchOffs = lastDot = -1;
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				return;
+			}
+
+			if ((e.getModifiers() & InputEvent.SHIFT_MASK) == 0) {
+				textArea.replaceSelection(" ");
+				return;
+			}
+
+			try {
+
+				int dot = textArea.getCaretPosition();
+				if (dot == 0) {
+					return;
+				}
+
+				int curWordStart = Utilities.getWordStart(textArea, dot - 1);
+
+				if (lastWordStart!=curWordStart || dot!=lastDot) {
+					lastPrefix = textArea.getText(curWordStart,dot-curWordStart);
+					// Utilities.getWordStart() treats spans of whitespace and
+					// single non-letter chars as "words."
+					if (lastPrefix.length()==0 ||
+							!Character.isLetter(lastPrefix.charAt(lastPrefix.length()-1))) {
+						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+						return;
+					}
+					lastWordStart = dot - lastPrefix.length();
+					searchOffs = lastWordStart;
+				}
+
+				while (searchOffs > 0) {
+					int wordStart = Utilities.getPreviousWord(textArea,
+							searchOffs);
+					if (wordStart==0 || wordStart==BreakIterator.DONE) {
+						UIManager.getLookAndFeel().provideErrorFeedback(
+								textArea);
+						break;
+					}
+					int end = Utilities.getWordEnd(textArea, wordStart);
+					String word = textArea.getText(wordStart, end - wordStart);
+					searchOffs = wordStart;
+					if (word.startsWith(lastPrefix)) {
+						textArea.replaceRange(word, lastWordStart, dot);
+						lastDot = textArea.getCaretPosition(); // Maybe shifted
+						break;
+					}
+				}
+
+			} catch (BadLocationException ble) { // Never happens
+				ble.printStackTrace();
+			}
+
+		}
+
+		public final String getMacroID() {
+			return getName();
+		}
+
+	}
+
+
+	/**
 	 * Moves the caret to the end of the document.
 	 */
 	public static class EndAction extends RecordableTextAction {
@@ -1032,9 +1123,9 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			try {
 				int offs = textArea.getCaretPosition();
-                    // FIXME:  Replace Utilities call with custom version to
-                    // cut down on all of the modelToViews, as each call causes
-                    // a getTokenList => expensive!
+				// FIXME:  Replace Utilities call with custom version to
+				// cut down on all of the modelToViews, as each call causes
+				// a getTokenList => expensive!
 				int endOffs = Utilities.getRowEnd(textArea, offs);
 				if (select) {
 					textArea.moveCaretPosition(endOffs);
