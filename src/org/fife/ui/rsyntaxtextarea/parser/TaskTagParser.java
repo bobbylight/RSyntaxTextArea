@@ -56,6 +56,17 @@ public class TaskTagParser extends AbstractParser {
 	}
 
 
+	/**
+	 * Returns the regular expression used to search for tasks.
+	 *
+	 * @return The regular expression.
+	 * @see #setTaskPattern(String)
+	 */
+	public String getTaskPattern() {
+		return taskPattern.pattern();
+	}
+
+
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 
 		Element root = doc.getDefaultRootElement();
@@ -124,6 +135,7 @@ public class TaskTagParser extends AbstractParser {
 	 *        disables task parsing.
 	 * @throws PatternSyntaxException If <code>pattern</code> is an invalid
 	 *         regular expression.
+	 * @see #getTaskPattern()
 	 */
 	public void setTaskPattern(String pattern) throws PatternSyntaxException {
 		if (pattern==null) {

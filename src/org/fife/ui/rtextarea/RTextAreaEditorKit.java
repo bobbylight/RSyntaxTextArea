@@ -1022,8 +1022,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				return;
 			}
 
-			if ((e.getModifiers() & InputEvent.SHIFT_MASK) == 0) {
-				textArea.replaceSelection(" ");
+			int modifiers = e.getModifiers();
+			if ((modifiers&InputEvent.SHIFT_MASK)!=InputEvent.SHIFT_MASK) {
+				if (modifiers==0) { // Only insert space if no modifiers
+					textArea.replaceSelection(" ");
+				}
 				return;
 			}
 
