@@ -26,7 +26,6 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.swing.text.Element;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -44,7 +43,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 public class TaskTagParser extends AbstractParser {
 
 	private DefaultParseResult result;
-	private String DEFAULT_TASK_PATTERN	= "TODO|FIXME";
+	private String DEFAULT_TASK_PATTERN	= "TODO|FIXME|???";
 	private Pattern taskPattern;
 
 	private static final Color COLOR = new Color(48, 150, 252);
@@ -59,11 +58,13 @@ public class TaskTagParser extends AbstractParser {
 	/**
 	 * Returns the regular expression used to search for tasks.
 	 *
-	 * @return The regular expression.
+	 * @return The regular expression.  This may be <code>null</code> if no
+	 *         regular expression was specified (or an empty string was
+	 *         specified).
 	 * @see #setTaskPattern(String)
 	 */
 	public String getTaskPattern() {
-		return taskPattern.pattern();
+		return taskPattern==null ? null : taskPattern.pattern();
 	}
 
 
@@ -128,17 +129,18 @@ public class TaskTagParser extends AbstractParser {
 
 
 	/**
-	 * Sets the pattern of task identifiers, for example,
-	 * "<code>TODO|FIXME</code>".
+	 * Sets the pattern of task identifiers.  You will usually want this to be
+	 * a list of words "or'ed" together, such as
+	 * "<code>TODO|FIXME|HACK|REMIND</code>".
 	 *
-	 * @param pattern The pattern.  A value of <code>null</code> effectively
-	 *        disables task parsing.
+	 * @param pattern The pattern.  A value of <code>null</code> or an
+	 *        empty string effectively disables task parsing.
 	 * @throws PatternSyntaxException If <code>pattern</code> is an invalid
 	 *         regular expression.
 	 * @see #getTaskPattern()
 	 */
 	public void setTaskPattern(String pattern) throws PatternSyntaxException {
-		if (pattern==null) {
+		if (pattern==null || pattern.length()==0) {
 			taskPattern = null;
 		}
 		else {

@@ -258,6 +258,7 @@ public class SyntaxView extends View implements TabExpander,
 				if (host.getEOLMarkersVisible()) {
 					span += metrics.charWidth('\u00B6');
 				}
+				return span;
 			case View.Y_AXIS:
 				// We update lineHeight here as when this method is first
 				// called, lineHeight isn't initialized.  If we don't do it
