@@ -43,12 +43,17 @@ import org.fife.ui.rsyntaxtextarea.Token;
 public class TaskTagParser extends AbstractParser {
 
 	private DefaultParseResult result;
-	private String DEFAULT_TASK_PATTERN	= "TODO|FIXME|???";
+	private String DEFAULT_TASK_PATTERN	= "TODO|FIXME|HACK";
 	private Pattern taskPattern;
 
 	private static final Color COLOR = new Color(48, 150, 252);
 
 
+	/**
+	 * Creates a new task parser.  The default parser treats the following
+	 * identifiers in comments as task definitions:  "<code>TODO</code>",
+	 * "<code>FIXME</code>", and "<code>HACK</code>".
+	 */
 	public TaskTagParser() {
 		result = new DefaultParseResult(this);
 		setTaskPattern(DEFAULT_TASK_PATTERN);
