@@ -442,7 +442,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 			font = new Font("Monospaced", Font.PLAIN, 13);
 		}
 
-		System.out.println(font.getFamily() + ", " + font.getName());
+		//System.out.println(font.getFamily() + ", " + font.getName());
 		return font;
 
 	}
