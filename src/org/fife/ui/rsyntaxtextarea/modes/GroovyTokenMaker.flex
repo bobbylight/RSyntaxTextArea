@@ -90,6 +90,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
 	 */
 	private void addToken(int tokenType) {
 		addToken(zzStartRead, zzMarkedPos-1, tokenType);
@@ -193,9 +205,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -210,7 +221,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -233,6 +244,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}
 
 Letter							= [A-Za-z]
+LetterOrUnderscore				= ({Letter}|"_")
 NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
@@ -242,7 +254,7 @@ AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({Letter}|"_"|"$")
+IdentifierStart					= ({LetterOrUnderscore}|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 
 LineTerminator				= (\n)
@@ -281,17 +293,23 @@ AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|
 GroovyOperator				= ("=~")
 Operator					= ({NonAssignmentOperator}|{AssignmentOperator}|{GroovyOperator})
 
-DocumentationKeyword		= ("author"|"deprecated"|"exception"|"link"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
+CurrentBlockTag				= ("author"|"deprecated"|"exception"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
+ProposedBlockTag			= ("category"|"example"|"tutorial"|"index"|"exclude"|"todo"|"internal"|"obsolete"|"threadsafety")
+BlockTag					= ({CurrentBlockTag}|{ProposedBlockTag})
+InlineTag					= ("code"|"docRoot"|"inheritDoc"|"link"|"linkplain"|"literal"|"value")
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
 ErrorIdentifier			= ({NonSeparator}+)
 
 Annotation				= ("@"{Identifier}?)
-/*
-URLCharacter				= ([A-Za-z_0-9:/\.\?=&\-])
-URLCharacters				= ({URLCharacter}+)
-URL						= (("http://"|"www."){URLCharacters})
-*/
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 %state MLC
 %state DOCCOMMENT
@@ -300,153 +318,206 @@ URL						= (("http://"|"www."){URLCharacters})
 
 %%
 
-/* Keywords */
-<YYINITIAL> "abstract"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "break"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "case"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "catch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "class"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "continue"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "default"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "do"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "extends"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "final"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "finally"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "it"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "implements"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "import"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "instanceof"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "native"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "new"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "null"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "package"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "private"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "protected"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "public"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "static"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "strictfp"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "super"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "switch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "synchronized"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "this"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "throw"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "throws"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "transient"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "try"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "void"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "volatile"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"				{ addToken(Token.RESERVED_WORD); }
-
-/* Groovy keywords */
-<YYINITIAL> "as"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "assert"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "def"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "mixin"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "property"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "test"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "using"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "in"				{ addToken(Token.RESERVED_WORD); }
-
-/* Data types. */
-<YYINITIAL> "boolean"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "byte"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "char"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "double"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "float"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "int"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "long"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "short"					{ addToken(Token.DATA_TYPE); }
-
-/* Booleans. */
-<YYINITIAL> {BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
-
-/* Standard Java classes (java.lang) */
-<YYINITIAL> "Boolean"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Byte"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Character"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Class"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ClassLoader"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Compiler"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Double"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Float"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "InheritableThreadLocal"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Integer"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Long"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Math"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Number"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Object"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Package"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Process"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Runtime"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "RuntimePermission"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SecurityManager"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Short"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "StackTraceElement"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "StrictMath"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "String"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "StringBuffer"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "System"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Thread"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ThreadGroup"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ThreadLocal"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Throwable"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Void"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ArithmeticException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ArrayIndexOutOfBoundsException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ArrayStoreException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ClassCastException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ClassNotFoundException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CloneNotSupportedException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Exception"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalAccessException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalArgumentException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalMonitorStateException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalStateException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalThreadStateException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IndexOutOfBoundsException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "InstantiationException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "InterruptedException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NegativeArraySizeException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NoSuchFieldException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NoSuchMethodException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NullPointerException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NumberFormatException"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "RuntimeException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "SecurityException"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "StringIndexOutOfBoundsException"	{ addToken(Token.FUNCTION); }
-<YYINITIAL> "UnsupportedOperationException"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "AbstractMethodError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "AssertionError"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ClassCircularityError"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ClassFormatError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Error"							{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ExceptionInInitializerError"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalAccessError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IllegalAccessError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "IncompatibleClassChangeError"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "InternalError"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "LinkageError"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NoClassDefFoundError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NoSuchFieldError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "NoSuchMethodError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "OutOfMemoryError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "StackOverflowError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ThreadDeath"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "UnknownError"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "UnsatisfiedLinkError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "UnsupportedClassVersionError"		{ addToken(Token.FUNCTION); }
-<YYINITIAL> "VerifyError"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "VirtualMachineError"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "CharSequence"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Cloneable"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Comparable"						{ addToken(Token.FUNCTION); }
-<YYINITIAL> "Runnable"						{ addToken(Token.FUNCTION); }
-
 <YYINITIAL> {
+
+	/* Keywords */
+	"abstract" |
+	"break" |
+	"case" |
+	"catch" |
+	"class" |
+	"continue" |
+	"default" |
+	"do" |
+	"else" |
+	"extends" |
+	"final" |
+	"finally" |
+	"for" |
+	"if" |
+	"it" |
+	"implements" |
+	"import" |
+	"instanceof" |
+	"native" |
+	"new" |
+	"null" |
+	"package" |
+	"private" |
+	"protected" |
+	"public" |
+	"return" |
+	"static" |
+	"strictfp" |
+	"super" |
+	"switch" |
+	"synchronized" |
+	"this" |
+	"throw" |
+	"throws" |
+	"transient" |
+	"try" |
+	"void" |
+	"volatile" |
+	"while"				{ addToken(Token.RESERVED_WORD); }
+
+	/* Groovy keywords */
+	"as" |
+	"assert" |
+	"def" |
+	"mixin" |
+	"property" |
+	"test" |
+	"using" |
+	"in"				{ addToken(Token.RESERVED_WORD); }
+
+	/* Data types. */
+	"boolean" |
+	"byte" |
+	"char" |
+	"double" |
+	"float" |
+	"int" |
+	"long" |
+	"short"					{ addToken(Token.DATA_TYPE); }
+
+	/* Booleans. */
+	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+
+	/* java.lang stuff */
+	"Appendable" |
+	"CharSequence" |
+	"Cloneable" |
+	"Comparable" |
+	"Iterable" |
+	"Readable" |
+	"Runnable" |
+	"Boolean" |
+	"Byte" |
+	"Character" |
+	"Character.Subset" |
+	"Character.UnicodeBlock" |
+	"Class" |
+	"ClassLoader" |
+	"Compiler" |
+	"Double" |
+	"Enum" |
+	"Float" |
+	"InheritableThreadLocal" |
+	"Integer" |
+	"Long" |
+	"Math" |
+	"Number" |
+	"Object" |
+	"Package" |
+	"Process" |
+	"ProcessBuilder" |
+	"Runtime" |
+	"RuntimePermission" |
+	"SecurityManager" |
+	"Short" |
+	"StackTraceElement" |
+	"StrictMath" |
+	"String" |
+	"StringBuffer" |
+	"StringBuilder" |
+	"System" |
+	"Thread" |
+	"ThreadGroup" |
+	"ThreadLocal" |
+	"Throwable" |
+	"Void" |
+	"Thread.State" |
+	"ArithmeticException" |
+	"ArrayIndexOutOfBoundsException" |
+	"ArrayStoreException" |
+	"ClassCastException" |
+	"ClassNotFoundException" |
+	"CloneNotSupportedException" |
+	"EnumConstantNotPresentException" |
+	"Exception" |
+	"IllegalAccessException" |
+	"IllegalArgumentException" |
+	"IllegalMonitorStateException" |
+	"IllegalStateException" |
+	"IllegalThreadStateException" |
+	"IndexOutOfBoundsException" |
+	"InstantiationException" |
+	"InterruptedException" |
+	"NegativeArraySizeException" |
+	"NoSuchFieldException" |
+	"NoSuchMethodException" |
+	"NullPointerException" |
+	"NumberFormatException" |
+	"RuntimeException" |
+	"SecurityException" |
+	"StringIndexOutOfBoundsException" |
+	"TypeNotPresentException" |
+	"UnsupportedOperationException" |
+	"AbstractMethodError" |
+	"AssertionError" |
+	"ClassCircularityError" |
+	"ClassFormatError" |
+	"Error" |
+	"ExceptionInInitializerError" |
+	"IllegalAccessError" |
+	"IncompatibleClassChangeError" |
+	"InstantiationError" |
+	"InternalError" |
+	"LinkageError" |
+	"NoClassDefFoundError" |
+	"NoSuchFieldError" |
+	"NoSuchMethodError" |
+	"OutOfMemoryError" |
+	"StackOverflowError" |
+	"ThreadDeath" |
+	"UnknownError" |
+	"UnsatisfiedLinkError" |
+	"UnsupportedClassVersionError" |
+	"VerifyError" |
+	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
+
+	/* Commonly used methods added to Object class */
+	"addShutdownHook" |
+	"any" |
+	"asBoolean" |
+	"asType" |
+	"collect" |
+	"dump" |
+	"each" |
+	"eachWithIndex" |
+	"every" |
+	"find" |
+	"findAll" |
+	"findIndexOf" |
+	"findIndexValues" |
+	"findLastIndexOf" |
+	"getAt" |
+	"getMetaClass" |
+	"getMetaPropertyValues" |
+	"getProperties" |
+	"grep" |
+	"hasProperty" |
+	"identity" |
+	"inject" |
+	"inspect" |
+	"invokeMethod" |
+	"is" |
+	"isCase" |
+	"iterator" |
+	"metaClass" |
+	"print" |
+	"printf" |
+	"println" |
+	"putAt" |
+	"respondsTo" |
+	"setMetaClass" |
+	"sleep" |
+	"split" |
+	"sprintf" |
+	"toString" |
+	"use" |
+	"with" 			{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
@@ -502,12 +573,10 @@ URL						= (("http://"|"www."){URLCharacters})
 
 <MLC> {
 
-	[^\n\*]+					{}
-/*	[^\h\w\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
+	[^hwf\n\*]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
+
 	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
@@ -518,20 +587,20 @@ URL						= (("http://"|"www."){URLCharacters})
 
 <DOCCOMMENT> {
 
-	[^\@\n\<\*]+				{}
-/*	[^\h\w\@\n\<\*]+			{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
-	"@"{DocumentationKeyword}	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
-	"@"						{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	[^hwf\@\{\n\<\*]+			{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
+
+	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"@"							{}
+	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"{"							{}
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
 	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }
-	\<						{}
+	\<							{}
 	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
-	\*						{}
-	<<EOF>>					{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	\*							{}
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
 
 }
 
