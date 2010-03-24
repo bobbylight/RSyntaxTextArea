@@ -2050,8 +2050,7 @@ private boolean fractionalFontMetricsEnabled;
 				!aaHintFieldName.equals(this.aaHintFieldName)) {
 			String old = this.aaHintFieldName;
 			try {
-				Field f = RenderingHints.class.
-								getDeclaredField(aaHintFieldName);
+				Field f = RenderingHints.class.getField(aaHintFieldName);
 				this.aaHint = f.get(null);
 				this.aaHintFieldName = aaHintFieldName;
 			} catch (RuntimeException re) {
