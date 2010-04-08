@@ -1045,7 +1045,10 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					// single non-letter chars as "words."
 					if (lastPrefix.length()==0 ||
 							!Character.isLetter(lastPrefix.charAt(lastPrefix.length()-1))) {
-						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+						//UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+						// It's annoying to not insert a space; sometimes I
+						// hold down shift when trying to type ") {".
+						textArea.replaceSelection(" ");
 						return;
 					}
 					lastWordStart = dot - lastPrefix.length();
