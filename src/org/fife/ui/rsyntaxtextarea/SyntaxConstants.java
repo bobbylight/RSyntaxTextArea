@@ -49,6 +49,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting ActionScript.
+	 */
+	public static final String SYNTAX_STYLE_ACTIONSCRIPT	= "text/actionscript";
+
+
+	/**
 	 * Style for highlighting x86 assembler.
 	 */
 	public static final String SYNTAX_STYLE_ASSEMBLER_X86	= "text/asm";

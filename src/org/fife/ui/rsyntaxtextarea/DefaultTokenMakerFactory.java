@@ -31,6 +31,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		String pkg = "org.fife.ui.rsyntaxtextarea.modes.";
 
 		map.put(SYNTAX_STYLE_NONE,				pkg + "PlainTextTokenMaker");
+		map.put(SYNTAX_STYLE_ACTIONSCRIPT,		pkg + "ActionScriptTokenMaker");
 		map.put(SYNTAX_STYLE_ASSEMBLER_X86,		pkg + "AssemblerX86TokenMaker");
 		map.put(SYNTAX_STYLE_BBCODE,			pkg + "BBCodeTokenMaker");
 		map.put(SYNTAX_STYLE_C,					pkg + "CTokenMaker");
