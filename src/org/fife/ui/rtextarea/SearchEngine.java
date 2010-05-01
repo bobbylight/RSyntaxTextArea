@@ -37,7 +37,7 @@ import javax.swing.text.Caret;
 
 /**
  * A singleton class that can perform advanced find/replace operations
- * in an <code>RTextArea</code>.
+ * in an {@link RTextArea}.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -49,64 +49,6 @@ public class SearchEngine {
 	 * Private constructor to prevent instantiation.
 	 */
 	private SearchEngine() {
-	}
-
-
-	/**
-	 * Centers the selection of the text component in the view.
-	 *
-	 * @param textArea The text component whose selection is to be centered.
-	 */
-	private static void centerSelectionInView(JTextArea textArea) {
-
-		int start = textArea.getSelectionStart();
-		int end = textArea.getSelectionEnd();
-		Rectangle r = null;
-
-		try {
-			Rectangle r1 = textArea.modelToView(start);
-			r = r1;
-			if (end!=start) {
-				r = textArea.modelToView(end);
-				r = r.union(r1);
-			}
-		} catch (BadLocationException ble) { // Never happens
-			ble.printStackTrace();
-		}
-
-		if (r!=null) {
-
-			Rectangle visible = textArea.getVisibleRect();
-			visible.x = r.x - (visible.width - r.width) / 2;
-			visible.y = r.y - (visible.height - r.height) / 2;
-
-			Rectangle bounds = textArea.getBounds();
-			Insets i = textArea.getInsets();
-			bounds.x = i.left;
-			bounds.y = i.top;
-			bounds.width -= i.left + i.right;
-			bounds.height -= i.top + i.bottom;
-
-			if (visible.x < bounds.x) {
-				visible.x = bounds.x;
-			}
-
-			if (visible.x + visible.width > bounds.x + bounds.width) {
-				visible.x = bounds.x + bounds.width - visible.width;
-			}
-
-			if (visible.y < bounds.y) {
-				visible.y = bounds.y;
-			}
-
-			if (visible.y + visible.height > bounds.y + bounds.height) {
-				visible.y = bounds.y + bounds.height - visible.height;
-			}
-
-			textArea.scrollRectToVisible(visible);
-
-		}
-
 	}
 
 
@@ -157,9 +99,7 @@ public class SearchEngine {
 				// won't appear selected.
 				c.setSelectionVisible(true);
 				pos = forward ? start+pos : pos;
-				c.setDot(pos);
-				c.moveDot(pos + text.length());
-				centerSelectionInView(textArea);
+				selectAndPossiblyCenter(textArea, pos, pos+text.length());
 				return true;
 			}
 		}
@@ -177,9 +117,7 @@ public class SearchEngine {
 				if (forward) {
 					regExPos.translate(start, start);
 				}
-				c.setDot(regExPos.x);
-				c.moveDot(regExPos.y);
-				centerSelectionInView(textArea);
+				selectAndPossiblyCenter(textArea, regExPos.x, regExPos.y);
 				return true;
 			}
 		}
@@ -761,10 +699,8 @@ public class SearchEngine {
 				matchStart += start;
 				matchEnd += start;
 			}
-			c.setDot(matchStart);
-			c.moveDot(matchEnd);
+			selectAndPossiblyCenter(textArea, matchStart, matchEnd);
 			textArea.replaceSelection(info.getReplacement());
-			centerSelectionInView(textArea);
 
 			return true;
 
@@ -821,7 +757,6 @@ public class SearchEngine {
 		makeMarkAndDotEqual(textArea, forward);
 		if (find(textArea, toFind, forward, matchCase, wholeWord, false)) {
 			textArea.replaceSelection(replaceWith);
-			centerSelectionInView(textArea);
 			return true;
 		}
 
@@ -906,6 +841,74 @@ public class SearchEngine {
 		}
 
 		return count;
+
+	}
+
+
+	/**
+	 * Selects a range of text in a text component.  If the new selection is
+	 * outside of the previous viewable rectangle, then the view is centered
+	 * around the new selection.
+	 *
+	 * @param textArea The text component whose selection is to be centered.
+	 * @param start The start of the range to select.
+	 * @param end The end of the range to select.
+	 */
+	private static void selectAndPossiblyCenter(JTextArea textArea, int start,
+												int end) {
+
+		Rectangle r = null;
+		try {
+			r = textArea.modelToView(start);
+			if (end!=start) {
+				r = r.union(textArea.modelToView(end));
+			}
+		} catch (BadLocationException ble) { // Never happens
+			ble.printStackTrace();
+			textArea.setSelectionStart(start);
+			textArea.setSelectionEnd(end);
+			return;
+		}
+
+		Rectangle visible = textArea.getVisibleRect();
+
+		// If the new selection is already in the view, don't scroll,
+		// as that is visually jarring.
+		if (visible.contains(r)) {
+			textArea.setSelectionStart(start);
+			textArea.setSelectionEnd(end);
+			return;
+		}
+
+		visible.x = r.x - (visible.width - r.width) / 2;
+		visible.y = r.y - (visible.height - r.height) / 2;
+
+		Rectangle bounds = textArea.getBounds();
+		Insets i = textArea.getInsets();
+		bounds.x = i.left;
+		bounds.y = i.top;
+		bounds.width -= i.left + i.right;
+		bounds.height -= i.top + i.bottom;
+
+		if (visible.x < bounds.x) {
+			visible.x = bounds.x;
+		}
+
+		if (visible.x + visible.width > bounds.x + bounds.width) {
+			visible.x = bounds.x + bounds.width - visible.width;
+		}
+
+		if (visible.y < bounds.y) {
+			visible.y = bounds.y;
+		}
+
+		if (visible.y + visible.height > bounds.y + bounds.height) {
+			visible.y = bounds.y + bounds.height - visible.height;
+		}
+
+		textArea.scrollRectToVisible(visible);
+		textArea.setSelectionStart(start);
+		textArea.setSelectionEnd(end);
 
 	}
 
