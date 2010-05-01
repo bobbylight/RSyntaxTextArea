@@ -22,7 +22,9 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -47,6 +49,64 @@ public class SearchEngine {
 	 * Private constructor to prevent instantiation.
 	 */
 	private SearchEngine() {
+	}
+
+
+	/**
+	 * Centers the selection of the text component in the view.
+	 *
+	 * @param textArea The text component whose selection is to be centered.
+	 */
+	private static void centerSelectionInView(JTextArea textArea) {
+
+		int start = textArea.getSelectionStart();
+		int end = textArea.getSelectionEnd();
+		Rectangle r = null;
+
+		try {
+			Rectangle r1 = textArea.modelToView(start);
+			r = r1;
+			if (end!=start) {
+				r = textArea.modelToView(end);
+				r = r.union(r1);
+			}
+		} catch (BadLocationException ble) { // Never happens
+			ble.printStackTrace();
+		}
+
+		if (r!=null) {
+
+			Rectangle visible = textArea.getVisibleRect();
+			visible.x = r.x - (visible.width - r.width) / 2;
+			visible.y = r.y - (visible.height - r.height) / 2;
+
+			Rectangle bounds = textArea.getBounds();
+			Insets i = textArea.getInsets();
+			bounds.x = i.left;
+			bounds.y = i.top;
+			bounds.width -= i.left + i.right;
+			bounds.height -= i.top + i.bottom;
+
+			if (visible.x < bounds.x) {
+				visible.x = bounds.x;
+			}
+
+			if (visible.x + visible.width > bounds.x + bounds.width) {
+				visible.x = bounds.x + bounds.width - visible.width;
+			}
+
+			if (visible.y < bounds.y) {
+				visible.y = bounds.y;
+			}
+
+			if (visible.y + visible.height > bounds.y + bounds.height) {
+				visible.y = bounds.y + bounds.height - visible.height;
+			}
+
+			textArea.scrollRectToVisible(visible);
+
+		}
+
 	}
 
 
@@ -99,6 +159,7 @@ public class SearchEngine {
 				pos = forward ? start+pos : pos;
 				c.setDot(pos);
 				c.moveDot(pos + text.length());
+				centerSelectionInView(textArea);
 				return true;
 			}
 		}
@@ -118,6 +179,7 @@ public class SearchEngine {
 				}
 				c.setDot(regExPos.x);
 				c.moveDot(regExPos.y);
+				centerSelectionInView(textArea);
 				return true;
 			}
 		}
@@ -702,6 +764,7 @@ public class SearchEngine {
 			c.setDot(matchStart);
 			c.moveDot(matchEnd);
 			textArea.replaceSelection(info.getReplacement());
+			centerSelectionInView(textArea);
 
 			return true;
 
@@ -758,6 +821,7 @@ public class SearchEngine {
 		makeMarkAndDotEqual(textArea, forward);
 		if (find(textArea, toFind, forward, matchCase, wholeWord, false)) {
 			textArea.replaceSelection(replaceWith);
+			centerSelectionInView(textArea);
 			return true;
 		}
 
