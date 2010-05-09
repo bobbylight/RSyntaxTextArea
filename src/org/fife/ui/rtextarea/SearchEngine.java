@@ -737,27 +737,34 @@ public class SearchEngine {
 	 * @see #regexReplace
 	 * @see #find
 	 */
-	public static boolean replace(JTextArea textArea, String toFind,
+	public static boolean replace(RTextArea textArea, String toFind,
 				String replaceWith, boolean forward, boolean matchCase,
 				boolean wholeWord, boolean regex)
 									throws PatternSyntaxException {
 
-		// Regular expression replacements have their own method.
-		if (regex) {
-			return regexReplace(textArea, toFind, replaceWith, forward,
-							matchCase, wholeWord);
-		}
+		textArea.beginAtomicEdit();
+		try {
 
-		// Plain text search.  If we find it, replace it!
-		// First make the dot and mark equal (get rid of any selection), as
-		// a common use-case is the user will use "Find" to select the text
-		// to replace, then click "Replace" to replace the current selection.
-		// Since our find() method searches from an endpoint of the selection,
-		// we must remove the selection to work properly.
-		makeMarkAndDotEqual(textArea, forward);
-		if (find(textArea, toFind, forward, matchCase, wholeWord, false)) {
-			textArea.replaceSelection(replaceWith);
-			return true;
+			// Regular expression replacements have their own method.
+			if (regex) {
+				return regexReplace(textArea, toFind, replaceWith, forward,
+								matchCase, wholeWord);
+			}
+
+			// Plain text search.  If we find it, replace it!
+			// First make the dot and mark equal (get rid of any selection), as
+			// a common use-case is the user will use "Find" to select the text
+			// to replace, then click "Replace" to replace the current
+			// selection. Since our find() method searches from an endpoint of
+			// the selection, we must remove the selection to work properly.
+			makeMarkAndDotEqual(textArea, forward);
+			if (find(textArea, toFind, forward, matchCase, wholeWord, false)) {
+				textArea.replaceSelection(replaceWith);
+				return true;
+			}
+
+		} finally {
+			textArea.endAtomicEdit();
 		}
 
 		return false;
@@ -787,57 +794,68 @@ public class SearchEngine {
 	 * @see #regexReplace
 	 * @see #find
 	 */
-	public static int replaceAll(JTextArea textArea, String toFind,
+	public static int replaceAll(RTextArea textArea, String toFind,
 							String replaceWith, boolean matchCase,
 							boolean wholeWord, boolean regex)
 									throws PatternSyntaxException {
 
 		int count = 0;
 
-		if (regex) {
-			if (replaceWith==null) {
-				replaceWith = ""; // Needed by getReplacementText() below.
+		textArea.beginAtomicEdit();
+		try {
+
+			if (regex) {
+
+				if (replaceWith==null) {
+					replaceWith = ""; // Needed by getReplacementText() below.
+				}
+				// NOTE: This is a high-memory operation.  First we make a copy
+				// of the current document in a string, then we build yet a
+				// third copy in a StringBuffer with replacements substituted.
+				// Memory could be saved by replacing text into the document
+				// directly as opposed to writing a StringBuffer, but this slows
+				// down the operation considerably (after each doc.replace(),
+				// all listeners are notified, etc.).
+				StringBuffer sb = new StringBuffer();
+				String findIn = textArea.getText();
+				int lastEnd = 0;
+				int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
+				flags |= matchCase ? 0 :
+							Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
+				Pattern p = Pattern.compile(toFind, flags);
+				Matcher m = p.matcher(findIn);
+				try {
+					// NOTE: Instead of using m.replaceAll() (and thus
+					// m.appendReplacement() and m.appendTail()), we
+					// do this ourselves since we have our own method
+					// of getting the "replacement text" which converts
+					// "\n" to newlines and "\t" to tabs.
+					while (m.find()) {
+						//m.appendReplacement(sb, replaceWith);
+						sb.append(findIn.substring(lastEnd, m.start()));
+						sb.append(getReplacementText(m, replaceWith));
+						lastEnd = m.end();
+						count++;
+					}
+					//m.appendTail(sb);
+					sb.append(findIn.substring(lastEnd));
+					textArea.setText(sb.toString());
+				} finally {
+					findIn = null; // May help GC.
+				}
 			}
-			// NOTE: This is a high-memory operation.  First me make a copy
-			// of the current document in a string, then we build yet a
-			// third copy in a StringBuffer with replacements substituted.
-			// Memory could be saved by replacing text into the document
-			// directly as opposed to writing a StringBuffer, but this slows
-			// down the operation considerably (after each doc.replace(),
-			// all listeners are notified, etc.).
-			StringBuffer sb = new StringBuffer();
-			String findIn = textArea.getText();
-			int lastEnd = 0;
-			Pattern p = Pattern.compile(toFind);
-			Matcher m = p.matcher(findIn);
-			try {
-				// NOTE: Instead of using m.replaceAll() (and thus
-				// m.appendReplacement() and m.appendTail()), we
-				// do this ourselves since we have our own method
-				// of getting the "replacement text" which converts
-				// "\n" to newlines and "\t" to tabs.
-				while (m.find()) {
-					//m.appendReplacement(sb, replaceWith);
-					sb.append(findIn.substring(lastEnd, m.start()));
-					sb.append(getReplacementText(m, replaceWith));
-					lastEnd = m.end();
+
+			else { // Non-regular expression search.
+				textArea.setCaretPosition(0);
+				while (SearchEngine.find(textArea, toFind, true, matchCase,
+									wholeWord, false)) {
+					textArea.replaceSelection(replaceWith);
 					count++;
 				}
-				//m.appendTail(sb);
-				sb.append(findIn.substring(lastEnd));
-				textArea.setText(sb.toString());
-			} finally {
-				findIn = null; // May help GC.
 			}
-		}
 
-		else { // Non-regular expression search.
-			textArea.setCaretPosition(0);
-			while (SearchEngine.find(textArea, toFind, true, matchCase,
-								wholeWord, false)) {
-				textArea.replaceSelection(replaceWith);
-				count++;
-			}
+		} finally {
+			textArea.endAtomicEdit();
 		}
 
 		return count;
