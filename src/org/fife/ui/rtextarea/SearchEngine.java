@@ -610,10 +610,10 @@ public class SearchEngine {
 		boolean wsBefore, wsAfter;
 
 		try {
-			wsBefore = Character.isWhitespace(searchIn.charAt(offset - 1));
+			wsBefore = !Character.isLetterOrDigit(searchIn.charAt(offset - 1));
 		} catch (IndexOutOfBoundsException e) { wsBefore = true; }
 		try {
-			wsAfter  = Character.isWhitespace(searchIn.charAt(offset + len));
+			wsAfter  = !Character.isLetterOrDigit(searchIn.charAt(offset + len));
 		} catch (IndexOutOfBoundsException e) { wsAfter = true; }
 
 		return wsBefore && wsAfter;
@@ -875,9 +875,15 @@ public class SearchEngine {
 	private static void selectAndPossiblyCenter(JTextArea textArea, int start,
 												int end) {
 
+		textArea.setSelectionStart(start);
+		textArea.setSelectionEnd(end);
+
 		Rectangle r = null;
 		try {
 			r = textArea.modelToView(start);
+			if (r==null) { // Not yet visible; i.e. JUnit tests
+				return;
+			}
 			if (end!=start) {
 				r = r.union(textArea.modelToView(end));
 			}
@@ -925,8 +931,6 @@ public class SearchEngine {
 		}
 
 		textArea.scrollRectToVisible(visible);
-		textArea.setSelectionStart(start);
-		textArea.setSelectionEnd(end);
 
 	}
 
