@@ -34,6 +34,7 @@ import javax.swing.plaf.TextUI;
 import javax.swing.plaf.basic.BasicTextUI.BasicHighlighter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.LayeredHighlighter;
@@ -131,8 +132,21 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
+
 		int start = notice.getOffset();
-		int end = start + notice.getLength();
+		int end = 0;
+		if (start==-1) { // Could just define an invalid line number
+			int line = notice.getLine();
+			Element root = doc.getDefaultRootElement();
+			if (line>=0 && line<root.getElementCount()) {
+				Element elem = root.getElement(line);
+				start = elem.getStartOffset();
+				end = elem.getEndOffset();
+			}
+		}
+		else {
+			end = start + notice.getLength();
+		}
 
 		// Always layered highlights for parser highlights.
 		HighlightInfo i = new LayeredHighlightInfo();

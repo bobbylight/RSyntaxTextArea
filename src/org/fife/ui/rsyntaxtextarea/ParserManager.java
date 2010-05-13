@@ -386,8 +386,8 @@ class ParserManager implements DocumentListener, ActionListener,
 					if (notice.containsPosition(pos)) {
 						tip = notice.getToolTipText();
 						parserForTip = notice.getParser();
-						if (notice.getParser() instanceof HyperlinkListener) {
-							listener = (HyperlinkListener)notice.getParser();
+						if (parserForTip instanceof HyperlinkListener) {
+							listener = (HyperlinkListener)parserForTip;
 						}
 						break;
 					}

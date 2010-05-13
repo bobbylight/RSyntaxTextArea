@@ -573,6 +573,105 @@ public class SearchEngineTest extends TestCase {
 	 * Tests <tt>SearchEngine.replaceAll()</tt>.
 	 */
 	public void testSearchEngineReplaceAll() throws BadLocationException {
+
+		String replaceWith = "FOOBAR";
+
+		// Replace "chuck", ignoring case.
+		String toFind = "chuck";
+		textArea.setText(text);
+		String expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
+		boolean matchCase = false;
+		boolean wholeWord = false;
+		boolean regex = false;
+		int count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(4, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wood", matching case.
+		toFind = "wood";
+		textArea.setText(text);
+		expected = textArea.getText().replaceAll(toFind, replaceWith);
+		matchCase = true;
+		wholeWord = false;
+		regex = false;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wood", ignoring case, whole word.
+		toFind = "wood";
+		textArea.setText(text);
+		expected = "How much FOOBAR wOuld a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
+		matchCase = false;
+		wholeWord = true;
+		regex = false;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(2, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "chUck", matching case, whole word.
+		toFind = "chUck";
+		textArea.setText(text);
+		expected = "How much wood wOuld a woodChuck FOOBAR, if a woodchuck could chuck wOod?";
+		matchCase = true;
+		wholeWord = true;
+		regex = false;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(1, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wo(?:o|ul)d", regex, ignoring case.
+		toFind = "wo(?:o|ul)d";
+		textArea.setText(text);
+		expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
+		matchCase = false;
+		wholeWord = false;
+		regex = true;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(5, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wo(?:o|ul)d", regex, matching case.
+		toFind = "wo(?:o|ul)d";
+		textArea.setText(text);
+		expected = textArea.getText().replaceAll(toFind, replaceWith);
+		matchCase = true;
+		wholeWord = false;
+		regex = true;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wo(?:o|ul)d", regex, ignoring case, whole word
+		toFind = "wo(?:o|ul)d";
+		textArea.setText(text);
+		expected = "How much FOOBAR FOOBAR a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
+		matchCase = false;
+		wholeWord = true;
+		regex = true;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
+		// Replace "wO(?:o|ul)d", regex, matching case, whole word
+		toFind = "wO(?:o|ul)d";
+		textArea.setText(text);
+		expected = "How much wood FOOBAR a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
+		matchCase = true;
+		wholeWord = true;
+		regex = true;
+		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
+								matchCase, wholeWord, regex);
+		assertEquals(2, count);
+		assertEquals(expected, textArea.getText());
+
 	}
 
 

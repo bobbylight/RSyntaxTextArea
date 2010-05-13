@@ -304,30 +304,61 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"add" |
 	"and" |
 	"break" |
+	"case" |
+	"catch" |
+	"class" |
+	"const" |
 	"continue" |
+	"default" |
 	"delete" |
 	"do" |
+	"dynamic" |
 	"else" |
 	"eq" |
+	"extends" |
+	"final" |
+	"finally" |
 	"for" |
+	"for each" |
 	"function" |
 	"ge" |
+	"get" |
 	"gt" |
 	"if" |
 	"ifFrameLoaded" |
+	"implements" |
+	"import" |
 	"in" |
+	"include" |
+	"interface" |
+	"internal" |
+	"label" |
 	"le" |
 	"lt" |
+	"namespace" |
+	"native" |
 	"ne" |
 	"new" |
 	"not" |
 	"on" |
 	"onClipEvent" |
 	"or" |
+	"override" |
+	"package" |
+	"private" |
+	"protected" |
+	"public" |
 	"return" |
-	"this" |
+	"set" |
+	"static" |
+	"super" |
+	"switch" |
 	"tellTarget" |
+	"this" |
+	"throw" |
+	"try" |
 	"typeof" |
+	"use" |
 	"var" |
 	"void" |
 	"while" |
@@ -342,18 +373,23 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Color" |
 	"Date" |
 	"Function" |
+	"int" |
 	"Key" |
 	"MovieClip" |
 	"Math" |
 	"Mouse" |
+	"Null" |
 	"Number" |
 	"Object" |
 	"Selection" |
 	"Sound" |
 	"String" |
+	"uint" |
+	"Vector" |
+	"void" |
 	"XML" |
 	"XMLNode" |
-	"XMLSocket" |
+	"XMLSocket"			{ addToken(Token.DATA_TYPE); }
 
 	/* Global functions */
 	"call" |

@@ -809,40 +809,24 @@ public class SearchEngine {
 				if (replaceWith==null) {
 					replaceWith = ""; // Needed by getReplacementText() below.
 				}
-				// NOTE: This is a high-memory operation.  First we make a copy
-				// of the current document in a string, then we build yet a
-				// third copy in a StringBuffer with replacements substituted.
-				// Memory could be saved by replacing text into the document
-				// directly as opposed to writing a StringBuffer, but this slows
-				// down the operation considerably (after each doc.replace(),
-				// all listeners are notified, etc.).
-				StringBuffer sb = new StringBuffer();
-				String findIn = textArea.getText();
-				int lastEnd = 0;
+
+				int oldOffs = textArea.getCaretPosition();
+				textArea.setCaretPosition(0);
 				int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 				flags |= matchCase ? 0 :
 							Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
 				Pattern p = Pattern.compile(toFind, flags);
-				Matcher m = p.matcher(findIn);
-				try {
-					// NOTE: Instead of using m.replaceAll() (and thus
-					// m.appendReplacement() and m.appendTail()), we
-					// do this ourselves since we have our own method
-					// of getting the "replacement text" which converts
-					// "\n" to newlines and "\t" to tabs.
-					while (m.find()) {
-						//m.appendReplacement(sb, replaceWith);
-						sb.append(findIn.substring(lastEnd, m.start()));
-						sb.append(getReplacementText(m, replaceWith));
-						lastEnd = m.end();
-						count++;
-					}
-					//m.appendTail(sb);
-					sb.append(findIn.substring(lastEnd));
-					textArea.setText(sb.toString());
-				} finally {
-					findIn = null; // May help GC.
+				while (SearchEngine.find(textArea, toFind, true, matchCase,
+									wholeWord, true)) {
+					Matcher m = p.matcher(textArea.getSelectedText());
+					String replacement = getReplacementText(m, replaceWith);
+					textArea.replaceSelection(replacement);
+					count++;
 				}
+				if (count==0) { // If nothing was found, don't move the caret.
+					textArea.setCaretPosition(oldOffs);
+				}
+
 			}
 
 			else { // Non-regular expression search.
