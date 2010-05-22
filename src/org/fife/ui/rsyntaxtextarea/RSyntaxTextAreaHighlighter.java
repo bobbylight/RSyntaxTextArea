@@ -194,6 +194,37 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 
 	/**
+	 * Removes all of the highlights for a specific parser.
+	 *
+	 * @param parser The parser.
+	 */
+	public void clearParserHighlights(Parser parser) {
+
+		for (Iterator i=parserHighlights.iterator(); i.hasNext(); ) {
+
+			HighlightInfo info = (HighlightInfo)i.next();
+
+			if (info.notice.getParser()==parser) {
+				if (info instanceof LayeredHighlightInfo) {
+					LayeredHighlightInfo lhi = (LayeredHighlightInfo)info;
+				    if (lhi.width > 0 && lhi.height > 0) {
+				    	textArea.repaint(lhi.x, lhi.y, lhi.width, lhi.height);
+				    }
+				}
+				else {
+					TextUI ui = textArea.getUI();
+					ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
+					//safeDamageRange(info.p0, info.p1);
+				}
+				i.remove();
+			}
+
+		}
+
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void deinstall(JTextComponent c) {

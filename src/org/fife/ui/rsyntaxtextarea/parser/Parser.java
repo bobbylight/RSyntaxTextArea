@@ -63,6 +63,15 @@ public interface Parser {
 
 
 	/**
+	 * Returns whether this parser is enabled.  If this returns
+	 * <code>false</code>, it will not be run.
+	 *
+	 * @return Whether this parser is enabled.
+	 */
+	public boolean isEnabled();
+
+
+	/**
 	 * Parses input from the specified document.
 	 *
 	 * @param doc The document to parse.  This document is in a read lock,

@@ -36,10 +36,24 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 public abstract class AbstractParser implements Parser {
 
 	/**
+	 * Whether this parser is enabled.  If this is <code>false</code>, then
+	 * this parser will not be run.
+	 */
+	private boolean enabled;
+
+	/**
 	 * Listens for events from {@link FocusableTip}s generated from this
 	 * parser's notices.
 	 */
 	private ExtendedHyperlinkListener linkListener;
+
+
+	/**
+	 * Constructor.
+	 */
+	protected AbstractParser() {
+		setEnabled(true);
+	}
 
 
 	/**
@@ -58,6 +72,25 @@ public abstract class AbstractParser implements Parser {
 	 */
 	public URL getImageBase() {
 		return null;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+
+	/**
+	 * Toggles whether this parser is enabled.
+	 *
+	 * @param enabled Whether this parser is enabled.
+	 * @see #isEnabled()
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 

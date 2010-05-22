@@ -146,8 +146,13 @@ class ParserManager implements DocumentListener, ActionListener,
 		try {
 			for (int i=0; i<parserCount; i++) {
 				Parser parser = getParser(i);
-				ParseResult res = parser.parse(doc, style);
-				addParserNoticeHighlights(res);
+				if (parser.isEnabled()) {
+					ParseResult res = parser.parse(doc, style);
+					addParserNoticeHighlights(res);
+				}
+				else {
+					clearParserNoticeHighlights(parser);
+				}
 			}
 			textArea.fireParserNoticesChange();
 		} finally {
@@ -244,6 +249,29 @@ class ParserManager implements DocumentListener, ActionListener,
 		}
 		if (noticesToHighlights!=null) {
 			noticesToHighlights.clear();
+		}
+	}
+
+
+	/**
+	 * Removes all parser notice highlights for a specific parser.
+	 *
+	 * @param parser The parser whose highlights to remove.
+	 */
+	private void clearParserNoticeHighlights(Parser parser) {
+		RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+											textArea.getHighlighter();
+		if (h!=null) {
+			h.clearParserHighlights(parser);
+		}
+		if (noticesToHighlights!=null) {
+			for (Iterator i=noticesToHighlights.entrySet().iterator(); i.hasNext(); ) {
+				Map.Entry entry = (Map.Entry)i.next();
+				ParserNotice notice = (ParserNotice)entry.getKey();
+				if (notice.getParser()==parser) {
+					i.remove();
+				}
+			}
 		}
 	}
 
