@@ -709,6 +709,26 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Forces re-parsing with a specific parser.  Note that if this parser is
+	 * not installed on this text area, nothing will happen.
+	 *
+	 * @param parser The parser that should re-parse this text area's contents.
+	 *        This should be installed on this text area.
+	 * @return Whether the parser was installed on this text area.
+	 * @see #forceReparsing(int)
+	 */
+	public boolean forceReparsing(Parser parser) {
+		for (int i=0; i<getParserCount(); i++) {
+			if (getParser(i)==parser) {
+				forceReparsing(i);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
 	 * Returns whether bracket matching should be animated.
 	 *
 	 * @return Whether bracket matching should be animated.

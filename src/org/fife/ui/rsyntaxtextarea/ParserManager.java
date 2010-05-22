@@ -308,8 +308,13 @@ class ParserManager implements DocumentListener, ActionListener,
 		String style = textArea.getSyntaxEditingStyle();
 		doc.readLock();
 		try {
-			ParseResult res = p.parse(doc, style);
-			addParserNoticeHighlights(res);
+			if (p.isEnabled()) {
+				ParseResult res = p.parse(doc, style);
+				addParserNoticeHighlights(res);
+			}
+			else {
+				clearParserNoticeHighlights(p);
+			}
 			textArea.fireParserNoticesChange();
 		} finally {
 			doc.readUnlock();

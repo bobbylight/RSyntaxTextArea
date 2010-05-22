@@ -43,6 +43,12 @@ public class DefaultParserNotice implements ParserNotice {
 	private String message;
 	private String toolTipText;
 
+	private static final Color[] DEFAULT_COLORS = {
+		new Color(255, 0, 128),		// Error
+		new Color(244, 200, 45),	// Warning
+		Color.gray,					// Info
+	};
+
 
 	/**
 	 * Constructor.
@@ -125,7 +131,11 @@ public class DefaultParserNotice implements ParserNotice {
 	 * {@inheritDoc}
 	 */
 	public Color getColor() {
-		return color;
+		Color c = color; // User-defined
+		if (c==null) {
+			c = DEFAULT_COLORS[getLevel()];
+		}
+		return c;
 	}
 
 
