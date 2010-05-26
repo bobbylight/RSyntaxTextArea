@@ -229,8 +229,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
-Equals				= (=)
-Name					= ([^= \t\n#!]*)
+Equals				= ([=\:])
+Name					= ([^=\: \t\n#!]*)
 Whitespace			= ([ \t]+)
 Comment				= ([#!].*)
 SingleQuote			= (')
