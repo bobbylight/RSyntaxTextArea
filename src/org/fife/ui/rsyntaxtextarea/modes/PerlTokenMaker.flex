@@ -494,6 +494,7 @@ ErrorIdentifier			= ({NonSeparator}+)
 	"open" |
 	"opendir" |
 	"ord" |
+	"our" |
 	"pack" |
 	"package" |
 	"pipe" |
