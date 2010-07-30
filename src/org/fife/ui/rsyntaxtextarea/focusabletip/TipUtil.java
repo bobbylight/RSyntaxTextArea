@@ -24,6 +24,10 @@ package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.SystemColor;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -42,6 +46,33 @@ class TipUtil {
 
 
 	private TipUtil() {
+	}
+
+
+	/**
+	 * Returns the screen coordinates for the monitor that contains the
+	 * specified point.  This is useful for setups with multiple monitors,
+	 * to ensure that popup windows are positioned properly.
+	 *
+	 * @param x The x-coordinate, in screen coordinates.
+	 * @param y The y-coordinate, in screen coordinates.
+	 * @return The bounds of the monitor that contains the specified point.
+	 */
+	public static Rectangle getScreenBoundsForPoint(int x, int y) {
+		GraphicsEnvironment env = GraphicsEnvironment.
+										getLocalGraphicsEnvironment();
+		GraphicsDevice[] devices = env.getScreenDevices();
+		for (int i=0; i<devices.length; i++) {
+			GraphicsConfiguration[] configs = devices[i].getConfigurations();
+			for (int j=0; j<configs.length; j++) {
+				Rectangle gcBounds = configs[j].getBounds();
+				if (gcBounds.contains(x, y)) {
+					return gcBounds;
+				}
+			}
+		}
+		// If point is outside all monitors, default to default monitor (?)
+		return env.getMaximumWindowBounds();
 	}
 
 

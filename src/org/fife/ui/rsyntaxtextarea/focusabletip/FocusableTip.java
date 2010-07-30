@@ -24,7 +24,6 @@ package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -69,7 +68,12 @@ public class FocusableTip {
 	/**
 	 * Margin from mouse cursor at which to draw focusable tip.
 	 */
-	private static final int MARGIN = 10;
+	private static final int X_MARGIN = 18;
+
+	/**
+	 * Margin from mouse cursor at which to draw focusable tip.
+	 */
+	private static final int Y_MARGIN = 12;
 
 	private static final String MSG =
 		"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip";
@@ -128,18 +132,32 @@ public class FocusableTip {
 
 				Point p = e.getPoint();
 				SwingUtilities.convertPointToScreen(p, textArea);
-				int x = o.isLeftToRight() ? (p.x-10) :
-										(p.x - tipWindow.getWidth() + MARGIN);
-				int y = p.y + MARGIN;
 
-				// Ensure tooltip is in the window bounds.
-				Dimension ss = tipWindow.getToolkit().getScreenSize();
-				x = Math.max(x, 0);
-				if (x+tipWindow.getWidth()>=ss.width) {
-					x = ss.width - tipWindow.getWidth();
+				// Ensure tool tip is in the window bounds.
+				// Multi-monitor support - make sure the completion window (and
+				// description window, if applicable) both fit in the same
+				// window in a multi-monitor environment.  To do this, we decide
+				// which monitor the rectangle "p" is in, and use that one.
+				Rectangle sb = TipUtil.getScreenBoundsForPoint(p.x, p.y);
+				//Dimension ss = tipWindow.getToolkit().getScreenSize();
+
+				// Try putting our stuff "below" the mouse first.
+				int y = p.y + Y_MARGIN;
+				if (y+tipWindow.getHeight()>=sb.y+sb.height) {
+					y = p.y - Y_MARGIN - tipWindow.getHeight();
 				}
-				if (y+tipWindow.getHeight()>=ss.height) { // Go above cursor
-					y = p.y - tipWindow.getHeight() - MARGIN;
+
+				// Get x-coordinate of completions.  Try to align left edge
+				// with the mouse first (with a slight margin).
+				int x = p.x - X_MARGIN; // ltr
+				if (!o.isLeftToRight()) {
+					x = p.x - tipWindow.getWidth() + X_MARGIN;
+				}
+				if (x<sb.x) {
+					x = sb.x;
+				}
+				else if (x+tipWindow.getWidth()>sb.x+sb.width) { // completions don't fit
+					x = sb.x + sb.width - tipWindow.getWidth();
 				}
 
 				tipWindow.setLocation(x, y);
