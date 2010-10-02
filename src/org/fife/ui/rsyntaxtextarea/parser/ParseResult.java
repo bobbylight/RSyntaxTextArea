@@ -37,7 +37,8 @@ public interface ParseResult {
 
 
 	/**
-	 * Returns the first line parsed.
+	 * Returns the first line parsed.  All parser implementations should
+	 * currently set this to <code>0</code> and parse the entire document.
 	 *
 	 * @return The first line parsed.
 	 * @see #getLastLineParsed()
@@ -46,7 +47,9 @@ public interface ParseResult {
 
 
 	/**
-	 * Returns the last line parsed.
+	 * Returns the first line parsed.  All parser implementations should
+	 * currently set this to the document's line count and parse the entire
+	 * document.
 	 *
 	 * @return The last line parsed.
 	 * @see #getFirstLineParsed()

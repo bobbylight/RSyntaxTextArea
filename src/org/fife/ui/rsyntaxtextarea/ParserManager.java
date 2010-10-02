@@ -75,7 +75,14 @@ class ParserManager implements DocumentListener, ActionListener,
 	private SquiggleUnderlineHighlightPainter parserErrorHighlightPainter =
 						new SquiggleUnderlineHighlightPainter(Color.RED);
 
-	private static final boolean DEBUG_PARSING	= false;
+	/**
+	 * If this system property is set to <code>true</code>, debug messages
+	 * will be printed to stdout to help diagnose parsing issues.
+	 */
+	private static final String PROPERTY_DEBUG_PARSING = "rsta.debugParsing";
+
+	private static final boolean DEBUG_PARSING	= Boolean.getBoolean(
+													PROPERTY_DEBUG_PARSING);
 
 	/**
 	 * The default delay between the last key press and when the document
@@ -201,6 +208,11 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private void addParserNoticeHighlights(ParseResult res) {
 
+		if (DEBUG_PARSING) {
+			System.out.println("[DEBUG]: Adding parser notices from " +
+								res.getParser());
+		}
+
 		if (noticesToHighlights==null) {
 			noticesToHighlights = new HashMap();
 		}
@@ -215,6 +227,9 @@ class ParserManager implements DocumentListener, ActionListener,
 
 			for (Iterator i=notices.iterator(); i.hasNext(); ) {
 				ParserNotice notice = (ParserNotice)i.next();
+				if (DEBUG_PARSING) {
+					System.out.println("[DEBUG]: ... adding: " + res);
+				}
 				try {
 					Object highlight = null;
 					if (notice.getShowInEditor()) {
@@ -227,6 +242,11 @@ class ParserManager implements DocumentListener, ActionListener,
 				}
 			}
 
+		}
+
+		if (DEBUG_PARSING) {
+			System.out.println("[DEBUG]: Done adding parser notices from " +
+								res.getParser());
 		}
 
 	}
@@ -556,6 +576,16 @@ class ParserManager implements DocumentListener, ActionListener,
 						h.removeParserHighlight(entry.getValue());
 					}
 					i.remove();
+					if (DEBUG_PARSING) {
+						System.out.println("[DEBUG]: ... notice removed: " +
+											notice);
+					}
+				}
+				else {
+					if (DEBUG_PARSING) {
+						System.out.println("[DEBUG]: ... notice not removed: " +
+											notice);
+					}
 				}
 			}
 
@@ -632,9 +662,21 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private final boolean shouldRemoveNotice(ParserNotice notice,
 											ParseResult res) {
-		return notice.getParser()==res.getParser() &&
-				notice.getLine()>=res.getFirstLineParsed() &&
-				notice.getLine()<=res.getLastLineParsed();
+
+		if (DEBUG_PARSING) {
+			System.out.println("[DEBUG]: ... ... shouldRemoveNotice " +
+					notice + ": " + (notice.getParser()==res.getParser()));
+		}
+
+		// NOTE: We must currently remove all notices for the parser.  Parser
+		// implementors are required to parse the entire document each parsing
+		// request, as RSTA is not yet sophisticated enough to determine the
+		// minimum range of text to parse (and ParserNotices' locations aren't
+		// updated when the Document is mutated, which would be a requirement
+		// for this as well).
+		// return same_parser && (in_reparsed_range || in_deleted_end_of_doc)
+		return notice.getParser()==res.getParser();
+
 	}
 
 
