@@ -46,10 +46,19 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 /**
  * The gutter is the component on the left-hand side of the text area that
  * displays optional information such as line numbers and icons (for bookmarks,
- * debugging breakpoints, error markers, etc.).
+ * debugging breakpoints, error markers, etc.).<p>
+ *
+ * To add icons to the gutter, you must first call
+ * {@link RTextScrollPane#setIconRowHeaderEnabled(boolean)} on the parent
+ * scroll pane, to make the icon area visible.  Then, you can add icons that
+ * track either lines in the document, or offsets, via
+ * {@link #addLineTrackingIcon(int, Icon)} and
+ * {@link #addOffsetTrackingIcon(int, Icon)}, respectively.  To remove an
+ * icon you've added, use {@link #removeTrackingIcon(GutterIconInfo)}.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see GutterIconInfo
  */
 public class Gutter extends JComponent {
 
@@ -108,7 +117,9 @@ public class Gutter extends JComponent {
 	 *
 	 * @param line The line to track (zero-based).
 	 * @param icon The icon to display.  This should be small (say 16x16).
-	 * @return A tag for this icon.
+	 * @return A tag for this icon.  This can later be used in a call to
+	 *         {@link #removeTrackingIcon(GutterIconInfo)} to remove this
+	 *         icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
 	 * @see #addOffsetTrackingIcon(int, Icon)
@@ -278,8 +289,11 @@ public class Gutter extends JComponent {
 	/**
 	 * Removes the specified tracking icon.
 	 *
-	 * @param tag A tag for a tracking icon.
+	 * @param tag A tag for an icon in the gutter, as returned from either
+	 *        {@link #addLineTrackingIcon(int, Icon)} or
+	 *        {@link #addOffsetTrackingIcon(int, Icon)}.
 	 * @see #removeAllTrackingIcons()
+	 * @see #addLineTrackingIcon(int, Icon)
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
 	public void removeTrackingIcon(GutterIconInfo tag) {

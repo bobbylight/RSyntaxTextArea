@@ -26,10 +26,15 @@ import javax.swing.Icon;
 
 
 /**
- * Information about an icon displayed in a {@link Gutter}.
+ * Information about an icon displayed in a {@link Gutter}.  Instances of this
+ * class are returned by {@link Gutter#addLineTrackingIcon(int, Icon)} and
+ * {@link Gutter#addOffsetTrackingIcon(int, Icon)}.  They can later be used
+ * in calls to {@link Gutter#removeTrackingIcon(GutterIconInfo)} to be
+ * individually removed.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see Gutter
  */
 public interface GutterIconInfo {
 
@@ -44,7 +49,8 @@ public interface GutterIconInfo {
 
 	/**
 	 * Returns the offset that is being tracked.  The line of this offset is
-	 * where the icon is rendered.  This offset may change as the user types.
+	 * where the icon is rendered.  This offset may change as the user types
+	 * to track the new location of the marked offset.
 	 *
 	 * @return The offset being tracked.
 	 */

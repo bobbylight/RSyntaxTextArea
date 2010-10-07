@@ -178,6 +178,93 @@ public abstract class Token {
 
 
 	/**
+	 * Appends HTML code for painting this token, using the given text area's
+	 * color scheme.
+	 *
+	 * @param sb The buffer to append to.
+	 * @param textArea The text area whose color scheme to use.
+	 * @param fontFamily Whether to include the font family in the HTML for
+	 *        this token.  You can pass <code>false</code> for this parameter
+	 *        if, for example, you are making all your HTML be monospaced,
+	 *        and don't want any crazy fonts being used in the editor to be
+	 *        reflected in your HTML.
+	 * @return The buffer appended to.
+	 * @see #getHTMLRepresentation(RSyntaxTextArea)
+	 */
+	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+											RSyntaxTextArea textArea,
+											boolean fontFamily) {
+
+		SyntaxScheme colorScheme = textArea.getSyntaxScheme();
+		Style scheme = colorScheme.styles[type];
+		Font font = textArea.getFontForTokenType(type);//scheme.font;
+
+		if (font.isBold()) sb.append("<b>");
+		if (font.isItalic()) sb.append("<em>");
+		if (scheme.underline) sb.append("<u>");
+
+		sb.append("<font");
+		if (fontFamily) {
+			sb.append("face=\"").append(font.getFamily()).append("\"");
+		}
+		sb.append(" color=\"").
+			append(getHTMLFormatForColor(scheme.foreground)).
+			append("\">");
+
+		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
+		// be turned into NOTHING.
+		appendHtmlLexeme(sb);//sb.append(getHtmlLexeme());
+
+		sb.append("</font>");
+		if (scheme.underline) sb.append("</u>");
+		if (font.isItalic()) sb.append("</em>");
+		if (font.isBold()) sb.append("</b>");
+
+		return sb;
+
+	}
+
+
+	/**
+	 * Appends an HTML version of the lexeme of this token (i.e. no style
+	 * HTML, but replacing chars such as <code>\t</code>, <code>&lt;</code>
+	 * and <code>&gt;</code> with their escapes).
+	 *
+	 * @param sb The buffer to append to.
+	 * @return The same buffer.
+	 */
+	private final StringBuffer appendHtmlLexeme(StringBuffer sb) {
+		int i = textOffset;
+		int lastI = i;
+		while (i<textOffset+textCount) {
+			char ch = text[i];
+			switch (ch) {
+				case '\t':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&nbsp;");
+					break;
+				case '<':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&lt;");
+					break;
+				case '>':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&gt;");
+					break;
+			}
+			i++;
+		}
+		if (lastI<textOffset+textCount) {
+			sb.append(text, lastI, textOffset+textCount-lastI);
+		}
+		return sb;
+	}
+
+
+	/**
 	 * Returns whether the token straddles the specified position in the
 	 * document.
 	 *
@@ -254,30 +341,11 @@ public abstract class Token {
 	 *
 	 * @param textArea The text area whose color scheme to use.
 	 * @return The HTML representation of the token.
+	 * @see #appendHTMLRepresentation(StringBuffer, RSyntaxTextArea, boolean)
 	 */
-	public String getHTMLRepresentation(final RSyntaxTextArea textArea) {
-		final SyntaxScheme colorScheme =
-					textArea.getSyntaxScheme();
-		final Style scheme = colorScheme.styles[type];
-		Font font = textArea.getFontForTokenType(type);//scheme.font;
+	public String getHTMLRepresentation(RSyntaxTextArea textArea) {
 		StringBuffer buf = new StringBuffer();
-		if (font.isBold()) buf.append("<b>");
-		if (font.isItalic()) buf.append("<em>");
-		if (scheme.underline) buf.append("<u>");
-		buf.append("<font face=\"").append(font.getFamily()).
-		    append("\" color=\"").
-		    append(getHTMLFormatForColor(scheme.foreground)).
-		    append("\">");
-		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
-		// be turned into NOTHING.
-		String text = getLexeme()./*replaceAll(" ", "&nbsp;").
-					replaceAll("\t", "&nbsp;").*/replaceAll("<", "&lt;").
-					replaceAll(">", "&gt;");
-		buf.append(text);
-		buf.append("</font>");
-		if (scheme.underline) buf.append("</u>");
-		if (font.isItalic()) buf.append("</em>");
-		if (font.isBold()) buf.append("</b>");
+		appendHTMLRepresentation(buf, textArea, true);
 		return buf.toString();
 	}
 
