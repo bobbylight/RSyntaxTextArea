@@ -205,7 +205,7 @@ public abstract class Token {
 
 		sb.append("<font");
 		if (fontFamily) {
-			sb.append("face=\"").append(font.getFamily()).append("\"");
+			sb.append(" face=\"").append(font.getFamily()).append("\"");
 		}
 		sb.append(" color=\"").
 			append(getHTMLFormatForColor(scheme.foreground)).
