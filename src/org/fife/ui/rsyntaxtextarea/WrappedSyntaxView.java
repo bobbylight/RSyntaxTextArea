@@ -123,7 +123,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				}
 				// Return the first non-whitespace char (i.e., don't start
 				// off the continuation of a wrapped line with whitespace).
-				return (t.type==Token.WHITESPACE) ? p+t.textCount : p;
+				return t.isWhitespace() ? p+t.textCount : p;
 //return getBreakLocation(t, fm, x0, currentWidth, this);
 			}
 			currentWidth -= tokenWidth;

@@ -550,6 +550,31 @@ public abstract class Token {
 
 
 	/**
+	 * Returns whether this token is of the specified type, with the specified
+	 * lexeme.
+	 *
+	 * @param type The type to check for.
+	 * @param lexeme The lexeme to check for.
+	 * @return Whether this token has that type and lexeme.
+	 */
+	public boolean is(int type, String lexeme) {
+		return this.type==type && textCount==lexeme.length() &&
+				lexeme.equals(getLexeme());
+	}
+
+
+	/**
+	 * Returns whether this token is a comment.
+	 *
+	 * @return Whether this token is a comment.
+	 * @see #isWhitespace()
+	 */
+	public boolean isComment() {
+		return type>=Token.COMMENT_EOL && type<=Token.COMMENT_DOCUMENTATION;
+	}
+
+
+	/**
 	 * Returns whether this token is a hyperlink.
 	 *
 	 * @return Whether this token is a hyperlink.
@@ -612,6 +637,7 @@ public abstract class Token {
 	 * Returns whether or not this token is whitespace.
 	 *
 	 * @return <code>true</code> iff this token is whitespace.
+	 * @see #isComment()
 	 */
 	public boolean isWhitespace() {
 		return type==WHITESPACE;

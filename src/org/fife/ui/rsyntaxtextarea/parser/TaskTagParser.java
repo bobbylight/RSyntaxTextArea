@@ -97,9 +97,7 @@ public class TaskTagParser extends AbstractParser {
 			String text = null;
 
 			while (t!=null && t.isPaintable()) {
-				if (t.type==Token.COMMENT_EOL ||
-						t.type==Token.COMMENT_MULTILINE ||
-						t.type==Token.COMMENT_DOCUMENTATION) {
+				if (t.isComment()) {
 
 					offs = t.offset;
 					text = t.getLexeme();

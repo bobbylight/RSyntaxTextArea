@@ -1024,8 +1024,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				Token t = doc.getTokenListForLine(line-1);
 				t = t.getLastNonCommentNonWhitespaceToken();
 
-				if (t!=null && t.type==Token.SEPARATOR &&
-						t.textCount==1 && t.text[t.textOffset]=='{') {
+				if (t!=null && t.isLeftCurly()) {
 
 					if (getOpenBraceCount(doc)>0) {
 						StringBuffer sb = new StringBuffer();

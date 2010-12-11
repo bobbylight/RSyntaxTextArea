@@ -144,7 +144,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 				for (int i=0; i<textArea.getLineCount(); i++) {
 					Token temp = textArea.getTokenListForLine(i);
 					while (temp!=null && temp.isPaintable()) {
-						if (temp.type==type && temp.getLexeme().equals(lexeme)){
+						if (temp.is(type, lexeme)) {
 							try {
 								int end = temp.offset + temp.textCount;
 Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
