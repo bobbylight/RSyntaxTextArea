@@ -28,12 +28,13 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
+import javax.swing.text.Utilities;
 
 
 /**
  * The default token used in the <code>org.fife.ui.rsyntaxtextarea</code> syntax
  * package.  This token type paints itself as you would expect, and properly
- * accounts for rendering hints (anti-aliasing and fractional fontmetrics).<p>
+ * accounts for rendering hints (anti-aliasing and fractional font metrics).<p>
  *
  * The current implementation paints as follows:
  * <ul>
@@ -58,7 +59,7 @@ import javax.swing.text.TabExpander;
  * width in such a way that a float is returned (Font.getStringBounds()?).
  *
  * @author Robert Futrell
- * @version 0.3
+ * @version 0.5
  * @see Token
  * @see VisibleWhitespaceToken
  */
@@ -68,7 +69,7 @@ public class DefaultToken extends Token {
 	/**
 	 * Creates a "null token."  The token itself is not null; rather, it
 	 * signifies that it is the last token in a linked list of tokens and
-	 * that it is not part of a "multiline token."
+	 * that it is not part of a "multi-line token."
 	 */
 	public DefaultToken() {
 		super();
@@ -241,13 +242,13 @@ public class DefaultToken extends Token {
 	 *        object is reused to keep from frequent memory allocations.
 	 * @return The bounding box for the specified position in the model.
 	 */
-	public Rectangle listOffsetToView(RSyntaxTextArea textArea,
-								TabExpander e, int pos, int x0,
-								Rectangle rect) {
+	public Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
+										int pos, int x0, Rectangle rect) {
 
-		float stableX = x0;	// Cached ending x-coord. of last tab or token.
+		int stableX = x0;	// Cached ending x-coord. of last tab or token.
 		Token token = this;
 		FontMetrics fm = null;
+		Segment s = new Segment();
 
 		while (token!=null && token.isPaintable()) {
 
@@ -258,39 +259,42 @@ public class DefaultToken extends Token {
 			char[] text = token.text;
 			int start = token.textOffset;
 			int end = start + token.textCount;
-			int i;
 
 			// If this token contains the position for which to get the
 			// bounding box...
 			if (token.containsPosition(pos)) {
-				end = start + (pos-token.offset);
-				for (i=start; i<end; i++) {
-					if (text[i] == '\t') {
-						stableX += fm.charsWidth(text, start, i-start+1);
-						stableX = e.nextTabStop(stableX, 0);
-						start = i+1;	// Do charsWidth() from next char.
-					}
-				}
-				int temp = fm.charsWidth(text, start, i-start);
-				rect.x = (int)stableX + temp;
-				if (text[i]=='\t')
+
+				s.array = token.text;
+				s.offset = token.textOffset;
+				s.count = pos-token.offset;
+
+				// Must use this (actually fm.charWidth()), and not
+				// fm.charsWidth() for returned value to match up with where
+				// text is actually painted on OS X!
+				int w = Utilities.getTabbedTextWidth(s, fm, stableX, e,
+													token.offset);
+				rect.x = stableX + w;
+				end = token.documentToToken(pos);
+
+				if (text[end]=='\t') {
 					rect.width = fm.charWidth(' ');
-				else
-					rect.width = fm.charsWidth(text, start,i-start+1) - temp;
+				}
+				else {
+					rect.width = fm.charWidth(text[end]);
+				}
+
 				return rect;
+
 			}
 
 			// If this token does not contain the position for which to get
 			// the bounding box...
 			else {
-				for (i=start; i<end; i++) {
-					if (text[i] == '\t') {
-						stableX += fm.charsWidth(text, start, i-start+1);
-						stableX = e.nextTabStop(stableX, 0);
-						start = i+1;	// Do charsWidth() from next char.
-					}
-				}
-				stableX += fm.charsWidth(text, start, i-start);
+				s.array = token.text;
+				s.offset = token.textOffset;
+				s.count = token.textCount;
+				stableX += Utilities.getTabbedTextWidth(s, fm, stableX, e,
+														token.offset);
 			}
 
 			token = token.getNextToken();
@@ -301,7 +305,7 @@ public class DefaultToken extends Token {
 		// a width of 1 (so selection highlights don't extend way past line's
 		// text).  A ConfigurableCaret will know to paint itself with a larger
 		// width.
-		rect.x = (int)stableX;
+		rect.x = stableX;
 		rect.width = 1;
 		return rect;
 
@@ -345,8 +349,7 @@ public class DefaultToken extends Token {
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
-						g.drawString(
-							new String(text, flushIndex, flushLen), x,y);
+						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
@@ -366,7 +369,7 @@ public class DefaultToken extends Token {
 								g, fm.getAscent(), host, bg);
 			}
 			g.setColor(fg);
-			g.drawString(new String(text, flushIndex, flushLen), x,y);
+			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 		}
 
 		if (host.getUnderlineForToken(this)) {
