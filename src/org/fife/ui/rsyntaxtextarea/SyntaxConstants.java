@@ -73,6 +73,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Clojure.
+	 */
+	public static final String SYNTAX_STYLE_CLOJURE			= "text/clojure";
+
+
+	/**
 	 * Style for highlighting C++.
 	 */
 	public static final String SYNTAX_STYLE_CPLUSPLUS		= "text/cpp";
