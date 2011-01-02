@@ -23,6 +23,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import javax.swing.Action;
 import javax.swing.text.Segment;
 
 
@@ -101,6 +102,15 @@ public interface TokenMaker {
 	 *         does not support commenting/uncommenting lines.
 	 */
 	public String[] getLineCommentStartAndEnd();
+
+
+	/**
+	 * Returns an action to handle "insert break" key presses (i.e. Enter).
+	 *
+	 * @return The action, or <code>null</code> if the default action should
+	 *         be used.
+	 */
+	public Action getInsertBreakAction();
 
 
 	/**

@@ -23,6 +23,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.ActionEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.Action;
+import javax.swing.UIManager;
+import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rtextarea.RTextArea;
+
 
 
 /**
@@ -33,6 +42,8 @@ package org.fife.ui.rsyntaxtextarea;
  * @version 1.0
  */
 public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
+
+	protected static final Action INSERT_BREAK_ACTION = new InsertBreakAction();
 
 
 	/**
@@ -47,6 +58,18 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	/**
+	 * Returns an action to handle "insert break" key presses (i.e. Enter).
+	 * An action is returned that handles newlines differently in multi-line
+	 * comments.
+	 *
+	 * @return The action.
+	 */
+	public Action getInsertBreakAction() {
+		return INSERT_BREAK_ACTION;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public boolean getShouldIndentNextLineAfter(Token t) {
@@ -55,6 +78,82 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 			return ch=='{' || ch=='(';
 		}
 		return false;
+	}
+
+
+	/**
+	 * Action that knows how to special-case inserting a newline in a
+	 * multi-line comment for languages like C and Java.
+	 */
+	private static class InsertBreakAction extends
+							RSyntaxTextAreaEditorKit.InsertBreakAction {
+
+		private static final Pattern p =
+							Pattern.compile("([ \\t]*)(/?[\\*]+)([ \\t]*)");
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea rsta = (RSyntaxTextArea)getTextComponent(e);
+			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
+
+			int line = textArea.getCaretLineNumber();
+			int type = doc.getLastTokenTypeOnLine(line);
+Token t = doc.getTokenListForLine(line);
+while (t!=null) {
+	System.out.println("... " + t);
+	t = t.getNextToken();
+}
+System.out.println(line + ", "  + type);
+			// Only in MLC's should we try this
+			if (type==Token.COMMENT_DOCUMENTATION ||
+					type==Token.COMMENT_MULTILINE) {
+				insertBreakInMLC(e, rsta, line);
+			}
+			else {
+				handleInsertBreak(rsta, true);
+			}
+
+		}
+
+		private void insertBreakInMLC(ActionEvent e, RSyntaxTextArea textArea,
+										int line) {
+
+			Matcher m = null;
+			try {
+				int start = textArea.getLineStartOffset(line);
+				int end = textArea.getLineEndOffset(line);
+				String text = textArea.getText(start, end-start);
+System.out.println("'" + text + "'");
+				m = p.matcher(text);
+			} catch (BadLocationException ble) { // Never happens
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				ble.printStackTrace();
+				return;
+			}
+
+			if (m.lookingAt()) {
+				boolean newMLC = m.group(2).charAt(0)=='/';
+				String header = m.group(1) +
+						(newMLC ? " * " : "*") +
+						m.group(3);
+				textArea.replaceSelection("\n" + header);
+				if (newMLC) {
+					int dot = textArea.getCaretPosition();
+					textArea.insert("\n" + m.group(1) + " */", dot);
+					textArea.setCaretPosition(dot);
+				}
+			}
+			else {
+				handleInsertBreak(textArea, true);
+			}
+
+		}
+
 	}
 
 

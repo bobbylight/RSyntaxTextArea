@@ -23,8 +23,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import javax.swing.Action;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
@@ -342,7 +344,6 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * @return Whether an extra indentation should be done.
 	 */
 	public boolean getShouldIndentNextLine(int line) {
-		
 		Token t = getTokenListForLine(line);
 		t = t.getLastNonCommentNonWhitespaceToken();
 		return tokenMaker.getShouldIndentNextLineAfter(t);
@@ -374,6 +375,16 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 		int initialTokenType = line==0 ? Token.NULL :
 								getLastTokenTypeOnLine(line-1);
 		return tokenMaker.getTokenList(s, initialTokenType, startOffset);
+	}
+
+
+	boolean insertBreakSpecialHandling(ActionEvent e) {
+		Action a = tokenMaker.getInsertBreakAction();
+		if (a!=null) {
+			a.actionPerformed(e);
+			return true;
+		}
+		return false;
 	}
 
 
@@ -491,11 +502,11 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 		int firstLine = line;
 
-		// Loop through all lines past our starting point.  We don't need to check the
-		// last line (numLines-1) because if line numLines-2's end-token value changed,
-		// line numLines-1 certainly needs repainting, and there are no lines past
-		// numLines-1 to worry about.
-		int end = numLines - 1;
+		// Loop through all lines past our starting point.  Update even the last
+		// line's info, even though there aren't any lines after it that depend
+		// on it changing for them to be changed, as its state may be used
+		// elsewhere in the library.
+		int end = numLines;
 		//System.err.println("--- end==" + end + " (numLines==" + numLines + ")");
 		while (line<end) {
 

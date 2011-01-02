@@ -901,17 +901,18 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
 			boolean noSelection= sta.getSelectionStart()==sta.getSelectionEnd();
 
-			// If we're auto-indenting...
-			if (noSelection && sta.isAutoIndentEnabled()) {
-				insertNewlineWithAutoIndent(sta);
-			}
-			else {
-				textArea.replaceSelection("\n");
-				if (noSelection) {
-					possiblyCloseCurlyBrace(sta, null);
-				}
+			// First, see if this language wants to handle inserting newlines
+			// itself.
+			boolean handled = false;
+			if (noSelection) {
+				RSyntaxDocument doc = (RSyntaxDocument)sta.getDocument();
+				handled = doc.insertBreakSpecialHandling(e);
 			}
 
+			// If not...
+			if (!handled) {
+				handleInsertBreak(sta, noSelection);
+			}
 
 		}
 
@@ -949,6 +950,28 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				}
 			}
 			return openCount;
+		}
+
+		/**
+		 * Actually inserts the newline into the document, and auto-indents
+		 * if appropriate.  This method can be called by token makers who
+		 * implement a custom action for inserting newlines.
+		 *
+		 * @param textArea
+		 * @param noSelection Whether there is no selection.
+		 */
+		protected void handleInsertBreak(RSyntaxTextArea textArea,
+										boolean noSelection) {
+			// If we're auto-indenting...
+			if (noSelection && textArea.isAutoIndentEnabled()) {
+				insertNewlineWithAutoIndent(textArea);
+			}
+			else {
+				textArea.replaceSelection("\n");
+				if (noSelection) {
+					possiblyCloseCurlyBrace(textArea, null);
+				}
+			}
 		}
 
 		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {

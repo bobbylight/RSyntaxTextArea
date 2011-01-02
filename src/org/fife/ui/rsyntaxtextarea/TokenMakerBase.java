@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import javax.swing.Action;
 import javax.swing.text.Segment;
 
 
@@ -146,6 +147,18 @@ abstract class TokenMakerBase implements TokenMaker {
 	 */
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return false;
+	}
+
+
+	/**
+	 * Returns an action to handle "insert break" key presses (i.e. Enter).
+	 * The default implementation returns <code>null</code>.  Subclasses
+	 * can override.
+	 *
+	 * @return The default implementation always returns <code>null</code>.
+	 */
+	public Action getInsertBreakAction() {
+		return null;
 	}
 
 
