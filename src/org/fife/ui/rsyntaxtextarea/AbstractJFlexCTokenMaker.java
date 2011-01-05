@@ -103,12 +103,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 			int line = textArea.getCaretLineNumber();
 			int type = doc.getLastTokenTypeOnLine(line);
-Token t = doc.getTokenListForLine(line);
-while (t!=null) {
-	System.out.println("... " + t);
-	t = t.getNextToken();
-}
-System.out.println(line + ", "  + type);
+
 			// Only in MLC's should we try this
 			if (type==Token.COMMENT_DOCUMENTATION ||
 					type==Token.COMMENT_MULTILINE) {
@@ -128,7 +123,6 @@ System.out.println(line + ", "  + type);
 				int start = textArea.getLineStartOffset(line);
 				int end = textArea.getLineEndOffset(line);
 				String text = textArea.getText(start, end-start);
-System.out.println("'" + text + "'");
 				m = p.matcher(text);
 			} catch (BadLocationException ble) { // Never happens
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
