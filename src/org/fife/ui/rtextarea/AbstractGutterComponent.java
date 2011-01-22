@@ -72,6 +72,11 @@ abstract class AbstractGutterComponent extends JComponent {
 	protected static final Rectangle getChildViewBounds(View parent, int line,
 										Rectangle editorRect) {
 		Shape alloc = parent.getChildAllocation(line, editorRect);
+		if (alloc==null) {
+			// WrappedSyntaxView can have this when made so small it's
+			// no longer visible
+			return new Rectangle();
+		}
 		return alloc instanceof Rectangle ? (Rectangle)alloc :
 										alloc.getBounds();
 	}
