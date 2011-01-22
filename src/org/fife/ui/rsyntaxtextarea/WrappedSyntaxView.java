@@ -24,9 +24,12 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
-
+import javax.swing.JViewport;
 import javax.swing.text.*;
 import javax.swing.event.*;
+
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -925,13 +928,27 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 
 		}
 
-		public void insertUpdate(DocumentEvent e, Shape a, ViewFactory f) {
+		private void handleDocumentEvent(DocumentEvent e, Shape a,
+											ViewFactory f) {
 			int n = calculateLineCount();
 			if (this.nlines != n) {
 				this.nlines = n;
 				WrappedSyntaxView.this.preferenceChanged(this, false, true);
 				// have to repaint any views after the receiver.
-				getContainer().repaint();
+				RSyntaxTextArea textArea = (RSyntaxTextArea)getContainer();
+				textArea.repaint();
+				// Must also revalidate container so gutter components, such
+				// as line numbers, get updated for this line's new height
+				Container parent = textArea.getParent();
+				if (parent instanceof JViewport &&
+						parent.getParent() instanceof RTextScrollPane) {
+					RTextScrollPane sp = (RTextScrollPane)parent.getParent();
+					Gutter gutter = sp.getGutter();
+					if (gutter!=null) {
+						gutter.revalidate();
+						gutter.repaint();
+					}
+				}
 			}
 			else if (a != null) {
 				Component c = getContainer();
@@ -940,19 +957,12 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 			}
 		}
 
+		public void insertUpdate(DocumentEvent e, Shape a, ViewFactory f) {
+			handleDocumentEvent(e, a, f);
+		}
+
 		public void removeUpdate(DocumentEvent e, Shape a, ViewFactory f) {
-			int n = calculateLineCount();
-			if (this.nlines != n) {
-				// have to repaint any views after the receiver.
-				this.nlines = n;
-				WrappedSyntaxView.this.preferenceChanged(this, false, true);
-				getContainer().repaint();
-			}
-			else if (a != null) {
-				Component c = getContainer();
-				Rectangle alloc = (Rectangle) a;
-				c.repaint(alloc.x, alloc.y, alloc.width, alloc.height);
-			}
+			handleDocumentEvent(e, a, f);
 		}
 
 	}
