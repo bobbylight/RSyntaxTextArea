@@ -42,6 +42,8 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.MouseInputAdapter;
 
+import org.fife.ui.rsyntaxtextarea.PopupWindowDecorator;
+
 
 /**
  * A focusable tool tip, similar to those found in Eclipse.  The user
@@ -109,6 +111,12 @@ public class FocusableTip {
 		Window owner = SwingUtilities.getWindowAncestor(textArea);
 		tipWindow = new TipWindow(owner, this, text);
 		tipWindow.setHyperlinkListener(hyperlinkListener);
+
+		// Give apps a chance to decorate us with drop shadows, etc.
+		PopupWindowDecorator decorator = PopupWindowDecorator.get();
+		if (decorator!=null) {
+			decorator.decorate(tipWindow);
+		}
 
 		// TODO: Position tip window better (handle RTL, edges of screen, etc.).
 		// Wrap in an invokeLater() to work around a JEditorPane issue where it
