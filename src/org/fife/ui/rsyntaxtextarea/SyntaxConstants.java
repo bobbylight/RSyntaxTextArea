@@ -157,6 +157,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting MXML.
+	 */
+	public static final String SYNTAX_STYLE_MXML			= "text/mxml";
+
+
+	/**
 	 * Style for highlighting Perl.
 	 */
 	public static final String SYNTAX_STYLE_PERL			= "text/perl";
