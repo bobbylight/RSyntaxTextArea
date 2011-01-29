@@ -126,21 +126,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Always returns <code>Token.NULL</code>, as there are no multiline
-	 * tokens in properties files.
-	 *
-	 * @param text The line of tokens to examine.
-	 * @param initialTokenType The token type to start with (i.e., the value
-	 *        of <code>getLastTokenTypeOnLine</code> for the line before
-	 *        <code>text</code>).
-	 * @return <code>Token.NULL</code>.
-	 */
-	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
-		return Token.NULL;
-	}
-
-
-	/**
 	 * Returns the text to place at the beginning and end of a
 	 * line to "comment" it in a this programming language.
 	 *
@@ -171,6 +156,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		// Start off in the proper state.
 		int state = Token.NULL;
+		switch (initialTokenType) {
+			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+				state = VALUE;
+				start = text.offset;
+				break;
+			default:
+				state = Token.NULL;
+		}
 
 		s = text;
 		try {
@@ -192,7 +185,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *              <code>false</code>.
 	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -207,7 +200,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -241,15 +234,17 @@ SingleQuote			= (')
 
 <YYINITIAL> {
 	{Name}			{ addToken(Token.RESERVED_WORD); }
-	{Equals}			{ addToken(Token.OPERATOR); yybegin(VALUE); }
+	{Equals}			{ start = zzMarkedPos; addToken(Token.OPERATOR); yybegin(VALUE); }
 	{Whitespace}		{ addToken(Token.WHITESPACE); }
 	{Comment}			{ addToken(Token.COMMENT_EOL); }
 	<<EOF>>			{ addNullToken(); return firstToken; }
 }
 
 <VALUE> {
-	{SingleQuote}[^']*{SingleQuote}?	{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	[^'\{]+						{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	"{"[^\}]*"}"?					{ addToken(Token.VARIABLE); }
-	<<EOF>>						{ addNullToken(); return firstToken; }
+	{SingleQuote}[^']*{SingleQuote}?	{ addToken(start, zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); start = zzMarkedPos; }
+	[^'\{\\]+						{}
+	"{"[^\}]*"}"?					{ int temp=zzStartRead; addToken(start, zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp, zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	[\\].							{}
+	[\\]							{ addToken(start, zzEndRead, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>							{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken; }
 }
