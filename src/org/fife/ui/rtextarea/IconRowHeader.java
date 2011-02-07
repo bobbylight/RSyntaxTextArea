@@ -96,6 +96,11 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 */
 	private int activeLineRangeEnd;
 
+	/**
+	 * The color used to highlight the active code block.
+	 */
+	private Color activeLineRangeColor = new Color(51,153,255);
+
 
 	/**
 	 * Constructor.
@@ -357,9 +362,11 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		if ((activeLineRangeStart>=topLine&&activeLineRangeStart<=bottomLine) ||
 			(activeLineRangeEnd>=topLine && activeLineRangeEnd<=bottomLine) ||
 			(activeLineRangeStart<=topLine && activeLineRangeEnd>=bottomLine)) {
-			g.setColor(new Color(51,153,255));
-			int y1 = Math.max(activeLineRangeStart, topLine) * cellHeight;
-			int y2 = (Math.min(activeLineRangeEnd, bottomLine)+1) * cellHeight;
+			g.setColor(activeLineRangeColor);
+			int firstLine = Math.max(activeLineRangeStart, topLine);
+			int y1 = firstLine * cellHeight;
+			int lastLine = Math.min(activeLineRangeEnd, bottomLine);
+			int y2 = (lastLine+1) * cellHeight;
 			//g.fillRect(0, y1, getWidth(), y2-y1);
 			int j = y1;
 			while (j<=y2) {
@@ -373,6 +380,14 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 				int yEnd = y1 + getWidth() - i;
 				g.drawLine(i,y1, getWidth(),yEnd);
 				i += 2;
+			}
+			if (firstLine==activeLineRangeStart) {
+				g.setColor(activeLineRangeColor);
+				g.drawLine(0,y1, getWidth(),y1);
+			}
+			if (lastLine==activeLineRangeEnd) {
+				g.setColor(activeLineRangeColor);
+				g.drawLine(0,y2, getWidth(),y2);
 			}
 		}
 
@@ -557,9 +572,12 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 * @see #clearActiveLineRange()
 	 */
 	public void setActiveLineRange(int startLine, int endLine) {
-		activeLineRangeStart = startLine;
-		activeLineRangeEnd = endLine;
-		repaint();
+		if (startLine!=activeLineRangeStart ||
+				endLine!=activeLineRangeEnd) {
+			activeLineRangeStart = startLine;
+			activeLineRangeEnd = endLine;
+			repaint();
+		}
 	}
 
 

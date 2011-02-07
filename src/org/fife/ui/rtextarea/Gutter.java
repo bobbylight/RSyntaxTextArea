@@ -40,6 +40,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.fife.ui.rsyntaxtextarea.ActiveLineRangeEvent;
+import org.fife.ui.rsyntaxtextarea.ActiveLineRangeListener;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 
@@ -156,7 +158,7 @@ public class Gutter extends JComponent {
 	 *
 	 * @see #setActiveLineRange(int, int)
 	 */
-	public void clearActiveLineRange() {
+	private void clearActiveLineRange() {
 		iconArea.clearActiveLineRange();
 	}
 
@@ -320,7 +322,7 @@ public class Gutter extends JComponent {
 	 * @param endLine The end of the line range.
 	 * @see #clearActiveLineRange()
 	 */
-	public void setActiveLineRange(int startLine, int endLine) {
+	private void setActiveLineRange(int startLine, int endLine) {
 		iconArea.setActiveLineRange(startLine, endLine);
 	}
 
@@ -556,9 +558,24 @@ public class Gutter extends JComponent {
 	 * resized.
 	 */
 	private class TextAreaListener extends ComponentAdapter
-						implements DocumentListener, PropertyChangeListener {
+						implements DocumentListener, PropertyChangeListener,
+						ActiveLineRangeListener {
 
 		private boolean installed;
+
+		/**
+		 * Modifies the "active line range" that is painted in this component.
+		 *
+		 * @param e Information about the new "active line range."
+		 */
+		public void activeLineRangeChanged(ActiveLineRangeEvent e) {
+			if (e.getMin()==-1) {
+				clearActiveLineRange();
+			}
+			else {
+				setActiveLineRange(e.getMin(), e.getMax());
+			}
+		}
 
 		public void changedUpdate(DocumentEvent e) {}
 
@@ -585,6 +602,9 @@ public class Gutter extends JComponent {
 			textArea.addComponentListener(this);
 			textArea.getDocument().addDocumentListener(this);
 			textArea.addPropertyChangeListener(this);
+			if (textArea instanceof RSyntaxTextArea) {
+				((RSyntaxTextArea)textArea).addActiveLineRangeListener(this);
+			}
 			installed = true;
 		}
 
@@ -613,6 +633,9 @@ public class Gutter extends JComponent {
 			if (installed) {
 				textArea.removeComponentListener(this);
 				textArea.getDocument().removeDocumentListener(this);
+				if (textArea instanceof RSyntaxTextArea) {
+					((RSyntaxTextArea)textArea).removeActiveLineRangeListener(this);
+				}
 				installed = false;
 			}
 		}

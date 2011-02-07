@@ -58,8 +58,10 @@ import javax.swing.text.Highlighter;
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
+import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 
@@ -68,11 +70,13 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  * of certain programming languages to its list of features.  Languages
  * currently supported include:
  * <ul>
+ *    <li>ActionScript
  *    <li>Assembler (X86)
  *    <li>C
  *    <li>C++
  *    <li>CSS
  *    <li>C#
+ *    <li>Clojure
  *    <li>Delphi
  *    <li>Fortran
  *    <li>Groovy
@@ -83,6 +87,7 @@ import org.fife.ui.rtextarea.RTextAreaUI;
  *    <li>Lisp
  *    <li>Lua
  *    <li>Make
+ *    <li>MXML
  *    <li>Perl
  *    <li>PHP
  *    <li>Ruby
@@ -379,6 +384,17 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Adds an "active line range" listener to this text area.
+	 *
+	 * @param l The listener to add.
+	 * @see #removeActiveLineRangeListener(ActiveLineRangeListener)
+	 */
+	public void addActiveLineRangeListener(ActiveLineRangeListener l) {
+		listenerList.add(ActiveLineRangeListener.class, l);
+	}
+
+
+	/**
 	 * Adds a hyperlink listener to this text area.
 	 *
 	 * @param l The listener to add.
@@ -647,6 +663,29 @@ private boolean fractionalFontMetricsEnabled;
 		super.fireCaretUpdate(e);
 		if (isBracketMatchingEnabled()) {
 			doBracketMatching();
+		}
+	}
+
+
+	/**
+	 * Notifies all listeners that the active line range has changed.
+	 *
+	 * @param min The minimum "active" line, or <code>-1</code>.
+	 * @param max The maximum "active" line, or <code>-1</code>.
+	 */
+	private void fireActiveLineRangeEvent(int min, int max) {
+		ActiveLineRangeEvent e = null; // Lazily created
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length-2; i>=0; i-=2) {
+			if (listeners[i]==ActiveLineRangeListener.class) {
+				if (e==null) {
+					e = new ActiveLineRangeEvent(this, min, max);
+				}
+				((ActiveLineRangeListener)listeners[i+1]).activeLineRangeChanged(e);
+			}
 		}
 	}
 
@@ -1490,6 +1529,17 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Removes an "active line range" listener from this text area.
+	 *
+	 * @param l The listener to remove.
+	 * @see {@link #addActiveLineRangeListener(ActiveLineRangeListener)}
+	 */
+	public void removeActiveLineRangeListener(ActiveLineRangeListener l) {
+		listenerList.remove(ActiveLineRangeListener.class, l);
+	}
+
+
+	/**
 	 * Removes a hyperlink listener from this text area.
 	 *
 	 * @param l The listener to remove.
@@ -1561,6 +1611,32 @@ private boolean fractionalFontMetricsEnabled;
 			return false;
 		}
 		return getCodeTemplateManager().saveTemplates();
+	}
+
+
+	/**
+	 * Sets the "active line range."  Note that this
+	 * <code>RSyntaxTextArea</code> itself does nothing with this information,
+	 * but if it is contained inside an {@link RTextScrollPane}, the active
+	 * line range may be displayed in the icon area of the {@link Gutter}.<p>
+	 * 
+	 * Note that basic users of <code>RSyntaxTextArea</code> will not call this
+	 * method directly; rather, it is usually called by instances of
+	 * <code>LanguageSupport</code> in the <code>RSTALangaugeSupport</code>
+	 * library.  See <a href="http://fifesoft.com">http://fifesoft.com</a>
+	 * for more information about this library.
+	 *
+	 * @param min The "minimum" line in the active line range, or
+	 *        <code>-1</code> if the range is being cleared.
+	 * @param max The "maximum" line in the active line range, or
+	 *        <code>-1</code> if the range is being cleared.
+	 * @see #addActiveLineRangeListener(ActiveLineRangeListener)
+	 */
+	public void setActiveLineRange(int min, int max) {
+		if (min==-1) {
+			max = -1; // Force max to be -1 if min is.
+		}
+		fireActiveLineRangeEvent(min, max);
 	}
 
 
