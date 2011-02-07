@@ -119,9 +119,11 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 										int line) {
 
 			Matcher m = null;
+			int start = -1;
+			int end = -1;
 			try {
-				int start = textArea.getLineStartOffset(line);
-				int end = textArea.getLineEndOffset(line);
+				start = textArea.getLineStartOffset(line);
+				end = textArea.getLineEndOffset(line);
 				String text = textArea.getText(start, end-start);
 				m = p.matcher(text);
 			} catch (BadLocationException ble) { // Never happens
@@ -131,16 +133,29 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 			}
 
 			if (m.lookingAt()) {
-				boolean newMLC = m.group(2).charAt(0)=='/';
-				String header = m.group(1) +
+
+				String leadingWS = m.group(1);
+				String mlcMarker = m.group(2);
+
+				// If the caret is "inside" any leading whitespace or MLC
+				// marker, move it to the end of the line.
+				int dot = textArea.getCaretPosition();
+				if (dot>=start &&
+						dot<start+leadingWS.length()+mlcMarker.length()) {
+					textArea.setCaretPosition(end-1);
+				}
+
+				boolean newMLC = mlcMarker.charAt(0)=='/';
+				String header = leadingWS +
 						(newMLC ? " * " : "*") +
 						m.group(3);
 				textArea.replaceSelection("\n" + header);
 				if (newMLC) {
-					int dot = textArea.getCaretPosition();
-					textArea.insert("\n" + m.group(1) + " */", dot);
+					dot = textArea.getCaretPosition(); // Has changed
+					textArea.insert("\n" + leadingWS + " */", dot);
 					textArea.setCaretPosition(dot);
 				}
+
 			}
 			else {
 				handleInsertBreak(textArea, true);
