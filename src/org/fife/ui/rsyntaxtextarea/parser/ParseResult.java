@@ -37,6 +37,15 @@ public interface ParseResult {
 
 
 	/**
+	 * Returns an error that occurred while parsing the document, if any.
+	 *
+	 * @return The error, or <code>null</code> if the document was
+	 *         successfully parsed.
+	 */
+	public Exception getError();
+
+
+	/**
 	 * Returns the first line parsed.  All parser implementations should
 	 * currently set this to <code>0</code> and parse the entire document.
 	 *
@@ -71,6 +80,17 @@ public interface ParseResult {
 	 * @return The parser.
 	 */
 	public Parser getParser();
+
+
+	/**
+	 * Returns the amount of time this parser took to parse the specified
+	 * range of text.  This is an optional operation; parsers are permitted
+	 * to return <code>0</code> for this value.
+	 *
+	 * @return The parse time, in milliseconds, or <code>0</code> if the
+	 *         parse time was not recorded.
+	 */
+	public long getParseTime();
 
 
 }

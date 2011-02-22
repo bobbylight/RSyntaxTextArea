@@ -1532,7 +1532,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Removes an "active line range" listener from this text area.
 	 *
 	 * @param l The listener to remove.
-	 * @see {@link #addActiveLineRangeListener(ActiveLineRangeListener)}
+	 * @see #removeActiveLineRangeListener(ActiveLineRangeListener)
 	 */
 	public void removeActiveLineRangeListener(ActiveLineRangeListener l) {
 		listenerList.remove(ActiveLineRangeListener.class, l);
