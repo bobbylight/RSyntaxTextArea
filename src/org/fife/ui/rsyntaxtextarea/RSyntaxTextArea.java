@@ -72,6 +72,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  * <ul>
  *    <li>ActionScript
  *    <li>Assembler (X86)
+ *    <li>BBCode
  *    <li>C
  *    <li>C++
  *    <li>CSS
