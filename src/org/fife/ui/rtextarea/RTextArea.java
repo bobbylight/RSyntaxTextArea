@@ -342,6 +342,28 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Tells whether an undo is possible
+	 * 
+	 * @see #canRedo()
+	 * @see #undoLastAction()
+	 */
+	public boolean canUndo() {
+		return undoManager.canUndo();
+	}
+
+
+	/**
+	 * Tells whether a redo is possible
+	 * 
+	 * @see #canUndo()
+	 * @see #redoLastAction()
+	 */
+	public boolean canRedo() {
+		return undoManager.canRedo();
+	}
+
+
+	/**
 	 * Clears any "mark all" highlights, if any.
 	 *
 	 * @see #markAll
@@ -1497,7 +1519,6 @@ public class RTextArea extends RTextAreaBase
 			cre.printStackTrace();
 		}
 	}
-
 
 	/**
 	 * Serializes this text area.
