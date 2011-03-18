@@ -241,7 +241,7 @@ SingleQuote			= (')
 }
 
 <VALUE> {
-	{SingleQuote}[^']*{SingleQuote}?	{ addToken(start, zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); start = zzMarkedPos; }
+	{SingleQuote}[^']*{SingleQuote}?	{ addToken(start, zzMarkedPos-1, Token.LITERAL_STRING_DOUBLE_QUOTE); start = zzMarkedPos; }
 	[^'\{\\]+						{}
 	"{"[^\}]*"}"?					{ int temp=zzStartRead; addToken(start, zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp, zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	[\\].							{}
