@@ -74,21 +74,6 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 				if (value!=-1)
 					tokenType = value;
 				break;
-			case Token.WHITESPACE:
-			case Token.SEPARATOR:
-			case Token.OPERATOR:
-			case Token.ERROR_STRING_DOUBLE:
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-			case Token.COMMENT_EOL:
-			case Token.VARIABLE:
-				break;
-
-			default:
-				new Exception("Unknown tokenType: '" + tokenType + "'").
-									printStackTrace();
-				tokenType = Token.IDENTIFIER;
-				break;
-
 		}
 
 		super.addToken(segment, start, end, tokenType, startOffset);
@@ -234,9 +219,11 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("rename",		reservedWord);
 		tokenMap.put("rmdir",		reservedWord);
 		tokenMap.put("route",		reservedWord);
+		tokenMap.put("sc",			reservedWord);
 		tokenMap.put("scandisk",		reservedWord);
 		tokenMap.put("scandreg",		reservedWord);
 		tokenMap.put("set",			reservedWord);
+		tokenMap.put("setx",			reservedWord);
 		tokenMap.put("setver",		reservedWord);
 		tokenMap.put("share",		reservedWord);
 		tokenMap.put("shutdown",		reservedWord);
@@ -282,7 +269,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		// See, when we find a token, its starting position is always of the form:
 		// 'startOffset + (currentTokenStart-offset)'; but since startOffset and
 		// offset are constant, tokens' starting positions become:
-		// 'newStartOffset+currentTokenStart' for one less subraction operation.
+		// 'newStartOffset+currentTokenStart' for one less subtraction operation.
 		int newStartOffset = startOffset - offset;
 
 		currentTokenStart = offset;
@@ -326,6 +313,23 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 						case ';':
 							addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenType = Token.NULL;
+							break;
+
+						// Newer version of EOL comments, or a label
+						case ':':
+							// If this will be the first token added, it is
+							// a new-style comment or a label
+							if (firstToken==null) {
+								if (i<end-1 && array[i+1]==':') { // new-style comment
+									currentTokenType = Token.COMMENT_EOL;
+								}
+								else { // Label
+									currentTokenType = Token.PREPROCESSOR;
+								}
+							}
+							else { // Just a colon
+								currentTokenType = Token.IDENTIFIER;
+							}
 							break;
 
 						default:
@@ -385,6 +389,25 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
 							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
 							currentTokenType = Token.NULL;
+							break;
+
+						// Newer version of EOL comments, or a label
+						case ':':
+							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							currentTokenStart = i;
+							// If the previous (whitespace) token was the first token
+							// added, this is a new-style comment or a label
+							if (firstToken.getNextToken()==null) {
+								if (i<end-1 && array[i+1]==':') { // new-style comment
+									currentTokenType = Token.COMMENT_EOL;
+								}
+								else { // Label
+									currentTokenType = Token.PREPROCESSOR;
+								}
+							}
+							else { // Just a colon
+								currentTokenType = Token.IDENTIFIER;
+							}
 							break;
 
 						default:	// Add the whitespace token and start anew.
@@ -499,6 +522,13 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 				case Token.COMMENT_EOL:
 					i = end - 1;
 					addToken(text, currentTokenStart,i, Token.COMMENT_EOL, newStartOffset+currentTokenStart);
+					// We need to set token type to null so at the bottom we don't add one more token.
+					currentTokenType = Token.NULL;
+					break;
+
+				case Token.PREPROCESSOR: // Used for labels
+					i = end - 1;
+					addToken(text, currentTokenStart,i, Token.PREPROCESSOR, newStartOffset+currentTokenStart);
 					// We need to set token type to null so at the bottom we don't add one more token.
 					currentTokenType = Token.NULL;
 					break;
