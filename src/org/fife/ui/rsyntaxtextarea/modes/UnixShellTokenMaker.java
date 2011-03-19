@@ -161,9 +161,11 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("banner",			function);
 		tokenMap.put("basename",			function);
 		tokenMap.put("batch",			function);
+		tokenMap.put("bg",			function); 
 		tokenMap.put("biff",			function); 
 		tokenMap.put("bin-mail",			function);
 		tokenMap.put("binmail",			function);
+		tokenMap.put("break",			function);
 		tokenMap.put("cal",			function); 
 		tokenMap.put("calendar",			function); 
 		tokenMap.put("cancel",			function); 
@@ -185,6 +187,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("colcrt",			function); 
 		tokenMap.put("comb",			function); 
 		tokenMap.put("comm",			function);
+		tokenMap.put("command",			function);
 		tokenMap.put("compress",			function);
 		tokenMap.put("continue",			function);
 		tokenMap.put("cp",			function); 
@@ -207,11 +210,16 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("enscript",		function); 
 		tokenMap.put("eqn",			function);
 		tokenMap.put("error",		function);
+		tokenMap.put("eval",		function);
 		tokenMap.put("ex",			function);
+		tokenMap.put("exec",			function);
 		tokenMap.put("exit",			function);
 		tokenMap.put("expand",		function);
+		tokenMap.put("export",		function);
 		tokenMap.put("expr",			function); 
 		tokenMap.put("false",			function); 
+		tokenMap.put("fc",			function); 
+		tokenMap.put("fg",			function); 
 		tokenMap.put("file",			function);
 		tokenMap.put("find",			function); 
 		tokenMap.put("finger",			function); 
@@ -222,6 +230,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("function",		function);
 		tokenMap.put("gcore",			function); 
 		tokenMap.put("get",			function); 
+		tokenMap.put("getopts",			function); 
 		tokenMap.put("gprof",			function); 
 		tokenMap.put("grep",			function); 
 		tokenMap.put("groups",			function); 
@@ -235,12 +244,14 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("imake",			function); 
 		tokenMap.put("indent",			function); 
 		tokenMap.put("install",			function); 
+		tokenMap.put("jobs",			function); 
 		tokenMap.put("join",			function); 
 		tokenMap.put("kill",			function); 
 		tokenMap.put("last",			function); 
 		tokenMap.put("ld",			function);
 		tokenMap.put("leave",			function); 
 		tokenMap.put("less",			function); 
+		tokenMap.put("let",			function); 
 		tokenMap.put("lex",			function); 
 		tokenMap.put("lint",			function); 
 		tokenMap.put("ln",			function); 
@@ -274,6 +285,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("paste",			function); 
 		tokenMap.put("pr",			function);
 		tokenMap.put("print",		function);
+		tokenMap.put("printf",		function);
 		tokenMap.put("printenv",			function); 
 		tokenMap.put("prof",			function); 
 		tokenMap.put("prs",			function); 
@@ -287,6 +299,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("rcs",			function); 
 		tokenMap.put("rcsdiff",			function);
 		tokenMap.put("read",			function);
+		tokenMap.put("readonly",			function);
 		tokenMap.put("red",			function);
 		tokenMap.put("return",		function);
 		tokenMap.put("rev",			function); 
@@ -307,6 +320,8 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("script",			function); 
 		tokenMap.put("sed",			function);
 		tokenMap.put("set",			function);
+		tokenMap.put("setgroups",			function);
+		tokenMap.put("setsenv",			function);
 		tokenMap.put("sh",			function);
 		tokenMap.put("shift",		function);
 		tokenMap.put("size",			function); 
@@ -319,6 +334,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("strip",			function); 
 		tokenMap.put("stty",			function); 
 		tokenMap.put("su",			function); 
+		tokenMap.put("sudo",			function); 
 		tokenMap.put("symorder",			function); 
 		tokenMap.put("tabs",			function); 
 		tokenMap.put("tail",			function); 
@@ -330,7 +346,9 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("test",			function); 
 		tokenMap.put("tftp",			function); 
 		tokenMap.put("time",			function); 
+		tokenMap.put("times",			function); 
 		tokenMap.put("touch",			function); 
+		tokenMap.put("trap",			function); 
 		tokenMap.put("troff",			function); 
 		tokenMap.put("true",			function);
 		tokenMap.put("tsort",			function); 
@@ -339,6 +357,9 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("typeset",		function);
 		tokenMap.put("ue",			function); 
 		tokenMap.put("ul",			function); 
+		tokenMap.put("ulimit",			function); 
+		tokenMap.put("umask",		function); 
+		tokenMap.put("unalias",			function); 
 		tokenMap.put("uncompress",			function); 
 		tokenMap.put("unexpand",		function);
 		tokenMap.put("unget",			function);
@@ -366,8 +387,10 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("wait",			function); 
 		tokenMap.put("wall",			function); 
 		tokenMap.put("wc",			function); 
+		tokenMap.put("wait",			function); 
 		tokenMap.put("what",			function); 
 		tokenMap.put("whatis",			function); 
+		tokenMap.put("whence",			function); 
 		tokenMap.put("whereis",			function); 
 		tokenMap.put("which",			function); 
 		tokenMap.put("who",			function); 
