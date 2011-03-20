@@ -115,6 +115,54 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 		}
 
+
+		/**
+		 * Returns whether the MLC token containing <code>offs</code> appears
+		 * to have a "nested" comment (i.e., contains "<code>/*</code>"
+		 * somewhere inside of it).  This implies that it is likely a "new" MLC
+		 * and needs to be closed.  While not foolproof, this is usually good
+		 * enough of a sign.
+		 *
+		 * @param textArea
+		 * @param line
+		 * @param offs
+		 * @return Whether a comment appears to be nested inside this one.
+		 */
+		private boolean appearsNested(RSyntaxTextArea textArea,
+						int line, int offs) {
+
+			final int firstLine = line; // Remember the line we start at.
+
+			while (line<textArea.getLineCount()) {
+				Token t = textArea.getTokenListForLine(line);
+				int i = 0;
+				// If examining the first line, start at offs.
+				if (line++==firstLine) {
+					t = RSyntaxUtilities.getTokenAtOffset(t, offs);
+					if (t==null) { // offs was at end of the line
+						continue;
+					}
+					i = t.documentToToken(offs);
+				}
+				else {
+					i = t.textOffset;
+				}
+				while (i<t.textOffset+t.textCount-1) {
+					if (t.text[i]=='/' && t.text[i+1]=='*') {
+						return true;
+					}
+					i++;
+				}
+				// If tokens come after this one on this line, our MLC ended.
+				if (t.getNextToken()!=null) {
+					return false;
+				}
+			}
+
+			return true; // No match - MLC goes to the end of the file
+
+		}
+
 		private void insertBreakInMLC(ActionEvent e, RSyntaxTextArea textArea,
 										int line) {
 
@@ -142,15 +190,23 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 				int dot = textArea.getCaretPosition();
 				if (dot>=start &&
 						dot<start+leadingWS.length()+mlcMarker.length()) {
+					// If we're in the whitespace before the very start of the
+					// MLC though, just insert a normal newline
+					if (mlcMarker.charAt(0)=='/') {
+						handleInsertBreak(textArea, true);
+						return;
+					}
 					textArea.setCaretPosition(end-1);
 				}
 
-				boolean newMLC = mlcMarker.charAt(0)=='/';
+				boolean firstMlcLine = mlcMarker.charAt(0)=='/';
+				boolean nested = appearsNested(textArea, line,
+												start+leadingWS.length()+2);
 				String header = leadingWS +
-						(newMLC ? " * " : "*") +
+						(firstMlcLine ? " * " : "*") +
 						m.group(3);
 				textArea.replaceSelection("\n" + header);
-				if (newMLC) {
+				if (nested) {
 					dot = textArea.getCaretPosition(); // Has changed
 					textArea.insert("\n" + leadingWS + " */", dot);
 					textArea.setCaretPosition(dot);
