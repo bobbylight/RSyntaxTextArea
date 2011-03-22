@@ -1022,14 +1022,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				return;
 			}
 
-			int modifiers = e.getModifiers();
-			if ((modifiers&InputEvent.SHIFT_MASK)!=InputEvent.SHIFT_MASK) {
-				if (modifiers==0) { // Only insert space if no modifiers
-					textArea.replaceSelection(" ");
-				}
-				return;
-			}
-
 			try {
 
 				int dot = textArea.getCaretPosition();
@@ -1045,10 +1037,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					// single non-letter chars as "words."
 					if (lastPrefix.length()==0 ||
 							!Character.isLetter(lastPrefix.charAt(lastPrefix.length()-1))) {
-						//UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-						// It's annoying to not insert a space; sometimes I
-						// hold down shift when trying to type ") {".
-						textArea.replaceSelection(" ");
+						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 						return;
 					}
 					lastWordStart = dot - lastPrefix.length();
@@ -1058,7 +1047,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				while (searchOffs > 0) {
 					int wordStart = Utilities.getPreviousWord(textArea,
 							searchOffs);
-					if (wordStart==0 || wordStart==BreakIterator.DONE) {
+					if (wordStart==BreakIterator.DONE) {
 						UIManager.getLookAndFeel().provideErrorFeedback(
 								textArea);
 						break;
