@@ -766,6 +766,46 @@ public abstract class Token {
 
 
 	/**
+	 * Paints dotted "tab" lines; that is, lines that show where your caret
+	 * would go to on the line if you hit "tab".  This visual effect is usually
+	 * done in the leading whitespace token(s) of lines.
+	 *
+	 * @param x The starting x-offset of this token.
+	 * @param y The baseline where this token was painted.
+	 * @param endX The ending x-offset of this token.
+	 * @param g The graphics context.
+	 * @param host The text area.
+	 */
+	protected void paintTabLines(int x, int y, int endX, Graphics2D g,
+								RSyntaxTextArea host) {
+
+		g.setColor(Color.gray);
+		FontMetrics fm = g.getFontMetrics();
+
+		int tabSize = host.getTabSize();
+		char[] ch = new char[tabSize];
+		for (int i=0; i<tabSize; i++) {
+			ch[i] = ' ';
+		}
+
+		int tabW = g.getFontMetrics().charsWidth(ch, 0, tabSize);
+		int x0 = ((x+tabW)/tabW) * tabW;
+		final int y0 = y - fm.getAscent();
+		while (x0<endX) {
+			int y1 = y0;
+			int y2 = y0 + host.getLineHeight();
+			while (y1<y2) {
+				g.drawLine(x0, y1, x0, y1);
+				y1 += 2;
+			}
+			//g.drawLine(x0,y0, x0,y0+host.getLineHeight());
+			x0 += tabW;
+		}
+
+	}
+
+
+	/**
 	 * Sets the value of this token to a particular segment of a document.
 	 * The "next token" value is cleared.
 	 *

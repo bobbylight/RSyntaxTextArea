@@ -378,6 +378,10 @@ public class DefaultToken extends Token {
 			g.drawLine(origX,y2, (int)nextX,y2);
 		}
 
+		if (host.getPaintTabLines() && isWhitespace()) {
+			paintTabLines((int)origX, (int)y, (int)nextX, g, host);
+		}
+
 		return nextX;
 
 	}

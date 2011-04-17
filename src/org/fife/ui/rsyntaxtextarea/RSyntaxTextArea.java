@@ -137,6 +137,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String PARSER_NOTICES_PROPERTY				= "RSTA.parserNotices";
 	public static final String SYNTAX_SCHEME_PROPERTY				= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY				= "RSTA.syntaxStyle";
+	public static final String TAB_LINES_PROPERTY					= "RSTA.tabLines";
 	public static final String VISIBLE_WHITESPACE_PROPERTY			= "RSTA.visibleWhitespace";
 
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
@@ -226,6 +227,11 @@ Rectangle match;
 	 * Whether EOL markers should be visible at the end of each line.
 	 */
 	private boolean eolMarkersVisible;
+
+	/**
+	 * Whether tab lines are enabled.
+	 */
+	private boolean paintTabLines;
 
 	/**
 	 * Whether hyperlinks are enabled (must be supported by the syntax
@@ -1108,6 +1114,17 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether tab lines are painted.
+	 *
+	 * @return Whether tab lines are painted.
+	 * @see #setPaintTabLines(boolean)
+	 */
+	public boolean getPaintTabLines() {
+		return paintTabLines;
+	}
+
+
+	/**
 	 * Returns the specified parser.
 	 *
 	 * @param index The {@link Parser} to retrieve.
@@ -1979,6 +1996,22 @@ private boolean fractionalFontMetricsEnabled;
 		matchedBracketBorderColor = color;
 		if (match!=null)
 			repaint();
+	}
+
+
+	/**
+	 * Toggles whether tab lines are painted.  This method fires a property
+	 * change event of type {@link #TAB_LINES_PROPERTY}.
+	 *
+	 * @param paint Whether tab lines are painted.
+	 * @see #getPaintTabLines()
+	 */
+	public void setPaintTabLines(boolean paint) {
+		if (paint!=paintTabLines) {
+			paintTabLines = paint;
+			repaint();
+			firePropertyChange(TAB_LINES_PROPERTY, !paint, paint);
+		}
 	}
 
 
