@@ -83,6 +83,12 @@ public abstract class Token {
 	 */
 	private Rectangle2D.Float bgRect;
 
+	/**
+	 * Micro-optimization; buffer used to compute tab width.  If the width is
+	 * correct it's not re-allocated, to prevent lots of very small garbage.
+	 * Only used when painting tab lines.
+	 */
+	private static char[] tabBuf;
 
 	// NOTE: All valid token types are >= 0, so extensions of the TokenMaker
 	// class are free to internally use all ints < 0 ONLY for "end-of-line"
@@ -770,26 +776,58 @@ public abstract class Token {
 	 * would go to on the line if you hit "tab".  This visual effect is usually
 	 * done in the leading whitespace token(s) of lines.
 	 *
-	 * @param x The starting x-offset of this token.
+	 * @param x The starting x-offset of this token.  It is assumed that this
+	 *        is the left margin of the text area (may be non-zero due to
+	 *        insets), since tab lines are only painted for leading whitespace.
 	 * @param y The baseline where this token was painted.
 	 * @param endX The ending x-offset of this token.
 	 * @param g The graphics context.
+	 * @param e Used to expand tabs.
 	 * @param host The text area.
 	 */
 	protected void paintTabLines(int x, int y, int endX, Graphics2D g,
-								RSyntaxTextArea host) {
+								TabExpander e, RSyntaxTextArea host) {
 
-		g.setColor(Color.gray);
-		FontMetrics fm = g.getFontMetrics();
-
-		int tabSize = host.getTabSize();
-		char[] ch = new char[tabSize];
-		for (int i=0; i<tabSize; i++) {
-			ch[i] = ' ';
+		// We allow tab lines to be painted in more than just Token.WHITESPACE,
+		// i.e. for MLC's and Token.IDENTIFIERS (for TokenMakers that return
+		// whitespace as identifiers for performance).  But we only paint tab
+		// lines for the leading whitespace in the token.  So, if this isn't a
+		// WHITESPACE token, figure out the leading whitespace's length.
+		if (type!=Token.WHITESPACE) {
+			int offs = textOffset;
+			for (; offs<textOffset+textCount; offs++) {
+				if (!RSyntaxUtilities.isWhitespace(text[offs])) {
+					break; // MLC text, etc.
+				}
+			}
+			int len = offs - textOffset;
+			if (len<2) { // Must be at least two whitespaces to see tab line
+				return;
+			}
+			//endX = x + (int)getWidthUpTo(len, host, e, x);
+			endX = (int)getWidthUpTo(len, host, e, 0);
 		}
 
-		int tabW = g.getFontMetrics().charsWidth(ch, 0, tabSize);
-		int x0 = ((x+tabW)/tabW) * tabW;
+		// Get the length of a tab.
+		FontMetrics fm = host.getFontMetricsForTokenType(type);
+		int tabSize = host.getTabSize();
+		if (tabBuf==null || tabBuf.length<tabSize) {
+			tabBuf = new char[tabSize];
+			for (int i=0; i<tabSize; i++) {
+				tabBuf[i] = ' ';
+			}
+		}
+		// Note different token types (MLC's, whitespace) could possibly be
+		// using different fonts, which means we can't cache the actual width
+		// of a tab as it may be different per-token-type.  We could keep a
+		// per-token-type cache, but we'd have to clear it whenever they
+		// modified token styles.
+		int tabW = fm.charsWidth(tabBuf, 0, tabSize);
+
+		// Draw any tab lines.  Here we're assuming that "x" is the left
+		// margin of the editor.
+		g.setColor(host.getTabLineColor());
+		int x0 = x + tabW;
 		final int y0 = y - fm.getAscent();
 		while (x0<endX) {
 			int y1 = y0;

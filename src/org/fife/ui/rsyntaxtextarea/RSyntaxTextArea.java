@@ -137,6 +137,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String PARSER_NOTICES_PROPERTY				= "RSTA.parserNotices";
 	public static final String SYNTAX_SCHEME_PROPERTY				= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY				= "RSTA.syntaxStyle";
+	public static final String TAB_LINE_COLOR_PROPERTY				= "RSTA.tabLineColor";
 	public static final String TAB_LINES_PROPERTY					= "RSTA.tabLines";
 	public static final String VISIBLE_WHITESPACE_PROPERTY			= "RSTA.visibleWhitespace";
 
@@ -232,6 +233,11 @@ Rectangle match;
 	 * Whether tab lines are enabled.
 	 */
 	private boolean paintTabLines;
+
+	/**
+	 * The color to use when painting tab lines.
+	 */
+	private Color tabLineColor;
 
 	/**
 	 * Whether hyperlinks are enabled (must be supported by the syntax
@@ -1118,6 +1124,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return Whether tab lines are painted.
 	 * @see #setPaintTabLines(boolean)
+	 * @see #getTabLineColor()
 	 */
 	public boolean getPaintTabLines() {
 		return paintTabLines;
@@ -1229,6 +1236,19 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public SyntaxScheme getSyntaxScheme() {
 		return syntaxScheme;
+	}
+
+
+	/**
+	 * Returns the color used to paint tab lines.
+	 *
+	 * @return The color used to paint tab lines.
+	 * @see #setTabLineColor(Color)
+	 * @see #getPaintTabLines()
+	 * @see #setPaintTabLines(boolean)
+	 */
+	public Color getTabLineColor() {
+		return tabLineColor;
 	}
 
 
@@ -1432,6 +1452,7 @@ private boolean fractionalFontMetricsEnabled;
 		setAnimateBracketMatching(true);
 		lastBracketMatchPos = -1;
 		setSelectionColor(getDefaultSelectionColor());
+		setTabLineColor(null);
 
 		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);
@@ -2005,6 +2026,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param paint Whether tab lines are painted.
 	 * @see #getPaintTabLines()
+	 * @see #setTabLineColor(Color)
 	 */
 	public void setPaintTabLines(boolean paint) {
 		if (paint!=paintTabLines) {
@@ -2142,6 +2164,34 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public static synchronized void setTemplatesEnabled(boolean enabled) {
 		templatesEnabled = enabled;
+	}
+
+
+	/**
+	 * Sets the color use to paint tab lines.  This method fires a property
+	 * change event of type {@link #TAB_LINE_COLOR_PROPERTY}.
+	 *
+	 * @param c The color.  If this value is <code>null</code>, the default
+	 *        (gray) is used.
+	 * @see #getTabLineColor()
+	 * @see #setPaintTabLines(boolean)
+	 * @see #getPaintTabLines()
+	 */
+	public void setTabLineColor(Color c) {
+
+		if (c==null) {
+			c = Color.gray;
+		}
+
+		if (!c.equals(tabLineColor)) {
+			Color old = tabLineColor;
+			tabLineColor = c;
+			if (getPaintTabLines()) {
+				repaint();
+			}
+			firePropertyChange(TAB_LINE_COLOR_PROPERTY, old, tabLineColor);
+		}
+
 	}
 
 

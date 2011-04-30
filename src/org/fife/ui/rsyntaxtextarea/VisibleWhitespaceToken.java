@@ -164,17 +164,6 @@ public class VisibleWhitespaceToken extends DefaultToken {
 					}
 					flushIndex = i + 1;
 
-					/*
-					if (host.showIndentGuide()) {
-						g.setColor(Color.GRAY);
-						int y2 = y - ascent;
-						int end2 = y + fm.getDescent() - 1;
-						while (y2<end2) {
-							g.drawLine(nextNextX,y2, nextNextX,y2);
-							y2 += 2;
-						}
-					*/
-
 					// Draw an arrow representing the tab.
 					int halfHeight = height / 2;
 					int quarterHeight = halfHeight / 2;
@@ -251,8 +240,11 @@ public class VisibleWhitespaceToken extends DefaultToken {
 			g.drawLine(origX,y2, (int)nextX,y2);
 		}
 
-		if (host.getPaintTabLines() && isWhitespace()) {
-			paintTabLines((int)origX, (int)y, (int)nextX, g, host);
+		// Don't check if it's whitespace - some TokenMakers may return types
+		// other than Token.WHITESPACE for spaces (such as Token.IDENTIFIER).
+		// This also allows us to paint tab lines for MLC's.
+		if (host.getPaintTabLines() && origX==host.getMargin().left) {// && isWhitespace()) {
+			paintTabLines((int)origX, (int)y, (int)nextX, g, e, host);
 		}
 
 		return nextX;
