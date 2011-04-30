@@ -2281,11 +2281,9 @@ private boolean fractionalFontMetricsEnabled;
 	public void setWhitespaceVisible(boolean visible) {
 		if (whitespaceVisible!=visible) {
 			whitespaceVisible = visible;
-			((RSyntaxDocument)getDocument()).setWhitespaceVisible(
-													visible, this);
+			((RSyntaxDocument)getDocument()).setWhitespaceVisible(visible);
 			repaint();
-			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY,
-							!visible, visible);
+			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY, !visible, visible);
 		}
 	}
 

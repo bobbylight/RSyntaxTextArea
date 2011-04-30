@@ -389,6 +389,17 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns whether whitespace is visible.
+	 *
+	 * @return Whether whitespace is visible.
+	 * @see #setWhitespaceVisible(boolean)
+	 */
+	public boolean isWhitespaceVisible() {
+		return tokenMaker==null ? false : tokenMaker.isWhitespaceVisible();
+	}
+
+
+	/**
 	 * Deserializes a document.
 	 *
 	 * @param s The stream to read from.
@@ -443,7 +454,9 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} is used.
 	 */
 	public void setSyntaxStyle(String styleKey) {
+		boolean wsVisible = isWhitespaceVisible();
 		tokenMaker = tokenMakerFactory.getTokenMaker(styleKey);
+		tokenMaker.setWhitespaceVisible(wsVisible);
 		updateSyntaxHighlightingInformation();
 	}
 
@@ -457,6 +470,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * @param tokenMaker The new token maker to use.
 	 */
 	public void setSyntaxStyle(TokenMaker tokenMaker) {
+		tokenMaker.setWhitespaceVisible(isWhitespaceVisible());
 		this.tokenMaker = tokenMaker;
 		updateSyntaxHighlightingInformation();
 	}
@@ -480,9 +494,10 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * they represent whitespace.
 	 *
 	 * @param visible Whether whitespace should be visible.
+	 * @see #isWhitespaceVisible()
 	 */
-	public void setWhitespaceVisible(boolean visible, RSyntaxTextArea textArea) {
-		tokenMaker.setWhitespaceVisible(visible, textArea);
+	public void setWhitespaceVisible(boolean visible) {
+		tokenMaker.setWhitespaceVisible(visible);
 	}
 
 

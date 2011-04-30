@@ -382,7 +382,7 @@ public class DefaultToken extends Token {
 		// other than Token.WHITESPACE for spaces (such as Token.IDENTIFIER).
 		// This also allows us to paint tab lines for MLC's.
 		if (host.getPaintTabLines() && origX==host.getMargin().left) {// && isWhitespace()) {
-			paintTabLines((int)origX, (int)y, (int)nextX, g, e, host);
+			paintTabLines(origX, (int)y, (int)nextX, g, e, host);
 		}
 
 		return nextX;

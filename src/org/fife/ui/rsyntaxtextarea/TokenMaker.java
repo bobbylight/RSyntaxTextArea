@@ -159,11 +159,21 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns whether whitespace is visible.
+	 *
+	 * @return Whether whitespace is visible.
+	 * @see #setWhitespaceVisible(boolean, RSyntaxTextArea)
+	 */
+	public boolean isWhitespaceVisible();
+
+
+	/**
 	 * Sets whether tokens are generated that "show" whitespace.
 	 *
 	 * @param visible Whether whitespace should be visible.
+	 * @see #isWhitespaceVisible()
 	 */
-	public void setWhitespaceVisible(boolean visible, RSyntaxTextArea textArea);
+	public void setWhitespaceVisible(boolean visible);
 
 
 }
