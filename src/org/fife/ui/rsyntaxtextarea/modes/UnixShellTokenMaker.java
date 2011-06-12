@@ -143,6 +143,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("else",				reservedWord);
 		tokenMap.put("esac",				reservedWord);
 		tokenMap.put("fi",				reservedWord);
+		tokenMap.put("for",				reservedWord);
 		tokenMap.put("if",				reservedWord);
 		tokenMap.put("in",				reservedWord);
 		tokenMap.put("select",			reservedWord);

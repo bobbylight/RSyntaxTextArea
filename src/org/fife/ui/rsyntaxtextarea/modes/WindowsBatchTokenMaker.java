@@ -162,6 +162,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("dir",			reservedWord);
 		tokenMap.put("diskcomp",		reservedWord);
 		tokenMap.put("diskcopy",		reservedWord);
+		tokenMap.put("do",				reservedWord);
 		tokenMap.put("doskey",		reservedWord);
 		tokenMap.put("dosshell",		reservedWord);
 		tokenMap.put("drivparm",		reservedWord);
@@ -184,6 +185,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("graftabl",		reservedWord);
 		tokenMap.put("help",			reservedWord);
 		tokenMap.put("ifshlp.sys",	reservedWord);
+		tokenMap.put("in",			reservedWord);
 		tokenMap.put("ipconfig",		reservedWord);
 		tokenMap.put("keyb",			reservedWord);
 		tokenMap.put("label",		reservedWord);
