@@ -276,6 +276,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("mkdir",		function);
 		tokenMap.put("mkstr",			function);
 		tokenMap.put("more",			function);
+		tokenMap.put("mount",			function);
 		tokenMap.put("mv",			function);
 		tokenMap.put("nawk",			function);
 		tokenMap.put("neqn",			function);
@@ -333,6 +334,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("sortbib",			function);
 		tokenMap.put("spell",		function);
 		tokenMap.put("split",			function);
+		tokenMap.put("ssh",				function);
 		tokenMap.put("strings",			function);
 		tokenMap.put("strip",			function);
 		tokenMap.put("stty",			function);

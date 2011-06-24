@@ -405,8 +405,8 @@ NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\
 IdentifierStart					= ({LetterOrUnderscore}|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 
-AS_CharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})[\'])
-AS_UnclosedCharLiteral		= ([\'][^\'\n]*)
+AS_CharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})*[\'])
+AS_UnclosedCharLiteral		= ([\']([\\].|[^\\\'])*[^\']?)
 AS_ErrorCharLiteral			= ({AS_UnclosedCharLiteral}[\'])
 AS_StringLiteral			= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
 AS_UnclosedStringLiteral	= ([\"]([\\].|[^\\\"])*[^\"]?)
