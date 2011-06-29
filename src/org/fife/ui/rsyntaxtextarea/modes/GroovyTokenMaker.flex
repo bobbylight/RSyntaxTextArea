@@ -301,6 +301,12 @@ InlineTag					= ("code"|"docRoot"|"inheritDoc"|"link"|"linkplain"|"literal"|"val
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
 ErrorIdentifier			= ({NonSeparator}+)
 
+// Variables in strings
+VariableStart				= ([\$])
+BracedVariable				= ({VariableStart}\{[^\}]+\})
+UnbracedVariable			= ({VariableStart}{Identifier})
+Variable					= ({BracedVariable}|{UnbracedVariable})
+
 Annotation				= ("@"{Identifier}?)
 
 URLGenDelim				= ([:\/\?#\[\]@])
@@ -315,6 +321,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state DOCCOMMENT
 %state MULTILINE_STRING_DOUBLE
 %state MULTILINE_STRING_SINGLE
+%state STRING_DOUBLE
 
 %%
 
@@ -534,15 +541,20 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
 	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
 	{ErrorCharLiteral}				{ addToken(Token.ERROR_CHAR); }
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-	{ErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
+	\"								{ start = zzMarkedPos-1; yybegin(STRING_DOUBLE); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
 	{DocCommentBegin}				{ start = zzMarkedPos-3; yybegin(DOCCOMMENT); }
 	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+
+	/* Regexes (/.../, ~/.../).  This is nowhere near exhaustive.        */
+	/* NOTE: We currently only match plain "/.../"  when it doesn't look */
+	/* like two divisions.  How can we  distinguish between a pattern    */
+	/* and two divisions?                                                */
+	"~/"[^/]*"/"						{ addToken(Token.FUNCTION); }
+    "/"({LetterOrUnderscore}|{Digit}|[\\.\-\\\+\*\{\}\[\]\?\^\$])+"/"	{ addToken(Token.FUNCTION); }
 
 	/* Annotations. */
 	{Annotation}					{ addToken(Token.VARIABLE); /* FIXME:  Add token type to Token? */ }
@@ -606,9 +618,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 <MULTILINE_STRING_DOUBLE> {
-	[^\"\\\n]*				{}
+	[^\"\\\$\n]*				{}
 	\\.?						{ /* Skip escaped chars, handles case: '\"""'. */ }
 	\"\"\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	{Variable}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{VariableStart}			{}
 	\"						{}
 	\n						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
@@ -623,3 +637,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 }
+
+<STRING_DOUBLE> {
+	[^\n\\\$\"]+		{}
+	\n					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	\\.?					{ /* Skip escaped chars. */ }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{VariableStart}		{}
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); return firstToken; }
+}
+
