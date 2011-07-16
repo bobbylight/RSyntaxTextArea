@@ -1195,7 +1195,7 @@ public class RTextArea extends RTextAreaBase
 	 * @return A <code>java.lang.String</code> just like <code>text</code>,
 	 *         but with spaces instead of tabs.
 	 */
-	private final String replaceTabsWithSpaces(final String text) {
+	private final String replaceTabsWithSpaces(String text) {
 
 		String tabText = "";
 		int temp = getTabSize();

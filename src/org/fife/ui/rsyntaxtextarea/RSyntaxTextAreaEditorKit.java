@@ -1108,17 +1108,31 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int dotLine = map.getElementIndex(dot);
 			int markLine = map.getElementIndex(mark);
 
-			// If there is a multiline selection, indent all lines in
+			// If there is a multi-line selection, indent all lines in
 			// the selection.
 			if (dotLine!=markLine) {
 				int first = Math.min(dotLine, markLine);
 				int last = Math.max(dotLine, markLine);
 				Element elem; int start;
+
+				// Since we're using Document.insertString(), we must mimic the
+				// soft tab behavior provided by RTextArea.replaceSelection().
+				String replacement = "\t";
+				if (textArea.getTabsEmulated()) {
+					StringBuffer sb = new StringBuffer();
+					int temp = textArea.getTabSize();
+					for (int i=0; i<temp; i++) {
+						sb.append(' ');
+					}
+					replacement = sb.toString();
+				}
+
+				textArea.beginAtomicEdit();
 				try {
 					for (int i=first; i<last; i++) {
 						elem = map.getElement(i);
 						start = elem.getStartOffset();
-						document.insertString(start, "\t", null);
+						document.insertString(start, replacement, null);
 					}
 					// Don't do the last line if the caret is at its
 					// beginning.  We must call getDot() again and not just
@@ -1127,12 +1141,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					elem = map.getElement(last);
 					start = elem.getStartOffset();
 					if (Math.max(c.getDot(), c.getMark())!=start) {
-						document.insertString(start, "\t", null);
+						document.insertString(start, replacement, null);
 					}
 				} catch (BadLocationException ble) { // Never happens.
 					ble.printStackTrace();
 					UIManager.getLookAndFeel().
 									provideErrorFeedback(textArea);
+				} finally {
+					textArea.endAtomicEdit();
 				}
 			}
 			else {
