@@ -26,6 +26,9 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -81,6 +84,18 @@ public class RSyntaxUtilities implements SwingConstants {
 		 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, // 224-
 		 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0  // 240-255.
 	};
+
+
+	/**
+	 * Returns the rendering hints for text that will most accurately reflect
+	 * those of the native windowing system.
+	 *
+	 * @return The rendering hints, or <code>null</code> if they cannot be
+	 *         determined.
+	 */
+	public static Map getDesktopAntiAliasHints() {
+		return (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+	}
 
 
 	/**

@@ -39,11 +39,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
@@ -299,14 +300,17 @@ Rectangle match;
 	 */
 	private FocusableTip focusableTip;
 
+	/**
+	 * Cached desktop anti-aliasing hints, if anti-aliasing is enabled.
+	 */
+	private Map aaHints;
+
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
 
 public int getMaxAscent() {
 	return maxAscent;
 }
-private String aaHintFieldName;
-private Object aaHint;
 private boolean fractionalFontMetricsEnabled;
 
 
@@ -792,6 +796,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether anti-aliasing is enabled in this editor.
+	 *
+	 * @return Whether anti-aliasing is enabled in this editor.
+	 * @see #setAntiAliasingEnabled(boolean)
+	 * @see #getFractionalFontMetricsEnabled()
+	 */
+	public boolean getAntiAliasingEnabled() {
+		return aaHints!=null;
+	}
+
+
+	/**
 	 * Returns the background color for tokens of the specified type.
 	 *
 	 * @param type The type of token.
@@ -989,9 +1005,8 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	private final Graphics2D getGraphics2D(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
-		if (aaHint!=null) {
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-							aaHint);
+		if (aaHints!=null) {
+			g2d.addRenderingHints(aaHints);
 		}
 		if (fractionalFontMetricsEnabled) {
 			g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
@@ -1263,20 +1278,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public static synchronized boolean getTemplatesEnabled() {
 		return templatesEnabled;
-	}
-
-
-	/**
-	 * Returns the rendering hint used when antialiasing text in this
-	 * editor.
-	 *
-	 * @return The name of a field in <code>java.awt.RenderingHints</code>,
-	 *         or <code>null</code> if no text antialiasing is being done.
-	 * @see #setTextAntiAliasHint(String)
-	 * @see #getFractionalFontMetricsEnabled()
-	 */
-	public String getTextAntiAliasHint() {
-		return aaHintFieldName;
 	}
 
 
@@ -1695,6 +1696,48 @@ private boolean fractionalFontMetricsEnabled;
 			firePropertyChange(ANIMATE_BRACKET_MATCHING_PROPERTY,
 								!animate, animate);
 		}
+	}
+
+
+	/**
+	 * Sets whether anti-aliasing is enabled in this editor.  This method
+	 * fires a property change event of type {@link #ANTIALIAS_PROPERTY}.
+	 *
+	 * @param enabled Whether anti-aliasing is enabled.
+	 * @see #getAntiAliasingEnabled()
+	 */
+	public void setAntiAliasingEnabled(boolean enabled) {
+
+		boolean currentlyEnabled = aaHints!=null;
+
+		if (enabled!=currentlyEnabled) {
+
+			if (enabled) {
+				aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
+				// If the desktop query method comes up empty, use the standard
+				// Java2D greyscale method.  Note this will likely NOT be as
+				// nice as what would be used if the getDesktopAntiAliasHints()
+				// call worked.
+				if (aaHints==null) {
+					aaHints = new HashMap();
+					aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING,
+							RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				}
+			}
+			else {
+				aaHints = null;
+			}
+
+			// We must be connected to a screen resource for our graphics
+			// to be non-null.
+			if (isDisplayable()) {
+				refreshFontMetrics(getGraphics2D(getGraphics()));
+			}
+			firePropertyChange(ANTIALIAS_PROPERTY, !enabled, enabled);
+			repaint();
+
+		}
+
 	}
 
 
@@ -2191,64 +2234,6 @@ private boolean fractionalFontMetricsEnabled;
 			}
 			firePropertyChange(TAB_LINE_COLOR_PROPERTY, old, tabLineColor);
 		}
-
-	}
-
-
-	/**
-	 * Sets the rendering hint to use when anti-aliasing text in this
-	 * editor.
-	 *
-	 * @param aaHintFieldName The name of a field in
-	 *        <code>java.awt.RenderingHints</code>.  If an unknown or
-	 *        unsupported field name is specified (such as a 1.6+ hint
-	 *        being specified when this is a 1.4/1.5 JVM), <code>null</code>
-	 *        is used instead.  A value of <code>null</code> means "no
-	 *        antialiasing."
-	 * @see #getTextAntiAliasHint()
-	 */
-	public void setTextAntiAliasHint(String aaHintFieldName) {
-
-		//System.out.println("Trying to set AA hint to: " + aaHintFieldName);
-
-		// If the new AA hint is null, disable text anti-aliasing.
-		if (aaHintFieldName==null && this.aaHintFieldName!=null) {
-			String old = this.aaHintFieldName;
-			this.aaHint = null;
-			this.aaHintFieldName = null;
-			// We must be connected to a screen resource for our graphics
-			// to be non-null.
-			if (isDisplayable()) {
-				refreshFontMetrics(getGraphics2D(getGraphics()));
-			}
-			firePropertyChange(ANTIALIAS_PROPERTY, old, null);
-			repaint();
-		}
-
-		// Otherwise, if they're specifying a new hint type, use it instead.
-		else if (aaHintFieldName!=null &&
-				!aaHintFieldName.equals(this.aaHintFieldName)) {
-			String old = this.aaHintFieldName;
-			try {
-				Field f = RenderingHints.class.getField(aaHintFieldName);
-				this.aaHint = f.get(null);
-				this.aaHintFieldName = aaHintFieldName;
-			} catch (RuntimeException re) {
-				// Re-throw (keep FindBugs happy)
-			} catch (/*NoSuchField|IllegalAccess*/Exception e) {
-				this.aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_OFF;
-				this.aaHintFieldName = "VALUE_TEXT_ANTIALIAS_OFF";
-			}
-			// We must be connected to a screen resource for our graphics
-			// to be non-null.
-			if (isDisplayable()) {
-				refreshFontMetrics(getGraphics2D(getGraphics()));
-			}
-			firePropertyChange(ANTIALIAS_PROPERTY, old,this.aaHintFieldName);
-			repaint();
-		}
-
-		//System.out.println("... Actual new value: " + this.aaHintFieldName);
 
 	}
 
