@@ -239,9 +239,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
-Letter							= [A-Za-z]
+Letter							= ([A-Za-z])
 LetterOrUnderscore				= ({Letter}|"_")
-NonzeroDigit						= [1-9]
+Underscores						= ([_]+)
+NonzeroDigit						= ([1-9])
+BinaryDigit						= ([0-1])
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
@@ -268,16 +270,29 @@ MLCEnd					= "*/"
 DocCommentBegin			= "/**"
 LineCommentBegin			= "//"
 
-IntegerHelper1				= (({NonzeroDigit}{Digit}*)|"0")
-IntegerHelper2				= ("0"(([xX]{HexDigit}+)|({OctalDigit}*)))
-IntegerLiteral				= ({IntegerHelper1}[lL]?)
-HexLiteral				= ({IntegerHelper2}[lL]?)
+DigitOrUnderscore			= ({Digit}|[_])
+DigitsAndUnderscoresEnd		= ({DigitOrUnderscore}*{Digit})
+IntegerHelper				= (({NonzeroDigit}{DigitsAndUnderscoresEnd}?)|"0")
+IntegerLiteral				= ({IntegerHelper}[lL]?)
+
+BinaryDigitOrUnderscore		= ({BinaryDigit}|[_])
+BinaryDigitsAndUnderscores	= ({BinaryDigit}({BinaryDigitOrUnderscore}*{BinaryDigit})?)
+BinaryLiteral				= ("0"[bB]{BinaryDigitsAndUnderscores})
+
+HexDigitOrUnderscore		= ({HexDigit}|[_])
+HexDigitsAndUnderscores		= ({HexDigit}({HexDigitOrUnderscore}*{HexDigit})?)
+OctalDigitOrUnderscore		= ({OctalDigit}|[_])
+OctalDigitsAndUnderscoresEnd= ({OctalDigitOrUnderscore}*{OctalDigit})
+HexHelper					= ("0"(([xX]{HexDigitsAndUnderscores})|({OctalDigitsAndUnderscoresEnd})))
+HexLiteral					= ({HexHelper}[lL]?)
+
 FloatHelper1				= ([fFdD]?)
 FloatHelper2				= ([eE][+-]?{Digit}+{FloatHelper1})
 FloatLiteral1				= ({Digit}+"."({FloatHelper1}|{FloatHelper2}|{Digit}+({FloatHelper1}|{FloatHelper2})))
 FloatLiteral2				= ("."{Digit}+({FloatHelper1}|{FloatHelper2}))
 FloatLiteral3				= ({Digit}+{FloatHelper2})
 FloatLiteral				= ({FloatLiteral1}|{FloatLiteral2}|{FloatLiteral3}|({Digit}+[fFdD]))
+
 ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 BooleanLiteral				= ("true"|"false")
 
@@ -375,12 +390,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* java.lang stuff */
 	"Appendable" |
+	"AutoCloseable" |
 	"CharSequence" |
 	"Cloneable" |
 	"Comparable" |
 	"Iterable" |
 	"Readable" |
 	"Runnable" |
+	"Thread.UncaughtExceptionHandler" |
 	"Boolean" |
 	"Byte" |
 	"Character" |
@@ -401,6 +418,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Package" |
 	"Process" |
 	"ProcessBuilder" |
+	"ProcessBuilder.Redirect" |
 	"Runtime" |
 	"RuntimePermission" |
 	"SecurityManager" |
@@ -416,6 +434,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"ThreadLocal" |
 	"Throwable" |
 	"Void" |
+	"Character.UnicodeScript" |
+	"ProcessBuilder.Redirect.Type" |
 	"Thread.State" |
 	"ArithmeticException" |
 	"ArrayIndexOutOfBoundsException" |
@@ -504,6 +524,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
@@ -513,7 +534,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
-	/* Catch any other (unhandled) characters and flag them as bad. */
+	/* Catch any other (unhandled) characters and flag them as identifiers. */
 	.							{ addToken(Token.ERROR_IDENTIFIER); }
 
 }
