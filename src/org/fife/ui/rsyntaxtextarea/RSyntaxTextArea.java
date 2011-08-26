@@ -988,7 +988,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return Whether fractional font metrics are enabled.
 	 * @see #setFractionalFontMetricsEnabled
-	 * @see #getTextAntiAliasHint
+	 * @see #getAntiAliasingEnabled()
 	 */
 	public boolean getFractionalFontMetricsEnabled() {
 		return fractionalFontMetricsEnabled;

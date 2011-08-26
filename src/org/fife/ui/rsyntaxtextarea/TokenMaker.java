@@ -44,7 +44,7 @@ public interface TokenMaker {
 	/**
 	 * Adds a null token to the end of the current linked list of tokens.
 	 * This should be put at the end of the linked list whenever the last
-	 * token on the current line is NOT a multiline token.
+	 * token on the current line is NOT a multi-line token.
 	 */
 	public void addNullToken();
 
@@ -162,7 +162,7 @@ public interface TokenMaker {
 	 * Returns whether whitespace is visible.
 	 *
 	 * @return Whether whitespace is visible.
-	 * @see #setWhitespaceVisible(boolean, RSyntaxTextArea)
+	 * @see #setWhitespaceVisible(boolean)
 	 */
 	public boolean isWhitespaceVisible();
 
