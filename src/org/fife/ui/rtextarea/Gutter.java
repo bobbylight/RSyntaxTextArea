@@ -34,7 +34,7 @@ import java.awt.event.ComponentAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -43,6 +43,7 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.ActiveLineRangeEvent;
 import org.fife.ui.rsyntaxtextarea.ActiveLineRangeListener;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
 
 /**
@@ -62,7 +63,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @version 1.0
  * @see GutterIconInfo
  */
-public class Gutter extends JComponent {
+public class Gutter extends JPanel {
 
 	/**
 	 * The text area.
@@ -78,6 +79,11 @@ public class Gutter extends JComponent {
 	 * Renders bookmark icons, breakpoints, error icons, etc.
 	 */
 	private IconRowHeader iconArea;
+
+	/**
+	 * Shows lines that are code-foldable.
+	 */
+	private FoldIndicator foldIndicator;
 
 	/**
 	 * Listens for events in our text area.
@@ -99,6 +105,10 @@ public class Gutter extends JComponent {
 			// Enable line numbers our first time through if they give us
 			// a text area.
 			setLineNumbersEnabled(true);
+			if (this.textArea instanceof RSyntaxTextArea) {
+				RSyntaxTextArea rsta = (RSyntaxTextArea)this.textArea;
+				setFoldIndicatorEnabled(rsta.isCodeFoldingEnabled());
+			}
 		}
 
 		setBorder(new GutterBorder(0, 0, 0, 1)); // Assume ltr
@@ -384,6 +394,19 @@ public class Gutter extends JComponent {
 	}
 
 
+	public void setFoldIndicatorEnabled(boolean enabled) {
+		if (foldIndicator!=null) {
+			if (enabled) {
+				add(foldIndicator, BorderLayout.LINE_END);
+			}
+			else {
+				remove(foldIndicator);
+			}
+			revalidate();
+		}
+	}
+
+
 	/**
 	 * Toggles whether the icon row header (used for breakpoints, bookmarks,
 	 * etc.) is enabled.
@@ -482,6 +505,12 @@ public class Gutter extends JComponent {
 		}
 		else {
 			iconArea.setTextArea(textArea);
+		}
+		if (foldIndicator==null) {
+			foldIndicator = new FoldIndicator(textArea);
+		}
+		else {
+			foldIndicator.setTextArea(textArea);
 		}
 		if (textArea!=null) {
 			listener.install(textArea);
@@ -603,7 +632,9 @@ public class Gutter extends JComponent {
 			textArea.getDocument().addDocumentListener(this);
 			textArea.addPropertyChangeListener(this);
 			if (textArea instanceof RSyntaxTextArea) {
-				((RSyntaxTextArea)textArea).addActiveLineRangeListener(this);
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+				rsta.addActiveLineRangeListener(this);
+				rsta.getFoldManager().addPropertyChangeListener(this);
 			}
 			installed = true;
 		}
@@ -623,6 +654,19 @@ public class Gutter extends JComponent {
 				}
 			}
 
+			// If they toggle whether code folding is enabled...
+			else if (RSyntaxTextArea.CODE_FOLDING_PROPERTY.equals(name)) {
+				boolean foldingEnabled = ((Boolean)e.getNewValue()).
+															booleanValue();
+				setFoldIndicatorEnabled(foldingEnabled);
+			}
+
+			// If code folds are updated...
+			else if (FoldManager.PROPERTY_FOLDS_UPDATED.equals(name)) {
+				System.out.println("Gutter: Folds updated, repainting!");
+				repaint();
+			}
+
 		}
 
 		public void removeUpdate(DocumentEvent e) {
@@ -634,7 +678,9 @@ public class Gutter extends JComponent {
 				textArea.removeComponentListener(this);
 				textArea.getDocument().removeDocumentListener(this);
 				if (textArea instanceof RSyntaxTextArea) {
-					((RSyntaxTextArea)textArea).removeActiveLineRangeListener(this);
+					RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+					rsta.removeActiveLineRangeListener(this);
+					rsta.getFoldManager().removePropertyChangeListener(this);
 				}
 				installed = false;
 			}

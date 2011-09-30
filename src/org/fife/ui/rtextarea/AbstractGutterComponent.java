@@ -25,7 +25,7 @@ package org.fife.ui.rtextarea;
 import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.View;
 
@@ -36,7 +36,7 @@ import javax.swing.text.View;
  * @author Robert Futrell
  * @version 1.0
  */
-abstract class AbstractGutterComponent extends JComponent {
+abstract class AbstractGutterComponent extends JPanel {
 
 	/**
 	 * The text area whose lines we are marking with icons.

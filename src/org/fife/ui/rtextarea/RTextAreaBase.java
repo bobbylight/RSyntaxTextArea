@@ -40,8 +40,6 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
 
 
 /**
@@ -734,15 +732,24 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		// No line wrap - we can simply check the line number (quicker).
 		else {
-			Document doc = getDocument();
-			if (doc!=null) {
-				Element map = doc.getDefaultRootElement();
-				int caretLine = map.getElementIndex(dot);
-				Rectangle alloc = ((RTextAreaUI)getUI()).
-											getVisibleEditorRect();
-				if (alloc!=null)
-					currentCaretY = alloc.y + caretLine*lineHeight;
-			}
+//			Document doc = getDocument();
+//			if (doc!=null) {
+//				Element map = doc.getDefaultRootElement();
+//				int caretLine = map.getElementIndex(dot);
+//				Rectangle alloc = ((RTextAreaUI)getUI()).
+//											getVisibleEditorRect();
+//				if (alloc!=null)
+//					currentCaretY = alloc.y + caretLine*lineHeight;
+//			}
+// Modified for code folding requirements
+try {
+	Rectangle temp = modelToView(dot);
+	if (temp!=null) {
+		currentCaretY = temp.y;
+	}
+} catch (BadLocationException ble) {
+	ble.printStackTrace(); // Should never happen.
+}
 		}
 
 		// Repaint current line (to fill in entire highlight), and old line

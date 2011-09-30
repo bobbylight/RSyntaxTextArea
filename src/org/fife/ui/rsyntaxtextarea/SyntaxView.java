@@ -27,6 +27,9 @@ import java.awt.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.folding.Fold;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+
 
 /**
  * The <code>javax.swing.text.View</code> object used by {@link RSyntaxTextArea}
@@ -264,7 +267,12 @@ public class SyntaxView extends View implements TabExpander,
 				// called, lineHeight isn't initialized.  If we don't do it
 				// here, we get no vertical scrollbar (as lineHeight==0).
 				lineHeight = host!=null ? host.getLineHeight() : lineHeight;
-				return getElement().getElementCount() * lineHeight;
+//				return getElement().getElementCount() * lineHeight;
+int visibleLineCount = getElement().getElementCount();
+if (host.isCodeFoldingEnabled()) {
+	visibleLineCount -= host.getFoldManager().getHiddenLineCount();
+}
+return visibleLineCount * lineHeight;
 			default:
 				throw new IllegalArgumentException("Invalid axis: " + axis);
 		}
@@ -299,9 +307,23 @@ public class SyntaxView extends View implements TabExpander,
 	public Token getTokenListForPhysicalLineAbove(int offset) {
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = document.getDefaultRootElement();
-		int line = map.getElementIndex(offset) - 1;
-		if (line>=0)
-			return document.getTokenListForLine(line);
+int line = map.getElementIndex(offset);
+FoldManager fm = host.getFoldManager();
+if (fm==null) {
+	line--;
+	if (line>=0) {
+		return document.getTokenListForLine(line);
+	}
+}
+else {
+	line = fm.getVisibleLineAbove(line);
+	if (line>=0) {
+		return document.getTokenListForLine(line);
+	}
+}
+//		int line = map.getElementIndex(offset) - 1;
+//		if (line>=0)
+//			return document.getTokenListForLine(line);
 		return null;
 	}
 
@@ -321,10 +343,24 @@ public class SyntaxView extends View implements TabExpander,
 	public Token getTokenListForPhysicalLineBelow(int offset) {
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = document.getDefaultRootElement();
-		int line = map.getElementIndex(offset);
 		int lineCount = map.getElementCount();
-		if (line<lineCount-1)
-			return document.getTokenListForLine(line+1);
+int line = map.getElementIndex(offset);
+if (!host.isCodeFoldingEnabled()) {
+	if (line<lineCount-1) {
+		return document.getTokenListForLine(line+1);
+	}
+}
+else {
+	FoldManager fm = host.getFoldManager();
+	line = fm.getVisibleLineBelow(line);
+	if (line<lineCount-1) {
+		return document.getTokenListForLine(line);
+	}
+}
+//		int line = map.getElementIndex(offset);
+//		int lineCount = map.getElementCount();
+//		if (line<lineCount-1)
+//			return document.getTokenListForLine(line+1);
 		return null;
 	}
 
@@ -358,6 +394,11 @@ public class SyntaxView extends View implements TabExpander,
 			// current line not being highlighted when a document is first
 			// opened.  So, we set it here just in case.
 			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
+if (host.isCodeFoldingEnabled()) {
+	FoldManager fm = host.getFoldManager();
+	int hiddenCount = fm.getHiddenLineCountAbove(line);
+	line -= hiddenCount;
+}
 			r = new Rectangle(alloc.x, alloc.y + line*lineHeight,
 									alloc.width, lineHeight);
 		}
@@ -383,10 +424,9 @@ public class SyntaxView extends View implements TabExpander,
 		Element map = getElement();
 		RSyntaxDocument doc = (RSyntaxDocument)getDocument();
 		int lineIndex = map.getElementIndex(pos);
+		Token tokenList = doc.getTokenListForLine(lineIndex);
 		Rectangle lineArea = lineToRect(a, lineIndex);
 		tabBase = lineArea.x; // Used by listOffsetToView().
-
-		Token tokenList = doc.getTokenListForLine(lineIndex);
 
 		//int x = (int)RSyntaxUtilities.getTokenListWidthUpTo(tokenList,
 		//							(RSyntaxTextArea)getContainer(),
@@ -531,22 +571,17 @@ public class SyntaxView extends View implements TabExpander,
 
 		lineHeight = host.getLineHeight();
 		ascent = host.getMaxAscent();//metrics.getAscent();
-		int heightBelow = (alloc.y + alloc.height) - (clip.y + clip.height);
-		int linesBelow = Math.max(0, heightBelow / lineHeight);
 		int heightAbove = clip.y - alloc.y;
 		int linesAbove = Math.max(0, heightAbove / lineHeight);
-		int linesTotal = alloc.height / lineHeight;
 
-		if (alloc.height % lineHeight != 0) {
-			linesTotal++;
-		}
-
+FoldManager fm = host.getFoldManager();
+linesAbove += fm.getHiddenLineCountAbove(linesAbove, true);
+Color foldStartLineBG = new Color(224, 255, 224);
 		Rectangle lineArea = lineToRect(a, linesAbove);
 		int y = lineArea.y + ascent;
 		int x = lineArea.x;
 		Element map = getElement();
 		int lineCount = map.getElementCount();
-		int endLine = Math.min(lineCount, linesTotal - linesBelow);
 
 		RSyntaxTextAreaHighlighter h =
 					(RSyntaxTextAreaHighlighter)host.getHighlighter();
@@ -555,8 +590,16 @@ public class SyntaxView extends View implements TabExpander,
 		Token token;
 		//System.err.println("Painting lines: " + linesAbove + " to " + (endLine-1));
 
-		for (int line = linesAbove; line < endLine; line++) {
 
+		int line = linesAbove;
+//int count = 0;
+		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
+
+Fold fold = fm.getFoldForLine(line);
+if (fold!=null && fold.isFolded()) {
+	g2d.setColor(foldStartLineBG);
+	g2d.fillRect(x, y-ascent, lineArea.width, lineArea.height);
+}
 			Element lineElement = map.getElement(line);
 			int startOffset = lineElement.getStartOffset();
 			//int endOffset = (line==lineCount ? lineElement.getEndOffset()-1 :
@@ -570,7 +613,18 @@ public class SyntaxView extends View implements TabExpander,
 			drawLine(token, g2d, x,y);
 			y += lineHeight;
 
+if (fold!=null && fold.isFolded()) {
+	line += fold.getLineCount();
+	g.setColor(Color.gray);
+	g.drawLine(x,y-ascent-1, alloc.width,y-ascent-1);
+}
+
+line++;
+//count++;
+
 		}
+
+		//System.out.println("SyntaxView: lines painted=" + count);
 
 	}
 
@@ -745,6 +799,10 @@ public class SyntaxView extends View implements TabExpander,
 
 			Element map = doc.getDefaultRootElement();
 			int lineIndex = Math.abs((y - alloc.y) / lineHeight);//metrics.getHeight() );
+FoldManager fm = host.getFoldManager();
+//System.out.print("--- " + lineIndex);
+lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
+//System.out.println(" => " + lineIndex);
 			if (lineIndex >= map.getElementCount())
 				return getEndOffset() - 1;
 
@@ -790,6 +848,8 @@ public class SyntaxView extends View implements TabExpander,
 			// current line not being highlighted when a document is first
 			// opened.  So, we set it here just in case.
 			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
+FoldManager fm = host.getFoldManager();
+line -= fm.getHiddenLineCountAbove(line);
 			return alloc.y + line*lineHeight;
 		}
 

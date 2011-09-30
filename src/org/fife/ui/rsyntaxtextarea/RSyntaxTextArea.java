@@ -57,6 +57,7 @@ import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 import org.fife.ui.rtextarea.Gutter;
@@ -129,6 +130,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
 	public static final String CLOSE_CURLY_BRACES_PROPERTY			= "RSTA.closeCurlyBraces";
 	public static final String CLOSE_MARKUP_TAGS_PROPERTY			= "RSTA.closeMarkupTags";
+	public static final String CODE_FOLDING_PROPERTY				= "RSTA.codeFolding";
 	public static final String EOL_VISIBLE_PROPERTY					= "RSTA.eolMarkersVisible";
 	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
@@ -289,6 +291,8 @@ Rectangle match;
 	private boolean isScanningForLinks;
 
 	private int hoveredOverLinkOffset;
+
+	private FoldManager foldManager;
 
 	/**
 	 * Whether "focusable" tool tips are used instead of standard ones.
@@ -925,6 +929,17 @@ private boolean fractionalFontMetricsEnabled;
 		return eolMarkersVisible;
 	}
 
+
+	/**
+	 * Returns the fold manager for this text area.
+	 *
+	 * @return The fold manager.
+	 */
+	public FoldManager getFoldManager() {
+		return foldManager;
+	}
+
+
 	/**
 	 * Returns the font for tokens of the specified type.
 	 *
@@ -1455,6 +1470,8 @@ private boolean fractionalFontMetricsEnabled;
 		setSelectionColor(getDefaultSelectionColor());
 		setTabLineColor(null);
 
+		foldManager = new FoldManager(this);
+
 		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);
 		setCloseCurlyBraces(true);
@@ -1504,6 +1521,19 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean isClearWhitespaceLinesEnabled() {
 		return clearWhitespaceLines;
+	}
+
+
+	/**
+	 * Returns whether code folding is enabled.  Note that only certain
+	 * languages support code folding; those that do not will ignore this
+	 * property.
+	 *
+	 * @return Whether code folding is enabled.
+	 * @see #setCodeFoldingEnabled(boolean)
+	 */
+	public boolean isCodeFoldingEnabled() {
+		return foldManager.isCodeFoldingEnabled();
 	}
 
 
@@ -1826,6 +1856,24 @@ private boolean fractionalFontMetricsEnabled;
 		if (close!=closeMarkupTags) {
 			closeMarkupTags = close;
 			firePropertyChange(CLOSE_MARKUP_TAGS_PROPERTY, !close, close);
+		}
+	}
+
+
+	/**
+	 * Sets whether code folding is enabled.  Note that only certain
+	 * languages will support code folding out of the box.  Those languages
+	 * which do not support folding will ignore this property.<p>
+	 * This method fires a property change event of type
+	 * {@link #CODE_FOLDING_PROPERTY}.
+	 *
+	 * @param enabled Whether code folding should be enabled.
+	 * @see #isCodeFoldingEnabled()
+	 */
+	public void setCodeFoldingEnabled(boolean enabled) {
+		if (enabled!=foldManager.isCodeFoldingEnabled()) {
+			foldManager.setCodeFoldingEnabled(enabled);
+			firePropertyChange(CODE_FOLDING_PROPERTY, !enabled, enabled);
 		}
 	}
 

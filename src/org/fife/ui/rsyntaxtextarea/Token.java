@@ -219,7 +219,7 @@ public abstract class Token {
 
 		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
 		// be turned into NOTHING.
-		appendHtmlLexeme(sb);//sb.append(getHtmlLexeme());
+		appendHtmlLexeme(sb);
 
 		sb.append("</font>");
 		if (scheme.underline) sb.append("</u>");
@@ -240,25 +240,38 @@ public abstract class Token {
 	 * @return The same buffer.
 	 */
 	private final StringBuffer appendHtmlLexeme(StringBuffer sb) {
+		boolean lastWasSpace = false;
 		int i = textOffset;
 		int lastI = i;
 		while (i<textOffset+textCount) {
 			char ch = text[i];
 			switch (ch) {
+				case ' ':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append(lastWasSpace ? "&nbsp;" : " ");
+					lastWasSpace = true;
+					break;
 				case '\t':
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
-					sb.append("&nbsp;");
+					sb.append("&#09;");
+					lastWasSpace = false;
 					break;
 				case '<':
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
 					sb.append("&lt;");
+					lastWasSpace = false;
 					break;
 				case '>':
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
 					sb.append("&gt;");
+					lastWasSpace = false;
+					break;
+				default:
+					lastWasSpace = false;
 					break;
 			}
 			i++;
@@ -313,6 +326,26 @@ public abstract class Token {
 	 */
 	public int documentToToken(int pos) {
 		return pos + (textOffset-offset);
+	}
+
+
+	/**
+	 * Returns whether this token's lexeme ends with the specified characters.
+	 *
+	 * @param ch The characters.
+	 * @return Whether this token's lexeme ends with the specified characters.
+	 */
+	public boolean endsWith(char[] ch) {
+		if (ch==null || ch.length>textCount) {
+			return false;
+		}
+		final int start = textOffset + textCount - ch.length;
+		for (int i=0; i<ch.length; i++) {
+			if (text[start+i]!=ch[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 

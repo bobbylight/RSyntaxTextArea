@@ -39,6 +39,8 @@ import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+
 
 /**
  * Utility methods used by <code>RSyntaxTextArea</code> and its associated
@@ -564,7 +566,10 @@ public class RSyntaxUtilities implements SwingConstants {
 		// A line containing only Token.NULL is an empty line.
 		else if (token.type==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be > c.getLineCount()-1 ??
-			return c.getLineStartOffset(line+1);
+//			return c.getLineStartOffset(line+1);
+FoldManager fm = c.getFoldManager();
+line = fm.getVisibleLineBelow(line);
+return c.getLineStartOffset(line);
 		}
 
 		else {

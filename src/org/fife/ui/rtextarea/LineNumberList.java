@@ -42,6 +42,10 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.folding.Fold;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+
 
 /**
  * Renders line numbers in the gutter.
@@ -268,28 +272,26 @@ class LineNumberList extends AbstractGutterComponent
 		g.fillRect(0,visibleRect.y, cellWidth,visibleRect.height);
 		g.setFont(getFont());
 
-		Document doc = textArea.getDocument();
-		Element root = doc.getDefaultRootElement();
-
 		if (textArea.getLineWrap()) {
 			paintWrappedLineNumbers(g, visibleRect);
 			return;
 		}
 
-		// Get the first and last lines to paint.
-		int topLine = visibleRect.y/cellHeight;
-		int bottomLine = Math.min(topLine+visibleRect.height/cellHeight+1,
-							root.getElementCount());
-
 		// Get where to start painting (top of the row), and where to paint
 		// the line number (drawString expects y==baseline).
-		// We need to be "scrolled up" up just enough for the missing part of
+		// We need to be "scrolled up" just enough for the missing part of
 		// the first line.
+		int topLine = visibleRect.y/cellHeight;
 		int actualTopY = topLine*cellHeight;
 		textAreaInsets = textArea.getInsets(textAreaInsets);
 		actualTopY += textAreaInsets.top;
 		int y = actualTopY + ascent;
 
+		// Get the actual first line to paint, taking into account folding.
+		FoldManager fm = ((RSyntaxTextArea)textArea).getFoldManager();
+		topLine += fm.getHiddenLineCountAbove(topLine, true);
+
+/*
 		// Highlight the current line's line number, if desired.
 		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
 				currentLine<=bottomLine) {
@@ -297,6 +299,7 @@ class LineNumberList extends AbstractGutterComponent
 			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight,
 						cellWidth,cellHeight);
 		}
+*/
 
 		// Paint line numbers
 		g.setColor(getForeground());
@@ -304,21 +307,44 @@ class LineNumberList extends AbstractGutterComponent
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
 			int rhs = getWidth() - RHS_BORDER_WIDTH;
-			for (int i=topLine+1; i<=bottomLine; i++) {
-				int index = i + getLineNumberingStartIndex() - 1;
-				String number = Integer.toString(index);
-				int width = metrics.stringWidth(number);
-				g.drawString(number, rhs-width,y);
-				y += cellHeight;
-			}
+int line = topLine + 1;
+while (y<visibleRect.y+visibleRect.height+ascent && line<textArea.getLineCount()) {
+	String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+	int width = metrics.stringWidth(number);
+	g.drawString(number, rhs-width,y);
+	y += cellHeight;
+	Fold fold = fm.getFoldForLine(line-1);
+	if (fold!=null && fold.isFolded()) {
+		line += fold.getLineCount();
+	}
+	line++;
+}
+//			for (int i=topLine+1; i<=bottomLine; i++) {
+//				int index = i + getLineNumberingStartIndex() - 1;
+//				String number = Integer.toString(index);
+//				int width = metrics.stringWidth(number);
+//				g.drawString(number, rhs-width,y);
+//				y += cellHeight;
+//			}
 		}
 		else { // rtl
-			for (int i=topLine+1; i<=bottomLine; i++) {
-				int index = i + getLineNumberingStartIndex() - 1;
-				String number = Integer.toString(index);
-				g.drawString(number, RHS_BORDER_WIDTH, y);
-				y += cellHeight;
-			}
+int line = topLine + 1;
+while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
+	String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+	g.drawString(number, RHS_BORDER_WIDTH, y);
+	y += cellHeight;
+	Fold fold = fm.getFoldForLine(line-1);
+	if (fold!=null && fold.isFolded()) {
+		line += fold.getLineCount();
+	}
+	line++;
+}
+//			for (int i=topLine+1; i<=bottomLine; i++) {
+//				int index = i + getLineNumberingStartIndex() - 1;
+//				String number = Integer.toString(index);
+//				g.drawString(number, RHS_BORDER_WIDTH, y);
+//				y += cellHeight;
+//			}
 		}
 
 	}
