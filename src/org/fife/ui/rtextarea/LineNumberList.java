@@ -308,7 +308,7 @@ class LineNumberList extends AbstractGutterComponent
 			FontMetrics metrics = g.getFontMetrics();
 			int rhs = getWidth() - RHS_BORDER_WIDTH;
 int line = topLine + 1;
-while (y<visibleRect.y+visibleRect.height+ascent && line<textArea.getLineCount()) {
+while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
 	String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
 	int width = metrics.stringWidth(number);
 	g.drawString(number, rhs-width,y);
