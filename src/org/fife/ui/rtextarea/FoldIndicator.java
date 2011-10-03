@@ -83,12 +83,18 @@ public class FoldIndicator extends AbstractGutterComponent {
 			if (offs>-1) {
 				try {
 					int line = rsta.getLineOfOffset(offs);
+					int origLine = line;
 					FoldManager fm = rsta.getFoldManager();
 					do {
 						fold = fm.getFoldForLine(line);
 					} while (fold==null && line-->=0);
+					if (fold!=null && !fold.containsLine(origLine)) {
+						// Found closest fold, but doesn't actually contain line
+						fold = null;
+					}
 				} catch (BadLocationException ble) {
 					ble.printStackTrace(); // Never happens
+					fold = null;
 				}
 			}
 		}
@@ -145,6 +151,9 @@ public class FoldIndicator extends AbstractGutterComponent {
 				if (fold!=null && fold.isFolded()) {
 
 					int endLine = fold.getEndLine();
+					if (fold.getLineCount()>25) { // Not too big
+						endLine = fold.getStartLine() + 25;
+					}
 
 					StringBuffer sb = new StringBuffer("<html>");
 					while (line<=endLine && line<rsta.getLineCount()) { // Sanity

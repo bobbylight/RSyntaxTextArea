@@ -610,15 +610,21 @@ if (fold!=null && fold.isFolded()) {
 	
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);
-			drawLine(token, g2d, x,y);
-			y += lineHeight;
+			int lineEndX = (int)drawLine(token, g2d, x,y);
 
 if (fold!=null && fold.isFolded()) {
 	line += fold.getLineCount();
 	g.setColor(Color.gray);
-	g.drawLine(x,y-ascent-1, alloc.width,y-ascent-1);
+	g.drawLine(x,y+lineHeight-ascent-1, alloc.width,y+lineHeight-ascent-1);
+	Font tempFont = host.getFontForTokenType(Token.COMMENT_MULTILINE);
+	tempFont = tempFont.deriveFont(tempFont.getSize2D()-1f);
+	lineEndX += 10;
+	final String str = "/*...*/";
+	g.drawRect(lineEndX, y-ascent, g.getFontMetrics().stringWidth(str)+12, lineHeight-3);
+	g.drawString("/*...*/", lineEndX+5, y);
 }
 
+y += lineHeight;
 line++;
 //count++;
 
