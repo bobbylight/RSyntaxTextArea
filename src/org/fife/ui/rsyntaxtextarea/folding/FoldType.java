@@ -1,3 +1,25 @@
+/*
+ * 10/08/2011
+ *
+ * FoldType.java - Types of folds found in many programming languages.
+ * Copyright (C) 2011 Robert Futrell
+ * robert_futrell at users.sourceforge.net
+ * http://fifesoft.com/rsyntaxtextarea
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA.
+ */
 package org.fife.ui.rsyntaxtextarea.folding;
 
 
@@ -30,6 +52,12 @@ public interface FoldType {
 	 * Denotes a <code>Fold</code> as being a multi-line comment.
 	 */
 	public static final int COMMENT							= 1;
+
+	/**
+	 * Denotes a <code>Fold</code> as being a section of import statements
+	 * (Java), include statements (C), etc.
+	 */
+	public static final int IMPORTS							= 2;
 
 	/**
 	 * Users building advanced editors such as IDE's, that want to allow their

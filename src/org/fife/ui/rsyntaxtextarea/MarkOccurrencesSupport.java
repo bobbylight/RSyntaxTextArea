@@ -139,7 +139,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			if (t!=null && isValidType(t) && !isNonWordChar(t)) {
 				RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.
 															getHighlighter();
-				String lexeme = t.getLexeme();
+				char[] lexeme = t.getLexeme().toCharArray();
 				int type = t.type;
 				for (int i=0; i<textArea.getLineCount(); i++) {
 					Token temp = textArea.getTokenListForLine(i);

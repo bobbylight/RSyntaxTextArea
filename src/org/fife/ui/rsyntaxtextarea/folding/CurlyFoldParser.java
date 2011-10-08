@@ -1,3 +1,25 @@
+/*
+ * 10/08/2011
+ *
+ * CurlyFoldParser.java - Fold parser for languages with C-style syntax.
+ * Copyright (C) 2011 Robert Futrell
+ * robert_futrell at users.sourceforge.net
+ * http://fifesoft.com/rsyntaxtextarea
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA.
+ */
 package org.fife.ui.rsyntaxtextarea.folding;
 
 import java.util.ArrayList;
@@ -43,9 +65,19 @@ public class CurlyFoldParser implements FoldParser {
 	private boolean foldableMultiLineComments;
 
 	/**
+	 * Whether this parser is folding Java.
+	 */
+	private boolean java;
+
+	/**
+	 * Used to find import statements when folding Java code.
+	 */
+	private static final char[] KEYWORD_IMPORT = { 'i', 'm', 'p', 'o', 'r', 't' };
+
+	/**
 	 * Ending of a multi-line comment in C, C++, Java, etc.
 	 */
-	private static final char[] C_MLC_END = { '*', '/' };
+	protected static final char[] C_MLC_END = { '*', '/' };
 
 
 	/**
@@ -53,9 +85,24 @@ public class CurlyFoldParser implements FoldParser {
 	 *
 	 * @param cStyleMultiLineComments Whether to scan for C-style multi-line
 	 *        comments and make them foldable.
+	 * @param java Whether this parser is folding Java.  This adds extra
+	 *        parsing rules, such as grouping all import statements into a
+	 *        fold section.
 	 */
-	public CurlyFoldParser(boolean cStyleMultiLineComments) {
+	public CurlyFoldParser(boolean cStyleMultiLineComments, boolean java) {
 		this.foldableMultiLineComments = cStyleMultiLineComments;
+		this.java = java;
+	}
+
+
+	/**
+	 * Returns whether multi-line comments are foldable with this parser.
+	 *
+	 * @return Whether multi-line comments are foldable.
+	 * @see #setFoldableMultiLineComments(boolean)
+	 */
+	public boolean getFoldableMultiLineComments() {
+		return foldableMultiLineComments;
 	}
 
 
@@ -70,19 +117,50 @@ public class CurlyFoldParser implements FoldParser {
 		if (doc.getCurlyBracesDenoteCodeBlocks()) {
 
 			Fold currentFold = null;
+			int lineCount = textArea.getLineCount();
+			boolean inMLC = false;
+			int mlcStart = 0;
+			int importStartLine = -1;
+			int lastSeenImportLine = -1;
+			int importGroupStartOffs = -1;
+			int importGroupEndOffs = -1;
 
 			try {
-
-				int lineCount = textArea.getLineCount();
-				boolean inMLC = false;
-				int mlcStart = 0;
 
 				for (int line=0; line<lineCount; line++) {
 
 					Token t = textArea.getTokenListForLine(line);
 					while (t!=null && t.isPaintable()) {
 
-						if (foldableMultiLineComments && t.isComment()) {
+						if (getFoldableMultiLineComments() && t.isComment()) {
+
+							// Java-specific stuff
+							if (java) {
+
+								if (importStartLine>-1) {
+									if (lastSeenImportLine>importStartLine) {
+										Fold fold = null;
+										// Any imports found *should* be a top-level fold,
+										// but we're extra lenient here and allow groups
+										// of them anywhere to keep our parser better-behaved
+										// if they have random "imports" throughout code.
+										if (currentFold==null) {
+											fold = new Fold(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
+													textArea, importGroupStartOffs);
+											folds.add(fold);
+										}
+										else {
+											fold = currentFold.createChild(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
+													importGroupStartOffs);
+										}
+										fold.setEndOffset(importGroupEndOffs);
+									}
+									importStartLine = lastSeenImportLine =
+									importGroupStartOffs = importGroupEndOffs = -1;
+								}
+
+							}
+
 							if (inMLC) {
 								// If we found the end of an MLC that started
 								// on a previous line...
@@ -114,9 +192,37 @@ public class CurlyFoldParser implements FoldParser {
 									mlcStart = t.offset;
 								}
 							}
+
 						}
 
 						else if (isLeftCurly(t)) {
+
+							// Java-specific stuff
+							if (java) {
+
+								if (importStartLine>-1) {
+									if (lastSeenImportLine>importStartLine) {
+										Fold fold = null;
+										// Any imports found *should* be a top-level fold,
+										// but we're extra lenient here and allow groups
+										// of them anywhere to keep our parser better-behaved
+										// if they have random "imports" throughout code.
+										if (currentFold==null) {
+											fold = new Fold(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
+													textArea, importGroupStartOffs);
+											folds.add(fold);
+										}
+										else {
+											fold = currentFold.createChild(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
+													importGroupStartOffs);
+										}
+										fold.setEndOffset(importGroupEndOffs);
+									}
+									importStartLine = lastSeenImportLine =
+									importGroupStartOffs = importGroupEndOffs = -1;
+								}
+
+							}
 
 							if (currentFold==null) {
 								currentFold = new Fold(FoldType.CODE, textArea, t.offset);
@@ -139,6 +245,26 @@ public class CurlyFoldParser implements FoldParser {
 									currentFold.removeFromParent();
 								}
 								currentFold = parentFold;
+							}
+
+						}
+
+						// Java-specific folding rules
+						else if (java) {
+
+							if (t.is(Token.RESERVED_WORD, KEYWORD_IMPORT)) {
+								if (importStartLine==-1) {
+									importStartLine = line;
+									importGroupStartOffs = t.offset;
+									importGroupEndOffs = t.offset;
+								}
+								lastSeenImportLine = line;
+							}
+
+							else if (importStartLine>-1 &&
+									t.type==Token.IDENTIFIER &&//SEPARATOR &&
+									t.isSingleChar(';')) {
+								importGroupEndOffs = t.offset;
 							}
 
 						}
@@ -183,6 +309,17 @@ public class CurlyFoldParser implements FoldParser {
 	 */
 	public boolean isRightCurly(Token t) {
 		return t.isRightCurly();
+	}
+
+
+	/**
+	 * Sets whether multi-line comments are foldable with this parser.
+	 *
+	 * @param foldable Whether multi-line comments are foldable.
+	 * @see #getFoldableMultiLineComments()
+	 */
+	public void setFoldableMultiLineComments(boolean foldable) {
+		this.foldableMultiLineComments = foldable;
 	}
 
 

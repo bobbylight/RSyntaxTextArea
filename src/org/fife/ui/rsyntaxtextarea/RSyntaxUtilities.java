@@ -446,6 +446,7 @@ public class RSyntaxUtilities implements SwingConstants {
 									Position.Bias[] biasRet, View view) 
 									throws BadLocationException {
 
+		RSyntaxTextArea target = (RSyntaxTextArea)view.getContainer();
 		biasRet[0] = Position.Bias.Forward;
 
 		// Do we want the "next position" above, below, to the left or right?
@@ -459,8 +460,6 @@ public class RSyntaxUtilities implements SwingConstants {
 								view.getStartOffset();
 					break;
 				}
-				RSyntaxTextArea target = (RSyntaxTextArea)view.
-													getContainer();
 				Caret c = (target != null) ? target.getCaret() : null;
 				// YECK! Ideally, the x location from the magic caret
 				// position would be passed in.
@@ -484,18 +483,43 @@ public class RSyntaxUtilities implements SwingConstants {
 				break;
 
 			case WEST:
-				if(pos == -1)
+				if(pos == -1) {
 					pos = Math.max(0, view.getEndOffset() - 1);
-				else
+				}
+				else {
 					pos = Math.max(0, pos - 1);
+					if (target.isCodeFoldingEnabled()) {
+						int last = target.getLineOfOffset(pos+1);
+						int current = target.getLineOfOffset(pos);
+						if (last!=current) { // If moving up  a line...
+							FoldManager fm = target.getFoldManager();
+							if (fm.isLineHidden(current)) {
+								while (--current>0 && fm.isLineHidden(current));
+								pos = target.getLineEndOffset(current) - 1;
+							}
+						}
+					}
+				}
 				break;
 
 			case EAST:
-				if(pos == -1)
+				if(pos == -1) {
 					pos = view.getStartOffset();
-				else
-					pos = Math.min(pos + 1, view.getDocument().
-													getLength());
+				}
+				else {
+					pos = Math.min(pos + 1, view.getDocument().getLength());
+					if (target.isCodeFoldingEnabled()) {
+						int last = target.getLineOfOffset(pos-1);
+						int current = target.getLineOfOffset(pos);
+						if (last!=current) { // If moving down  a line...
+							FoldManager fm = target.getFoldManager();
+							if (fm.isLineHidden(current)) {
+								while (++current>0 && fm.isLineHidden(current));
+								pos = target.getLineStartOffset(current);
+							}
+						}
+					}
+				}
 				break;
 
 			default:

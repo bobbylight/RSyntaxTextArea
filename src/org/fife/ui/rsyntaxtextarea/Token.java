@@ -590,11 +590,37 @@ public abstract class Token {
 
 	/**
 	 * Returns whether this token is of the specified type, with the specified
+	 * lexeme.<p>
+	 * This method is preferred over the other overload in performance-critical
+	 * code where this operation may be called frequently, since it does not
+	 * involve any String allocations.
+	 *
+	 * @param type The type to check for.
+	 * @param lexeme The lexeme to check for.
+	 * @return Whether this token has that type and lexeme.
+	 * @see #is(int, String)
+	 */
+	public boolean is(int type, char[] lexeme) {
+		if (this.type==type && textCount==lexeme.length) {
+			for (int i=0; i<textCount; i++) {
+				if (text[textOffset+i]!=lexeme[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Returns whether this token is of the specified type, with the specified
 	 * lexeme.
 	 *
 	 * @param type The type to check for.
 	 * @param lexeme The lexeme to check for.
 	 * @return Whether this token has that type and lexeme.
+	 * @see #is(int, char[])
 	 */
 	public boolean is(int type, String lexeme) {
 		return this.type==type && textCount==lexeme.length() &&

@@ -89,8 +89,6 @@ class LineNumberList extends AbstractGutterComponent
 	 */
 	private int lineNumberingStartIndex;
 
-	private static final int RHS_BORDER_WIDTH	= 8;
-
 
 	/**
 	 * Constructs a new <code>LineNumberList</code> using default values for
@@ -168,6 +166,23 @@ class LineNumberList extends AbstractGutterComponent
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
 		return new Dimension(cellWidth, h);
+	}
+
+
+	/**
+	 * Returns the width of the empty border on this components right-hand
+	 * side (or left-hand side, if the orientation is RTL).
+	 *
+	 * @return The border width.
+	 */
+	private int getRhsBorderWidth() {
+		int w = 8;
+		if (textArea instanceof RSyntaxTextArea) {
+			if (((RSyntaxTextArea)textArea).isCodeFoldingEnabled()) {
+				w = 0;
+			}
+		}
+		return w;
 	}
 
 
@@ -288,8 +303,12 @@ class LineNumberList extends AbstractGutterComponent
 		int y = actualTopY + ascent;
 
 		// Get the actual first line to paint, taking into account folding.
-		FoldManager fm = ((RSyntaxTextArea)textArea).getFoldManager();
-		topLine += fm.getHiddenLineCountAbove(topLine, true);
+		FoldManager fm = null;
+		if (textArea instanceof RSyntaxTextArea) {
+			fm = ((RSyntaxTextArea)textArea).getFoldManager();
+			topLine += fm.getHiddenLineCountAbove(topLine, true);
+		}
+		final int RHS_BORDER_WIDTH = getRhsBorderWidth();
 
 /*
 		// Highlight the current line's line number, if desired.
@@ -409,6 +428,7 @@ while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 												visibleEditorRect);
 		int y = r.y;
 
+		final int RHS_BORDER_WIDTH = getRhsBorderWidth();
 		int rhs;
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
@@ -562,7 +582,7 @@ while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 	private void updateCellWidths() {
 
 		int oldCellWidth = cellWidth;
-		cellWidth = RHS_BORDER_WIDTH;
+		cellWidth = getRhsBorderWidth();
 
 		// Adjust the amount of space the line numbers take up, if necessary.
 		if (textArea!=null) {
