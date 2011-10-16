@@ -42,7 +42,7 @@ import javax.swing.text.html.HTMLDocument;
  * @author Robert Futrell
  * @version 1.0
  */
-class TipUtil {
+public class TipUtil {
 
 
 	private TipUtil() {
