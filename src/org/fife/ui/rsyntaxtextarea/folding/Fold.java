@@ -408,8 +408,10 @@ public class Fold implements Comparable {
 			this.collapsed = folded;
 			int lineCount = getLineCount();
 			if (parent!=null) {
+System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCollapsedLineCount())));
 				parent.updateChildCollapsedLineCount(
-						collapsed ? lineCount : -lineCount);
+						collapsed ? lineCount :
+							-(lineCount-getCollapsedLineCount()));
 			}
 
 			// If an end point of the selection is being hidden, move the caret
