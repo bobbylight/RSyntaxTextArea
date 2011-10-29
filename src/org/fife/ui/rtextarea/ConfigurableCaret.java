@@ -401,6 +401,25 @@ public class ConfigurableCaret extends DefaultCaret {
 				// first blink.
 				validateWidth(r);
 
+				// This condition is most commonly hit when code folding is
+				// enabled and the user collapses a fold above the caret
+				// position.  If our cached x/y/w/h aren't updated, this caret
+				// appears to stop blinking because the wrong line range gets
+				// damaged.  This check keeps us in sync.
+				if (width>0 && height>0 &&
+						!contains(r.x, r.y, r.width, r.height)) {
+					Rectangle clip = g.getClipBounds();
+					if (clip != null && !clip.contains(this)) {
+						// Clip doesn't contain the old location, force it
+						// to be repainted lest we leave a caret around.
+						repaint();
+					}
+					// This will potentially cause a repaint of something
+					// we're already repainting, but without changing the
+					// semantics of damage we can't really get around this.
+					damage(r);
+				}
+
 				// Need to subtract 2 from height, otherwise
 				// the caret will expand too far vertically.
 				r.height -= 2;

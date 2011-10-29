@@ -111,7 +111,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 					do {
 						fold = fm.getFoldForLine(line);
 					} while (fold==null && line-->=0);
-					if (fold!=null && !fold.containsLine(origLine)) {
+					if (fold!=null && !fold.containsOrStartsOnLine(origLine)) {
 						// Found closest fold, but doesn't actually contain line
 						fold = null;
 					}
@@ -396,7 +396,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		}
 
 		public void propertyChange(PropertyChangeEvent e) {
-			// Whether or not code folding is enabled in the editor has changed.
+			// Whether folding is enabled in the editor has changed.
 			repaint();
 		}
 

@@ -109,9 +109,23 @@ public class Fold implements Comparable {
 	 * @param line The line to check.
 	 * @return Whether the line would be hidden if this fold is collapsed.
 	 * @see #containsOffset(int)
+	 * @see #containsOrStartsOnLine(int)
 	 */
 	public boolean containsLine(int line) {
 		return line>getStartLine() && line<=getEndLine();
+	}
+
+
+	/**
+	 * Returns whether the given line is in the range
+	 * <code>[getStartLine(), getEndLine()]</code>, inclusive.
+	 *
+	 * @param line The line to check.
+	 * @return Whether this fold contains, or starts on, the line.
+	 * @see #containsLine(int)
+	 */
+	public boolean containsOrStartsOnLine(int line) {
+		return line>=getStartLine() && line<=getEndLine();
 	}
 
 
@@ -419,13 +433,16 @@ public class Fold implements Comparable {
 		if (collapsed!=this.collapsed) {
 
 			// Change our fold state and cached info about folded line count.
-			this.collapsed = collapsed;
 			int lineCount = getLineCount();
+			int linesToCollapse = lineCount - childCollapsedLineCount;
+			if (!collapsed) { // If we're expanding
+				linesToCollapse = -linesToCollapse;
+			}
+			//System.out.println("Hiding lines: " + linesToCollapse +
+			//		" (" + lineCount + ", " + linesToCollapse + ")");
+			this.collapsed = collapsed;
 			if (parent!=null) {
-System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCollapsedLineCount())));
-				parent.updateChildCollapsedLineCount(
-						collapsed ? lineCount :
-							-(lineCount-getCollapsedLineCount()));
+				parent.updateChildCollapsedLineCount(linesToCollapse);
 			}
 
 			// If an end point of the selection is being hidden, move the caret
@@ -448,8 +465,7 @@ System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCo
 				}
 			}
 
-			textArea.revalidate();
-			textArea.repaint();
+			textArea.foldToggled(this);
 
 		}
 
@@ -496,7 +512,9 @@ System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCo
 	 * @return A string representation of this <code>Fold</code>.
 	 */
 	public String toString() {
-		return "[Fold: startOffs=" + startOffs.getOffset() +
+		return "[Fold: " +
+				"startOffs=" + getStartOffset() +
+				", endOffs=" + getEndOffset() +
 				", collapsed=" + collapsed +
 				"]";
 	}

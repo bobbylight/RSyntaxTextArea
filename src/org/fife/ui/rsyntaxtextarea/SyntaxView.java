@@ -353,7 +353,7 @@ if (!host.isCodeFoldingEnabled()) {
 else {
 	FoldManager fm = host.getFoldManager();
 	line = fm.getVisibleLineBelow(line);
-	if (line>=0 && line<lineCount-1) {
+	if (line>=0 && line<lineCount) {
 		return document.getTokenListForLine(line);
 	}
 }

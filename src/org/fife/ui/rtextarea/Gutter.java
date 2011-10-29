@@ -658,12 +658,15 @@ public class Gutter extends JPanel {
 			else if (RSyntaxTextArea.CODE_FOLDING_PROPERTY.equals(name)) {
 				boolean foldingEnabled = ((Boolean)e.getNewValue()).
 															booleanValue();
+				if (lineNumberList!=null) { // Its size depends on folding
+					//lineNumberList.revalidate();
+					lineNumberList.updateCellWidths();
+				}
 				setFoldIndicatorEnabled(foldingEnabled);
 			}
 
 			// If code folds are updated...
 			else if (FoldManager.PROPERTY_FOLDS_UPDATED.equals(name)) {
-				System.out.println("Gutter: Folds updated, repainting!");
 				repaint();
 			}
 

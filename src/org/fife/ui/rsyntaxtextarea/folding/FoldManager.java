@@ -477,6 +477,9 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 			textArea.repaint();
 
 		}
+		else {
+			folds.clear();
+		}
 
 	}
 

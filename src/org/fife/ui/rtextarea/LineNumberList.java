@@ -176,7 +176,7 @@ class LineNumberList extends AbstractGutterComponent
 	 * @return The border width.
 	 */
 	private int getRhsBorderWidth() {
-		int w = 8;
+		int w = 4;
 		if (textArea instanceof RSyntaxTextArea) {
 			if (((RSyntaxTextArea)textArea).isCodeFoldingEnabled()) {
 				w = 0;
@@ -579,7 +579,7 @@ while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 	 * Changes the width of the cells in the JList so you can see every digit
 	 * of each.
 	 */
-	private void updateCellWidths() {
+	void updateCellWidths() {
 
 		int oldCellWidth = cellWidth;
 		cellWidth = getRhsBorderWidth();

@@ -61,6 +61,7 @@ import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
+import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
@@ -766,6 +767,21 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	void fireParserNoticesChange() {
 		firePropertyChange(PARSER_NOTICES_PROPERTY, null, null);
+	}
+
+
+	/**
+	 * Called whenever a fold is collapsed or expanded.  This causes the
+	 * text editor to revalidate.  This method is here because of poor design
+	 * and should be removed.
+	 *
+	 * @param fold The fold that was collapsed or expanded.
+	 */
+	public void foldToggled(Fold fold) {
+		match = null; // TODO: Update the bracket rect rather than hide it
+		possiblyUpdateCurrentLineHighlightLocation();
+		revalidate();
+		repaint();
 	}
 
 
