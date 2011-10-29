@@ -596,7 +596,7 @@ Color foldStartLineBG = new Color(224, 255, 224);
 		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
 
 Fold fold = fm.getFoldForLine(line);
-if (fold!=null && fold.isFolded()) {
+if (fold!=null && fold.isCollapsed()) {
 	g2d.setColor(foldStartLineBG);
 	g2d.fillRect(x, y-ascent, lineArea.width, lineArea.height);
 }
@@ -612,7 +612,7 @@ if (fold!=null && fold.isFolded()) {
 			token = document.getTokenListForLine(line);
 			int lineEndX = (int)drawLine(token, g2d, x,y);
 
-if (fold!=null && fold.isFolded()) {
+if (fold!=null && fold.isCollapsed()) {
 	line += fold.getLineCount();
 	g.setColor(Color.gray);
 	g.drawLine(x,y+lineHeight-ascent-1, alloc.width,y+lineHeight-ascent-1);

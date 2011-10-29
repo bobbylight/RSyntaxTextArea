@@ -198,6 +198,36 @@ public class Fold implements Comparable {
 
 
 	/**
+	 * Returns the "deepest" open fold containing the specified offset.  It
+	 * is assumed that it's already been verified that <code>offs</code> is
+	 * indeed contained in this fold.
+	 *
+	 * @param offs The offset.
+	 * @return The fold, or <code>null</code> if no open fold contains the
+	 *         offset.
+	 * @see FoldManager#getDeepestOpenFoldContaining(int)
+	 */
+	Fold getDeepestOpenFoldContaining(int offs) {
+
+		Fold deepestFold = this;
+
+		for (int i=0; i<getChildCount(); i++) {
+			Fold fold = getChild(i);
+			if (fold.containsOffset(offs)) {
+				if (fold.isCollapsed()) {
+					break;
+				}
+				deepestFold = fold.getDeepestOpenFoldContaining(offs);
+				break;
+			}
+		}
+
+		return deepestFold;
+
+	}
+
+
+	/**
 	 * Returns the end line of this fold.  For example, in languages such as
 	 * C and Java, this might be the line containing the closing curly brace of
 	 * a code block.<p>
@@ -337,10 +367,10 @@ public class Fold implements Comparable {
 	 * Returns whether this fold is collapsed.
 	 *
 	 * @return Whether this fold is collapsed.
-	 * @see #setFolded(boolean)
-	 * @see #toggleFoldState()
+	 * @see #setCollapsed(boolean)
+	 * @see #toggleCollapsedState()
 	 */
-	public boolean isFolded() {
+	public boolean isCollapsed() {
 		return collapsed;
 	}
 
@@ -377,35 +407,19 @@ public class Fold implements Comparable {
 
 
 	/**
-	 * Sets the ending offset of this fold, such as the closing curly brace
-	 * of a code block in C or Java. {@link FoldParser} implementations should
-	 * call this on an existing <code>Fold</code> upon finding its end.  If
-	 * this method isn't called, then this <code>Fold</code> is considered to
-	 * have no end, i.e., it will collapse everything to the end of the file.
-	 * 
-	 * @param endOffs The end offset of this fold.
-	 * @throws BadLocationException If <code>endOffs</code> is not a valid
-	 *         location in the text area.
-	 */
-	public void setEndOffset(int endOffs) throws BadLocationException {
-		this.endOffs = textArea.getDocument().createPosition(endOffs);
-	}
-
-
-	/**
 	 * Sets whether this <code>Fold</code> is collapsed.  Calling this method
 	 * will update both the text area and all <code>Gutter</code> components.
 	 *
-	 * @param folded Whether this fold should be collapsed.
-	 * @see #isFolded()
-	 * @see #toggleFoldState()
+	 * @param collapsed Whether this fold should be collapsed.
+	 * @see #isCollapsed()
+	 * @see #toggleCollapsedState()
 	 */
-	public void setFolded(boolean folded) {
+	public void setCollapsed(boolean collapsed) {
 
-		if (folded!=this.collapsed) {
+		if (collapsed!=this.collapsed) {
 
 			// Change our fold state and cached info about folded line count.
-			this.collapsed = folded;
+			this.collapsed = collapsed;
 			int lineCount = getLineCount();
 			if (parent!=null) {
 System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCollapsedLineCount())));
@@ -416,7 +430,7 @@ System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCo
 
 			// If an end point of the selection is being hidden, move the caret
 			// "out" of the fold.
-			if (folded) {
+			if (collapsed) {
 				int dot = textArea.getSelectionStart(); // Forgive variable name
 				Element root = textArea.getDocument().getDefaultRootElement();
 				int dotLine = root.getElementIndex(dot);
@@ -443,12 +457,28 @@ System.out.println("Hiding lines: " + (collapsed ? lineCount : -(lineCount-getCo
 
 
 	/**
+	 * Sets the ending offset of this fold, such as the closing curly brace
+	 * of a code block in C or Java. {@link FoldParser} implementations should
+	 * call this on an existing <code>Fold</code> upon finding its end.  If
+	 * this method isn't called, then this <code>Fold</code> is considered to
+	 * have no end, i.e., it will collapse everything to the end of the file.
+	 * 
+	 * @param endOffs The end offset of this fold.
+	 * @throws BadLocationException If <code>endOffs</code> is not a valid
+	 *         location in the text area.
+	 */
+	public void setEndOffset(int endOffs) throws BadLocationException {
+		this.endOffs = textArea.getDocument().createPosition(endOffs);
+	}
+
+
+	/**
 	 * Toggles the collapsed state of this fold.
 	 *
-	 * @see #setFolded(boolean)
+	 * @see #setCollapsed(boolean)
 	 */
-	public void toggleFoldState() {
-		setFolded(!collapsed);
+	public void toggleCollapsedState() {
+		setCollapsed(!collapsed);
 	}
 
 

@@ -45,6 +45,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
@@ -64,6 +68,7 @@ import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.RecordableTextAction;
 
 
 
@@ -148,25 +153,23 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private static final Color DEFAULT_BRACKET_MATCH_BORDER_COLOR	= new Color(0,0,128);
 	private static final Color DEFAULT_SELECTION_COLOR			= new Color(200,200,255);
 
+	private static final String MSG	= "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
 
-	/**
-	 * The key for the syntax style to be highlighting.
-	 */
+	private static JMenu foldingMenu;
+	private static RecordableTextAction toggleCurrentFoldAction;
+	private static RecordableTextAction collapseAllCommentFoldsAction;
+	private static RecordableTextAction expandAllFoldsAction;
+
+	/** The key for the syntax style to be highlighting. */
 	private String syntaxStyleKey;
 
-	/**
-	 * The colors used for syntax highlighting.
-	 */
+	/** The colors used for syntax highlighting. */
 	private SyntaxScheme syntaxScheme;
 
-	/**
-	 * Handles code templates.
-	 */
+	/** Handles code templates. */
 	private static CodeTemplateManager codeTemplateManager;
 
-	/**
-	 * Whether or not templates are enabled.
-	 */
+	/** Whether or not templates are enabled. */
 	private static boolean templatesEnabled;
 
 	/**
@@ -176,25 +179,18 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 Rectangle match;
 
 	/**
-	 * Colors used for the "matched bracket" if bracket matching is
-	 * enabled.
+	 * Colors used for the "matched bracket" if bracket matching is enabled.
 	 */
 	private Color matchedBracketBGColor;
 	private Color matchedBracketBorderColor;
 
-	/**
-	 * The location of the last matched bracket.
-	 */
+	/** The location of the last matched bracket. */
 	private int lastBracketMatchPos;
 
-	/**
-	 * Whether or not bracket matching is enabled.
-	 */
+	/** Whether or not bracket matching is enabled. */
 	private boolean bracketMatchingEnabled;
 
-	/**
-	 * Whether or not bracket matching is animated.
-	 */
+	/** Whether or not bracket matching is animated. */
 	private boolean animateBracketMatching;
 
 	private BracketMatchingTimer bracketRepaintTimer;
@@ -222,24 +218,16 @@ Rectangle match;
 	 */
 	private boolean clearWhitespaceLines;
 
-	/**
-	 * Whether we are displaying visible whitespace (spaces and tabs).
-	 */
+	/** Whether we are displaying visible whitespace (spaces and tabs). */
 	private boolean whitespaceVisible;
 
-	/**
-	 * Whether EOL markers should be visible at the end of each line.
-	 */
+	/** Whether EOL markers should be visible at the end of each line. */
 	private boolean eolMarkersVisible;
 
-	/**
-	 * Whether tab lines are enabled.
-	 */
+	/** Whether tab lines are enabled. */
 	private boolean paintTabLines;
 
-	/**
-	 * The color to use when painting tab lines.
-	 */
+	/** The color to use when painting tab lines. */
 	private Color tabLineColor;
 
 	/**
@@ -248,9 +236,7 @@ Rectangle match;
 	 */
 	private boolean hyperlinksEnabled;
 
-	/**
-	 * The color to use when painting hyperlinks.
-	 */
+	/** The color to use when painting hyperlinks. */
 	private Color hyperlinkFG;
 
 	/**
@@ -259,29 +245,19 @@ Rectangle match;
 	 */
 	private int linkScanningMask;
 
-	/**
-	 * Used during "Copy as RTF" operations.
-	 */
+	/** Used during "Copy as RTF" operations. */
 	private RtfGenerator rtfGenerator;
 
-	/**
-	 * Handles "mark occurrences" support.
-	 */
+	/** Handles "mark occurrences" support. */
 	private MarkOccurrencesSupport markOccurrencesSupport;
 
-	/**
-	 * The color used to render "marked occurrences."
-	 */
+	/** The color used to render "marked occurrences." */
 	private Color markOccurrencesColor;
 
-	/**
-	 * Metrics of the text area's font.
-	 */
+	/** Metrics of the text area's font. */
 	private FontMetrics defaultFontMetrics;
 
-	/**
-	 * Manages running the parser.
-	 */
+	/** Manages running the parser. */
 	private ParserManager parserManager;
 
 	/**
@@ -294,27 +270,17 @@ Rectangle match;
 
 	private FoldManager foldManager;
 
-	/**
-	 * Whether "focusable" tool tips are used instead of standard ones.
-	 */
+	/** Whether "focusable" tool tips are used instead of standard ones. */
 	private boolean useFocusableTips;
 
-	/**
-	 * The last focusable tip displayed.
-	 */
+	/** The last focusable tip displayed. */
 	private FocusableTip focusableTip;
 
-	/**
-	 * Cached desktop anti-aliasing hints, if anti-aliasing is enabled.
-	 */
+	/** Cached desktop anti-aliasing hints, if anti-aliasing is enabled. */
 	private Map aaHints;
 
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
-
-public int getMaxAscent() {
-	return maxAscent;
-}
 private boolean fractionalFontMetricsEnabled;
 
 
@@ -625,6 +591,59 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	protected RTAMouseListener createMouseListener() {
 		return new RSyntaxTextAreaMutableCaretEvent(this);
+	}
+
+
+	/**
+	 * Overridden to add menu items related to cold folding.
+	 *
+	 * @return The popup menu.
+	 */
+	protected JPopupMenu createPopupMenu() {
+		JPopupMenu popup = super.createPopupMenu();
+		popup.addSeparator();
+		popup.add(foldingMenu);
+		return popup;
+	}
+
+
+	/**
+	 * See createPopupMenuActions() in RTextArea.
+	 * TODO: Remove these horrible hacks and move localizing of actions into
+	 * the editor kits, where it should be!  The context menu should contain
+	 * actions from the editor kits.
+	 */
+	private static void createRstaPopupMenuActions() {
+
+		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
+		//int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
+
+		String name = bundle.getString("Action.ToggleCurrentFold.Name");
+		char mnemonic = bundle.getString("Action.ToggleCurrentFold.Mnemonic").charAt(0);
+		String desc = bundle.getString("Action.ToggleCurrentFold.Desc");
+		toggleCurrentFoldAction = new RSyntaxTextAreaEditorKit.
+				ToggleCurrentFoldAction(name, null, desc, 
+										new Integer(mnemonic), null);
+		foldingMenu.add(toggleCurrentFoldAction);
+
+		name = bundle.getString("Action.CollapseCommentFolds.Name");
+		mnemonic = bundle.getString("Action.CollapseCommentFolds.Mnemonic").charAt(0);
+		desc = bundle.getString("Action.CollapseCommentFolds.Desc");
+		collapseAllCommentFoldsAction = new RSyntaxTextAreaEditorKit.
+				CollapseAllCommentFoldsAction(name, null, desc,
+						new Integer(mnemonic), null);
+		foldingMenu.add(collapseAllCommentFoldsAction);
+
+		name = bundle.getString("Action.ExpandAllFolds.Name");
+		mnemonic = bundle.getString("Action.ExpandAllFolds.Mnemonic").charAt(0);
+		desc = bundle.getString("Action.ExpandAllFolds.Desc");
+		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.
+				ExpandAllFoldsAction(name, null, desc, new Integer(mnemonic),
+						null);
+		foldingMenu.add(expandAllFoldsAction);
+
 	}
 
 
@@ -1150,6 +1169,16 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Overridden to return the max ascent for any font used in the editor.
+	 *
+	 * @return The max ascent value.
+	 */
+	public int getMaxAscent() {
+		return maxAscent;
+	}
+
+
+	/**
 	 * Returns whether tab lines are painted.
 	 *
 	 * @return Whether tab lines are painted.
@@ -1459,6 +1488,16 @@ private boolean fractionalFontMetricsEnabled;
 	 * editor.
 	 */
 	protected void init() {
+
+		// NOTE: Our actions are created here instead of in a static block
+		// so they are only created when the first RTextArea is instantiated,
+		// not before.  There have been reports of users calling static getters
+		// (e.g. RSyntaxTextArea.getDefaultBracketMatchBGColor()) which would
+		// cause these actions to be created and (possibly) incorrectly
+		// localized, if they were in a static block.
+		if (toggleCurrentFoldAction==null) {
+			createRstaPopupMenuActions();
+		}
 
 		// Set some RSyntaxTextArea default values.
 		syntaxStyleKey = SYNTAX_STYLE_NONE;

@@ -99,6 +99,29 @@ public class FoldManager {
 
 
 	/**
+	 * Returns a specific top-level fold, which may have child folds.
+	 *
+	 * @param index The index of the fold.
+	 * @return The fold.
+	 * @see #getFoldCount()
+	 */
+	public Fold getFold(int index) {
+		return (Fold)folds.get(index);
+	}
+
+
+	/**
+	 * Returns the number of top-level folds.
+	 *
+	 * @return The number of top-level folds.
+	 * @see #getFold(int)
+	 */
+	public int getFoldCount() {
+		return folds.size();
+	}
+
+
+	/**
 	 * Returns the fold region that starts at the specified line.
 	 *
 	 * @param line The line number.
@@ -227,7 +250,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		int count = 0;
 
 		if (fold.getEndLine()<line ||
-				(fold.isFolded() && fold.getStartLine()<line)) {
+				(fold.isCollapsed() && fold.getStartLine()<line)) {
 			count = fold.getCollapsedLineCount();
 		}
 		else {
@@ -243,6 +266,35 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		}
 
 		return count;
+
+	}
+
+
+	/**
+	 * Returns the "deepest" open fold containing the specified offset.
+	 *
+	 * @param offs The offset.
+	 * @return The fold, or <code>null</code> if no open fold contains the
+	 *         offset.
+	 */
+	public Fold getDeepestOpenFoldContaining(int offs) {
+
+		Fold deepestFold = null;
+
+		if (offs>-1) {
+			for (int i=0; i<folds.size(); i++) {
+				Fold fold = getFold(i);
+				if (fold.containsOffset(offs)) {
+					if (fold.isCollapsed()) {
+						return null;
+					}
+					deepestFold = fold.getDeepestOpenFoldContaining(offs);
+					break;
+				}
+			}
+		}
+
+		return deepestFold;
 
 	}
 
@@ -339,7 +391,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		for (int i=0; i<folds.size(); i++) {
 			Fold fold = (Fold)folds.get(i);
 			if (fold.containsLine(line)) {
-				if (fold.isFolded()) {
+				if (fold.isCollapsed()) {
 					return true;
 				}
 				else {
@@ -355,7 +407,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		for (int i=0; i<parent.getChildCount(); i++) {
 			Fold child = parent.getChild(i);
 			if (child.containsLine(line)) {
-				if (child.isFolded()) {
+				if (child.isCollapsed()) {
 					return true;
 				}
 				else {
@@ -372,7 +424,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		//System.out.println(newFold + " => " + previousLoc);
 		if (previousLoc>=0) {
 			Fold prevFold = (Fold)oldFolds.get(previousLoc);
-			newFold.setFolded(prevFold.isFolded());
+			newFold.setCollapsed(prevFold.isCollapsed());
 		}
 		else {
 			//previousLoc = -(insertion point) - 1;
@@ -503,8 +555,8 @@ private Parser tempParser;
 			int endLine = root.getElementIndex(endOffs);
 			if (startLine!=endLine) { // Inserted text covering > 1 line...
 				Fold fold = getFoldForLine(startLine);
-				if (fold!=null && fold.isFolded()) {
-					fold.toggleFoldState();
+				if (fold!=null && fold.isCollapsed()) {
+					fold.toggleCollapsedState();
 				}
 			}
 		}
@@ -524,8 +576,8 @@ private Parser tempParser;
 				//System.out.println(">>> " + lastLineModified);
 				Fold fold = getFoldForLine(lastLineModified);
 				//System.out.println("&&& " + fold);
-				if (fold!=null && fold.isFolded()) {
-					fold.toggleFoldState();
+				if (fold!=null && fold.isCollapsed()) {
+					fold.toggleCollapsedState();
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Never happens

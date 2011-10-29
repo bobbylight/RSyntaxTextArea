@@ -170,7 +170,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 					return null;
 				}
 				Fold fold = fm.getFoldForLine(line);
-				if (fold!=null && fold.isFolded()) {
+				if (fold!=null && fold.isCollapsed()) {
 
 					int endLine = fold.getEndLine();
 					if (fold.getLineCount()>25) { // Not too big
@@ -281,14 +281,14 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
-				if (fold==foldWithOutlineShowing && !fold.isFolded()) {
+				if (fold==foldWithOutlineShowing && !fold.isCollapsed()) {
 					g.setColor(getForeground());
 					int w2 = width/2;
 					g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
 					paintingOutlineLine = true;
 				}
 				paintFoldIcon(g, fold, x, y);
-				if (fold.isFolded()) {
+				if (fold.isCollapsed()) {
 					line += fold.getLineCount();
 				}
 			}
@@ -315,7 +315,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		g.setColor(getForeground());
 		g.drawRect(x,y, 8,8);
 		g.drawLine(x+2,y+4, x+2+4,y+4);
-		if (fold.isFolded()) {
+		if (fold.isCollapsed()) {
 			g.drawLine(x+4,y+2, x+4,y+6);
 		}
 	}
@@ -373,7 +373,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
-				fold.toggleFoldState();
+				fold.toggleCollapsedState();
 				getGutter().repaint();
 				textArea.repaint();
 			}

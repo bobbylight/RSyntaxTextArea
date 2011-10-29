@@ -28,6 +28,9 @@ import java.util.Stack;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.folding.Fold;
+import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.fife.ui.rtextarea.RTextArea;
@@ -39,6 +42,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * programming-specific stuff.  There are currently subclasses to handle:
  *
  * <ul>
+ *   <li>Toggling code folds.</li>
  *   <li>Aligning "closing" curly braces with their matches, if the current
  *       programming language uses curly braces to identify code blocks.</li>
  *   <li>Copying the current selection as RTF.</li>
@@ -67,11 +71,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
 	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
+	public static final String rstaCollapseAllCommentFoldsAction = "RSTA.CollapseAllCommentFoldsAction";
 	public static final String rstaCopyAsRtfAction			= "RSTA.CopyAsRtfAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
+	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
+	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
 
 
 	/**
@@ -438,6 +445,41 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
+	 * Collapses all comment folds.
+	 */
+	public static class CollapseAllCommentFoldsAction
+			extends RecordableTextAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public CollapseAllCommentFoldsAction() {
+			super(rstaCollapseAllCommentFoldsAction);
+		}
+
+		public CollapseAllCommentFoldsAction(String name, Icon icon,
+				String desc, Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				FoldCollapser collapser = new FoldCollapser();
+				collapser.collapseFolds(rsta.getFoldManager());
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
+		}
+
+		public final String getMacroID() {
+			return getName();
+		}
+
+	}
+
+
+	/**
 	 * Action for copying text as RTF.
 	 */
 	public static class CopyAsRtfAction extends RecordableTextAction {
@@ -743,6 +785,49 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			offs += seg.getIndex() - seg.getBeginIndex();
 			return offs;
 
+		}
+
+	}
+
+
+	/**
+	 * Expands all folds.
+	 */
+	public static class ExpandAllFoldsAction extends RecordableTextAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public ExpandAllFoldsAction() {
+			super(rstaExpandAllFoldsAction);
+		}
+
+		public ExpandAllFoldsAction(String name, Icon icon,
+				String desc, Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				FoldManager fm = rsta.getFoldManager();
+				for (int i=0; i<fm.getFoldCount(); i++) {
+					expand(fm.getFold(i));
+				}
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
+		}
+
+		private void expand(Fold fold) {
+			fold.setCollapsed(false);
+			for (int i=0; i<fold.getChildCount(); i++) {
+				expand(fold.getChild(i));
+			}
+		}
+
+		public final String getMacroID() {
+			return getName();
 		}
 
 	}
@@ -1498,6 +1583,53 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public final String getMacroID() {
 			return rstaToggleCommentAction;
+		}
+
+	}
+
+
+	/**
+	 * Toggles the fold at the current caret position or line.
+	 */
+	public static class ToggleCurrentFoldAction extends RecordableTextAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public ToggleCurrentFoldAction() {
+			super(rstaToggleCurrentFoldAction);
+		}
+
+		public ToggleCurrentFoldAction(String name, Icon icon, String desc,
+					Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				Fold fold = getClosestFold(rsta);
+				if (fold!=null) {
+					fold.toggleCollapsedState();
+				}
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
+		}
+
+		private Fold getClosestFold(RSyntaxTextArea textArea) {
+			int offs = textArea.getCaretPosition();
+			int line = textArea.getCaretLineNumber();
+			FoldManager fm = textArea.getFoldManager();
+			Fold fold = fm.getFoldForLine(line);
+			if (fold==null) {
+				fold = fm.getDeepestOpenFoldContaining(offs);
+			}
+			return fold;
+		}
+
+		public final String getMacroID() {
+			return getName();
 		}
 
 	}

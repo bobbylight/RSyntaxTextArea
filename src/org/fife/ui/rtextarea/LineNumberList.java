@@ -333,7 +333,7 @@ while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount(
 	g.drawString(number, rhs-width,y);
 	y += cellHeight;
 	Fold fold = fm.getFoldForLine(line-1);
-	if (fold!=null && fold.isFolded()) {
+	if (fold!=null && fold.isCollapsed()) {
 		line += fold.getLineCount();
 	}
 	line++;
@@ -353,7 +353,7 @@ while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 	g.drawString(number, RHS_BORDER_WIDTH, y);
 	y += cellHeight;
 	Fold fold = fm.getFoldForLine(line-1);
-	if (fold!=null && fold.isFolded()) {
+	if (fold!=null && fold.isCollapsed()) {
 		line += fold.getLineCount();
 	}
 	line++;

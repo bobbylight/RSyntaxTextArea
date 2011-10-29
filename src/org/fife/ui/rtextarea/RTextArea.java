@@ -469,6 +469,9 @@ public class RTextArea extends RTextAreaBase
 	/**
 	 * Creates the actions used in the popup menu and retrievable by
 	 * {@link #getAction(int)}.
+	 * TODO: Remove these horrible hacks and move localizing of actions into
+	 * the editor kits, where it should be!  The context menu should contain
+	 * actions from the editor kits.
 	 */
 	private static void createPopupMenuActions() {
 
