@@ -22,6 +22,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
@@ -166,14 +167,20 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 			Rectangle match = rsta.match;
 			if (match!=null) {
 				if (rsta.getAnimateBracketMatching()) {
-					g.setColor(rsta.getMatchedBracketBGColor());
-					g.fillRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
+					Color bg = rsta.getMatchedBracketBGColor();
+					if (bg!=null) {
+						g.setColor(bg);
+						g.fillRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
+					}
 					g.setColor(rsta.getMatchedBracketBorderColor());
 					g.drawRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
 				}
 				else {
-					g.setColor(rsta.getMatchedBracketBGColor());
-					g.fillRect(match.x,match.y, match.width,match.height-1);
+					Color bg = rsta.getMatchedBracketBGColor();
+					if (bg!=null) {
+						g.setColor(bg);
+						g.fillRect(match.x,match.y, match.width,match.height-1);
+					}
 					g.setColor(rsta.getMatchedBracketBorderColor());
 					g.drawRect(match.x,match.y, match.width,match.height-1);
 				}

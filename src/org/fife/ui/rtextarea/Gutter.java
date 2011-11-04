@@ -209,6 +209,28 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns the background color used by the (default) fold icons.
+	 *
+	 * @return The background color.
+	 * @see #setFoldBackground(Color)
+	 */
+	public Color getFoldBackground() {
+		return foldIndicator.getFoldIconBackground();
+	}
+
+
+	/**
+	 * Returns the foreground color of the fold indicator.
+	 *
+	 * @return The foreground color of the fold indicator.
+	 * @see #setFoldIndicatorForeground(Color)
+	 */
+	public Color getFoldIndicatorForeground() {
+		return foldIndicator.getForeground();
+	}
+
+
+	/**
 	 * Returns the color to use to paint line numbers.
 	 *
 	 * @return The color used when painting line numbers.
@@ -404,6 +426,34 @@ public class Gutter extends JPanel {
 			}
 			revalidate();
 		}
+	}
+
+
+	/**
+	 * Sets the background color used by the (default) fold icons.
+	 *
+	 * @param bg The new background color.
+	 * @see #getFoldBackground()
+	 */
+	public void setFoldBackground(Color bg) {
+		if (bg==null) {
+			bg = FoldIndicator.DEFAULT_FOLD_BACKGROUND;
+		}
+		foldIndicator.setFoldIconBackground(bg);
+	}
+
+
+	/**
+	 * Sets the foreground color used by the fold indicator.
+	 *
+	 * @param fg The new fold indicator foreground.
+	 * @see #getFoldIndicatorForeground()
+	 */
+	public void setFoldIndicatorForeground(Color fg) {
+		if (fg==null) {
+			fg = FoldIndicator.DEFAULT_FOREGROUND;
+		}
+		foldIndicator.setForeground(fg);
 	}
 
 

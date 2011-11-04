@@ -428,7 +428,11 @@ public class ConfigurableCaret extends DefaultCaret {
 
 					// Draw a big rectangle, and xor the foreground color.
 					case BLOCK_STYLE:
-						g.setXORMode(Color.WHITE);
+						Color textAreaBg = textArea.getBackground();
+						if (textAreaBg==null) {
+							textAreaBg = Color.white;
+						}
+						g.setXORMode(textAreaBg);
 						// fills x==r.x to x==(r.x+(r.width)-1), inclusive.
 						g.fillRect(r.x,r.y, r.width,r.height);
 						break;
@@ -441,7 +445,11 @@ public class ConfigurableCaret extends DefaultCaret {
 
 					// Draw an "underline" below the current position.
 					case UNDERLINE_STYLE:
-						g.setXORMode(Color.WHITE);
+						textAreaBg = textArea.getBackground();
+						if (textAreaBg==null) {
+							textAreaBg = Color.white;
+						}
+						g.setXORMode(textAreaBg);
 						int y = r.y + r.height;
 						g.drawLine(r.x,y, r.x+r.width-1,y);
 						break;

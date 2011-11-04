@@ -441,8 +441,8 @@ private boolean fractionalFontMetricsEnabled;
 		lineHeight = maxAscent = 0;
 
 		// Each token style.
-		for (int i=0; i<syntaxScheme.styles.length; i++) {
-			Style ss = syntaxScheme.styles[i];
+		for (int i=0; i<syntaxScheme.getStyleCount(); i++) {
+			Style ss = syntaxScheme.getStyle(i);
 			if (ss!=null && ss.font!=null) {
 				FontMetrics fm = getFontMetrics(ss.font);
 				int height = fm.getHeight();
@@ -858,7 +858,7 @@ private boolean fractionalFontMetricsEnabled;
 	public Color getBackgroundForTokenType(int type) {
 		// Don't default to this.getBackground(), as Tokens simply don't
 		// paint a background if they get a null Color.
-		return syntaxScheme.styles[type].background;
+		return syntaxScheme.getStyle(type).background;
 	}
 
 
@@ -983,7 +983,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getFontMetricsForTokenType(int)
 	 */
 	public Font getFontForTokenType(int type) {
-		Font f = syntaxScheme.styles[type].font;
+		Font f = syntaxScheme.getStyle(type).font;
 		return f!=null ? f : getFont();
 	}
 
@@ -996,7 +996,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getFontForTokenType(int)
 	 */
 	public FontMetrics getFontMetricsForTokenType(int type) {
-		FontMetrics fm = syntaxScheme.styles[type].fontMetrics;
+		FontMetrics fm = syntaxScheme.getStyle(type).fontMetrics;
 		return fm!=null ? fm : defaultFontMetrics;
 	}
 
@@ -1028,7 +1028,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getForegroundForToken(Token)
 	 */
 	public Color getForegroundForTokenType(int type) {
-		Color fg = syntaxScheme.styles[type].foreground;
+		Color fg = syntaxScheme.getStyle(type).foreground;
 		return fg!=null ? fg : getForeground();
 	}
 
@@ -1151,7 +1151,8 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Gets the color used as the background for a matched bracket.
 	 *
-	 * @return The color used.
+	 * @return The color used.  If this is <code>null</code>, no special
+	 *         background is painted behind a matched bracket.
 	 * @see #setMatchedBracketBGColor
 	 * @see #getMatchedBracketBorderColor
 	 */
@@ -1481,7 +1482,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public boolean getUnderlineForToken(Token t) {
 		return (t.isHyperlink() && getHyperlinksEnabled()) ||
-				syntaxScheme.styles[t.type].underline;
+				syntaxScheme.getStyle(t.type).underline;
 	}
 
 
@@ -2141,7 +2142,8 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets the color used as the background for a matched bracket.
 	 *
-	 * @param color The color to use.
+	 * @param color The color to use.  If this is <code>null</code>, then no
+	 *        special background is painted behind a matched bracket.
 	 * @see #getMatchedBracketBGColor
 	 * @see #setMatchedBracketBorderColor
 	 */

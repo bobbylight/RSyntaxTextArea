@@ -536,9 +536,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// from the old scheme before updating.
 
 			boolean changed = false;
-			int count = scheme.styles.length;
+			int count = scheme.getStyleCount();
 			for (int i=0; i<count; i++) {
-				Style ss = scheme.styles[i];
+				Style ss = scheme.getStyle(i);
 				if (ss!=null) {
 					Font font = ss.font;
 					if (font!=null) {
@@ -900,9 +900,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// from the old scheme before updating.
 
 			boolean changed = false;
-			int count = scheme.styles.length;
+			int count = scheme.getStyleCount();
 			for (int i=0; i<count; i++) {
-				Style ss = scheme.styles[i];
+				Style ss = scheme.getStyle(i);
 				if (ss!=null) {
 					Font font = ss.font;
 					if (font!=null) {

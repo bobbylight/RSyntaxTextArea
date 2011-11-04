@@ -202,7 +202,7 @@ public abstract class Token {
 											boolean fontFamily) {
 
 		SyntaxScheme colorScheme = textArea.getSyntaxScheme();
-		Style scheme = colorScheme.styles[type];
+		Style scheme = colorScheme.getStyle(type);
 		Font font = textArea.getFontForTokenType(type);//scheme.font;
 
 		if (font.isBold()) sb.append("<b>");

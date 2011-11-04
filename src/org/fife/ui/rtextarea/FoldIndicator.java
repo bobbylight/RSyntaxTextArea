@@ -24,6 +24,7 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -32,6 +33,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.Icon;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.MouseInputAdapter;
@@ -70,9 +72,30 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private Fold foldWithOutlineShowing;
 
 	/**
+	 * The color to use for fold icon backgrounds, if the default icons
+	 * are used.
+	 */
+	private Color foldIconBackground;
+
+	/**
+	 * The icon used for collapsed folds.
+	 */
+	private Icon collapsedFoldIcon;
+
+	/**
+	 * The icon used for expanded folds.
+	 */
+	private Icon expandedFoldIcon;
+
+	/**
 	 * The color used to paint fold outlines.
 	 */
-	private static final Color DEFAULT_FOREGROUND = Color.GRAY;
+	static final Color DEFAULT_FOREGROUND = Color.gray;
+
+	/**
+	 * The default color used to paint the "inside" of fold icons.
+	 */
+	static final Color DEFAULT_FOLD_BACKGROUND = Color.white;
 
 	/**
 	 * Listens for events in this component.
@@ -84,12 +107,13 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	private static final int WIDTH = 12;
 
-	private static final int ICON_HEIGHT = 9;
-
 
 	public FoldIndicator(RTextArea textArea) {
 		super(textArea);
 		setForeground(DEFAULT_FOREGROUND);
+		setFoldIconBackground(DEFAULT_FOLD_BACKGROUND);
+		collapsedFoldIcon = new FoldIcon(true);
+		expandedFoldIcon = new FoldIcon(false);
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -123,6 +147,18 @@ public class FoldIndicator extends AbstractGutterComponent {
 	
 		return fold;
 
+	}
+
+
+	/**
+	 * Returns the color to use for the "background" of fold icons.  This
+	 * is be ignored if custom icons are used.
+	 *
+	 * @return The background color.
+	 * @see #setFoldIconBackground(Color)
+	 */
+	public Color getFoldIconBackground() {
+		return foldIconBackground;
 	}
 
 
@@ -250,7 +286,8 @@ public class FoldIndicator extends AbstractGutterComponent {
 		// the first line.
 		int cellHeight = textArea.getLineHeight();
 		int topLine = visibleRect.y/cellHeight;
-		int y = topLine*cellHeight + (cellHeight-ICON_HEIGHT)/2;
+		int y = topLine*cellHeight +
+		(cellHeight-collapsedFoldIcon.getIconHeight())/2;
 		textAreaInsets = textArea.getInsets(textAreaInsets);
 		if (textAreaInsets!=null) {
 			y += textAreaInsets.top;
@@ -287,7 +324,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 					g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
 					paintingOutlineLine = true;
 				}
-				paintFoldIcon(g, fold, x, y);
+				if (fold.isCollapsed()) {
+					collapsedFoldIcon.paintIcon(this, g, x, y);
+				}
+				else {
+					expandedFoldIcon.paintIcon(this, g, x, y);
+				}
 				if (fold.isCollapsed()) {
 					line += fold.getLineCount();
 				}
@@ -306,18 +348,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	private void paintComponentWrapped(Graphics g) {
 		// TODO
-	}
-
-
-	private void paintFoldIcon(Graphics g, Fold fold, int x, int y) {
-		g.setColor(Color.white);
-		g.fillRect(x,y, 8,8);
-		g.setColor(getForeground());
-		g.drawRect(x,y, 8,8);
-		g.drawLine(x+2,y+4, x+2+4,y+4);
-		if (fold.isCollapsed()) {
-			g.drawLine(x+4,y+2, x+4,y+6);
-		}
 	}
 
 
@@ -340,6 +370,34 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 
 	/**
+	 * Sets the color to use for the "background" of fold icons.  This will
+	 * be ignored if custom icons are used.
+	 *
+	 * @param bg The new background color.
+	 * @see #getFoldIconBackground()
+	 */
+	public void setFoldIconBackground(Color bg) {
+		foldIconBackground = bg;
+	}
+
+
+	/**
+	 * Sets the icons to use to represent collapsed and expanded folds.
+	 *
+	 * @param collapsedIcon The collapsed fold icon.  This cannot be
+	 *        <code>null</code>.
+	 * @param expandedIcon The expanded fold icon.  This cannot be
+	 *        <code>null</code>.
+	 */
+	public void setFoldIcons(Icon collapsedIcon, Icon expandedIcon) {
+		this.collapsedFoldIcon = collapsedIcon;
+		this.expandedFoldIcon = expandedIcon;
+		revalidate(); // Icons may be different sizes.
+		repaint();
+	}
+
+
+	/**
 	 * Overridden so we can track when code folding is enabled/disabled.
 	 */
 	public void setTextArea(RTextArea textArea) {
@@ -355,6 +413,42 @@ public class FoldIndicator extends AbstractGutterComponent {
 	}
 
 
+	/**
+	 * The default +/- icon for expanding and collapsing folds.
+	 */
+	private class FoldIcon implements Icon {
+
+		private boolean collapsed;
+
+		public FoldIcon(boolean collapsed) {
+			this.collapsed = collapsed;
+		}
+
+		public int getIconHeight() {
+			return 8;
+		}
+
+		public int getIconWidth() {
+			return 8;
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			g.setColor(foldIconBackground);
+			g.fillRect(x,y, 8,8);
+			g.setColor(getForeground());
+			g.drawRect(x,y, 8,8);
+			g.drawLine(x+2,y+4, x+2+4,y+4);
+			if (collapsed) {
+				g.drawLine(x+4,y+2, x+4,y+6);
+			}
+		}
+		
+	}
+
+
+	/**
+	 * Listens for events in this component.
+	 */
 	private class Listener extends MouseInputAdapter
 			implements PropertyChangeListener {
 

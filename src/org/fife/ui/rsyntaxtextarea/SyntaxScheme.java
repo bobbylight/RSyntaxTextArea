@@ -47,7 +47,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class SyntaxScheme implements Cloneable {
 
-	public Style[] styles;
+	private Style[] styles;
 
 	private static final String VERSION			= "*ver1";
 
@@ -176,6 +176,30 @@ public class SyntaxScheme implements Cloneable {
 	private static final String getHexString(Color c) {
 		return "$" + Integer.toHexString((c.getRGB() & 0xffffff)+0x1000000).
 									substring(1);
+	}
+
+
+	/**
+	 * Returns the specified style.
+	 *
+	 * @param index The index of the style.
+	 * @return The style.
+	 * @see #setStyle(int, Style)
+	 * @see #getStyleCount()
+	 */
+	public Style getStyle(int index) {
+		return styles[index];
+	}
+
+
+	/**
+	 * Returns the number of styles.
+	 *
+	 * @return The number of styles.
+	 * @see #getStyle(int)
+	 */
+	public int getStyleCount() {
+		return styles.length;
 	}
 
 
@@ -378,6 +402,7 @@ public class SyntaxScheme implements Cloneable {
 	 *
 	 * @param type The token type.
 	 * @param style The style for the token type.
+	 * @see #getStyle(int)
 	 */
 	public void setStyle(int type, Style style) {
 		styles[type] = style;
