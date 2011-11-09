@@ -267,12 +267,12 @@ public class SyntaxView extends View implements TabExpander,
 				// called, lineHeight isn't initialized.  If we don't do it
 				// here, we get no vertical scrollbar (as lineHeight==0).
 				lineHeight = host!=null ? host.getLineHeight() : lineHeight;
-//				return getElement().getElementCount() * lineHeight;
-int visibleLineCount = getElement().getElementCount();
-if (host.isCodeFoldingEnabled()) {
-	visibleLineCount -= host.getFoldManager().getHiddenLineCount();
-}
-return visibleLineCount * lineHeight;
+				//return getElement().getElementCount() * lineHeight;
+				int visibleLineCount = getElement().getElementCount();
+				if (host.isCodeFoldingEnabled()) {
+					visibleLineCount -= host.getFoldManager().getHiddenLineCount();
+				}
+				return visibleLineCount * lineHeight;
 			default:
 				throw new IllegalArgumentException("Invalid axis: " + axis);
 		}
@@ -697,12 +697,24 @@ line++;
 					possiblyUpdateLongLine(added[i], addedAt+i);
 			}
 			if (removed != null) {
+				boolean foldingEnabled = this.host.isCodeFoldingEnabled();
+				boolean refreshFoldManager = false;
 				for (int i = 0; i < removed.length; i++) {
 					if (removed[i] == longLine) {
 						longLineWidth = -1; // Must do this!!
 						calculateLongestLine();
 						break;
 					}
+					// If any line removed is a collapsed fold line, we must
+					// update FoldManager here so resizing (caused by
+					// preferenceChanged()) is done correctly.
+					if (foldingEnabled &&
+							this.host.getFoldManager().isFoldStartLine(i)) {
+						refreshFoldManager = true;
+					}
+				}
+				if (refreshFoldManager) {
+					this.host.getFoldManager().reparse();
 				}
 			}
 			preferenceChanged(null, true, true);

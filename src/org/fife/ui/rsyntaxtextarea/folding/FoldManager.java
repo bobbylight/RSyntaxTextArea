@@ -451,7 +451,12 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	}
 
 
-	private void reparse() {
+	/**
+	 * Forces an immediate reparsing for folds, if folding is enabled.  This
+	 * usually does not need to be called by the programmer, since fold
+	 * parsing is done automatically by RSTA.
+	 */
+	public void reparse() {
 
 		if (codeFoldingEnabled && parser!=null) {
 
