@@ -29,15 +29,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import javax.swing.JViewport;
-
-import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -53,6 +55,7 @@ public class Theme {
 	private Color bgColor;
 	private Color caretColor;
 	private Color selectionBG;
+	private boolean selectionRoundedEdges;
 	private Color currentLineHighlight;
 	private boolean fadeCurrentLineHighlight;
 	private Color marginLineColor;
@@ -81,6 +84,7 @@ public class Theme {
 		textArea.setBackground(bgColor);
 		textArea.setCaretColor(caretColor);
 		textArea.setSelectionColor(selectionBG);
+		textArea.setRoundedSelectionEdges(selectionRoundedEdges);
 		textArea.setCurrentLineHighlightColor(currentLineHighlight);
 		textArea.setFadeCurrentLineHighlight(fadeCurrentLineHighlight);
 		textArea.setMarginLineColor(marginLineColor);
@@ -120,7 +124,7 @@ public class Theme {
 
 		BufferedInputStream bin = new BufferedInputStream(in);
 		try {
-			XmlParser.load(theme, bin);
+			XmlHandler.load(theme, bin);
 		} finally {
 			bin.close();
 		}
@@ -157,44 +161,43 @@ public class Theme {
 	/**
 	 * Loads a <code>SyntaxScheme</code> from an XML file.
 	 */
-	private static class XmlParser extends DefaultHandler {
+	private static class XmlHandler extends DefaultHandler {
 
 		private Theme theme;
 
-		/**
-		 * Creates the XML reader to use.  Note that in 1.4 JRE's, the reader
-		 * class wasn't defined by default, but in 1.5+ it is.
-		 *
-		 * @return The XML reader to use.
-		 */
-		private static XMLReader createReader() throws IOException {
-			XMLReader reader = null;
-			try {
-				reader = XMLReaderFactory.createXMLReader();
-			} catch (SAXException e) {
-				// Happens in JRE 1.4.x; 1.5+ define the reader class properly
-				try {
-					reader = XMLReaderFactory.createXMLReader(
-							"org.apache.crimson.parser.XMLReaderImpl");
-				} catch (SAXException se) {
-					throw new IOException(se.toString());
-				}
-			}
-			return reader;
+		public void error(SAXParseException e) throws SAXException {
+			throw e;
 		}
 
-		public static void load(Theme theme, InputStream in) throws IOException {
-			XMLReader reader = createReader();
-			XmlParser parser = new XmlParser();
-			parser.theme = theme;
-			reader.setContentHandler(parser);
-			InputSource is = new InputSource(in);
-			is.setEncoding("UTF-8");
+		public void fatalError(SAXParseException e) throws SAXException {
+			throw e;
+		}
+
+	    public static void load(Theme theme, InputStream in) throws IOException {
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			spf.setValidating(true);
 			try {
+				SAXParser parser = spf.newSAXParser();
+				XMLReader reader = parser.getXMLReader();
+				XmlHandler handler = new XmlHandler();
+				handler.theme = theme;
+				reader.setEntityResolver(handler);
+				reader.setContentHandler(handler);
+				reader.setDTDHandler(handler);
+				reader.setErrorHandler(handler);
+				InputSource is = new InputSource(in);
+				is.setEncoding("UTF-8");
 				reader.parse(is);
-			} catch (SAXException se) {
+			} catch (/*SAX|ParserConfiguration*/Exception se) {
+				se.printStackTrace();
 				throw new IOException(se.toString());
 			}
+		}
+
+	    public InputSource resolveEntity(String publicID, 
+				String systemID) throws SAXException {
+			return new InputSource(getClass().
+					getResourceAsStream("/theme.dtd"));
 		}
 
 		public void startElement(String uri, String localName, String qName,
@@ -284,6 +287,8 @@ public class Theme {
 			else if ("selection".equals(qName)) {
 				String color = attrs.getValue("bg");
 				theme.selectionBG = stringToColor(color);
+				String roundedStr = attrs.getValue("roundedEdges");
+				theme.selectionRoundedEdges = Boolean.valueOf(roundedStr).booleanValue();
 			}
 
 			// Start of the syntax scheme definition
@@ -357,6 +362,10 @@ public class Theme {
 
 			}
 
+		}
+
+		public void warning(SAXParseException e) throws SAXException {
+			throw e;
 		}
 
 	}
