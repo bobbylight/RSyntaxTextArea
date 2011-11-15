@@ -40,10 +40,13 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * The set of colors and styles used by an <code>RSyntaxTextArea</code> to
- * color tokens.
+ * color tokens.  You can use this class to programmatically set the fonts
+ * and colors used in an RSyntaxTextArea, but for more powerful, externalized
+ * control, consider using {@link Theme}s instead.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see Theme
  */
 public class SyntaxScheme implements Cloneable {
 

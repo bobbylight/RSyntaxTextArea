@@ -44,7 +44,14 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * A theme is a set of fonts and colors to use to style RSyntaxTextArea.
- * Themes are defined in XML files.
+ * Themes are defined in XML files that are validated against
+ * <code>themes.dtd</code>.  This provides applications and other consumers an
+ * easy way to style RSyntaxTextArea without having to use the API.<p>
+ * 
+ * Sample themes are included in the source tree under the <code>/themes</code>
+ * folder, but are not a part of the built RSyntaxTextArea jar.  Hosting
+ * applications are free to ship and use these themes as-is, modify them, or
+ * create their own.
  *
  * @author Robert Futrell
  * @version 1.0

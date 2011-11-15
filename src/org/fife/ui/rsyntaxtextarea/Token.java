@@ -99,43 +99,47 @@ public abstract class Token {
 	public static final int COMMENT_EOL						= 1;
 	public static final int COMMENT_MULTILINE				= 2;
 	public static final int COMMENT_DOCUMENTATION			= 3;
+	public static final int COMMENT_KEYWORD					= 4;
 
-	public static final int RESERVED_WORD					= 4;
+	public static final int RESERVED_WORD					= 5;
 
-	public static final int FUNCTION						= 5;
+	public static final int FUNCTION						= 6;
 
-	public static final int LITERAL_BOOLEAN					= 6;
-	public static final int LITERAL_NUMBER_DECIMAL_INT		= 7;
-	public static final int LITERAL_NUMBER_FLOAT				= 8;
-	public static final int LITERAL_NUMBER_HEXADECIMAL		= 9;
-	public static final int LITERAL_STRING_DOUBLE_QUOTE		= 10;
-	public static final int LITERAL_CHAR					= 11;	// Char or single-quote string.
-	public static final int LITERAL_BACKQUOTE				= 12;	// Used in UNIX/Perl scripts.
+	public static final int LITERAL_BOOLEAN					= 7;
+	public static final int LITERAL_NUMBER_DECIMAL_INT		= 8;
+	public static final int LITERAL_NUMBER_FLOAT			= 9;
+	public static final int LITERAL_NUMBER_HEXADECIMAL		= 10;
+	public static final int LITERAL_STRING_DOUBLE_QUOTE		= 11;
+	public static final int LITERAL_CHAR					= 12;
+	public static final int LITERAL_BACKQUOTE				= 13;
 
-	public static final int DATA_TYPE						= 13;
+	public static final int DATA_TYPE						= 14;
 
-	public static final int VARIABLE						= 14;
+	public static final int VARIABLE						= 15;
 
-	public static final int IDENTIFIER						= 15;
+	public static final int ANNOTATION						= 16;
 
-	public static final int WHITESPACE						= 16;
+	public static final int IDENTIFIER						= 17;
 
-	public static final int SEPARATOR						= 17;
+	public static final int WHITESPACE						= 18;
 
-	public static final int OPERATOR						= 18;
+	public static final int SEPARATOR						= 19;
 
-	public static final int PREPROCESSOR					= 19;
+	public static final int OPERATOR						= 20;
 
-	public static final int MARKUP_TAG_DELIMITER			= 20;
-	public static final int MARKUP_TAG_NAME					= 21;
-	public static final int MARKUP_TAG_ATTRIBUTE			= 22;
+	public static final int PREPROCESSOR					= 21;
 
-	public static final int ERROR_IDENTIFIER				= 23;
-	public static final int ERROR_NUMBER_FORMAT				= 24;
-	public static final int ERROR_STRING_DOUBLE 			= 25;
-	public static final int ERROR_CHAR						= 26;	// Char or single-quote string.
+	public static final int MARKUP_TAG_DELIMITER			= 22;
+	public static final int MARKUP_TAG_NAME					= 23;
+	public static final int MARKUP_TAG_ATTRIBUTE			= 24;
+	public static final int MARKUP_TAG_ATTRIBUTE_VALUE		= 25;
 
-	public static final int NUM_TOKEN_TYPES					= 27;
+	public static final int ERROR_IDENTIFIER				= 26;
+	public static final int ERROR_NUMBER_FORMAT				= 27;
+	public static final int ERROR_STRING_DOUBLE 			= 28;
+	public static final int ERROR_CHAR						= 29;
+
+	public static final int NUM_TOKEN_TYPES					= 30;
 
 
 	/**
