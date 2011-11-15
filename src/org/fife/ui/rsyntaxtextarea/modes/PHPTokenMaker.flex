@@ -810,6 +810,13 @@ PHP_LineCommentBegin		= ("//"|[#])
 
 	"?>"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
 
+	/* Error control operator */
+	("@"{JS_Identifier})		{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead, Token.FUNCTION);
+									zzMarkedPos -= (count-1); //yypushback(count-1);
+								}
+
 	/* Keywords */
 	"__CLASS__" |
 	"__DIR__" |
@@ -1336,15 +1343,11 @@ PHP_LineCommentBegin		= ("//"|[#])
 	"ngettext" |
 	"nl2br" |
 	"nl_langinfo" |
-	"node_name" |
-	"node_type" |
-	"node_value" |
+	("node_"("name"|"type"|"value")) |
 	"normalize" |
 	"notations" |
 	("notes_"("body"|"copy_db"|"create_db"|"create_note"|"drop_db"|"find_note"|"header_info"|"list_msgs"|"mark_read"|"mark_unread"|"nav_create"|"search"|"unread"|"version")) |
-	"nsapi_request_headers" |
-	"nsapi_response_headers" |
-	"nsapi_virtual" |
+	("nsapi_"("request_headers"|"response_headers"|"virtual")) |
 	"number_format" |
 	("ob_"("clean"|"end_clean"|"end_flush"|"flush"|"get_clean"|"get_contents"|"get_flush"|"get_length"|"get_level"|"get_status"|"gzhandler"|"iconv_handler"|"implicit_flush"|"list_handlers"|"start"|"tidyhandler")) |
 	"object" |
@@ -1612,14 +1615,12 @@ PHP_LineCommentBegin		= ("//"|[#])
 	"userlist" |
 	"usleep" |
 	"usort" |
-	"utf8_decode" |
-	"utf8_encode" |
+	"utf8_"("decode"|"encode") |
 	"valid" |
 	"validate" |
 	"value" |
 	"values" |
-	"var_dump" |
-	"var_export" |
+	"var_"("dump"|"export") |
 	("variant_"("abs"|"add"|"and"|"cast"|"cat"|"cmp"|"date_from_timestamp"|"date_to_timestamp"|"div"|"eqv"|"fix"|"get_type"|"idiv"|"imp"|"int"|"mod"|"mul"|"neg"|"not"|"or"|"pow"|"round"|"set"|"set_type"|"sub"|"xor")) |
 	"version_compare" |
 	"vfprintf" |
@@ -1661,6 +1662,9 @@ PHP_LineCommentBegin		= ("//"|[#])
 	"zend_version" |
 	("zip_"("close"|"entry_close"|"entry_compressedsize"|"entry_compressionmethod"|"entry_filesize"|"entry_name"|"entry_open"|"entry_read"|"open"|"read")) |
 	"zlib_get_coding_type" |
+
+	/* mysql functions */
+	("mysql_"("affected_rows"|"client_encoding"|"close"|"connect"|"create_db"|"data_seek"|"db_"("name"|"query")|"drop_db"|"errno"|"error"|"escape_string"|"fetch_"("array"|"assoc"|"field"|"lengths"|"object"|"row")|"field_"("flags"|"len"|"name"|"seek"|"table"|"type")|"free_result"|"get_"("client_info"|"host_info"|"proto_info"|"server_info")|"info"|"insert_id"|"list_"("dbs"|"fields"|"processes"|"tables")|"num_"("fields"|"rows")|"pconnect"|"ping"|"query"|"real_escape_string"|"result"|"select_db"|"set_charset"|"stat"|"tablename"|"thread_id"|"unbuffered_query")) |
 
 	/* Function aliases */
 	"apache_request_headers" |
