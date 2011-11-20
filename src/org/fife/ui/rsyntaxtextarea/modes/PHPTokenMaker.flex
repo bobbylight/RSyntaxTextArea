@@ -212,7 +212,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * {@inheritDoc}
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return false;
+		return type==Token.FUNCTION || type==Token.VARIABLE;
 	}
 
 

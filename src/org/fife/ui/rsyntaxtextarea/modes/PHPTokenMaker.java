@@ -19442,7 +19442,7 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 	 * {@inheritDoc}
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return false;
+		return type==Token.FUNCTION || type==Token.VARIABLE;
 	}
 
 

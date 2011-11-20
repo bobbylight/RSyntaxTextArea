@@ -176,15 +176,10 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Returns whether tokens of the specified type should have "mark
-	 * occurrences" enabled for the current programming language.
-	 *
-	 * @param type The token type.
-	 * @return Whether tokens of this type should have "mark occurrences"
-	 *         enabled.
+	 * {@inheritDoc}
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return super.getMarkOccurrencesOfTokenType(type) || type==Token.VARIABLE;
 	}
 
 
