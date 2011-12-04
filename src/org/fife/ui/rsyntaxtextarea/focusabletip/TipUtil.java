@@ -32,6 +32,7 @@ import java.awt.SystemColor;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.html.HTMLDocument;
 
@@ -46,6 +47,41 @@ public class TipUtil {
 
 
 	private TipUtil() {
+	}
+
+
+	/**
+	 * Returns a hex string for the specified color, suitable for HTML.
+	 *
+	 * @param c The color.
+	 * @return The string representation, in the form "<code>#rrggbb</code>",
+	 *         or <code>null</code> if <code>c</code> is <code>null</code>.
+	 */
+	private static final String getHexString(Color c) {
+
+		if (c==null) {
+			return null;
+		}
+
+		StringBuffer sb = new StringBuffer("#");
+		int r = c.getRed();
+		if (r<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(r));
+		int g = c.getGreen();
+		if (g<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(g));
+		int b = c.getBlue();
+		if (b<16) {
+			sb.append('0');
+		}
+		sb.append(Integer.toHexString(b));
+
+		return sb.toString();
+
 	}
 
 
@@ -86,7 +122,7 @@ public class TipUtil {
 		Color c = UIManager.getColor("ToolTip.background");
 
 		// Tooltip.background is wrong color on Nimbus (!)
-		if (c==null || UIManager.getLookAndFeel().getName().equals("Nimbus")) {
+		if (c==null || isNimbusLookAndFeel()) {
 			c = UIManager.getColor("info"); // Used by Nimbus (and others)
 			if (c==null) {
 				c = SystemColor.info; // System default
@@ -105,6 +141,50 @@ public class TipUtil {
 
 
 	/**
+	 * Returns the border used by tool tips in this look and feel.
+	 *
+	 * @return The border.
+	 */
+	public static Border getToolTipBorder() {
+
+		Border border = UIManager.getBorder("ToolTip.border");
+
+		if (border==null || isNimbusLookAndFeel()) {
+			border = UIManager.getBorder("nimbusBorder");
+			if (border==null) {
+				border = BorderFactory.createLineBorder(SystemColor.controlDkShadow);
+			}
+		}
+
+		return border;
+
+	}
+
+
+	/**
+	 * Returns whether a color is a Nimbus DerivedColor, which is troublesome
+	 * in that it doesn't use its RGB values (uses HSB instead?) and so
+	 * querying them is useless.
+	 *
+	 * @param c The color to check.
+	 * @return Whether it is a DerivedColor
+	 */
+	private static final boolean isDerivedColor(Color c) {
+		return c!=null && c.getClass().getName().endsWith(".DerivedColor");
+	}
+
+
+	/**
+	 * Returns whether the Nimbus Look and Feel is installed.
+	 *
+	 * @return Whether the current LAF is Nimbus.
+	 */
+	private static final boolean isNimbusLookAndFeel() {
+		return UIManager.getLookAndFeel().getName().equals("Nimbus");
+	}
+
+
+	/**
 	 * Tweaks a <code>JEditorPane</code> so it can be used to render the
 	 * content in a focusable pseudo-tool tip.  It is assumed that the editor
 	 * pane is using an <code>HTMLDocument</code>.
@@ -114,7 +194,8 @@ public class TipUtil {
 	public static void tweakTipEditorPane(JEditorPane textArea) {
 
 		// Jump through a few hoops to get things looking nice in Nimbus
-		if (UIManager.getLookAndFeel().getName().equals("Nimbus")) {
+		boolean isNimbus = isNimbusLookAndFeel();
+		if (isNimbus) {
 			Color selBG = textArea.getSelectionColor();
 			Color selFG = textArea.getSelectedTextColor();
 			textArea.setUI(new javax.swing.plaf.basic.BasicEditorPaneUI());
@@ -128,6 +209,15 @@ public class TipUtil {
 		// Make selection visible even though we are not (initially) focusable.
 		textArea.getCaret().setSelectionVisible(true);
 
+		// Set the foreground color.  Important because when rendering HTML,
+		// default foreground becomes black, which may not match all LAF's
+		// (e.g. Substance).
+		Color fg = UIManager.getColor("Label.foreground");
+		if (fg==null || (isNimbus && isDerivedColor(fg))) {
+			fg = SystemColor.textText;
+		}
+		textArea.setForeground(fg);
+
 		// Make it use the "tool tip" background color.
 		textArea.setBackground(TipUtil.getToolTipBackground());
 
@@ -139,8 +229,9 @@ public class TipUtil {
 		}
 		HTMLDocument doc = (HTMLDocument) textArea.getDocument();
 		doc.getStyleSheet().addRule(
-				"body { font-family: " + font.getFamily() + "; font-size: "
-						+ font.getSize() + "pt; }");
+				"body { font-family: " + font.getFamily() +
+						"; font-size: " + font.getSize() + "pt" +
+						"; color: " + getHexString(fg) + "; }");
 
 	}
 

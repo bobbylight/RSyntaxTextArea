@@ -410,8 +410,10 @@ public class Fold implements Comparable {
 	 * @see #isOnSingleLine()
 	 */
 	public void removeFromParent() {
-		parent.removeMostRecentChild();
-		this.parent = null;
+		if (parent!=null) {
+			parent.removeMostRecentChild();
+			this.parent = null;
+		}
 	}
 
 

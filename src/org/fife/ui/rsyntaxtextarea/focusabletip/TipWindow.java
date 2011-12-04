@@ -49,6 +49,7 @@ import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.MouseInputAdapter;
@@ -87,9 +88,7 @@ class TipWindow extends JWindow implements ActionListener {
 		tipListener = new TipListener();
 
 		JPanel cp = new JPanel(new BorderLayout());
-		cp.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createLineBorder(Color.BLACK), BorderFactory
-				.createEmptyBorder()));
+		cp.setBorder(TipUtil.getToolTipBorder());
 		cp.setBackground(TipUtil.getToolTipBackground());
 		textArea = new JEditorPane("text/html", msg);
 		TipUtil.tweakTipEditorPane(textArea);
@@ -268,7 +267,9 @@ class TipWindow extends JWindow implements ActionListener {
 			Component comp = cp.getComponent(0);
 			cp.remove(0);
 			JScrollPane sp = new JScrollPane(comp);
-			sp.setViewportBorder(BorderFactory.createEmptyBorder());
+			Border emptyBorder = BorderFactory.createEmptyBorder();
+			sp.setBorder(emptyBorder);
+			sp.setViewportBorder(emptyBorder);
 			sp.setBackground(textArea.getBackground());
 			sp.getViewport().setBackground(textArea.getBackground());
 			cp.add(sp);
