@@ -1525,6 +1525,7 @@ private boolean fractionalFontMetricsEnabled;
 		lastBracketMatchPos = -1;
 		setSelectionColor(getDefaultSelectionColor());
 		setTabLineColor(null);
+		setMarkOccurrencesColor(MarkOccurrencesSupport.DEFAULT_COLOR);
 
 		foldManager = new FoldManager(this);
 

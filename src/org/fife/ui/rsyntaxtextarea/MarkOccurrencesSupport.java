@@ -52,6 +52,11 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	private List tags;
 
 	/**
+	 * The default color used to mark occurrences.
+	 */
+	public static final Color DEFAULT_COLOR = new Color(224, 224, 224);
+
+	/**
 	 * The default delay.
 	 */
 	private static final int DEFAULT_DELAY_MS = 1000;
@@ -73,7 +78,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 *        be in milliseconds.
 	 */
 	public MarkOccurrencesSupport(int delay) {
-		this(delay, new Color(224, 224, 224));
+		this(delay, DEFAULT_COLOR);
 	}
 
 
@@ -217,6 +222,9 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 		}
 		this.textArea = textArea;
 		textArea.addCaretListener(this);
+		if (textArea.getMarkOccurrencesColor()!=null) {
+			setColor(textArea.getMarkOccurrencesColor());
+		}
 	}
 
 

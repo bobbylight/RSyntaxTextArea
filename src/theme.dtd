@@ -43,7 +43,7 @@
       iconBg CDATA #REQUIRED>
 <!ATTLIST style
       token     CDATA #REQUIRED
-      fg        CDATA #REQUIRED
+      fg        CDATA #IMPLIED
       bg        CDATA #IMPLIED
       bold      (true|false) "false"
       italic    (true|false) "false"

@@ -25,12 +25,25 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import javax.swing.JViewport;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,6 +51,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -51,7 +65,12 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  * Sample themes are included in the source tree under the <code>/themes</code>
  * folder, but are not a part of the built RSyntaxTextArea jar.  Hosting
  * applications are free to ship and use these themes as-is, modify them, or
- * create their own.
+ * create their own.<p>
+ *
+ * Note that to save a <code>Theme</code> via {@link #save(OutputStream)},
+ * you must currently create a <code>Theme</code> from a text area wrapped in
+ * an <code>RTextScrollPane</code>, so that the color information for the
+ * gutter can be retrieved.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -78,6 +97,51 @@ public class Theme {
 	private Color lineNumberColor;
 	private Color foldIndicatorFG;
 	private Color foldBG;
+
+
+	/**
+	 * Private constructor, used when loading from a stream.
+	 */
+	private Theme() {
+	}
+
+
+	/**
+	 * Creates a theme from an RSyntaxTextArea.  It should be contained in
+	 * an <code>RTextScrollPane</code> to get all gutter color information.
+	 *
+	 * @param textArea The text area.
+	 */
+	public Theme(RSyntaxTextArea textArea) {
+
+		baseFont = textArea.getFont();
+		bgColor = textArea.getBackground();
+		caretColor = textArea.getCaretColor();
+		selectionBG = textArea.getSelectionColor();
+		selectionRoundedEdges = textArea.getRoundedSelectionEdges();
+		currentLineHighlight = textArea.getCurrentLineHighlightColor();
+		fadeCurrentLineHighlight = textArea.getFadeCurrentLineHighlight();
+		marginLineColor = textArea.getMarginLineColor();
+		markAllHighlightColor = textArea.getMarkAllHighlightColor();
+		markOccurrencesColor = textArea.getMarkOccurrencesColor();
+		matchedBracketBG = textArea.getMatchedBracketBGColor();
+		matchedBracketFG = textArea.getMatchedBracketBorderColor();
+		matchedBracketAnimate = textArea.getAnimateBracketMatching();
+
+		scheme = textArea.getSyntaxScheme();
+
+		if (textArea.getParent() instanceof JViewport &&
+				textArea.getParent().getParent() instanceof RTextScrollPane) {
+			RTextScrollPane scrollPane = (RTextScrollPane)textArea.getParent().getParent();
+			Gutter gutter = scrollPane.getGutter();
+			bgColor = gutter.getBackground();
+			gutterBorderColor = gutter.getBorderColor();
+			lineNumberColor = gutter.getLineNumberColor();
+			foldIndicatorFG = gutter.getFoldIndicatorForeground();
+			foldBG = gutter.getFoldBackground();
+		}
+
+	}
 
 
 	/**
@@ -117,6 +181,16 @@ public class Theme {
 	}
 
 
+	private static final String colorToString(Color c) {
+		int color = c.getRGB() & 0xffffff;
+		String str = Integer.toHexString(color);
+		while (str.length()<6) {
+			str = "0" + str;
+		}
+		return str;
+	}
+
+
 	/**
 	 * Loads a theme.
 	 *
@@ -124,6 +198,7 @@ public class Theme {
 	 *        method returns.
 	 * @return The theme.
 	 * @throws IOException If an IO error occurs.
+	 * @see #save(OutputStream)
 	 */
 	public static Theme load(InputStream in) throws IOException {
 
@@ -137,6 +212,153 @@ public class Theme {
 		}
 
 		return theme;
+
+	}
+
+
+	/**
+	 * Saves this theme to an output stream.
+	 *
+	 * @param out The output stream to write to.
+	 * @throws IOException If an IO error occurs.
+	 * @see #load(InputStream)
+	 */
+	public void save(OutputStream out) throws IOException {
+
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		try {
+
+			DocumentBuilder db = DocumentBuilderFactory.newInstance().
+					newDocumentBuilder();
+			DOMImplementation impl = db.getDOMImplementation();
+
+			Document doc = impl.createDocument(null, "RSyntaxTheme", null);
+			Element root = doc.getDocumentElement();
+			root.setAttribute("version", "1.0");
+
+			Element elem = doc.createElement("baseFont");
+			if (!baseFont.getFamily().equals(
+					RSyntaxTextArea.getDefaultFont().getFamily())) {
+				elem.setAttribute("family", baseFont.getFamily());
+			}
+			elem.setAttribute("size", Integer.toString(baseFont.getSize()));
+			root.appendChild(elem);
+
+			elem = doc.createElement("background");
+			elem.setAttribute("color", colorToString(bgColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("caret");
+			elem.setAttribute("color", colorToString(caretColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("selection");
+			elem.setAttribute("bg", colorToString(selectionBG));
+			elem.setAttribute("roundedEdges", Boolean.toString(selectionRoundedEdges));
+			root.appendChild(elem);
+
+			elem = doc.createElement("currentLineHighlight");
+			elem.setAttribute("color", colorToString(currentLineHighlight));
+			elem.setAttribute("fade", Boolean.toString(fadeCurrentLineHighlight));
+			root.appendChild(elem);
+
+			elem = doc.createElement("marginLine");
+			elem.setAttribute("fg", colorToString(marginLineColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("markAllHighlight");
+			elem.setAttribute("color", colorToString(markAllHighlightColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("markOccurrencesHighlight");
+			elem.setAttribute("color", colorToString(markOccurrencesColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("matchedBracket");
+			elem.setAttribute("fg", colorToString(matchedBracketFG));
+			elem.setAttribute("bg", colorToString(matchedBracketBG));
+			elem.setAttribute("animate", Boolean.toString(matchedBracketAnimate));
+			root.appendChild(elem);
+
+			elem = doc.createElement("gutterBorder");
+			elem.setAttribute("color", colorToString(gutterBorderColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("lineNumbers");
+			elem.setAttribute("fg", colorToString(lineNumberColor));
+			root.appendChild(elem);
+
+			elem = doc.createElement("foldIndicator");
+			elem.setAttribute("fg", colorToString(foldIndicatorFG));
+			elem.setAttribute("iconBg", colorToString(foldBG));
+			root.appendChild(elem);
+
+			elem = doc.createElement("tokenStyles");
+			Field[] fields = TokenTypes.class.getFields();
+			for (int i=0; i<fields.length; i++) {
+				Field field = fields[i];
+				int value = field.getInt(null);
+				if (value!=TokenTypes.NUM_TOKEN_TYPES) {
+					Style style = scheme.getStyle(value);
+					if (style!=null) {
+						Element elem2 = doc.createElement("style");
+						elem2.setAttribute("token", field.getName());
+						Color fg = style.foreground;
+						if (fg!=null) {
+							elem2.setAttribute("fg", colorToString(fg));
+						}
+						Color bg = style.background;
+						if (bg!=null) {
+							elem2.setAttribute("bg", colorToString(bg));
+						}
+						Font font = style.font;
+						if (font!=null) {
+							if (!font.getFamily().equals(
+									baseFont.getFamily())) {
+								elem2.setAttribute("fontFamily", font.getFamily());
+							}
+							if (font.getSize()!=baseFont.getSize()) {
+								elem2.setAttribute("fontSize", Integer.toString(font.getSize()));
+							}
+							if (font.isBold()) {
+								elem2.setAttribute("bold", "true");
+							}
+							if (font.isItalic()) {
+								elem2.setAttribute("italic", "true");
+							}
+						}
+						if (style.underline) {
+							elem2.setAttribute("underline", "true");
+						}
+						elem.appendChild(elem2);
+					}
+				}
+			}
+			root.appendChild(elem);
+
+			DOMSource source = new DOMSource(doc);
+			// Use a writer instead of OutputStream to allow pretty printing.
+			// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337981
+			StreamResult result = new StreamResult(new PrintWriter(
+					new UnicodeWriter(bout, "UTF-8")));
+			TransformerFactory transFac = TransformerFactory.newInstance();
+			Transformer transformer = transFac.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "theme.dtd");
+			transformer.transform(source, result);
+
+		} catch (RuntimeException re) {
+			throw re; // FindBugs
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IOException("Error generating XML: " + e.getMessage());
+			// When Java 6 is minimum required version
+			//throw new IOException("Error generating XML: " + e.getMessage(), e);
+		} finally {
+			bout.close();
+		}
 
 	}
 
