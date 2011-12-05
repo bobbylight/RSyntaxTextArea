@@ -372,6 +372,7 @@ public class SyntaxScheme implements Cloneable {
 		styles[Token.COMMENT_EOL]				= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
+		styles[Token.COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
 		styles[Token.RESERVED_WORD]				= new Style(keyword, null, keywordFont);
 		styles[Token.FUNCTION]					= new Style(function, null);
 		styles[Token.LITERAL_BOOLEAN]			= new Style(literalNumber, null);
@@ -383,15 +384,16 @@ public class SyntaxScheme implements Cloneable {
 		styles[Token.LITERAL_BACKQUOTE]			= new Style(literalString, null);
 		styles[Token.DATA_TYPE]				= new Style(new Color(0,128,128), null);
 		styles[Token.VARIABLE]					= new Style(new Color(255,153,0), null);
+		styles[Token.ANNOTATION]				= new Style(Color.gray, null);
 		styles[Token.IDENTIFIER]				= new Style(null, null);
 		styles[Token.WHITESPACE]				= new Style(Color.gray, null);
 		styles[Token.SEPARATOR]				= new Style(Color.RED, null);
 		styles[Token.OPERATOR]					= new Style(new Color(128,64,64), null);
-		styles[Token.PREPROCESSOR]				= new Style(new Color(128,128,128), null);
+		styles[Token.PREPROCESSOR]				= new Style(Color.gray, null);
 		styles[Token.MARKUP_TAG_DELIMITER]		= new Style(Color.RED, null);
 		styles[Token.MARKUP_TAG_NAME]			= new Style(Color.BLUE, null);
 		styles[Token.MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127), null);
-//		styles[Token.ERROR]					= null;
+		styles[Token.MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString, null);
 		styles[Token.ERROR_IDENTIFIER]			= new Style(error, null);
 		styles[Token.ERROR_NUMBER_FORMAT]		= new Style(error, null);
 		styles[Token.ERROR_STRING_DOUBLE]		= new Style(error, null);
