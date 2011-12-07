@@ -388,7 +388,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 
-	/* java.lang stuff */
+	/* java.lang classes */
 	"Appendable" |
 	"AutoCloseable" |
 	"CharSequence" |
@@ -484,17 +484,201 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" |
 
+	/* java.io classes*/
+    "Closeable" |
+    "DataInput" |
+    "DataOutput" |
+    "Externalizable" |
+    "FileFilter" |
+    "FilenameFilter" |
+    "Flushable" |
+    "ObjectInput" |
+    "ObjectInputValidation" |
+    "ObjectOutput" |
+    "ObjectStreamConstants" |
+    "Serializable" |
+
+    "BufferedInputStream" |
+    "BufferedOutputStream" |
+    "BufferedReader" |
+    "BufferedWriter" |
+    "ByteArrayInputStream" |
+    "ByteArrayOutputStream" |
+    "CharArrayReader" |
+    "CharArrayWriter" |
+    "Console" |
+    "DataInputStream" |
+    "DataOutputStream" |
+    "File" |
+    "FileDescriptor" |
+    "FileInputStream" |
+    "FileOutputStream" |
+    "FilePermission" |
+    "FileReader" |
+    "FileWriter" |
+    "FilterInputStream" |
+    "FilterOutputStream" |
+    "FilterReader" |
+    "FilterWriter" |
+    "InputStream" |
+    "InputStreamReader" |
+    "LineNumberInputStream" |
+    "LineNumberReader" |
+    "ObjectInputStream" |
+    "ObjectInputStream.GetField" |
+    "ObjectOutputStream" |
+    "ObjectOutputStream.PutField" |
+    "ObjectStreamClass" |
+    "ObjectStreamField" |
+    "OutputStream" |
+    "OutputStreamWriter" |
+    "PipedInputStream" |
+    "PipedOutputStream" |
+    "PipedReader" |
+    "PipedWriter" |
+    "PrintStream" |
+    "PrintWriter" |
+    "PushbackInputStream" |
+    "PushbackReader" |
+    "RandomAccessFile" |
+    "Reader" |
+    "SequenceInputStream" |
+    "SerializablePermission" |
+    "StreamTokenizer" |
+    "StringBufferInputStream" |
+    "StringReader" |
+    "StringWriter" |
+    "Writer" |
+
+    "CharConversionException" |
+    "EOFException" |
+    "FileNotFoundException" |
+    "InterruptedIOException" |
+    "InvalidClassException" |
+    "InvalidObjectException" |
+    "IOException" |
+    "NotActiveException" |
+    "NotSerializableException" |
+    "ObjectStreamException" |
+    "OptionalDataException" |
+    "StreamCorruptedException" |
+    "SyncFailedException" |
+    "UnsupportedEncodingException" |
+    "UTFDataFormatException" |
+    "WriteAbortedException" |
+
+    "IOError" |
+
+	/* java.util classes */
+    "Collection" |
+    "Comparator" |
+    "Deque" |
+    "Enumeration" |
+    "EventListener" |
+    "Formattable" |
+    "Iterator" |
+    "List" |
+    "ListIterator" |
+    "Map" |
+    "Map.Entry" |
+    "NavigableMap" |
+    "NavigableSet" |
+    "Observer" |
+    "Queue" |
+    "RandomAccess" |
+    "Set" |
+    "SortedMap" |
+    "SortedSet" |
+
+    "AbstractCollection" |
+    "AbstractList" |
+    "AbstractMap" |
+    "AbstractMap.SimpleEntry" |
+    "AbstractMap.SimpleImmutableEntry" |
+    "AbstractQueue" |
+    "AbstractSequentialList" |
+    "AbstractSet" |
+    "ArrayDeque" |
+    "ArrayList" |
+    "Arrays" |
+    "BitSet" |
+    "Calendar" |
+    "Collections" |
+    "Currency" |
+    "Date" |
+    "Dictionary" |
+    "EnumMap" |
+    "EnumSet" |
+    "EventListenerProxy" |
+    "EventObject" |
+    "FormattableFlags" |
+    "Formatter" |
+    "GregorianCalendar" |
+    "HashMap" |
+    "HashSet" |
+    "Hashtable" |
+    "IdentityHashMap" |
+    "LinkedHashMap" |
+    "LinkedHashSet" |
+    "LinkedList" |
+    "ListResourceBundle" |
+    "Locale" |
+    "Locale.Builder" |
+    "Objects" |
+    "Observable" |
+    "PriorityQueue" |
+    "Properties" |
+    "PropertyPermission" |
+    "PropertyResourceBundle" |
+    "Random" |
+    "ResourceBundle" |
+    "ResourceBundle.Control" |
+    "Scanner" |
+    "ServiceLoader" |
+    "SimpleTimeZone" |
+    "Stack" |
+    "StringTokenizer" |
+    "Timer" |
+    "TimerTask" |
+    "TimeZone" |
+    "TreeMap" |
+    "TreeSet" |
+    "UUID" |
+    "Vector" |
+    "WeakHashMap" |
+
+    "Formatter.BigDecimalLayoutForm" |
+    "Locale.Category" |
+
+    "ConcurrentModificationException" |
+    "DuplicateFormatFlagsException" |
+    "EmptyStackException" |
+    "FormatFlagsConversionMismatchException" |
+    "FormatterClosedException" |
+    "IllegalFormatCodePointException" |
+    "IllegalFormatConversionException" |
+    "IllegalFormatException" |
+    "IllegalFormatFlagsException" |
+    "IllegalFormatPrecisionException" |
+    "IllegalFormatWidthException" |
+    "IllformedLocaleException" |
+    "InputMismatchException" |
+    "InvalidPropertiesFormatException" |
+    "MissingFormatArgumentException" |
+    "MissingFormatWidthException" |
+    "MissingResourceException" |
+    "NoSuchElementException" |
+    "TooManyListenersException" |
+    "UnknownFormatConversionException" |
+    "UnknownFormatFlagsException" |
+
+    "ServiceConfigurationError" 		{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
-
-/*
- * How should we handle generics?
-"<"[^\[\]\{\}\(\)\+\-\*\/\%\&\|\!\~]+">" {addToken(Token.PREPROCESSOR); }
-*/
 
 	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
 
@@ -513,7 +697,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
 
 	/* Annotations. */
-	{Annotation}					{ addToken(Token.VARIABLE); /* FIXME:  Add token type to Token? */ }
+	{Annotation}					{ addToken(Token.ANNOTATION); }
 
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }
@@ -560,9 +744,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
 	[hwf]						{}
 
-	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"@"							{}
-	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"{"							{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
 	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }

@@ -352,6 +352,7 @@ public class SyntaxScheme implements Cloneable {
 		Color docComment		= new Color(164,0,0);
 		Color keyword			= Color.BLUE;
 		Color function			= new Color(173,128,0);
+		Color regex				= new Color(173,128,0);
 		Color literalNumber		= new Color(100,0,200);
 		Color literalString		= new Color(220,0,156);
 		Color error			= new Color(148,148,0);
@@ -373,7 +374,9 @@ public class SyntaxScheme implements Cloneable {
 		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
 		styles[Token.COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
+		styles[Token.COMMENT_MARKUP]			= new Style(Color.gray, null, commentFont);
 		styles[Token.RESERVED_WORD]				= new Style(keyword, null, keywordFont);
+		styles[Token.RESERVED_WORD_2]			= new Style(keyword, null, keywordFont);
 		styles[Token.FUNCTION]					= new Style(function, null);
 		styles[Token.LITERAL_BOOLEAN]			= new Style(literalNumber, null);
 		styles[Token.LITERAL_NUMBER_DECIMAL_INT]	= new Style(literalNumber, null);
@@ -384,6 +387,7 @@ public class SyntaxScheme implements Cloneable {
 		styles[Token.LITERAL_BACKQUOTE]			= new Style(literalString, null);
 		styles[Token.DATA_TYPE]				= new Style(new Color(0,128,128), null);
 		styles[Token.VARIABLE]					= new Style(new Color(255,153,0), null);
+		styles[Token.REGEX]						= new Style(regex, null);
 		styles[Token.ANNOTATION]				= new Style(Color.gray, null);
 		styles[Token.IDENTIFIER]				= new Style(null, null);
 		styles[Token.WHITESPACE]				= new Style(Color.gray, null);

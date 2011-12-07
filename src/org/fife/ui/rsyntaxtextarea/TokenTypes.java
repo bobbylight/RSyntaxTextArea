@@ -41,45 +41,49 @@ public interface TokenTypes {
 	public static final int COMMENT_MULTILINE				= 2;
 	public static final int COMMENT_DOCUMENTATION			= 3;
 	public static final int COMMENT_KEYWORD					= 4;
+	public static final int COMMENT_MARKUP					= 5;
 
-	public static final int RESERVED_WORD					= 5;
+	public static final int RESERVED_WORD					= 6;
+	public static final int RESERVED_WORD_2					= 7;
 
-	public static final int FUNCTION						= 6;
+	public static final int FUNCTION						= 8;
 
-	public static final int LITERAL_BOOLEAN					= 7;
-	public static final int LITERAL_NUMBER_DECIMAL_INT		= 8;
-	public static final int LITERAL_NUMBER_FLOAT			= 9;
-	public static final int LITERAL_NUMBER_HEXADECIMAL		= 10;
-	public static final int LITERAL_STRING_DOUBLE_QUOTE		= 11;
-	public static final int LITERAL_CHAR					= 12;
-	public static final int LITERAL_BACKQUOTE				= 13;
+	public static final int LITERAL_BOOLEAN					= 9;
+	public static final int LITERAL_NUMBER_DECIMAL_INT		= 10;
+	public static final int LITERAL_NUMBER_FLOAT			= 11;
+	public static final int LITERAL_NUMBER_HEXADECIMAL		= 12;
+	public static final int LITERAL_STRING_DOUBLE_QUOTE		= 13;
+	public static final int LITERAL_CHAR					= 14;
+	public static final int LITERAL_BACKQUOTE				= 15;
 
-	public static final int DATA_TYPE						= 14;
+	public static final int DATA_TYPE						= 16;
 
-	public static final int VARIABLE						= 15;
+	public static final int VARIABLE						= 17;
 
-	public static final int ANNOTATION						= 16;
+	public static final int REGEX							= 18;
 
-	public static final int IDENTIFIER						= 17;
+	public static final int ANNOTATION						= 19;
 
-	public static final int WHITESPACE						= 18;
+	public static final int IDENTIFIER						= 20;
 
-	public static final int SEPARATOR						= 19;
+	public static final int WHITESPACE						= 21;
 
-	public static final int OPERATOR						= 20;
+	public static final int SEPARATOR						= 22;
 
-	public static final int PREPROCESSOR					= 21;
+	public static final int OPERATOR						= 23;
 
-	public static final int MARKUP_TAG_DELIMITER			= 22;
-	public static final int MARKUP_TAG_NAME					= 23;
-	public static final int MARKUP_TAG_ATTRIBUTE			= 24;
-	public static final int MARKUP_TAG_ATTRIBUTE_VALUE		= 25;
+	public static final int PREPROCESSOR					= 24;
 
-	public static final int ERROR_IDENTIFIER				= 26;
-	public static final int ERROR_NUMBER_FORMAT				= 27;
-	public static final int ERROR_STRING_DOUBLE 			= 28;
-	public static final int ERROR_CHAR						= 29;
+	public static final int MARKUP_TAG_DELIMITER			= 25;
+	public static final int MARKUP_TAG_NAME					= 26;
+	public static final int MARKUP_TAG_ATTRIBUTE			= 27;
+	public static final int MARKUP_TAG_ATTRIBUTE_VALUE		= 28;
 
-	public static final int NUM_TOKEN_TYPES					= 30;
+	public static final int ERROR_IDENTIFIER				= 29;
+	public static final int ERROR_NUMBER_FORMAT				= 30;
+	public static final int ERROR_STRING_DOUBLE 			= 31;
+	public static final int ERROR_CHAR						= 32;
+
+	public static final int NUM_TOKEN_TYPES					= 33;
 
 }

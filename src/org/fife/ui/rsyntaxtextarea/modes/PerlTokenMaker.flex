@@ -610,17 +610,17 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* distinguish between that and two divisions?  It seems this is one */
 	/* of those times when the Perl interpreter's "Do what I mean" kicks */
 	/* in to decide what the programmer really meant.                    */
-	m"/"[^/]*"/"[msixpogc]*			{ addToken(Token.FUNCTION); }
-	m"!"[^!]*"!"[msixpogc]*			{ addToken(Token.FUNCTION); }
-	m"|"[^\|]*"|"[msixpogc]*			{ addToken(Token.FUNCTION); }
-	m\\[^\\]*\\[cgimosx]*			{ addToken(Token.FUNCTION); }
-	s"/"[^/]*"/"[^/]*"/"[msixpogce]*	{ addToken(Token.FUNCTION); }
-	s"!"[^!]*"!"[^!]*"!"[msixpogce]*	{ addToken(Token.FUNCTION); }
-	s"|"[^\|]*"|"[^\|]*"|"[msixpogce]*	{ addToken(Token.FUNCTION); }
-	(tr|y)"/"[^/]*"/"[^/]*"/"[cds]*	{ addToken(Token.FUNCTION); }
-	(tr|y)"!"[^!]*"!"[^!]*"!"[cds]*	{ addToken(Token.FUNCTION); }
-	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cds]*	{ addToken(Token.FUNCTION); }
-	(tr|y)\\[^\\]*\\[^\\]*\\[cds]*	{ addToken(Token.FUNCTION); }
+	m"/"[^/]*"/"[msixpogc]*			{ addToken(Token.REGEX); }
+	m"!"[^!]*"!"[msixpogc]*			{ addToken(Token.REGEX); }
+	m"|"[^\|]*"|"[msixpogc]*			{ addToken(Token.REGEX); }
+	m\\[^\\]*\\[cgimosx]*			{ addToken(Token.REGEX); }
+	s"/"[^/]*"/"[^/]*"/"[msixpogce]*	{ addToken(Token.REGEX); }
+	s"!"[^!]*"!"[^!]*"!"[msixpogce]*	{ addToken(Token.REGEX); }
+	s"|"[^\|]*"|"[^\|]*"|"[msixpogce]*	{ addToken(Token.REGEX); }
+	(tr|y)"/"[^/]*"/"[^/]*"/"[cds]*	{ addToken(Token.REGEX); }
+	(tr|y)"!"[^!]*"!"[^!]*"!"[cds]*	{ addToken(Token.REGEX); }
+	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cds]*	{ addToken(Token.REGEX); }
+	(tr|y)\\[^\\]*\\[^\\]*\\[cds]*	{ addToken(Token.REGEX); }
 
 	/* "Here-document" syntax.  This is only implemented for the common */
 	/* cases.                                                           */
