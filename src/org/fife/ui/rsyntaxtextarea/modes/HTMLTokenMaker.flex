@@ -78,39 +78,53 @@ import org.fife.ui.rsyntaxtextarea.*;
 %{
 
 	/**
+	 * Type specific to XMLTokenMaker denoting a line ending with an unclosed
+	 * double-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+
+
+	/**
+	 * Type specific to XMLTokenMaker denoting a line ending with an unclosed
+	 * single-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE			= -2;
+
+
+	/**
 	 * Token type specific to HTMLTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG					= -1;
+	public static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to HTMLTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	public static final int INTERNAL_INTAG_SCRIPT			= -2;
+	public static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -3;
+	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -4;
+	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -5;
+	public static final int INTERNAL_IN_JS					= -7;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -6;
+	public static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Whether closing markup tags are automatically completed for HTML.
@@ -228,11 +242,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = INTAG_SCRIPT;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
@@ -593,14 +607,14 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
@@ -617,14 +631,14 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 
 <INATTR_DOUBLE_SCRIPT> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <JAVASCRIPT> {

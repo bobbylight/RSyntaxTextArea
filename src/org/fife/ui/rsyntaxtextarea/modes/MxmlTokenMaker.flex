@@ -78,46 +78,60 @@ import org.fife.ui.rsyntaxtextarea.*;
 %{
 
 	/**
+	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
+	 * double-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+
+
+	/**
+	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
+	 * single-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE			= -2;
+
+
+	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line with an unclosed XML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG						= -1;
+	public static final int INTERNAL_INTAG						= -3;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line with an unclosed Script tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG_SCRIPT				= -2;
+	public static final int INTERNAL_INTAG_SCRIPT				= -4;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line in the middle of a double-quoted attribute in a Script
 	 * tag.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT	= -3;
+	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT	= -5;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line in the middle of a single-quoted attribute in a Script
 	 * tag.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT	= -4;
+	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT	= -6;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line in an ActionScript code block (text content inside a
 	 * Script tag).
 	 */
-	public static final int INTERNAL_IN_AS						= -5;
+	public static final int INTERNAL_IN_AS						= -7;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line in an MLC in an ActionScript code block (text content
 	 * inside a Script tag).
 	 */
-	public static final int INTERNAL_IN_AS_MLC					= -6;
+	public static final int INTERNAL_IN_AS_MLC					= -8;
 
 	/**
 	 * Whether closing markup tags are automatically completed for HTML.
@@ -266,11 +280,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = DTD;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
@@ -533,14 +547,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
@@ -557,14 +571,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <INATTR_DOUBLE_SCRIPT> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <CDATA> {

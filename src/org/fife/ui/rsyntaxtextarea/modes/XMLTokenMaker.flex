@@ -78,11 +78,25 @@ import org.fife.ui.rsyntaxtextarea.*;
 %{
 
 	/**
+	 * Type specific to XMLTokenMaker denoting a line ending with an unclosed
+	 * double-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+
+
+	/**
+	 * Type specific to XMLTokenMaker denoting a line ending with an unclosed
+	 * single-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE			= -2;
+
+
+	/**
 	 * Token type specific to XMLTokenMaker; this signals that the user has
 	 * ended a line with an unclosed XML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG					= -1;
+	public static final int INTERNAL_INTAG					= -3;
 
 
 	/**
@@ -101,6 +115,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	static {
 		completeCloseTags = true;
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens as an
+	 * "end token;" that is, at <code>zzMarkedPos</code>.
+	 *
+	 * @param tokenType The token's type.
+	 */
+	private void addEndToken(int tokenType) {
+		addToken(zzMarkedPos,zzMarkedPos, tokenType);
 	}
 
 
@@ -207,11 +232,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = DTD;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
@@ -382,14 +407,14 @@ CDataEnd				= ("]]>")
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <CDATA> {

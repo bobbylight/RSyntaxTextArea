@@ -176,7 +176,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *              <code>false</code>.
 	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -191,7 +191,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -221,7 +221,7 @@ LineTerminator	= ([\n])
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
-URLUnreserved			= ([a-zA-Z0-9\-\.\~])
+URLUnreserved			= ({LetterOrDigit}|[_\-\.\~])
 URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
 URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{LetterOrDigit})

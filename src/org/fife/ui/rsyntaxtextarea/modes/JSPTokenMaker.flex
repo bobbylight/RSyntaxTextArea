@@ -78,65 +78,79 @@ import org.fife.ui.rsyntaxtextarea.*;
 %{
 
 	/**
+	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
+	 * double-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+
+
+	/**
+	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
+	 * single-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE			= -2;
+
+
+	/**
 	 * Token type specific to JSPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG					= -1;
+	public static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to JSPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	public static final int INTERNAL_INTAG_SCRIPT			= -2;
+	public static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -3;
+	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -4;
+	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
 
 	/**
 	 * Token type specifying we're in a JSP hidden comment ("<%-- ... --%>").
 	 */
-	public static final int INTERNAL_IN_HIDDEN_COMMENT		= -5;
+	public static final int INTERNAL_IN_HIDDEN_COMMENT		= -7;
 
 	/**
 	 * Token type specifying we're in a Java documentation comment.
 	 */
-	public static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -6;
+	public static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -8;
 
 	/**
 	 * Token type specifying we're in Java code.
 	 */
-	public static final int INTERNAL_IN_JAVA_EXPRESSION		= -7;
+	public static final int INTERNAL_IN_JAVA_EXPRESSION		= -9;
 
 	/**
 	 * Token type specifying we're in Java multiline comment.
 	 */
-	public static final int INTERNAL_IN_JAVA_MLC				= -8;
+	public static final int INTERNAL_IN_JAVA_MLC				= -10;
 
 	/**
 	 * Token type specifying we're in a JSP directive (either include, page
 	 * or taglib).
 	 */
-	public static final int INTERNAL_IN_JSP_DIRECTIVE			= -9;
+	public static final int INTERNAL_IN_JSP_DIRECTIVE			= -11;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -10;
+	public static final int INTERNAL_IN_JS					= -12;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -11;
+	public static final int INTERNAL_IN_JS_MLC				= -13;
 
 	/**
 	 * Whether closing markup tags are automatically completed for JSP.
@@ -161,6 +175,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	private void addEndToken(int tokenType) {
 		addToken(zzMarkedPos,zzMarkedPos, tokenType);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
 	}
 
 
@@ -254,11 +280,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = INTAG_SCRIPT;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
@@ -386,6 +412,7 @@ EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
 
 // Java stuff.
 Letter							= [A-Za-z]
+LetterOrUnderscore				= ({Letter}|"_")
 NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
@@ -395,7 +422,7 @@ AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({Letter}|"_"|"$")
+IdentifierStart					= ({LetterOrUnderscore}|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 WhiteSpace				= ([ \t\f])
 JCharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})[\'])
@@ -431,6 +458,13 @@ ErrorIdentifier			= ({NonSeparator}+)
 Annotation				= ("@"{JIdentifier}?)
 PrimitiveTypes				= ("boolean"|"byte"|"char"|"double" |"float"|"int"|"long"|"short")
 
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 // JavaScript stuff.
 JS_UnclosedCharLiteral		= ("'"({AnyCharacterButApostropheOrBackSlash}|{Escape}))
@@ -688,14 +722,14 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
@@ -712,14 +746,14 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 <INATTR_DOUBLE_SCRIPT> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <JAVASCRIPT> {
@@ -905,14 +939,16 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 
-	/* java.lang stuff */
+	/* java.lang classes */
 	"Appendable" |
+	"AutoCloseable" |
 	"CharSequence" |
 	"Cloneable" |
 	"Comparable" |
 	"Iterable" |
 	"Readable" |
 	"Runnable" |
+	"Thread.UncaughtExceptionHandler" |
 	"Boolean" |
 	"Byte" |
 	"Character" |
@@ -933,6 +969,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"Package" |
 	"Process" |
 	"ProcessBuilder" |
+	"ProcessBuilder.Redirect" |
 	"Runtime" |
 	"RuntimePermission" |
 	"SecurityManager" |
@@ -948,6 +985,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"ThreadLocal" |
 	"Throwable" |
 	"Void" |
+	"Character.UnicodeScript" |
+	"ProcessBuilder.Redirect.Type" |
 	"Thread.State" |
 	"ArithmeticException" |
 	"ArrayIndexOutOfBoundsException" |
@@ -1007,11 +1046,6 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 	{JIdentifier}					{ addToken(Token.IDENTIFIER); }
 
-/*
- * How should we handle generics?
-"<"[^\[\]\{\}\(\)\+\-\*\/\%\&\|\!\~]+">" {addToken(Token.PREPROCESSOR); }
-*/
-
 	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
 
 	/* String/Character literals. */
@@ -1057,18 +1091,13 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 
 <JAVA_MLC> {
-
-	[^\n\*]+					{}
-/*	[^\h\w\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
+	[^hwf\n\*]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
 	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC); return firstToken; }
 	{MLCEnd}					{ yybegin(JAVA_EXPRESSION); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC); return firstToken; }
-
 }
 
 

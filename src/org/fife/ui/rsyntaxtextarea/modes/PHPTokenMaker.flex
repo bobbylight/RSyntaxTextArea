@@ -78,59 +78,73 @@ import org.fife.ui.rsyntaxtextarea.*;
 %{
 
 	/**
-	 * Token type specific to HTMLTokenMaker; this signals that the user has
+	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
+	 * double-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+
+
+	/**
+	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
+	 * single-quote attribute.
+	 */
+	public static final int INTERNAL_ATTR_SINGLE			= -2;
+
+
+	/**
+	 * Token type specific to PHPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG					= -1;
+	public static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to HTMLTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	public static final int INTERNAL_INTAG_SCRIPT			= -2;
+	public static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -3;
+	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -4;
+	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -5;
+	public static final int INTERNAL_IN_JS					= -7;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -6;
+	public static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Token type specifying we're in PHP.
 	 */
-	public static final int INTERNAL_IN_PHP					= -7;
+	public static final int INTERNAL_IN_PHP					= -9;
 
 	/**
 	 * Token type specifying we're in a PHP multiline comment.
 	 */
-	public static final int INTERNAL_IN_PHP_MLC				= -8;
+	public static final int INTERNAL_IN_PHP_MLC				= -10;
 
 	/**
 	 * Token type specifying we're in a PHP multiline string.
 	 */
-	public static final int INTERNAL_PHP_STRING				= -9;
+	public static final int INTERNAL_PHP_STRING				= -11;
 
 	/**
 	 * Token type specifying we're in a PHP multiline char.
 	 */
-	public static final int INTERNAL_PHP_CHAR				= -10;
+	public static final int INTERNAL_PHP_CHAR				= -12;
 
 	/**
 	 * Whether closing markup tags are automatically completed for PHP.
@@ -155,6 +169,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	private void addEndToken(int tokenType) {
 		addToken(zzMarkedPos,zzMarkedPos, tokenType);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
 	}
 
 
@@ -252,11 +278,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = INTAG_SCRIPT;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
@@ -424,6 +450,14 @@ LetterOrUnderscore			= ({Letter}|[_])
 LetterOrUnderscoreOrDigit	= ({LetterOrUnderscore}|{Digit})
 PHP_Variable				= ("$"{LetterOrUnderscore}{LetterOrUnderscoreOrDigit}*)
 PHP_LineCommentBegin		= ("//"|[#])
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscoreOrDigit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 %state COMMENT
 %state DTD
@@ -636,14 +670,14 @@ PHP_LineCommentBegin		= ("//"|[#])
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
@@ -660,14 +694,14 @@ PHP_LineCommentBegin		= ("//"|[#])
 
 <INATTR_DOUBLE_SCRIPT> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <JAVASCRIPT> {
@@ -1844,7 +1878,9 @@ PHP_LineCommentBegin		= ("//"|[#])
 
 <PHP_MLC> {
 	// PHP MLC's.  This state is essentially Java's MLC state.
-	[^\n\*]+						{}
+	[^hwf\n\*]+					{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]						{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
