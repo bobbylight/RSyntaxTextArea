@@ -95,6 +95,8 @@ public class Theme {
 
 	private Color gutterBorderColor;
 	private Color lineNumberColor;
+	private String lineNumberFont;
+	private int lineNumberFontSize;
 	private Color foldIndicatorFG;
 	private Color foldBG;
 
@@ -137,6 +139,8 @@ public class Theme {
 			bgColor = gutter.getBackground();
 			gutterBorderColor = gutter.getBorderColor();
 			lineNumberColor = gutter.getLineNumberColor();
+			lineNumberFont = gutter.getLineNumberFont().getFamily();
+			lineNumberFontSize = gutter.getLineNumberFont().getSize();
 			foldIndicatorFG = gutter.getFoldIndicatorForeground();
 			foldBG = gutter.getFoldBackground();
 		}
@@ -174,6 +178,12 @@ public class Theme {
 			gutter.setBackground(bgColor);
 			gutter.setBorderColor(gutterBorderColor);
 			gutter.setLineNumberColor(lineNumberColor);
+			String fontName = lineNumberFont!=null ? lineNumberFont :
+				baseFont.getFamily();
+			int fontSize = lineNumberFontSize>0 ? lineNumberFontSize :
+				baseFont.getSize();
+			Font font = new Font(lineNumberFont, Font.PLAIN, fontSize);
+			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldBackground(foldBG);
 		}
@@ -286,6 +296,13 @@ public class Theme {
 
 			elem = doc.createElement("lineNumbers");
 			elem.setAttribute("fg", colorToString(lineNumberColor));
+			if (lineNumberFont!=null) {
+				elem.setAttribute("lineNumberFont", lineNumberFont);
+			}
+			if (lineNumberFontSize>0) {
+				elem.setAttribute("lineNumberFontSize",
+						Integer.toString(lineNumberFontSize));
+			}
 			root.appendChild(elem);
 
 			elem = doc.createElement("foldIndicator");
@@ -423,6 +440,20 @@ public class Theme {
 			}
 		}
 
+		private static final int parseInt(Attributes attrs, String attr,
+				int def) {
+			int value = def;
+			String temp = attrs.getValue(attr);
+			if (temp != null) {
+				try {
+					value = Integer.parseInt(temp);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			}
+			return value;
+		}
+
 	    public InputSource resolveEntity(String publicID, 
 				String systemID) throws SAXException {
 			return new InputSource(getClass().
@@ -487,6 +518,8 @@ public class Theme {
 			else if ("lineNumbers".equals(qName)) {
 				String color = attrs.getValue("fg");
 				theme.lineNumberColor = stringToColor(color);
+				theme.lineNumberFont = attrs.getValue("fontFamily");
+				theme.lineNumberFontSize = parseInt(attrs, "fontSize", -1);
 			}
 
 			else if ("marginLine".equals(qName)) {
@@ -522,7 +555,7 @@ public class Theme {
 
 			// Start of the syntax scheme definition
 			else if ("tokenStyles".equals(qName)) {
-				theme.scheme = new SyntaxScheme(theme.baseFont);
+				theme.scheme = new SyntaxScheme(theme.baseFont, false);
 			}
 
 			// A style in the syntax scheme
@@ -560,6 +593,24 @@ public class Theme {
 					Color bg = stringToColor(bgStr);
 					theme.scheme.getStyle(index).background = bg;
 
+					Font font = theme.baseFont;
+					String familyName = attrs.getValue("fontFamily");
+					if (familyName!=null) {
+						font = new Font(familyName, font.getStyle(),
+								font.getSize());
+					}
+					String sizeStr = attrs.getValue("fontSize");
+					if (sizeStr!=null) {
+						try {
+							float size = Float.parseFloat(sizeStr);
+							size = Math.max(size, 1f);
+							font = font.deriveFont(size);
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+						}
+					}
+					theme.scheme.getStyle(index).font = font;
+
 					boolean styleSpecified = false;
 					boolean bold = false;
 					boolean italic = false;
@@ -577,8 +628,9 @@ public class Theme {
 						int style = 0;
 						if (bold) { style |= Font.BOLD; }
 						if (italic) { style |= Font.ITALIC; }
+						Font orig = theme.scheme.getStyle(index).font;
 						theme.scheme.getStyle(index).font =
-								theme.baseFont.deriveFont(style);
+							orig.deriveFont(style);
 					}
 
 					String ulineStr = attrs.getValue("underline");

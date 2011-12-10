@@ -27,12 +27,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -43,6 +45,7 @@ import javax.swing.text.Element;
 import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
@@ -62,6 +65,8 @@ class LineNumberList extends AbstractGutterComponent
 	private int cellHeight;		// Height of a line number "cell" when word wrap is off.
 	private int cellWidth;		// The width used for all line number cells.
 	private int ascent;			// The ascent to use when painting line numbers.
+
+	private Map aaHints;
 
 	private int mouseDragStartOffset;
 
@@ -129,6 +134,8 @@ class LineNumberList extends AbstractGutterComponent
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
+
+		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
 
 	}
 
@@ -286,6 +293,9 @@ class LineNumberList extends AbstractGutterComponent
 		g.setColor(bg);
 		g.fillRect(0,visibleRect.y, cellWidth,visibleRect.height);
 		g.setFont(getFont());
+		if (aaHints!=null) {
+			((Graphics2D)g).addRenderingHints(aaHints);
+		}
 
 		if (textArea.getLineWrap()) {
 			paintWrappedLineNumbers(g, visibleRect);

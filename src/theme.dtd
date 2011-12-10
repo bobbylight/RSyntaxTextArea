@@ -37,14 +37,19 @@
       bg CDATA #IMPLIED
       animate (true|false) "false">
 <!ATTLIST gutterBorder color CDATA #REQUIRED>
-<!ATTLIST lineNumbers fg CDATA #REQUIRED>
+<!ATTLIST lineNumbers
+      fg         CDATA #REQUIRED
+      fontFamily CDATA #IMPLIED
+      fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator
       fg     CDATA #REQUIRED
       iconBg CDATA #REQUIRED>
 <!ATTLIST style
-      token     CDATA #REQUIRED
-      fg        CDATA #IMPLIED
-      bg        CDATA #IMPLIED
-      bold      (true|false) "false"
-      italic    (true|false) "false"
-      underline (true|false) "false">
+      token      CDATA #REQUIRED
+      fg         CDATA #IMPLIED
+      bg         CDATA #IMPLIED
+      fontFamily CDATA #IMPLIED
+      fontSize   CDATA #IMPLIED
+      bold       (true|false) "false"
+      italic     (true|false) "false"
+      underline  (true|false) "false">

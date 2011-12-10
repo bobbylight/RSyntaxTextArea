@@ -79,8 +79,22 @@ public class SyntaxScheme implements Cloneable {
 	 *        font.
 	 */
 	public SyntaxScheme(Font baseFont) {
+		this(baseFont, true);
+	}
+
+
+	/**
+	 * Creates a default color scheme.
+	 *
+	 * @param baseFont The base font to use.  Keywords will be a bold version
+	 *        of this font, and comments will be an italicized version of this
+	 *        font.
+	 * @param fontStyles Whether bold and italic should be used in the scheme
+	 *        (vs. all tokens using a plain font).
+	 */
+	public SyntaxScheme(Font baseFont, boolean fontStyles) {
 		styles = new Style[Token.NUM_TOKEN_TYPES];
-		restoreDefaults(baseFont);
+		restoreDefaults(baseFont, fontStyles);
 	}
 
 
@@ -346,6 +360,20 @@ public class SyntaxScheme implements Cloneable {
 	 *        used.
 	 */
 	public void restoreDefaults(Font baseFont) {
+		restoreDefaults(baseFont, true);
+	}
+
+
+	/**
+	 * Restores all colors and fonts to their default values.
+	 *
+	 * @param baseFont The base font to use when creating this scheme.  If
+	 *        this is <code>null</code>, then a default monospaced font is
+	 *        used.
+	 * @param fontStyles Whether bold and italic should be used in the scheme
+	 *        (vs. all tokens using a plain font).
+	 */
+	public void restoreDefaults(Font baseFont, boolean fontStyles) {
 
 		// Colors used by tokens.
 		Color comment			= new Color(0,128,0);
@@ -357,18 +385,22 @@ public class SyntaxScheme implements Cloneable {
 		Color literalString		= new Color(220,0,156);
 		Color error			= new Color(148,148,0);
 
-		// Special fonts.
+		// (Possible) special font styles for keywords and comments.
 		if (baseFont==null) {
 			baseFont = RSyntaxTextArea.getDefaultFont();
 		}
-		// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
-		StyleContext sc = StyleContext.getDefaultStyleContext();
-		Font boldFont = sc.getFont(baseFont.getFamily(), Font.BOLD,
-				baseFont.getSize());
-		Font italicFont = sc.getFont(baseFont.getFamily(), Font.ITALIC,
-				baseFont.getSize());
-		Font commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
-		Font keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
+		Font commentFont = baseFont;
+		Font keywordFont = baseFont;
+		if (fontStyles) {
+			// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
+			StyleContext sc = StyleContext.getDefaultStyleContext();
+			Font boldFont = sc.getFont(baseFont.getFamily(), Font.BOLD,
+					baseFont.getSize());
+			Font italicFont = sc.getFont(baseFont.getFamily(), Font.ITALIC,
+					baseFont.getSize());
+			commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
+			keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
+		}
 
 		styles[Token.COMMENT_EOL]				= new Style(comment, null, commentFont);
 		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
