@@ -37,7 +37,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
  * RSTA.
  *
  * @author Robert Futrell
- * @versoin 1.0
+ * @version 1.0
  */
 public class FoldParserManager implements SyntaxConstants {
 

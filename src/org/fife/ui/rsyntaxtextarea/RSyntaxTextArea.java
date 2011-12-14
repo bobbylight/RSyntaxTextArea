@@ -24,6 +24,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -508,6 +509,35 @@ private boolean fractionalFontMetricsEnabled;
 
 		return clone;
 
+	}
+
+
+	/**
+	 * Overridden to toggle the enabled state of various
+	 * RSyntaxTextArea-specific menu items.
+	 * 
+	 * If you set the popup menu via {@link #setPopupMenu(JPopupMenu)}, you
+	 * will want to override this method, especially if you removed any of the
+	 * menu items in the default popup menu.
+	 *
+	 * @param popupMenu The popup menu.  This will never be <code>null</code>.
+	 * @see #createPopupMenu()
+	 * @see #setPopupMenu(JPopupMenu)
+	 */
+	protected void configurePopupMenu(JPopupMenu popupMenu) {
+
+		super.configurePopupMenu(popupMenu); // Currently does nothing
+
+		// Be nice and let them set the popup to null without overriding
+		// this method
+		if (popupMenu!=null && popupMenu.getComponentCount()>0) {
+			Component c = popupMenu.getComponent(popupMenu.getComponentCount()-1);
+			if (c instanceof JMenu) { // Assume it's the folding menu
+				JMenu foldingMenu = (JMenu)c;
+				foldingMenu.setEnabled(foldManager.
+						isCodeFoldingSupportedAndEnabled());
+			}
+		}
 	}
 
 

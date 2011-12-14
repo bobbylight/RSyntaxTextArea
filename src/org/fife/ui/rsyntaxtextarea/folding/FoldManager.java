@@ -370,6 +370,21 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 
 
 	/**
+	 * Returns <code>true</code> if and only if code folding is enabled for
+	 * this text area, AND folding is supported for the language it is editing.
+	 * Whether or not folding is supported for a language depends on whether
+	 * a fold parser is registered for that language with the
+	 * <code>FoldParserManager</code>.
+	 *
+	 * @return Whether folding is supported and enabled for this text area.
+	 * @see FoldParserManager
+	 */
+	public boolean isCodeFoldingSupportedAndEnabled() {
+		return codeFoldingEnabled && parser!=null;
+	}
+
+
+	/**
 	 * Returns whether the specified line contains the start of a fold region.
 	 *
 	 * @param line The line.

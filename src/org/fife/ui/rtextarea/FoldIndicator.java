@@ -35,9 +35,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
@@ -287,7 +291,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		int cellHeight = textArea.getLineHeight();
 		int topLine = visibleRect.y/cellHeight;
 		int y = topLine*cellHeight +
-		(cellHeight-collapsedFoldIcon.getIconHeight())/2;
+			(cellHeight-collapsedFoldIcon.getIconHeight())/2;
 		textAreaInsets = textArea.getInsets(textAreaInsets);
 		if (textAreaInsets!=null) {
 			y += textAreaInsets.top;
@@ -347,7 +351,109 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * @param g The graphics context.
 	 */
 	private void paintComponentWrapped(Graphics g) {
-		// TODO
+
+		// The variables we use are as follows:
+		// - visibleRect is the "visible" area of the text area; e.g.
+		// [0,100, 300,100+(lineCount*cellHeight)-1].
+		// actualTop.y is the topmost-pixel in the first logical line we
+		// paint.  Note that we may well not paint this part of the logical
+		// line, as it may be broken into many physical lines, with the first
+		// few physical lines scrolled past.  Note also that this is NOT the
+		// visible rect of this line number list; this line number list has
+		// visible rect == [0,0, insets.left-1,visibleRect.height-1].
+		// - offset (<=0) is the y-coordinate at which we begin painting when
+		// we begin painting with the first logical line.  This can be
+		// negative, signifying that we've scrolled past the actual topmost
+		// part of this line.
+
+		// The algorithm is as follows:
+		// - Get the starting y-coordinate at which to paint.  This may be
+		//   above the first visible y-coordinate as we're in line-wrapping
+		//   mode, but we always paint entire logical lines.
+		// - Paint that line's indicator, if appropriate.  Increment y to be
+		//   just below the are we just painted (i.e., the beginning of the
+		//   next logical line's view area).
+		// - Get the ending visual position for that line.  We can now loop
+		//   back, paint this line, and continue until our y-coordinate is
+		//   past the last visible y-value.
+
+		// We avoid using modelToView/viewToModel where possible, as these
+		// methods trigger a parsing of the line into syntax tokens, which is
+		// costly.  It's cheaper to just grab the child views' bounds.
+
+		// Some variables we'll be using.
+		int width = getWidth();
+
+		RTextAreaUI ui = (RTextAreaUI)textArea.getUI();
+		View v = ui.getRootView(textArea).getView(0);
+		Document doc = textArea.getDocument();
+		Element root = doc.getDefaultRootElement();
+		int topPosition = textArea.viewToModel(
+								new Point(visibleRect.x,visibleRect.y));
+		int topLine = root.getElementIndex(topPosition);
+		int cellHeight = textArea.getLineHeight();
+		FoldManager fm = ((RSyntaxTextArea)textArea).getFoldManager();
+
+		// Compute the y at which to begin painting text, taking into account
+		// that 1 logical line => at least 1 physical line, so it may be that
+		// y<0.  The computed y-value is the y-value of the top of the first
+		// (possibly) partially-visible view.
+		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
+		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
+												visibleEditorRect);
+		int y = r.y;
+		y += (cellHeight-collapsedFoldIcon.getIconHeight())/2;
+
+		int visibleBottom = visibleRect.y + visibleRect.height;
+		int x = width - 10;
+		boolean paintingOutlineLine = false;
+		int lineCount = root.getElementCount();
+
+		int line = topLine;
+		while (y<visibleBottom && line<lineCount) {
+
+			int curLineH = LineNumberList.getChildViewBounds(v, line,
+					visibleEditorRect).height;
+
+			if (paintingOutlineLine) {
+				g.setColor(getForeground());
+				int w2 = width/2;
+				if (line==foldWithOutlineShowing.getEndLine()) {
+					int y2 = y + curLineH - cellHeight/2;
+					g.drawLine(w2,y, w2,y2);
+					g.drawLine(w2,y2, width-2,y2);
+					paintingOutlineLine = false;
+				}
+				else {
+					g.drawLine(w2,y, w2,y+curLineH);
+				}
+			}
+			Fold fold = fm.getFoldForLine(line);
+			if (fold!=null) {
+				if (fold==foldWithOutlineShowing && !fold.isCollapsed()) {
+					g.setColor(getForeground());
+					int w2 = width/2;
+					g.drawLine(w2,y+cellHeight/2, w2,y+curLineH);
+					paintingOutlineLine = true;
+				}
+				if (fold.isCollapsed()) {
+					collapsedFoldIcon.paintIcon(this, g, x, y);
+					y += LineNumberList.getChildViewBounds(v, line,
+								visibleEditorRect).height;
+					line += fold.getLineCount() + 1;
+				}
+				else {
+					expandedFoldIcon.paintIcon(this, g, x, y);
+					y += curLineH;
+					line++;
+				}
+			}
+			else {
+				y += curLineH;
+				line++;
+			}
+		}
+
 	}
 
 
@@ -458,6 +564,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 		}
 
 		public void mouseClicked(MouseEvent e) {
+
+			// TODO: Implement code folding with word wrap enabled
+			if (textArea.getLineWrap()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
 
 			Point p = e.getPoint();
 			int line = rowAtPoint(p);

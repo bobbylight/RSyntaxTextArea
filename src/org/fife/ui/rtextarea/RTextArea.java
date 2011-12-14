@@ -389,7 +389,11 @@ public class RTextArea extends RTextAreaBase
 	 * custom configuration (configuring actions, adding/removing items, etc.).
 	 * <p>
 	 *
-	 * The default implementation does nothing.
+	 * The default implementation does nothing.<p>
+	 * 
+	 * If you set the popup menu via {@link #setPopupMenu(JPopupMenu)}, you
+	 * will want to override this method, especially if you removed any of the
+	 * menu items in the default popup menu.
 	 *
 	 * @param popupMenu The popup menu.  This will never be <code>null</code>.
 	 * @see #createPopupMenu()
@@ -1426,11 +1430,16 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
-	 * Sets the popup menu used by this text area.
+	 * Sets the popup menu used by this text area.<p>
+	 * 
+	 * If you set the popup menu with this method, you'll want to consider also
+	 * overriding {@link #configurePopupMenu(JPopupMenu)}, especially if you
+	 * removed any of the default menu items.
 	 *
 	 * @param popupMenu The popup menu.  If this is <code>null</code>, no
 	 *        popup menu will be displayed.
 	 * @see #getPopupMenu()
+	 * @see #configurePopupMenu(JPopupMenu)
 	 */
 	public void setPopupMenu(JPopupMenu popupMenu) {
 		this.popupMenu = popupMenu;

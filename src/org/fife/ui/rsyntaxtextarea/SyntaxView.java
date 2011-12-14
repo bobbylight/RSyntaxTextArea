@@ -574,8 +574,8 @@ if (host.isCodeFoldingEnabled()) {
 		int heightAbove = clip.y - alloc.y;
 		int linesAbove = Math.max(0, heightAbove / lineHeight);
 
-FoldManager fm = host.getFoldManager();
-linesAbove += fm.getHiddenLineCountAbove(linesAbove, true);
+		FoldManager fm = host.getFoldManager();
+		linesAbove += fm.getHiddenLineCountAbove(linesAbove, true);
 Color foldStartLineBG = new Color(224, 255, 224);
 		Rectangle lineArea = lineToRect(a, linesAbove);
 		int y = lineArea.y + ascent;
@@ -595,11 +595,11 @@ Color foldStartLineBG = new Color(224, 255, 224);
 //int count = 0;
 		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
 
-Fold fold = fm.getFoldForLine(line);
-if (fold!=null && fold.isCollapsed()) {
-	g2d.setColor(foldStartLineBG);
-	g2d.fillRect(x, y-ascent, lineArea.width, lineArea.height);
-}
+			Fold fold = fm.getFoldForLine(line);
+			if (fold!=null && fold.isCollapsed()) {
+				g2d.setColor(foldStartLineBG);
+				g2d.fillRect(x, y-ascent, lineArea.width, lineArea.height);
+			}
 			Element lineElement = map.getElement(line);
 			int startOffset = lineElement.getStartOffset();
 			//int endOffset = (line==lineCount ? lineElement.getEndOffset()-1 :

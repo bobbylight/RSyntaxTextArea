@@ -182,7 +182,7 @@ public class Theme {
 				baseFont.getFamily();
 			int fontSize = lineNumberFontSize>0 ? lineNumberFontSize :
 				baseFont.getSize();
-			Font font = new Font(lineNumberFont, Font.PLAIN, fontSize);
+			Font font = new Font(fontName, Font.PLAIN, fontSize);
 			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldBackground(foldBG);
