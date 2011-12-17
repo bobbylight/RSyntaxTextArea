@@ -99,7 +99,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_INTAG					= -3;
 
 	/**
-	 * Token type specific to HTMLTokenMaker; this signals that the user has
+	 * Token type specific to PHPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
 	public static final int INTERNAL_INTAG_SCRIPT			= -4;
@@ -129,27 +129,32 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in PHP.
 	 */
-	public static final int INTERNAL_IN_PHP					= -9;
+	public static final int INTERNAL_IN_PHP					= -(1<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline comment.
 	 */
-	public static final int INTERNAL_IN_PHP_MLC				= -10;
+	public static final int INTERNAL_IN_PHP_MLC				= -(2<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline string.
 	 */
-	public static final int INTERNAL_PHP_STRING				= -11;
+	public static final int INTERNAL_IN_PHP_STRING				= -(3<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline char.
 	 */
-	public static final int INTERNAL_PHP_CHAR				= -12;
+	public static final int INTERNAL_IN_PHP_CHAR				= -(4<<11);
 
 	/**
 	 * Whether closing markup tags are automatically completed for PHP.
 	 */
 	private static boolean completeCloseTags;
+
+	/**
+	 * The state PHP was started in (YYINITIAL, INTERNAL_IN_JS, etc.).
+	 */
+	private int phpInState;
 
 
 	/**
@@ -258,6 +263,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
+		phpInState = YYINITIAL; // Shouldn't be necessary
 
 		// Start off in the proper state.
 		int state = Token.NULL;
@@ -302,24 +308,34 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = JS_MLC;
 				start = text.offset;
 				break;
-			case INTERNAL_IN_PHP:
-				state = PHP;
-				start = text.offset;
-				break;
-			case INTERNAL_IN_PHP_MLC:
-				state = PHP_MLC;
-				start = text.offset;
-				break;
-			case INTERNAL_PHP_STRING:
-				state = PHP_STRING;
-				start = text.offset;
-				break;
-			case INTERNAL_PHP_CHAR:
-				state = PHP_CHAR;
-				start = text.offset;
-				break;
 			default:
-				state = Token.NULL;
+				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
+					int main = -(-initialTokenType & 0xffffff00);
+					switch (main) {
+						default: // Should never happen
+						case INTERNAL_IN_PHP:
+							state = PHP;
+							start = text.offset;
+							break;
+						case INTERNAL_IN_PHP_MLC:
+							state = PHP_MLC;
+							start = text.offset;
+							break;
+						case INTERNAL_IN_PHP_STRING:
+							state = PHP_STRING;
+							start = text.offset;
+							break;
+						case INTERNAL_IN_PHP_CHAR:
+							state = PHP_CHAR;
+							start = text.offset;
+							break;
+					}
+					phpInState = -initialTokenType&0xff;
+				}
+				else {
+					state = Token.NULL;
+				}
+				break;
 		}
 
 		s = text;
@@ -446,6 +462,7 @@ BooleanLiteral				= ("true"|"false")
 
 
 // PHP stuff (most PHP stuff is shared with JS for simplicity)
+PHP_Start					= ("<?""php"?)
 LetterOrUnderscore			= ({Letter}|[_])
 LetterOrUnderscoreOrDigit	= ({LetterOrUnderscore}|{Digit})
 PHP_Variable				= ("$"{LetterOrUnderscore}{LetterOrUnderscoreOrDigit}*)
@@ -486,8 +503,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
 							}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
-	"<?php"						{ addToken(Token.SEPARATOR); yybegin(PHP); }
-	"<?"						{ addToken(Token.SEPARATOR); yybegin(PHP); }
+	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
@@ -657,6 +673,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INTAG> {
+	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
@@ -669,18 +686,23 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_DOUBLE> {
-	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	[^\"<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
+	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
-	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	[^\'<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
+	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
+	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
@@ -693,14 +715,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_DOUBLE_SCRIPT> {
-	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	[^\"<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
+	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
-	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	[^\'<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
+	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
@@ -811,6 +837,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
 	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
 
+	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+
 	/* Operators. */
 	{JS_Operator}					{ addToken(Token.OPERATOR); }
 
@@ -842,7 +870,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <PHP> {
 
-	"?>"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+	"?>"						{ addToken(Token.SEPARATOR); start = zzMarkedPos; yybegin(phpInState); }
 
 	/* Error control operator */
 	("@"{JS_Identifier})		{
@@ -1839,7 +1867,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 	{PHP_Variable}				{ addToken(Token.VARIABLE); }
 
-	{LineTerminator}				{ addEndToken(INTERNAL_IN_PHP); return firstToken; }
+	{LineTerminator}				{ addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
 	{JS_Identifier}				{ addToken(Token.IDENTIFIER); }
 	{Whitespace}					{ addToken(Token.WHITESPACE); }
 
@@ -1850,7 +1878,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(PHP_MLC); }
-	{PHP_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_PHP); return firstToken; }
+	{PHP_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
@@ -1868,7 +1896,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
-	<<EOF>>						{ addEndToken(INTERNAL_IN_PHP); return firstToken; }
+	<<EOF>>						{ addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
 
 	/* Catch any other (unhandled) characters and assume they are okay. */
 	.							{ addToken(Token.IDENTIFIER); }
@@ -1881,29 +1909,29 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[^hwf\n\*]+					{}
 	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]						{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC - phpInState); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC - phpInState); return firstToken; }
 }
 
 
 <PHP_STRING> {
 	[^\n\\\$\"]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_PHP_STRING); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_IN_PHP_STRING - phpInState); return firstToken; }
 	\\.?				{ /* Skip escaped chars. */ }
 	{PHP_Variable}		{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	"$"					{}
 	\"					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_PHP_STRING); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_IN_PHP_STRING - phpInState); return firstToken; }
 }
 
 
 <PHP_CHAR> {
 	[^\n\\\']+			{}
 	\\.?				{ /* Skip escaped single quotes only, but this should still work. */ }
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_PHP_CHAR); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_IN_PHP_CHAR - phpInState); return firstToken; }
 	\'					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_PHP_CHAR); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_IN_PHP_CHAR - phpInState); return firstToken; }
 }
 

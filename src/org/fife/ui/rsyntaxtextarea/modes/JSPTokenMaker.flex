@@ -122,35 +122,40 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_IN_HIDDEN_COMMENT		= -7;
 
 	/**
-	 * Token type specifying we're in a Java documentation comment.
-	 */
-	public static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -8;
-
-	/**
-	 * Token type specifying we're in Java code.
-	 */
-	public static final int INTERNAL_IN_JAVA_EXPRESSION		= -9;
-
-	/**
-	 * Token type specifying we're in Java multiline comment.
-	 */
-	public static final int INTERNAL_IN_JAVA_MLC				= -10;
-
-	/**
 	 * Token type specifying we're in a JSP directive (either include, page
 	 * or taglib).
 	 */
-	public static final int INTERNAL_IN_JSP_DIRECTIVE			= -11;
+	public static final int INTERNAL_IN_JSP_DIRECTIVE			= -8;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -12;
+	public static final int INTERNAL_IN_JS					= -9;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -13;
+	public static final int INTERNAL_IN_JS_MLC				= -10;
+
+	/**
+	 * Token type specifying we're in a Java documentation comment.
+	 */
+	public static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -(1<<11);
+
+	/**
+	 * Token type specifying we're in Java code.
+	 */
+	public static final int INTERNAL_IN_JAVA_EXPRESSION		= -(2<<11);
+
+	/**
+	 * Token type specifying we're in Java multiline comment.
+	 */
+	public static final int INTERNAL_IN_JAVA_MLC				= -(3<<11);
+
+	/**
+	 * The state JSP was started in (YYINITIAL, INTERNAL_IN_JS, etc.).
+	 */
+	private int jspInState;
 
 	/**
 	 * Whether closing markup tags are automatically completed for JSP.
@@ -256,6 +261,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
+		jspInState = YYINITIAL; // Shouldn't be necessary
 
 		// Start off in the proper state.
 		int state = Token.NULL;
@@ -300,18 +306,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = HIDDEN_COMMENT;
 				start = text.offset;
 				break;
-			case INTERNAL_IN_JAVA_DOCCOMMENT:
-				state = JAVA_DOCCOMMENT;
-				start = text.offset;
-				break;
-			case INTERNAL_IN_JAVA_EXPRESSION:
-				state = JAVA_EXPRESSION;
-				start = text.offset;
-				break;
-			case INTERNAL_IN_JAVA_MLC:
-				state = JAVA_MLC;
-				start = text.offset;
-				break;
 			case INTERNAL_IN_JSP_DIRECTIVE:
 				state = JSP_DIRECTIVE;
 				start = text.offset;
@@ -325,7 +319,29 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				if (initialTokenType<-1024) { // INTERNAL_IN_JAVAxxx - jspInState
+					int main = -(-initialTokenType & 0xffffff00);
+					switch (main) {
+						default: // Should never happen
+						case INTERNAL_IN_JAVA_DOCCOMMENT:
+							state = JAVA_DOCCOMMENT;
+							start = text.offset;
+							break;
+						case INTERNAL_IN_JAVA_EXPRESSION:
+							state = JAVA_EXPRESSION;
+							start = text.offset;
+							break;
+						case INTERNAL_IN_JAVA_MLC:
+							state = JAVA_MLC;
+							start = text.offset;
+							break;
+					}
+					jspInState = -initialTokenType&0xff;
+				}
+				else {
+					state = Token.NULL;
+				}
+				break;
 		}
 
 		s = text;
@@ -409,6 +425,10 @@ UnclosedCharLiteral		= ([\'][^\']*)
 CharLiteral			= ({UnclosedCharLiteral}[\'])
 EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
 
+JspExpressionStart		= ("<%=")
+JspScriptletStart		= ("<%")
+JspDeclarationStart		= ("<%!")
+JspStart				= ({JspExpressionStart}|{JspScriptletStart}|{JspDeclarationStart})
 
 // Java stuff.
 Letter							= [A-Za-z]
@@ -457,6 +477,11 @@ JIdentifier				= ({IdentifierStart}{IdentifierPart}*)
 ErrorIdentifier			= ({NonSeparator}+)
 Annotation				= ("@"{JIdentifier}?)
 PrimitiveTypes				= ("boolean"|"byte"|"char"|"double" |"float"|"int"|"long"|"short")
+
+CurrentBlockTag				= ("author"|"deprecated"|"exception"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
+ProposedBlockTag			= ("category"|"example"|"tutorial"|"index"|"exclude"|"todo"|"internal"|"obsolete"|"threadsafety")
+BlockTag					= ({CurrentBlockTag}|{ProposedBlockTag})
+InlineTag					= ("code"|"docRoot"|"inheritDoc"|"link"|"linkplain"|"literal"|"value")
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -520,10 +545,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?"						{ start = zzMarkedPos-2; yybegin(PI); }
 	"<%--"					{ start = zzMarkedPos-4; yybegin(HIDDEN_COMMENT); }
-	"<%!"					{ addToken(Token.SEPARATOR); yybegin(JAVA_EXPRESSION); }
-	"<%="					{ addToken(Token.SEPARATOR); yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	"<%@"                         { addToken(Token.SEPARATOR); yybegin(JSP_DIRECTIVE); }
-	"<%"						{ addToken(Token.SEPARATOR); yybegin(JAVA_EXPRESSION); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
@@ -709,6 +732,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 }
 
 <INTAG> {
+	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
@@ -721,18 +745,23 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 }
 
 <INATTR_DOUBLE> {
-	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	[^\"<]*					{}
+	"<"						{ /* Allowing JSP expressions, etc. */ }
+	[\"]					{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
-	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	[^\'<]*					{}
+	"<"						{ /* Allowing JSP expressions, etc. */ }
+	[\']					{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
+	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
@@ -745,15 +774,19 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 }
 
 <INATTR_DOUBLE_SCRIPT> {
-	[^\"]*						{}
-	[\"]						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	[^\"<]*					{}
+	"<"						{ /* Allowing JSP expressions, etc. */ }
+	[\"]					{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
-	[^\']*						{}
-	[\']						{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	[^\'<]*					{}
+	"<"						{ /* Allowing JSP expressions, etc. */ }
+	[\']					{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <JAVASCRIPT> {
@@ -825,12 +858,12 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"Infinity"					{ addToken(Token.RESERVED_WORD); }
 
 	// Functions.
-	"eval"						{ addToken(Token.FUNCTION); }
-	"parseInt"					{ addToken(Token.FUNCTION); }
-	"parseFloat"					{ addToken(Token.FUNCTION); }
-	"escape"						{ addToken(Token.FUNCTION); }
-	"unescape"					{ addToken(Token.FUNCTION); }
-	"isNaN"						{ addToken(Token.FUNCTION); }
+	"eval" |
+	"parseInt" |
+	"parseFloat" |
+	"escape" |
+	"unescape" |
+	"isNaN" |
 	"isFinite"					{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addEndToken(INTERNAL_IN_JS); return firstToken; }
@@ -855,6 +888,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
 	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
+
+	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 
 	/* Operators. */
 	{JS_Operator}					{ addToken(Token.OPERATOR); }
@@ -888,6 +923,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 <JAVA_EXPRESSION> {
 
+	"%>"							{ addToken(Token.SEPARATOR); start = zzMarkedPos; yybegin(jspInState); }
+
 	/* Keywords */
 	"abstract"|
 	"assert" |
@@ -918,7 +955,6 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"private" |
 	"protected" |
 	"public" |
-	"return" |
 	"static" |
 	"strictfp" |
 	"super"	 |
@@ -932,6 +968,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"void"	 |
 	"volatile" |
 	"while"					{ addToken(Token.RESERVED_WORD); }
+	"return"				{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Data types. */
 	{PrimitiveTypes}			{ addToken(Token.DATA_TYPE); }
@@ -1037,12 +1074,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	"VerifyError" |
 	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
 
-}
-
-
-<JAVA_EXPRESSION> {
-
-	{LineTerminator}				{ addEndToken(INTERNAL_IN_JAVA_EXPRESSION); return firstToken; }
+	{LineTerminator}				{ addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 
 	{JIdentifier}					{ addToken(Token.IDENTIFIER); }
 
@@ -1050,27 +1082,26 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 	/* String/Character literals. */
 	{JCharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-	{JUnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JAVA_EXPRESSION); return firstToken; }
+	{JUnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 	{JErrorCharLiteral}				{ addToken(Token.ERROR_CHAR); }
 	{JStringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{JUnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JAVA_EXPRESSION); return firstToken; }
+	{JUnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 	{JErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(JAVA_MLC); }
 	{DocCommentBegin}				{ start = zzMarkedPos-3; yybegin(JAVA_DOCCOMMENT); }
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JAVA_EXPRESSION); return firstToken; }
+	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 
 	/* Annotations. */
-	{Annotation}					{ addToken(Token.VARIABLE); /* FIXME:  Add token type to Token? */ }
+	{Annotation}					{ addToken(Token.ANNOTATION); }
 
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }
 	{Separator2}					{ addToken(Token.IDENTIFIER); }
 
 	/* Operators. */
-	"%>"							{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
 	{Operator}					{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
@@ -1082,7 +1113,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
-	<<EOF>>						{ addEndToken(INTERNAL_IN_JAVA_EXPRESSION); return firstToken; }
+	<<EOF>>						{ addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
 	.							{ addToken(Token.ERROR_IDENTIFIER); }
@@ -1094,29 +1125,29 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	[^hwf\n\*]+				{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC); return firstToken; }
+	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC - jspInState); return firstToken; }
 	{MLCEnd}					{ yybegin(JAVA_EXPRESSION); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JAVA_MLC - jspInState); return firstToken; }
 }
 
 
 <JAVA_DOCCOMMENT> {
 
-	[^\@\n\<\*]+				{}
-/*	[^\h\w\@\n\<\*]+			{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.HYPERLINK); start = zzMarkedPos; }
-	"h"						{}
-	"w"						{}
-*/
-	"@"{DocumentationKeyword}	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
-	"@"						{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JAVA_DOCCOMMENT); return firstToken; }
-	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }
-	\<						{}
+	[^hwf\@\{\n\<\*]+			{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
+
+	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"							{}
+	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{"							{}
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JAVA_DOCCOMMENT - jspInState); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }
+	\<							{}
 	{MLCEnd}					{ yybegin(JAVA_EXPRESSION); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
-	\*						{}
-	<<EOF>>					{ yybegin(JAVA_EXPRESSION); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JAVA_DOCCOMMENT); return firstToken; }
+	\*							{}
+	<<EOF>>						{ yybegin(JAVA_EXPRESSION); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JAVA_DOCCOMMENT - jspInState); return firstToken; }
 
 }
 
