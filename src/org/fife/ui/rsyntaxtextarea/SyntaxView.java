@@ -24,11 +24,14 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
+import javax.swing.JViewport;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -164,6 +167,30 @@ public class SyntaxView extends View implements TabExpander,
 			else
 				host.repaint();
 		}
+	}
+
+
+	/**
+	 * Returns the color to use for the line underneath a folded region line.
+	 *
+	 * @param textArea The text area.
+	 * @return The color to use.
+	 */
+	private Color getFoldedLineBottomColor(RSyntaxTextArea textArea) {
+
+		Color color = Color.gray;
+
+		Container parent = textArea.getParent();
+		if (parent instanceof JViewport) {
+			parent = parent.getParent();
+			if (parent instanceof RTextScrollPane) {
+				Gutter gutter = ((RTextScrollPane)parent).getGutter();
+				color = gutter.getFoldIndicatorForeground();
+			}
+		}
+
+		return color;
+
 	}
 
 
@@ -576,7 +603,6 @@ if (host.isCodeFoldingEnabled()) {
 
 		FoldManager fm = host.getFoldManager();
 		linesAbove += fm.getHiddenLineCountAbove(linesAbove, true);
-Color foldStartLineBG = new Color(224, 255, 224);
 		Rectangle lineArea = lineToRect(a, linesAbove);
 		int y = lineArea.y + ascent;
 		int x = lineArea.x;
@@ -596,10 +622,6 @@ Color foldStartLineBG = new Color(224, 255, 224);
 		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
 
 			Fold fold = fm.getFoldForLine(line);
-			if (fold!=null && fold.isCollapsed()) {
-				g2d.setColor(foldStartLineBG);
-				g2d.fillRect(x, y-ascent, lineArea.width, lineArea.height);
-			}
 			Element lineElement = map.getElement(line);
 			int startOffset = lineElement.getStartOffset();
 			//int endOffset = (line==lineCount ? lineElement.getEndOffset()-1 :
@@ -610,23 +632,21 @@ Color foldStartLineBG = new Color(224, 255, 224);
 	
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);
-			int lineEndX = (int)drawLine(token, g2d, x,y);
+			drawLine(token, g2d, x,y);
 
-if (fold!=null && fold.isCollapsed()) {
-	line += fold.getLineCount();
-	g.setColor(Color.gray);
-	g.drawLine(x,y+lineHeight-ascent-1, alloc.width,y+lineHeight-ascent-1);
-	Font tempFont = host.getFontForTokenType(Token.COMMENT_MULTILINE);
-	tempFont = tempFont.deriveFont(tempFont.getSize2D()-1f);
-	lineEndX += 10;
-	final String str = "/*...*/";
-	g.drawRect(lineEndX, y-ascent, g.getFontMetrics().stringWidth(str)+12, lineHeight-3);
-	g.drawString("/*...*/", lineEndX+5, y);
-}
+			if (fold!=null && fold.isCollapsed()) {
+				line += fold.getLineCount();
+				Color c = getFoldedLineBottomColor(host);
+				if (c!=null) {
+					g.setColor(c);
+					g.drawLine(x,y+lineHeight-ascent-1,
+							alloc.width,y+lineHeight-ascent-1);
+				}
+			}
 
-y += lineHeight;
-line++;
-//count++;
+			y += lineHeight;
+			line++;
+			//count++;
 
 		}
 
