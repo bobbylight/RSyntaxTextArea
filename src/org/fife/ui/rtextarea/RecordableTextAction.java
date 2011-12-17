@@ -235,4 +235,14 @@ public abstract class RecordableTextAction extends TextAction {
 	}
 
 
+	/**
+	 * Sets the short description for this action.
+	 *
+	 * @param shortDesc The short description for this action.
+	 */
+	public void setShortDescription(String shortDesc) {
+		putValue(SHORT_DESCRIPTION, shortDesc);
+	}
+
+
 }
