@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
+import javax.swing.JToolTip;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -45,6 +46,7 @@ import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
@@ -121,6 +123,30 @@ public class FoldIndicator extends AbstractGutterComponent {
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
 		ToolTipManager.sharedInstance().registerComponent(this);
+	}
+
+
+	/**
+	 * Overridden to use the editor's background if it's detected that the
+	 * user isn't using white as the editor bg, but the system's tool tip
+	 * background is yellow-ish.
+	 *
+	 * @return The tool tip.
+	 */
+	public JToolTip createToolTip() {
+		JToolTip tip = super.createToolTip();
+		Color textAreaBG = textArea.getBackground();
+		if (textAreaBG!=null && !Color.white.equals(textAreaBG)) {
+			Color bg = TipUtil.getToolTipBackground();
+			System.out.println(bg);
+			// If current L&F's tool tip color is close enough to "yellow",
+			// and we're not using the default text background of white, use
+			// the editor background as the tool tip background.
+			if (bg.getRed()>=240 && bg.getGreen()>=240 && bg.getBlue()>=200) {
+				tip.setBackground(textAreaBG);
+			}
+		}
+		return tip;
 	}
 
 
