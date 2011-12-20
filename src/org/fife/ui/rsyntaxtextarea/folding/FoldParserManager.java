@@ -76,36 +76,20 @@ public class FoldParserManager implements SyntaxConstants {
 
 
 	/**
-	 * Adds a mapping from a syntax style to a fold parser supplier.  The
-	 * supplier will be called whenever an RSTA instance is created (or
-	 * modified) to edit the language specified.
-	 *
-	 * @param syntaxStyle The syntax style.
-	 * @param supplier The fold parser supplier.
-	 * @see #addFoldParserMapping(String, FoldParser)
-	 * @see SyntaxConstants
-	 */
-	public void addFoldParserMapping(String syntaxStyle,
-									FoldParserSupplier supplier) {
-		foldParserMap.put(syntaxStyle, supplier);
-	}
-
-
-	/**
 	 * Creates the syntax style-to-fold parser mapping for built-in languages.
 	 * @return
 	 */
 	private Map createFoldParserMap() {
 
 		Map map = new HashMap();
-		CFoldParserSupplier cfps = new CFoldParserSupplier();
 
-		map.put(SYNTAX_STYLE_C,					cfps);
-		map.put(SYNTAX_STYLE_CPLUSPLUS,			cfps);
-		map.put(SYNTAX_STYLE_CSHARP,			cfps);
-		map.put(SYNTAX_STYLE_GROOVY,			cfps);
+		map.put(SYNTAX_STYLE_C,					new CurlyFoldParser(true, false));
+		map.put(SYNTAX_STYLE_CPLUSPLUS,			new CurlyFoldParser(true, false));
+		map.put(SYNTAX_STYLE_CSHARP,			new CurlyFoldParser(true, false));
+		map.put(SYNTAX_STYLE_GROOVY,			new CurlyFoldParser(true, false));
 		map.put(SYNTAX_STYLE_JAVA,				new CurlyFoldParser(true, true));
-		map.put(SYNTAX_STYLE_PERL,				cfps);
+		map.put(SYNTAX_STYLE_MXML,				new XmlFoldParser());
+		map.put(SYNTAX_STYLE_PERL,				new CurlyFoldParser(true, false));
 		map.put(SYNTAX_STYLE_XML,				new XmlFoldParser());
 
 		return map;
@@ -133,49 +117,7 @@ public class FoldParserManager implements SyntaxConstants {
 	 *         for the language.
 	 */
 	public FoldParser getFoldParser(String syntaxStyle) {
-
-		FoldParser parser = null;
-
-		Object obj = foldParserMap.get(syntaxStyle);
-		if (obj instanceof FoldParserSupplier) {
-			FoldParserSupplier supplier = (FoldParserSupplier)obj;
-			parser = supplier.getFoldParser();
-		}
-		else if (obj instanceof FoldParser) {
-			parser = (FoldParser)obj;
-		}
-
-		return parser;
-
-	}
-
-
-	/**
-	 * Supplies fold parsers.  This is often used to lazily create a shared
-	 * fold parser for all text areas editing a certain language.
-	 */
-	public interface FoldParserSupplier {
-
-		public FoldParser getFoldParser();
-
-	}
-
-
-	/**
-	 * Supplies a shared instance of {@link CurlyFoldParser}, lazily created.
-	 * This instance will fold code blocks and multi-line comments.
-	 */
-	public static class CFoldParserSupplier implements FoldParserSupplier {
-
-		private CurlyFoldParser parser;
-
-		public FoldParser getFoldParser() {
-			if (parser==null) {
-				parser = new CurlyFoldParser(true, false);
-			}
-			return parser;
-		}
-
+		return (FoldParser)foldParserMap.get(syntaxStyle);
 	}
 
 
