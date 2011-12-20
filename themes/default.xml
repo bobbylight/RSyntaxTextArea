@@ -50,7 +50,7 @@
       <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="DC009C"/>
       <style token="OPERATOR" fg="000000"/>
       <style token="PREPROCESSOR" fg="808080"/>
-      <style token="REGEX" fg="ad8000"/>
+      <style token="REGEX" fg="008040"/>
       <style token="SEPARATOR" fg="ff0000"/>
       <style token="VARIABLE" fg="ff9900" bold="true"/>
       <style token="WHITESPACE" fg="000000"/>

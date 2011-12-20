@@ -380,7 +380,7 @@ public class SyntaxScheme implements Cloneable {
 		Color docComment		= new Color(164,0,0);
 		Color keyword			= Color.BLUE;
 		Color function			= new Color(173,128,0);
-		Color regex				= new Color(173,128,0);
+		Color regex				= new Color(0,128,164);
 		Color literalNumber		= new Color(100,0,200);
 		Color literalString		= new Color(220,0,156);
 		Color error			= new Color(148,148,0);
