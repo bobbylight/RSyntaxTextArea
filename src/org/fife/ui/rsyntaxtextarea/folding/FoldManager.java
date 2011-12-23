@@ -151,7 +151,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		}
 		else {
 			int endLine = midFold.getEndLine();
-			if (line>endLine) {
+			if (line>=endLine) {
 				low = mid + 1;
 			}
 			else { // line>startLine && line<=endLine
