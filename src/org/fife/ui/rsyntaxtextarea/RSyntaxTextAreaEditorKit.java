@@ -32,6 +32,7 @@ import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
+import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
@@ -447,8 +448,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Collapses all comment folds.
 	 */
-	public static class CollapseAllCommentFoldsAction
-			extends RecordableTextAction {
+	public static class CollapseAllCommentFoldsAction extends FoldRelatedAction{
 
 		private static final long serialVersionUID = 1L;
 
@@ -466,6 +466,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			if (rsta.isCodeFoldingEnabled()) {
 				FoldCollapser collapser = new FoldCollapser();
 				collapser.collapseFolds(rsta.getFoldManager());
+				possiblyRepaintGutter(textArea);
 			}
 			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
@@ -793,7 +794,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Expands all folds.
 	 */
-	public static class ExpandAllFoldsAction extends RecordableTextAction {
+	public static class ExpandAllFoldsAction extends FoldRelatedAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -813,6 +814,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				for (int i=0; i<fm.getFoldCount(); i++) {
 					expand(fm.getFold(i));
 				}
+				possiblyRepaintGutter(rsta);
 			}
 			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
@@ -828,6 +830,35 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+	}
+
+
+	/**
+	 * Base class for folding-related actions.
+	 */
+	static abstract class FoldRelatedAction extends RecordableTextAction {
+
+		public FoldRelatedAction(String name) {
+			super(name);
+		}
+
+		public FoldRelatedAction(String name, Icon icon,
+				String desc, Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		/**
+		 * Repaints the gutter in a text area's scroll pane, if necessary.
+		 *
+		 * @param textArea The text area.
+		 */
+		protected void possiblyRepaintGutter(RTextArea textArea) {
+			Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+			if (gutter!=null) {
+				gutter.repaint();
+			}
 		}
 
 	}
@@ -1591,7 +1622,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Toggles the fold at the current caret position or line.
 	 */
-	public static class ToggleCurrentFoldAction extends RecordableTextAction {
+	public static class ToggleCurrentFoldAction extends FoldRelatedAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -1611,6 +1642,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				if (fold!=null) {
 					fold.toggleCollapsedState();
 				}
+				possiblyRepaintGutter(textArea);
 			}
 			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);

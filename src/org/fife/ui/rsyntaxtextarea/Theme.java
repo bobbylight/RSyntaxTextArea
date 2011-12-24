@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import javax.swing.JViewport;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -53,7 +52,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -132,10 +130,8 @@ public class Theme {
 
 		scheme = textArea.getSyntaxScheme();
 
-		if (textArea.getParent() instanceof JViewport &&
-				textArea.getParent().getParent() instanceof RTextScrollPane) {
-			RTextScrollPane scrollPane = (RTextScrollPane)textArea.getParent().getParent();
-			Gutter gutter = scrollPane.getGutter();
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter!=null) {
 			bgColor = gutter.getBackground();
 			gutterBorderColor = gutter.getBorderColor();
 			lineNumberColor = gutter.getLineNumberColor();
@@ -171,10 +167,8 @@ public class Theme {
 
 		textArea.setSyntaxScheme(scheme);
 
-		if (textArea.getParent() instanceof JViewport &&
-				textArea.getParent().getParent() instanceof RTextScrollPane) {
-			RTextScrollPane scrollPane = (RTextScrollPane)textArea.getParent().getParent();
-			Gutter gutter = scrollPane.getGutter();
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter!=null) {
 			gutter.setBackground(bgColor);
 			gutter.setBorderColor(gutterBorderColor);
 			gutter.setLineNumberColor(lineNumberColor);

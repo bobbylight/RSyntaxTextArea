@@ -31,9 +31,12 @@ import javax.swing.JScrollPane;
 
 /**
  * An extension of <code>javax.swing.JScrollPane</code> that will only take
- * <code>RTextArea</code>s for its view.  This class has the ability to show
- * line numbers for its text component view, as well as per-line icons (for
- * bookmarks, debugging breakpoints, error markers, etc.).<p>
+ * <code>RTextArea</code>s for its view.  This class has the ability to show:
+ * <ul>
+ *    <li>Line numbers
+ *    <li>Per-line icons (for bookmarks, debugging breakpoints, error markers, etc.)
+ *    <li>+/- icons to denote code folding regions.
+ * </ul>
  *
  * The actual "meat" of these extras is contained in the {@link Gutter} class.
  * Each <code>RTextScrollPane</code> has a <code>Gutter</code> instance that

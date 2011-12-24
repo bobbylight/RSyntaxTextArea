@@ -23,6 +23,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -40,6 +41,9 @@ import javax.swing.text.TabExpander;
 import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -97,6 +101,29 @@ public class RSyntaxUtilities implements SwingConstants {
 	 */
 	public static Map getDesktopAntiAliasHints() {
 		return (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+	}
+
+
+	/**
+	 * Returns the gutter component of the scroll pane containing a text
+	 * area, if any.
+	 *
+	 * @param textArea The text area.
+	 * @return The gutter, or <code>null</code> if the text area is not in
+	 *         an {@link RTextScrollPane}.
+	 * @see RTextScrollPane#getGutter()
+	 */
+	public static Gutter getGutter(RTextArea textArea) {
+		Gutter gutter = null;
+		Container parent = textArea.getParent();
+		if (parent instanceof JViewport) {
+			parent = parent.getParent();
+			if (parent instanceof RTextScrollPane) {
+				RTextScrollPane sp = (RTextScrollPane)parent;
+				gutter = sp.getGutter(); // Should always be non-null
+			}
+		}
+		return gutter;
 	}
 
 
@@ -491,7 +518,7 @@ public class RSyntaxUtilities implements SwingConstants {
 					if (target.isCodeFoldingEnabled()) {
 						int last = target.getLineOfOffset(pos+1);
 						int current = target.getLineOfOffset(pos);
-						if (last!=current) { // If moving up  a line...
+						if (last!=current) { // If moving up a line...
 							FoldManager fm = target.getFoldManager();
 							if (fm.isLineHidden(current)) {
 								while (--current>0 && fm.isLineHidden(current));
@@ -511,11 +538,14 @@ public class RSyntaxUtilities implements SwingConstants {
 					if (target.isCodeFoldingEnabled()) {
 						int last = target.getLineOfOffset(pos-1);
 						int current = target.getLineOfOffset(pos);
-						if (last!=current) { // If moving down  a line...
+						if (last!=current) { // If moving down a line...
 							FoldManager fm = target.getFoldManager();
 							if (fm.isLineHidden(current)) {
-								while (++current>0 && fm.isLineHidden(current));
-								pos = target.getLineStartOffset(current);
+								int lineCount = target.getLineCount();
+								while (++current<lineCount && fm.isLineHidden(current));
+								pos = current==lineCount ?
+										target.getLineEndOffset(last)-1 : // Was the last visible line
+										target.getLineStartOffset(current);
 							}
 						}
 					}

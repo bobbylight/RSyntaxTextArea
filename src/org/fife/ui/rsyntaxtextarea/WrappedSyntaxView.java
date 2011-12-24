@@ -24,12 +24,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
-import javax.swing.JViewport;
 import javax.swing.text.*;
 import javax.swing.event.*;
 
 import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -939,15 +937,10 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 				textArea.repaint();
 				// Must also revalidate container so gutter components, such
 				// as line numbers, get updated for this line's new height
-				Container parent = textArea.getParent();
-				if (parent instanceof JViewport &&
-						parent.getParent() instanceof RTextScrollPane) {
-					RTextScrollPane sp = (RTextScrollPane)parent.getParent();
-					Gutter gutter = sp.getGutter();
-					if (gutter!=null) {
-						gutter.revalidate();
-						gutter.repaint();
-					}
+				Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+				if (gutter!=null) {
+					gutter.revalidate();
+					gutter.repaint();
 				}
 			}
 			else if (a != null) {

@@ -24,14 +24,12 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
-import javax.swing.JViewport;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 /**
@@ -177,20 +175,12 @@ public class SyntaxView extends View implements TabExpander,
 	 * @return The color to use.
 	 */
 	private Color getFoldedLineBottomColor(RSyntaxTextArea textArea) {
-
 		Color color = Color.gray;
-
-		Container parent = textArea.getParent();
-		if (parent instanceof JViewport) {
-			parent = parent.getParent();
-			if (parent instanceof RTextScrollPane) {
-				Gutter gutter = ((RTextScrollPane)parent).getGutter();
-				color = gutter.getFoldIndicatorForeground();
-			}
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter!=null) {
+			color = gutter.getFoldIndicatorForeground();
 		}
-
 		return color;
-
 	}
 
 
@@ -635,13 +625,22 @@ if (host.isCodeFoldingEnabled()) {
 			drawLine(token, g2d, x,y);
 
 			if (fold!=null && fold.isCollapsed()) {
-				line += fold.getLineCount();
+
+				// Visible indicator of collapsed lines
 				Color c = getFoldedLineBottomColor(host);
 				if (c!=null) {
 					g.setColor(c);
 					g.drawLine(x,y+lineHeight-ascent-1,
 							alloc.width,y+lineHeight-ascent-1);
 				}
+
+				// Skip to next line to paint, taking extra care for lines with
+				// block ends and begins together, e.g. "} else {"
+				do {
+					line += fold.getLineCount();
+					fold = fm.getFoldForLine(line);
+				} while (fold!=null && fold.isCollapsed());
+
 			}
 
 			y += lineHeight;

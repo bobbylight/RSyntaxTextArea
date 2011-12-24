@@ -31,6 +31,8 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+
 
 /**
  * An extension of <code>DefaultEditorKit</code> that adds functionality found
@@ -1568,71 +1570,60 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			Container parent = textArea.getParent();
-			if (parent instanceof JViewport) {
+			Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+			if (gutter!=null) {
 
-				parent = parent.getParent();
-				if (parent instanceof RTextScrollPane) {
+				try {
 
-					RTextScrollPane sp = (RTextScrollPane)parent;
-					Gutter gutter = sp.getGutter();
-					if (gutter!=null) { // Always true
+					GutterIconInfo[] bookmarks = gutter.getBookmarks();
+					if (bookmarks.length==0) {
+						UIManager.getLookAndFeel().
+									provideErrorFeedback(textArea);
+						return;
+					}
 
-						try {
+					GutterIconInfo moveTo = null;
+					int curLine = textArea.getCaretLineNumber();
 
-							GutterIconInfo[] bookmarks = gutter.getBookmarks();
-							if (bookmarks.length==0) {
-								UIManager.getLookAndFeel().
-											provideErrorFeedback(textArea);
-								return;
-							}
-
-							GutterIconInfo moveTo = null;
-							int curLine = textArea.getCaretLineNumber();
-
-							if (forward) {
-								for (int i=0; i<bookmarks.length; i++) {
-									GutterIconInfo bookmark = bookmarks[i];
-									int offs = bookmark.getMarkedOffset();
-									int line = textArea.getLineOfOffset(offs);
-									if (line>curLine) {
-										moveTo = bookmark;
-										break;
-									}
-								}
-								if (moveTo==null) { // Loop back to beginning
-									moveTo = bookmarks[0];
-								}
-							}
-							else {
-								for (int i=bookmarks.length-1; i>=0; i--) {
-									GutterIconInfo bookmark = bookmarks[i];
-									int offs = bookmark.getMarkedOffset();
-									int line = textArea.getLineOfOffset(offs);
-									if (line<curLine) {
-										moveTo = bookmark;
-										break;
-									}
-								}
-								if (moveTo==null) { // Loop back to end
-									moveTo = bookmarks[bookmarks.length-1];
-								}
-							}
-
-							int offs = moveTo.getMarkedOffset();
+					if (forward) {
+						for (int i=0; i<bookmarks.length; i++) {
+							GutterIconInfo bookmark = bookmarks[i];
+							int offs = bookmark.getMarkedOffset();
 							int line = textArea.getLineOfOffset(offs);
-							offs = textArea.getLineStartOffset(line);
-							textArea.setCaretPosition(offs);
-
-						} catch (BadLocationException ble) { // Never happens
-							UIManager.getLookAndFeel().
-										provideErrorFeedback(textArea);
-							ble.printStackTrace();
+							if (line>curLine) {
+								moveTo = bookmark;
+								break;
+							}
+						}
+						if (moveTo==null) { // Loop back to beginning
+							moveTo = bookmarks[0];
+						}
+					}
+					else {
+						for (int i=bookmarks.length-1; i>=0; i--) {
+							GutterIconInfo bookmark = bookmarks[i];
+							int offs = bookmark.getMarkedOffset();
+							int line = textArea.getLineOfOffset(offs);
+							if (line<curLine) {
+								moveTo = bookmark;
+								break;
+							}
+						}
+						if (moveTo==null) { // Loop back to end
+							moveTo = bookmarks[bookmarks.length-1];
 						}
 					}
 
-				}
+					int offs = moveTo.getMarkedOffset();
+					int line = textArea.getLineOfOffset(offs);
+					offs = textArea.getLineStartOffset(line);
+					textArea.setCaretPosition(offs);
 
+				} catch (BadLocationException ble) { // Never happens
+					UIManager.getLookAndFeel().
+								provideErrorFeedback(textArea);
+					ble.printStackTrace();
+				}
 			}
 
 		}
@@ -2209,20 +2200,15 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			Container parent = textArea.getParent();
-			if (parent instanceof JViewport) {
-				parent = parent.getParent();
-				if (parent instanceof RTextScrollPane) {
-					RTextScrollPane sp = (RTextScrollPane)parent;
-					Gutter gutter = sp.getGutter();
-					int line = textArea.getCaretLineNumber();
-					try {
-						gutter.toggleBookmark(line);
-					} catch (BadLocationException ble) { // Never happens
-						UIManager.getLookAndFeel().
-									provideErrorFeedback(textArea);
-						ble.printStackTrace();
-					}
+			Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+			if (gutter!=null) {
+				int line = textArea.getCaretLineNumber();
+				try {
+					gutter.toggleBookmark(line);
+				} catch (BadLocationException ble) { // Never happens
+					UIManager.getLookAndFeel().
+								provideErrorFeedback(textArea);
+					ble.printStackTrace();
 				}
 			}
 		}

@@ -356,12 +356,15 @@ public class FoldIndicator extends AbstractGutterComponent {
 				}
 				if (fold.isCollapsed()) {
 					collapsedFoldIcon.paintIcon(this, g, x, y);
+					// Skip to next line to paint, taking extra care for lines with
+					// block ends and begins together, e.g. "} else {"
+					do {
+						line += fold.getLineCount();
+						fold = fm.getFoldForLine(line);
+					} while (fold!=null && fold.isCollapsed());
 				}
 				else {
 					expandedFoldIcon.paintIcon(this, g, x, y);
-				}
-				if (fold.isCollapsed()) {
-					line += fold.getLineCount();
 				}
 			}
 			line++;

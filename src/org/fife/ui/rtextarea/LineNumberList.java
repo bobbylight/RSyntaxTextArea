@@ -336,44 +336,37 @@ class LineNumberList extends AbstractGutterComponent
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
 			int rhs = getWidth() - RHS_BORDER_WIDTH;
-int line = topLine + 1;
-while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
-	String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
-	int width = metrics.stringWidth(number);
-	g.drawString(number, rhs-width,y);
-	y += cellHeight;
-	Fold fold = fm.getFoldForLine(line-1);
-	if (fold!=null && fold.isCollapsed()) {
-		line += fold.getLineCount();
-	}
-	line++;
-}
-//			for (int i=topLine+1; i<=bottomLine; i++) {
-//				int index = i + getLineNumberingStartIndex() - 1;
-//				String number = Integer.toString(index);
-//				int width = metrics.stringWidth(number);
-//				g.drawString(number, rhs-width,y);
-//				y += cellHeight;
-//			}
+			int line = topLine + 1;
+			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
+				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+				int width = metrics.stringWidth(number);
+				g.drawString(number, rhs-width,y);
+				y += cellHeight;
+				Fold fold = fm.getFoldForLine(line-1);
+				// Skip to next line to paint, taking extra care for lines with
+				// block ends and begins together, e.g. "} else {"
+				while (fold!=null && fold.isCollapsed()) {
+					line += fold.getLineCount();
+					fold = fm.getFoldForLine(line-1);
+				}
+				line++;
+			}
 		}
 		else { // rtl
-int line = topLine + 1;
-while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
-	String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
-	g.drawString(number, RHS_BORDER_WIDTH, y);
-	y += cellHeight;
-	Fold fold = fm.getFoldForLine(line-1);
-	if (fold!=null && fold.isCollapsed()) {
-		line += fold.getLineCount();
-	}
-	line++;
-}
-//			for (int i=topLine+1; i<=bottomLine; i++) {
-//				int index = i + getLineNumberingStartIndex() - 1;
-//				String number = Integer.toString(index);
-//				g.drawString(number, RHS_BORDER_WIDTH, y);
-//				y += cellHeight;
-//			}
+			int line = topLine + 1;
+			while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
+				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+				g.drawString(number, RHS_BORDER_WIDTH, y);
+				y += cellHeight;
+				Fold fold = fm.getFoldForLine(line-1);
+				// Skip to next line to paint, taking extra care for lines with
+				// block ends and begins together, e.g. "} else {"
+				while (fold!=null && fold.isCollapsed()) {
+					line += fold.getLineCount();
+					fold = fm.getFoldForLine(line);
+				}
+				line++;
+			}
 		}
 
 	}
