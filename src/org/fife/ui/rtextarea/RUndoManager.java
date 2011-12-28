@@ -44,9 +44,9 @@ import javax.swing.undo.UndoableEdit;
  * @author Robert Futrell
  * @version 1.0
  */
-class RUndoManager extends UndoManager {
+public class RUndoManager extends UndoManager {
 
-	public RCompoundEdit compoundEdit;
+	private RCompoundEdit compoundEdit;
 	private RTextArea textArea;
 	private int lastOffset;
 	private String cantUndoText;

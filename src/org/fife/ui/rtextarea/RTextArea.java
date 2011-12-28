@@ -541,6 +541,16 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Creates an undo manager for use in this text area.
+	 *
+	 * @return The undo manager.
+	 */
+	protected RUndoManager createUndoManager() {
+		return new RUndoManager(this);
+	}
+
+
+	/**
 	 * Removes all undoable edits from this document's undo manager.  This
 	 * method also makes the undo/redo actions disabled.
 	 */
@@ -553,7 +563,7 @@ public class RTextArea extends RTextAreaBase
 	public void discardAllEdits() {
 		undoManager.discardAllEdits();
 		getDocument().removeUndoableEditListener(undoManager);
-		undoManager = new RUndoManager(this);
+		undoManager = createUndoManager();
 		getDocument().addUndoableEditListener(undoManager);
 		undoManager.updateActions();
 	}
@@ -845,7 +855,7 @@ public class RTextArea extends RTextAreaBase
 		}
 
 		// Install the undo manager.
-		undoManager = new RUndoManager(this);
+		undoManager = createUndoManager();
 		getDocument().addUndoableEditListener(undoManager);
 
 		// Set the defaults for various stuff.
@@ -1036,7 +1046,7 @@ public class RTextArea extends RTextAreaBase
 
 		// UndoManagers cannot be serialized without Exceptions.  See
 		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4275892
-		undoManager = new RUndoManager(this);
+		undoManager = createUndoManager();
 		getDocument().addUndoableEditListener(undoManager);
 
 		lineHighlightManager = null; // Keep FindBugs happy.
