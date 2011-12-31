@@ -840,7 +840,11 @@ public abstract class Token implements TokenTypes {
 		// margin of the editor.
 		g.setColor(host.getTabLineColor());
 		int x0 = x + tabW;
-		final int y0 = y - fm.getAscent();
+		int y0 = y - fm.getAscent();
+		if ((y0&1)>0) {
+			// Only paint on even y-pixels to prevent doubling up between lines
+			y0++;
+		}
 		while (x0<endX) {
 			int y1 = y0;
 			int y2 = y0 + host.getLineHeight();
