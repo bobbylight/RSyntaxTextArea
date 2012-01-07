@@ -29,7 +29,6 @@ import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
-import org.fife.ui.rtextarea.Gutter;
 
 
 /**
@@ -165,22 +164,6 @@ public class SyntaxView extends View implements TabExpander,
 			else
 				host.repaint();
 		}
-	}
-
-
-	/**
-	 * Returns the color to use for the line underneath a folded region line.
-	 *
-	 * @param textArea The text area.
-	 * @return The color to use.
-	 */
-	private Color getFoldedLineBottomColor(RSyntaxTextArea textArea) {
-		Color color = Color.gray;
-		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
-		if (gutter!=null) {
-			color = gutter.getFoldIndicatorForeground();
-		}
-		return color;
 	}
 
 
@@ -627,7 +610,7 @@ if (host.isCodeFoldingEnabled()) {
 			if (fold!=null && fold.isCollapsed()) {
 
 				// Visible indicator of collapsed lines
-				Color c = getFoldedLineBottomColor(host);
+				Color c = RSyntaxUtilities.getFoldedLineBottomColor(host);
 				if (c!=null) {
 					g.setColor(c);
 					g.drawLine(x,y+lineHeight-ascent-1,

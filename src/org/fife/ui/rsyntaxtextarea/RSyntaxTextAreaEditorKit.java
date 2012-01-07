@@ -94,6 +94,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
+		new EndAction(endAction, false),
+		new EndAction(selectionEndAction, true),
 		new EndWordAction(endWordAction, false),
 		new EndWordAction(endWordAction, true),
 		new GoToMatchingBracketAction(),
@@ -724,6 +726,37 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					doc.remove(start, toRemove);
 				}
 			}
+		}
+
+	}
+
+
+	/**
+	 * Moves the caret to the end of the document, taking into account code
+	 * folding.
+	 */
+	public static class EndAction extends RTextAreaEditorKit.EndAction {
+
+		public EndAction(String name, boolean select) {
+			super(name, select);
+		}
+
+		protected int getVisibleEnd(RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				FoldManager fm = rsta.getFoldManager();
+				int lastVisibleLine = fm.getLastVisibleLine();
+				if (lastVisibleLine==rsta.getLineCount()-1) {
+					return rsta.getDocument().getLength();
+				}
+				try {
+					return rsta.getLineEndOffset(lastVisibleLine) - 1;
+				} catch (BadLocationException ble) {
+					ble.printStackTrace();
+					// Fall through, just use standard behavior.
+				}
+			}
+			return super.getVisibleEnd(textArea);
 		}
 
 	}

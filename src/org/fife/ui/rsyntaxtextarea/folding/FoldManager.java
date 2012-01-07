@@ -99,6 +99,35 @@ public class FoldManager {
 
 
 	/**
+	 * Returns the "deepest" open fold containing the specified offset.
+	 *
+	 * @param offs The offset.
+	 * @return The fold, or <code>null</code> if no open fold contains the
+	 *         offset.
+	 */
+	public Fold getDeepestOpenFoldContaining(int offs) {
+
+		Fold deepestFold = null;
+
+		if (offs>-1) {
+			for (int i=0; i<folds.size(); i++) {
+				Fold fold = getFold(i);
+				if (fold.containsOffset(offs)) {
+					if (fold.isCollapsed()) {
+						return null;
+					}
+					deepestFold = fold.getDeepestOpenFoldContaining(offs);
+					break;
+				}
+			}
+		}
+
+		return deepestFold;
+
+	}
+
+
+	/**
 	 * Returns a specific top-level fold, which may have child folds.
 	 *
 	 * @param index The index of the fold.
@@ -271,30 +300,42 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 
 
 	/**
-	 * Returns the "deepest" open fold containing the specified offset.
+	 * Returns the last visible line in the text area, taking into account
+	 * folds.
 	 *
-	 * @param offs The offset.
-	 * @return The fold, or <code>null</code> if no open fold contains the
-	 *         offset.
+	 * @return The last visible line.
 	 */
-	public Fold getDeepestOpenFoldContaining(int offs) {
+	public int getLastVisibleLine() {
 
-		Fold deepestFold = null;
+		int lastLine = textArea.getLineCount() - 1;
 
-		if (offs>-1) {
-			for (int i=0; i<folds.size(); i++) {
-				Fold fold = getFold(i);
-				if (fold.containsOffset(offs)) {
-					if (fold.isCollapsed()) {
-						return null;
+		if (isCodeFoldingSupportedAndEnabled()) {
+			int foldCount = getFoldCount();
+			if (foldCount>0) {
+				Fold lastFold = getFold(foldCount-1);
+				if (lastFold.containsLine(lastLine)) {
+					if (lastFold.isCollapsed()) {
+						lastLine = lastFold.getStartLine();
 					}
-					deepestFold = fold.getDeepestOpenFoldContaining(offs);
-					break;
+					else { // Child fold may end on the same line as parent
+						while (lastFold.getHasChildFolds()) {
+							lastFold = lastFold.getLastChild();
+							if (lastFold.containsLine(lastLine)) {
+								if (lastFold.isCollapsed()) {
+									lastLine = lastFold.getStartLine();
+									break;
+								}
+							}
+							else { // Higher up
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
 
-		return deepestFold;
+		return lastLine;
 
 	}
 

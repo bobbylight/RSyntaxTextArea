@@ -73,6 +73,14 @@ public class Fold implements Comparable {
 	}
 
 
+	/**
+	 * Creates a fold that is a child of this one.
+	 *
+	 * @param type The type of fold.
+	 * @param startOffs The starting offset of the fold.
+	 * @return The child fold.
+	 * @throws BadLocationException If {@link #startOffs} is invalid.
+	 */
 	public Fold createChild(int type, int startOffs) throws BadLocationException {
 		Fold child = new Fold(type, textArea, startOffs);
 		child.parent = this;
@@ -304,6 +312,20 @@ public class Fold implements Comparable {
 	 */
 	public boolean getHasChildFolds() {
 		return getChildCount()>0;
+	}
+
+
+	/**
+	 * Returns the last child fold.
+	 *
+	 * @return The last child fold, or <code>null</code> if this fold does not
+	 *         have any children.
+	 * @see #getChild(int)
+	 * @see #getHasChildFolds()
+	 */
+	public Fold getLastChild() {
+		int childCount = getChildCount();
+		return childCount==0 ? null : getChild(childCount-1);
 	}
 
 

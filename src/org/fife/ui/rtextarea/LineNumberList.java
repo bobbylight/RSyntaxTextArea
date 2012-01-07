@@ -414,13 +414,14 @@ class LineNumberList extends AbstractGutterComponent
 
 		RTextAreaUI ui = (RTextAreaUI)textArea.getUI();
 		View v = ui.getRootView(textArea).getView(0);
-		boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
+		//boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
 		int topPosition = textArea.viewToModel(
 								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
+		FoldManager fm = ((RSyntaxTextArea)textArea).getFoldManager();
 
 		// Compute the y at which to begin painting text, taking into account
 		// that 1 logical line => at least 1 physical line, so it may be that
@@ -430,7 +431,6 @@ class LineNumberList extends AbstractGutterComponent
 		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
 												visibleEditorRect);
 		int y = r.y;
-
 		final int RHS_BORDER_WIDTH = getRhsBorderWidth();
 		int rhs;
 		boolean ltr = getComponentOrientation().isLeftToRight();
@@ -451,12 +451,14 @@ class LineNumberList extends AbstractGutterComponent
 
 			r = LineNumberList.getChildViewBounds(v, topLine, visibleEditorRect);
 
+			/*
 			// Highlight the current line's line number, if desired.
 			if (currentLineHighlighted && topLine==currentLine) {
 				g.setColor(textArea.getCurrentLineHighlightColor());
 				g.fillRect(0,y, width,(r.y+r.height)-y);
 				g.setColor(getForeground());
 			}
+			*/
 
 			// Paint the line number.
 			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
@@ -476,6 +478,10 @@ class LineNumberList extends AbstractGutterComponent
 
 			// Update topLine (we're actually using it for our "current line"
 			// variable now).
+			Fold fold = fm.getFoldForLine(topLine);
+			if (fold!=null && fold.isCollapsed()) {
+				topLine += fold.getCollapsedLineCount();
+			}
 			topLine++;
 			if (topLine>=lineCount)
 				break;

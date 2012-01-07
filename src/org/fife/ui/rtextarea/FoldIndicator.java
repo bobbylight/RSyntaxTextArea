@@ -36,7 +36,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 import javax.swing.JToolTip;
 import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
@@ -594,11 +593,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		public void mouseClicked(MouseEvent e) {
 
-			// TODO: Implement code folding with word wrap enabled
-			if (textArea.getLineWrap()) {
-				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-				return;
-			}
+//			// TODO: Implement code folding with word wrap enabled
+//			if (textArea.getLineWrap()) {
+//				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+//				return;
+//			}
 
 			Point p = e.getPoint();
 			int line = rowAtPoint(p);

@@ -23,13 +23,13 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.util.Map;
-
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -101,6 +101,22 @@ public class RSyntaxUtilities implements SwingConstants {
 	 */
 	public static Map getDesktopAntiAliasHints() {
 		return (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+	}
+
+
+	/**
+	 * Returns the color to use for the line underneath a folded region line.
+	 *
+	 * @param textArea The text area.
+	 * @return The color to use.
+	 */
+	public static Color getFoldedLineBottomColor(RSyntaxTextArea textArea) {
+		Color color = Color.gray;
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter!=null) {
+			color = gutter.getFoldIndicatorForeground();
+		}
+		return color;
 	}
 
 

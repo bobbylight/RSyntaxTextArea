@@ -1090,8 +1090,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			Document doc = textArea.getDocument();
-			int dot = doc.getLength();
+			int dot = getVisibleEnd(textArea);
 			if (select)
 				textArea.moveCaretPosition(dot);
 			else
@@ -1100,6 +1099,10 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getVisibleEnd(RTextArea textArea) {
+			return textArea.getDocument().getLength();
 		}
 
 	}

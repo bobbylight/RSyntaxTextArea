@@ -27,6 +27,8 @@ import java.awt.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 
+import org.fife.ui.rsyntaxtextarea.folding.Fold;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 
 
@@ -164,6 +166,24 @@ return p + 1;
 
 
 	/**
+	 * Sets the allocation rectangle for a given line's view, but sets the
+	 * y value to the passed-in value.  This should be used instead of
+	 * {@link #childAllocation(int, Rectangle)} since it allows you to account
+	 * for hidden lines in collapsed fold regions.
+	 *
+	 * @param line
+	 * @param y
+	 * @param alloc
+	 */
+	private void childAllocation2(int line, int y, Rectangle alloc) {
+		alloc.x += getOffset(X_AXIS, line);
+		alloc.y += y;
+		alloc.width = getSpan(X_AXIS, line);
+		alloc.height = getSpan(Y_AXIS, line);
+	}
+
+
+	/**
 	 * Draws a single view (i.e., a line of text for a wrapped view),
 	 * wrapping the text onto multiple lines if necessary.
 	 *
@@ -235,6 +255,61 @@ return p + 1;
 			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
 			g.drawString("\u00B6", x, y-fontHeight);
 		}
+
+	}
+
+
+	/**
+	 * Fetches the allocation for the given child view.<p>
+	 * Overridden to account for code folding.
+	 * 
+	 * @param index The index of the child, >= 0 && < getViewCount().
+	 * @param a The allocation to this view
+	 * @return The allocation to the child; or <code>null</code> if
+	 *         <code>a</code> is <code>null</code>; or <code>null</code> if the
+	 *         layout is invalid
+	 */
+	public Shape getChildAllocation(int index, Shape a) {
+		if (a != null) {
+			Shape ca = getChildAllocationImpl(index, a);
+			if ((ca != null) && (!isAllocationValid())) {
+				// The child allocation may not have been set yet.
+				Rectangle r = (ca instanceof Rectangle) ? (Rectangle) ca : ca
+						.getBounds();
+				if ((r.width == 0) && (r.height == 0)) {
+					return null;
+				}
+			}
+			return ca;
+		}
+		return null;
+	}
+
+	/**
+	 * Fetches the allocation for the given child view to render into.<p>
+	 * Overridden to account for lines hidden by collapsed folded regions.
+	 * 
+	 * @param line The index of the child, >= 0 && < getViewCount()
+	 * @param a The allocation to this view
+	 * @return The allocation to the child
+	 */
+	public Shape getChildAllocationImpl(int line, Shape a) {
+
+		Rectangle alloc = getInsideAllocation(a);
+		host = (RSyntaxTextArea)getContainer();
+		FoldManager fm = host.getFoldManager();
+		int y = alloc.y;
+
+		for (int i=0; i<line; i++) {
+			y += getSpan(Y_AXIS, i);
+			Fold fold = fm.getFoldForLine(i);
+			if (fold!=null && fold.isCollapsed()) {
+				i += fold.getCollapsedLineCount();
+			}
+		}
+
+		childAllocation2(line, y, alloc);
+		return alloc;
 
 	}
 
@@ -328,6 +403,36 @@ return p + 1;
 
 
 	/**
+	 * Overridden to allow for folded regions.
+	 */
+	protected View getViewAtPoint(int x, int y, Rectangle alloc) {
+
+		int lineCount = getViewCount();
+		int curY = alloc.y + getOffset(Y_AXIS, 0); // Always at least 1 line
+		host = (RSyntaxTextArea)getContainer();
+		FoldManager fm = host.getFoldManager();
+
+		for (int line=1; line<lineCount; line++) {
+			int span = getSpan(Y_AXIS, line-1);
+			if (y<curY+span) {
+				childAllocation2(line-1, curY, alloc);
+				return getView(line-1);
+			}
+			curY += span;
+			Fold fold = fm.getFoldForLine(line-1);
+			if (fold!=null && fold.isCollapsed()) {
+				line += fold.getCollapsedLineCount();
+			}
+		}
+
+		// Not found - return last line's view.
+		childAllocation2(lineCount - 1, curY, alloc);
+		return getView(lineCount - 1);
+
+	}
+
+
+	/**
 	 * Gives notification that something was inserted into the 
 	 * document in a location that this view is responsible for.
 	 * This is implemented to simply update the children.
@@ -367,6 +472,46 @@ return p + 1;
 				added[i] = new WrappedLine(e.getElement(i));
 			replace(0, 0, added);
 		}
+	}
+
+
+	public Shape modelToView(int pos, Shape a, Position.Bias b)
+			throws BadLocationException {
+
+		if (! isAllocationValid()) {
+			Rectangle alloc = a.getBounds();
+			setSize(alloc.width, alloc.height);
+		}
+
+		boolean isBackward = (b == Position.Bias.Backward);
+		int testPos = (isBackward) ? Math.max(0, pos - 1) : pos;
+		if(isBackward && testPos < getStartOffset()) {
+			return null;
+		}
+
+		int vIndex = getViewIndexAtPosition(testPos);
+		if ((vIndex != -1) && (vIndex < getViewCount())) {
+			View v = getView(vIndex);
+			if(v != null && testPos >= v.getStartOffset() &&
+					testPos < v.getEndOffset()) {
+				Shape childShape = getChildAllocation(vIndex, a);
+				if (childShape == null) {
+					// We are likely invalid, fail.
+					return null;
+				}
+				Shape retShape = v.modelToView(pos, childShape, b);
+				if(retShape == null && v.getEndOffset() == pos) {
+					if(++vIndex < getViewCount()) {
+						v = getView(vIndex);
+						retShape = v.modelToView(pos, getChildAllocation(vIndex, a), b);
+					}
+				}
+				return retShape;
+			}
+		}
+
+		throw new BadLocationException("Position not represented by view", pos);
+
 	}
 
 
@@ -487,20 +632,32 @@ return p + 1;
 		host = (RSyntaxTextArea)getContainer();
 		int ascent = host.getMaxAscent();
 		int fontHeight = host.getLineHeight();
+		FoldManager fm = host.getFoldManager();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
-		int y = alloc.y + getTopInset();
+		tempRect.y = alloc.y + getTopInset();
 		Rectangle clip = g.getClipBounds();
 		for (int i = 0; i < n; i++) {
 			tempRect.x = x + getOffset(X_AXIS, i);
-			tempRect.y = y + getOffset(Y_AXIS, i);
+			//tempRect.y = y + getOffset(Y_AXIS, i);
 			tempRect.width = getSpan(X_AXIS, i);
 			tempRect.height = getSpan(Y_AXIS, i);
 			//System.err.println("For line " + i + ": tempRect==" + tempRect);
 			if (tempRect.intersects(clip)) {
 				View view = getView(i);
 				drawView(g2d, alloc, view, fontHeight, tempRect.y+ascent);
+			}
+			tempRect.y += tempRect.height;
+			Fold possibleFold = fm.getFoldForLine(i);
+			if (possibleFold!=null && possibleFold.isCollapsed()) {
+				i += possibleFold.getCollapsedLineCount();
+				// Visible indicator of collapsed lines
+				Color c = RSyntaxUtilities.getFoldedLineBottomColor(host);
+				if (c!=null) {
+					g.setColor(c);
+					g.drawLine(x,tempRect.y-1, alloc.width,tempRect.y-1);
+				}
 			}
 		}
 
@@ -623,6 +780,26 @@ return p + 1;
 		Font f = host.getFont();
 		metrics = host.getFontMetrics(f); // Metrics for the default font.
 		tabSize = getTabSize() * metrics.charWidth('m');
+	}
+
+
+	public int viewToModel(float x, float y, Shape a, Position.Bias[] bias) {
+
+		if (! isAllocationValid()) {
+			Rectangle alloc = a.getBounds();
+			setSize(alloc.width, alloc.height);
+		}
+
+		// Get the child view for the line at (x,y), and ask it for the
+		// specific offset.
+		Rectangle alloc = getInsideAllocation(a);
+		View v = getViewAtPoint((int) x, (int) y, alloc);
+		if (v != null) {
+			return v.viewToModel(x, y, alloc, bias);
+		}
+
+		return -1;
+
 	}
 
 
