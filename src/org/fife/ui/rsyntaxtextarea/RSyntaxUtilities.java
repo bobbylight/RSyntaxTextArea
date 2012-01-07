@@ -354,8 +354,13 @@ public class RSyntaxUtilities implements SwingConstants {
 								int offset = start + (i-segOffset);
 								token = RSyntaxUtilities.getTokenAtOffset(token, offset);
 								if (token.type==Token.SEPARATOR) {
-									if (numEmbedded==0)
+									if (numEmbedded==0) {
+										if (textArea.isCodeFoldingEnabled() &&
+												textArea.getFoldManager().isLineHidden(curLine)) {
+											return -1; // Match hidden in a fold
+										}
 										return offset;
+									}
 									numEmbedded--;
 								}
 							}
