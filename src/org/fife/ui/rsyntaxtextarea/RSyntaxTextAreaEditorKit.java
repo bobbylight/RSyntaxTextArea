@@ -1339,10 +1339,24 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return offs;
 			}
 
-			int line = textArea.getLineOfOffset(offs);
-			int end = textArea.getLineEndOffset(line);
-			if (offs==end) {
-				return offs+1; // Start of next line.
+			Element root = doc.getDefaultRootElement();
+			int line = root.getElementIndex(offs);
+			int end = root.getElement(line).getEndOffset() - 1;
+			if (offs==end) {// If we're already at the end of the line...
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+				if (rsta.isCodeFoldingEnabled()) { // Start of next visible line
+					FoldManager fm = rsta.getFoldManager();
+					int lineCount = root.getElementCount();
+					while (++line<lineCount && fm.isLineHidden(line));
+					if (line<lineCount) { // Found a lower visible line
+						offs = root.getElement(line).getStartOffset();
+					}
+					// No lower visible line - we're already at last visible offset
+					return offs;
+				}
+				else {
+					return offs+1; // Start of next line.
+				}
 			}
 			doc.getText(offs, end-offs, seg);
 
@@ -1490,10 +1504,23 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-			int line = textArea.getLineOfOffset(offs);
-			int start = textArea.getLineStartOffset(line);
-			if (offs==start) {
-				return start-1; // End of previous line.
+			Element root = doc.getDefaultRootElement();
+			int line = root.getElementIndex(offs);
+			int start = root.getElement(line).getStartOffset();
+			if (offs==start) {// If we're already at the start of the line...
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+				if (rsta.isCodeFoldingEnabled()) { // End of next visible line
+					FoldManager fm = rsta.getFoldManager();
+					while (--line>=0 && fm.isLineHidden(line));
+					if (line>=0) { // Found an earlier visible line
+						offs = root.getElement(line).getEndOffset() - 1;
+					}
+					// No earlier visible line - we must be at offs==0...
+					return offs;
+				}
+				else {
+					return start-1; // End of previous line.
+				}
 			}
 			doc.getText(start, offs-start, seg);
 
