@@ -153,6 +153,28 @@ public abstract class Token implements TokenTypes {
 	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
 											RSyntaxTextArea textArea,
 											boolean fontFamily) {
+		return appendHTMLRepresentation(sb, textArea, fontFamily, false);
+	}
+
+
+	/**
+	 * Appends HTML code for painting this token, using the given text area's
+	 * color scheme.
+	 *
+	 * @param sb The buffer to append to.
+	 * @param textArea The text area whose color scheme to use.
+	 * @param fontFamily Whether to include the font family in the HTML for
+	 *        this token.  You can pass <code>false</code> for this parameter
+	 *        if, for example, you are making all your HTML be monospaced,
+	 *        and don't want any crazy fonts being used in the editor to be
+	 *        reflected in your HTML.
+	 * @param tabsToSpaces Whether to convert tabs into spaces.
+	 * @return The buffer appended to.
+	 * @see #getHTMLRepresentation(RSyntaxTextArea)
+	 */
+	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+								RSyntaxTextArea textArea, boolean fontFamily,
+								boolean tabsToSpaces) {
 
 		SyntaxScheme colorScheme = textArea.getSyntaxScheme();
 		Style scheme = colorScheme.getStyle(type);
@@ -160,7 +182,7 @@ public abstract class Token implements TokenTypes {
 
 		if (font.isBold()) sb.append("<b>");
 		if (font.isItalic()) sb.append("<em>");
-		if (scheme.underline) sb.append("<u>");
+		if (scheme.underline || isHyperlink()) sb.append("<u>");
 
 		sb.append("<font");
 		if (fontFamily) {
@@ -172,10 +194,10 @@ public abstract class Token implements TokenTypes {
 
 		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
 		// be turned into NOTHING.
-		appendHtmlLexeme(sb);
+		appendHtmlLexeme(textArea, sb, tabsToSpaces);
 
 		sb.append("</font>");
-		if (scheme.underline) sb.append("</u>");
+		if (scheme.underline || isHyperlink()) sb.append("</u>");
 		if (font.isItalic()) sb.append("</em>");
 		if (font.isBold()) sb.append("</b>");
 
@@ -189,13 +211,19 @@ public abstract class Token implements TokenTypes {
 	 * HTML, but replacing chars such as <code>\t</code>, <code>&lt;</code>
 	 * and <code>&gt;</code> with their escapes).
 	 *
+	 * @param textArea The text area.
 	 * @param sb The buffer to append to.
+	 * @param tabsToSpaces Whether to convert tabs into spaces.
 	 * @return The same buffer.
 	 */
-	private final StringBuffer appendHtmlLexeme(StringBuffer sb) {
+	private final StringBuffer appendHtmlLexeme(RSyntaxTextArea textArea,
+								StringBuffer sb, boolean tabsToSpaces) {
+
 		boolean lastWasSpace = false;
 		int i = textOffset;
 		int lastI = i;
+		String tabStr = null;
+
 		while (i<textOffset+textCount) {
 			char ch = text[i];
 			switch (ch) {
@@ -208,7 +236,13 @@ public abstract class Token implements TokenTypes {
 				case '\t':
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
-					sb.append("&#09;");
+					if (tabsToSpaces && tabStr==null) {
+						tabStr = "";
+						for (int j=0; j<textArea.getTabSize(); j++) {
+							tabStr += "&nbsp;";
+						}
+					}
+					sb.append(tabsToSpaces ? tabStr : "&#09;");
 					lastWasSpace = false;
 					break;
 				case '<':

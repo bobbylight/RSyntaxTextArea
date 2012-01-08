@@ -137,7 +137,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 		Color textAreaBG = textArea.getBackground();
 		if (textAreaBG!=null && !Color.white.equals(textAreaBG)) {
 			Color bg = TipUtil.getToolTipBackground();
-			System.out.println(bg);
 			// If current L&F's tool tip color is close enough to "yellow",
 			// and we're not using the default text background of white, use
 			// the editor background as the tool tip background.
@@ -242,11 +241,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 						endLine = fold.getStartLine() + 25;
 					}
 
-					StringBuffer sb = new StringBuffer("<html>");
+					StringBuffer sb = new StringBuffer("<html><nobr>");
 					while (line<=endLine && line<rsta.getLineCount()) { // Sanity
 						Token t = rsta.getTokenListForLine(line);
 						while (t!=null && t.isPaintable()) {
-							t.appendHTMLRepresentation(sb, rsta, true);
+							t.appendHTMLRepresentation(sb, rsta, true, true);
 							t = t.getNextToken();
 						}
 						sb.append("<br>");
