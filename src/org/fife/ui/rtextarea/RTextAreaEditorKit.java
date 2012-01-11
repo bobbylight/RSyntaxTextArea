@@ -942,17 +942,26 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 			try {
 				int end = textArea.getSelectionStart();
-				int start = Utilities.getPreviousWord(textArea, end);
+				int start = getPreviousWordStart(textArea, end);
 				if (end>start) {
 					textArea.getDocument().remove(start, end-start);
 				}
-			} catch (Exception ex) {
+			} catch (BadLocationException ex) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
 		}
 
 		public String getMacroID() {
 			return rtaDeletePrevWordAction;
+		}
+
+		/**
+		 * Returns the starting offset to delete.  Exists so subclasses can
+		 * override.
+		 */
+		protected int getPreviousWordStart(RTextArea textArea, int end)
+				throws BadLocationException {
+			return Utilities.getPreviousWord(textArea, end);
 		}
 
 	}

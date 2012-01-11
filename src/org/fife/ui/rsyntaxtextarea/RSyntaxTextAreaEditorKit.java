@@ -94,6 +94,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
+		new DeletePrevWordAction(),
 		new EndAction(endAction, false),
 		new EndAction(selectionEndAction, true),
 		new EndWordAction(endWordAction, false),
@@ -726,6 +727,76 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					doc.remove(start, toRemove);
 				}
 			}
+		}
+
+	}
+
+
+	/**
+	 * Deletes the previous word, but differentiates symbols from "words" to
+	 * match the behavior of code editors.
+	 */
+	public static class DeletePrevWordAction
+			extends RTextAreaEditorKit.DeletePrevWordAction {
+
+		private Segment seg = new Segment();
+
+		protected int getPreviousWordStart(RTextArea textArea, int offs)
+				throws BadLocationException {
+
+			if (offs==0) {
+				return offs;
+			}
+
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			int line = textArea.getLineOfOffset(offs);
+			int start = textArea.getLineStartOffset(line);
+			if (offs==start) {
+				return start-1; // Just delete the newline
+			}
+			int end = textArea.getLineEndOffset(line);
+			if (line!=textArea.getLineCount()-1) {
+				end--;
+			}
+			doc.getText(start, end-start, seg);
+
+			// Determine the "type" of char at offs - lower case, upper case,
+			// whitespace or other.  We take special care here as we're starting
+			// in the middle of the Segment to check whether we're already at
+			// the "beginning" of a word.
+			int firstIndex = seg.getBeginIndex() + (offs-start) - 1;
+			seg.setIndex(firstIndex);
+			char ch = seg.current();
+
+			// Always strip off whitespace first
+			if (Character.isWhitespace(ch)) {
+				do {
+					ch = seg.previous();
+				} while (Character.isWhitespace(ch));
+			}
+
+			// The "word" is a group of letters and/or digits
+			if (Character.isLetterOrDigit(ch)) {
+				do {
+					ch = seg.previous();
+				} while (Character.isLetterOrDigit(ch));
+			}
+
+			// The "word" is a series of symbols.
+			else {
+				while (!Character.isWhitespace(ch) &&
+						!Character.isLetterOrDigit(ch)
+						&& ch!=Segment.DONE) {
+					ch = seg.previous();
+				}
+			}
+
+			if (ch==Segment.DONE) {
+				return start; // Removed last "token" of the line
+			}
+			offs -= firstIndex - seg.getIndex();
+			return offs;
+
 		}
 
 	}
