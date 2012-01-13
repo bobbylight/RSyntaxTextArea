@@ -58,6 +58,8 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke('/'), 									RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, defaultMod),			RSyntaxTextAreaEditorKit.rstaToggleCommentAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, defaultMod),	RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, defaultMod),			RSyntaxTextAreaEditorKit.rstaCollapseFoldAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, defaultMod),			RSyntaxTextAreaEditorKit.rstaExpandFoldAction);
 
 		// FIXME:  The keystroke associated with this action should be dynamic and
 		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's

@@ -80,6 +80,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
+	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
+	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 
 
 	/**
@@ -91,6 +93,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new CloseMarkupTagAction(),
 		new BeginWordAction(beginWordAction, false),
 		new BeginWordAction(selectionBeginWordAction, true),
+		new ChangeFoldStateAction(rstaCollapseFoldAction, true),
+		new ChangeFoldStateAction(rstaExpandFoldAction, false),
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
@@ -216,6 +220,44 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			return offs;
 
+		}
+
+	}
+
+
+	/**
+	 * Expands or collapses the nearest fold.
+	 */
+	public static class ChangeFoldStateAction extends FoldRelatedAction {
+
+		private boolean collapse;
+
+		public ChangeFoldStateAction(String name, boolean collapse) {
+			super(name);
+			this.collapse = collapse;
+		}
+
+		public ChangeFoldStateAction(String name, Icon icon,
+				String desc, Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				Fold fold = getClosestFold(rsta);
+				if (fold!=null) {
+					fold.setCollapsed(collapse);
+				}
+				possiblyRepaintGutter(textArea);
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
+		}
+
+		public final String getMacroID() {
+			return getName();
 		}
 
 	}
@@ -951,6 +993,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		public FoldRelatedAction(String name, Icon icon,
 				String desc, Integer mnemonic, KeyStroke accelerator) {
 			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		protected Fold getClosestFold(RSyntaxTextArea textArea) {
+			int offs = textArea.getCaretPosition();
+			int line = textArea.getCaretLineNumber();
+			FoldManager fm = textArea.getFoldManager();
+			Fold fold = fm.getFoldForLine(line);
+			if (fold==null) {
+				fold = fm.getDeepestOpenFoldContaining(offs);
+			}
+			return fold;
 		}
 
 		/**
@@ -1778,17 +1831,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
-		}
-
-		private Fold getClosestFold(RSyntaxTextArea textArea) {
-			int offs = textArea.getCaretPosition();
-			int line = textArea.getCaretLineNumber();
-			FoldManager fm = textArea.getFoldManager();
-			Fold fold = fm.getFoldForLine(line);
-			if (fold==null) {
-				fold = fm.getDeepestOpenFoldContaining(offs);
-			}
-			return fold;
 		}
 
 		public final String getMacroID() {
