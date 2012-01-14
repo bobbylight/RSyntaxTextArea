@@ -327,9 +327,10 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		int width = getWidth();
 		int x = width - 10;
-		boolean paintingOutlineLine = false;
-
 		int line = topLine;
+		boolean paintingOutlineLine = foldWithOutlineShowing!=null &&
+				foldWithOutlineShowing.containsLine(line);
+
 		while (y<visibleRect.y+visibleRect.height) {
 			if (paintingOutlineLine) {
 				g.setColor(getForeground());
@@ -433,10 +434,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		int visibleBottom = visibleRect.y + visibleRect.height;
 		int x = width - 10;
-		boolean paintingOutlineLine = false;
+		int line = topLine;
+		boolean paintingOutlineLine = foldWithOutlineShowing!=null &&
+				foldWithOutlineShowing.containsLine(line);
 		int lineCount = root.getElementCount();
 
-		int line = topLine;
 		while (y<visibleBottom && line<lineCount) {
 
 			int curLineH = LineNumberList.getChildViewBounds(v, line,

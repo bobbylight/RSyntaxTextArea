@@ -856,20 +856,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		protected int getVisibleEnd(RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-			if (rsta.isCodeFoldingEnabled()) {
-				FoldManager fm = rsta.getFoldManager();
-				int lastVisibleLine = fm.getLastVisibleLine();
-				if (lastVisibleLine==rsta.getLineCount()-1) {
-					return rsta.getDocument().getLength();
-				}
-				try {
-					return rsta.getLineEndOffset(lastVisibleLine) - 1;
-				} catch (BadLocationException ble) {
-					ble.printStackTrace();
-					// Fall through, just use standard behavior.
-				}
-			}
-			return super.getVisibleEnd(textArea);
+			return rsta.getLastVisibleOffset();
 		}
 
 	}

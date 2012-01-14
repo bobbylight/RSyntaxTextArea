@@ -31,6 +31,9 @@ import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+
 
 /**
  * The caret used by {@link RTextArea}.  This caret has all of the properties
@@ -216,6 +219,7 @@ public class ConfigurableCaret extends DefaultCaret {
 			throw new IllegalArgumentException(
 					"c must be instance of RTextArea");
 		super.deinstall(c);
+		c.setNavigationFilter(null);
 	}
 
 
@@ -275,9 +279,8 @@ public class ConfigurableCaret extends DefaultCaret {
 			throw new IllegalArgumentException(
 					"c must be instance of RTextArea");
 		super.install(c);
+		c.setNavigationFilter(new FoldAwareNavigationFilter());
 	}
-
-
 	/**
 	 * Called when the mouse is clicked.  If the click was generated from
 	 * button1, a double click selects a word, and a triple click the
@@ -638,6 +641,79 @@ public class ConfigurableCaret extends DefaultCaret {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 		s.writeInt(getStyle());
+	}
+
+
+	/**
+	 * Keeps the caret out of folded regions in edge cases where it doesn't
+	 * happen automatically, for example, when the caret moves automatically in
+	 * response to Document.insert() and Document.remove() calls.  Most keyboard
+	 * shortcuts already take folding into account, as do viewToModel() and
+	 * modelToView(), so this filter usually does not do anything.<p>
+	 *
+	 * Common cases: backspacing to visible line of collapsed region.
+	 */
+	private class FoldAwareNavigationFilter extends NavigationFilter {
+
+	    public void setDot(FilterBypass fb, int dot, Position.Bias bias) {
+
+	    	RTextArea textArea = getTextArea();
+	        if (textArea instanceof RSyntaxTextArea) {
+
+	        	RSyntaxTextArea rsta = (RSyntaxTextArea)getTextArea();
+	        	if (rsta.isCodeFoldingEnabled()) {
+
+	        		int lastDot = getDot();
+	        		FoldManager fm = rsta.getFoldManager();
+	        		int line = 0;
+	        		try {
+	        			line = textArea.getLineOfOffset(dot);
+	        		} catch (Exception e) {
+	        			e.printStackTrace();
+	        		}
+
+	        		if (fm.isLineHidden(line)) {
+
+	        			//System.out.println("filterBypass: avoiding hidden line");
+	        			try {
+		        			if (dot>lastDot) { // Moving to further line
+		        				int lineCount = textArea.getLineCount();
+		        				while (++line<lineCount &&
+		        						fm.isLineHidden(line));
+		            			if (line<lineCount) {
+		            				dot = textArea.getLineStartOffset(line);
+		            			}
+		            			else { // No lower lines visible 
+		            				UIManager.getLookAndFeel().
+		            						provideErrorFeedback(textArea);
+		            				return;
+		            			}
+		        			}
+		        			else if (dot<lastDot) { // Moving to earlier line
+		        				while (--line>=0 && fm.isLineHidden(line));
+		        				if (line>=0) {
+		        					dot = textArea.getLineEndOffset(line) - 1;
+		        				}
+		        			}
+						} catch (Exception e) {
+							e.printStackTrace();
+							return;
+						}
+
+	        		}
+
+	        	}
+
+	        }
+
+	        super.setDot(fb, dot, bias);
+
+	    }
+
+	    public void moveDot(FilterBypass fb, int dot, Position.Bias bias) {
+	        super.moveDot(fb, dot, bias);
+	    }
+
 	}
 
 

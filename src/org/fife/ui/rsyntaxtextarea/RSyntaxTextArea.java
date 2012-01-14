@@ -1120,6 +1120,27 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the last visible offset in this text area.  This may not be the
+	 * length of the document if code folding is enabled.
+	 *
+	 * @return The last visible offset in this text area.
+	 */
+	public int getLastVisibleOffset() {
+		if (isCodeFoldingEnabled()) {
+			int lastVisibleLine = foldManager.getLastVisibleLine();
+			if (lastVisibleLine<getLineCount()-1) { // Not the last line
+				try {
+					return getLineEndOffset(lastVisibleLine) - 1;
+				} catch (BadLocationException ble) { // Never happens
+					ble.printStackTrace();
+				}
+			}
+		}
+		return getDocument().getLength();
+	}
+
+
+	/**
 	 * Returns the height to use for a line of text in this text area.
 	 *
 	 * @return The height of a line of text in this text area.

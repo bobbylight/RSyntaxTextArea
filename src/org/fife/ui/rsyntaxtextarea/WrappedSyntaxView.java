@@ -785,6 +785,8 @@ return p + 1;
 
 	public int viewToModel(float x, float y, Shape a, Position.Bias[] bias) {
 
+		int offs = -1;
+
 		if (! isAllocationValid()) {
 			Rectangle alloc = a.getBounds();
 			setSize(alloc.width, alloc.height);
@@ -795,10 +797,17 @@ return p + 1;
 		Rectangle alloc = getInsideAllocation(a);
 		View v = getViewAtPoint((int) x, (int) y, alloc);
 		if (v != null) {
-			return v.viewToModel(x, y, alloc, bias);
+			offs = v.viewToModel(x, y, alloc, bias);
 		}
 
-		return -1;
+		// Code folding may have hidden the last line.  If so, return the last
+		// visible offset instead of the last offset.
+		if (host.isCodeFoldingEnabled() && v==getView(getViewCount()-1) &&
+				offs==v.getEndOffset()-1) {
+			offs = host.getLastVisibleOffset();
+		}
+
+		return offs;
 
 	}
 

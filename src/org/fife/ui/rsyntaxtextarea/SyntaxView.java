@@ -795,7 +795,7 @@ if (host.isCodeFoldingEnabled()) {
 		// If they're asking about a position below this view, the position
 		// is assumed to be the ending position of this view.
 		else if (y > alloc.y + alloc.height) {
-			return getEndOffset() - 1;
+			return host.getLastVisibleOffset();
 		}
 
 		// They're asking about a position within the coverage of this view
@@ -811,8 +811,9 @@ FoldManager fm = host.getFoldManager();
 //System.out.print("--- " + lineIndex);
 lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 //System.out.println(" => " + lineIndex);
-			if (lineIndex >= map.getElementCount())
-				return getEndOffset() - 1;
+			if (lineIndex >= map.getElementCount()) {
+				return host.getLastVisibleOffset();
+			}
 
 			Element line = map.getElement(lineIndex);
 
