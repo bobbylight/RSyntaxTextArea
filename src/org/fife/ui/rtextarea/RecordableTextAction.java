@@ -24,6 +24,7 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
@@ -136,6 +137,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * Returns the accelerator for this action.
 	 *
 	 * @return The accelerator.
+	 * @see #setAccelerator(KeyStroke)
 	 */
 	public KeyStroke getAccelerator() {
 		return (KeyStroke)getValue(ACCELERATOR_KEY);
@@ -181,6 +183,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * Returns the mnemonic for this action.
 	 *
 	 * @return The mnemonic, or <code>-1</code> if not defined.
+	 * @see #setMnemonic(char)
 	 * @see #setMnemonic(Integer)
 	 */
 	public int getMnemonic() {
@@ -193,6 +196,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * Returns the name of this action.
 	 *
 	 * @return The name of this action.
+	 * @see #setName(String)
 	 */
 	public String getName() {
 		return (String)getValue(NAME);
@@ -212,13 +216,64 @@ public abstract class RecordableTextAction extends TextAction {
 
 
 	/**
+	 * Sets the accelerator for this action.
+	 *
+	 * @param accelerator The new accelerator.
+	 * @see #getAccelerator()
+	 */
+	public void setAccelerator(KeyStroke accelerator) {
+		putValue(ACCELERATOR_KEY, accelerator);
+	}
+
+
+	/**
 	 * Sets the mnemonic for this action.
 	 *
 	 * @param mnemonic The new mnemonic.
+	 * @see #setMnemonic(Integer)
+	 * @see #getMnemonic()
+	 */
+	public void setMnemonic(char mnemonic) {
+		setMnemonic(new Integer(mnemonic));
+	}
+
+
+	/**
+	 * Sets the mnemonic for this action.
+	 *
+	 * @param mnemonic The new mnemonic.
+	 * @see #setMnemonic(char)
 	 * @see #getMnemonic()
 	 */
 	public void setMnemonic(Integer mnemonic) {
 		putValue(MNEMONIC_KEY, mnemonic);
+	}
+
+
+	/**
+	 * Sets the name of this action.
+	 *
+	 * @param name The new name.
+	 * @see #getName()
+	 */
+	public void setName(String name) {
+		putValue(NAME, name);
+	}
+
+
+	/**
+	 * Sets the name, mnemonic, and description of this action.
+	 *
+	 * @param msg The resource bundle.
+	 * @param keyRoot The root of the keys for the properties.
+	 *        "<code>.Name</code>", "<code>.Mnemonic</code>", and
+	 *        "<code>.Desc</code>" will be appended to create the key for each
+	 *        property.
+	 */
+	public void setProperties(ResourceBundle msg, String keyRoot) {
+		setName(msg.getString(keyRoot + ".Name"));
+		setMnemonic(msg.getString(keyRoot + ".Mnemonic").charAt(0));
+		setShortDescription(msg.getString(keyRoot + ".Desc"));
 	}
 
 

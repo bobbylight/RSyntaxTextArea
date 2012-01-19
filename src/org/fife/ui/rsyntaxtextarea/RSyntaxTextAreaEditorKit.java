@@ -24,6 +24,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ResourceBundle;
 import java.util.Stack;
 import javax.swing.*;
 import javax.swing.text.*;
@@ -82,6 +83,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
 	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
+
+	private static final String MSG	= "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
+	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 
 	/**
@@ -144,6 +148,18 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public Action[] getActions() {
 		return TextAction.augmentList(super.getActions(),
 							RSyntaxTextAreaEditorKit.defaultActions);
+	}
+
+
+	/**
+	 * Returns localized text for an action.  There's definitely a better place
+	 * for this functionality.
+	 *
+	 * @param key The key into the action resource bundle.
+	 * @return The localized text.
+	 */
+	public static String getString(String key) {
+		return msg.getString(key);
 	}
 
 
@@ -499,6 +515,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public CollapseAllCommentFoldsAction() {
 			super(rstaCollapseAllCommentFoldsAction);
+			setProperties(msg, "Action.CollapseCommentFolds");
 		}
 
 		public CollapseAllCommentFoldsAction(String name, Icon icon,
@@ -519,7 +536,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		public final String getMacroID() {
-			return getName();
+			return rstaCollapseAllCommentFoldsAction;
 		}
 
 	}
@@ -933,6 +950,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public ExpandAllFoldsAction() {
 			super(rstaExpandAllFoldsAction);
+			setProperties(msg, "Action.ExpandAllFolds");
 		}
 
 		public ExpandAllFoldsAction(String name, Icon icon,
@@ -962,7 +980,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		public final String getMacroID() {
-			return getName();
+			return rstaExpandAllFoldsAction;
 		}
 
 	}
@@ -1799,6 +1817,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public ToggleCurrentFoldAction() {
 			super(rstaToggleCurrentFoldAction);
+			setProperties(msg, "Action.ToggleCurrentFold");
 		}
 
 		public ToggleCurrentFoldAction(String name, Icon icon, String desc,
@@ -1821,7 +1840,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		public final String getMacroID() {
-			return getName();
+			return rstaToggleCurrentFoldAction;
 		}
 
 	}

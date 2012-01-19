@@ -65,8 +65,8 @@ public class RUndoManager extends UndoManager {
 	public RUndoManager(RTextArea textArea) {
 		this.textArea = textArea;
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
-		cantUndoText = msg.getString("CantUndoName");
-		cantRedoText = msg.getString("CantRedoName");
+		cantUndoText = msg.getString("Action.CantUndo.Name");
+		cantRedoText = msg.getString("Action.CantRedo.Name");
 	}
 
 

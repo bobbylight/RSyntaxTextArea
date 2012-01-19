@@ -157,7 +157,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	private static final String MSG	= "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
 
-	private static JMenu foldingMenu;
+	private JMenu foldingMenu;
 	private static RecordableTextAction toggleCurrentFoldAction;
 	private static RecordableTextAction collapseAllCommentFoldsAction;
 	private static RecordableTextAction expandAllFoldsAction;
@@ -631,10 +631,19 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The popup menu.
 	 */
 	protected JPopupMenu createPopupMenu() {
+
 		JPopupMenu popup = super.createPopupMenu();
 		popup.addSeparator();
+
+		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
+		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
+		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
+		foldingMenu.add(createPopupMenuItem(collapseAllCommentFoldsAction));
+		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
 		popup.add(foldingMenu);
+
 		return popup;
+
 	}
 
 
@@ -646,34 +655,18 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	private static void createRstaPopupMenuActions() {
 
-		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
-		//int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
-		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
-
-		String name = bundle.getString("Action.ToggleCurrentFold.Name");
-		char mnemonic = bundle.getString("Action.ToggleCurrentFold.Mnemonic").charAt(0);
-		String desc = bundle.getString("Action.ToggleCurrentFold.Desc");
 		toggleCurrentFoldAction = new RSyntaxTextAreaEditorKit.
-				ToggleCurrentFoldAction(name, null, desc, 
-										new Integer(mnemonic), null);
-		foldingMenu.add(toggleCurrentFoldAction);
+				ToggleCurrentFoldAction();
+		toggleCurrentFoldAction.setProperties(msg, "Action.ToggleCurrentFold");
 
-		name = bundle.getString("Action.CollapseCommentFolds.Name");
-		mnemonic = bundle.getString("Action.CollapseCommentFolds.Mnemonic").charAt(0);
-		desc = bundle.getString("Action.CollapseCommentFolds.Desc");
 		collapseAllCommentFoldsAction = new RSyntaxTextAreaEditorKit.
-				CollapseAllCommentFoldsAction(name, null, desc,
-						new Integer(mnemonic), null);
-		foldingMenu.add(collapseAllCommentFoldsAction);
+				CollapseAllCommentFoldsAction();
+		collapseAllCommentFoldsAction.setProperties(msg, "Action.CollapseCommentFolds");
 
-		name = bundle.getString("Action.ExpandAllFolds.Name");
-		mnemonic = bundle.getString("Action.ExpandAllFolds.Mnemonic").charAt(0);
-		desc = bundle.getString("Action.ExpandAllFolds.Desc");
-		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.
-				ExpandAllFoldsAction(name, null, desc, new Integer(mnemonic),
-						null);
-		foldingMenu.add(expandAllFoldsAction);
+		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.ExpandAllFoldsAction();
+		expandAllFoldsAction.setProperties(msg, "Action.ExpandAllFolds");
 
 	}
 

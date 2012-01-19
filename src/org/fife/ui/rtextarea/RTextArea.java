@@ -420,53 +420,20 @@ public class RTextArea extends RTextAreaBase
 	 * @return The popup menu.
 	 * @see #setPopupMenu(JPopupMenu)
 	 * @see #configurePopupMenu(JPopupMenu)
+	 * @see #createPopupMenuItem(Action)
 	 */
 	protected JPopupMenu createPopupMenu() {
-
 		JPopupMenu menu = new JPopupMenu();
-		JMenuItem menuItem;
-
-		menuItem = new JMenuItem(undoAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
-		menuItem = new JMenuItem(redoAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
+		menu.add(createPopupMenuItem(undoAction));
+		menu.add(createPopupMenuItem(redoAction));
 		menu.addSeparator();
-
-		menuItem = new JMenuItem(cutAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
-		menuItem = new JMenuItem(copyAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
-		menuItem = new JMenuItem(pasteAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
-		menuItem = new JMenuItem(deleteAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
+		menu.add(createPopupMenuItem(cutAction));
+		menu.add(createPopupMenuItem(copyAction));
+		menu.add(createPopupMenuItem(pasteAction));
+		menu.add(createPopupMenuItem(deleteAction));
 		menu.addSeparator();
-
-		menuItem = new JMenuItem(selectAllAction);
-		menuItem.setAccelerator(null);
-		menuItem.setToolTipText(null);
-		menu.add(menuItem);
-
+		menu.add(createPopupMenuItem(selectAllAction));
 		return menu;
-
 	}
 
 
@@ -479,54 +446,52 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private static void createPopupMenuActions() {
 
-		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
-
 		// Create actions for right-click popup menu.
 		// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
 		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
-		String name = bundle.getString("CutName");
-		char mnemonic = bundle.getString("CutMnemonic").charAt(0);
-		String desc = bundle.getString("CutDesc");
-		cutAction = new RTextAreaEditorKit.CutAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_X, mod));
+		cutAction = new RTextAreaEditorKit.CutAction();
+		cutAction.setProperties(msg, "Action.Cut");
+		cutAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, mod));
+		copyAction = new RTextAreaEditorKit.CopyAction();
+		copyAction.setProperties(msg, "Action.Copy");
+		copyAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
+		pasteAction = new RTextAreaEditorKit.PasteAction();
+		pasteAction.setProperties(msg, "Action.Paste");
+		pasteAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
+		deleteAction = new RTextAreaEditorKit.DeleteNextCharAction();
+		deleteAction.setProperties(msg, "Action.Delete");
+		deleteAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+		undoAction = new RTextAreaEditorKit.UndoAction();
+		undoAction.setProperties(msg, "Action.Undo");
+		undoAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
+		redoAction = new RTextAreaEditorKit.RedoAction();
+		redoAction.setProperties(msg, "Action.Redo");
+		redoAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
+		selectAllAction = new RTextAreaEditorKit.SelectAllAction();
+		selectAllAction.setProperties(msg, "Action.SelectAll");
+		selectAllAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
 
-		name = bundle.getString("CopyName");
-		mnemonic = bundle.getString("CopyMnemonic").charAt(0);
-		desc = bundle.getString("CopyDesc");
-		copyAction = new RTextAreaEditorKit.CopyAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_C, mod));
+	}
 
-		name = bundle.getString("PasteName");
-		mnemonic = bundle.getString("PasteMnemonic").charAt(0);
-		desc = bundle.getString("PasteDesc");
-		pasteAction = new RTextAreaEditorKit.PasteAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_V, mod));
 
-		name = bundle.getString("DeleteName");
-		mnemonic = bundle.getString("DeleteMnemonic").charAt(0);
-		desc = bundle.getString("DeleteDesc");
-		deleteAction = new RTextAreaEditorKit.DeleteNextCharAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-
-		name = bundle.getString("CantUndoName");
-		mnemonic = bundle.getString("UndoMnemonic").charAt(0);
-		desc = bundle.getString("UndoDesc");
-		undoAction = new RTextAreaEditorKit.UndoAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
-
-		name = bundle.getString("CantRedoName");
-		mnemonic = bundle.getString("RedoMnemonic").charAt(0);
-		desc = bundle.getString("RedoDesc");
-		redoAction = new RTextAreaEditorKit.RedoAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
-
-		name = bundle.getString("SAName");
-		mnemonic = bundle.getString("SAMnemonic").charAt(0);
-		desc = bundle.getString("SelectAllDesc");
-		selectAllAction = new RTextAreaEditorKit.SelectAllAction(name, null, desc,
-			new Integer(mnemonic), KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
-
+	/**
+	 * Creates and configures a menu item for used in the popup menu.
+	 *
+	 * @param a The action for the menu item.
+	 * @return The menu item.
+	 * @see #createPopupMenu()
+	 */
+	protected JMenuItem createPopupMenuItem(Action a) {
+		JMenuItem item = new JMenuItem(a) {
+			public void setToolTipText(String text) {
+				// Ignore!  Actions (e.g. undo/redo) set this when changing
+				// their text due to changing enabled state.
+			}
+		};
+		item.setAccelerator(null);
+		return item;
 	}
 
 
