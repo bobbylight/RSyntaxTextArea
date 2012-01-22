@@ -48,8 +48,8 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
 /**
  * The gutter is the component on the left-hand side of the text area that
- * displays optional information such as line numbers and icons (for bookmarks,
- * debugging breakpoints, error markers, etc.).<p>
+ * displays optional information such as line numbers, fold regions, and icons
+ * (for bookmarks, debugging breakpoints, error markers, etc.).<p>
  *
  * To add icons to the gutter, you must first call
  * {@link RTextScrollPane#setIconRowHeaderEnabled(boolean)} on the parent
@@ -280,6 +280,18 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns whether tool tips are displayed showing the contents of
+	 * collapsed fold regions when the mouse hovers over a +/- icon.
+	 *
+	 * @return Whether these tool tips are displayed.
+	 * @see #setShowCollapsedRegionToolTips(boolean)
+	 */
+	public boolean getShowCollapsedRegionToolTips() {
+		return foldIndicator.getShowCollapsedRegionToolTips();
+	}
+
+
+	/**
 	 * Returns the tracking icons at the specified view position.
 	 *
 	 * @param p The view position.
@@ -291,6 +303,22 @@ public class Gutter extends JPanel {
 		int offs = textArea.viewToModel(new Point(0, p.y));
 		int line = textArea.getLineOfOffset(offs);
 		return iconArea.getTrackingIcons(line);
+	}
+
+
+	/**
+	 * Returns whether the fold indicator is enabled.
+	 *
+	 * @return Whether the fold indicator is enabled.
+	 * @see #setFoldIndicatorEnabled(boolean)
+	 */
+	public boolean isFoldIndicatorEnabled() {
+		for (int i=0; i<getComponentCount(); i++) {
+			if (getComponent(i)==foldIndicator) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -416,6 +444,27 @@ public class Gutter extends JPanel {
 	}
 
 
+	/**
+	 * Sets the icons to use to represent collapsed and expanded folds.
+	 *
+	 * @param collapsedIcon The collapsed fold icon.  This cannot be
+	 *        <code>null</code>.
+	 * @param expandedIcon The expanded fold icon.  This cannot be
+	 *        <code>null</code>.
+	 */
+	public void setFoldIcons(Icon collapsedIcon, Icon expandedIcon) {
+		if (foldIndicator!=null) {
+			foldIndicator.setFoldIcons(collapsedIcon, expandedIcon);
+		}
+	}
+
+
+	/**
+	 * Toggles whether the fold indicator is enabled.
+	 *
+	 * @param enabled Whether the fold indicator should be enabled.
+	 * @see #isFoldIndicatorEnabled()
+	 */
 	public void setFoldIndicatorEnabled(boolean enabled) {
 		if (foldIndicator!=null) {
 			if (enabled) {
@@ -530,6 +579,20 @@ public class Gutter extends JPanel {
 				remove(lineNumberList);
 			}
 			revalidate();
+		}
+	}
+
+
+	/**
+	 * Toggles whether tool tips should be displayed showing the contents of
+	 * collapsed fold regions when the mouse hovers over a +/- icon.
+	 *
+	 * @param show Whether to show these tool tips.
+	 * @see #getShowCollapsedRegionToolTips()
+	 */
+	public void setShowCollapsedRegionToolTips(boolean show) {
+		if (foldIndicator!=null) {
+			foldIndicator.setShowCollapsedRegionToolTips(show);
 		}
 	}
 

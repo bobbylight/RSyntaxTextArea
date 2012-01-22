@@ -93,6 +93,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private Icon expandedFoldIcon;
 
 	/**
+	 * Whether tool tips are displayed showing the contents of collapsed
+	 * fold regions.
+	 */
+	private boolean showFoldRegionTips;
+
+	/**
 	 * The color used to paint fold outlines.
 	 */
 	static final Color DEFAULT_FOREGROUND = Color.gray;
@@ -121,7 +127,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		expandedFoldIcon = new FoldIcon(false);
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
-		ToolTipManager.sharedInstance().registerComponent(this);
+		setShowCollapsedRegionToolTips(true);
 	}
 
 
@@ -193,6 +199,18 @@ public class FoldIndicator extends AbstractGutterComponent {
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
 		return new Dimension(WIDTH, h);
+	}
+
+
+	/**
+	 * Returns whether tool tips are displayed showing the contents of
+	 * collapsed fold regions when the mouse hovers over a +/- icon.
+	 *
+	 * @return Whether these tool tips are displayed.
+	 * @see #setShowCollapsedRegionToolTips(boolean)
+	 */
+	public boolean getShowCollapsedRegionToolTips() {
+		return showFoldRegionTips;
 	}
 
 
@@ -529,6 +547,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 		this.expandedFoldIcon = expandedIcon;
 		revalidate(); // Icons may be different sizes.
 		repaint();
+	}
+
+
+	/**
+	 * Toggles whether tool tips should be displayed showing the contents of
+	 * collapsed fold regions when the mouse hovers over a +/- icon.
+	 *
+	 * @param show Whether to show these tool tips.
+	 * @see #getShowCollapsedRegionToolTips()
+	 */
+	public void setShowCollapsedRegionToolTips(boolean show) {
+		if (show!=showFoldRegionTips) {
+			if (show) {
+				ToolTipManager.sharedInstance().registerComponent(this);
+			}
+			else {
+				ToolTipManager.sharedInstance().unregisterComponent(this);
+			}
+			showFoldRegionTips = show;
+		}
 	}
 
 

@@ -622,7 +622,7 @@ public abstract class Token implements TokenTypes {
 	 * @see #isWhitespace()
 	 */
 	public boolean isComment() {
-		return type>=Token.COMMENT_EOL && type<=Token.COMMENT_DOCUMENTATION;
+		return type>=Token.COMMENT_EOL && type<=Token.COMMENT_MARKUP;
 	}
 
 

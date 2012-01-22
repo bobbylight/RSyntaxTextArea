@@ -63,7 +63,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.7
+ * @version 0.8
  *
  */
 %%
@@ -526,6 +526,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 %state INATTR_SINGLE_SCRIPT
 %state JAVASCRIPT
 %state JS_MLC
+%state JS_EOL_COMMENT
 %state HIDDEN_COMMENT
 %state JAVA_DOCCOMMENT
 %state JAVA_EXPRESSION
@@ -569,7 +570,9 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 }
 
 <COMMENT> {
-	[^\n\-]+					{}
+	[^hwf\n\-]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
 	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); }
 	"-"						{}
@@ -577,7 +580,9 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 }
 
 <HIDDEN_COMMENT> {
-	[^\n\-]+					{}
+	[^hwf\n\-]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
 	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_HIDDEN_COMMENT); return firstToken; }
 	"--%>"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+3, Token.COMMENT_MULTILINE); }
 	"-"						{}
@@ -883,7 +888,7 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
-	{JS_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
@@ -913,11 +918,32 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
-	[^\n\*]+						{}
+	[^hwf\n\*]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+}
+
+
+<JS_EOL_COMMENT> {
+	[^hwf<\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	{EndScriptTag}			{
+							  yybegin(YYINITIAL);
+							  int temp = zzStartRead;
+							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
+							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+							}
+	"<"						{}
+	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+
 }
 
 

@@ -40,6 +40,7 @@ public class XmlFoldParser implements FoldParser {
 
 	private static final char[] MARKUP_CLOSING_TAG_START = { '<', '/' };
 	private static final char[] MARKUP_SHORT_TAG_END = { '/', '>' };
+	private static final char[] MLC_END = { '-', '-', '>' };
 
 
 	/**
@@ -49,10 +50,10 @@ public class XmlFoldParser implements FoldParser {
 
 		List folds = new ArrayList();
 
-//		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
-//		boolean inMLC = false;
+		boolean inMLC = false;
+		int mlcStart = 0;
 
 		try {
 
@@ -61,7 +62,42 @@ public class XmlFoldParser implements FoldParser {
 				Token t = textArea.getTokenListForLine(line);
 				while (t!=null && t.isPaintable()) {
 
-					if (t.type==Token.MARKUP_TAG_DELIMITER && t.isSingleChar('<')) {
+					if (t.isComment()) {
+
+						// Continuing an MLC from a previous line
+						if (inMLC) {
+							// Found the end of the MLC starting on a previous line...
+							if (t.endsWith(MLC_END)) {
+								int mlcEnd = t.offset + t.textCount - 1;
+								if (currentFold==null) {
+									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
+									currentFold.setEndOffset(mlcEnd);
+									folds.add(currentFold);
+									currentFold = null;
+								}
+								else {
+									currentFold = currentFold.createChild(FoldType.COMMENT, mlcStart);
+									currentFold.setEndOffset(mlcEnd);
+									currentFold = currentFold.getParent();
+								}
+								inMLC = false;
+								mlcStart = 0;
+							}
+							// Otherwise, this MLC is continuing on to yet
+							// another line.
+						}
+
+						else {
+							// If we're an MLC that ends on a later line...
+							if (t.type==Token.COMMENT_MULTILINE) {
+								inMLC = true;
+								mlcStart = t.offset;
+							}
+						}
+
+					}
+
+					else if (t.type==Token.MARKUP_TAG_DELIMITER && t.isSingleChar('<')) {
 						if (currentFold==null) {
 							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
 							folds.add(currentFold);

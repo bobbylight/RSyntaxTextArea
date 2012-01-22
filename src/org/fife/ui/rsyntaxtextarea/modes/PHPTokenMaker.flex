@@ -63,7 +63,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.4
+ * @version 0.7
  *
  */
 %%
@@ -487,6 +487,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state INATTR_SINGLE_SCRIPT
 %state JAVASCRIPT
 %state JS_MLC
+%state JS_EOL_COMMENT
 %state PHP
 %state PHP_MLC
 %state PHP_STRING
@@ -526,7 +527,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <COMMENT> {
-	[^\n\-]+					{}
+	[^hwf\n\-]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]					{}
 	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); }
 	"-"						{}
@@ -806,12 +809,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Infinity"					{ addToken(Token.RESERVED_WORD); }
 
 	// Functions.
-	"eval"						{ addToken(Token.FUNCTION); }
-	"parseInt"					{ addToken(Token.FUNCTION); }
-	"parseFloat"					{ addToken(Token.FUNCTION); }
-	"escape"						{ addToken(Token.FUNCTION); }
-	"unescape"					{ addToken(Token.FUNCTION); }
-	"isNaN"						{ addToken(Token.FUNCTION); }
+	"eval" |
+	"parseInt" |
+	"parseFloat" |
+	"escape" |
+	"unescape" |
+	"isNaN" |
 	"isFinite"					{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addEndToken(INTERNAL_IN_JS); return firstToken; }
@@ -831,7 +834,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
-	{JS_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
@@ -860,11 +863,32 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
-	[^\n\*]+						{}
+	[^hwf\n\*]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+}
+
+
+<JS_EOL_COMMENT> {
+	[^hwf<\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	{EndScriptTag}			{
+							  yybegin(YYINITIAL);
+							  int temp = zzStartRead;
+							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
+							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+							}
+	"<"						{}
+	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+
 }
 
 
@@ -1287,11 +1311,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"inet_ntop" |
 	"inet_pton" |
 	"info" |
-	"ini_alter" |
-	"ini_get" |
-	"ini_get_all" |
-	"ini_restore" |
-	"ini_set" |
+	("ini_"("alter"|"get"|"get_all"|"restore"|"set")) |
 	"insert" |
 	"insert_before" |
 	"insertanchor" |
@@ -1690,11 +1710,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	("vpopmail_"("add_alias_domain"|"add_alias_domain_ex"|"add_domain"|"add_domain_ex"|"add_user"|"alias_add"|"alias_del"|"alias_del_domain"|"alias_get"|"alias_get_all"|"auth_user"|"del_domain"|"del_domain_ex"|"del_user"|"error"|"passwd"|"set_user_quota")) |
 	"vprintf" |
 	"vsprintf" |
-	"w32api_deftype" |
-	"w32api_init_dtype" |
-	"w32api_invoke_function" |
-	"w32api_register_function" |
-	"w32api_set_call_method" |
+	("w32api_"("deftype"|"init_dtype"|"invoke_function"|"register_function"|"set_call_method")) |
 	"wddx_add_vars" |
 	"wddx_deserialize" |
 	"wddx_packet_end" |
