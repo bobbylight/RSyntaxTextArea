@@ -78,12 +78,14 @@ public interface TokenTypes {
 	public static final int MARKUP_TAG_NAME					= 26;
 	public static final int MARKUP_TAG_ATTRIBUTE			= 27;
 	public static final int MARKUP_TAG_ATTRIBUTE_VALUE		= 28;
+	public static final int MARKUP_PROCESSING_INSTRUCTION	= 29;
+	public static final int MARKUP_CDATA					= 30;
 
-	public static final int ERROR_IDENTIFIER				= 29;
-	public static final int ERROR_NUMBER_FORMAT				= 30;
-	public static final int ERROR_STRING_DOUBLE 			= 31;
-	public static final int ERROR_CHAR						= 32;
+	public static final int ERROR_IDENTIFIER				= 31;
+	public static final int ERROR_NUMBER_FORMAT				= 32;
+	public static final int ERROR_STRING_DOUBLE 			= 33;
+	public static final int ERROR_CHAR						= 34;
 
-	public static final int NUM_TOKEN_TYPES					= 33;
+	public static final int NUM_TOKEN_TYPES					= 35;
 
 }

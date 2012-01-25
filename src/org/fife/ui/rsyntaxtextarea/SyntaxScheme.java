@@ -48,7 +48,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @version 1.0
  * @see Theme
  */
-public class SyntaxScheme implements Cloneable {
+public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	private Style[] styles;
 
@@ -64,7 +64,7 @@ public class SyntaxScheme implements Cloneable {
 	 *        will be initially <code>null</code>.
 	 */
 	public SyntaxScheme(boolean useDefaults) {
-		styles = new Style[Token.NUM_TOKEN_TYPES];
+		styles = new Style[NUM_TOKEN_TYPES];
 		if (useDefaults) {
 			restoreDefaults(null);
 		}
@@ -93,7 +93,7 @@ public class SyntaxScheme implements Cloneable {
 	 *        (vs. all tokens using a plain font).
 	 */
 	public SyntaxScheme(Font baseFont, boolean fontStyles) {
-		styles = new Style[Token.NUM_TOKEN_TYPES];
+		styles = new Style[NUM_TOKEN_TYPES];
 		restoreDefaults(baseFont, fontStyles);
 	}
 
@@ -138,8 +138,8 @@ public class SyntaxScheme implements Cloneable {
 			cnse.printStackTrace();
 			return null;
 		}
-		shcs.styles = new Style[Token.NUM_TOKEN_TYPES];
-		for (int i=0; i<Token.NUM_TOKEN_TYPES; i++) {
+		shcs.styles = new Style[NUM_TOKEN_TYPES];
+		for (int i=0; i<NUM_TOKEN_TYPES; i++) {
 			Style s = styles[i];
 			if (s!=null) {
 				shcs.styles[i] = (Style)s.clone();
@@ -283,7 +283,7 @@ public class SyntaxScheme implements Cloneable {
 					return scheme; // Still set to defaults
 				}
 
-				int tokenTypeCount = Token.NUM_TOKEN_TYPES;
+				int tokenTypeCount = NUM_TOKEN_TYPES;
 				int tokenCount = tokenTypeCount*7 + 1; // Version string
 				if (tokens.length!=tokenCount) {
 					throw new Exception(
@@ -380,7 +380,9 @@ public class SyntaxScheme implements Cloneable {
 		Color docComment		= new Color(164,0,0);
 		Color keyword			= Color.BLUE;
 		Color function			= new Color(173,128,0);
+		Color preprocessor		= new Color(128,64,64);
 		Color regex				= new Color(0,128,164);
+		Color variable			= new Color(255,153,0);
 		Color literalNumber		= new Color(100,0,200);
 		Color literalString		= new Color(220,0,156);
 		Color error			= new Color(148,148,0);
@@ -402,38 +404,40 @@ public class SyntaxScheme implements Cloneable {
 			keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
 		}
 
-		styles[Token.COMMENT_EOL]				= new Style(comment, null, commentFont);
-		styles[Token.COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
-		styles[Token.COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
-		styles[Token.COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
-		styles[Token.COMMENT_MARKUP]			= new Style(Color.gray, null, commentFont);
-		styles[Token.RESERVED_WORD]				= new Style(keyword, null, keywordFont);
-		styles[Token.RESERVED_WORD_2]			= new Style(keyword, null, keywordFont);
-		styles[Token.FUNCTION]					= new Style(function, null);
-		styles[Token.LITERAL_BOOLEAN]			= new Style(literalNumber, null);
-		styles[Token.LITERAL_NUMBER_DECIMAL_INT]	= new Style(literalNumber, null);
-		styles[Token.LITERAL_NUMBER_FLOAT]		= new Style(literalNumber, null);
-		styles[Token.LITERAL_NUMBER_HEXADECIMAL]	= new Style(literalNumber, null);
-		styles[Token.LITERAL_STRING_DOUBLE_QUOTE]	= new Style(literalString, null);
-		styles[Token.LITERAL_CHAR]				= new Style(literalString, null);
-		styles[Token.LITERAL_BACKQUOTE]			= new Style(literalString, null);
-		styles[Token.DATA_TYPE]				= new Style(new Color(0,128,128), null);
-		styles[Token.VARIABLE]					= new Style(new Color(255,153,0), null);
-		styles[Token.REGEX]						= new Style(regex, null);
-		styles[Token.ANNOTATION]				= new Style(Color.gray, null);
-		styles[Token.IDENTIFIER]				= new Style(null, null);
-		styles[Token.WHITESPACE]				= new Style(Color.gray, null);
-		styles[Token.SEPARATOR]				= new Style(Color.RED, null);
-		styles[Token.OPERATOR]					= new Style(new Color(128,64,64), null);
-		styles[Token.PREPROCESSOR]				= new Style(Color.gray, null);
-		styles[Token.MARKUP_TAG_DELIMITER]		= new Style(Color.RED, null);
-		styles[Token.MARKUP_TAG_NAME]			= new Style(Color.BLUE, null);
-		styles[Token.MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127), null);
-		styles[Token.MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString, null);
-		styles[Token.ERROR_IDENTIFIER]			= new Style(error, null);
-		styles[Token.ERROR_NUMBER_FORMAT]		= new Style(error, null);
-		styles[Token.ERROR_STRING_DOUBLE]		= new Style(error, null);
-		styles[Token.ERROR_CHAR]				= new Style(error, null);
+		styles[COMMENT_EOL]				= new Style(comment, null, commentFont);
+		styles[COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
+		styles[COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
+		styles[COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
+		styles[COMMENT_MARKUP]			= new Style(Color.gray, null, commentFont);
+		styles[RESERVED_WORD]				= new Style(keyword, null, keywordFont);
+		styles[RESERVED_WORD_2]			= new Style(keyword, null, keywordFont);
+		styles[FUNCTION]					= new Style(function);
+		styles[LITERAL_BOOLEAN]			= new Style(literalNumber);
+		styles[LITERAL_NUMBER_DECIMAL_INT]	= new Style(literalNumber);
+		styles[LITERAL_NUMBER_FLOAT]		= new Style(literalNumber);
+		styles[LITERAL_NUMBER_HEXADECIMAL]	= new Style(literalNumber);
+		styles[LITERAL_STRING_DOUBLE_QUOTE]	= new Style(literalString);
+		styles[LITERAL_CHAR]				= new Style(literalString);
+		styles[LITERAL_BACKQUOTE]			= new Style(literalString);
+		styles[DATA_TYPE]				= new Style(new Color(0,128,128));
+		styles[VARIABLE]					= new Style(variable);
+		styles[REGEX]						= new Style(regex);
+		styles[ANNOTATION]				= new Style(Color.gray);
+		styles[IDENTIFIER]				= new Style(null);
+		styles[WHITESPACE]				= new Style(Color.gray);
+		styles[SEPARATOR]				= new Style(Color.RED);
+		styles[OPERATOR]					= new Style(preprocessor);
+		styles[PREPROCESSOR]				= new Style(Color.gray);
+		styles[MARKUP_TAG_DELIMITER]		= new Style(Color.RED);
+		styles[MARKUP_TAG_NAME]			= new Style(Color.BLUE);
+		styles[MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127));
+		styles[MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString);
+		styles[MARKUP_PROCESSING_INSTRUCTION] = new Style(preprocessor);
+		styles[MARKUP_CDATA]				= new Style(variable);
+		styles[ERROR_IDENTIFIER]			= new Style(error);
+		styles[ERROR_NUMBER_FORMAT]		= new Style(error);
+		styles[ERROR_STRING_DOUBLE]		= new Style(error);
+		styles[ERROR_CHAR]				= new Style(error);
 
 	}
 
@@ -504,7 +508,7 @@ public class SyntaxScheme implements Cloneable {
 		StringBuffer sb = new StringBuffer(VERSION);
 		sb.append(',');
 
-		for (int i=0; i<Token.NUM_TOKEN_TYPES; i++) {
+		for (int i=0; i<NUM_TOKEN_TYPES; i++) {
 
 			sb.append(i).append(',');
 

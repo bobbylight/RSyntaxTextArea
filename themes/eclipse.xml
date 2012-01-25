@@ -48,6 +48,8 @@
       <style token="MARKUP_TAG_NAME" fg="3f7f7f"/>
       <style token="MARKUP_TAG_ATTRIBUTE" fg="7f7f7f"/>
       <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="2900ff"/>
+      <style token="MARKUP_PROCESSING_INSTRUCTION" fg="808080"/>
+      <style token="MARKUP_CDATA" fg="cc6600"/>
       <style token="OPERATOR" fg="000000"/>
       <style token="PREPROCESSOR" fg="808080"/>
       <style token="REGEX" fg="008040"/>

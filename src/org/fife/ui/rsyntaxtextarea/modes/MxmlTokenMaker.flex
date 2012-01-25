@@ -288,7 +288,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = INATTR_SINGLE;
 				start = text.offset;
 				break;
-			case Token.PREPROCESSOR:
+			case Token.MARKUP_PROCESSING_INSTRUCTION:
 				state = PI;
 				start = text.offset;
 				break;
@@ -316,7 +316,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = AS_MLC;
 				start = text.offset;
 				break;
-			case Token.VARIABLE:
+			case Token.MARKUP_CDATA:
 				state = CDATA;
 				start = text.offset;
 				break;
@@ -520,10 +520,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <PI> {
 	[^\n\?]+						{}
-	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
-	"?>"							{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.PREPROCESSOR); }
+	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
+	"?>"							{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
 	"?"							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
 }
 
 <DTD> {
@@ -583,9 +583,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CDATA> {
 	[^\]]+						{}
-	{CDataEnd}					{ int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.VARIABLE); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
+	{CDataEnd}					{ int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
 	"]"							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_CDATA); return firstToken; }
 }
 
 <AS> {

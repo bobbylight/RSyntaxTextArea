@@ -59,16 +59,26 @@ public class Style implements Cloneable {
 
 
 	/**
-	 * Creates a new syntax scheme defaulting to black foreground, no
+	 * Creates a new style defaulting to black foreground, no
 	 * background, and no styling.
 	 */
 	public Style() {
-		this(DEFAULT_FOREGROUND, DEFAULT_BACKGROUND);
+		this(DEFAULT_FOREGROUND);
 	}
 
 
 	/**
-	 * Creates a new syntax scheme with the specified colors and no styling.
+	 * Creates a new style with the specified foreground and no styling.
+	 *
+	 * @param fg The foreground color to use.
+	 */
+	public Style(Color fg) {
+		this(fg, DEFAULT_BACKGROUND);
+	}
+
+
+	/**
+	 * Creates a new style with the specified colors and no styling.
 	 *
 	 * @param fg The foreground color to use.
 	 * @param bg The background color to use.
@@ -79,7 +89,7 @@ public class Style implements Cloneable {
 
 
 	/**
-	 * Creates a new syntax scheme.
+	 * Creates a new style.
 	 *
 	 * @param fg The foreground color to use.
 	 * @param bg The background color to use.
@@ -91,7 +101,7 @@ public class Style implements Cloneable {
 
 
 	/**
-	 * Creates a new syntax scheme.
+	 * Creates a new style.
 	 *
 	 * @param fg The foreground color to use.
 	 * @param bg The background color to use.
