@@ -18,6 +18,7 @@
    <markAllHighlight color="6b8189"/> <!-- TODO: Fix me -->
    <markOccurrencesHighlight color="d4d4d4"/> <!-- TODO: Fix me -->
    <matchedBracket fg="DBE0CC" animate="false"/>
+   <hyperlinks fg="0000ff"/>
    
    <!-- Gutter styling. -->
    <gutterBorder color="808080"/>

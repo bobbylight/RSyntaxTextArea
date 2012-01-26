@@ -1,7 +1,7 @@
 <!-- DTD for RSyntaxTextArea Theme XML. -->
 <!ELEMENT RSyntaxTheme (baseFont, background, caret, selection,
       currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
-      matchedBracket, gutterBorder, lineNumbers, foldIndicator, tokenStyles)>
+      matchedBracket, hyperlinks, gutterBorder, lineNumbers, foldIndicator, tokenStyles)>
 <!ELEMENT background EMPTY>
 <!ELEMENT baseFont EMPTY>
 <!ELEMENT caret EMPTY>
@@ -11,6 +11,7 @@
 <!ELEMENT markAllHighlight EMPTY>
 <!ELEMENT markOccurrencesHighlight EMPTY>
 <!ELEMENT matchedBracket EMPTY>
+<!ELEMENT hyperlinks EMPTY>
 <!ELEMENT gutterBorder EMPTY>
 <!ELEMENT lineNumbers EMPTY>
 <!ELEMENT foldIndicator EMPTY>
@@ -36,6 +37,8 @@
       fg CDATA #REQUIRED
       bg CDATA #IMPLIED
       animate (true|false) "false">
+<!ATTLIST hyperlinks
+      fg CDATA #REQUIRED>
 <!ATTLIST gutterBorder color CDATA #REQUIRED>
 <!ATTLIST lineNumbers
       fg         CDATA #REQUIRED

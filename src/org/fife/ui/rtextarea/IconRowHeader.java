@@ -343,31 +343,29 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
+		textAreaInsets = textArea.getInsets(textAreaInsets);
 
 		// Get the first and last lines to paint.
 		int cellHeight = textArea.getLineHeight();
-		int topLine = visibleRect.y/cellHeight;
-		int bottomLine = Math.min(topLine+visibleRect.height/cellHeight,
+		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
+		int bottomLine = Math.min(topLine+visibleRect.height/cellHeight+1,
 							root.getElementCount());
 
 		// Get where to start painting (top of the row).
 		// We need to be "scrolled up" up just enough for the missing part of
 		// the first line.
-		int y = topLine*cellHeight;
-		textAreaInsets = textArea.getInsets(textAreaInsets);
-		if (textAreaInsets!=null) {
-			y += textAreaInsets.top;
-		}
+		int y = topLine*cellHeight + textAreaInsets.top;
 
 		if ((activeLineRangeStart>=topLine&&activeLineRangeStart<=bottomLine) ||
 			(activeLineRangeEnd>=topLine && activeLineRangeEnd<=bottomLine) ||
 			(activeLineRangeStart<=topLine && activeLineRangeEnd>=bottomLine)) {
+
 			g.setColor(activeLineRangeColor);
 			int firstLine = Math.max(activeLineRangeStart, topLine);
-			int y1 = firstLine * cellHeight;
+			int y1 = firstLine * cellHeight + textAreaInsets.top;
 			int lastLine = Math.min(activeLineRangeEnd, bottomLine);
-			int y2 = (lastLine+1) * cellHeight;
-			//g.fillRect(0, y1, getWidth(), y2-y1);
+			int y2 = (lastLine+1) * cellHeight + textAreaInsets.top - 1;
+
 			int j = y1;
 			while (j<=y2) {
 				int yEnd = Math.min(y2, j+getWidth());
@@ -375,12 +373,14 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 				g.drawLine(0,j, xEnd,yEnd);
 				j += 2;
 			}
+
 			int i = 2;
 			while (i<getWidth()) {
 				int yEnd = y1 + getWidth() - i;
 				g.drawLine(i,y1, getWidth(),yEnd);
 				i += 2;
 			}
+
 			if (firstLine==activeLineRangeStart) {
 				g.setColor(activeLineRangeColor);
 				g.drawLine(0,y1, getWidth(),y1);
@@ -389,6 +389,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 				g.setColor(activeLineRangeColor);
 				g.drawLine(0,y2, getWidth(),y2);
 			}
+
 		}
 
 		if (trackingIcons!=null) {

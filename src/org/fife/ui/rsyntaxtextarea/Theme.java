@@ -57,8 +57,8 @@ import org.fife.ui.rtextarea.Gutter;
 /**
  * A theme is a set of fonts and colors to use to style RSyntaxTextArea.
  * Themes are defined in XML files that are validated against
- * <code>themes.dtd</code>.  This provides applications and other consumers an
- * easy way to style RSyntaxTextArea without having to use the API.<p>
+ * <code>themes.dtd</code>.  This provides applications and other consumers
+ * with an easy way to style RSyntaxTextArea without having to use the API.<p>
  * 
  * Sample themes are included in the source tree under the <code>/themes</code>
  * folder, but are not a part of the built RSyntaxTextArea jar.  Hosting
@@ -88,6 +88,7 @@ public class Theme {
 	private Color matchedBracketFG;
 	private Color matchedBracketBG;
 	private boolean matchedBracketAnimate;
+	private Color hyperlinkFG;
 
 	private SyntaxScheme scheme;
 
@@ -127,6 +128,7 @@ public class Theme {
 		matchedBracketBG = textArea.getMatchedBracketBGColor();
 		matchedBracketFG = textArea.getMatchedBracketBorderColor();
 		matchedBracketAnimate = textArea.getAnimateBracketMatching();
+		hyperlinkFG = textArea.getHyperlinkForeground();
 
 		scheme = textArea.getSyntaxScheme();
 
@@ -164,6 +166,7 @@ public class Theme {
 		textArea.setMatchedBracketBGColor(matchedBracketBG);
 		textArea.setMatchedBracketBorderColor(matchedBracketFG);
 		textArea.setAnimateBracketMatching(matchedBracketAnimate);
+		textArea.setHyperlinkForeground(hyperlinkFG);
 
 		textArea.setSyntaxScheme(scheme);
 
@@ -282,6 +285,10 @@ public class Theme {
 			elem.setAttribute("fg", colorToString(matchedBracketFG));
 			elem.setAttribute("bg", colorToString(matchedBracketBG));
 			elem.setAttribute("animate", Boolean.toString(matchedBracketAnimate));
+			root.appendChild(elem);
+
+			elem = doc.createElement("hyperlinks");
+			elem.setAttribute("fg", colorToString(hyperlinkFG));
 			root.appendChild(elem);
 
 			elem = doc.createElement("gutterBorder");
@@ -538,6 +545,11 @@ public class Theme {
 				theme.matchedBracketBG = stringToColor(bg);
 				String animate = attrs.getValue("animate");
 				theme.matchedBracketAnimate = Boolean.valueOf(animate).booleanValue();
+			}
+
+			else if ("hyperlinks".equals(qName)) {
+				String fg = attrs.getValue("fg");
+				theme.hyperlinkFG = stringToColor(fg);
 			}
 
 			else if ("selection".equals(qName)) {
