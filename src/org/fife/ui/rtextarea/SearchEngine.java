@@ -70,13 +70,17 @@ public class SearchEngine {
 	 * @throws PatternSyntaxException If <code>regex</code> is
 	 *         <code>true</code> but <code>text</code> is not a valid regular
 	 *         expression.
-	 * @see #replace
-	 * @see #regexReplace
+	 * @see #replace(RTextArea, String, String, boolean, boolean, boolean, boolean)
+	 * @see #replaceAll(RTextArea, String, String, boolean, boolean, boolean)
 	 */
 	public static boolean find(JTextArea textArea, String text,
 							boolean forward, boolean matchCase,
 							boolean wholeWord, boolean regex)
 									throws PatternSyntaxException {
+
+		if (text==null || text.length()==0) {
+			return false;
+		}
 
 		// Be smart about what position we're "starting" at.  We don't want
 		// to find a match in the currently selected text (if any), so we
@@ -355,6 +359,10 @@ public class SearchEngine {
 							boolean matchCase, boolean wholeWord,
 							String replaceStr) {
 
+		if (wholeWord) {
+			regEx = "\\b" + regEx + "\\b";
+		}
+
 		// Make a pattern that takes into account whether or not to match case.
 		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 		flags |= matchCase ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
@@ -363,101 +371,28 @@ public class SearchEngine {
 		// Make a Matcher to find the regEx instances.
 		Matcher m = pattern.matcher(searchIn);
 
-		/*
-		 * Our algorithm is broken into four cases:
-		 *   1. Forward search, not whole-word: Just take first match found.
-		 *   2. Forward search, whole-word: Loop until the first whole-word
-		 *      match is found.
-		 *   3. Backward search, not whole-word.  Find all matches first
-		 *      (must do this since we can't search for regexes backwards),
-		 *      and return last match found.
-		 *   4. Backward search, whole-word.  Find all matches first, then
-		 *      loop through them backwards until the first (i.e., the last!)
-		 *      whole-word match is found.
-		 */
-
-		// If this is a forward-direction search...
+		// Search forwards
 		if (goForward) {
-
-			// 1. Forward search, not whole word => easy.  Just return
-			// the first match found.
-			if (!wholeWord) {
-				if (m.find()) {
-					if (replaceStr==null) { // Find, not replace.
-						return new Point(m.start(), m.end());
-					}
-					else { // Replace.
-						return new RegExReplaceInfo(m.group(0),
-								m.start(), m.end(),
-								getReplacementText(m, replaceStr));
-					}
-				}
-			}
-
-			// 2. Forward search, whole word => just okay.  Find and look at
-			// matches one at a time until you find one that's "whole word."
-			else {
-				while (m.find()) {
-					Point loc = new Point(m.start(), m.end());
-					if (isWholeWord(searchIn, loc.x,loc.y-loc.x)) {
-						if (replaceStr==null) { // Find, not replace.
-							return loc;
-						}
-						else { // Replace.
-							return new RegExReplaceInfo(m.group(0),
-								loc.x, loc.y,
-								getReplacementText(m, replaceStr));
-						}
-					}
-				}
-			}
-
-		} // End of if (goForward).
-
-		// If this is a backward-direction search...
-		else {
-
-			// Get some variables ready.
-			List matches = getMatches(m, replaceStr);
-			if (matches.isEmpty())
-				return null;
-			int pos = matches.size() - 1;
-
-			// 3. If they're not looking for a "whole word" just return
-			// the first (i.e., last) match.
-			if (wholeWord==false) {
+			if (m.find()) {
 				if (replaceStr==null) { // Find, not replace.
-					return /*(Point)*/matches.get(pos);
+					return new Point(m.start(), m.end());
 				}
-				else { // Replace.
-					return /*(RegExReplaceInfo)*/matches.get(pos);
-				}
+				// Otherwise, replace
+				return new RegExReplaceInfo(m.group(0),
+						m.start(), m.end(),
+						getReplacementText(m, replaceStr));
 			}
-
-			// 4. Otherwise, go through the matches last-to-first.
-			while (pos>=0) {
-				Object matchObj = matches.get(pos);
-				if (replaceStr==null) { // Find, not replace.
-					Point loc = (Point)matchObj;
-					if (isWholeWord(searchIn, loc.x,loc.y-loc.x)) {
-						return matchObj;
-					}
-				}
-				else { // Replace.
-					RegExReplaceInfo info = (RegExReplaceInfo)matchObj;
-					int x = info.getStartIndex();
-					int y = info.getEndIndex();
-					if (isWholeWord(searchIn, x,y-x)) {
-						return matchObj;
-					}
-				}
-				pos--;
-			}
-
 		}
 
-		// If we didn't find a match after all that, return null.
-		return null;
+		// Search backwards
+		else {
+			List matches = getMatches(m, replaceStr);
+			if (!matches.isEmpty()) {
+				return matches.get(matches.size()-1);
+			}
+		}
+
+		return null; // No match found
 
 	}
 
@@ -734,13 +669,17 @@ public class SearchEngine {
 	 *         <code>true</code> and <code>replaceWith</code> references
 	 *         an invalid group (less than zero or greater than the number
 	 *         of groups matched).
-	 * @see #regexReplace
-	 * @see #find
+	 * @see #replaceAll(RTextArea, String, String, boolean, boolean, boolean)
+	 * @see #find(JTextArea, String, boolean, boolean, boolean, boolean)
 	 */
 	public static boolean replace(RTextArea textArea, String toFind,
 				String replaceWith, boolean forward, boolean matchCase,
 				boolean wholeWord, boolean regex)
 									throws PatternSyntaxException {
+
+		if (toFind==null || toFind.length()==0) {
+			return false;
+		}
 
 		textArea.beginAtomicEdit();
 		try {
@@ -798,6 +737,10 @@ public class SearchEngine {
 							String replaceWith, boolean matchCase,
 							boolean wholeWord, boolean regex)
 									throws PatternSyntaxException {
+
+		if (toFind==null || toFind.length()==0) {
+			return 0;
+		}
 
 		int count = 0;
 
