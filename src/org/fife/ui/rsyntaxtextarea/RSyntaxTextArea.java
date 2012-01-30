@@ -2249,6 +2249,7 @@ private boolean fractionalFontMetricsEnabled;
 			syntaxStyleKey = styleKey;
 			((RSyntaxDocument)getDocument()).setSyntaxStyle(styleKey);
 			firePropertyChange(SYNTAX_STYLE_PROPERTY, oldStyle, styleKey);
+			setActiveLineRange(-1, -1);
 		}
 
 	}

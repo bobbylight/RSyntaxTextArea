@@ -91,6 +91,10 @@ public class RSyntaxUtilities implements SwingConstants {
 		 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0  // 240-255.
 	};
 
+	/**
+	 * Used in bracket matching methods.
+	 */
+	private static Segment charSegment = new Segment();
 
 	/**
 	 * Returns the rendering hints for text that will most accurately reflect
@@ -244,7 +248,6 @@ public class RSyntaxUtilities implements SwingConstants {
 	 *         <code>-1</code> if there isn't a matching bracket (or the caret
 	 *         isn't on a bracket).
 	 */
-	private static Segment charSegment = new Segment();
 	public static int getMatchingBracketPosition(RSyntaxTextArea textArea) {
 
 		try {
@@ -429,7 +432,7 @@ public class RSyntaxUtilities implements SwingConstants {
 								}
 							}
 
-						} // End of for (int i=segOffset; i<segOffset+charSegment.count; i++).
+						}
 
 						// Bail out if we've gone through all lines and
 						// haven't found the match.
