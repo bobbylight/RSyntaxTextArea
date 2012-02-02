@@ -138,6 +138,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_IN_JS_MLC				= -10;
 
 	/**
+	 * Token type specifying we're in an invalid multi-line JS string.
+	 */
+	public static final int INTERNAL_IN_JS_STRING_INVALID	= -11;
+
+	/**
+	 * Token type specifying we're in a valid multi-line JS string.
+	 */
+	public static final int INTERNAL_IN_JS_STRING_VALID		= -12;
+
+	/**
+	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
+	 */
+	public static final int INTERNAL_IN_JS_CHAR_INVALID	= -13;
+
+	/**
+	 * Token type specifying we're in a valid multi-line JS single-quoted string.
+	 */
+	public static final int INTERNAL_IN_JS_CHAR_VALID		= -14;
+
+	/**
 	 * Token type specifying we're in a Java documentation comment.
 	 */
 	public static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -(1<<11);
@@ -161,6 +181,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Whether closing markup tags are automatically completed for JSP.
 	 */
 	private static boolean completeCloseTags;
+
+	/**
+	 * When in the JS_STRING state, whether the current string is valid.
+	 */
+	private boolean validJSString;
 
 
 	/**
@@ -316,6 +341,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 				break;
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_STRING_INVALID:
+				state = JS_STRING;
+				validJSString = false;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_STRING_VALID:
+				state = JS_STRING;
+				validJSString = true;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_CHAR_INVALID:
+				state = JS_CHAR;
+				validJSString = false;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_CHAR_VALID:
+				state = JS_CHAR;
+				validJSString = true;
 				start = text.offset;
 				break;
 			default:
@@ -492,14 +537,6 @@ URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 // JavaScript stuff.
-JS_UnclosedCharLiteral		= ("'"({AnyCharacterButApostropheOrBackSlash}|{Escape})*)
-JS_CharLiteral				= ({JS_UnclosedCharLiteral}"'")
-JS_UnclosedErrorCharLiteral	= ([\']([^\'\n]|"\\'")*)
-JS_ErrorCharLiteral			= ({JS_UnclosedErrorCharLiteral}[\'])
-JS_UnclosedStringLiteral	= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*)
-JS_StringLiteral			= ({JS_UnclosedStringLiteral}[\"])
-JS_UnclosedErrorStringLiteral	= ([\"]([^\"\n]|"\\\"")*)
-JS_ErrorStringLiteral		= ({JS_UnclosedErrorStringLiteral}[\"])
 JS_MLCBegin				= ({MLCBegin})
 JS_MLCEnd					= ({MLCEnd})
 JS_LineCommentBegin			= ({LineCommentBegin})
@@ -525,6 +562,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 %state INATTR_DOUBLE_SCRIPT
 %state INATTR_SINGLE_SCRIPT
 %state JAVASCRIPT
+%state JS_STRING
+%state JS_CHAR
 %state JS_MLC
 %state JS_EOL_COMMENT
 %state HIDDEN_COMMENT
@@ -876,14 +915,8 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 
 	/* String/Character literals. */
-	{JS_CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
-	{JS_UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{JS_UnclosedErrorCharLiteral}		{ addToken(Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_ErrorCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{JS_StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{JS_UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_UnclosedErrorStringLiteral}	{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_ErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
+	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
+	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
@@ -913,6 +946,53 @@ JS_ErrorIdentifier			= ({ErrorIdentifier})
 	/* Catch any other (unhandled) characters and flag them as bad. */
 	.							{ addToken(Token.ERROR_IDENTIFIER); }
 
+}
+
+
+<JS_STRING> {
+	[^\n\\\"]+				{}
+	\n						{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+	\\						{ /* Line ending in '\' => continue to next line. */
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addEndToken(INTERNAL_IN_JS_STRING_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
+								}
+								return firstToken;
+							}
+	\"						{ int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+}
+
+<JS_CHAR> {
+	[^\n\\\']+				{}
+	\n						{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+	\\						{ /* Line ending in '\' => continue to next line. */
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
+								}
+								return firstToken;
+							}
+	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
 

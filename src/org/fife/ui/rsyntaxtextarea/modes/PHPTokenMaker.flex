@@ -63,7 +63,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.7
+ * @version 0.8
  *
  */
 %%
@@ -127,6 +127,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
+	 * Token type specifying we're in an invalid multi-line JS string.
+	 */
+	public static final int INTERNAL_IN_JS_STRING_INVALID	= -9;
+
+	/**
+	 * Token type specifying we're in a valid multi-line JS string.
+	 */
+	public static final int INTERNAL_IN_JS_STRING_VALID		= -10;
+
+	/**
+	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
+	 */
+	public static final int INTERNAL_IN_JS_CHAR_INVALID	= -11;
+
+	/**
+	 * Token type specifying we're in a valid multi-line JS single-quoted string.
+	 */
+	public static final int INTERNAL_IN_JS_CHAR_VALID		= -12;
+
+	/**
 	 * Token type specifying we're in PHP.
 	 */
 	public static final int INTERNAL_IN_PHP					= -(1<<11);
@@ -155,6 +175,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * The state PHP was started in (YYINITIAL, INTERNAL_IN_JS, etc.).
 	 */
 	private int phpInState;
+
+	/**
+	 * When in the JS_STRING state, whether the current string is valid.
+	 */
+	private boolean validJSString;
 
 
 	/**
@@ -308,6 +333,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = JS_MLC;
 				start = text.offset;
 				break;
+			case INTERNAL_IN_JS_STRING_INVALID:
+				state = JS_STRING;
+				validJSString = false;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_STRING_VALID:
+				state = JS_STRING;
+				validJSString = true;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_CHAR_INVALID:
+				state = JS_CHAR;
+				validJSString = false;
+				start = text.offset;
+				break;
+			case INTERNAL_IN_JS_CHAR_VALID:
+				state = JS_CHAR;
+				validJSString = true;
+				start = text.offset;
+				break;
 			default:
 				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
 					int main = -(-initialTokenType & 0xffffff00);
@@ -422,21 +467,10 @@ NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
-AnyCharacterButApostropheOrBackSlash	= ([^\\'])
-AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
-JS_UnclosedCharLiteral		= ("'"({AnyCharacterButApostropheOrBackSlash}|{Escape})*)
-JS_CharLiteral				= ({JS_UnclosedCharLiteral}"'")
-JS_UnclosedErrorCharLiteral	= ([\']([^\'\n]|"\\'")*)
-JS_ErrorCharLiteral			= ({JS_UnclosedErrorCharLiteral}[\'])
-JS_UnclosedStringLiteral	= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*)
-JS_StringLiteral			= ({JS_UnclosedStringLiteral}[\"])
-JS_UnclosedErrorStringLiteral	= ([\"]([^\"\n]|"\\\"")*)
-JS_ErrorStringLiteral		= ({JS_UnclosedErrorStringLiteral}[\"])
 JS_MLCBegin				= "/*"
 JS_MLCEnd					= "*/"
 JS_LineCommentBegin			= "//"
@@ -486,6 +520,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state INATTR_DOUBLE_SCRIPT
 %state INATTR_SINGLE_SCRIPT
 %state JAVASCRIPT
+%state JS_CHAR
+%state JS_STRING
 %state JS_MLC
 %state JS_EOL_COMMENT
 %state PHP
@@ -822,14 +858,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{Whitespace}					{ addToken(Token.WHITESPACE); }
 
 	/* String/Character literals. */
-	{JS_CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
-	{JS_UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{JS_UnclosedErrorCharLiteral}		{ addToken(Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_ErrorCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{JS_StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{JS_UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_UnclosedErrorStringLiteral}	{ addToken(Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_ErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
+	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
+	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
+
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
@@ -859,6 +890,53 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Catch any other (unhandled) characters and flag them as bad. */
 	.							{ addToken(Token.ERROR_IDENTIFIER); }
 
+}
+
+
+<JS_STRING> {
+	[^\n\\\"]+				{}
+	\n						{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+	\\						{ /* Line ending in '\' => continue to next line. */
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addEndToken(INTERNAL_IN_JS_STRING_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
+								}
+								return firstToken;
+							}
+	\"						{ int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+}
+
+<JS_CHAR> {
+	[^\n\\\']+				{}
+	\n						{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+	\\						{ /* Line ending in '\' => continue to next line. */
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
+								}
+								return firstToken;
+							}
+	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
 <JS_MLC> {
