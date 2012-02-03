@@ -24,6 +24,7 @@
    <gutterBorder color="dddddd"/>
    <lineNumbers fg="787878"/>
    <foldIndicator fg="808080" iconBg="ffffff"/>
+   <activeLineRange color="3399ff"/>
    
    <!-- Syntax tokens. -->
    <tokenStyles>

@@ -2,7 +2,7 @@
  * 11/14/2003
  *
  * RTextScrollPane.java - A JScrollPane that will only accept RTextAreas
- * so that it can display line numbers.
+ * so that it can display line numbers, fold indicators, and icons.
  * Copyright (C) 2003 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
@@ -41,7 +41,7 @@ import javax.swing.JScrollPane;
  * The actual "meat" of these extras is contained in the {@link Gutter} class.
  * Each <code>RTextScrollPane</code> has a <code>Gutter</code> instance that
  * it uses as its row header.  The gutter is only made visible when one of its
- * features is being used (line numbering and/or icons).
+ * features is being used (line numbering, folding, and/or icons).
  *
  * @author Robert Futrell
  * @version 0.9
@@ -171,6 +171,17 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
+	 * Returns whether the fold indicator is enabled.
+	 *
+	 * @return Whether the fold indicator is enabled.
+	 * @see #setFoldIndicatorEnabled(boolean)
+	 */
+	public boolean isFoldIndicatorEnabled() {
+		return gutter.isFoldIndicatorEnabled();
+	}
+
+
+	/**
 	 * Returns whether the icon row header is enabled.
 	 *
 	 * @return Whether the icon row header is enabled.
@@ -178,6 +189,18 @@ public class RTextScrollPane extends JScrollPane {
 	 */
 	public boolean isIconRowHeaderEnabled() {
 		return gutter.isIconRowHeaderEnabled();
+	}
+
+
+	/**
+	 * Toggles whether the fold indicator is enabled.
+	 *
+	 * @param enabled Whether the fold indicator should be enabled.
+	 * @see #isFoldIndicatorEnabled()
+	 */
+	public void setFoldIndicatorEnabled(boolean enabled) {
+		gutter.setFoldIndicatorEnabled(enabled);
+		checkGutterVisibility();
 	}
 
 

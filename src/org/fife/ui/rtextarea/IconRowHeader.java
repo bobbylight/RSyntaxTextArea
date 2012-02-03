@@ -46,7 +46,21 @@ import javax.swing.text.View;
 
 
 /**
- * Renderes icons in the {@link Gutter}.
+ * Renders icons in the {@link Gutter}.  This can be used to visually mark
+ * lines containing syntax errors, lines with breakpoints set on them, etc.<p>
+ *
+ * This component has built-in support for displaying icons representing
+ * "bookmarks;" that is, lines a user can cycle through via F2 and Shift+F2.
+ * Bookmarked lines are toggled via Ctrl+F2.  In order to enable bookmarking,
+ * you must first assign an icon to represent a bookmarked line, then actually
+ * enable the feature.  This is actually done on the parent {@link Gutter}
+ * component:<p>
+ * 
+ * <pre>
+ * Gutter gutter = scrollPane.getGutter();
+ * gutter.setBookmarkIcon(new ImageIcon("bookmark.png"));
+ * gutter.setBookmarkingEnabled(true);
+ * </pre>
  *
  * @author Robert Futrell
  * @version 1.0
@@ -99,7 +113,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	/**
 	 * The color used to highlight the active code block.
 	 */
-	private Color activeLineRangeColor = new Color(51,153,255);
+	private Color activeLineRangeColor;
 
 
 	/**
@@ -114,6 +128,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		width = 16;
 		addMouseListener(this);
 		activeLineRangeStart = activeLineRangeEnd = -1;
+		setActiveLineRangeColor(null);
 
 		// Must explicitly set our background color, otherwise we inherit that
 		// of the parent Gutter.
@@ -161,6 +176,17 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			activeLineRangeStart = activeLineRangeEnd = -1;
 			repaint();
 		}
+	}
+
+
+	/**
+	 * Returns the color used to paint the active line range, if any.
+	 *
+	 * @return The color.
+	 * @see #setActiveLineRangeColor(Color)
+	 */
+	public Color getActiveLineRangeColor() {
+		return activeLineRangeColor;
 	}
 
 
@@ -566,23 +592,6 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 
 	/**
-	 * Highlights a range of lines in the icon area.
-	 *
-	 * @param startLine The start of the line range.
-	 * @param endLine The end of the line range.
-	 * @see #clearActiveLineRange()
-	 */
-	public void setActiveLineRange(int startLine, int endLine) {
-		if (startLine!=activeLineRangeStart ||
-				endLine!=activeLineRangeEnd) {
-			activeLineRangeStart = startLine;
-			activeLineRangeEnd = endLine;
-			repaint();
-		}
-	}
-
-
-	/**
 	 * Removes all tracking icons.
 	 *
 	 * @see #removeTrackingIcon(Object)
@@ -607,6 +616,42 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 					i.remove();
 				}
 			}
+		}
+	}
+
+
+	/**
+	 * Highlights a range of lines in the icon area.
+	 *
+	 * @param startLine The start of the line range.
+	 * @param endLine The end of the line range.
+	 * @see #clearActiveLineRange()
+	 */
+	public void setActiveLineRange(int startLine, int endLine) {
+		if (startLine!=activeLineRangeStart ||
+				endLine!=activeLineRangeEnd) {
+			activeLineRangeStart = startLine;
+			activeLineRangeEnd = endLine;
+			repaint();
+		}
+	}
+
+
+	/**
+	 * Sets the color to use to render active line ranges.
+	 *
+	 * @param color The color to use.  If this is null, then the default
+	 *        color is used.
+	 * @see #getActiveLineRangeColor()
+	 * @see Gutter#DEFAULT_ACTIVE_LINE_RANGE_COLOR
+	 */
+	public void setActiveLineRangeColor(Color color) {
+		if (color==null) {
+			color = Gutter.DEFAULT_ACTIVE_LINE_RANGE_COLOR;
+		}
+		if (!color.equals(activeLineRangeColor)) {
+			activeLineRangeColor = color;
+			repaint();
 		}
 	}
 

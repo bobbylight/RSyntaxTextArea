@@ -51,19 +51,38 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * displays optional information such as line numbers, fold regions, and icons
  * (for bookmarks, debugging breakpoints, error markers, etc.).<p>
  *
- * To add icons to the gutter, you must first call
- * {@link RTextScrollPane#setIconRowHeaderEnabled(boolean)} on the parent
- * scroll pane, to make the icon area visible.  Then, you can add icons that
- * track either lines in the document, or offsets, via
+ * Icons can be added on a per-line basis to visually mark syntax errors, lines
+ * with breakpoints set on them, etc.  To add icons to the gutter, you must
+ * first call {@link RTextScrollPane#setIconRowHeaderEnabled(boolean)} on the
+ * parent scroll pane, to make the icon area visible.  Then, you can add icons
+ * that track either lines in the document, or offsets, via
  * {@link #addLineTrackingIcon(int, Icon)} and
  * {@link #addOffsetTrackingIcon(int, Icon)}, respectively.  To remove an
- * icon you've added, use {@link #removeTrackingIcon(GutterIconInfo)}.
+ * icon you've added, use {@link #removeTrackingIcon(GutterIconInfo)}.<p>
+ *
+ * In addition to support for arbitrary per-line icons, this component also
+ * has built-in support for displaying icons representing "bookmarks;" that is,
+ * lines a user can cycle through via F2 and Shift+F2.  Bookmarked lines are
+ * toggled via Ctrl+F2.  In order to enable bookmarking, you must first assign
+ * an icon to represent a bookmarked line, then actually enable the feature:
+ * 
+ * <pre>
+ * Gutter gutter = scrollPane.getGutter();
+ * gutter.setBookmarkIcon(new ImageIcon("bookmark.png"));
+ * gutter.setBookmarkingEnabled(true);
+ * </pre>
  *
  * @author Robert Futrell
  * @version 1.0
  * @see GutterIconInfo
  */
 public class Gutter extends JPanel {
+
+	/**
+	 * The color used to highlight active line ranges if none is specified.
+	 */
+	public static final Color DEFAULT_ACTIVE_LINE_RANGE_COLOR =
+												new Color(51, 153, 255);
 
 	/**
 	 * The text area.
@@ -170,6 +189,17 @@ public class Gutter extends JPanel {
 	 */
 	private void clearActiveLineRange() {
 		iconArea.clearActiveLineRange();
+	}
+
+
+	/**
+	 * Returns the color used to paint the active line range, if any.
+	 *
+	 * @return The color.
+	 * @see #setActiveLineRangeColor(Color)
+	 */
+	public Color getActiveLineRangeColor() {
+		return iconArea.getActiveLineRangeColor();
 	}
 
 
@@ -371,6 +401,19 @@ public class Gutter extends JPanel {
 	 */
 	public void removeAllTrackingIcons() {
 		iconArea.removeAllTrackingIcons();
+	}
+
+
+	/**
+	 * Sets the color to use to render active line ranges.
+	 *
+	 * @param color The color to use.  If this is null, then the default
+	 *        color is used.
+	 * @see #getActiveLineRangeColor()
+	 * @see #DEFAULT_ACTIVE_LINE_RANGE_COLOR
+	 */
+	public void setActiveLineRangeColor(Color color) {
+		iconArea.setActiveLineRangeColor(color);
 	}
 
 
