@@ -2,7 +2,7 @@
 <!ELEMENT RSyntaxTheme (baseFont, background, caret, selection,
       currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
       matchedBracket, hyperlinks, gutterBorder, lineNumbers, foldIndicator,
-      activeLineRange, tokenStyles)>
+      iconRowHeader, tokenStyles)>
 <!ELEMENT background EMPTY>
 <!ELEMENT baseFont EMPTY>
 <!ELEMENT caret EMPTY>
@@ -16,7 +16,7 @@
 <!ELEMENT gutterBorder EMPTY>
 <!ELEMENT lineNumbers EMPTY>
 <!ELEMENT foldIndicator EMPTY>
-<!ELEMENT activeLineRange EMPTY>
+<!ELEMENT iconRowHeader EMPTY>
 <!ELEMENT tokenStyles (style+)>
 <!ELEMENT style EMPTY>
 
@@ -41,7 +41,8 @@
       animate (true|false) "false">
 <!ATTLIST hyperlinks
       fg CDATA #REQUIRED>
-<!ATTLIST gutterBorder color CDATA #REQUIRED>
+<!ATTLIST gutterBorder
+      color CDATA #REQUIRED>
 <!ATTLIST lineNumbers
       fg         CDATA #REQUIRED
       fontFamily CDATA #IMPLIED
@@ -49,7 +50,8 @@
 <!ATTLIST foldIndicator
       fg     CDATA #REQUIRED
       iconBg CDATA #REQUIRED>
-<!ATTLIST activeLineRange color CDATA #REQUIRED>
+<!ATTLIST iconRowHeader
+      activeLineRange CDATA #REQUIRED>
 <!ATTLIST style
       token      CDATA #REQUIRED
       fg         CDATA #IMPLIED
