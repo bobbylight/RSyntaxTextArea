@@ -533,12 +533,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %%
 
 <YYINITIAL> {
-	"<!--"					{ start = zzMarkedPos-4; yybegin(COMMENT); }
-	"<script"					{
-							  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-							  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
-							  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
-							}
+	"<!--"						{ start = zzMarkedPos-4; yybegin(COMMENT); }
+	"<"[sS][cC][rR][iI][pP][tT]	{
+								  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+								  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
+								}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
 	"<"({Letter}|{Digit})+		{
@@ -742,7 +742,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <INTAG_SCRIPT> {
 	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
-	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
+	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
@@ -941,9 +941,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
-	[^hwf\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[^hwf<\n\*]+			{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
+	{EndScriptTag}			{
+							  yybegin(YYINITIAL);
+							  int temp = zzStartRead;
+							  addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE);
+							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
+							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+							}
+	"<"						{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
