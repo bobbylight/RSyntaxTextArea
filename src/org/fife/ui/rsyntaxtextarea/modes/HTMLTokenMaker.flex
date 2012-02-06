@@ -436,6 +436,7 @@ JS_AssignmentOperator		= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>=
 JS_Operator				= ({JS_NonAssignmentOperator}|{JS_AssignmentOperator})
 JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)
 JS_ErrorIdentifier			= ({NonSeparator}+)
+JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -797,6 +798,39 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
 	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
+
+	/* Attempt to identify regular expressions (not foolproof) - do after comments! */
+	{JS_Regex}						{
+										boolean highlightedAsRegex = false;
+										if (firstToken==null) {
+											addToken(Token.REGEX);
+											highlightedAsRegex = true;
+										}
+										else {
+											// If this is *likely* to be a regex, based on
+											// the previous token, highlight it as such.
+											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
+											if (t==null || t.isSingleChar('(') ||
+													t.isSingleChar('=') ||
+													t.isSingleChar(',') ||
+													t.isSingleChar('!') ||
+													t.isSingleChar('&') ||
+													t.is(Token.OPERATOR, "==") ||
+													t.is(Token.OPERATOR, "===") ||
+													t.is(Token.OPERATOR, "!=") ||
+													t.is(Token.OPERATOR, "!==")) {
+												addToken(Token.REGEX);
+												highlightedAsRegex = true;
+											}
+										}
+										// If it doesn't *appear* to be a regex, highlight it as
+										// individual tokens.
+										if (!highlightedAsRegex) {
+											int temp = zzStartRead + 1;
+											addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+											zzStartRead = zzCurrentPos = zzMarkedPos = temp;
+										}
+									}
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
