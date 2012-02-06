@@ -72,7 +72,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  */
 
-public class JavaScriptTokenMaker extends AbstractJFlexTokenMaker {
+public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
