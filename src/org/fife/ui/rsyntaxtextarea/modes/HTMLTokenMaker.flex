@@ -810,15 +810,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 											// If this is *likely* to be a regex, based on
 											// the previous token, highlight it as such.
 											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
-											if (t==null || t.isSingleChar('(') ||
-													t.isSingleChar('=') ||
-													t.isSingleChar(',') ||
-													t.isSingleChar('!') ||
-													t.isSingleChar('&') ||
-													t.is(Token.OPERATOR, "==") ||
-													t.is(Token.OPERATOR, "===") ||
-													t.is(Token.OPERATOR, "!=") ||
-													t.is(Token.OPERATOR, "!==")) {
+											if (RSyntaxUtilities.regexCanFollowInJavaScript(t)) {
 												addToken(Token.REGEX);
 												highlightedAsRegex = true;
 											}

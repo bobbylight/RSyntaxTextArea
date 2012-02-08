@@ -602,7 +602,10 @@ public abstract class Token implements TokenTypes {
 
 	/**
 	 * Returns whether this token is of the specified type, with the specified
-	 * lexeme.
+	 * lexeme.<p>
+	 * The other overload of this method is preferred over this one in
+	 * performance-critical code, as this one involves a String allocation
+	 * while the other does not.
 	 *
 	 * @param type The type to check for.
 	 * @param lexeme The lexeme to check for.

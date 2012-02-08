@@ -4206,34 +4206,27 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
         case 152: break;
         case 79: 
           { boolean highlightedAsRegex = false;
-										if (firstToken==null) {
-											addToken(Token.REGEX);
-											highlightedAsRegex = true;
-										}
-										else {
-											// If this is *likely* to be a regex, based on
-											// the previous token, highlight it as such.
-											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
-											if (t==null || t.isSingleChar('(') ||
-													t.isSingleChar('=') ||
-													t.isSingleChar(',') ||
-													t.isSingleChar('!') ||
-													t.isSingleChar('&') ||
-													t.is(Token.OPERATOR, "==") ||
-													t.is(Token.OPERATOR, "===") ||
-													t.is(Token.OPERATOR, "!=") ||
-													t.is(Token.OPERATOR, "!==")) {
-												addToken(Token.REGEX);
-												highlightedAsRegex = true;
-											}
-										}
-										// If it doesn't *appear* to be a regex, highlight it as
-										// individual tokens.
-										if (!highlightedAsRegex) {
-											int temp = zzStartRead + 1;
-											addToken(zzStartRead, zzStartRead, Token.OPERATOR);
-											zzStartRead = zzCurrentPos = zzMarkedPos = temp;
-										}
+			if (firstToken==null) {
+				addToken(Token.REGEX);
+				highlightedAsRegex = true;
+			}
+			else {
+				// If this is *likely* to be a regex, based on
+				// the previous token, highlight it as such.
+				Token t = firstToken.getLastNonCommentNonWhitespaceToken();
+				if (RSyntaxUtilities.regexCanFollowInJavaScript(t)) {
+					addToken(Token.REGEX);
+					highlightedAsRegex = true;
+				}
+			}
+			// If it doesn't *appear* to be a regex, highlight it as
+			// individual tokens.
+			if (!highlightedAsRegex) {
+				int temp = zzStartRead + 1;
+				addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+				zzStartRead = zzCurrentPos = zzMarkedPos = temp;
+			}
+
           }
         case 153: break;
         case 59: 

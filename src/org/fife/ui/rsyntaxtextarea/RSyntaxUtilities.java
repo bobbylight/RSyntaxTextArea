@@ -97,6 +97,12 @@ public class RSyntaxUtilities implements SwingConstants {
 	private static Segment charSegment = new Segment();
 
 	/**
+	 * Used internally.
+	 */
+	private static final char[] JS_KEYWORD_RETURN = { 'r', 'e', 't', 'u', 'r', 'n' };
+
+
+	/**
 	 * Returns the rendering hints for text that will most accurately reflect
 	 * those of the native windowing system.
 	 *
@@ -1012,6 +1018,35 @@ return c.getLineStartOffset(line);
 		// Return the x-offset (in pixels) of the newly-modified t.
 		return x0;
 
+	}
+
+
+	/**
+	 * Returns whether a regular expression token can follow the specified
+	 * token in JavaScript.
+	 *
+	 * @param t The token to check, which may be <code>null</code>.
+	 * @return Whether a regular expression token may follow this one in
+	 *         JavaScript.
+	 */
+	public static boolean regexCanFollowInJavaScript(Token t) {
+		char ch;
+		// We basically try to mimic Eclipse's JS editor's behavior here.
+		return t==null ||
+				//t.isOperator() ||
+				(t.textCount==1 && (
+					(ch=t.text[t.textOffset])=='=' ||
+					ch=='(' ||
+					ch==',' ||
+					ch=='?' ||
+					ch==':' ||
+					ch=='[' ||
+					ch=='!' ||
+					ch=='&'
+				)) ||
+				/* Operators "==", "===", "!=", "!==" */
+				(t.type==Token.OPERATOR && t.text[t.textCount-1]=='=') ||
+				t.is(Token.RESERVED_WORD, JS_KEYWORD_RETURN);
 	}
 
 
