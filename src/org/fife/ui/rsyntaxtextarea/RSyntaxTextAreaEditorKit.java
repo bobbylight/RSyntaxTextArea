@@ -73,16 +73,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
 	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
+	public static final String rstaCollapseAllFoldsAction	= "RSTA.CollapseAllFoldsAction";
 	public static final String rstaCollapseAllCommentFoldsAction = "RSTA.CollapseAllCommentFoldsAction";
+	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
 	public static final String rstaCopyAsRtfAction			= "RSTA.CopyAsRtfAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
+	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
-	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
-	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 
 	private static final String MSG	= "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
 	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
@@ -99,6 +100,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new BeginWordAction(selectionBeginWordAction, true),
 		new ChangeFoldStateAction(rstaCollapseFoldAction, true),
 		new ChangeFoldStateAction(rstaExpandFoldAction, false),
+		new CollapseAllFoldsAction(),
 		new CopyAsRtfAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
@@ -107,6 +109,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new EndAction(selectionEndAction, true),
 		new EndWordAction(endWordAction, false),
 		new EndWordAction(endWordAction, true),
+		new ExpandAllFoldsAction(),
 		new GoToMatchingBracketAction(),
 		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
@@ -543,6 +546,52 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
+	 * Collapses all folds.
+	 */
+	public static class CollapseAllFoldsAction extends FoldRelatedAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public CollapseAllFoldsAction() {
+			this(false);
+		}
+
+		public CollapseAllFoldsAction(boolean localizedName) {
+			super(rstaCollapseAllFoldsAction);
+			if (localizedName) {
+				setProperties(msg, "Action.CollapseAllFolds");
+			}
+		}
+
+		public CollapseAllFoldsAction(String name, Icon icon,
+				String desc, Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			if (rsta.isCodeFoldingEnabled()) {
+				FoldCollapser collapser = new FoldCollapser() {
+					public boolean getShouldCollapse(Fold fold) {
+						return true;
+					}
+				};
+				collapser.collapseFolds(rsta.getFoldManager());
+				possiblyRepaintGutter(textArea);
+			}
+			else {
+				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
+		}
+
+		public final String getMacroID() {
+			return rstaCollapseAllFoldsAction;
+		}
+
+	}
+
+
+	/**
 	 * Action for copying text as RTF.
 	 */
 	public static class CopyAsRtfAction extends RecordableTextAction {
@@ -949,8 +998,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		private static final long serialVersionUID = 1L;
 
 		public ExpandAllFoldsAction() {
+			this(false);
+		}
+
+		public ExpandAllFoldsAction(boolean localizedName) {
 			super(rstaExpandAllFoldsAction);
-			setProperties(msg, "Action.ExpandAllFolds");
+			if (localizedName) {
+				setProperties(msg, "Action.ExpandAllFolds");
+			}
 		}
 
 		public ExpandAllFoldsAction(String name, Icon icon,

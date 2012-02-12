@@ -60,6 +60,8 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, defaultMod),	RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, defaultMod),		RSyntaxTextAreaEditorKit.rstaCollapseFoldAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, defaultMod),			RSyntaxTextAreaEditorKit.rstaExpandFoldAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_DIVIDE, defaultMod),			RSyntaxTextAreaEditorKit.rstaCollapseAllFoldsAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_MULTIPLY, defaultMod),		RSyntaxTextAreaEditorKit.rstaExpandAllFoldsAction);
 
 		// FIXME:  The keystroke associated with this action should be dynamic and
 		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's

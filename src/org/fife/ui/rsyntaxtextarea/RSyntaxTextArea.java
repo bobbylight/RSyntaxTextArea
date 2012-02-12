@@ -160,6 +160,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private JMenu foldingMenu;
 	private static RecordableTextAction toggleCurrentFoldAction;
 	private static RecordableTextAction collapseAllCommentFoldsAction;
+	private static RecordableTextAction collapseAllFoldsAction;
 	private static RecordableTextAction expandAllFoldsAction;
 
 	/** The key for the syntax style to be highlighting. */
@@ -639,6 +640,7 @@ private boolean fractionalFontMetricsEnabled;
 		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
 		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
 		foldingMenu.add(createPopupMenuItem(collapseAllCommentFoldsAction));
+		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
 		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
 		popup.add(foldingMenu);
 
@@ -665,8 +667,8 @@ private boolean fractionalFontMetricsEnabled;
 				CollapseAllCommentFoldsAction();
 		collapseAllCommentFoldsAction.setProperties(msg, "Action.CollapseCommentFolds");
 
-		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.ExpandAllFoldsAction();
-		expandAllFoldsAction.setProperties(msg, "Action.ExpandAllFolds");
+		collapseAllFoldsAction = new RSyntaxTextAreaEditorKit.CollapseAllFoldsAction(true);
+		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.ExpandAllFoldsAction(true);
 
 	}
 
