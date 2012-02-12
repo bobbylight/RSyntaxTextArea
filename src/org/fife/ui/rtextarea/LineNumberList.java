@@ -346,7 +346,13 @@ class LineNumberList extends AbstractGutterComponent
 				// Skip to next line to paint, taking extra care for lines with
 				// block ends and begins together, e.g. "} else {"
 				while (fold!=null && fold.isCollapsed()) {
-					line += fold.getLineCount();
+					int hiddenLineCount = fold.getLineCount();
+					if (hiddenLineCount==0) {
+						// Fold parser identified a 0-line fold region... This
+						// is really a bug, but we'll handle it gracefully.
+						break;
+					}
+					line += hiddenLineCount;
 					fold = fm.getFoldForLine(line-1);
 				}
 				line++;

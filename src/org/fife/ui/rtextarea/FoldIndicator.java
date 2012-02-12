@@ -376,7 +376,14 @@ public class FoldIndicator extends AbstractGutterComponent {
 					// Skip to next line to paint, taking extra care for lines with
 					// block ends and begins together, e.g. "} else {"
 					do {
-						line += fold.getLineCount();
+						int hiddenLineCount = fold.getLineCount();
+						if (hiddenLineCount==0) {
+							// Fold parser identified a zero-line fold region.
+							// This is really a bug, but we'll be graceful here
+							// and avoid an infinite loop.
+							break;
+						}
+						line += hiddenLineCount;
 						fold = fm.getFoldForLine(line);
 					} while (fold!=null && fold.isCollapsed());
 				}

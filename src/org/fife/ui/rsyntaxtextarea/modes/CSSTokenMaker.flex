@@ -1,7 +1,7 @@
 /*
  * 09/03/2005
  *
- * CSSTokenMaker.java - Token maker for CSS files.
+ * CSSTokenMaker.java - Token maker for CSS 3 files.
  * Copyright (C) 2005 Robert Futrell
  * robert_futrell at users.sourceforge.net
  * http://fifesoft.com/rsyntaxtextarea
@@ -29,7 +29,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 /**
- * This class splits up text into tokens representing a CSS file.<p>
+ * This class splits up text into tokens representing a CSS 3 file.  It's
+ * written with a few extra internal states so that it can easily be copy
+ * and pasted into HTML, PHP, and JSP TokenMakres when it is updated.<p>
  *
  * This implementation was created using
  * <a href="http://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
@@ -78,8 +80,39 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %{
 
+	/**
+	 * Internal type denoting a line ending in a CSS property.
+	 */
+	public static final int INTERNAL_CSS_PROPERTY			= -1;
 
-/*****************************************************************************/
+	/**
+	 * Internal type denoting a line ending in a CSS property value.
+	 */
+	public static final int INTERNAL_CSS_VALUE				= -2;
+
+	/**
+	 * Internal type denoting line ending in a CSS double-quote string.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	public static final int INTERNAL_CSS_STRING				= -(1<<11);
+
+	/**
+	 * Internal type denoting line ending in a CSS single-quote string.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	public static final int INTERNAL_CSS_CHAR				= -(2<<11);
+
+	/**
+	 * Internal type denoting line ending in a CSS multi-line comment.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	public static final int INTERNAL_CSS_MLC				= -(3<<11);
+
+	/**
+	 * The state previous CSS-related state we were in before going into a CSS
+	 * string, multi-line comment, etc.
+	 */
+	private int cssPrevState;
 
 
 	/**
@@ -91,7 +124,27 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-/*****************************************************************************/
+	/**
+	 * Adds the token specified to the current linked list of tokens as an
+	 * "end token;" that is, at <code>zzMarkedPos</code>.
+	 *
+	 * @param tokenType The token's type.
+	 */
+	private void addEndToken(int tokenType) {
+		addToken(zzMarkedPos,zzMarkedPos, tokenType);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
 
 
 	/**
@@ -104,9 +157,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-/*****************************************************************************/
-
-
 	/**
 	 * Adds the token specified to the current linked list of tokens.
 	 *
@@ -116,9 +166,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 		int so = start + offsetShift;
 		addToken(zzBuffer, start,end, tokenType, so);
 	}
-
-
-/*****************************************************************************/
 
 
 	/**
@@ -137,7 +184,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-/*****************************************************************************/
+	/**
+	 * Returns <code>true</code> since CSS uses curly braces.
+	 *
+	 * @return <code>true</code> always.
+	 */
+	public boolean getCurlyBracesDenoteCodeBlocks() {
+		return true;
+	}
 
 
 	/**
@@ -156,30 +210,49 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
+		cssPrevState = YYINITIAL; // Shouldn't be necessary
 
 		// Start off in the proper state.
 		int state = Token.NULL;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-				state = STRING;
-				start = text.offset;
+				state = CSS_STRING;
 				break;
 			case Token.LITERAL_CHAR:
-				state = CHAR_LITERAL;
-				start = text.offset;
+				state = CSS_CHAR_LITERAL;
 				break;
 			case Token.COMMENT_MULTILINE:
-				state = C_STYLE_COMMENT;
-				start = text.offset;
+				state = CSS_C_STYLE_COMMENT;
 				break;
-			case Token.COMMENT_DOCUMENTATION:
-				state = CD_COMMENT;
-				start = text.offset;
+			case INTERNAL_CSS_PROPERTY:
+				state = CSS_PROPERTY;
+				break;
+			case INTERNAL_CSS_VALUE:
+				state = CSS_VALUE;
 				break;
 			default:
-				state = Token.NULL;
+				if (initialTokenType<-1024) {
+					int main = -(-initialTokenType & 0xffffff00);
+					switch (main) {
+						default: // Should never happen
+						case INTERNAL_CSS_STRING:
+							state = CSS_STRING;
+							break;
+						case INTERNAL_CSS_CHAR:
+							state = CSS_CHAR_LITERAL;
+							break;
+						case INTERNAL_CSS_MLC:
+							state = CSS_C_STYLE_COMMENT;
+							break;
+					}
+					cssPrevState = -initialTokenType&0xff;
+				}
+				else {
+					state = Token.NULL;
+				}
 		}
 
+		start = text.offset;
 		s = text;
 		try {
 			yyreset(zzReader);
@@ -193,22 +266,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-/*****************************************************************************/
-
-
 	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
-
-
-/*****************************************************************************/
 
 
 	/**
@@ -221,7 +287,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -241,97 +307,122 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-/*****************************************************************************/
-
 %}
 
-ident				= ([-]?{nmstart}{nmchar}*)
-name					= ({nmchar}+)
-nmstart				= ([_a-zA-Z]|{nonascii}|{escape})
-nonascii				= ([^\0-\177])
-unicode				= (\\[0-9a-f]{1,6}[ \n\t\f]?)
-escape				= ({unicode}|\\[^\n\r\f0-9a-f])
-nmchar				= ([_a-zA-Z0-9\-]|{nonascii}|{escape})
-num					= ([0-9]+|[0-9]*\.[0-9]+)
-w					= ([ \t\n\f])
+Digit						= ([0-9])
+Letter						= ([A-Za-z])
+LetterOrUnderscore			= ({Letter}|[_])
+LetterOrUnderscoreOrDash	= ({LetterOrUnderscore}|[\-])
 
-IDENT				= ({ident})
-ATKEYWORD				= (@{ident})
-HASH					= (#{name})
-NUMBER				= ({num})
-PERCENTAGE			= ({num}%)
-DIMENSION				= ({num}{ident})
-UNICODE_RANGE			= (U\+[0-9A-F?]{1,6}(-[0-9A-F]{1,6})?)
-CDO					= ("<!--")
-CDC					= ("-->")
-SEPARATOR				= ([;\{\}\(\)\[\]])
-S					= ({w}+)
-COMMENT_START			= ("/*")
-COMMENT_END			= ("*/")
-FUNCTION				= ({ident}\()
-INCLUDES				= (\~=)
-DASHMATCH				= (\|=)
+CSS_SelectorPiece			= (("*"|"."|{LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
+CSS_PseudoClass				= (":"("root"|"nth-child"|"nth-last-child"|"nth-of-type"|"nth-last-of-type"|"first-child"|"last-child"|"first-of-type"|"last-of-type"|"only-child"|"only-of-type"|"empty"|"link"|"visited"|"active"|"hover"|"focus"|"target"|"lang"|"enabled"|"disabled"|"checked"|":first-line"|":first-letter"|":before"|":after"|"not"))
+CSS_AtKeyword				= ("@"{CSS_SelectorPiece})
+CSS_Id						= ("#"{CSS_SelectorPiece})
+CSS_Separator				= ([;\(\)\[\]])
+WhiteSpace					= ([ \t]+)
+MlcStart					= ("/*")
+MlcEnd						= ("*/")
+
+CSS_Property				= ([\*]?{LetterOrUnderscoreOrDash}({LetterOrUnderscoreOrDash}|{Digit})*)
+CSS_ValueChar				= ({LetterOrUnderscoreOrDash}|[\\/])
+CSS_Value					= ({CSS_ValueChar}*)
+CSS_Function				= ({CSS_Value}\()
+CSS_Digits					= ([\-]?{Digit}+([0-9\.]+)?(pt|pc|in|mm|cm|em|ex|px|ms|s|%)?)
+CSS_Hex						= ("#"[0-9a-fA-F]+)
+CSS_Number					= ({CSS_Digits}|{CSS_Hex})
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
-%state STRING
-%state CHAR_LITERAL
-%state CD_COMMENT
-%state C_STYLE_COMMENT
+%state CSS_PROPERTY
+%state CSS_VALUE
+%state CSS_STRING
+%state CSS_CHAR_LITERAL
+%state CSS_C_STYLE_COMMENT
 
 
 %%
 
 <YYINITIAL> {
-
-	{IDENT}			{ addToken(Token.IDENTIFIER); }
-	{ATKEYWORD}		{ addToken(Token.VARIABLE); }
-	\"				{ start = zzMarkedPos-1; yybegin(STRING); }
-	\'				{ start = zzMarkedPos-1; yybegin(CHAR_LITERAL); }
-	{HASH}			{ addToken(Token.VARIABLE); }
-	{NUMBER}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{PERCENTAGE}		{ addToken(Token.DATA_TYPE); }
-	{DIMENSION}		{ addToken(Token.DATA_TYPE); }
-	{UNICODE_RANGE}	{ addToken(Token.FUNCTION); }
-	{CDO}			{ start = zzMarkedPos-4; yybegin(CD_COMMENT); }
-	{SEPARATOR}		{ addToken(Token.SEPARATOR); }
-	{S}				{ addToken(Token.WHITESPACE); }
-	{COMMENT_START}	{ start = zzMarkedPos-2; yybegin(C_STYLE_COMMENT); }
-	{FUNCTION}		{ addToken(Token.FUNCTION); }
-	{INCLUDES}		{ addToken(Token.OPERATOR); }
-	{DASHMATCH}		{ addToken(Token.OPERATOR); }
-	.				{ addToken(Token.IDENTIFIER); }
-	<<EOF>>			{ addNullToken(); return firstToken; }
-
+	{CSS_SelectorPiece}	{ addToken(Token.DATA_TYPE); }
+	{CSS_PseudoClass}	{ addToken(Token.RESERVED_WORD); }
+	":"					{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
+	{CSS_AtKeyword}		{ addToken(Token.REGEX); }
+	{CSS_Id}			{ addToken(Token.VARIABLE); }
+	"{"					{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
+	[,]					{ addToken(Token.IDENTIFIER); }
+	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	[+>~\^$\|=]			{ addToken(Token.OPERATOR); }
+	{CSS_Separator}		{ addToken(Token.SEPARATOR); }
+	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
+	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("yyinitial: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addNullToken(); return firstToken; }
 }
 
-<STRING> {
-	[^\n\"]+			{}
-	\n				{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-	\"				{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL); }
-	<<EOF>>			{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); return firstToken; }
+<CSS_PROPERTY> {
+	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
+	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
+	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
 }
 
-<CHAR_LITERAL> {
-	[^\n\']+			{}
-	\n				{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken; }
-	\'				{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(YYINITIAL); }
-	<<EOF>>			{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); return firstToken; }
+<CSS_VALUE> {
+	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
+	"!important"		{ addToken(Token.ANNOTATION); }
+	{CSS_Function}		{ int temp = zzMarkedPos - 2;
+						  addToken(zzStartRead, temp, Token.FUNCTION);
+						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+						  zzStartRead = zzCurrentPos = zzMarkedPos;
+						}
+	{CSS_Number}		{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	")"					{ /* End of a function */ addToken(Token.SEPARATOR); }
+	[;]					{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
+	[,\.]				{ addToken(Token.IDENTIFIER); }
+	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
+	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
 }
 
-<CD_COMMENT> {
-	[^\n\-]+			{}
-	\n				{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
-	{CDC}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_DOCUMENTATION); }
-	\-				{}
-	<<EOF>>			{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
+<CSS_STRING> {
+	[^\n\\\"]+			{}
+	\\.?				{ /* Skip escaped chars. */ }
+	\"					{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
 }
 
-<C_STYLE_COMMENT> {
+<CSS_CHAR_LITERAL> {
+	[^\n\\\']+			{}
+	\\.?				{ /* Skip escaped chars. */ }
+	\'					{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
+}
 
-	[^\n\*]+			{}
-	\n				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	{COMMENT_END}		{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
-	\*				{}
-	<<EOF>>			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-
+<CSS_C_STYLE_COMMENT> {
+	[^hwf\n\*]+			{}
+	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]				{}
+	{MlcEnd}			{ addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState); }
+	\*					{}
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
 }

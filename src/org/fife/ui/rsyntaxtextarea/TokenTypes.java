@@ -24,18 +24,22 @@ package org.fife.ui.rsyntaxtextarea;
 
 
 /**
- * All token types supported by RSyntaxTextArea.
+ * All token types supported by RSyntaxTextArea.<p>
+ *
+ * Note that all valid token types are &gt;= 0, so extensions of the TokenMaker
+ * class are free to internally use all ints &lt; 0 ONLY for "end-of-line"
+ * style markers; they are ignored by painting implementations.
  *
  * @author Robert Futrell
  * @version 1.0
  */
 public interface TokenTypes {
 
-	// NOTE: All valid token types are >= 0, so extensions of the TokenMaker
-	// class are free to internally use all ints < 0 ONLY for "end-of-line"
-	// style markers; they are ignored by painting implementations.
-
-	public static final int NULL							= 0;	// Marks EOL with no multiline token at end.
+	/**
+	 * Tokens of type <code>NULL</code> mark the end of lines with no
+	 * multi-line token at the end (such as a block comment in C++).
+	 */
+	public static final int NULL							= 0;
 
 	public static final int COMMENT_EOL						= 1;
 	public static final int COMMENT_MULTILINE				= 2;
