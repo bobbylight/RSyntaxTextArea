@@ -67,7 +67,6 @@ public class FoldParserManager implements SyntaxConstants {
 	 *
 	 * @param syntaxStyle The syntax style.
 	 * @param parser The parser.
-	 * @see #addFoldParserMapping(String, FoldParserSupplier)
 	 * @see SyntaxConstants
 	 */
 	public void addFoldParserMapping(String syntaxStyle, FoldParser parser) {

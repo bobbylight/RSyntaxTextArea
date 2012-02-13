@@ -79,7 +79,7 @@ public class Fold implements Comparable {
 	 * @param type The type of fold.
 	 * @param startOffs The starting offset of the fold.
 	 * @return The child fold.
-	 * @throws BadLocationException If {@link #startOffs} is invalid.
+	 * @throws BadLocationException If <code>startOffs</code> is invalid.
 	 */
 	public Fold createChild(int type, int startOffs) throws BadLocationException {
 		Fold child = new Fold(type, textArea, startOffs);
