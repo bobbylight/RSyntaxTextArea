@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,8 +82,10 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private static final String PROPERTY_DEBUG_PARSING = "rsta.debugParsing";
 
-	private static final boolean DEBUG_PARSING	= Boolean.getBoolean(
-													PROPERTY_DEBUG_PARSING);
+	/**
+	 * Whether to print debug messages while running parsers.
+	 */
+	private static final boolean DEBUG_PARSING;
 
 	/**
 	 * The default delay between the last key press and when the document
@@ -168,7 +171,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 		if (DEBUG_PARSING) {
 			float time = (System.currentTimeMillis()-begin)/1000f;
-			System.err.println("Total parsing time: " + time + " seconds");
+			System.out.println("Total parsing time: " + time + " seconds");
 		}
 
 	}
@@ -688,6 +691,18 @@ class ParserManager implements DocumentListener, ActionListener,
 	public void stopParsing() {
 		timer.stop();
 		running = false;
+	}
+
+
+	static {
+		boolean debugParsing = false;
+		try {
+			debugParsing = Boolean.getBoolean(PROPERTY_DEBUG_PARSING);
+		} catch (AccessControlException ace) {
+			// Likely an applet's security manager.
+			debugParsing = false; // FindBugs
+		}
+		DEBUG_PARSING = debugParsing;
 	}
 
 

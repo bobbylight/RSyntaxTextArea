@@ -78,40 +78,52 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * An extension of <code>RTextArea</code> that adds syntax highlighting
  * of certain programming languages to its list of features.  Languages
  * currently supported include:
- * <ul>
- *    <li>ActionScript
- *    <li>Assembler (X86)
- *    <li>BBCode
- *    <li>C
- *    <li>C++
- *    <li>CSS
- *    <li>C#
- *    <li>Clojure
- *    <li>Delphi
- *    <li>Fortran
- *    <li>Groovy
- *    <li>HTML
- *    <li>Java
- *    <li>JavaScript
- *    <li>JSP
- *    <li>Lisp
- *    <li>Lua
- *    <li>Make
- *    <li>MXML
- *    <li>Perl
- *    <li>PHP
- *    <li>Ruby
- *    <li>SAS
- *    <li>Scala
- *    <li>SQL
- *    <li>Tcl
- *    <li>UNIX shell scripts
- *    <li>Windows batch
- *    <li>XML files
- * </ul>
+ *
+ * <table>
+ *  <tr>
+ *   <td style="vertical-align: top">
+ *    <ul>
+ *       <li>ActionScript
+ *       <li>Assembler (X86)
+ *       <li>BBCode
+ *       <li>C
+ *       <li>C++
+ *       <li>CSS
+ *       <li>C#
+ *       <li>Clojure
+ *       <li>Delphi
+ *       <li>Fortran
+ *       <li>Groovy
+ *       <li>HTML
+ *       <li>Java
+ *       <li>JavaScript
+ *       <li>JSP
+ *    </ul>
+ *   </td>
+ *   <td style="vertical-align: top">
+ *    <ul>
+ *       <li>Lisp
+ *       <li>Lua
+ *       <li>Make
+ *       <li>MXML
+ *       <li>Perl
+ *       <li>PHP
+ *       <li>Ruby
+ *       <li>SAS
+ *       <li>Scala
+ *       <li>SQL
+ *       <li>Tcl
+ *       <li>UNIX shell scripts
+ *       <li>Windows batch
+ *       <li>XML files
+ *    </ul>
+ *   </td>
+ *  </tr>
+ * </table>
  *
  * Other added features include:
- * <ul>
+ * <ul style="columns: 2 12em; column-gap: 1em">
+ *    <li>Code folding
  *    <li>Bracket matching
  *    <li>Auto-indentation
  *    <li>Copy as RTF
@@ -126,7 +138,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 1.3
+ * @version 2.0.1
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
