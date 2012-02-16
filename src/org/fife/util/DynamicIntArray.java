@@ -23,6 +23,8 @@
  */
 package org.fife.util;
 
+import java.io.Serializable;
+
 
 /**
  * Similar to a <code>java.util.ArrayList</code>, but specifically for
@@ -32,7 +34,7 @@ package org.fife.util;
  * @author Robert Futrell
  * @version 0.8
  */
-public class DynamicIntArray {
+public class DynamicIntArray implements Serializable {
 
 	/**
 	 * The actual data.
