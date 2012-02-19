@@ -52,10 +52,7 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 
 
 	/**
-	 * Constructor.
-	 *
-	 * @param color The color to draw the bounding boxes with.  This cannot
-	 *        be <code>null</code>.
+	 * Creates a highlight painter that defaults to blue.
 	 */
 	public MarkOccurrencesHighlightPainter() {
 		super(Color.BLUE);

@@ -1011,8 +1011,8 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 		 * Provides a mapping from the view coordinate space to the logical
 		 * coordinate space of the model.
 		 *
-		 * @param x the X coordinate
-		 * @param y the Y coordinate
+		 * @param fx the X coordinate
+		 * @param fy the Y coordinate
 		 * @param a the allocated region to render into
 		 * @return the location within the model that best represents the
 		 *  given point in the view

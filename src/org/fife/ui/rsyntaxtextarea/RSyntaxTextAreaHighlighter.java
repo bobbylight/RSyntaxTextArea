@@ -97,7 +97,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @param start
 	 * @param end
 	 * @param p
-	 * @return
+	 * @return A tag to reference the highlight later.
 	 * @throws BadLocationException
 	 * @see {@link #removeMarkOccurrencesHighlight(Object)}
 	 */
@@ -165,7 +165,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	/**
 	 * Removes all parser highlights.
 	 *
-	 * @see #addParserHighlight(int, int, Color, javax.swing.text.Highlighter.HighlightPainter)
+	 * @see #addParserHighlight(ParserNotice, javax.swing.text.Highlighter.HighlightPainter)
 	 */
 	void clearParserHighlights() {
 
@@ -365,7 +365,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * Removes a "marked occurrences" highlight from the view.
 	 *
 	 * @param tag The reference to the highlight
-	 * @see #addMarkedOccurrenceHighlight(int, int, javax.swing.text.Highlighter.HighlightPainter)
+	 * @see #addMarkedOccurrenceHighlight(int, int, MarkOccurrencesHighlightPainter)
 	 */
 	void removeMarkOccurrencesHighlight(Object tag) {
 		removeListHighlight(markedOccurrences, tag);
@@ -376,7 +376,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * Removes a parser highlight from this view.
 	 *
 	 * @param tag The reference to the highlight.
-	 * @see #addParserHighlight(int, int, Color, javax.swing.text.Highlighter.HighlightPainter)
+	 * @see #addParserHighlight(ParserNotice, javax.swing.text.Highlighter.HighlightPainter)
 	 */
 	void removeParserHighlight(Object tag) {
 		removeListHighlight(parserHighlights, tag);

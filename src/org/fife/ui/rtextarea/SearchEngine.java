@@ -34,13 +34,24 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+
 
 /**
  * A singleton class that can perform advanced find/replace operations
- * in an {@link RTextArea}.
+ * in an {@link RTextArea}.  Simply create a {@link SearchContext} and call
+ * one of the following methods:
+ * 
+ * <ul>
+ *    <li>{@link #find(JTextArea, SearchContext)}
+ *    <li>{@link #replace(RTextArea, SearchContext)}
+ *    <li>{@link #replaceAll(RTextArea, SearchContext)}
+ * </ul>
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see SearchContext
  */
 public class SearchEngine {
 
@@ -58,26 +69,16 @@ public class SearchEngine {
 	 * text area.
 	 *
 	 * @param textArea The text area in which to search.
-	 * @param text The string literal or regular expression to search for.
-	 * @param forward Whether to search forward from the caret position or
-	 *        backward from it.
-	 * @param matchCase Whether the search should be case-sensitive.
-	 * @param wholeWord Whether there should be spaces or tabs on either side
-	 *        of the match.
-	 * @param regex Whether <code>text</code> is a Java regular expression to
-	 *        search for.
+	 * @param context What to search for and all search options.
 	 * @return Whether a match was found (and thus selected).
-	 * @throws PatternSyntaxException If <code>regex</code> is
-	 *         <code>true</code> but <code>text</code> is not a valid regular
-	 *         expression.
-	 * @see #replace(RTextArea, String, String, boolean, boolean, boolean, boolean)
-	 * @see #replaceAll(RTextArea, String, String, boolean, boolean, boolean)
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
+	 * @see #replace(RTextArea, SearchContext)
+	 * @see #replaceAll(RTextArea, SearchContext)
 	 */
-	public static boolean find(JTextArea textArea, String text,
-							boolean forward, boolean matchCase,
-							boolean wholeWord, boolean regex)
-									throws PatternSyntaxException {
+	public static boolean find(JTextArea textArea, SearchContext context) {
 
+		String text = context.getSearchFor();
 		if (text==null || text.length()==0) {
 			return false;
 		}
@@ -87,6 +88,7 @@ public class SearchEngine {
 		// start searching AFTER the selection if searching forward, and
 		// BEFORE the selection if searching backward.
 		Caret c = textArea.getCaret();
+		boolean forward = context.getSearchForward();
 		int start = forward ? Math.max(c.getDot(), c.getMark()) :
 						Math.min(c.getDot(), c.getMark());
 
@@ -94,9 +96,9 @@ public class SearchEngine {
 		if (findIn==null || findIn.length()==0) return false;
 
 		// Find the next location of the text we're searching for.
-		if (regex==false) {
+		if (!context.isRegularExpression()) {
 			int pos = getNextMatchPos(text, findIn, forward,
-											matchCase, wholeWord);
+								context.getMatchCase(), context.getWholeWord());
 			findIn = null; // May help garbage collecting.
 			if (pos!=-1) {
 				// Without this, if JTextArea isn't in focus, selection
@@ -111,8 +113,8 @@ public class SearchEngine {
 			// Regex matches can have varying widths.  The returned point's
 			// x- and y-values represent the start and end indices of the
 			// match in findIn.
-			Point regExPos = getNextMatchPosRegEx(text, findIn,
-									forward, matchCase, wholeWord);
+			Point regExPos = getNextMatchPosRegEx(text, findIn, forward,
+								context.getMatchCase(), context.getWholeWord());
 			findIn = null; // May help garbage collecting.
 			if (regExPos!=null) {
 				// Without this, if JTextArea isn't in focus, selection
@@ -136,7 +138,7 @@ public class SearchEngine {
 	 * Returns the text in which to search, as a string.  This is used
 	 * internally to grab the smallest buffer possible in which to search.
 	 */
-	protected static String getFindInText(JTextArea textArea, int start,
+	private static String getFindInText(JTextArea textArea, int start,
 									boolean forward) {
 
 		// Be smart about the text we grab to search in.  We grab more than
@@ -194,7 +196,7 @@ public class SearchEngine {
 	 *         an invalid group (less than zero or greater than the number of
 	 *         groups matched).
 	 */
-	protected static List getMatches(Matcher m, String replaceStr) {
+	private static List getMatches(Matcher m, String replaceStr) {
 		ArrayList matches = new ArrayList();
 		while (m.find()) {
 			Point loc = new Point(m.start(), m.end());
@@ -213,7 +215,9 @@ public class SearchEngine {
 	/**
 	 * Searches <code>searchIn</code> for an occurrence of
 	 * <code>searchFor</code> either forwards or backwards, matching
-	 * case or not.
+	 * case or not.<p>
+	 *
+	 * Most clients will have no need to call this method directly.
 	 *
 	 * @param searchFor The string to look for.
 	 * @param searchIn The string to search in.
@@ -226,8 +230,6 @@ public class SearchEngine {
 	 *        don't count as matches.
 	 * @return The starting position of a match, or <code>-1</code> if no
 	 *         match was found.
-	 * @see #getNextMatchPosImpl
-	 * @see #getNextMatchPosRegEx
 	 */
 	public static final int getNextMatchPos(String searchFor, String searchIn,
 								boolean forward, boolean matchCase,
@@ -263,7 +265,7 @@ public class SearchEngine {
 	 * @return The location of the next match, or <code>-1</code> if no
 	 *         match was found.
 	 */
-	protected static final int getNextMatchPosImpl(String searchFor,
+	private static final int getNextMatchPosImpl(String searchFor,
 								String searchIn, boolean goForward,
 								boolean matchCase, boolean wholeWord) {
 
@@ -316,7 +318,7 @@ public class SearchEngine {
 	 *         regular expression.
 	 * @see #getNextMatchPos
 	 */
-	public static Point getNextMatchPosRegEx(String regEx,
+	private static Point getNextMatchPosRegEx(String regEx,
 							CharSequence searchIn, boolean goForward,
 							boolean matchCase, boolean wholeWord) {
 		return (Point)getNextMatchPosRegExImpl(regEx, searchIn, goForward,
@@ -354,7 +356,7 @@ public class SearchEngine {
 	 *         groups matched).
 	 * @see #getNextMatchPos
 	 */
-	protected static Object getNextMatchPosRegExImpl(String regEx,
+	private static Object getNextMatchPosRegExImpl(String regEx,
 							CharSequence searchIn, boolean goForward,
 							boolean matchCase, boolean wholeWord,
 							String replaceStr) {
@@ -401,39 +403,31 @@ public class SearchEngine {
 	 * Returns information on how to implement a regular expression "replace"
 	 * action in the specified text with the specified replacement string.
 	 *
-	 * @param regEx The regular expression to look for.
 	 * @param searchIn The string to search in.
-	 * @param goForward Whether to search forward.  If <code>false</code>,
-	 *        search backward.
-	 * @param matchCase Whether or not to do a case-sensitive search for
-	 *        <code>regEx</code>.
-	 * @param wholeWord If <code>true</code>, <code>regEx</code> occurrences
-	 *        embedded in longer words in <code>searchIn</code> don't count as
-	 *        matches.
-	 * @param replacement A template for the replacement string (e.g., this
-	 *        can contain <code>\t</code> and <code>\n</code> to mean tabs
-	 *        and newlines, respectively, as well as group references
-	 *        <code>$n</code>).
+	 * @param context The search options.
 	 * @return A <code>RegExReplaceInfo</code> object describing how to
 	 *         implement the replace.
-	 * @throws PatternSyntaxException If <code>regEx</code> is an invalid
-	 *         regular expression.
-	 * @throws IndexOutOfBoundsException If <code>replacement</code> references
-	 *         an invalid group (less than zero or greater than the number of
+	 * @throws PatternSyntaxException If the search text is an invalid regular
+	 *         expression.
+	 * @throws IndexOutOfBoundsException If the replacement text references an
+	 *         invalid group (less than zero or greater than the number of
 	 *         groups matched).
 	 * @see #getNextMatchPos
 	 */
-	protected static RegExReplaceInfo getRegExReplaceInfo(String regEx,
-									String searchIn, boolean goForward,
-									boolean matchCase, boolean wholeWord,
-									String replacement) {
+	private static RegExReplaceInfo getRegExReplaceInfo(String searchIn,
+										SearchContext context) {
 		// Can't pass null to getNextMatchPosRegExImpl or it'll think
 		// you're doing a "find" operation instead of "replace, and return a
 		// Point.
+		String replacement = context.getReplaceWith();
 		if (replacement==null) {
 			replacement = "";
 		}
-		return (RegExReplaceInfo)getNextMatchPosRegExImpl(regEx, searchIn,
+		String regex = context.getSearchFor();
+		boolean goForward = context.getSearchForward();
+		boolean matchCase = context.getMatchCase();
+		boolean wholeWord = context.getWholeWord();
+		return (RegExReplaceInfo)getNextMatchPosRegExImpl(regex, searchIn,
 						goForward, matchCase, wholeWord, replacement);
 	}
 
@@ -441,7 +435,15 @@ public class SearchEngine {
 	/**
 	 * Called internally by <code>getMatches()</code>.  This method assumes
 	 * that the specified matcher has just found a match, and that you want
-	 * to get the string with which to replace that match.
+	 * to get the string with which to replace that match.<p>
+	 *
+	 * Escapes simply insert the escaped character, except for <code>\n</code>
+	 * and <code>\t</code>, which insert a newline and tab respectively.
+	 * Substrings of the form <code>$\d+</code> are considered to be matched
+	 * groups.  To include a literal dollar sign in your template, escape it
+	 * (i.e. <code>\$</code>).<p>
+	 *
+	 * Most clients will have no need to call this method directly.
 	 *
 	 * @param m The matcher.
 	 * @param template The template for the replacement string.  For example,
@@ -535,9 +537,8 @@ public class SearchEngine {
 
 	/**
 	 * Returns whether the characters on either side of
-	 * <code>substr(searchIn,startPos,startPos+searchStringLength)</code>
-	 * are whitespace.  While this isn't the best definition of "whole word",
-	 * it's the one we're going to use for now.
+	 * <code>substr(searchIn, startPos, startPos+searchStringLength)</code>
+	 * are <em>not</em> letters or digits.
 	 */
 	private static final boolean isWholeWord(CharSequence searchIn,
 											int offset, int len) {
@@ -566,7 +567,7 @@ public class SearchEngine {
 	 *        document (<code>false</code> means backward).
 	 * @return The new dot and mark position.
 	 */
-	protected static int makeMarkAndDotEqual(JTextArea textArea,
+	private static int makeMarkAndDotEqual(JTextArea textArea,
 										boolean forward) {
 		Caret c = textArea.getCaret();
 		int val = forward ? Math.min(c.getDot(), c.getMark()) :
@@ -582,25 +583,18 @@ public class SearchEngine {
 	 * the specified replacement string.
 	 *
 	 * @param textArea The text area in which to search.
-	 * @param toFind The regular expression to search for.
-	 * @param replaceWith The string to replace the found regex with.
-	 * @param forward Whether to search forward from the caret position
-	 *        or backward from it.
-	 * @param matchCase Whether the search should be case-sensitive.
-	 * @param wholeWord Whether there should be spaces or tabs on either
-	 *        side of the match.
+	 * @param context What to search for and all search options.
 	 * @return Whether a match was found (and thus replaced).
-	 * @throws PatternSyntaxException If <code>toFind</code> is not a
-	 *         valid regular expression.
-	 * @throws IndexOutOfBoundsException If <code>replaceWith</code> references
-	 *         an invalid group (less than zero or greater than the number of
-	 *         groups matched).
-	 * @see #replace
-	 * @see #find
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
+	 * @throws IndexOutOfBoundsException If this is a regular expression search
+	 *         but the replacement text references an invalid group (less than
+	 *         zero or greater than the number of groups matched).
+	 * @see #replace(RTextArea, SearchContext)
+	 * @see #find(JTextArea, SearchContext)
 	 */
-	protected static boolean regexReplace(JTextArea textArea, String toFind,
-				String replaceWith, boolean forward, boolean matchCase,
-				boolean wholeWord) throws PatternSyntaxException {
+	private static boolean regexReplace(JTextArea textArea,
+			SearchContext context) throws PatternSyntaxException {
 
 		// Be smart about what position we're "starting" at.  For example,
 		// if they are searching backwards and there is a selection such that
@@ -609,15 +603,14 @@ public class SearchEngine {
 		// selection.  So, in that case we start at the beginning of the
 		// selection.
 		Caret c = textArea.getCaret();
+		boolean forward = context.getSearchForward();
 		int start = makeMarkAndDotEqual(textArea, forward);
 
 		String findIn = getFindInText(textArea, start, forward);
 		if (findIn==null) return false;
 
 		// Find the next location of the text we're searching for.
-		RegExReplaceInfo info = getRegExReplaceInfo(toFind, findIn,
-											forward, matchCase,
-											wholeWord, replaceWith);
+		RegExReplaceInfo info = getRegExReplaceInfo(findIn, context);
 
 		findIn = null; // May help garbage collecting.
 
@@ -653,30 +646,20 @@ public class SearchEngine {
 	 * specified replacement string.
 	 *
 	 * @param textArea The text area in which to search.
-	 * @param toFind The text/regular expression  to search for.
-	 * @param replaceWith The string to replace the found text with.
-	 * @param forward Whether to search forward from the caret position or
-	 *        backward from it.
-	 * @param matchCase Whether the search should be case-sensitive.
-	 * @param wholeWord Whether there should be spaces or tabs on either
-	 *        side of the match.
-	 * @param regex Whether or not this is a regular expression search.
+	 * @param context What to search for and all search options.
 	 * @return Whether a match was found (and thus replaced).
-	 * @throws PatternSyntaxException If <code>regex</code> is
-	 *         <code>true</code> but <code>toFind</code> is not a valid
-	 *         regular expression.
-	 * @throws IndexOutOfBoundsException If <code>regex</code> is
-	 *         <code>true</code> and <code>replaceWith</code> references
-	 *         an invalid group (less than zero or greater than the number
-	 *         of groups matched).
-	 * @see #replaceAll(RTextArea, String, String, boolean, boolean, boolean)
-	 * @see #find(JTextArea, String, boolean, boolean, boolean, boolean)
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
+	 * @throws IndexOutOfBoundsException If this is a regular expression search
+	 *         but the replacement text references an invalid group (less than
+	 *         zero or greater than the number of groups matched).
+	 * @see #replaceAll(RTextArea, SearchContext)
+	 * @see #find(JTextArea, SearchContext)
 	 */
-	public static boolean replace(RTextArea textArea, String toFind,
-				String replaceWith, boolean forward, boolean matchCase,
-				boolean wholeWord, boolean regex)
+	public static boolean replace(RTextArea textArea, SearchContext context)
 									throws PatternSyntaxException {
 
+		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
 			return false;
 		}
@@ -685,9 +668,8 @@ public class SearchEngine {
 		try {
 
 			// Regular expression replacements have their own method.
-			if (regex) {
-				return regexReplace(textArea, toFind, replaceWith, forward,
-								matchCase, wholeWord);
+			if (context.isRegularExpression()) {
+				return regexReplace(textArea, context);
 			}
 
 			// Plain text search.  If we find it, replace it!
@@ -696,9 +678,9 @@ public class SearchEngine {
 			// to replace, then click "Replace" to replace the current
 			// selection. Since our find() method searches from an endpoint of
 			// the selection, we must remove the selection to work properly.
-			makeMarkAndDotEqual(textArea, forward);
-			if (find(textArea, toFind, forward, matchCase, wholeWord, false)) {
-				textArea.replaceSelection(replaceWith);
+			makeMarkAndDotEqual(textArea, context.getSearchForward());
+			if (find(textArea, context)) {
+				textArea.replaceSelection(context.getReplaceWith());
 				return true;
 			}
 
@@ -716,28 +698,19 @@ public class SearchEngine {
 	 * the specified document with the specified replacement.
 	 *
 	 * @param textArea The text area in which to search.
-	 * @param toFind The text/regular expression  to search for.
-	 * @param replaceWith The string to replace the found text with.
-	 * @param matchCase Whether the search should be case-sensitive.
-	 * @param wholeWord Whether there should be spaces or tabs on either
-	 *        side of the match.
-	 * @param regex Whether or not this is a regular expression search.
-	 * @return The number of replacements done.
-	 * @throws PatternSyntaxException If <code>regex</code> is
-	 *         <code>true</code> and <code>toFind</code> is an invalid
-	 *         regular expression.
-	 * @throws IndexOutOfBoundsException If <code>replaceWith</code> references
-	 *         an invalid group (less than zero or greater than the number of
-	 *         groups matched).
-	 * @see #replace
-	 * @see #regexReplace
-	 * @see #find
+	 * @param context What to search for and all search options.
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the replacement text is an invalid regular expression.
+	 * @throws IndexOutOfBoundsException If this is a regular expression search
+	 *         but the replacement text references an invalid group (less than
+	 *         zero or greater than the number of groups matched).
+	 * @see #replace(RTextArea, SearchContext)
+	 * @see #find(JTextArea, SearchContext)
 	 */
-	public static int replaceAll(RTextArea textArea, String toFind,
-							String replaceWith, boolean matchCase,
-							boolean wholeWord, boolean regex)
+	public static int replaceAll(RTextArea textArea, SearchContext context)
 									throws PatternSyntaxException {
 
+		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
 			return 0;
 		}
@@ -747,8 +720,9 @@ public class SearchEngine {
 		textArea.beginAtomicEdit();
 		try {
 
-			if (regex) {
+			if (context.isRegularExpression()) {
 
+				String replaceWith = context.getReplaceWith();
 				if (replaceWith==null) {
 					replaceWith = ""; // Needed by getReplacementText() below.
 				}
@@ -756,11 +730,10 @@ public class SearchEngine {
 				int oldOffs = textArea.getCaretPosition();
 				textArea.setCaretPosition(0);
 				int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
-				flags |= matchCase ? 0 :
+				flags |= context.getMatchCase() ? 0 :
 							Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
 				Pattern p = Pattern.compile(toFind, flags);
-				while (SearchEngine.find(textArea, toFind, true, matchCase,
-									wholeWord, true)) {
+				while (SearchEngine.find(textArea, context)) {
 					Matcher m = p.matcher(textArea.getSelectedText());
 					String replacement = getReplacementText(m, replaceWith);
 					textArea.replaceSelection(replacement);
@@ -774,9 +747,8 @@ public class SearchEngine {
 
 			else { // Non-regular expression search.
 				textArea.setCaretPosition(0);
-				while (SearchEngine.find(textArea, toFind, true, matchCase,
-									wholeWord, false)) {
-					textArea.replaceSelection(replaceWith);
+				while (SearchEngine.find(textArea, context)) {
+					textArea.replaceSelection(context.getReplaceWith());
 					count++;
 				}
 			}
@@ -802,6 +774,16 @@ public class SearchEngine {
 	private static void selectAndPossiblyCenter(JTextArea textArea, int start,
 												int end) {
 
+		boolean foldsExpanded = false;
+		if (textArea instanceof RSyntaxTextArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			FoldManager fm = rsta.getFoldManager();
+			if (fm.isCodeFoldingSupportedAndEnabled()) {
+				foldsExpanded = fm.ensureOffsetNotInClosedFold(start);
+				foldsExpanded |= fm.ensureOffsetNotInClosedFold(end);
+			}
+		}
+
 		textArea.setSelectionStart(start);
 		textArea.setSelectionEnd(end);
 
@@ -825,7 +807,7 @@ public class SearchEngine {
 
 		// If the new selection is already in the view, don't scroll,
 		// as that is visually jarring.
-		if (visible.contains(r)) {
+		if (!foldsExpanded && visible.contains(r)) {
 			textArea.setSelectionStart(start);
 			textArea.setSelectionEnd(end);
 			return;

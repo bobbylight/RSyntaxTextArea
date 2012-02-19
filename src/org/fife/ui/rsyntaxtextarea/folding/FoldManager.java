@@ -99,6 +99,50 @@ public class FoldManager {
 
 
 	/**
+	 * Ensures that the specified offset is not hidden in a collapsed fold.
+	 * Any folds containing this offset that are collapsed will be expanded.
+	 *
+	 * @param offs The offset.
+	 * @return Whether any folds had to be opened.
+	 * @see #getDeepestFoldContaining(int)
+	 */
+	public boolean ensureOffsetNotInClosedFold(int offs) {
+		boolean foldsOpened = false;
+		Fold fold = getDeepestFoldContaining(offs);
+		while (fold!=null) {
+			if (fold.isCollapsed()) {
+				fold.setCollapsed(false);
+				foldsOpened = true;
+			}
+			fold = fold.getParent();
+		}
+		return foldsOpened;
+	}
+
+
+	/**
+	 * Returns the "deepest" nested fold containing the specified offset.
+	 *
+	 * @param offs The offset.
+	 * @return The deepest fold containing the offset, or <code>null</code> if
+	 *         no fold contains the offset.
+	 */
+	public Fold getDeepestFoldContaining(int offs) {
+		Fold deepestFold = null;
+		if (offs>-1) {
+			for (int i=0; i<folds.size(); i++) {
+				Fold fold = getFold(i);
+				if (fold.containsOffset(offs)) {
+					deepestFold = fold.getDeepestFoldContaining(offs);
+					break;
+				}
+			}
+		}
+		return deepestFold;
+	}
+
+
+	/**
 	 * Returns the "deepest" open fold containing the specified offset.
 	 *
 	 * @param offs The offset.

@@ -23,7 +23,7 @@
 
 
 	<!-- Set global properties for this build. -->
-	<property name="version"          value="2.0.0"/>
+	<property name="version"          value="2.0.1"/>
 	<property name="source-dir"       location="src"/>
 	<property name="class-dir"        location="ant-classes"/>
 	<property name="dist-dir"         location="dist"/>
@@ -51,6 +51,9 @@
 		<jar destfile="${dist-dir}/rsyntaxtextarea.jar">
 			<fileset dir="${class-dir}"/>
 			<fileset dir="i18n"/>
+			<fileset dir="${source-dir}">
+				<include name="theme.dtd"/>
+			</fileset>
 			<manifest>
 				<attribute name="Specification-Title" value="RSyntaxTextArea"/>
 				<attribute name="Specification-Version" value="${version}"/>

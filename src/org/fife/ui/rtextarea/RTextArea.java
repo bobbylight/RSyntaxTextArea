@@ -891,8 +891,13 @@ public class RTextArea extends RTextAreaBase
 			int caretPos = getCaretPosition();
 			markedWord = toMark;
 			setCaretPosition(0);
-			boolean found = SearchEngine.find(this, toMark, true, matchCase,
-										wholeWord, regex);
+			SearchContext context = new SearchContext();
+			context.setSearchFor(toMark);
+			context.setMatchCase(matchCase);
+			context.setRegularExpression(regex);
+			context.setSearchForward(true);
+			context.setWholeWord(wholeWord);
+			boolean found = SearchEngine.find(this, context);
 			while (found) {
 				int start = getSelectionStart();
 				int end = getSelectionEnd();
@@ -903,8 +908,7 @@ public class RTextArea extends RTextAreaBase
 					ble.printStackTrace();
 				}
 				numMarked++;
-				found = SearchEngine.find(this, toMark, true,
-									matchCase, wholeWord, regex);
+				found = SearchEngine.find(this, context);
 			}
 			setCaretPosition(caretPos);
 			repaint();
@@ -1169,7 +1173,7 @@ public class RTextArea extends RTextAreaBase
 	 * the number of spaces equivalent to a tab in this text area.<p>
 	 *
 	 * This method should only be called from thread-safe methods, such as
-	 * {@link replaceSelection(String)}.
+	 * {@link #replaceSelection(String)}.
 	 *
 	 * @param text The <code>java.lang.String</code> in which to replace tabs
 	 *        with spaces.  This has already been verified to have at least

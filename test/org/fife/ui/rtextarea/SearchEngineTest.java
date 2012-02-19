@@ -34,7 +34,7 @@ import org.fife.ui.rtextarea.SearchEngine;
 
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
- * <tt>RTextArea</tt>/<tt>RSyntaxTextArea</tt>.
+ * <code>RTextArea</code>/<code>RSyntaxTextArea</code>.
  * 
  * @author Robert Futrell
  * @version 1.0
@@ -113,462 +113,386 @@ public class SearchEngineTest extends TestCase {
 
 
 	/**
-	 * Tests <tt>SearchEngine.find()</tt> when searching backward.
+	 * Tests <code>SearchEngine.find()</code> when searching backward.
 	 */
 	public void testSearchEngineFindBackward() throws BadLocationException {
 
 		textArea.setText(text);
 
 		int end = text.length();
-		boolean forward = false;
-		boolean matchCase = false;
-		boolean wholeWord = false;
-		boolean regex = false;
+		SearchContext context = new SearchContext();
+		context.setSearchForward(false);
 
 		// Search for "chuck", ignoring case.
-		String toFind = "chuck";
+		context.setSearchFor("chuck");
+		context.setMatchCase(false);
 		textArea.setCaretPosition(end);
-		boolean found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		boolean found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 48, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 48, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 26, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 26, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "Chuck", matching case.
-		toFind = "Chuck";
-		matchCase = true;
+		context.setSearchFor("Chuck");
+		context.setMatchCase(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("Chuck", 26, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("Chuck", 26, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "chuck", ignoring case, whole word
-		toFind = "chuck";
-		matchCase = false;
-		wholeWord = true;
+		context.setSearchFor("Chuck");
+		context.setMatchCase(false);
+		context.setWholeWord(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "wood", matching case, whole word
-		toFind = "wood";
-		matchCase = true;
-		wholeWord = true;
+		context.setSearchFor("wood");
+		context.setMatchCase(true);
+		context.setWholeWord(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("wood", 9, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("wood", 9, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, ignoring case
-		toFind = ".ould";
-		matchCase = false;
-		wholeWord = false;
-		regex = true;
+		context.setSearchFor(".ould");
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, matching case
-		toFind = ".ould";
-		matchCase = true;
-		wholeWord = false;
-		regex = true;
+		context.setSearchFor(".ould");
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea,context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
-		toFind = "[cd]hUCk";
-		matchCase = false;
-		wholeWord = true;
-		regex = true;
+		context.setSearchFor("[cd]hUCk");
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, matching case, whole word
-		toFind = "[cd]huck";
-		matchCase = true;
-		wholeWord = true;
-		regex = true;
+		context.setSearchFor("[cd]huck");
+		context.setMatchCase(true);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 	}
 
 
 	/**
-	 * Tests <tt>SearchEngine.find()</tt> when searching forward.
+	 * Tests <code>SearchEngine.find()</code> when searching forward.
 	 */
 	public void testSearchEngineFindForward() throws BadLocationException {
 
 		textArea.setText(text);
 
-		boolean forward = true;
-		boolean matchCase = false;
-		boolean wholeWord = false;
-		boolean regex = false;
+		SearchContext context = new SearchContext();
 
 		// Search for "chuck", ignoring case.
-		String toFind = "chuck";
-		boolean found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		context.setSearchFor("chuck");
+		boolean found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 26, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 26, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 48, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 48, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "Chuck", matching case.
-		toFind = "Chuck";
-		matchCase = true;
+		context.setSearchFor("Chuck");
+		context.setMatchCase(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("Chuck", 26, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("Chuck", 26, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "chuck", ignoring case, whole word
-		toFind = "chuck";
-		matchCase = false;
-		wholeWord = true;
+		context.setSearchFor("chuck");
+		context.setMatchCase(false);
+		context.setWholeWord(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "wood", matching case, whole word
-		toFind = "wood";
-		matchCase = true;
-		wholeWord = true;
+		context.setSearchFor("wood");
+		context.setMatchCase(true);
+		context.setWholeWord(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("wood", 9, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("wood", 9, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, ignoring case
-		toFind = ".ould";
-		matchCase = false;
-		wholeWord = false;
-		regex = true;
+		context.setSearchFor(".ould");
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, matching case
-		toFind = ".ould";
-		matchCase = true;
-		wholeWord = false;
-		regex = true;
+		context.setSearchFor(".ould");
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
-		toFind = "[cd]hUCk";
-		matchCase = false;
-		wholeWord = true;
-		regex = true;
+		context.setSearchFor("[cd]hUCk");
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 32, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 32, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
-		assertSelected("chuck", 60, matchCase);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		assertSelected("chuck", 60, context.getMatchCase());
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, matching case, whole word
-		toFind = "[cd]huck";
-		matchCase = true;
-		wholeWord = true;
-		regex = true;
+		context.setSearchFor("[cd]huck");
+		context.setMatchCase(true);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
-		found = SearchEngine.find(textArea, toFind, forward, matchCase,
-				wholeWord, regex);
+		found = SearchEngine.find(textArea, context);
 		assertEquals(false, found);
 
 	}
 
 
 	/**
-	 * Tests <tt>SearchEngine.replace()</tt>.
+	 * Tests <code>SearchEngine.replace()</code>.
 	 *
 	 * @param forward Whether to test searching forward or backward.
 	 */
 	private void testSearchEngineReplace(boolean forward)
 										throws BadLocationException {
 
-		String replaceWith = "FOOBAR";
 		int offs = forward ? 0 : text.length();
+		SearchContext context = new SearchContext();
+		context.setSearchForward(forward);
+		context.setReplaceWith("FOOBAR");
 
 		// Search for "chuck", ignoring case.
-		String toFind = "chuck";
+		context.setSearchFor("chuck");
 		textArea.setText(text);
-		String expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
-		boolean matchCase = false;
-		boolean wholeWord = false;
-		boolean regex = false;
+		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
 		textArea.setCaretPosition(offs);
-		boolean found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		boolean found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for "chuck", matching case.
-		toFind = "chuck";
+		context.setSearchFor("chuck");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll(toFind, replaceWith);
-		matchCase = true;
-		wholeWord = false;
-		regex = false;
+		expected = textArea.getText().replaceAll(context.getSearchFor(), context.getReplaceWith());
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for "chuck", ignoring case, whole word.
-		toFind = "chuck";
+		context.setSearchFor("chuck");
 		textArea.setText(text);
 		expected = "How much wood wOuld a woodChuck FOOBAR, if a woodchuck could FOOBAR wOod?";
-		matchCase = false;
-		wholeWord = true;
-		regex = false;
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for "chuck", matching case, whole word.
-		toFind = "chuck";
+		context.setSearchFor("chuck");
 		textArea.setText(text);
 		expected = "How much wood wOuld a woodChuck chUck, if a woodchuck could FOOBAR wOod?";
-		matchCase = true;
-		wholeWord = true;
-		regex = false;
+		context.setMatchCase(true);
+		context.setWholeWord(true);
+		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for ".huck", regex, ignoring case
-		toFind = ".huck";
+		context.setSearchFor(".huck");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
-		matchCase = false;
-		wholeWord = false;
-		regex = true;
+		expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for ".huck", regex, matching case
-		toFind = ".huck";
+		context.setSearchFor(".huck");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll(toFind, replaceWith);
-		matchCase = true;
-		wholeWord = false;
-		regex = true;
+		expected = textArea.getText().replaceAll(context.getSearchFor(), context.getReplaceWith());
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
-		toFind = "[cd]huck";
+		context.setSearchFor("[cd]huck");
 		textArea.setText(text);
 		expected = "How much wood wOuld a woodChuck FOOBAR, if a woodchuck could FOOBAR wOod?";
-		matchCase = false;
-		wholeWord = true;
-		regex = true;
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
 		// Search for "[cd]hUck", regex, matching case, whole word
-		toFind = "[cd]hUck";
+		context.setSearchFor("[cd]hUck");
 		textArea.setText(text);
 		expected = "How much wood wOuld a woodChuck FOOBAR, if a woodchuck could chuck wOod?";
-		matchCase = true;
-		wholeWord = false;
-		regex = true;
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, toFind, replaceWith,
-				forward, matchCase, wholeWord, regex);
+		found = SearchEngine.replace(textArea, context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -576,7 +500,7 @@ public class SearchEngineTest extends TestCase {
 
 
 	/**
-	 * Tests <tt>SearchEngine.replace()</tt> when searching backward.
+	 * Tests <code>SearchEngine.replace()</code> when searching backward.
 	 */
 	public void testSearchEngineReplaceBackward() throws BadLocationException {
 		testSearchEngineReplace(false);
@@ -584,7 +508,7 @@ public class SearchEngineTest extends TestCase {
 
 
 	/**
-	 * Tests <tt>SearchEngine.replace()</tt> when searching forward.
+	 * Tests <code>SearchEngine.replace()</code> when searching forward.
 	 */
 	public void testSearchEngineReplaceForward() throws BadLocationException {
 		testSearchEngineReplace(true);
@@ -592,105 +516,95 @@ public class SearchEngineTest extends TestCase {
 
 
 	/**
-	 * Tests <tt>SearchEngine.replaceAll()</tt>.
+	 * Tests <code>SearchEngine.replaceAll()</code>.
 	 */
 	public void testSearchEngineReplaceAll() throws BadLocationException {
 
-		String replaceWith = "FOOBAR";
+		SearchContext context = new SearchContext();
+		context.setReplaceWith("FOOBAR");
 
 		// Replace "chuck", ignoring case.
-		String toFind = "chuck";
+		context.setSearchFor("chuck");
 		textArea.setText(text);
-		String expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
-		boolean matchCase = false;
-		boolean wholeWord = false;
-		boolean regex = false;
-		int count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
+		int count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(4, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wood", matching case.
-		toFind = "wood";
+		context.setSearchFor("wood");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll(toFind, replaceWith);
-		matchCase = true;
-		wholeWord = false;
-		regex = false;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		expected = textArea.getText().replaceAll(context.getSearchFor(), context.getReplaceWith());
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(false);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wood", ignoring case, whole word.
-		toFind = "wood";
+		context.setSearchFor("wood");
 		textArea.setText(text);
 		expected = "How much FOOBAR wOuld a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
-		matchCase = false;
-		wholeWord = true;
-		regex = false;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(false);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(2, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "chUck", matching case, whole word.
-		toFind = "chUck";
+		context.setSearchFor("chUck");
 		textArea.setText(text);
 		expected = "How much wood wOuld a woodChuck FOOBAR, if a woodchuck could chuck wOod?";
-		matchCase = true;
-		wholeWord = true;
-		regex = false;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		context.setMatchCase(true);
+		context.setWholeWord(true);
+		context.setRegularExpression(false);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(1, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wo(?:o|ul)d", regex, ignoring case.
-		toFind = "wo(?:o|ul)d";
+		context.setSearchFor("wo(?:o|ul)d");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll("(?i:" + toFind + ")", replaceWith);
-		matchCase = false;
-		wholeWord = false;
-		regex = true;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(5, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wo(?:o|ul)d", regex, matching case.
-		toFind = "wo(?:o|ul)d";
+		context.setSearchFor("wo(?:o|ul)d");
 		textArea.setText(text);
-		expected = textArea.getText().replaceAll(toFind, replaceWith);
-		matchCase = true;
-		wholeWord = false;
-		regex = true;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		expected = textArea.getText().replaceAll(context.getSearchFor(), context.getReplaceWith());
+		context.setMatchCase(true);
+		context.setWholeWord(false);
+		context.setRegularExpression(true);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wo(?:o|ul)d", regex, ignoring case, whole word
-		toFind = "wo(?:o|ul)d";
+		context.setSearchFor("wo(?:o|ul)d");
 		textArea.setText(text);
 		expected = "How much FOOBAR FOOBAR a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
-		matchCase = false;
-		wholeWord = true;
-		regex = true;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		context.setMatchCase(false);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
 		// Replace "wO(?:o|ul)d", regex, matching case, whole word
-		toFind = "wO(?:o|ul)d";
+		context.setSearchFor("wO(?:o|ul)d");
 		textArea.setText(text);
 		expected = "How much wood FOOBAR a woodChuck chUck, if a woodchuck could chuck FOOBAR?";
-		matchCase = true;
-		wholeWord = true;
-		regex = true;
-		count = SearchEngine.replaceAll(textArea, toFind, replaceWith,
-								matchCase, wholeWord, regex);
+		context.setMatchCase(true);
+		context.setWholeWord(true);
+		context.setRegularExpression(true);
+		count = SearchEngine.replaceAll(textArea, context);
 		assertEquals(2, count);
 		assertEquals(expected, textArea.getText());
 

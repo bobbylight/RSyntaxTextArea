@@ -220,6 +220,29 @@ public class Fold implements Comparable {
 
 
 	/**
+	 * Returns the "deepest" fold containing the specified offset.  It is
+	 * assumed that it's already been verified that <code>offs</code> is indeed
+	 * contained in this fold.
+	 *
+	 * @param offs The offset.
+	 * @return The fold, or <code>null</code> if no child fold also contains
+	 *         the offset.
+	 * @see FoldManager#getDeepestFoldContaining(int)
+	 */
+	Fold getDeepestFoldContaining(int offs) {
+		Fold deepestFold = this;
+		for (int i=0; i<getChildCount(); i++) {
+			Fold fold = getChild(i);
+			if (fold.containsOffset(offs)) {
+				deepestFold = fold.getDeepestFoldContaining(offs);
+				break;
+			}
+		}
+		return deepestFold;
+	}
+
+
+	/**
 	 * Returns the "deepest" open fold containing the specified offset.  It
 	 * is assumed that it's already been verified that <code>offs</code> is
 	 * indeed contained in this fold.
