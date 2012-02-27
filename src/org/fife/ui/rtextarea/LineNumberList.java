@@ -177,7 +177,7 @@ class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Returns the width of the empty border on this components right-hand
+	 * Returns the width of the empty border on this component's right-hand
 	 * side (or left-hand side, if the orientation is RTL).
 	 *
 	 * @return The border width.
@@ -606,11 +606,11 @@ class LineNumberList extends AbstractGutterComponent
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
 				int lineCount = textArea.getLineCount();
-				while (lineCount >= 10) {
+				do {
 					lineCount = lineCount/10;
 					count++;
-				}
-				cellWidth += fontMetrics.charWidth('9')*(count+1) + 5;
+				} while (lineCount >= 10);
+				cellWidth += fontMetrics.charWidth('9')*(count+1) + 3;
 			}
 		}
 
