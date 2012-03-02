@@ -181,6 +181,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public String[] getLineCommentStartAndEnd() {
+		return new String[] { "//", null };
+	}
+
+
+	/**
 	 * Returns the first token in the linked list of tokens generated
 	 * from <code>text</code>.  This method must be implemented by
 	 * subclasses so they can correctly implement syntax highlighting.
@@ -348,13 +356,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"if" |
 	"in" |
 	"new" |
-	"return" |
 	"this" |
 	"typeof" |
 	"var" |
 	"void" |
 	"while" |
 	"with"						{ addToken(Token.RESERVED_WORD); }
+	"return"					{ addToken(Token.RESERVED_WORD_2); }
 
 	// Reserved (but not yet used) ECMA keywords.
 	"abstract"					{ addToken(Token.RESERVED_WORD); }
@@ -536,6 +544,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[^hwf\n]+				{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 }
