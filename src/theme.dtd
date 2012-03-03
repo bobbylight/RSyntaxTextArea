@@ -34,7 +34,9 @@
       fade (true|false) "false">
 <!ATTLIST marginLine fg CDATA #REQUIRED>
 <!ATTLIST markAllHighlight color CDATA #REQUIRED>
-<!ATTLIST markOccurrencesHighlight color CDATA #REQUIRED>
+<!ATTLIST markOccurrencesHighlight
+      color CDATA #REQUIRED
+      border (true|false) "false">
 <!ATTLIST matchedBracket
       fg CDATA #REQUIRED
       bg CDATA #IMPLIED

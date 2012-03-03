@@ -85,6 +85,7 @@ public class Theme {
 	private Color marginLineColor;
 	private Color markAllHighlightColor;
 	private Color markOccurrencesColor;
+	private boolean markOccurrencesBorder;
 	private Color matchedBracketFG;
 	private Color matchedBracketBG;
 	private boolean matchedBracketAnimate;
@@ -125,6 +126,7 @@ public class Theme {
 		marginLineColor = textArea.getMarginLineColor();
 		markAllHighlightColor = textArea.getMarkAllHighlightColor();
 		markOccurrencesColor = textArea.getMarkOccurrencesColor();
+		markOccurrencesBorder = textArea.getPaintMarkOccurrencesBorder();
 		matchedBracketBG = textArea.getMatchedBracketBGColor();
 		matchedBracketFG = textArea.getMatchedBracketBorderColor();
 		matchedBracketAnimate = textArea.getAnimateBracketMatching();
@@ -163,6 +165,7 @@ public class Theme {
 		textArea.setMarginLineColor(marginLineColor);
 		textArea.setMarkAllHighlightColor(markAllHighlightColor);
 		textArea.setMarkOccurrencesColor(markOccurrencesColor);
+		textArea.setPaintMarkOccurrencesBorder(markOccurrencesBorder);
 		textArea.setMatchedBracketBGColor(matchedBracketBG);
 		textArea.setMatchedBracketBorderColor(matchedBracketFG);
 		textArea.setAnimateBracketMatching(matchedBracketAnimate);
@@ -279,6 +282,7 @@ public class Theme {
 
 			elem = doc.createElement("markOccurrencesHighlight");
 			elem.setAttribute("color", colorToString(markOccurrencesColor));
+			elem.setAttribute("border", Boolean.toString(markOccurrencesBorder));
 			root.appendChild(elem);
 
 			elem = doc.createElement("matchedBracket");
@@ -536,6 +540,8 @@ public class Theme {
 			else if ("markOccurrencesHighlight".equals(qName)) {
 				String color = attrs.getValue("color");
 				theme.markOccurrencesColor = stringToColor(color);
+				String border = attrs.getValue("border");
+				theme.markOccurrencesBorder = Boolean.valueOf(border).booleanValue();
 			}
 
 			else if ("matchedBracket".equals(qName)) {
