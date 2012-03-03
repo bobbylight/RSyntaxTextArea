@@ -22,7 +22,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-//import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -48,7 +47,7 @@ import javax.swing.text.View;
 class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 
 	private Color borderColor;
-//	private BasicStroke stroke;
+	private boolean paintBorder;
 
 
 	/**
@@ -56,9 +55,18 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	 */
 	public MarkOccurrencesHighlightPainter() {
 		super(Color.BLUE);
-//		float[] dash = { 6, 4 };
-//		stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
-//							BasicStroke.JOIN_MITER, 1, dash, 0);
+	}
+
+
+	/**
+	 * Returns whether a border is painted around marked occurrences.
+	 *
+	 * @return Whether a border is painted.
+	 * @see #setPaintBorder(boolean)
+	 * @see #getColor()
+	 */
+	public boolean getPaintBorder() {
+		return paintBorder;
 	}
 
 
@@ -110,11 +118,10 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 			Rectangle r = (shape instanceof Rectangle) ? (Rectangle) shape
 												: shape.getBounds();
 			g2d.fillRect(r.x, r.y, r.width, r.height);
-			g2d.setColor(borderColor);
-//			Stroke oldStroke = g2d.getStroke();
-//			g2d.setStroke(stroke);
-			g2d.drawRect(r.x,r.y, r.width-1,r.height-1);
-//			g2d.setStroke(oldStroke);
+			if (paintBorder) {
+				g2d.setColor(borderColor);
+				g2d.drawRect(r.x,r.y, r.width-1,r.height-1);
+			}
 			return r;
 		} catch (BadLocationException e) { // Never happens
 			e.printStackTrace();
@@ -130,6 +137,18 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	public void setColor(Color c) {
 		super.setColor(c);
 		borderColor = c.darker();
+	}
+
+
+	/**
+	 * Toggles whether a border is painted around highlights.
+	 *
+	 * @param paint Whether to paint a border.
+	 * @see #getPaintBorder()
+	 * @see #setColor(Color)
+	 */
+	public void setPaintBorder(boolean paint) {
+		this.paintBorder = paint;
 	}
 
 

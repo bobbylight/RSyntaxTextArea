@@ -64,6 +64,7 @@ public class RTADefaultInputMap extends InputMap {
 
 		int defaultModifier = getDefaultModifier();
 		//int ctrl = InputEvent.CTRL_MASK;
+		int alt = InputEvent.ALT_MASK;
 		int shift = InputEvent.SHIFT_MASK;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   0),					DefaultEditorKit.beginLineAction);
@@ -82,7 +83,7 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,   0),					DefaultEditorKit.downAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,   shift),					DefaultEditorKit.selectionDownAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,   defaultModifier),			RTextAreaEditorKit.rtaScrollDownAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,   defaultModifier|shift),	RTextAreaEditorKit.rtaLineDownAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,   alt),	RTextAreaEditorKit.rtaLineDownAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,  0),					DefaultEditorKit.forwardAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,  shift),					DefaultEditorKit.selectionForwardAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,  defaultModifier),			DefaultEditorKit.nextWordAction);
@@ -90,7 +91,7 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,     0),					DefaultEditorKit.upAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,     shift),					DefaultEditorKit.selectionUpAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,     defaultModifier),			RTextAreaEditorKit.rtaScrollUpAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,     defaultModifier|shift),	RTextAreaEditorKit.rtaLineUpAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,     alt),	RTextAreaEditorKit.rtaLineUpAction);
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP,0),					DefaultEditorKit.pageUpAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP,shift),					RTextAreaEditorKit.rtaSelectionPageUpAction);
@@ -130,6 +131,9 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		0),							RTextAreaEditorKit.rtaNextBookmarkAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		shift),						RTextAreaEditorKit.rtaPrevBookmarkAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		defaultModifier),			RTextAreaEditorKit.rtaToggleBookmarkAction);
+
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_K,		defaultModifier|shift),		RTextAreaEditorKit.rtaPrevOccurrenceAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_K,		defaultModifier),			RTextAreaEditorKit.rtaNextOccurrenceAction);
 
 		/* NOTE:  Currently, macros aren't part of the default input map for */
 		/* RTextArea, as they display their own popup windows, etc. which    */

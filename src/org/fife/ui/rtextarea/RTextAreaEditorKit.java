@@ -115,6 +115,16 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static final String rtaLowerSelectionCaseAction		= "RTA.LowerCaseAction";
 
 	/**
+	 * Action to select the next occurrence of the selected text.
+	 */
+	public static final String rtaNextOccurrenceAction		= "RTA.NextOccurrenceAction";
+
+	/**
+     * Action to select the previous occurrence of the selected text.
+	 */
+	public static final String rtaPrevOccurrenceAction		= "RTA.PrevOccurrenceAction";
+
+	/**
 	 * Action to jump to the next bookmark.
 	 */
 	public static final String rtaNextBookmarkAction		= "RTA.NextBookmarkAction";
@@ -245,6 +255,8 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new NextVisualPositionAction(downAction, false, SwingConstants.SOUTH),
 		new NextVisualPositionAction(selectionUpAction, true, SwingConstants.NORTH),
 		new NextVisualPositionAction(selectionDownAction, true, SwingConstants.SOUTH),
+        new NextOccurrenceAction(rtaNextOccurrenceAction),
+        new PreviousOccurrenceAction(rtaPrevOccurrenceAction),
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
 		new PageAction(rtaSelectionPageLeftAction, true, true), 
@@ -1136,6 +1148,19 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				// cut down on all of the modelToViews, as each call causes
 				// a getTokenList => expensive!
 				int endOffs = Utilities.getRowEnd(textArea, offs);
+// TODO: Verify
+//				int endOffs;
+//				try {
+//					try {
+//						// CDE: I added a cache which improves performance.
+//						((RSyntaxDocument)((BasicTextUI)textArea.getUI()).getRootView(textArea).getView(0).getDocument()).setCacheTokenListForLine(true);
+//					} catch(Exception ex) {}
+//					endOffs = Utilities.getRowEnd(textArea, offs);
+//				} finally {
+//					try {
+//						((RSyntaxDocument)((BasicTextUI)textArea.getUI()).getRootView(textArea).getView(0).getDocument()).setCacheTokenListForLine(false);
+//					} catch(Exception ex) {}
+//				}
 				if (select) {
 					textArea.moveCaretPosition(endOffs);
 				}
@@ -1648,6 +1673,38 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Selects the next occurrence of the text last selected.
+	 */
+	public static class NextOccurrenceAction extends RecordableTextAction {
+
+		public NextOccurrenceAction(String name) {
+			super(name);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			String selectedText = textArea.getSelectedText();
+			if (selectedText == null || selectedText.length() == 0) {
+				selectedText = RTextArea.getSelectedOccurrenceText();
+				if (selectedText == null || selectedText.length() == 0) {
+					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+					return;
+				}
+			}
+			SearchContext context = new SearchContext(selectedText);
+			if (!SearchEngine.find(textArea, context)) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+			}
+			RTextArea.setSelectedOccurrenceText(selectedText);
+		}
+
+		public final String getMacroID() {
+			return getName();
+		}
+
+	}
+
+
+	/**
 	 * Action to move the selection and/or caret. Constructor indicates
 	 * direction to use.
 	 */
@@ -1739,7 +1796,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
     }
 
-            
+
 	/**
 	 * Positions the caret at the next word.
 	 */
@@ -1906,6 +1963,39 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		public final String getMacroID() {
 			return rtaPlaybackLastMacroAction;
+		}
+
+	}
+
+
+	/**
+	 * Select the previous occurrence of the text last selected.
+	 */
+	public static class PreviousOccurrenceAction extends RecordableTextAction {
+
+		public PreviousOccurrenceAction(String name) {
+			super(name);
+		}
+
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			String selectedText = textArea.getSelectedText();
+			if (selectedText == null || selectedText.length() == 0) {
+				selectedText = RTextArea.getSelectedOccurrenceText();
+				if (selectedText == null || selectedText.length() == 0) {
+					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+					return;
+				}
+			}
+			SearchContext context = new SearchContext(selectedText);
+			context.setSearchForward(false);
+			if (!SearchEngine.find(textArea, context)) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+			}
+			RTextArea.setSelectedOccurrenceText(selectedText);
+		}
+
+		public final String getMacroID() {
+			return getName();
 		}
 
 	}

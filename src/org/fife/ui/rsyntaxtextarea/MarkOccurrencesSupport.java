@@ -211,6 +211,18 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 
 
 	/**
+	 * Returns whether a border is painted around marked occurrences.
+	 *
+	 * @return Whether a border is painted.
+	 * @see #setPaintBorder(boolean)
+	 * @see #getColor()
+	 */
+	public boolean getPaintBorder() {
+		return p.getPaintBorder();
+	}
+
+
+	/**
 	 * Installs this listener on a text area.  If it is already installed on
 	 * another text area, it is uninstalled first.
 	 *
@@ -276,6 +288,7 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 	 *
 	 * @param color The color to use.
 	 * @see #getColor()
+	 * @see #setPaintBorder(boolean)
 	 */
 	public void setColor(Color color) {
 		p.setColor(color);
@@ -296,6 +309,23 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 	 */
 	public void setDelay(int delay) {
 		timer.setDelay(delay);
+	}
+
+
+	/**
+	 * Toggles whether a border is painted around marked highlights.
+	 *
+	 * @param paint Whether to paint a border.
+	 * @see #getPaintBorder()
+	 * @see #setColor(Color)
+	 */
+	public void setPaintBorder(boolean paint) {
+		if (paint!=p.getPaintBorder()) {
+			p.setPaintBorder(paint);
+			if (textArea!=null) {
+				textArea.repaint();
+			}
+		}
 	}
 
 

@@ -269,6 +269,9 @@ Rectangle match;
 	/** The color used to render "marked occurrences." */
 	private Color markOccurrencesColor;
 
+	/** Whether a border should be painted around marked occurrences. */
+	private boolean paintMarkOccurrencesBorder;
+
 	/** Metrics of the text area's font. */
 	private FontMetrics defaultFontMetrics;
 
@@ -1387,6 +1390,19 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether a border is painted around marked occurrences.
+	 *
+	 * @return Whether a border is painted.
+	 * @see #setPaintMarkOccurrencesBorder(boolean)
+	 * @see #getMarkOccurrencesColor()
+	 * @see #getMarkOccurrences()
+	 */
+	public boolean getPaintMarkOccurrencesBorder() {
+		return paintMarkOccurrencesBorder;
+	}
+
+
+	/**
 	 * Returns whether or not templates are enabled for all instances
 	 * of <code>RSyntaxTextArea</code>.
 	 *
@@ -2205,6 +2221,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *        special background is painted behind a matched bracket.
 	 * @see #getMatchedBracketBGColor
 	 * @see #setMatchedBracketBorderColor
+	 * @see #setPaintMarkOccurrencesBorder(boolean)
 	 */
 	public void setMatchedBracketBGColor(Color color) {
 		matchedBracketBGColor = color;
@@ -2224,6 +2241,22 @@ private boolean fractionalFontMetricsEnabled;
 		matchedBracketBorderColor = color;
 		if (match!=null)
 			repaint();
+	}
+
+
+	/**
+	 * Toggles whether a border should be painted around marked occurrences.
+	 *
+	 * @param paintBorder Whether to paint a border.
+	 * @see #getPaintMarkOccurrencesBorder()
+	 * @see #setMarkOccurrencesColor(Color)
+	 * @see #setMarkOccurrences(boolean)
+	 */
+	public void setPaintMarkOccurrencesBorder(boolean paintBorder) {
+		paintMarkOccurrencesBorder = paintBorder;
+		if (markOccurrencesSupport!=null) {
+			markOccurrencesSupport.setPaintBorder(paintBorder);
+		}
 	}
 
 

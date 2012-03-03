@@ -28,7 +28,7 @@ package org.fife.ui.rtextarea;
  * keep an instance of this class around and use it to maintain the user's
  * selection for options such as "match case," "regular expression," etc.,
  * between search operations.  They can then pass the instance as a parameter
- * to the public {@link SearchEngine} methods to do the actual searching.<p>
+ * to the public {@link SearchEngine} methods to do the actual searching.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -56,6 +56,18 @@ public class SearchContext {
 	 * case-insensitive, not whole-word, not a regular expression.
 	 */
 	public SearchContext() {
+		this(null);
+	}
+
+
+	/**
+	 * Creates a new search context.  Specifies a forward search,
+	 * case-insensitive, not whole-word, not a regular expression.
+	 *
+	 * @param searchFor The text to search for.
+	 */
+	public SearchContext(String searchFor) {
+		this.searchFor = searchFor;
 		forward = true;
 	}
 

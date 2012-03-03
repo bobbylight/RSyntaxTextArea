@@ -147,6 +147,11 @@ public class RTextArea extends RTextAreaBase
 	private boolean popupMenuCreated;
 
 	/**
+	 * The text last searched for via Ctrl+K or Ctrl+Shift+K.
+	 */
+	private static String selectedOccurrenceText;
+
+	/**
 	 * Can return tool tips for this text area.  Subclasses can install a
 	 * supplier as a means of adding custom tool tips without subclassing
 	 * <tt>RTextArea</tt>.  {@link #getToolTipText()} checks this supplier
@@ -742,6 +747,17 @@ public class RTextArea extends RTextAreaBase
 			popupMenuCreated = true;
 		}
 		return popupMenu;
+	}
+
+
+	/**
+	 * Returns the text last selected and used in a Ctrl+K operation.
+	 *
+	 * @return The text, or <code>null</code> if none.
+	 * @see #setSelectedOccurrenceText(String)
+	 */
+	public static String getSelectedOccurrenceText() {
+		return selectedOccurrenceText;
 	}
 
 
@@ -1434,6 +1450,24 @@ public class RTextArea extends RTextAreaBase
 			markAllHighlightPainter.setRoundedEdges(rounded);
 			super.setRoundedSelectionEdges(rounded); // Fires event.
 		}
+	}
+
+
+	/**
+	 * Sets the text last selected/Ctrl+K'd in an <code>RTextArea</code>.
+	 * This text will be searched for in subsequent Ctrl+K/Ctrl+Shift+K
+	 * actions (Cmd+K on OS X).<p>
+	 *
+	 * Since the selected occurrence actions are built into RTextArea,
+	 * applications usually do not have to call this method directly, but can
+	 * choose to do so if they wish (for example, if they wish to set this
+	 * value when the user does a search via a Find dialog).
+	 *
+	 * @param text The selected text.
+	 * @see #getSelectedOccurrenceText()
+	 */
+	public static void setSelectedOccurrenceText(String text) {
+		selectedOccurrenceText = text;
 	}
 
 
