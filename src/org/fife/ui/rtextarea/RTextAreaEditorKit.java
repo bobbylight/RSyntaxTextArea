@@ -1142,25 +1142,22 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		}
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			int offs = textArea.getCaretPosition();
+			int endOffs = 0;
 			try {
-				int offs = textArea.getCaretPosition();
-				// FIXME:  Replace Utilities call with custom version to
-				// cut down on all of the modelToViews, as each call causes
-				// a getTokenList => expensive!
-				int endOffs = Utilities.getRowEnd(textArea, offs);
-// TODO: Verify
-//				int endOffs;
-//				try {
-//					try {
-//						// CDE: I added a cache which improves performance.
-//						((RSyntaxDocument)((BasicTextUI)textArea.getUI()).getRootView(textArea).getView(0).getDocument()).setCacheTokenListForLine(true);
-//					} catch(Exception ex) {}
-//					endOffs = Utilities.getRowEnd(textArea, offs);
-//				} finally {
-//					try {
-//						((RSyntaxDocument)((BasicTextUI)textArea.getUI()).getRootView(textArea).getView(0).getDocument()).setCacheTokenListForLine(false);
-//					} catch(Exception ex) {}
-//				}
+				if (textArea.getLineWrap()) {
+					// Must check per character, since one logical line may be
+					// many physical lines.
+					// FIXME:  Replace Utilities call with custom version to
+					// cut down on all of the modelToViews, as each call causes
+					// a getTokenList => expensive!
+					endOffs = Utilities.getRowEnd(textArea, offs);
+				}
+				else {
+					Element root = textArea.getDocument().getDefaultRootElement();
+					int line = root.getElementIndex(offs);
+					endOffs = root.getElement(line).getEndOffset() - 1;
+				}
 				if (select) {
 					textArea.moveCaretPosition(endOffs);
 				}
