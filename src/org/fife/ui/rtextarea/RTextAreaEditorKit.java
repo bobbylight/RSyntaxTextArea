@@ -31,6 +31,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 
 
@@ -1649,6 +1650,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					}
 
 					int offs = moveTo.getMarkedOffset();
+					if (textArea instanceof RSyntaxTextArea) {
+						RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+						if (rsta.isCodeFoldingEnabled()) {
+							rsta.getFoldManager().
+										ensureOffsetNotInClosedFold(offs);
+						}
+					}
 					int line = textArea.getLineOfOffset(offs);
 					offs = textArea.getLineStartOffset(line);
 					textArea.setCaretPosition(offs);
