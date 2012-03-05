@@ -522,13 +522,40 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 
 
 	/**
+	 * Returns the y-coordinate of the specified line.<p>
+	 *
+	 * The default implementation is equivalent to:
+	 * <pre>
+	 * int startOffs = textArea.getLineStartOffset(line);
+	 * return yForLineContaining(startOffs);</code>
+	 * </pre>
+	 *
+	 * Subclasses that can calculate this value more quickly than traditional
+	 * {@link #modelToView(JTextComponent, int)} calls should override this
+	 * method to do so. This method may be used when the entire bounding box
+	 * isn't needed, to speed up rendering.
+	 *
+	 * @param alloc The area the text area can render into.
+	 * @param line The line number.
+	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>line</code> isn't a valid line
+	 *         number for this document.
+	 */
+	public int yForLine(int line) throws BadLocationException {
+		int startOffs = textArea.getLineStartOffset(line);
+		return yForLineContaining(startOffs);
+	}
+
+
+	/**
 	 * Returns the y-coordinate of the line containing an offset.<p>
 	 *
 	 * The default implementation is equivalent to:
 	 * <pre>
 	 * int line = textArea.getLineOfOffset(offs);
 	 * int startOffs = textArea.getLineStartOffset(line);
-	 * return modelToView(startOffs).y</code>
+	 * return modelToView(startOffs).y;</code>
 	 * </pre>
 	 *
 	 * Subclasses that can calculate this value more quickly than traditional

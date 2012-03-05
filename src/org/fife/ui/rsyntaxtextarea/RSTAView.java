@@ -37,6 +37,23 @@ interface RSTAView {
 
 
 	/**
+	 * Returns the y-coordinate of the specified line.<p>
+	 *
+	 * This method is quicker than using traditional
+	 * <code>modelToView(int)</code> calls, as the entire bounding box isn't
+	 * computed.
+	 *
+	 * @param alloc The area the text area can render into.
+	 * @param line The line number.
+	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>line</code> isn't a valid line
+	 *         number for this document.
+	 */
+	public int yForLine(Rectangle alloc, int line) throws BadLocationException;
+
+
+	/**
 	 * Returns the y-coordinate of the line containing a specified offset.<p>
 	 *
 	 * This method is quicker than using traditional

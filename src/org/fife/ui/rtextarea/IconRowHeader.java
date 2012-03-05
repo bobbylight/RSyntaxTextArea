@@ -262,7 +262,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 *         icons there, this will be an empty array.
 	 * @throws BadLocationException If <code>line</code> is invalid.
 	 */
-	public GutterIconImpl[] getTrackingIcons(int line)
+	public GutterIconInfo[] getTrackingIcons(int line)
 								throws BadLocationException {
 
 		List retVal = new ArrayList(1);
@@ -285,8 +285,8 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			}
 		}
 
-		GutterIconImpl[] array = new GutterIconImpl[retVal.size()];
-		return (GutterIconImpl[])retVal.toArray(array);
+		GutterIconInfo[] array = new GutterIconInfo[retVal.size()];
+		return (GutterIconInfo[])retVal.toArray(array);
 
 	}
 
@@ -720,7 +720,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			return false;
 		}
 
-		GutterIconImpl[] icons = getTrackingIcons(line);
+		GutterIconInfo[] icons = getTrackingIcons(line);
 		if (icons.length==0) {
 			int offs = textArea.getLineStartOffset(line);
 			addOffsetTrackingIcon(offs, bookmarkIcon);

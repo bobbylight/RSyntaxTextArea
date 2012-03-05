@@ -222,6 +222,30 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 
 
 	/**
+	 * Returns the y-coordinate of the specified line.<p>
+	 *
+	 * This method is quicker than using traditional
+	 * <code>modelToView(int)</code> calls, as the entire bounding box isn't
+	 * computed.
+	 *
+	 * @param alloc The area the text area can render into.
+	 * @param line The line number.
+	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>line</code> isn't a valid line
+	 *         number for this document.
+	 */
+	public int yForLine(int line) throws BadLocationException {
+		Rectangle alloc = getVisibleEditorRect();
+		if (alloc!=null) {
+			RSTAView view = (RSTAView)getRootView(textArea).getView(0);
+			return view.yForLine(alloc, line);
+		}
+		return -1;
+	}
+
+
+	/**
 	 * Returns the y-coordinate of the line containing a specified offset.<p>
 	 *
 	 * This is faster than calling <code>modelToView(offs).y</code>, so it is

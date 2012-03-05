@@ -1119,19 +1119,21 @@ try {
 
 
 	/**
-	 * Returns the y-coordinate of the line containing an offset.<p>
+	 * Returns the y-coordinate of the specified line.
 	 *
-	 * The default implementation is equivalent to:
-	 * <pre>
-	 * int line = textArea.getLineOfOffset(offs);
-	 * int startOffs = textArea.getLineStartOffset(line);
-	 * return modelToView(startOffs).y</code>
-	 * </pre>
-	 *
-	 * Subclasses that can calculate this value more quickly than traditional
-	 * {@link #modelToView(int)} calls should override this method to do so.
-	 * This method may be used when the entire bounding box isn't needed, to
-	 * speed up rendering.
+	 * @param line The line number.
+	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
+	 *         this text area doesn't yet have a positive size.
+	 * @throws BadLocationException If <code>line</code> isn't a valid line
+	 *         number for this document.
+	 */
+	public int yForLine(int line) throws BadLocationException {
+		return ((RTextAreaUI)getUI()).yForLine(line);
+	}
+
+
+	/**
+	 * Returns the y-coordinate of the line containing an offset.
 	 *
 	 * @param offs The offset info the document.
 	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if

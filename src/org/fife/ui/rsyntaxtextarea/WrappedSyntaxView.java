@@ -815,19 +815,22 @@ return p + 1;
 	/**
 	 * {@inheritDoc}
 	 */
-	public int yForLineContaining(Rectangle alloc, int offs)
-								throws BadLocationException {
-
-		// line coordinates
-		Element map = getElement();
-		int line = map.getElementIndex(offs);
-
+	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 		if (isAllocationValid()) {
 			return alloc.y + getOffset(Y_AXIS, line);
 		}
-
 		return -1;
+	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int yForLineContaining(Rectangle alloc, int offs)
+								throws BadLocationException {
+		Element map = getElement();
+		int line = map.getElementIndex(offs);
+		return yForLine(alloc, line);
 	}
 
 
