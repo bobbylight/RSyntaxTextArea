@@ -611,4 +611,51 @@ public class SearchEngineTest extends TestCase {
 	}
 
 
+	/**
+	 * Tests <code>SearchEngine.replaceAll()</code> when the replacement string
+	 * has captured groups.
+	 */
+	public void testSearchEngineRegexReplaceAllWithCapturedGroups() throws BadLocationException {
+
+		SearchContext context = new SearchContext();
+		context.setRegularExpression(true);
+
+		// A single captured group.
+		context.setSearchFor("r(o+)t");
+		textArea.setText("root roOt root");
+		String expected = "oo oO oo";
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setReplaceWith("$1");
+		int count = SearchEngine.replaceAll(textArea, context);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
+		// Multiple captured groups.
+		context.setSearchFor("(\\d)(\\d+)[kM]");
+		textArea.setText("152k 5271143M 3985k");
+		expected = "1.52 5.271143 3.985";
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setReplaceWith("$1.$2");
+		count = SearchEngine.replaceAll(textArea, context);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
+		// No matches
+		context.setSearchFor("(\\d)(\\d+)ABC");
+		expected = "152k 5271143M 3985k";
+		textArea.setText(expected);
+		textArea.setCaretPosition(8);
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setReplaceWith("$1.$2");
+		count = SearchEngine.replaceAll(textArea, context);
+		assertEquals(0, count);
+		assertEquals(expected, textArea.getText());
+		assertEquals(8, textArea.getCaretPosition()); // Caret doesn't move
+
+	}
+
+
 }

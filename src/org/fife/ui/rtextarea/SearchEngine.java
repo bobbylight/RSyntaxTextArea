@@ -719,40 +719,14 @@ public class SearchEngine {
 
 		textArea.beginAtomicEdit();
 		try {
-
-			if (context.isRegularExpression()) {
-
-				String replaceWith = context.getReplaceWith();
-				if (replaceWith==null) {
-					replaceWith = ""; // Needed by getReplacementText() below.
-				}
-
-				int oldOffs = textArea.getCaretPosition();
-				textArea.setCaretPosition(0);
-				int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
-				flags |= context.getMatchCase() ? 0 :
-							Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
-				Pattern p = Pattern.compile(toFind, flags);
-				while (SearchEngine.find(textArea, context)) {
-					Matcher m = p.matcher(textArea.getSelectedText());
-					String replacement = getReplacementText(m, replaceWith);
-					textArea.replaceSelection(replacement);
-					count++;
-				}
-				if (count==0) { // If nothing was found, don't move the caret.
-					textArea.setCaretPosition(oldOffs);
-				}
-
+			int oldOffs = textArea.getCaretPosition();
+			textArea.setCaretPosition(0);
+			while (SearchEngine.replace(textArea, context)) {
+				count++;
 			}
-
-			else { // Non-regular expression search.
-				textArea.setCaretPosition(0);
-				while (SearchEngine.find(textArea, context)) {
-					textArea.replaceSelection(context.getReplaceWith());
-					count++;
-				}
+			if (count==0) { // If nothing was found, don't move the caret.
+				textArea.setCaretPosition(oldOffs);
 			}
-
 		} finally {
 			textArea.endAtomicEdit();
 		}
