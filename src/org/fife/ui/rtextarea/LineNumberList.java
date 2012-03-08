@@ -56,7 +56,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * @author Robert Futrell
  * @version 1.0
  */
-class LineNumberList extends AbstractGutterComponent
+public class LineNumberList extends AbstractGutterComponent
 								implements MouseInputListener {
 
 	private int currentLine;	// The last line the caret was on.
@@ -103,7 +103,7 @@ class LineNumberList extends AbstractGutterComponent
 	 *        displayed.
 	 */
 	public LineNumberList(RTextArea textArea) {
-		this(textArea, Color.GRAY);
+		this(textArea, null);
 	}
 
 
@@ -112,7 +112,8 @@ class LineNumberList extends AbstractGutterComponent
 	 *
 	 * @param textArea The text component for which line numbers will be
 	 *        displayed.
-	 * @param numberColor The color to use for the line numbers.
+	 * @param numberColor The color to use for the line numbers.  If this is
+	 *        <code>null</code>, gray will be used.
 	 */
 	public LineNumberList(RTextArea textArea, Color numberColor) {
 

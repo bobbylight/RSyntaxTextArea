@@ -51,10 +51,10 @@ import javax.swing.text.View;
  *
  * This component has built-in support for displaying icons representing
  * "bookmarks;" that is, lines a user can cycle through via F2 and Shift+F2.
- * Bookmarked lines are toggled via Ctrl+F2.  In order to enable bookmarking,
- * you must first assign an icon to represent a bookmarked line, then actually
- * enable the feature.  This is actually done on the parent {@link Gutter}
- * component:<p>
+ * Bookmarked lines are toggled via Ctrl+F2, or by clicking in the icon area
+ * at the line to bookmark.  In order to enable bookmarking, you must first
+ * assign an icon to represent a bookmarked line, then actually enable the
+ * feature.  This is actually done on the parent {@link Gutter} component:<p>
  * 
  * <pre>
  * Gutter gutter = scrollPane.getGutter();
@@ -65,17 +65,17 @@ import javax.swing.text.View;
  * @author Robert Futrell
  * @version 1.0
  */
-class IconRowHeader extends AbstractGutterComponent implements MouseListener {
+public class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
 	/**
 	 * The icons to render.
 	 */
-	private List trackingIcons;
+	protected List trackingIcons;
 
 	/**
 	 * The width of this component.
 	 */
-	private int width;
+	protected int width;
 
 	/**
 	 * Whether this component listens for mouse clicks and toggles "bookmark"
@@ -92,23 +92,23 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
 	 * each paint.
 	 */
-	private Rectangle visibleRect;
+	protected Rectangle visibleRect;
 
 	/**
 	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
 	 * each paint.
 	 */
-	private Insets textAreaInsets;
+	protected Insets textAreaInsets;
 
 	/**
 	 * The first line in the active line range.
 	 */
-	private int activeLineRangeStart;
+	protected int activeLineRangeStart;
 
 	/**
 	 * The end line in the active line range.
 	 */
-	private int activeLineRangeEnd;
+	protected int activeLineRangeEnd;
 
 	/**
 	 * The color used to highlight the active code block.
@@ -249,7 +249,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 	}
 
 
-	private GutterIconImpl getTrackingIcon(int index) {
+	protected GutterIconImpl getTrackingIcon(int index) {
 		return (GutterIconImpl)trackingIcons.get(index);
 	}
 
@@ -408,11 +408,9 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 			}
 
 			if (firstLine==activeLineRangeStart) {
-				g.setColor(activeLineRangeColor);
 				g.drawLine(0,y1, getWidth(),y1);
 			}
 			if (lastLine==activeLineRangeEnd) {
-				g.setColor(activeLineRangeColor);
 				g.drawLine(0,y2, getWidth(),y2);
 			}
 
@@ -421,11 +419,11 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		if (trackingIcons!=null) {
 			int lastLine = bottomLine;
 			for (int i=trackingIcons.size()-1; i>=0; i--) { // Last to first
-				GutterIconImpl ti = getTrackingIcon(i);
+				GutterIconInfo ti = getTrackingIcon(i);
 				int offs = ti.getMarkedOffset();
 				if (offs>=0 && offs<=doc.getLength()) {
 					int line = root.getElementIndex(offs);
-					if (line<=lastLine && line>topLine-1) {
+					if (line<=lastLine && line>=topLine) {
 						Icon icon = ti.getIcon();
 						if (icon!=null) {
 							int y2 = y + (line-topLine)*cellHeight;
@@ -434,7 +432,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 							lastLine = line-1; // Paint only 1 icon per line
 						}
 					}
-					else if (line<=topLine-1) {
+					else if (line<topLine) {
 						break;
 					}
 				}
@@ -523,7 +521,7 @@ class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 		int cellHeight = textArea.getLineHeight();
 		while (y < visibleBottom) {
 
-			r = LineNumberList.getChildViewBounds(v, topLine, visibleEditorRect);
+			r = getChildViewBounds(v, topLine, visibleEditorRect);
 //			int lineEndY = r.y+r.height;
 
 			/*

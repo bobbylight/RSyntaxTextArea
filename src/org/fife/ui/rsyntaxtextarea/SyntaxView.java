@@ -860,9 +860,11 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 			// current line not being highlighted when a document is first
 			// opened.  So, we set it here just in case.
 			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
-FoldManager fm = host.getFoldManager();
-line -= fm.getHiddenLineCountAbove(line);
-			return alloc.y + line*lineHeight;
+			FoldManager fm = host.getFoldManager();
+			if (!fm.isLineHidden(line)) {
+				line -= fm.getHiddenLineCountAbove(line);
+				return alloc.y + line*lineHeight;
+			}
 		}
 
 		return -1;

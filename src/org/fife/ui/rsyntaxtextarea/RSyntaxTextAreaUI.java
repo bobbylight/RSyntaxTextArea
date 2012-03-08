@@ -227,13 +227,6 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * This method is quicker than using traditional
 	 * <code>modelToView(int)</code> calls, as the entire bounding box isn't
 	 * computed.
-	 *
-	 * @param alloc The area the text area can render into.
-	 * @param line The line number.
-	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
-	 *         this text area doesn't yet have a positive size.
-	 * @throws BadLocationException If <code>line</code> isn't a valid line
-	 *         number for this document.
 	 */
 	public int yForLine(int line) throws BadLocationException {
 		Rectangle alloc = getVisibleEditorRect();
@@ -250,12 +243,6 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 *
 	 * This is faster than calling <code>modelToView(offs).y</code>, so it is
 	 * preferred if you do not need the actual bounding box.
-	 *
-	 * @param offs The offset info the document.
-	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if
-	 *         this text area doesn't yet have a positive size.
-	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
-	 *         into the document.
 	 */
 	public int yForLineContaining(int offs) throws BadLocationException {
 		Rectangle alloc = getVisibleEditorRect();

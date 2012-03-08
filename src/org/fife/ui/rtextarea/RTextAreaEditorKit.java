@@ -300,6 +300,28 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Creates an icon row header to use in the gutter for a text area.
+	 *
+	 * @param textArea The text area.
+	 * @return The icon row header.
+	 */
+	public IconRowHeader createIconRowHeader(RTextArea textArea) {
+		return new IconRowHeader(textArea);
+	}
+
+
+	/**
+	 * Creates a line number list to use in the gutter for a text area.
+	 *
+	 * @param textArea The text area.
+	 * @return The line number list.
+	 */
+	public LineNumberList createLineNumberList(RTextArea textArea) {
+		return new LineNumberList(textArea);
+	}
+
+
+	/**
 	 * Fetches the set of commands that can be used
 	 * on a text component that is using a model and
 	 * view produced by this kit.

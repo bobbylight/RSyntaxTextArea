@@ -34,6 +34,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
@@ -138,6 +139,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	public Document createDefaultDocument() {
 		return new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
+	}
+
+
+	/**
+	 * Overridden to return a row header that is aware of folding.
+	 *
+	 * @param textArea The text area.
+	 * @return The icon row header.
+	 */
+	public IconRowHeader createIconRowHeader(RTextArea textArea) {
+		return new FoldingAwareIconRowHeader((RSyntaxTextArea)textArea);
 	}
 
 

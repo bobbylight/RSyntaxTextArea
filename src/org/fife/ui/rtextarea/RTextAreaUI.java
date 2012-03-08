@@ -538,7 +538,8 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 	 * @param alloc The area the text area can render into.
 	 * @param line The line number.
 	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
-	 *         this text area doesn't yet have a positive size.
+	 *         this text area doesn't yet have a positive size or the line is
+	 *         hidden (i.e. from folding).
 	 * @throws BadLocationException If <code>line</code> isn't a valid line
 	 *         number for this document.
 	 */
@@ -565,7 +566,8 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 	 *
 	 * @param offs The offset info the document.
 	 * @return The y-coordinate of the top of the offset, or <code>-1</code> if
-	 *         this text area doesn't yet have a positive size.
+	 *         this text area doesn't yet have a positive size or the line is
+	 *         hidden (i.e. from folding).
 	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
 	 *         into the document.
 	 */

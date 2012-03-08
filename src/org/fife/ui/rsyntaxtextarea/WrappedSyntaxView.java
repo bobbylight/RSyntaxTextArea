@@ -25,6 +25,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import javax.swing.text.*;
+import javax.swing.text.Position.Bias;
 import javax.swing.event.*;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
@@ -300,6 +301,8 @@ return p + 1;
 		FoldManager fm = host.getFoldManager();
 		int y = alloc.y;
 
+		// TODO: Make cached getOffset() calls for Y_AXIS valid even for
+		// folding, to speed this up!
 		for (int i=0; i<line; i++) {
 			y += getSpan(Y_AXIS, i);
 			Fold fold = fm.getFoldForLine(i);
@@ -381,9 +384,24 @@ return p + 1;
 	 */
 	public float getPreferredSpan(int axis) {
 		updateMetrics();
-		float span = super.getPreferredSpan(axis);
-		if (axis==View.X_AXIS) { // EOL marker
+		float span = 0;
+		if (axis==View.X_AXIS) { // Add EOL marker
+			span = super.getPreferredSpan(axis);
 			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+		}
+		else {
+			span = super.getPreferredSpan(axis);
+			if (host.isCodeFoldingEnabled()) {
+				// TODO: Cache y-offsets again to speed this up
+				//System.out.println("y-axis baby");
+				int lineCount = host.getLineCount();
+				FoldManager fm = host.getFoldManager();
+				for (int i=0; i<lineCount; i++) {
+					if (fm.isLineHidden(i)) {
+						span -= getSpan(View.Y_AXIS, i);
+					}
+				}
+			}
 		}
 		return span;
 	}
@@ -816,10 +834,9 @@ return p + 1;
 	 * {@inheritDoc}
 	 */
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
-		if (isAllocationValid()) {
-			return alloc.y + getOffset(Y_AXIS, line);
-		}
-		return -1;
+		return yForLineContaining(alloc,
+				getElement().getElement(line).getStartOffset());
+//return alloc.y + getOffset(Y_AXIS, line);
 	}
 
 
@@ -828,9 +845,22 @@ return p + 1;
 	 */
 	public int yForLineContaining(Rectangle alloc, int offs)
 								throws BadLocationException {
-		Element map = getElement();
-		int line = map.getElementIndex(offs);
-		return yForLine(alloc, line);
+		if (isAllocationValid()) {
+			// TODO: make cached Y_AXIS offsets valid even with folding enabled
+			// to speed this back up!
+			Rectangle r = (Rectangle)modelToView(offs, alloc, Bias.Forward);
+			if (r!=null) {
+				if (host.isCodeFoldingEnabled()) {
+					int line = host.getLineOfOffset(offs);
+					FoldManager fm = host.getFoldManager();
+					if (fm.isLineHidden(line)) {
+						return -1;
+					}
+				}
+				return r.y;
+			}
+		}
+		return -1;
 	}
 
 

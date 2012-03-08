@@ -647,17 +647,21 @@ public class Gutter extends JPanel {
 	 * @param textArea The text area.
 	 */
 	void setTextArea(RTextArea textArea) {
+
+		RTextAreaEditorKit kit = (RTextAreaEditorKit)textArea.getUI().
+												getEditorKit(textArea);
 		if (this.textArea!=null) {
 			listener.uninstall();
 		}
+
 		if (lineNumberList==null) {
-			lineNumberList = new LineNumberList(textArea);
+			lineNumberList = kit.createLineNumberList(textArea);
 		}
 		else {
 			lineNumberList.setTextArea(textArea);
 		}
 		if (iconArea==null) {
-			iconArea = new IconRowHeader(textArea);
+			iconArea = kit.createIconRowHeader(textArea);
 		}
 		else {
 			iconArea.setTextArea(textArea);
@@ -668,10 +672,10 @@ public class Gutter extends JPanel {
 		else {
 			foldIndicator.setTextArea(textArea);
 		}
-		if (textArea!=null) {
-			listener.install(textArea);
-		}
+
+		listener.install(textArea);
 		this.textArea = textArea;
+
 	}
 
 
