@@ -15,8 +15,8 @@ robert -at- fifesoft dot com.
 
 * License
 
-  RSyntaxTextArea is licensed under the LGPL.  Please see the included license
-  file.
+  RSyntaxTextArea is licensed under a modified BSD license.  Please see the
+  included RSyntaxTextArea.License.txt file.
 
 * Feedback
 
