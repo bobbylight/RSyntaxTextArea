@@ -187,6 +187,31 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Returns whether a regular expression token can follow the specified
+	 * token.
+	 *
+	 * @param t The token to check, which may be <code>null</code>.
+	 * @return Whether a regular expression token may follow this one.
+	 */
+	private static final boolean regexCanFollow(Token t) {
+		char ch;
+		return t==null ||
+				//t.isOperator() ||
+				(t.textCount==1 && (
+					(ch=t.text[t.textOffset])=='=' ||
+					ch=='(' ||
+					ch==',' ||
+					ch=='?' ||
+					ch==':' ||
+					ch=='['
+				)) ||
+				/* Operators "==", "===", "!=", "!==", etc. */
+				(t.type==Token.OPERATOR &&
+					((ch=t.text[t.textOffset+t.textCount-1])=='=' || ch=='~'));
+	}
+
+
+	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
@@ -236,7 +261,6 @@ Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
 AnyCharacterButApostropheOrBackSlash	= ([^\\'])
-AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
@@ -249,9 +273,6 @@ WhiteSpace				= ([ \t\f])
 CharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})*[\'])
 UnclosedCharLiteral			= ([\'][^\'\n]*)
 ErrorCharLiteral			= ({UnclosedCharLiteral}[\'])
-StringLiteral				= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
-UnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
-ErrorStringLiteral			= ({UnclosedStringLiteral}[\"])
 
 MLCBegin					= "/*"
 MLCEnd					= "*/"
@@ -270,6 +291,7 @@ FloatLiteral3				= ({Digit}+{FloatHelper2})
 FloatLiteral				= ({FloatLiteral1}|{FloatLiteral2}|{FloatLiteral3}|({Digit}+[fFdD]))
 ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 BooleanLiteral				= ("true"|"false")
+Regex						= ([~]?"/"([^\*\\/]|\\.)([^/\\]|\\.)*"/")
 
 Separator					= ([\(\)\{\}\[\]])
 Separator2				= ([\;,.])
@@ -535,15 +557,33 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{DocCommentBegin}				{ start = zzMarkedPos-3; yybegin(DOCCOMMENT); }
 	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
-	/* Regexes (/.../, ~/.../).  This is nowhere near exhaustive.        */
-	/* NOTE: We currently only match plain "/.../"  when it doesn't look */
-	/* like two divisions.  How can we  distinguish between a pattern    */
-	/* and two divisions?                                                */
-	"~/"[^/]*"/"						{ addToken(Token.FUNCTION); }
-    "/"({LetterOrUnderscore}|{Digit}|[\\.\-\\\+\*\{\}\[\]\?\^\$])+"/"	{ addToken(Token.FUNCTION); }
+	/* Regular expressions. */
+	{Regex}	{
+				boolean highlightedAsRegex = false;
+				if (zzBuffer[zzStartRead]=='~' || firstToken==null) {
+					addToken(Token.REGEX);
+					highlightedAsRegex = true;
+				}
+				else {
+					// If this is *likely* to be a regex, based on
+					// the previous token, highlight it as such.
+					Token t = firstToken.getLastNonCommentNonWhitespaceToken();
+					if (regexCanFollow(t)) {
+						addToken(Token.REGEX);
+						highlightedAsRegex = true;
+					}
+				}
+				// If it doesn't *appear* to be a regex, highlight it as
+				// individual tokens.
+				if (!highlightedAsRegex) {
+					int temp = zzStartRead + 1;
+					addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+					zzStartRead = zzCurrentPos = zzMarkedPos = temp;
+				}
+			}
 
 	/* Annotations. */
-	{Annotation}					{ addToken(Token.VARIABLE); /* FIXME:  Add token type to Token? */ }
+	{Annotation}					{ addToken(Token.ANNOTATION); }
 
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }
@@ -610,7 +650,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{Variable}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}			{}
 	\"						{}
-	\n						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
@@ -620,7 +660,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.?						{ /* Skip escaped chars, handles case: "\'''". */ }
 	\'\'\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.LITERAL_CHAR); }
 	\'						{}
-	\n						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 }
 

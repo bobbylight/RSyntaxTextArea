@@ -1031,7 +1031,8 @@ return c.getLineStartOffset(line);
 					ch=='&'
 				)) ||
 				/* Operators "==", "===", "!=", "!==" */
-				(t.type==Token.OPERATOR && t.text[t.textCount-1]=='=') ||
+				(t.type==Token.OPERATOR &&
+						t.text[t.textOffset+t.textCount-1]=='=') ||
 				t.is(Token.RESERVED_WORD, JS_KEYWORD_RETURN);
 	}
 

@@ -377,6 +377,7 @@ return p + 1;
 		}
 		else {
 			span = super.getPreferredSpan(axis);
+			host = (RSyntaxTextArea)getContainer();
 			if (host.isCodeFoldingEnabled()) {
 				// TODO: Cache y-offsets again to speed this up
 				//System.out.println("y-axis baby");

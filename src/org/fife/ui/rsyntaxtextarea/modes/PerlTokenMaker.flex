@@ -239,13 +239,40 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Returns whether a regular expression token can follow the specified
+	 * token.
+	 *
+	 * @param t The token to check, which may be <code>null</code>.
+	 * @return Whether a regular expression token may follow this one.
+	 */
+	private static final boolean regexCanFollow(Token t) {
+		char ch;
+		// We basically try to mimic Eclipse's JS editor's behavior here.
+		return t==null ||
+				//t.isOperator() ||
+				(t.textCount==1 && (
+					(ch=t.text[t.textOffset])=='=' ||
+					ch=='(' ||
+					ch==',' ||
+					ch=='?' ||
+					ch==':' ||
+					ch=='[' ||
+					ch=='!' ||
+					ch=='&'
+				)) ||
+				/* Operators "==", "===", "!=", "!==", etc. */
+				(t.type==Token.OPERATOR &&
+					((ch=t.text[t.textOffset+t.textCount-1])=='=' || ch=='~'));
+	}
+
+
+	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -260,7 +287,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -312,18 +339,20 @@ ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparat
 Separator					= ([\(\)\{\}\[\]])
 Separator2				= ([\;:,.])
 
-VariableStart				= ([\$\@\%)])
+VariableStart				= ([\$\@\%)]"$"?)
 BracedVariable				= ({VariableStart}\{{Identifier}\})
 UnbracedVariable			= ({VariableStart}{Identifier})
 BracedShellVariable			= ([\$]\{[\&\`\'\+\*\.\/\|\,\\\"\;\#\%\=\-\~\^\:\?\!\@\$\<\>\)\(\[\]\)\}])
 UnbracedShellVariable		= ([\$][\&\`\'\+\*\.\/\|\,\\\"\;\#\%\=\-\~\^\:\?\!\@\$\<\>\)\(\[\]\)])
 MatchVariable				= ([\$]{Digit})
 Variable					= ({BracedVariable}|{UnbracedVariable}|{BracedShellVariable}|{UnbracedShellVariable}|{MatchVariable})
+Regex						= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[msixpogcadlu]*)
 
 NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"|"|"&&"|">>>"|"->")
 AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
+BindingOperator				= ("=~"|"!~")
 FunnyOperator				= (([\*][\'\"])|([\&][\'\"]))
-Operator					= ({NonAssignmentOperator}|{AssignmentOperator}|{FunnyOperator})
+Operator					= ({NonAssignmentOperator}|{AssignmentOperator}|{BindingOperator}|{FunnyOperator})
 
 PodCommandsExceptCut		= ("="("pod"|"head1"|"head2"|"head3"|"head4"|"over"|"item"|"back"|"begin"|"end"|"for"|"encoding"))
 
@@ -590,23 +619,48 @@ ErrorIdentifier			= ({NonSeparator}+)
 	{LineCommentBegin}"!".*			{ addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; }
 	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
-	/* Regexes (/.../, s!...!!, etc.).  This is nowhere near exhaustive, */
-	/* but is rather just the common ones.                               */
-	/* NOTE: We currently don't match plain /.../.  How can we           */
-	/* distinguish between that and two divisions?  It seems this is one */
-	/* of those times when the Perl interpreter's "Do what I mean" kicks */
-	/* in to decide what the programmer really meant.                    */
-	m"/"[^/]*"/"[msixpogc]*			{ addToken(Token.REGEX); }
-	m"!"[^!]*"!"[msixpogc]*			{ addToken(Token.REGEX); }
-	m"|"[^\|]*"|"[msixpogc]*			{ addToken(Token.REGEX); }
-	m\\[^\\]*\\[cgimosx]*			{ addToken(Token.REGEX); }
-	s"/"[^/]*"/"[^/]*"/"[msixpogce]*	{ addToken(Token.REGEX); }
-	s"!"[^!]*"!"[^!]*"!"[msixpogce]*	{ addToken(Token.REGEX); }
-	s"|"[^\|]*"|"[^\|]*"|"[msixpogce]*	{ addToken(Token.REGEX); }
-	(tr|y)"/"[^/]*"/"[^/]*"/"[cds]*	{ addToken(Token.REGEX); }
-	(tr|y)"!"[^!]*"!"[^!]*"!"[cds]*	{ addToken(Token.REGEX); }
-	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cds]*	{ addToken(Token.REGEX); }
-	(tr|y)\\[^\\]*\\[^\\]*\\[cds]*	{ addToken(Token.REGEX); }
+	/* Easily identifiable regexes of the form "/.../". This is not foolproof. */
+	{Regex}		{
+					boolean highlightedAsRegex = false;
+					if (firstToken==null) {
+						addToken(Token.REGEX);
+						highlightedAsRegex = true;
+					}
+					else {
+						// If this is *likely* to be a regex, based on
+						// the previous token, highlight it as such.
+						Token t = firstToken.getLastNonCommentNonWhitespaceToken();
+						if (regexCanFollow(t)) {
+							addToken(Token.REGEX);
+							highlightedAsRegex = true;
+						}
+					}
+					// If it doesn't *appear* to be a regex, highlight it as
+					// individual tokens.
+					if (!highlightedAsRegex) {
+						int temp = zzStartRead + 1;
+						addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+						zzStartRead = zzCurrentPos = zzMarkedPos = temp;
+					}
+				}
+
+	/* More regexes (m/.../, s!...!!, etc.).  This is nowhere near */
+	/* exhaustive, but is rather just the common ones.             */
+	m"/"[^/]*"/"[msixpodualgc]*				{ addToken(Token.REGEX); }
+	m"!"[^!]*"!"[msixpodualgc]*				{ addToken(Token.REGEX); }
+	m"|"[^\|]*"|"[msixpodualgc]*			{ addToken(Token.REGEX); }
+	m\\[^\\]*\\[msixpodualgc]*				{ addToken(Token.REGEX); }
+	s"/"[^/]*"/"[^/]*"/"[msixpodualgcer]*	{ addToken(Token.REGEX); }
+	s"!"[^!]*"!"[^!]*"!"[msixpodualgcer]*	{ addToken(Token.REGEX); }
+	s"|"[^\|]*"|"[^\|]*"|"[msixpodualgcer]*	{ addToken(Token.REGEX); }
+	(tr|y)"/"[^/]*"/"[^/]*"/"[cdsr]*		{ addToken(Token.REGEX); }
+	(tr|y)"!"[^!]*"!"[^!]*"!"[cdsr]*		{ addToken(Token.REGEX); }
+	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cdsr]*		{ addToken(Token.REGEX); }
+	(tr|y)\\[^\\]*\\[^\\]*\\[cdsr]*		{ addToken(Token.REGEX); }
+	qr"/"[^/]*"/"[msixpodual]*			{ addToken(Token.REGEX); }
+	qr"!"[^/]*"!"[msixpodual]*			{ addToken(Token.REGEX); }
+	qr"|"[^/]*"|"[msixpodual]*			{ addToken(Token.REGEX); }
+	qr\\[^/]*\\[msixpodual]*			{ addToken(Token.REGEX); }
 
 	/* "Here-document" syntax.  This is only implemented for the common */
 	/* cases.                                                           */
@@ -750,7 +804,7 @@ ErrorIdentifier			= ({NonSeparator}+)
 	"=cut"				{ if (start==zzStartRead) { addToken(Token.COMMENT_DOCUMENTATION); yybegin(YYINITIAL); } }
 	{PodCommandsExceptCut}	{ if (start==zzStartRead) { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; } }
 	=					{}
-	\n					{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_POD); return firstToken; }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_POD); return firstToken; }
 }
 
