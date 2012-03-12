@@ -28,12 +28,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
@@ -124,7 +123,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 2.0.1
+ * @version 2.0.2
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
@@ -1287,7 +1286,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *         none.
 	 */
 	public List getParserNotices() {
-		return parserManager==null ? new ArrayList(0) :
+		return parserManager==null ? Collections.EMPTY_LIST :
 									parserManager.getParserNotices();
 	}
 
