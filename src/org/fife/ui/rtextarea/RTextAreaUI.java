@@ -521,7 +521,6 @@ public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
 	 * method to do so. This method may be used when the entire bounding box
 	 * isn't needed, to speed up rendering.
 	 *
-	 * @param alloc The area the text area can render into.
 	 * @param line The line number.
 	 * @return The y-coordinate of the top of the line, or <code>-1</code> if
 	 *         this text area doesn't yet have a positive size or the line is
