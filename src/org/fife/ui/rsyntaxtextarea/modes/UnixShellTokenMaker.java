@@ -183,6 +183,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("crontab",			function);
 		tokenMap.put("csh",			function);
 		tokenMap.put("ctags",			function);
+		tokenMap.put("cut", 		function);
 		tokenMap.put("cvs",			function);
 		tokenMap.put("date",			function);
 		tokenMap.put("dbx",			function);

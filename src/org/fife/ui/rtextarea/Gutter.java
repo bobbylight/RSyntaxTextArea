@@ -99,7 +99,10 @@ public class Gutter extends JPanel {
 	/**
 	 * Constructor.
 	 *
-	 * @param textArea The parent text area.
+	 * @param textArea The parent text area.  If this is
+	 *        <code>null</code>, you must call
+	 *        {@link #setTextArea(Component)}, passing in an
+	 *        {@link RTextArea}.
 	 */
 	public Gutter(RTextArea textArea) {
 
@@ -634,32 +637,38 @@ public class Gutter extends JPanel {
 	 */
 	void setTextArea(RTextArea textArea) {
 
-		RTextAreaEditorKit kit = (RTextAreaEditorKit)textArea.getUI().
-												getEditorKit(textArea);
 		if (this.textArea!=null) {
 			listener.uninstall();
 		}
 
-		if (lineNumberList==null) {
-			lineNumberList = kit.createLineNumberList(textArea);
-		}
-		else {
-			lineNumberList.setTextArea(textArea);
-		}
-		if (iconArea==null) {
-			iconArea = kit.createIconRowHeader(textArea);
-		}
-		else {
-			iconArea.setTextArea(textArea);
-		}
-		if (foldIndicator==null) {
-			foldIndicator = new FoldIndicator(textArea);
-		}
-		else {
-			foldIndicator.setTextArea(textArea);
+		if (textArea!=null) {
+
+			RTextAreaEditorKit kit = (RTextAreaEditorKit)textArea.getUI().
+					getEditorKit(textArea);
+
+			if (lineNumberList==null) {
+				lineNumberList = kit.createLineNumberList(textArea);
+			}
+			else {
+				lineNumberList.setTextArea(textArea);
+			}
+			if (iconArea==null) {
+				iconArea = kit.createIconRowHeader(textArea);
+			}
+			else {
+				iconArea.setTextArea(textArea);
+			}
+			if (foldIndicator==null) {
+				foldIndicator = new FoldIndicator(textArea);
+			}
+			else {
+				foldIndicator.setTextArea(textArea);
+			}
+
+			listener.install(textArea);
+
 		}
 
-		listener.install(textArea);
 		this.textArea = textArea;
 
 	}
