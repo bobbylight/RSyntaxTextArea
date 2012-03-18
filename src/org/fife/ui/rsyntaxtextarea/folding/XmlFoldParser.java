@@ -17,7 +17,9 @@ import org.fife.ui.rsyntaxtextarea.Token;
 
 
 /**
- * Fold parser for XML.
+ * Fold parser for XML.  Any tags that span more than one line, as well as
+ * comment regions spanning more than one line, are identified as foldable
+ * regions.
  *
  * @author Robert Futrell
  * @version 1.0

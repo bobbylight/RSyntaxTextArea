@@ -23,6 +23,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Robert Futrell
  * @version 1.0
  * @see CurlyFoldParser
+ * @see XmlFoldParser
  */
 public interface FoldParser {
 

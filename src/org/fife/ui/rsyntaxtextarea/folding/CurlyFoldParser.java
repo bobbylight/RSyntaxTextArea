@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
@@ -58,12 +57,21 @@ public class CurlyFoldParser implements FoldParser {
 	/**
 	 * Used to find import statements when folding Java code.
 	 */
-	private static final char[] KEYWORD_IMPORT = { 'i', 'm', 'p', 'o', 'r', 't' };
+	private static final char[] KEYWORD_IMPORT = "import".toCharArray();
 
 	/**
 	 * Ending of a multi-line comment in C, C++, Java, etc.
 	 */
-	protected static final char[] C_MLC_END = { '*', '/' };
+	protected static final char[] C_MLC_END = "*/".toCharArray();
+
+
+	/**
+	 * Creates a fold parser that identifies foldable regions via curly braces
+	 * as well as C-style multi-line comments.
+	 */
+	public CurlyFoldParser() {
+		this(true, false);
+	}
 
 
 	/**
@@ -99,177 +107,172 @@ public class CurlyFoldParser implements FoldParser {
 
 		List folds = new ArrayList();
 
-		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-		if (doc.getCurlyBracesDenoteCodeBlocks()) {
+		Fold currentFold = null;
+		int lineCount = textArea.getLineCount();
+		boolean inMLC = false;
+		int mlcStart = 0;
+		int importStartLine = -1;
+		int lastSeenImportLine = -1;
+		int importGroupStartOffs = -1;
+		int importGroupEndOffs = -1;
 
-			Fold currentFold = null;
-			int lineCount = textArea.getLineCount();
-			boolean inMLC = false;
-			int mlcStart = 0;
-			int importStartLine = -1;
-			int lastSeenImportLine = -1;
-			int importGroupStartOffs = -1;
-			int importGroupEndOffs = -1;
+		try {
 
-			try {
+			for (int line=0; line<lineCount; line++) {
 
-				for (int line=0; line<lineCount; line++) {
+				Token t = textArea.getTokenListForLine(line);
+				while (t!=null && t.isPaintable()) {
 
-					Token t = textArea.getTokenListForLine(line);
-					while (t!=null && t.isPaintable()) {
+					if (getFoldableMultiLineComments() && t.isComment()) {
 
-						if (getFoldableMultiLineComments() && t.isComment()) {
+						// Java-specific stuff
+						if (java) {
 
-							// Java-specific stuff
-							if (java) {
-
-								if (importStartLine>-1) {
-									if (lastSeenImportLine>importStartLine) {
-										Fold fold = null;
-										// Any imports found *should* be a top-level fold,
-										// but we're extra lenient here and allow groups
-										// of them anywhere to keep our parser better-behaved
-										// if they have random "imports" throughout code.
-										if (currentFold==null) {
-											fold = new Fold(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
-													textArea, importGroupStartOffs);
-											folds.add(fold);
-										}
-										else {
-											fold = currentFold.createChild(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
-													importGroupStartOffs);
-										}
-										fold.setEndOffset(importGroupEndOffs);
-									}
-									importStartLine = lastSeenImportLine =
-									importGroupStartOffs = importGroupEndOffs = -1;
-								}
-
-							}
-
-							if (inMLC) {
-								// If we found the end of an MLC that started
-								// on a previous line...
-								if (t.endsWith(C_MLC_END)) {
-									int mlcEnd = t.offset + t.textCount - 1;
+							if (importStartLine>-1) {
+								if (lastSeenImportLine>importStartLine) {
+									Fold fold = null;
+									// Any imports found *should* be a top-level fold,
+									// but we're extra lenient here and allow groups
+									// of them anywhere to keep our parser better-behaved
+									// if they have random "imports" throughout code.
 									if (currentFold==null) {
-										currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
-										currentFold.setEndOffset(mlcEnd);
-										folds.add(currentFold);
-										currentFold = null;
+										fold = new Fold(FoldType.IMPORTS,
+												textArea, importGroupStartOffs);
+										folds.add(fold);
 									}
 									else {
-										currentFold = currentFold.createChild(FoldType.COMMENT, mlcStart);
-										currentFold.setEndOffset(mlcEnd);
-										currentFold = currentFold.getParent();
+										fold = currentFold.createChild(FoldType.IMPORTS,
+												importGroupStartOffs);
 									}
-									//System.out.println("Ending MLC at: " + mlcEnd + ", parent==" + currentFold);
-									inMLC = false;
-									mlcStart = 0;
+									fold.setEndOffset(importGroupEndOffs);
 								}
-								// Otherwise, this MLC is continuing on to yet
-								// another line.
-							}
-							else {
-								// If we're an MLC that ends on a later line...
-								if (t.type!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
-									//System.out.println("Starting MLC at: " + t.offset);
-									inMLC = true;
-									mlcStart = t.offset;
-								}
+								importStartLine = lastSeenImportLine =
+								importGroupStartOffs = importGroupEndOffs = -1;
 							}
 
 						}
 
-						else if (isLeftCurly(t)) {
-
-							// Java-specific stuff
-							if (java) {
-
-								if (importStartLine>-1) {
-									if (lastSeenImportLine>importStartLine) {
-										Fold fold = null;
-										// Any imports found *should* be a top-level fold,
-										// but we're extra lenient here and allow groups
-										// of them anywhere to keep our parser better-behaved
-										// if they have random "imports" throughout code.
-										if (currentFold==null) {
-											fold = new Fold(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
-													textArea, importGroupStartOffs);
-											folds.add(fold);
-										}
-										else {
-											fold = currentFold.createChild(FoldType.FOLD_TYPE_USER_DEFINED_MIN,
-													importGroupStartOffs);
-										}
-										fold.setEndOffset(importGroupEndOffs);
-									}
-									importStartLine = lastSeenImportLine =
-									importGroupStartOffs = importGroupEndOffs = -1;
+						if (inMLC) {
+							// If we found the end of an MLC that started
+							// on a previous line...
+							if (t.endsWith(C_MLC_END)) {
+								int mlcEnd = t.offset + t.textCount - 1;
+								if (currentFold==null) {
+									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
+									currentFold.setEndOffset(mlcEnd);
+									folds.add(currentFold);
+									currentFold = null;
 								}
-
-							}
-
-							if (currentFold==null) {
-								currentFold = new Fold(FoldType.CODE, textArea, t.offset);
-								folds.add(currentFold);
-							}
-							else {
-								currentFold = currentFold.createChild(FoldType.CODE, t.offset);
-							}
-
-						}
-
-						else if (isRightCurly(t)) {
-
-							if (currentFold!=null) {
-								currentFold.setEndOffset(t.offset);
-								Fold parentFold = currentFold.getParent();
-								//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
-								// Don't add fold markers for single-line blocks
-								if (currentFold.isOnSingleLine()) {
-									if (parentFold!=null) {
-										currentFold.removeFromParent();
-									}
-									else {
-										folds.remove(folds.size()-1);
-									}
+								else {
+									currentFold = currentFold.createChild(FoldType.COMMENT, mlcStart);
+									currentFold.setEndOffset(mlcEnd);
+									currentFold = currentFold.getParent();
 								}
-								currentFold = parentFold;
+								//System.out.println("Ending MLC at: " + mlcEnd + ", parent==" + currentFold);
+								inMLC = false;
+								mlcStart = 0;
 							}
-
+							// Otherwise, this MLC is continuing on to yet
+							// another line.
 						}
-
-						// Java-specific folding rules
-						else if (java) {
-
-							if (t.is(Token.RESERVED_WORD, KEYWORD_IMPORT)) {
-								if (importStartLine==-1) {
-									importStartLine = line;
-									importGroupStartOffs = t.offset;
-									importGroupEndOffs = t.offset;
-								}
-								lastSeenImportLine = line;
+						else {
+							// If we're an MLC that ends on a later line...
+							if (t.type!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
+								//System.out.println("Starting MLC at: " + t.offset);
+								inMLC = true;
+								mlcStart = t.offset;
 							}
-
-							else if (importStartLine>-1 &&
-									t.type==Token.IDENTIFIER &&//SEPARATOR &&
-									t.isSingleChar(';')) {
-								importGroupEndOffs = t.offset;
-							}
-
 						}
-
-						t = t.getNextToken();
 
 					}
 
+					else if (isLeftCurly(t)) {
+
+						// Java-specific stuff
+						if (java) {
+
+							if (importStartLine>-1) {
+								if (lastSeenImportLine>importStartLine) {
+									Fold fold = null;
+									// Any imports found *should* be a top-level fold,
+									// but we're extra lenient here and allow groups
+									// of them anywhere to keep our parser better-behaved
+									// if they have random "imports" throughout code.
+									if (currentFold==null) {
+										fold = new Fold(FoldType.IMPORTS,
+												textArea, importGroupStartOffs);
+										folds.add(fold);
+									}
+									else {
+										fold = currentFold.createChild(FoldType.IMPORTS,
+												importGroupStartOffs);
+									}
+									fold.setEndOffset(importGroupEndOffs);
+								}
+								importStartLine = lastSeenImportLine =
+								importGroupStartOffs = importGroupEndOffs = -1;
+							}
+
+						}
+
+						if (currentFold==null) {
+							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							folds.add(currentFold);
+						}
+						else {
+							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+						}
+
+					}
+
+					else if (isRightCurly(t)) {
+
+						if (currentFold!=null) {
+							currentFold.setEndOffset(t.offset);
+							Fold parentFold = currentFold.getParent();
+							//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
+							// Don't add fold markers for single-line blocks
+							if (currentFold.isOnSingleLine()) {
+								if (parentFold!=null) {
+									currentFold.removeFromParent();
+								}
+								else {
+									folds.remove(folds.size()-1);
+								}
+							}
+							currentFold = parentFold;
+						}
+
+					}
+
+					// Java-specific folding rules
+					else if (java) {
+
+						if (t.is(Token.RESERVED_WORD, KEYWORD_IMPORT)) {
+							if (importStartLine==-1) {
+								importStartLine = line;
+								importGroupStartOffs = t.offset;
+								importGroupEndOffs = t.offset;
+							}
+							lastSeenImportLine = line;
+						}
+
+						else if (importStartLine>-1 &&
+								t.type==Token.IDENTIFIER &&//SEPARATOR &&
+								t.isSingleChar(';')) {
+							importGroupEndOffs = t.offset;
+						}
+
+					}
+
+					t = t.getNextToken();
+
 				}
 
-			} catch (BadLocationException ble) { // Should never happen
-				ble.printStackTrace();
 			}
 
+		} catch (BadLocationException ble) { // Should never happen
+			ble.printStackTrace();
 		}
 
 		return folds;
