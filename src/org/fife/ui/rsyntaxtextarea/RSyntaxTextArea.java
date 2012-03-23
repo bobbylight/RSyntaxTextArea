@@ -1600,6 +1600,7 @@ private boolean fractionalFontMetricsEnabled;
 		isScanningForLinks = false;
 		setUseFocusableTips(true);
 
+		setAntiAliasingEnabled(true);
 		restoreDefaultSyntaxScheme();
 
 	}
