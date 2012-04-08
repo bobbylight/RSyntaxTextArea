@@ -203,6 +203,12 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private void addParserNoticeHighlights(ParseResult res) {
 
+		// Parsers are supposed to return at least empty ParseResults, but
+		// we'll be defensive here.
+		if (res==null) {
+			return;
+		}
+
 		if (DEBUG_PARSING) {
 			System.out.println("[DEBUG]: Adding parser notices from " +
 								res.getParser());

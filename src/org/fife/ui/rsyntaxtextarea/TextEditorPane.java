@@ -549,7 +549,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * Sets whether or not this text in this editor has unsaved changes.
 	 * This fires a property change event of type {@link #DIRTY_PROPERTY}.
 	 *
-	 * @param dirty Whether or not the text has beeen modified.
+	 * @param dirty Whether or not the text has been modified.
 	 * @see #isDirty()
 	 */
 	private void setDirty(boolean dirty) {
