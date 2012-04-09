@@ -1518,7 +1518,7 @@ private boolean fractionalFontMetricsEnabled;
 				focusableTip.setImageBase(imageBase);
 				focusableTip.toolTipRequested(e, text);
 			}
-			// No tooltip text at new location - hide tip window if one is
+			// No tool tip text at new location - hide tip window if one is
 			// currently visible
 			else if (focusableTip!=null) {
 				focusableTip.possiblyDisposeOfTipWindow();

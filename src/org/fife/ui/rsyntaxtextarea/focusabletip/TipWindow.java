@@ -42,6 +42,8 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+
 
 /**
  * The actual tool tip component.
@@ -70,13 +72,13 @@ class TipWindow extends JWindow implements ActionListener {
 
 		super(owner);
 		this.ft = ft;
-		this.text = msg;
+		this.text = RSyntaxUtilities.escapeForHtml(msg, "<br>", false);
 		tipListener = new TipListener();
 
 		JPanel cp = new JPanel(new BorderLayout());
 		cp.setBorder(TipUtil.getToolTipBorder());
 		cp.setBackground(TipUtil.getToolTipBackground());
-		textArea = new JEditorPane("text/html", msg);
+		textArea = new JEditorPane("text/html", text);
 		TipUtil.tweakTipEditorPane(textArea);
 		if (ft.getImageBase()!=null) { // Base URL for images
 			((HTMLDocument)textArea.getDocument()).setBase(ft.getImageBase());
@@ -169,15 +171,27 @@ class TipWindow extends JWindow implements ActionListener {
 		Rectangle r = null;
 		try {
 
+			// modelToView call is required for this hack, never remove!
 			r = textArea.modelToView(textArea.getDocument().getLength()-1);
-			d.height = r.y + r.height;
 
 			// Ensure the text area doesn't start out too tall or wide.
 			d = textArea.getPreferredSize();
-			d.width = Math.min(d.width+25, 320);
-			d.height = Math.min(d.height, 150);
+			d.width += 25; // Just a little extra space
+			final int MAX_WINDOW_W = 600;
+			d.width = Math.min(d.width, MAX_WINDOW_W);
+			d.height = Math.min(d.height, 400);
 
+			// Both needed for modelToView() calculation below...
 			textArea.setPreferredSize(d);
+			textArea.setSize(d);
+
+			// if the new textArea width causes our text to wrap, we must
+			// compute a new preferred size to get all our physical lines.
+			r = textArea.modelToView(textArea.getDocument().getLength()-1);
+			if (r.y+r.height>d.height) {
+				d.height = r.y + r.height + 5;
+				textArea.setPreferredSize(d);
+			}
 
 		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
