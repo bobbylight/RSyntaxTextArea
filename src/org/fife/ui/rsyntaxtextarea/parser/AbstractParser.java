@@ -14,7 +14,8 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 
 
 /**
- * A base class for {@link Parser} implementations.
+ * A base class for {@link Parser} implementations.  Most <code>Parser</code>s
+ * should be able to extend this class.
  *
  * @author Robert Futrell
  * @version 1.0

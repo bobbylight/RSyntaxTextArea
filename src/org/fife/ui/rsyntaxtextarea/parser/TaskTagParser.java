@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.text.Element;
 
+import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Token;
@@ -139,7 +140,10 @@ public class TaskTagParser extends AbstractParser {
 
 
 	/**
-	 * A parser notice that signifies a task.
+	 * A parser notice that signifies a task.  This class is here so we can
+	 * treat tasks specially and show them in the {@link ErrorStrip} even
+	 * though they are <code>INFO</code>-level and marked as "don't show in
+	 * editor."
 	 */
 	public static class TaskNotice extends DefaultParserNotice {
 
