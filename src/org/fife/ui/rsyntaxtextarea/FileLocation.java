@@ -16,7 +16,8 @@ import java.net.URL;
 
 
 /**
- * Holds the location of a local or remote file.
+ * Holds the location of a local or remote file.  This provides a common way
+ * to read, write, and check properties of both local and remote files.
  *
  * @author Robert Futrell
  * @version 1.0

@@ -124,6 +124,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *
  * @author Robert Futrell
  * @version 2.0.2
+ * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 

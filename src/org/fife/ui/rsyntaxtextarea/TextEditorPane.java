@@ -402,7 +402,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Loads the specified file in this editor.
+	 * Loads the specified file in this editor.  This method fires a property
+	 * change event of type {@link #FULL_PATH_PROPERTY}.
 	 *
 	 * @param loc The location of the file to load.  This cannot be
 	 *        <code>null</code>.
@@ -416,11 +417,10 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 */
 	public void load(FileLocation loc, String defaultEnc) throws IOException {
 
-		this.loc = loc;
-
 		// For new local files, just go with it.
 		if (loc.isLocal() && !loc.isLocalAndExists()) {
 			this.charSet = defaultEnc!=null ? defaultEnc : getDefaultEncoding();
+			this.loc = loc;
 			return;
 		}
 
@@ -428,7 +428,6 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		// check for BOMs and handle them correctly in all cases, then pass
 		// rest of stream down to InputStreamReader.
 		UnicodeReader ur = new UnicodeReader(loc.getInputStream(), defaultEnc);
-		charSet = ur.getEncoding();
 
 		// Remove listener so dirty flag doesn't get set when loading a file.
 		Document doc = getDocument();
@@ -440,6 +439,12 @@ public class TextEditorPane extends RSyntaxTextArea implements
 			doc.addDocumentListener(this);
 			r.close();
 		}
+
+		// No IOException thrown, so we can finally change the location.
+		charSet = ur.getEncoding();
+		String old = getFileFullPath();
+		this.loc = loc;
+		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 
 	}
 
