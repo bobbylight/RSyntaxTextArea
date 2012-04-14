@@ -89,6 +89,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting DTD files.
+	 */
+	public static final String SYNTAX_STYLE_DTD			= "text/dtd";
+
+
+	/**
 	 * Style for highlighting Fortran.
 	 */
 	public static final String SYNTAX_STYLE_FORTRAN			= "text/fortran";
