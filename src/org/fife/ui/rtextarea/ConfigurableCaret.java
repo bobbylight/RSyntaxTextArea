@@ -363,6 +363,22 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
+	 * Overridden to also focus the text component on right mouse clicks.
+	 *
+	 * @param e The mouse event.
+	 */
+	public void mousePressed(MouseEvent e) {
+		super.mousePressed(e);
+		if (!e.isConsumed() && SwingUtilities.isRightMouseButton(e)) {
+			JTextComponent c = getComponent();
+			if (c!=null && c.isEnabled() && c.isRequestFocusEnabled()) {
+				c.requestFocusInWindow();
+			}
+		}
+	}
+
+
+	/**
 	 * Paints the cursor.
 	 *
 	 * @param g The graphics context in which to paint.
