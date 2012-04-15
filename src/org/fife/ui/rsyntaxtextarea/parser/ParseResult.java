@@ -18,6 +18,8 @@ import java.util.List;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see DefaultParseResult
+ * @see ParserNotice
  */
 public interface ParseResult {
 
@@ -55,7 +57,7 @@ public interface ParseResult {
 	/**
 	 * Returns the notices for the parsed section.
 	 *
-	 * @return The notices.
+	 * @return A list of {@link ParserNotice}s.
 	 */
 	public List getNotices();
 

@@ -12,10 +12,13 @@ import java.awt.Color;
 
 
 /**
- * Base implementation of a parser notice.
+ * Base implementation of a parser notice.  Most <code>Parser</code>
+ * implementations can return instances of this in their parse result.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
+ * @see Parser
+ * @see ParseResult
  */
 public class DefaultParserNotice implements ParserNotice {
 

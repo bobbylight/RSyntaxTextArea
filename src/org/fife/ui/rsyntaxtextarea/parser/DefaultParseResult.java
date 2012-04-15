@@ -13,10 +13,12 @@ import java.util.List;
 
 
 /**
- * A basic implementation of {@link ParseResult}.
+ * A basic implementation of {@link ParseResult}.  Most, if not all,
+ * <code>Parser</code>s can return instances of this class.
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see Parser
  */
 public class DefaultParseResult implements ParseResult {
 
