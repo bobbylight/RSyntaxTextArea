@@ -12,6 +12,7 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.Action;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -38,7 +39,7 @@ import org.fife.util.DynamicIntArray;
  * type <code>CHANGE</code> use their offset and length values to represent the
  * first and last lines, respectively, that have had their syntax coloring
  * change.  This is really a hack to increase the speed of the painting code
- * and should really be corrected, but oh well.
+ * and should really be corrected, but oh well. 
  *
  * @author Robert Futrell
  * @version 0.1
@@ -54,7 +55,12 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	/**
 	 * Splits text into tokens for the current programming language.
 	 */
-	private TokenMaker tokenMaker;
+	private transient TokenMaker tokenMaker;
+
+	/**
+	 * The current syntax style.  Only cached to keep this class serializable.
+	 */
+	private String syntaxStyle;
 
 	/**
 	 * Array of values representing the "last token type" on each line.  This
@@ -63,7 +69,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * and start the current line's syntax highlighting in multiline comment
 	 * state.
 	 */
-	protected DynamicIntArray lastTokensOnLines;
+	protected transient DynamicIntArray lastTokensOnLines;
 
 	private transient Segment s;
 
@@ -388,14 +394,27 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	/**
 	 * Deserializes a document.
 	 *
-	 * @param s The stream to read from.
+	 * @param in The stream to read from.
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private void readObject(ObjectInputStream s)
+	private void readObject(ObjectInputStream in)
 						throws ClassNotFoundException, IOException {
-		s.defaultReadObject();
+
+		in.defaultReadObject();
+
+		// Install default TokenMakerFactory.  To support custom TokenMakers,
+		// both JVM's should install default TokenMakerFactories that support
+		// the language they want to use beforehand.
+		setTokenMakerFactory(null);
+
+		// Handle other transient stuff
 		this.s = new Segment();
+		int lineCount = getDefaultRootElement().getElementCount();
+		lastTokensOnLines = new DynamicIntArray(lineCount);
+		setSyntaxStyle(syntaxStyle); // Actually install (transient) TokenMaker
+		setWhitespaceVisible(in.readBoolean()); // Do after setSyntaxStyle()
+
 	}
 
 
@@ -444,6 +463,7 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 		tokenMaker = tokenMakerFactory.getTokenMaker(styleKey);
 		tokenMaker.setWhitespaceVisible(wsVisible);
 		updateSyntaxHighlightingInformation();
+		this.syntaxStyle = styleKey;
 	}
 
 
@@ -583,7 +603,19 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 
 	/**
-	 * Document content that provides access to individual characters.
+	 * Overridden for custom serialization purposes.
+	 *
+	 * @param out The stream to write to.
+	 * @throws IOException If an IO error occurs.
+	 */
+	private void writeObject(ObjectOutputStream out)throws IOException {
+		out.defaultWriteObject();
+		out.writeBoolean(isWhitespaceVisible());
+	}
+
+
+	/**
+	 * Document content that provides fast access to individual characters.
 	 *
 	 * @author Robert Futrell
 	 * @version 1.0
