@@ -72,7 +72,12 @@ class TipWindow extends JWindow implements ActionListener {
 
 		super(owner);
 		this.ft = ft;
-		this.text = RSyntaxUtilities.escapeForHtml(msg, "<br>", false);
+		// Render plain text tool tips correctly.
+		if (msg!=null && msg.length()>=6 &&
+				!msg.substring(0,6).toLowerCase().equals("<html>")) {
+			msg = "<html>" + RSyntaxUtilities.escapeForHtml(msg, "<br>", false);
+		}
+		this.text = msg;
 		tipListener = new TipListener();
 
 		JPanel cp = new JPanel(new BorderLayout());

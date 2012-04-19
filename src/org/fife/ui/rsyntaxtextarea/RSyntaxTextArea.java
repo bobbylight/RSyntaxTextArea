@@ -2459,6 +2459,23 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Resets the editor state after the user clicks on a hyperlink or releases
+	 * the hyperlink modifier.
+	 */
+	private void stopScanningForLinks() {
+		if (isScanningForLinks) {
+			Cursor c = getCursor();
+			isScanningForLinks = false;
+			hoveredOverLinkOffset = -1;
+			if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
+				setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+				repaint(); // TODO: Repaint just the affected line.
+			}
+		}
+	}
+
+
+	/**
 	 * Returns the token at the specified position in the view.
 	 *
 	 * @param p The position in the view.
@@ -2559,6 +2576,7 @@ private boolean fractionalFontMetricsEnabled;
 						HyperlinkEvent.EventType.ACTIVATED,
 						url, desc);
 				fireHyperlinkUpdate(he);
+				stopScanningForLinks();
 			}
 		}
 
@@ -2585,13 +2603,7 @@ private boolean fractionalFontMetricsEnabled;
 				}
 				else {
 					if (isScanningForLinks) {
-						Cursor c = getCursor();
-						isScanningForLinks = false;
-						hoveredOverLinkOffset = -1;
-						if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
-							setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-							repaint(); // TODO: Repaint just the affected line.
-						}
+						stopScanningForLinks();
 					}
 				}
 			}
