@@ -77,7 +77,7 @@ public class XmlFoldParser implements FoldParser {
 
 						else {
 							// If we're an MLC that ends on a later line...
-							if (t.type==Token.COMMENT_MULTILINE) {
+							if (t.type==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
 								inMLC = true;
 								mlcStart = t.offset;
 							}
