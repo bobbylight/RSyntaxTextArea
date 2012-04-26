@@ -55,6 +55,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		map.put(SYNTAX_STYLE_JAVA,				pkg + "JavaTokenMaker");
 		map.put(SYNTAX_STYLE_JAVASCRIPT,		pkg + "JavaScriptTokenMaker");
 		map.put(SYNTAX_STYLE_JSP,				pkg + "JSPTokenMaker");
+		map.put(SYNTAX_STYLE_LATEX,				pkg + "LatexTokenMaker");
 		map.put(SYNTAX_STYLE_LISP,				pkg + "LispTokenMaker");
 		map.put(SYNTAX_STYLE_LUA,				pkg + "LuaTokenMaker");
 		map.put(SYNTAX_STYLE_MAKEFILE,			pkg + "MakefileTokenMaker");

@@ -131,6 +131,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting LaTeX.
+	 */
+	public static final String SYNTAX_STYLE_LATEX		= "text/latex";
+
+
+	/**
 	 * Style for highlighting Lisp.
 	 */
 	public static final String SYNTAX_STYLE_LISP		= "text/lisp";

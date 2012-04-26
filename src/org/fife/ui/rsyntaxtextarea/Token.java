@@ -307,6 +307,7 @@ public abstract class Token implements TokenTypes {
 	 *
 	 * @param ch The characters.
 	 * @return Whether this token's lexeme ends with the specified characters.
+	 * @see #startsWith(char[])
 	 */
 	public boolean endsWith(char[] ch) {
 		if (ch==null || ch.length>textCount) {
@@ -572,6 +573,7 @@ public abstract class Token implements TokenTypes {
 	 * @param lexeme The lexeme to check for.
 	 * @return Whether this token has that type and lexeme.
 	 * @see #is(int, String)
+	 * @see #startsWith(char[])
 	 */
 	public boolean is(int type, char[] lexeme) {
 		if (this.type==type && textCount==lexeme.length) {
@@ -919,10 +921,31 @@ public abstract class Token implements TokenTypes {
 	 * token.
 	 *
 	 * @param nextToken The new next token.
-	 * @see #getNextToken
+	 * @see #getNextToken()
 	 */
 	public void setNextToken(Token nextToken) {
 		this.nextToken = nextToken;
+	}
+
+
+	/**
+	 * Returns whether this token starts with the specified characters.
+	 *
+	 * @param chars The characters.
+	 * @return Whether this token starts with those characters.
+	 * @see #endsWith(char[])
+	 * @see #is(int, char[])
+	 */
+	public boolean startsWith(char[] chars) {
+		if (chars.length<=textCount){
+			for (int i=0; i<chars.length; i++) {
+				if (text[textOffset+i]!=chars[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 
@@ -938,7 +961,7 @@ public abstract class Token implements TokenTypes {
 	 * @param pos A position in the token's internal char array
 	 *        (<code>textOffset</code> - <code>textOffset+textCount</code>).
 	 * @return The corresponding position in the document.
-	 * @see #documentToToken
+	 * @see #documentToToken(int)
 	 */
 	public int tokenToDocument(int pos) {
 		return pos + (offset-textOffset);
