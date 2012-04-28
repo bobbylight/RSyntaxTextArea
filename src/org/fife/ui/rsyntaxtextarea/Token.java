@@ -629,6 +629,16 @@ public abstract class Token implements TokenTypes {
 
 
 	/**
+	 * Returns whether this token is an identifier.
+	 *
+	 * @return Whether this token is an identifier.
+	 */
+	public boolean isIdentifier() {
+		return type==IDENTIFIER;
+	}
+
+
+	/**
 	 * Returns whether this token is a {@link #SEPARATOR} representing a single
 	 * left curly brace.
 	 *

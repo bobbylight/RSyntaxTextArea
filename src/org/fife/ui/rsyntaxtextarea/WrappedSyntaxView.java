@@ -20,10 +20,7 @@ import org.fife.ui.rtextarea.Gutter;
 
 
 /**
- * The view used by {@link RSyntaxTextArea} when word wrap is enabled.<p>
- *
- * This class is a work-in-progress and will eventually replace
- * {@link WrappedSyntaxView} (which works, but ignores token styles).
+ * The view used by {@link RSyntaxTextArea} when word wrap is enabled.
  *
  * @author Robert Futrell
  * @version 0.2

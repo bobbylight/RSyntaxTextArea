@@ -77,6 +77,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>C#
  *       <li>Clojure
  *       <li>Delphi
+ *       <li>DTD
  *       <li>Fortran
  *       <li>Groovy
  *       <li>HTML
@@ -87,6 +88,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *   </td>
  *   <td style="vertical-align: top">
  *    <ul>
+ *       <li>LaTeX
  *       <li>Lisp
  *       <li>Lua
  *       <li>Make
@@ -123,7 +125,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 2.0.2
+ * @version 2.0.3
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {

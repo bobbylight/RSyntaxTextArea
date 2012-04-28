@@ -258,7 +258,7 @@ public class CurlyFoldParser implements FoldParser {
 						}
 
 						else if (importStartLine>-1 &&
-								t.type==Token.IDENTIFIER &&//SEPARATOR &&
+								t.isIdentifier() &&//SEPARATOR &&
 								t.isSingleChar(';')) {
 							importGroupEndOffs = t.offset;
 						}

@@ -11,7 +11,6 @@ package org.fife.ui.rsyntaxtextarea.folding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -27,8 +26,8 @@ import org.fife.ui.rsyntaxtextarea.Token;
  */
 public class LatexFoldParser implements FoldParser {
 
-	private static final char[] BEGIN = "\\begin{".toCharArray();
-	private static final char[] END = "\\end{".toCharArray();
+	private static final char[] BEGIN = "\\begin".toCharArray();
+	private static final char[] END = "\\end".toCharArray();
 
 
 	/**
@@ -49,26 +48,34 @@ public class LatexFoldParser implements FoldParser {
 				Token t = textArea.getTokenListForLine(line);
 				while (t!=null && t.isPaintable()) {
 
-					if (t.type==Token.RESERVED_WORD) { // A \begin{} or \end{}
-						if (t.startsWith(BEGIN)) {
-							if (currentFold==null) {
-								currentFold = new Fold(FoldType.CODE, textArea, t.offset);
-								folds.add(currentFold);
+					if (t.is(Token.RESERVED_WORD, BEGIN)) {
+						Token temp = t.getNextToken();
+						if (temp!=null && temp.isLeftCurly()) {
+							temp = temp.getNextToken();
+							if (temp!=null && temp.type==Token.RESERVED_WORD) {
+								if (currentFold==null) {
+									currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+									folds.add(currentFold);
+								}
+								else {
+									currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+								}
+								expectedStack.push(temp.getLexeme());
+								t = temp;
 							}
-							else {
-								currentFold = currentFold.createChild(FoldType.CODE, t.offset);
-							}
-							String expected = t.getLexeme();
-							expected = expected.substring(7, expected.length()-1);
-							expectedStack.push(expected);
 						}
-						else if (t.startsWith(END)) {
-							if (currentFold!=null && !expectedStack.isEmpty()) {
-								String value = t.getLexeme();
-								value = value.substring(5, value.length()-1);
+					}
+
+					else if (t.is(Token.RESERVED_WORD, END) &&
+							currentFold!=null && !expectedStack.isEmpty()) {
+						Token temp = t.getNextToken();
+						if (temp!=null && temp.isLeftCurly()) {
+							temp = temp.getNextToken();
+							if (temp!=null && temp.type==Token.RESERVED_WORD) {
+								String value = temp.getLexeme();
 								if (expectedStack.peek().equals(value)) {
 									expectedStack.pop();
-									currentFold.setEndOffset(t.textOffset);
+									currentFold.setEndOffset(t.offset);
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
 									if (currentFold.isOnSingleLine()) {
@@ -79,6 +86,7 @@ public class LatexFoldParser implements FoldParser {
 											folds.remove(folds.size()-1);
 										}
 									}
+									t = temp;
 									currentFold = parentFold;
 								}
 							}
