@@ -20,7 +20,10 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
  * An interface for a parser for content in an {@link RSyntaxTextArea}.
  * A <code>Parser</code> returns a list of issues it finds in the text area's
  * content, which the text area can flag (e.g. squiggle underline).  It can
- * also return descriptions of the issues, to be used in tool tips.
+ * also return descriptions of the issues, to be used in tool tips.<p>
+ * 
+ * To install a <code>Parser</code>, simply call
+ * {@link RSyntaxTextArea#addParser(Parser)}.
  *
  * @author Robert Futrell
  * @version 0.5
