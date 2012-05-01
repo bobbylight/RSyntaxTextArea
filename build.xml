@@ -87,7 +87,7 @@
 				<include name="i18n/**"/>
 				<include name="src/**"/>
 				<include name="build.xml"/>
-				<include name=".properties"/>
+				<include name=".project"/>
 				<include name=".classpath"/>
 			</fileset>
 		</zip>
