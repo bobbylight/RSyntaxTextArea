@@ -99,8 +99,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Constructor.
 	 *
-	 * @param textArea The parent text area.  If this is
-	 *        <code>null</code>, you must call {@link #setTextArea(RTextArea)}.
+	 * @param textArea The parent text area.
 	 */
 	public Gutter(RTextArea textArea) {
 

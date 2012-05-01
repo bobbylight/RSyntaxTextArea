@@ -232,7 +232,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @return The full path to the document.
 	 */
 	public String getFileFullPath() {
-		return loc.getFileFullPath();
+		return loc==null ? null : loc.getFileFullPath();
 	}
 
 
