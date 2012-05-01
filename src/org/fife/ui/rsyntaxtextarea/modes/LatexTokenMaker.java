@@ -60,9 +60,6 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
 
-  /** initial size of the lookahead buffer */
-  private static final int ZZ_BUFFERSIZE = 16384;
-
   /** lexical states */
   public static final int EOL_COMMENT = 1;
   public static final int YYINITIAL = 0;
@@ -254,13 +251,10 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 
   /** this buffer contains the current text to be matched and is
       the source of the yytext() string */
-  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+  private char zzBuffer[];
 
   /** the textposition at the last accepting state */
   private int zzMarkedPos;
-
-  /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
 
   /** the current text position in the buffer */
   private int zzCurrentPos;
@@ -271,23 +265,6 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
   /** endRead marks the last character in the buffer, that has been read
       from input */
   private int zzEndRead;
-
-  /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
-
-  /** the number of characters up to the start of the matched text */
-  private int yychar;
-
-  /**
-   * the number of characters from the last newline up to the start of the 
-   * matched text
-   */
-  private int yycolumn;
-
-  /** 
-   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-   */
-  private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
@@ -430,10 +407,9 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 		//zzStartRead = zzEndRead = s.offset;
 		zzStartRead = s.offset;
 		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
+		zzCurrentPos = zzMarkedPos = s.offset;
 		zzLexicalState = YYINITIAL;
 		zzReader = reader;
-		zzAtBOL  = true;
 		zzAtEOF  = false;
 	}
 
@@ -690,7 +666,7 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 18: break;
         case 10: 
-          { int temp = zzStartRead; int end = zzMarkedPos;
+          { int temp = zzStartRead;
 							addToken(temp, temp+3, Token.RESERVED_WORD);
 							addToken(temp+4, temp+4, Token.SEPARATOR);
 							addToken(temp+5, zzMarkedPos-2, Token.RESERVED_WORD);
@@ -698,7 +674,7 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 19: break;
         case 11: 
-          { int temp = zzStartRead; int end = zzMarkedPos;
+          { int temp = zzStartRead;
 							addToken(temp, temp+5, Token.RESERVED_WORD);
 							addToken(temp+6, temp+6, Token.SEPARATOR);
 							addToken(temp+7, zzMarkedPos-2, Token.RESERVED_WORD);

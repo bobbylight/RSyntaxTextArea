@@ -233,13 +233,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	([\\]{AnyChar}+)			{ addToken(Token.FUNCTION); }
 	[\{\}]						{ addToken(Token.SEPARATOR); }
-	("\\begin{"{AnyChar}+"}")   { int temp = zzStartRead; int end = zzMarkedPos;
+	("\\begin{"{AnyChar}+"}")   { int temp = zzStartRead;
 							addToken(temp, temp+5, Token.RESERVED_WORD);
 							addToken(temp+6, temp+6, Token.SEPARATOR);
 							addToken(temp+7, zzMarkedPos-2, Token.RESERVED_WORD);
 							addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
 								}
-	("\\end{"{AnyChar}+"}")		{ int temp = zzStartRead; int end = zzMarkedPos;
+	("\\end{"{AnyChar}+"}")		{ int temp = zzStartRead;
 							addToken(temp, temp+3, Token.RESERVED_WORD);
 							addToken(temp+4, temp+4, Token.SEPARATOR);
 							addToken(temp+5, zzMarkedPos-2, Token.RESERVED_WORD);

@@ -1,7 +1,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 //import java.awt.Graphics;
-import java.awt.Rectangle;
+//import java.awt.Rectangle;
 //import java.awt.Shape;
 
 //import javax.swing.text.CompositeView;
@@ -22,18 +22,18 @@ import javax.swing.text.Element;
  */
 public class WrappedSyntaxView2 {//extends CompositeView {
 
-	private Rectangle tempRect;
-	private int[] cachedOffsets;
-	private int[] cachedSpans;
-	private boolean sizeRequirementsValid;
+//	private Rectangle tempRect;
+//	private int[] cachedOffsets;
+//	private int[] cachedSpans;
+//	private boolean sizeRequirementsValid;
 
 
 	public WrappedSyntaxView2(Element root) {
 		//super(root);
-		tempRect = new Rectangle();
-		cachedOffsets = new int[0];
-		cachedSpans = new int[0];
-		sizeRequirementsValid = false;
+//		tempRect = new Rectangle();
+//		cachedOffsets = new int[0];
+//		cachedSpans = new int[0];
+//		sizeRequirementsValid = false;
 	}
 
 
