@@ -108,9 +108,10 @@ public class TipUtil {
 		Color c = UIManager.getColor("ToolTip.background");
 
 		// Tooltip.background is wrong color on Nimbus (!)
-		if (c==null || isNimbusLookAndFeel()) {
+		boolean isNimbus = isNimbusLookAndFeel();
+		if (c==null || isNimbus) {
 			c = UIManager.getColor("info"); // Used by Nimbus (and others)
-			if (c==null) {
+			if (c==null || (isNimbus && isDerivedColor(c))) {
 				c = SystemColor.info; // System default
 			}
 		}
