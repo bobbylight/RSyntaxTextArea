@@ -95,6 +95,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * When in the JS_STRING state, whether the current string is valid.
 	 */
 	private boolean validJSString;
+	
+	private static String jsVersion = "1.0";
 
 
 	/**
@@ -104,7 +106,30 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public JavaScriptTokenMaker() {
 		super();
 	}
-
+	
+	/**
+	* 
+	* Set the supported JavaScript version because some keywords were introduced on or after this version
+	*/
+	public static void setJavaScriptVersion(String javaScriptVersion) {
+		jsVersion = javaScriptVersion;
+	}
+	
+	/*
+	*
+	* @return Supported JavaScript version
+	*/
+	public static String getJavaScriptVersion() {
+		return jsVersion;
+	}
+	
+	/**
+	* @param JavaScript version required 
+	* @return checks the JavaScript version is the same or greater than version required 
+	*/
+	private static boolean isJavaScriptCompatible(String version) {
+		return jsVersion.compareTo(version) >= 0;
+	}
 
 	/**
 	 * Adds the token specified to the current linked list of tokens as an
@@ -332,7 +357,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 
-	// ECMA keywords.
+	// ECMA 3+ keywords.
 	"break" |
 	"continue" |
 	"delete" |
@@ -349,7 +374,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"while" |
 	"with"						{ addToken(Token.RESERVED_WORD); }
 	"return"					{ addToken(Token.RESERVED_WORD_2); }
-
+	
+	//JavaScript 1.6
+	"each" 						{if(isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	//JavaScript 1.7
+	"let" 						{if(isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	
 	// Reserved (but not yet used) ECMA keywords.
 	"abstract"					{ addToken(Token.RESERVED_WORD); }
 	"boolean"						{ addToken(Token.DATA_TYPE); }
