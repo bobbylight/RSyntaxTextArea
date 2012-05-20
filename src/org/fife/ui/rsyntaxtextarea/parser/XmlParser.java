@@ -8,6 +8,7 @@
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 
+import java.io.IOException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -32,9 +33,18 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
  * XmlParser xmlParser = new XmlParser();
  * textArea.addParser(xmlParser);
  * </pre>
- *
+ * 
+ * To support DTD validation, specify an entity resolver when creating the
+ * parser, and enable validation like so:
+ * 
+ * <pre>
+ * XmlParser xmlParser = new XmlParser(new MyEntityResolver());
+ * xmlParser.setValidating(true);
+ * textArea.addParser(xmlParser);
+ * </pre>
+ * 
  * Also note that a single instance of this class can be installed on
- * multiple instances of <code>RSyntaxTextArea</code>.
+ * multiple instances of <code>RSyntaxTextArea</code>.<p>
  *
  * For a more complete XML parsing solution, see the
  * <a href="http://svn.fifesoft.com/viewvc-1.0.5/bin/cgi/viewvc.cgi/RSTALanguageSupport/trunk/?root=RSyntaxTextArea">RSTALanguageSupport
@@ -47,15 +57,39 @@ public class XmlParser extends AbstractParser {
 
 	private SAXParserFactory spf;
 	private DefaultParseResult result;
+	private EntityResolver entityResolver;
 
 
 	public XmlParser() {
+		this(null);
+	}
+
+
+	/**
+	 * Constructor allowing DTD validation of documents.
+	 * 
+	 * @param resolver An entity resolver to use if validation is enabled.
+	 * @see #setValidating(boolean)
+	 */
+	public XmlParser(EntityResolver resolver) {
+		this.entityResolver = resolver;
 		result = new DefaultParseResult(this);
 		try {
 			spf = SAXParserFactory.newInstance();
 		} catch (FactoryConfigurationError fce) {
 			fce.printStackTrace();
 		}
+	}
+
+
+	/**
+	 * Returns whether this parser does DTD validation.
+	 *
+	 * @return Whether this parser does DTD validation.
+	 * @see #setValidating(boolean)
+	 */
+	public boolean isValidating() {
+		return spf.isValidating();
 	}
 
 
@@ -68,7 +102,7 @@ public class XmlParser extends AbstractParser {
 		Element root = doc.getDefaultRootElement();
 		result.setParsedLines(0, root.getElementCount()-1);
 
-		if (spf==null) {
+		if (spf==null || doc.getLength()==0) {
 			return result;
 		}
 
@@ -82,7 +116,7 @@ public class XmlParser extends AbstractParser {
 		} catch (SAXParseException spe) {
 			// A fatal parse error - ignore; a ParserNotice was already created.
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace(); // Will print if DTD specified and can't be found
 			result.addNotice(new DefaultParserNotice(this,
 					"Error parsing XML: " + e.getMessage(), 0, -1, -1));
 		}
@@ -91,6 +125,47 @@ public class XmlParser extends AbstractParser {
 
 	}
 
+
+	/**
+	 * Sets whether this parser will use DTD validation if required.
+	 *
+	 * @param validating Whether DTD validation should be enabled.  If this is
+	 *        <code>true</code>, documents must specify a DOCTYPE, and you
+	 *        should have used the constructor specifying an entity resolver.
+	 * @see #isValidating()
+	 */
+	public void setValidating(boolean validating) {
+		spf.setValidating(validating);
+	}
+
+/*
+	public static void main(String[] args) {
+		javax.swing.JFrame frame = new javax.swing.JFrame();
+		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea = new
+			org.fife.ui.rsyntaxtextarea.RSyntaxTextArea(25, 40);
+		textArea.setSyntaxEditingStyle("text/xml");
+		XmlParser parser = new XmlParser(new EntityResolver() {
+			public InputSource resolveEntity(String publicId, String systemId)
+					throws SAXException, IOException {
+		    	if ("http://fifesoft.com/rsyntaxtextarea/theme.dtd".equals(systemId)) {
+		    		return new org.xml.sax.InputSource(getClass().getResourceAsStream("/theme.dtd"));
+		    	}
+		    	return null;
+			}
+		});
+		parser.setValidating(true);
+		textArea.addParser(parser);
+		try {
+			textArea.read(new java.io.BufferedReader(new java.io.FileReader("C:/temp/test.xml")), null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		frame.setContentPane(new org.fife.ui.rtextarea.RTextScrollPane(textArea));
+		frame.pack();
+		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+*/
 
 	/**
 	 * Callback notified when errors are found in the XML document.  Adds a
@@ -125,6 +200,20 @@ public class XmlParser extends AbstractParser {
 
 		public void fatalError(SAXParseException e) {
 			doError(e, ParserNotice.ERROR);
+		}
+
+		public InputSource resolveEntity(String publicId, String systemId)
+								throws SAXException {
+			if (entityResolver!=null) {
+				try {
+					return entityResolver.resolveEntity(publicId, systemId);
+				} catch (IOException ioe) {
+					// TODO: Remove when removing 1.4.2-compatibility, as
+					// IOExceptions are thrown then
+					ioe.printStackTrace();
+				}
+			}
+			return super.resolveEntity(publicId, systemId);
 		}
 
 		public void warning(SAXParseException e) {
