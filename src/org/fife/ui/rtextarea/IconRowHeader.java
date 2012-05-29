@@ -30,6 +30,8 @@ import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.FoldingAwareIconRowHeader;
+
 
 /**
  * Renders icons in the {@link Gutter}.  This can be used to visually mark
@@ -50,6 +52,7 @@ import javax.swing.text.View;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see FoldingAwareIconRowHeader
  */
 public class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 

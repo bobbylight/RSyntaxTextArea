@@ -82,12 +82,14 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		// Get the first line to paint.
 		int cellHeight = textArea.getLineHeight();
 		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
-		topLine += fm.getHiddenLineCountAbove(topLine, true);
 
 		// Get where to start painting (top of the row).
 		// We need to be "scrolled up" up just enough for the missing part of
 		// the first line.
 		int y = topLine*cellHeight + textAreaInsets.top;
+
+		// AFTER calculating visual offset to paint at, account for folding.
+		topLine += fm.getHiddenLineCountAbove(topLine, true);
 
 		// Paint the active line range.
 		if (activeLineRangeStart>-1 && activeLineRangeEnd>-1) {
@@ -144,7 +146,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 					if (line<=lastLine && line>=topLine) {
 						try {
 							int lineY = rsta.yForLine(line);
-							if (lineY>=y && lineY<y+visibleRect.height) {
+							if (lineY>=y && lineY<=y+visibleRect.height) {
 								Icon icon = ti.getIcon();
 								if (icon!=null) {
 									int y2 = lineY + (cellHeight-icon.getIconHeight())/2;
