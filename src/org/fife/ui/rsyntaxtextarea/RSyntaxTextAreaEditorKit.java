@@ -340,18 +340,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					// whitespace for the '}' to match that of the '{' char's line.
 					int match = RSyntaxUtilities.getMatchingBracketPosition(rsta);
 					if (match>-1) {
-						elem = root.getElement(root.getElementIndex(match));
-						int start2 = elem.getStartOffset();
-						int end = elem.getEndOffset() - 1;
-						String text = null;
 						try {
-							text = doc.getText(start2, end-start2);
-						} catch (BadLocationException ble) { // Never happens
+							String ws = RSyntaxUtilities.getLeadingWhitespace(doc, match);
+							rsta.replaceRange(ws, start, dot);
+						} catch (BadLocationException ble) {
 							ble.printStackTrace();
 							return;
 						}
-						String ws = RSyntaxUtilities.getLeadingWhitespace(text);
-						rsta.replaceRange(ws, start, dot);
 					}
 
 				}

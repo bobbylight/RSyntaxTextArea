@@ -40,7 +40,7 @@ class DefaultTokenFactory implements TokenFactory {
 
 
 	/**
-	 * Cosnstructor.
+	 * Constructor.
 	 */
 	public DefaultTokenFactory() {
 		this(DEFAULT_START_SIZE, DEFAULT_INCREMENT);
