@@ -423,7 +423,11 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 			}
 		}
 		else {
-			font = new Font("Monospaced", Font.PLAIN, 13);
+			// Consolas added in Vista, used by VS2010+.
+			font = new Font("Consolas", Font.PLAIN, 13);
+			if (!"Consolas".equals(font.getFamily())) {
+				font = new Font("Monospaced", Font.PLAIN, 13);
+			}
 		}
 
 		//System.out.println(font.getFamily() + ", " + font.getName());
