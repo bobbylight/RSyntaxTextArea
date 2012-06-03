@@ -13,8 +13,6 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Timer;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -35,7 +33,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	private RSyntaxTextArea textArea;
 	private Timer timer;
 	private MarkOccurrencesHighlightPainter p;
-	private List tags;
 
 	/**
 	 * The default color used to mark occurrences.
@@ -82,7 +79,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 		timer.setRepeats(false);
 		p = new MarkOccurrencesHighlightPainter();
 		setColor(color);
-		tags = new ArrayList();
 	}
 
 
@@ -138,12 +134,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 						if (temp.is(type, lexeme)) {
 							try {
 								int end = temp.offset + temp.textCount;
-Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
-//								end--; // HACK to prevent typed chars from being added
-//								Object tag = h.addHighlight(temp.offset, end,p);
-								tags.add(tag);
-//								// HACK again, to ensure repaint of last char rendered.
-//								textArea.getUI().damageRange(textArea, end+1, end+1);
+								h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 							} catch (BadLocationException ble) {
 								ble.printStackTrace(); // Never happens
 							}
@@ -151,12 +142,14 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 						temp = temp.getNextToken();
 					}
 				}
+//textArea.repaint();
+// TODO: Do a textArea.repaint() instead of repainting each marker as it's added if count is huge
 			}
 
 		} finally {
 			doc.readUnlock();
 			//time = System.currentTimeMillis() - time;
-			//System.out.println("Took: " + time + " ms");
+			//System.out.println("MarkOccurrencesSupport took: " + time + " ms");
 		}
 
 		textArea.fireMarkedOccurrencesChanged();
@@ -261,11 +254,8 @@ Object tag = h.addMarkedOccurrenceHighlight(temp.offset, end, p);
 		if (textArea!=null) {
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 													textArea.getHighlighter();
-			for (int i=0; i<tags.size(); i++) {
-				h.removeMarkOccurrencesHighlight(tags.get(i));
-			}
+			h.clearMarkOccurrencesHighlights();
 		}
-		tags.clear();
 	}
 
 

@@ -486,9 +486,8 @@ if (host.isCodeFoldingEnabled()) {
 		else {
 			s1 = modelToView(p1, a, b1);
 		}
-		Rectangle r0 = s0.getBounds();
-		Rectangle r1 = (s1 instanceof Rectangle) ? (Rectangle) s1 :
-													s1.getBounds();
+		Rectangle r0 = s0 instanceof Rectangle ? (Rectangle)s0 : s0.getBounds();
+		Rectangle r1 = s1 instanceof Rectangle ? (Rectangle)s1 : s1.getBounds();
 		if (r0.y != r1.y) {
 			// If it spans lines, force it to be the width of the view.
 			Rectangle alloc = (a instanceof Rectangle) ? (Rectangle)a :

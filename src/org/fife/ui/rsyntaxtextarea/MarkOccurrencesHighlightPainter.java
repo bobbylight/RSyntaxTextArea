@@ -10,7 +10,6 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.text.BadLocationException;
@@ -96,17 +95,16 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 		}
 
 		// Should only render part of View.
-		Graphics2D g2d = (Graphics2D)g;
 		try {
 			// --- determine locations ---
 			Shape shape = view.modelToView(p0, Position.Bias.Forward, p1,
 					Position.Bias.Backward, viewBounds);
 			Rectangle r = (shape instanceof Rectangle) ? (Rectangle) shape
 												: shape.getBounds();
-			g2d.fillRect(r.x, r.y, r.width, r.height);
+			g.fillRect(r.x, r.y, r.width, r.height);
 			if (paintBorder) {
-				g2d.setColor(borderColor);
-				g2d.drawRect(r.x,r.y, r.width-1,r.height-1);
+				g.setColor(borderColor);
+				g.drawRect(r.x,r.y, r.width-1,r.height-1);
 			}
 			return r;
 		} catch (BadLocationException e) { // Never happens
