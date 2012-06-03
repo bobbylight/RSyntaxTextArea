@@ -102,9 +102,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 		doc.readLock();
 		try {
 
-			// Remove old highlights
-			removeHighlights();
-
 			// Get the token at the caret position.
 			int line = textArea.getCaretLineNumber();
 			Token tokenList = textArea.getTokenListForLine(line);
@@ -124,8 +121,9 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 			// Add new highlights if an identifier is selected.
 			if (t!=null && isValidType(t) && !isNonWordChar(t)) {
-				RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.
-															getHighlighter();
+				removeHighlights();
+				RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+													textArea.getHighlighter();
 				char[] lexeme = t.getLexeme().toCharArray();
 				int type = t.type;
 				for (int i=0; i<textArea.getLineCount(); i++) {
