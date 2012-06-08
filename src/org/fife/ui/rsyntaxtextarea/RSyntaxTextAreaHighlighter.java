@@ -85,7 +85,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @param p
 	 * @return A tag to reference the highlight later.
 	 * @throws BadLocationException
-	 * @see {@link #removeMarkOccurrencesHighlight(Object)}
+	 * @see {@link #clearMarkOccurrencesHighlights()}
 	 */
 	Object addMarkedOccurrenceHighlight(int start, int end,
 			MarkOccurrencesHighlightPainter p) throws BadLocationException {
@@ -149,33 +149,32 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 
 	/**
+	 * Removes all "marked occurrences" highlights from the view.
+	 *
+	 * @see #addMarkedOccurrenceHighlight(int, int, MarkOccurrencesHighlightPainter)
+	 */
+	void clearMarkOccurrencesHighlights() {
+		// Don't remove via the iterator; since our List is an ArrayList, this
+		// implies tons of System.arrayCopy()s 
+		for (Iterator i=markedOccurrences.iterator(); i.hasNext(); ) {
+			repaintListHighlight(i.next());
+		}
+		markedOccurrences.clear();
+	}
+
+
+	/**
 	 * Removes all parser highlights.
 	 *
 	 * @see #addParserHighlight(ParserNotice, javax.swing.text.Highlighter.HighlightPainter)
 	 */
 	void clearParserHighlights() {
-
+		// Don't remove via an iterator; since our List is an ArrayList, this
+		// implies tons of System.arrayCopy()s 
 		for (int i=0; i<parserHighlights.size(); i++) {
-
-			Object tag = parserHighlights.get(i);
-
-			if (tag instanceof LayeredHighlightInfo) {
-				LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
-			    if (lhi.width > 0 && lhi.height > 0) {
-			    	textArea.repaint(lhi.x, lhi.y, lhi.width, lhi.height);
-			    }
-			}
-			else {
-				HighlightInfo info = (HighlightInfo) tag;
-				TextUI ui = textArea.getUI();
-				ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
-				//safeDamageRange(info.p0, info.p1);
-			}
-
+			repaintListHighlight(parserHighlights.get(i));
 		}
-
 		parserHighlights.clear();
-
 	}
 
 
@@ -330,7 +329,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	private void removeListHighlight(List list, Object tag) {
+	private void repaintListHighlight(Object tag) {
 		if (tag instanceof LayeredHighlightInfo) {
 			LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
 		    if (lhi.width > 0 && lhi.height > 0) {
@@ -343,19 +342,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 			ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
 			//safeDamageRange(info.p0, info.p1);
 		}
-		list.remove(tag);
 	}
-
-
-	/**
-	 * Removes a "marked occurrences" highlight from the view.
-	 *
-	 * @param tag The reference to the highlight
-	 * @see #addMarkedOccurrenceHighlight(int, int, MarkOccurrencesHighlightPainter)
-	 */
-	void removeMarkOccurrencesHighlight(Object tag) {
-		removeListHighlight(markedOccurrences, tag);
-    }
 
 
 	/**
@@ -365,7 +352,8 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @see #addParserHighlight(ParserNotice, javax.swing.text.Highlighter.HighlightPainter)
 	 */
 	void removeParserHighlight(Object tag) {
-		removeListHighlight(parserHighlights, tag);
+		repaintListHighlight(tag);
+		parserHighlights.remove(tag);
 	}
 
 
