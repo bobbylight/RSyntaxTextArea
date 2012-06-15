@@ -47,6 +47,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 	private int currentLine;	// The last line the caret was on.
 	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
+	private int lastVisibleLine;// Last line index painted.
 
 	private int cellHeight;		// Height of a line number "cell" when word wrap is off.
 	private int cellWidth;		// The width used for all line number cells.
@@ -143,6 +144,20 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
+	 * Calculates the last line number index painted in this component.
+	 *
+	 * @return The last line number index painted in this component.
+	 */
+	private int calculateLastVisibleLineNumber() {
+		int lastLine = 0;
+		if (textArea!=null) {
+			lastLine = textArea.getLineCount()+getLineNumberingStartIndex()-1;
+		}
+		return lastLine;
+	}
+
+
+	/**
 	 * Returns the starting line's line number.  The default value is
 	 * <code>1</code>.
 	 *
@@ -184,14 +199,14 @@ public class LineNumberList extends AbstractGutterComponent
 	 * {@inheritDoc}
 	 */
 	void handleDocumentEvent(DocumentEvent e) {
-		int newLineCount = textArea!=null ? textArea.getLineCount() : 0;
-		if (newLineCount!=currentLineCount) {
+		int newLastLine = calculateLastVisibleLineNumber();
+		if (newLastLine!=lastVisibleLine) {
 			// Adjust the amount of space the line numbers take up,
 			// if necessary.
-			if (newLineCount/10 != currentLineCount/10) {
+			if (newLastLine/10 != lastVisibleLine/10) {
 				updateCellWidths();
 			}
-			currentLineCount = newLineCount;
+			lastVisibleLine = newLastLine;
 			repaint();
 		}
 	}
@@ -549,6 +564,7 @@ public class LineNumberList extends AbstractGutterComponent
 		}
 
 		super.setTextArea(textArea);
+		lastVisibleLine = calculateLastVisibleLineNumber();
 
 		if (textArea!=null) {
 			l.install(textArea); // Won't double-install
@@ -592,7 +608,9 @@ public class LineNumberList extends AbstractGutterComponent
 			if (font!=null) {
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
-				int lineCount = textArea.getLineCount();
+				int lineCount = textArea.getLineCount() +
+						getLineNumberingStartIndex() - 1;
+System.out.println(lineCount);
 				do {
 					lineCount = lineCount/10;
 					count++;
