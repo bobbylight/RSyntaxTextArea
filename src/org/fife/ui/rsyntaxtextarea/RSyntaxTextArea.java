@@ -2034,11 +2034,13 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets the font used by this text area.  Note that this method does not
-	 * alter the appearance of an <code>RSyntaxTextArea</code> since it uses
-	 * different fonts for each token type.
+	 * Sets the font used by this text area.  Note that if some token styles
+	 * are using a different font, they will not be changed by calling this
+	 * method.  To set different fonts on individual token types, use the
+	 * text area's <code>SyntaxScheme</code>.
 	 *
 	 * @param font The font.
+	 * @see SyntaxScheme#getStyle(int)
 	 */
 	public void setFont(Font font) {
 
