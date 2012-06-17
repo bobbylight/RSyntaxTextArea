@@ -1127,7 +1127,7 @@ public class RTextArea extends RTextAreaBase
 		}
 
 		if (getTabsEmulated() && text.indexOf('\t')>-1) {
-			text = replaceTabsWithSpaces(text);
+			text = replaceTabsWithSpaces(text, getTabSize());
 		}
 
 		// If the user wants to overwrite text...
@@ -1169,7 +1169,7 @@ public class RTextArea extends RTextAreaBase
 	}
 
 
-	private StringBuffer repTabsSB;
+	private static StringBuffer repTabsSB;
 	/**
 	 * Replaces all instances of the tab character in <code>text</code> with
 	 * the number of spaces equivalent to a tab in this text area.<p>
@@ -1183,11 +1183,11 @@ public class RTextArea extends RTextAreaBase
 	 * @return A <code>java.lang.String</code> just like <code>text</code>,
 	 *         but with spaces instead of tabs.
 	 */
-	private final String replaceTabsWithSpaces(String text) {
+	public static final String replaceTabsWithSpaces(String text,
+			int tabSize) {
 
 		String tabText = "";
-		int temp = getTabSize();
-		for (int i=0; i<temp; i++) {
+		for (int i=0; i<tabSize; i++) {
 			tabText += ' ';
 		}
 

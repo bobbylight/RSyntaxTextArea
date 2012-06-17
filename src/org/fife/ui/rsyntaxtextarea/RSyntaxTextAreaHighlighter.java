@@ -223,7 +223,8 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * Returns a list of "marked occurrences" in the text area.  If there are
 	 * no marked occurrences, this will be an empty list.
 	 *
-	 * @return The list of marked occurrences.
+	 * @return The list of marked occurrences, or an empty list if none.  The
+	 *         contents of this list will be of type {@link DocumentRange}.
 	 */
 	public List getMarkedOccurrences() {
 		List list = new ArrayList(markedOccurrences.size());
@@ -231,7 +232,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 			HighlightInfo info = (HighlightInfo)i.next();
 			int start = info.getStartOffset();
 			int end = info.getEndOffset() + 1; // HACK
-			DocumentRange range = new DocumentRangeImpl(start, end);
+			DocumentRange range = new DocumentRange(start, end);
 			list.add(range);
 		}
 		return list;
@@ -354,27 +355,6 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	void removeParserHighlight(Object tag) {
 		repaintListHighlight(tag);
 		parserHighlights.remove(tag);
-	}
-
-
-	private static class DocumentRangeImpl implements DocumentRange {
-
-		private int startOffs;
-		private int endOffs;
-
-		public DocumentRangeImpl(int startOffs, int endOffs) {
-			this.startOffs = startOffs;
-			this.endOffs = endOffs;
-		}
-
-		public int getEndOffset() {
-			return endOffs;
-		}
-
-		public int getStartOffset() {
-			return startOffs;
-		}
-
 	}
 
 

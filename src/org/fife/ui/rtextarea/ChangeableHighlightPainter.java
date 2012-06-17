@@ -279,6 +279,24 @@ public class ChangeableHighlightPainter
 		else
 			g2d.setPaint(paint);
 
+		// This special case isn't needed for most standard Swing Views (which
+		// always return a width of 1 for modelToView() calls), but it is
+		// needed for RSTA views, which actually return the width of chars for
+		// modelToView calls.  But this should be faster anyway, as we
+		// short-circuit and do only one modelToView() for one offset.
+		if (offs0==offs1) {
+			try {
+				Shape s = view.modelToView(offs0, bounds,
+											Position.Bias.Forward);
+				Rectangle r = s.getBounds();
+				g.drawLine(r.x, r.y, r.x, r.y+r.height);
+				return r;
+			} catch (BadLocationException ble) {
+				ble.printStackTrace(); // Never happens
+				return null;
+			}
+		}
+
 		// Contained in view, can just use bounds.
 		if (offs0==view.getStartOffset() && offs1==view.getEndOffset()) {
 
