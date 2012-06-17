@@ -203,7 +203,7 @@ public class XmlParser extends AbstractParser {
 		}
 
 		public InputSource resolveEntity(String publicId, String systemId)
-								throws SAXException, IOException {
+								throws SAXException {
 			if (entityResolver!=null) {
 				try {
 					return entityResolver.resolveEntity(publicId, systemId);
