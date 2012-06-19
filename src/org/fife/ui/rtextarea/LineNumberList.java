@@ -610,7 +610,6 @@ public class LineNumberList extends AbstractGutterComponent
 				int count = 0;
 				int lineCount = textArea.getLineCount() +
 						getLineNumberingStartIndex() - 1;
-System.out.println(lineCount);
 				do {
 					lineCount = lineCount/10;
 					count++;
