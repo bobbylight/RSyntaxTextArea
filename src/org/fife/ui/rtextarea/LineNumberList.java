@@ -544,7 +544,11 @@ public class LineNumberList extends AbstractGutterComponent
 	 * @see #getLineNumberingStartIndex()
 	 */
 	public void setLineNumberingStartIndex(int index) {
-		lineNumberingStartIndex = index;
+		if (index!=lineNumberingStartIndex) {
+			lineNumberingStartIndex = index;
+			updateCellWidths();
+			repaint();
+		}
 	}
 
 
