@@ -18,6 +18,7 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.modes.AbstractMarkupTokenMaker;
+import org.fife.ui.rtextarea.RDocument;
 import org.fife.util.DynamicIntArray;
 
 
@@ -44,7 +45,7 @@ import org.fife.util.DynamicIntArray;
  * @author Robert Futrell
  * @version 0.1
  */
-public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
+public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 
 	/**
 	 * Creates a {@link TokenMaker} appropriate for a given programming
@@ -64,9 +65,9 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 
 	/**
 	 * Array of values representing the "last token type" on each line.  This
-	 * is used in cases such as multiline comments:  if the previous line
-	 * ended with an (unclosed) multiline comment, we can use this knowledge
-	 * and start the current line's syntax highlighting in multiline comment
+	 * is used in cases such as multi-line comments:  if the previous line
+	 * ended with an (unclosed) multi-line comment, we can use this knowledge
+	 * and start the current line's syntax highlighting in multi-line comment
 	 * state.
 	 */
 	protected transient DynamicIntArray lastTokensOnLines;
@@ -94,25 +95,12 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
 	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
-		super(new RGapContent());
 		putProperty(tabSizeAttribute, new Integer(5));
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
 		setTokenMakerFactory(tmf);
 		setSyntaxStyle(syntaxStyle);
-	}
-
-
-	/**
-	 * Returns the character in the document at the specified offset.
-	 *
-	 * @param offset The offset of the character.
-	 * @return The character.
-	 * @throws BadLocationException If the offset is invalid.
-	 */
-	public char charAt(int offset) throws BadLocationException {
-		return ((RGapContent)getContent()).charAt(offset);
 	}
 
 
@@ -611,32 +599,6 @@ public class RSyntaxDocument extends PlainDocument implements SyntaxConstants {
 	private void writeObject(ObjectOutputStream out)throws IOException {
 		out.defaultWriteObject();
 		out.writeBoolean(isWhitespaceVisible());
-	}
-
-
-	/**
-	 * Document content that provides fast access to individual characters.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
-	 */
-	private static class RGapContent extends GapContent {
-
-		public RGapContent() {
-		}
-
-		public char charAt(int offset) throws BadLocationException {
-			if (offset<0 || offset>=length()) {
-				throw new BadLocationException("Invalid offset", offset);
-			}
-			int g0 = getGapStart();
-			char[] array = (char[]) getArray();
-			if (offset<g0) { // below gap
-				return array[offset];
-			}
-			return array[getGapEnd() + offset - g0]; // above gap
-		}
-
 	}
 
 

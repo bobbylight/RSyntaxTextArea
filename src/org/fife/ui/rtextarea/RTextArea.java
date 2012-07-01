@@ -395,6 +395,17 @@ public class RTextArea extends RTextAreaBase
 
 
 	/**
+	 * Creates the default implementation of the model to be used at
+	 * construction if one isn't explicitly given. A new instance of RDocument
+	 * is returned.
+	 *
+	 * @return The default document.
+	 */
+	protected Document createDefaultModel() {
+		return new RDocument();
+	}
+
+	/**
 	 * Returns the caret event/mouse listener for <code>RTextArea</code>s.
 	 *
 	 * @return The caret event/mouse listener.
@@ -1333,12 +1344,12 @@ public class RTextArea extends RTextAreaBase
 	 *
 	 * @param document The new document to use.
 	 * @throws IllegalArgumentException If the document is not an instance of
-	 *         {@link AbstractDocument}.
+	 *         {@link RDocument}.
 	 */
 	public void setDocument(Document document) {
-		if (!(document instanceof AbstractDocument)) {
+		if (!(document instanceof RDocument)) {
 			throw new IllegalArgumentException("RTextArea requires " +
-				"instances of AbstractDocument for its document");
+				"instances of RDocument for its document");
 		}
 		if (undoManager!=null) { // First time through, undoManager==null
 			Document old = getDocument();

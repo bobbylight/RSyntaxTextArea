@@ -121,6 +121,35 @@ public class SearchEngine {
 
 
 	/**
+	 * Returns a <code>CharSequence</code> for a text area that doesn't make a
+	 * copy of its contents for iteration.  This conserves memory but is likely
+	 * just a tad slower.
+	 *
+	 * @param textArea The text area whose document is the basis for the
+	 *        <code>CharSequence</code>.
+	 * @param start The starting offset of the sequence (or ending offset if
+	 *        <code>forward</code> is <code>false</code>).
+	 * @param forward Whether we're searching forward or backward.
+	 * @return The character sequence.
+	 */
+	private static CharSequence getFindInCharSequence(RTextArea textArea,
+			int start, boolean forward) {
+		RDocument doc = (RDocument)textArea.getDocument();
+		int csStart = 0;
+		int csEnd = 0;
+		if (forward) {
+			csStart = start;
+			csEnd = doc.getLength();
+		}
+		else {
+			csStart = 0;
+			csEnd = start;
+		}
+		return new RDocumentCharSequence(doc, csStart, csEnd);
+	}
+
+
+	/**
 	 * Returns the text in which to search, as a string.  This is used
 	 * internally to grab the smallest buffer possible in which to search.
 	 */
@@ -128,25 +157,20 @@ public class SearchEngine {
 									boolean forward) {
 
 		// Be smart about the text we grab to search in.  We grab more than
-		// a single line because our searches can return multiline results.
+		// a single line because our searches can return multi-line results.
 		// We copy only the chars that will be searched through.
 		String findIn = null;
-		if (forward) {
-			try {
+		try {
+			if (forward) {
 				findIn = textArea.getText(start,
 							textArea.getDocument().getLength()-start);
-			} catch (BadLocationException ble) {
-				// Never happens; findIn will be null anyway.
-				ble.printStackTrace();
 			}
-		}
-		else { // backward
-			try {
+			else { // backward
 				findIn = textArea.getText(0, start);
-			} catch (BadLocationException ble) {
-				// Never happens; findIn will be null anyway.
-				ble.printStackTrace();
 			}
+		} catch (BadLocationException ble) {
+			// Never happens; findIn will be null anyway.
+			ble.printStackTrace();
 		}
 
 		return findIn;
@@ -400,7 +424,7 @@ public class SearchEngine {
 	 *         groups matched).
 	 * @see #getNextMatchPos
 	 */
-	private static RegExReplaceInfo getRegExReplaceInfo(String searchIn,
+	private static RegExReplaceInfo getRegExReplaceInfo(CharSequence searchIn,
 										SearchContext context) {
 		// Can't pass null to getNextMatchPosRegExImpl or it'll think
 		// you're doing a "find" operation instead of "replace, and return a
@@ -579,7 +603,7 @@ public class SearchEngine {
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
-	private static boolean regexReplace(JTextArea textArea,
+	private static boolean regexReplace(RTextArea textArea,
 			SearchContext context) throws PatternSyntaxException {
 
 		// Be smart about what position we're "starting" at.  For example,
@@ -592,7 +616,7 @@ public class SearchEngine {
 		boolean forward = context.getSearchForward();
 		int start = makeMarkAndDotEqual(textArea, forward);
 
-		String findIn = getFindInText(textArea, start, forward);
+		CharSequence findIn = getFindInCharSequence(textArea, start, forward);
 		if (findIn==null) return false;
 
 		// Find the next location of the text we're searching for.
@@ -696,6 +720,7 @@ public class SearchEngine {
 	public static int replaceAll(RTextArea textArea, SearchContext context)
 									throws PatternSyntaxException {
 
+		context.setSearchForward(true); // Replace all always searches forward
 		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
 			return 0;
