@@ -71,11 +71,11 @@ class SizeGrip extends JPanel {
 	 */
 	private Image createOSXSizeGrip() {
 		ClassLoader cl = getClass().getClassLoader();
-		URL url = cl.getResource("org/fife/ui/autocomplete/osx_sizegrip.png");
+		URL url = cl.getResource("org/fife/ui/rsyntaxtextarea/focusabletip/osx_sizegrip.png");
 		if (url==null) {
 			// We're not running in a jar - we may be debugging in Eclipse,
 			// for example
-			File f = new File("../AutoComplete/src/org/fife/ui/autocomplete/osx_sizegrip.png");
+			File f = new File("../RSyntaxTextArea/src/org/fife/ui/rsyntaxtextarea/focusabletip/osx_sizegrip.png");
 			if (f.isFile()) {
 				try {
 					url = f.toURI().toURL();
@@ -108,14 +108,14 @@ class SizeGrip extends JPanel {
 		super.paintComponent(g);
 
 		Dimension dim = getSize();
-		Color c1 = UIManager.getColor("Label.disabledShadow");
-		Color c2 = UIManager.getColor("Label.disabledForeground");
 
 		if (osxSizeGrip!=null) {
 			g.drawImage(osxSizeGrip, dim.width-16, dim.height-16, null);
 			return;
 		}
 
+		Color c1 = UIManager.getColor("Label.disabledShadow");
+		Color c2 = UIManager.getColor("Label.disabledForeground");
 		ComponentOrientation orientation = getComponentOrientation();
 
 		if (orientation.isLeftToRight()) {
@@ -193,9 +193,6 @@ class SizeGrip extends JPanel {
 	/**
 	 * Listens for mouse events on this panel and resizes the parent window
 	 * appropriately.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
 	 */
 	/*
 	 * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using

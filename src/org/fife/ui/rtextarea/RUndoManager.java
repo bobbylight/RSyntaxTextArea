@@ -222,10 +222,7 @@ public class RUndoManager extends UndoManager {
 	}
 
 	/**
-	 * The action used by {@link RUndoManager}.
-	 *  
-	 * @author Robert Futrell
-	 * @version 1.0
+	 * The edit used by {@link RUndoManager}.
 	 */
 	class RCompoundEdit extends CompoundEdit {
 

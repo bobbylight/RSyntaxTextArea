@@ -762,9 +762,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 	/**
 	 * Implementation of the icons rendered.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
 	 */
 	private static class GutterIconImpl implements GutterIconInfo, Comparable {
 
@@ -777,8 +774,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		}
 
 		public int compareTo(Object o) {
-			if (o instanceof GutterIconImpl) {
-				return pos.getOffset() - ((GutterIconImpl)o).getMarkedOffset();
+			if (o instanceof GutterIconInfo) {
+				return pos.getOffset() - ((GutterIconInfo)o).getMarkedOffset();
 			}
 			return -1;
 		}

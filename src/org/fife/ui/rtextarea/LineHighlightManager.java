@@ -161,9 +161,6 @@ class LineHighlightManager {
 
 	/**
 	 * Information about a line highlight.
-	 *
-	 * @author Robert Futrell
-	 * @version 1.0
 	 */
 	private static class LineHighlightInfo implements Comparable {
 
