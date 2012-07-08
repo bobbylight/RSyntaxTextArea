@@ -860,7 +860,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	* @param JavaScript version required 
 	* @return checks the JavaScript version is the same or greater than version required 
 	*/
-	private static boolean isJavaScriptCompatible(String version) {
+	public static boolean isJavaScriptCompatible(String version) {
 		return jsVersion.compareTo(version) >= 0;
 	}
 
