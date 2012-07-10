@@ -76,6 +76,7 @@ public class Theme {
 	private Color matchedBracketBG;
 	private boolean matchedBracketAnimate;
 	private Color hyperlinkFG;
+	private Color[] secondaryLanguages;
 
 	private SyntaxScheme scheme;
 
@@ -91,6 +92,7 @@ public class Theme {
 	 * Private constructor, used when loading from a stream.
 	 */
 	private Theme() {
+		secondaryLanguages = new Color[3];
 	}
 
 
@@ -117,6 +119,12 @@ public class Theme {
 		matchedBracketFG = textArea.getMatchedBracketBorderColor();
 		matchedBracketAnimate = textArea.getAnimateBracketMatching();
 		hyperlinkFG = textArea.getHyperlinkForeground();
+
+		int count = textArea.getSecondaryLanguageCount();
+		secondaryLanguages = new Color[count];
+		for (int i=0; i<count; i++) {
+			secondaryLanguages[i]= textArea.getSecondaryLanguageBackground(i+1);
+		}
 
 		scheme = textArea.getSyntaxScheme();
 
@@ -156,6 +164,11 @@ public class Theme {
 		textArea.setMatchedBracketBorderColor(matchedBracketFG);
 		textArea.setAnimateBracketMatching(matchedBracketAnimate);
 		textArea.setHyperlinkForeground(hyperlinkFG);
+
+		int count = secondaryLanguages.length;
+		for (int i=0; i<count; i++) {
+			textArea.setSecondaryLanguageBackground(i+1, secondaryLanguages[i]);
+		}
 
 		textArea.setSyntaxScheme(scheme);
 
@@ -280,6 +293,14 @@ public class Theme {
 			elem = doc.createElement("hyperlinks");
 			elem.setAttribute("fg", colorToString(hyperlinkFG));
 			root.appendChild(elem);
+
+			elem = doc.createElement("secondaryLanguages");
+			for (int i=0; i<secondaryLanguages.length; i++) {
+				Color color = secondaryLanguages[i];
+				Element elem2 = doc.createElement("language");
+				elem2.setAttribute("index", Integer.toString(i+1));
+				elem2.setAttribute("bg", color==null ? "":colorToString(color));
+			}
 
 			elem = doc.createElement("gutterBorder");
 			elem.setAttribute("color", colorToString(gutterBorderColor));
@@ -542,6 +563,15 @@ public class Theme {
 			else if ("hyperlinks".equals(qName)) {
 				String fg = attrs.getValue("fg");
 				theme.hyperlinkFG = stringToColor(fg);
+			}
+
+			else if ("language".equals(qName)) {
+				String indexStr = attrs.getValue("index");
+				int index = Integer.parseInt(indexStr) - 1;
+				if (theme.secondaryLanguages.length>index) { // Sanity
+					Color bg = stringToColor(attrs.getValue("bg"));
+					theme.secondaryLanguages[index] = bg;
+				}
 			}
 
 			else if ("selection".equals(qName)) {

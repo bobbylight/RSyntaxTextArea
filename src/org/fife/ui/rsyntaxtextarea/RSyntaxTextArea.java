@@ -130,26 +130,27 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
-	public static final String ANIMATE_BRACKET_MATCHING_PROPERTY	= "RSTA.animateBracketMatching";
-	public static final String ANTIALIAS_PROPERTY					= "RSTA.antiAlias";
-	public static final String AUTO_INDENT_PROPERTY					= "RSTA.autoIndent";
-	public static final String BRACKET_MATCHING_PROPERTY			= "RSTA.bracketMatching";
-	public static final String CLEAR_WHITESPACE_LINES_PROPERTY		= "RSTA.clearWhitespaceLines";
-	public static final String CLOSE_CURLY_BRACES_PROPERTY			= "RSTA.closeCurlyBraces";
-	public static final String CLOSE_MARKUP_TAGS_PROPERTY			= "RSTA.closeMarkupTags";
-	public static final String CODE_FOLDING_PROPERTY				= "RSTA.codeFolding";
-	public static final String EOL_VISIBLE_PROPERTY					= "RSTA.eolMarkersVisible";
-	public static final String FOCUSABLE_TIPS_PROPERTY				= "RSTA.focusableTips";
-	public static final String FRACTIONAL_FONTMETRICS_PROPERTY		= "RSTA.fractionalFontMetrics";
-	public static final String HYPERLINKS_ENABLED_PROPERTY			= "RSTA.hyperlinksEnabled";
-	public static final String MARK_OCCURRENCES_PROPERTY			= "RSTA.markOccurrences";
-	public static final String MARKED_OCCURRENCES_CHANGED_PROPERTY	= "RSTA.markedOccurrencesChanged";
-	public static final String PARSER_NOTICES_PROPERTY				= "RSTA.parserNotices";
-	public static final String SYNTAX_SCHEME_PROPERTY				= "RSTA.syntaxScheme";
-	public static final String SYNTAX_STYLE_PROPERTY				= "RSTA.syntaxStyle";
-	public static final String TAB_LINE_COLOR_PROPERTY				= "RSTA.tabLineColor";
-	public static final String TAB_LINES_PROPERTY					= "RSTA.tabLines";
-	public static final String VISIBLE_WHITESPACE_PROPERTY			= "RSTA.visibleWhitespace";
+	public static final String ANIMATE_BRACKET_MATCHING_PROPERTY		= "RSTA.animateBracketMatching";
+	public static final String ANTIALIAS_PROPERTY						= "RSTA.antiAlias";
+	public static final String AUTO_INDENT_PROPERTY						= "RSTA.autoIndent";
+	public static final String BRACKET_MATCHING_PROPERTY				= "RSTA.bracketMatching";
+	public static final String CLEAR_WHITESPACE_LINES_PROPERTY			= "RSTA.clearWhitespaceLines";
+	public static final String CLOSE_CURLY_BRACES_PROPERTY				= "RSTA.closeCurlyBraces";
+	public static final String CLOSE_MARKUP_TAGS_PROPERTY				= "RSTA.closeMarkupTags";
+	public static final String CODE_FOLDING_PROPERTY					= "RSTA.codeFolding";
+	public static final String EOL_VISIBLE_PROPERTY						= "RSTA.eolMarkersVisible";
+	public static final String FOCUSABLE_TIPS_PROPERTY					= "RSTA.focusableTips";
+	public static final String FRACTIONAL_FONTMETRICS_PROPERTY			= "RSTA.fractionalFontMetrics";
+	public static final String HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY	= "RSTA.highlightSecondaryLanguages";
+	public static final String HYPERLINKS_ENABLED_PROPERTY				= "RSTA.hyperlinksEnabled";
+	public static final String MARK_OCCURRENCES_PROPERTY				= "RSTA.markOccurrences";
+	public static final String MARKED_OCCURRENCES_CHANGED_PROPERTY		= "RSTA.markedOccurrencesChanged";
+	public static final String PARSER_NOTICES_PROPERTY					= "RSTA.parserNotices";
+	public static final String SYNTAX_SCHEME_PROPERTY					= "RSTA.syntaxScheme";
+	public static final String SYNTAX_STYLE_PROPERTY					= "RSTA.syntaxStyle";
+	public static final String TAB_LINE_COLOR_PROPERTY					= "RSTA.tabLineColor";
+	public static final String TAB_LINES_PROPERTY						= "RSTA.tabLines";
+	public static final String VISIBLE_WHITESPACE_PROPERTY				= "RSTA.visibleWhitespace";
 
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
 	private static final Color DEFAULT_BRACKET_MATCH_BORDER_COLOR	= new Color(0,0,128);
@@ -248,6 +249,9 @@ Rectangle match;
 	 */
 	private int linkScanningMask;
 
+	/** Whether secondary languages have their backgrounds colored. */
+	private boolean highlightSecondaryLanguages;
+
 	/** Used during "Copy as RTF" operations. */
 	private RtfGenerator rtfGenerator;
 
@@ -288,6 +292,8 @@ Rectangle match;
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
 private boolean fractionalFontMetricsEnabled;
+
+	private Color[] secondaryLanguageBackgrounds;
 
 
 	/**
@@ -581,7 +587,7 @@ private boolean fractionalFontMetricsEnabled;
 				}
 				else {
 					Font font = getFontForTokenType(t.type);
-					Color bg = getBackgroundForTokenType(t.type);
+					Color bg = getBackgroundForToken(t);
 					boolean underline = getUnderlineForToken(t);
 					// Small optimization - don't print fg color if this
 					// is a whitespace color.  Saves on RTF size.
@@ -875,18 +881,30 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the background color for tokens of the specified type.
+	 * Returns the background color for a token.
 	 *
-	 * @param type The type of token.
-	 * @return The background color to use for that token type.  If
-	 *         this value is <code>null</code> then this token type
-	 *         has no special background color.
+	 * @param token The token.
+	 * @return The background color to use for that token.  If this value is
+	 *         is <code>null</code> then this token has no special background
+	 *         color.
 	 * @see #getForegroundForToken(Token)
 	 */
-	public Color getBackgroundForTokenType(int type) {
+	public Color getBackgroundForToken(Token token) {
+		Color c = null;
+		if (getHighlightSecondaryLanguages()) {
+			// 1-indexed, since 0 == main language.
+			int languageIndex = token.getLanguageIndex() - 1;
+			if (languageIndex>=0 &&
+					languageIndex<secondaryLanguageBackgrounds.length) {
+				c = secondaryLanguageBackgrounds[languageIndex];
+			}
+		}
+		if (c==null) {
+			c = syntaxScheme.getStyle(token.type).background;
+		}
 		// Don't default to this.getBackground(), as Tokens simply don't
 		// paint a background if they get a null Color.
-		return syntaxScheme.getStyle(type).background;
+		return c;
 	}
 
 
@@ -1035,7 +1053,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param t The token.
 	 * @return The foreground color to use for that token.  This
 	 *         value is never <code>null</code>.
-	 * @see #getBackgroundForTokenType(int)
+	 * @see #getBackgroundForToken(Token)
 	 */
 	public Color getForegroundForToken(Token t) {
 		if (getHyperlinksEnabled() && t.isHyperlink() &&
@@ -1091,6 +1109,23 @@ private boolean fractionalFontMetricsEnabled;
 							RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		}
 		return g2d;
+	}
+
+
+	/**
+	 * Returns whether "secondary" languages should have their backgrounds
+	 * colored differently to visually differentiate them.  This feature
+	 * imposes a fair performance penalty.
+	 *
+	 * @return Whether secondary languages have their backgrounds colored
+	 *         differently.
+	 * @see #setHighlightSecondaryLanguages(boolean)
+	 * @see #getSecondaryLanguageBackground(int)
+	 * @see #getSecondaryLanguageCount()
+	 * @see #setSecondaryLanguageBackground(int, Color)
+	 */
+	public boolean getHighlightSecondaryLanguages() {
+		return true;
 	}
 
 
@@ -1391,6 +1426,35 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the background color for the specified secondary language.
+	 *
+	 * @param index The language index.  Note that these are 1-based, not
+	 *        0-based, and should be in the range
+	 *        <code>1-getSecondaryLanugageBackgroundCount()</code>, inclusive.
+	 * @return The color, or <code>null</code> if none.
+	 * @see #getSecondaryLanguageCount()
+	 * @see #setSecondaryLanguageBackground(int, Color)
+	 * @see #getHighlightSecondaryLanguages()
+	 */
+	public Color getSecondaryLanguageBackground(int index) {
+		return secondaryLanguageBackgrounds[index];
+	}
+
+
+	/**
+	 * Returns the number of secondary language backgrounds.
+	 *
+	 * @return The number of secondary language backgrounds.
+	 * @see #getSecondaryLanguageBackground(int)
+	 * @see #setSecondaryLanguageBackground(int, Color)
+	 * @see #getHighlightSecondaryLanguages()
+	 */
+	public int getSecondaryLanguageCount() {
+		return secondaryLanguageBackgrounds.length;
+	}
+
+
+	/**
 	 * Returns whether or not templates are enabled for all instances
 	 * of <code>RSyntaxTextArea</code>.
 	 *
@@ -1605,6 +1669,12 @@ private boolean fractionalFontMetricsEnabled;
 
 		setAntiAliasingEnabled(true);
 		restoreDefaultSyntaxScheme();
+
+		setHighlightSecondaryLanguages(true);
+		secondaryLanguageBackgrounds = new Color[3];
+		secondaryLanguageBackgrounds[0] = new Color(0xfff0cc);
+		secondaryLanguageBackgrounds[1] = new Color(0xdafeda);
+		secondaryLanguageBackgrounds[2] = new Color(0xffe0f0);
 
 	}
 
@@ -2112,6 +2182,30 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Sets whether "secondary" languages should have their backgrounds
+	 * colored differently to visually differentiate them.  This feature
+	 * imposes a fair performance penalty.  This method fires a property change
+	 * event of type {@link #HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY}.
+	 *
+	 * @return Whether secondary languages have their backgrounds colored
+	 *         differently.
+	 * @see #getHighlightSecondaryLanguages()
+	 * @see #setSecondaryLanguageBackground(int, Color)
+	 * @see #getSecondaryLanguageCount()
+	 */
+	public void setHighlightSecondaryLanguages(boolean highlight) {
+		if (this.highlightSecondaryLanguages!=highlight) {
+			highlightSecondaryLanguages = highlight;
+			if (highlight) {
+				repaint();
+				firePropertyChange(HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY,
+						!highlight, highlight);
+			}
+		}
+	}
+
+
+	/**
 	 * Sets the color to use when painting hyperlinks.
 	 *
 	 * @param fg The color to use when painting hyperlinks.
@@ -2264,6 +2358,28 @@ private boolean fractionalFontMetricsEnabled;
 			paintTabLines = paint;
 			repaint();
 			firePropertyChange(TAB_LINES_PROPERTY, !paint, paint);
+		}
+	}
+
+
+	/**
+	 * Sets the background color to use for a secondary language.
+	 *
+	 * @param index The language index.  Note that these are 1-based, not
+	 *        0-based, and should be in the range
+	 *        <code>1-getSecondaryLanugageBackgroundCount()</code>, inclusive.
+	 * @param color The new color, or <code>null</code> for none.
+	 * @see #getSecondaryLanguageBackground(int)
+	 * @see #getSecondaryLanguageCount()
+	 */
+	public void setSecondaryLanguageBackground(int index, Color color) {
+		index--;
+		Color old = secondaryLanguageBackgrounds[index];
+		if ((color==null && old!=null) || (color!=null && !color.equals(old))) {
+			secondaryLanguageBackgrounds[index] = color;
+			if (getHighlightSecondaryLanguages()) {
+				repaint();
+			}
 		}
 	}
 

@@ -320,7 +320,7 @@ public class DefaultToken extends Token {
 		int flushLen = 0;
 		int flushIndex = textOffset;
 		Color fg = host.getForegroundForToken(this);
-		Color bg = host.getBackgroundForTokenType(type);
+		Color bg = host.getBackgroundForToken(this);
 		g.setFont(host.getFontForTokenType(type));
 		FontMetrics fm = host.getFontMetricsForTokenType(type);
 

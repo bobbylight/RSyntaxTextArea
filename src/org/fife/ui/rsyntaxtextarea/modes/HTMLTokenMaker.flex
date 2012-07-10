@@ -50,7 +50,6 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  * @author Robert Futrell
  * @version 0.9
- *
  */
 %%
 
@@ -199,6 +198,21 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	private boolean validJSString;
 
+	/**
+	 * Language state set on HTML tokens.  Must be 0.
+	 */
+	private static final int LANG_INDEX_DEFAULT = 0;
+
+	/**
+	 * Language state set on JavaScript tokens.
+	 */
+	private static final int LANG_INDEX_JS = 1;
+
+	/**
+	 * Language state set on CSS tokens.
+	 */
+	private static final int LANG_INDEX_CSS = 2;
+
 
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
@@ -299,6 +313,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
 		cssPrevState = CSS; // Shouldn't be necessary
+		int languageIndex = 0;
 
 		// Start off in the proper state.
 		int state = Token.NULL;
@@ -341,34 +356,43 @@ import org.fife.ui.rsyntaxtextarea.*;
 				break;
 			case INTERNAL_IN_JS:
 				state = JAVASCRIPT;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_STRING_INVALID:
 				state = JS_STRING;
 				validJSString = false;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_STRING_VALID:
 				state = JS_STRING;
 				validJSString = true;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_CHAR_INVALID:
 				state = JS_CHAR;
 				validJSString = false;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_CHAR_VALID:
 				state = JS_CHAR;
 				validJSString = true;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_CSS:
 				state = CSS;
+				languageIndex = LANG_INDEX_CSS;
 				break;
 			case INTERNAL_CSS_PROPERTY:
 				state = CSS_PROPERTY;
+				languageIndex = LANG_INDEX_CSS;
 				break;
 			case INTERNAL_CSS_VALUE:
 				state = CSS_VALUE;
+				languageIndex = LANG_INDEX_CSS;
 				break;
 			default:
 				if (initialTokenType<-1024) {
@@ -386,6 +410,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 							break;
 					}
 					cssPrevState = -initialTokenType&0xff;
+					languageIndex = LANG_INDEX_CSS;
 				}
 				else {
 					state = Token.NULL;
@@ -393,6 +418,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				break;
 		}
 
+		setLanguageIndex(languageIndex);
 		start = text.offset;
 		s = text;
 		try {
@@ -787,7 +813,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	">"						{ yybegin(JAVASCRIPT); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(JAVASCRIPT, LANG_INDEX_JS); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_SCRIPT); return firstToken; }
@@ -811,7 +837,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	">"						{ yybegin(CSS); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(CSS, LANG_INDEX_CSS); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_STYLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_STYLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_STYLE); return firstToken; }
@@ -832,7 +858,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <JAVASCRIPT> {
 
 	{EndScriptTag}				{
-								  yybegin(YYINITIAL);
+								  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
@@ -1032,7 +1058,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
-							  yybegin(YYINITIAL);
+							  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 							  int temp = zzStartRead;
 							  addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE);
 							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
@@ -1051,9 +1077,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
-							  yybegin(YYINITIAL);
 							  int temp = zzStartRead;
 							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+							  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
 							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
@@ -1066,7 +1092,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS> {
 	{EndStyleTag}		{
-						  yybegin(YYINITIAL);
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
@@ -1091,7 +1117,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS_PROPERTY> {
 	{EndStyleTag}		{
-						  yybegin(YYINITIAL);
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
@@ -1108,7 +1134,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS_VALUE> {
 	{EndStyleTag}		{
-						  yybegin(YYINITIAL);
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);

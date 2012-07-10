@@ -19,6 +19,12 @@
    <markOccurrencesHighlight color="d4d4d4" border="false"/>
    <matchedBracket fg="c0c0c0" animate="false"/>
    <hyperlinks fg="0000ff"/>
+   <secondaryLanguages>
+      <language index="1" bg="fff0cc"/>
+      <language index="2" bg="dafeda"/>
+      <language index="3" bg="ffe0f0"/>
+   </secondaryLanguages>
+   
    
    <!-- Gutter styling. -->
    <gutterBorder color="dddddd"/>

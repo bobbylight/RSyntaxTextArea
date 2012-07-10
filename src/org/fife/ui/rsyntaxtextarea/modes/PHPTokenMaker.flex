@@ -49,8 +49,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.8
- *
+ * @version 0.9
  */
 %%
 
@@ -67,14 +66,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
 	 * double-quote attribute.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE			= -1;
+	private static final int INTERNAL_ATTR_DOUBLE			= -1;
 
 
 	/**
 	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
 	 * single-quote attribute.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE			= -2;
+	private static final int INTERNAL_ATTR_SINGLE			= -2;
 
 
 	/**
@@ -82,75 +81,133 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	public static final int INTERNAL_INTAG					= -3;
+	private static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to PHPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	public static final int INTERNAL_INTAG_SCRIPT			= -4;
+	private static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
+	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-qouted attribute in a
 	 * script tag.
 	 */
-	public static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
+	private static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
+
+	/**
+	 * Token type specifying that the user has
+	 * ended a line with an unclosed <code>&lt;style&gt;</code> tag.
+	 */
+	private static final int INTERNAL_INTAG_STYLE			= -7;
+
+	/**
+	 * Token type specifying we're in a double-qouted attribute in a
+	 * style tag.
+	 */
+	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
+
+	/**
+	 * Token type specifying we're in a single-qouted attribute in a
+	 * style tag.
+	 */
+	private static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	public static final int INTERNAL_IN_JS					= -7;
+	private static final int INTERNAL_IN_JS					= -10;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -8;
+	private static final int INTERNAL_IN_JS_MLC				= -11;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	public static final int INTERNAL_IN_JS_STRING_INVALID	= -9;
+	private static final int INTERNAL_IN_JS_STRING_INVALID	= -12;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	public static final int INTERNAL_IN_JS_STRING_VALID		= -10;
+	private static final int INTERNAL_IN_JS_STRING_VALID		= -13;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	public static final int INTERNAL_IN_JS_CHAR_INVALID	= -11;
+	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -14;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	public static final int INTERNAL_IN_JS_CHAR_VALID		= -12;
+	private static final int INTERNAL_IN_JS_CHAR_VALID		= -15;
 
 	/**
-	 * Token type specifying we're in PHP.
+	 * Internal type denoting a line ending in CSS.
 	 */
-	public static final int INTERNAL_IN_PHP					= -(1<<11);
+	private static final int INTERNAL_CSS					= -16;
+
+	/**
+	 * Internal type denoting a line ending in a CSS property.
+	 */
+	private static final int INTERNAL_CSS_PROPERTY			= -17;
+
+	/**
+	 * Internal type denoting a line ending in a CSS property value.
+	 */
+	private static final int INTERNAL_CSS_VALUE				= -18;
+
+	/**
+	 * Internal type denoting line ending in a CSS double-quote string.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	private static final int INTERNAL_CSS_STRING				= -(1<<11);
+
+	/**
+	 * Internal type denoting line ending in a CSS single-quote string.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	private static final int INTERNAL_CSS_CHAR				= -(2<<11);
+
+	/**
+	 * Internal type denoting line ending in a CSS multi-line comment.
+	 * The state to return to is embedded in the actual end token type.
+	 */
+	private static final int INTERNAL_CSS_MLC				= -(3<<11);
+
+	/**
+	 * Token type specifying we're in PHP.  This particular field is public so
+	 * that we can hack and key off of it for code completion.
+	 */
+	public static final int INTERNAL_IN_PHP					= -(4<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline comment.
 	 */
-	public static final int INTERNAL_IN_PHP_MLC				= -(2<<11);
+	private static final int INTERNAL_IN_PHP_MLC				= -(5<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline string.
 	 */
-	public static final int INTERNAL_IN_PHP_STRING				= -(3<<11);
+	private static final int INTERNAL_IN_PHP_STRING				= -(6<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline char.
 	 */
-	public static final int INTERNAL_IN_PHP_CHAR				= -(4<<11);
+	private static final int INTERNAL_IN_PHP_CHAR				= -(7<<11);
+
+	/**
+	 * The state previous CSS-related state we were in before going into a CSS
+	 * string, multi-line comment, etc.
+	 */
+	private int cssPrevState;
 
 	/**
 	 * Whether closing markup tags are automatically completed for PHP.
@@ -166,6 +223,21 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * When in the JS_STRING state, whether the current string is valid.
 	 */
 	private boolean validJSString;
+
+	/**
+	 * Language state set on HTML tokens.  Must be 0.
+	 */
+	private static final int LANG_INDEX_DEFAULT = 0;
+
+	/**
+	 * Language state set on JavaScript tokens.
+	 */
+	private static final int LANG_INDEX_JS = 1;
+
+	/**
+	 * Language state set on CSS tokens.
+	 */
+	private static final int LANG_INDEX_CSS = 2;
 
 
 	/**
@@ -275,69 +347,84 @@ import org.fife.ui.rsyntaxtextarea.*;
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
 		phpInState = YYINITIAL; // Shouldn't be necessary
+		cssPrevState = CSS; // Shouldn't be necessary
+		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
 		int state = Token.NULL;
 		switch (initialTokenType) {
 			case Token.COMMENT_MULTILINE:
 				state = COMMENT;
-				start = text.offset;
 				break;
 			case Token.VARIABLE:
 				state = DTD;
-				start = text.offset;
 				break;
 			case INTERNAL_INTAG:
 				state = INTAG;
-				start = text.offset;
 				break;
 			case INTERNAL_INTAG_SCRIPT:
 				state = INTAG_SCRIPT;
-				start = text.offset;
+				break;
+			case INTERNAL_INTAG_STYLE:
+				state = INTAG_STYLE;
 				break;
 			case INTERNAL_ATTR_DOUBLE:
 				state = INATTR_DOUBLE;
-				start = text.offset;
 				break;
 			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
-				start = text.offset;
 				break;
 			case INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT:
 				state = INATTR_DOUBLE_SCRIPT;
-				start = text.offset;
 				break;
 			case INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT:
 				state = INATTR_SINGLE_SCRIPT;
-				start = text.offset;
+				break;
+			case INTERNAL_ATTR_DOUBLE_QUOTE_STYLE:
+				state = INATTR_DOUBLE_STYLE;
+				break;
+			case INTERNAL_ATTR_SINGLE_QUOTE_STYLE:
+				state = INATTR_SINGLE_STYLE;
 				break;
 			case INTERNAL_IN_JS:
 				state = JAVASCRIPT;
-				start = text.offset;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
-				start = text.offset;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			case INTERNAL_IN_JS_STRING_INVALID:
 				state = JS_STRING;
+				languageIndex = LANG_INDEX_JS;
 				validJSString = false;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_STRING_VALID:
 				state = JS_STRING;
+				languageIndex = LANG_INDEX_JS;
 				validJSString = true;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_CHAR_INVALID:
 				state = JS_CHAR;
+				languageIndex = LANG_INDEX_JS;
 				validJSString = false;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_CHAR_VALID:
 				state = JS_CHAR;
+				languageIndex = LANG_INDEX_JS;
 				validJSString = true;
-				start = text.offset;
+				break;
+			case INTERNAL_CSS:
+				state = CSS;
+				languageIndex = LANG_INDEX_CSS;
+				break;
+			case INTERNAL_CSS_PROPERTY:
+				state = CSS_PROPERTY;
+				languageIndex = LANG_INDEX_CSS;
+				break;
+			case INTERNAL_CSS_VALUE:
+				state = CSS_VALUE;
+				languageIndex = LANG_INDEX_CSS;
 				break;
 			default:
 				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
@@ -346,22 +433,36 @@ import org.fife.ui.rsyntaxtextarea.*;
 						default: // Should never happen
 						case INTERNAL_IN_PHP:
 							state = PHP;
-							start = text.offset;
+							phpInState = -initialTokenType&0xff;
 							break;
 						case INTERNAL_IN_PHP_MLC:
 							state = PHP_MLC;
-							start = text.offset;
+							phpInState = -initialTokenType&0xff;
 							break;
 						case INTERNAL_IN_PHP_STRING:
 							state = PHP_STRING;
-							start = text.offset;
+							phpInState = -initialTokenType&0xff;
 							break;
 						case INTERNAL_IN_PHP_CHAR:
 							state = PHP_CHAR;
-							start = text.offset;
+							phpInState = -initialTokenType&0xff;
+							break;
+						case INTERNAL_CSS_STRING:
+							state = CSS_STRING;
+							languageIndex = LANG_INDEX_CSS;
+							cssPrevState = -initialTokenType&0xff;
+							break;
+						case INTERNAL_CSS_CHAR:
+							state = CSS_CHAR_LITERAL;
+							languageIndex = LANG_INDEX_CSS;
+							cssPrevState = -initialTokenType&0xff;
+							break;
+						case INTERNAL_CSS_MLC:
+							state = CSS_C_STYLE_COMMENT;
+							languageIndex = LANG_INDEX_CSS;
+							cssPrevState = -initialTokenType&0xff;
 							break;
 					}
-					phpInState = -initialTokenType&0xff;
 				}
 				else {
 					state = Token.NULL;
@@ -369,6 +470,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 				break;
 		}
 
+		setLanguageIndex(languageIndex);
+		start = text.offset;
 		s = text;
 		try {
 			yyreset(zzReader);
@@ -439,20 +542,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}
 
 // HTML-specific stuff.
-Whitespace			= ([ \t\f]+)
-LineTerminator			= ([\n])
-Identifier			= ([^ \t\n<&]+)
-AmperItem				= ([&][^; \t]*[;]?)
-InTagIdentifier		= ([^ \t\n\"\'/=>]+)
-EndScriptTag			= ("</" [sS][cC][rR][iI][pP][tT] ">")
+Whitespace					= ([ \t\f]+)
+LineTerminator				= ([\n])
+Identifier					= ([^ \t\n<&]+)
+AmperItem					= ([&][^; \t]*[;]?)
+InTagIdentifier				= ([^ \t\n\"\'/=>]+)
+EndScriptTag				= ("</" [sS][cC][rR][iI][pP][tT] ">")
+EndStyleTag					= ("</" [sS][tT][yY][lL][eE] ">")
+
+
+// General stuff.
+Letter							= [A-Za-z]
+NonzeroDigit					= [1-9]
+Digit							= ("0"|{NonzeroDigit})
+HexDigit						= ({Digit}|[A-Fa-f])
+OctalDigit						= ([0-7])
+LetterOrUnderscore				= ({Letter}|"_")
+LetterOrUnderscoreOrDash		= ({LetterOrUnderscore}|[\-])
 
 
 // JavaScript stuff.
-Letter							= [A-Za-z]
-NonzeroDigit						= [1-9]
-Digit							= ("0"|{NonzeroDigit})
-HexDigit							= ({Digit}|[A-Fa-f])
-OctalDigit						= ([0-7])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
@@ -484,10 +593,27 @@ BooleanLiteral				= ("true"|"false")
 
 // PHP stuff (most PHP stuff is shared with JS for simplicity)
 PHP_Start					= ("<?""php"?)
-LetterOrUnderscore			= ({Letter}|[_])
 LetterOrUnderscoreOrDigit	= ({LetterOrUnderscore}|{Digit})
 PHP_Variable				= ("$"{LetterOrUnderscore}{LetterOrUnderscoreOrDigit}*)
 PHP_LineCommentBegin		= ("//"|[#])
+
+
+// CSS stuff.
+CSS_SelectorPiece			= (("*"|"."|{LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
+CSS_PseudoClass				= (":"("root"|"nth-child"|"nth-last-child"|"nth-of-type"|"nth-last-of-type"|"first-child"|"last-child"|"first-of-type"|"last-of-type"|"only-child"|"only-of-type"|"empty"|"link"|"visited"|"active"|"hover"|"focus"|"target"|"lang"|"enabled"|"disabled"|"checked"|":first-line"|":first-letter"|":before"|":after"|"not"))
+CSS_AtKeyword				= ("@"{CSS_SelectorPiece})
+CSS_Id						= ("#"{CSS_SelectorPiece})
+CSS_Separator				= ([;\(\)\[\]])
+CSS_MlcStart				= ({JS_MLCBegin})
+CSS_MlcEnd					= ({JS_MLCEnd})
+CSS_Property				= ([\*]?{LetterOrUnderscoreOrDash}({LetterOrUnderscoreOrDash}|{Digit})*)
+CSS_ValueChar				= ({LetterOrUnderscoreOrDash}|[\\/])
+CSS_Value					= ({CSS_ValueChar}*)
+CSS_Function				= ({CSS_Value}\()
+CSS_Digits					= ([\-]?{Digit}+([0-9\.]+)?(pt|pc|in|mm|cm|em|ex|px|ms|s|%)?)
+CSS_Hex						= ("#"[0-9a-fA-F]+)
+CSS_Number					= ({CSS_Digits}|{CSS_Hex})
+
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -506,6 +632,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state INTAG_SCRIPT
 %state INATTR_DOUBLE_SCRIPT
 %state INATTR_SINGLE_SCRIPT
+%state INTAG_STYLE
+%state INATTR_DOUBLE_STYLE
+%state INATTR_SINGLE_STYLE
 %state JAVASCRIPT
 %state JS_CHAR
 %state JS_STRING
@@ -515,6 +644,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state PHP_MLC
 %state PHP_STRING
 %state PHP_CHAR
+%state CSS
+%state CSS_PROPERTY
+%state CSS_VALUE
+%state CSS_STRING
+%state CSS_CHAR_LITERAL
+%state CSS_C_STYLE_COMMENT
 
 
 %%
@@ -525,6 +660,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 								  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
+								}
+	"<"[sS][tT][yY][lL][eE]		{
+								  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-5,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+								  start = zzMarkedPos; cssPrevState = zzLexicalState; yybegin(INTAG_STYLE);
 								}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
@@ -734,7 +874,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	">"						{ yybegin(JAVASCRIPT); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(JAVASCRIPT, LANG_INDEX_JS); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_SCRIPT); return firstToken; }
@@ -756,16 +896,40 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
+<INTAG_STYLE> {
+	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
+	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
+	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	"="						{ addToken(Token.OPERATOR); }
+	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(CSS, LANG_INDEX_CSS); }
+	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_STYLE); }
+	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_STYLE); }
+	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_STYLE); return firstToken; }
+}
+
+<INATTR_DOUBLE_STYLE> {
+	[^\"]*						{}
+	[\"]						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_STYLE); return firstToken; }
+}
+
+<INATTR_SINGLE_STYLE> {
+	[^\']*						{}
+	[\']						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_STYLE); return firstToken; }
+}
+
 <JAVASCRIPT> {
 
 	{EndScriptTag}					{
-								  yybegin(YYINITIAL);
+								  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 								}
 
-	// ECMA keywords.
+	// ECMA 3+ keywords.
 	"break" |
 	"continue" |
 	"delete" |
@@ -775,13 +939,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"if" |
 	"in" |
 	"new" |
-	"return" |
 	"this" |
 	"typeof" |
 	"var" |
 	"void" |
 	"while" |
 	"with"						{ addToken(Token.RESERVED_WORD); }
+	"return"					{ addToken(Token.RESERVED_WORD_2); }
+
+	//JavaScript 1.6
+	"each" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	//JavaScript 1.7
+	"let" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
 
 	// Reserved (but not yet used) ECMA keywords.
 	"abstract"					{ addToken(Token.RESERVED_WORD); }
@@ -977,9 +1146,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
-							  yybegin(YYINITIAL);
 							  int temp = zzStartRead;
 							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+							  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
 							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
@@ -988,6 +1157,103 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
 
+}
+
+
+<CSS> {
+	{EndStyleTag}		{
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
+						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						}
+	{CSS_SelectorPiece}	{ addToken(Token.DATA_TYPE); }
+	{CSS_PseudoClass}	{ addToken(Token.RESERVED_WORD); }
+	":"					{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
+	{CSS_AtKeyword}		{ addToken(Token.REGEX); }
+	{CSS_Id}			{ addToken(Token.VARIABLE); }
+	"{"					{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
+	[,]					{ addToken(Token.IDENTIFIER); }
+	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	[+>~\^$\|=]			{ addToken(Token.OPERATOR); }
+	{CSS_Separator}		{ addToken(Token.SEPARATOR); }
+	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("CSS: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addEndToken(INTERNAL_CSS); return firstToken; }
+}
+
+<CSS_PROPERTY> {
+	{EndStyleTag}		{
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
+						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						}
+	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
+	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
+	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
+}
+
+<CSS_VALUE> {
+	{EndStyleTag}		{
+						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
+						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						}
+	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
+	"!important"		{ addToken(Token.ANNOTATION); }
+	{CSS_Function}		{ int temp = zzMarkedPos - 2;
+						  addToken(zzStartRead, temp, Token.FUNCTION);
+						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+						  zzStartRead = zzCurrentPos = zzMarkedPos;
+						}
+	{CSS_Number}		{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	")"					{ /* End of a function */ addToken(Token.SEPARATOR); }
+	[;]					{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
+	[,\.]				{ addToken(Token.IDENTIFIER); }
+	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
+	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.					{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	"\n" |
+	<<EOF>>				{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
+}
+
+<CSS_STRING> {
+	[^\n\\\"]+			{}
+	\\.?				{ /* Skip escaped chars. */ }
+	\"					{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
+}
+
+<CSS_CHAR_LITERAL> {
+	[^\n\\\']+			{}
+	\\.?				{ /* Skip escaped chars. */ }
+	\'					{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
+}
+
+<CSS_C_STYLE_COMMENT> {
+	[^hwf\n\*]+			{}
+	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]				{}
+	{CSS_MlcEnd}		{ addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState); }
+	\*					{}
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
 }
 
 
@@ -1036,7 +1302,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"endswitch" |
 	"endwhile" |
 	"eval" |
-	"exit" |
 	"extends" |
 	"final" |
 	"for" |
@@ -1062,7 +1327,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"public" |
 	"require" |
 	"require_once" |
-	"return" |
 	"static" |
 	"switch" |
 	"throw" |
@@ -1076,6 +1340,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"parent" |
 	"self" |
 	"stdClass"					{ addToken(Token.RESERVED_WORD); }
+
+	"exit" |
+	"return"					{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Functions */
 	"__call" |
