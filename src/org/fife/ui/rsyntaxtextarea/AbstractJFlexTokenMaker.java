@@ -29,4 +29,24 @@ public abstract class AbstractJFlexTokenMaker extends TokenMakerBase {
 	protected int offsetShift;	// As parser always starts at 0, but our line doesn't.
 
 
+	/**
+	 * Declared here so we can define overloads that refer to this method.
+	 *
+	 * @param newState The new JFlex state to enter.
+	 */
+	public abstract void yybegin(int newState);
+
+
+	/**
+	 * Starts a new JFlex state and changes the current language index.
+	 *
+	 * @param newState The new JFlex state to enter.
+	 * @param languageIndex The new language index.
+	 */
+	protected void yybegin(int state, int languageIndex) {
+		yybegin(state);
+		setLanguageIndex(languageIndex);
+	}
+
+
 }
