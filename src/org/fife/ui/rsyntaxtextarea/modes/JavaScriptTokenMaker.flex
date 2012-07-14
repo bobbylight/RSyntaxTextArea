@@ -52,8 +52,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.8
- *
+ * @version 0.9
  */
 %%
 
@@ -69,35 +68,80 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	public static final int INTERNAL_IN_JS_MLC				= -8;
+	private static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	public static final int INTERNAL_IN_JS_STRING_INVALID	= -9;
+	private static final int INTERNAL_IN_JS_STRING_INVALID	= -9;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	public static final int INTERNAL_IN_JS_STRING_VALID		= -10;
+	private static final int INTERNAL_IN_JS_STRING_VALID		= -10;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	public static final int INTERNAL_IN_JS_CHAR_INVALID	= -11;
+	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -11;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	public static final int INTERNAL_IN_JS_CHAR_VALID		= -12;
+	private static final int INTERNAL_IN_JS_CHAR_VALID		= -12;
+
+	private static final int INTERNAL_E4X = -13;
+
+	private static final int INTERNAL_E4X_INTAG = -14;
+
+	private static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -15;
+
+	private static final int INTERNAL_IN_E4X_COMMENT = -16;
+
+	private static final int INTERNAL_E4X_DTD = -17;
+
+	private static final int INTERNAL_E4X_DTD_INTERNAL = -18;
+
+	private static final int INTERNAL_E4X_ATTR_SINGLE = -19;
+
+	private static final int INTERNAL_E4X_ATTR_DOUBLE = -20;
+
+	private static final int INTERNAL_E4X_MARKUP_CDATA = -21;
 
 	/**
 	 * When in the JS_STRING state, whether the current string is valid.
 	 */
 	private boolean validJSString;
-	
-	private static String jsVersion = "1.0";
 
+	/**
+	 * Whether we're in an internal DTD.  Only valid if in an e4x DTD.
+	 */
+	private boolean e4x_inInternalDtd;
+
+	/**
+	 * The previous e4x state.  Only valid if in an e4x state.
+	 */
+	private int e4x_prevState;
+
+	/**
+	 * The version of JavaScript being highlighted.
+	 */
+	private static String jsVersion;
+
+	/**
+	 * Whether e4x is being highlighted.
+	 */
+	private static boolean e4xSupported;
+
+	/**
+	 * Language state set on JS tokens.  Must be 0.
+	 */
+	private static final int LANG_INDEX_DEFAULT	= 0;
+
+	/**
+	 * Language state set on E4X tokens.
+	 */
+	private static final int LANG_INDEX_E4X = 1;
 
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
@@ -106,30 +150,13 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public JavaScriptTokenMaker() {
 		super();
 	}
-	
-	/**
-	* 
-	* Set the supported JavaScript version because some keywords were introduced on or after this version
-	*/
-	public static void setJavaScriptVersion(String javaScriptVersion) {
-		jsVersion = javaScriptVersion;
+
+
+	static {
+		jsVersion = "1.0";
+		e4xSupported = true;
 	}
-	
-	/*
-	*
-	* @return Supported JavaScript version
-	*/
-	public static String getJavaScriptVersion() {
-		return jsVersion;
-	}
-	
-	/**
-	* @param JavaScript version required 
-	* @return checks the JavaScript version is the same or greater than version required 
-	*/
-	public static boolean isJavaScriptCompatible(String version) {
-		return jsVersion.compareTo(version) >= 0;
-	}
+
 
 	/**
 	 * Adds the token specified to the current linked list of tokens as an
@@ -192,6 +219,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Returns the JavaScript version being highlighted.
+	 *
+	 * @return Supported JavaScript version.
+	 * @see #isJavaScriptCompatible(String)
+	 */
+	public static String getJavaScriptVersion() {
+		return jsVersion;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public String[] getLineCommentStartAndEnd() {
@@ -215,38 +253,83 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
+		validJSString = true;
+		e4x_prevState = YYINITIAL;
+		e4x_inInternalDtd = false;
+		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
 		int state = Token.NULL;
 		switch (initialTokenType) {
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_STRING_INVALID:
 				state = JS_STRING;
 				validJSString = false;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_STRING_VALID:
 				state = JS_STRING;
-				validJSString = true;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_CHAR_INVALID:
 				state = JS_CHAR;
 				validJSString = false;
-				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_CHAR_VALID:
 				state = JS_CHAR;
-				validJSString = true;
-				start = text.offset;
+				break;
+			case INTERNAL_E4X:
+				state = E4X;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_INTAG:
+				state = E4X_INTAG;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION:
+				state = E4X_PI;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_DTD:
+				state = E4X_DTD;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_DTD_INTERNAL:
+				state = E4X_DTD;
+				e4x_inInternalDtd = true;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_ATTR_SINGLE:
+				state = E4X_INATTR_SINGLE;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_ATTR_DOUBLE:
+				state = E4X_INATTR_DOUBLE;
+				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_E4X_MARKUP_CDATA:
+				state = E4X_CDATA;
+				languageIndex = LANG_INDEX_E4X;
 				break;
 			default:
-				state = Token.NULL;
+				if (initialTokenType<-1024) { // INTERNAL_IN_E4X_COMMENT - prevState
+					int main = -(-initialTokenType & 0xffffff00);
+					switch (main) {
+						default: // Should never happen
+						case INTERNAL_IN_E4X_COMMENT:
+							state = E4X_COMMENT;
+							break;
+					}
+					e4x_prevState = -initialTokenType&0xff;
+					languageIndex = LANG_INDEX_E4X;
+				}
+				else { // Shouldn't happen
+					state = Token.NULL;
+				}
 		}
 
+		setLanguageIndex(languageIndex);
+		start = text.offset;
 		s = text;
 		try {
 			yyreset(zzReader);
@@ -257,6 +340,57 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return new DefaultToken();
 		}
 
+	}
+
+
+	/**
+	 * Returns whether e4x is being highlighted.
+	 *
+	 * @return Whether e4x is being highlighted.
+	 * @see #setE4xSupported(boolean)
+	 */
+	public static boolean isE4xSupported() {
+		return e4xSupported;
+	}
+
+
+	/**
+	 * Returns whether features for a specific JS version should be honored
+	 * while highlighting.
+	 * 
+	 * @param JavaScript version required 
+	 * @return Whether the JavaScript version is the same or greater than
+	 *         version required. 
+	 */
+	public static boolean isJavaScriptCompatible(String version) {
+		return jsVersion.compareTo(version) >= 0;
+	}
+
+
+	/**
+	 * Sets whether e4x should be highlighted.  A repaint should be forced on
+	 * all <code>RSyntaxTextArea</code>s editing JavaScript if this property
+	 * is changed to see the difference.
+	 *
+	 * @param supported Whether e4x should be highlighted.
+	 * @see #isE4xSupported()
+	 */
+	public static void setE4xSupported(boolean supported) {
+		e4xSupported = supported;
+	}
+
+
+	/**
+	 * Set the supported JavaScript version because some keywords were
+	 * introduced on or after this version.
+	 *
+	 * @param javaScriptVersion The version of JavaScript to support, such as
+	 *        "<code>1.5</code>" or "<code>1.6</code>".
+	 * @see #isJavaScriptCompatible(String)
+	 * @see #getJavaScriptVersion()
+	 */
+	public static void setJavaScriptVersion(String javaScriptVersion) {
+		jsVersion = javaScriptVersion;
 	}
 
 
@@ -311,6 +445,7 @@ NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
+LetterOrDigit					= ({Letter}|{Digit})
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
@@ -337,13 +472,24 @@ JS_Operator				= ({JS_NonAssignmentOperator}|{JS_AssignmentOperator})
 JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)
 JS_ErrorIdentifier			= ({NonSeparator}+)
 JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
+JS_E4xAttribute				= ("@"{Letter}{LetterOrDigit}*)
+
+e4x_NameStartChar		= ([\:A-Z_a-z])
+e4x_NameChar			= ({e4x_NameStartChar}|[\-\.0-9])
+e4x_TagName				= ({e4x_NameStartChar}{e4x_NameChar}*)
+e4x_Identifier			= ([^ \t\n<&;]+)
+e4x_EndXml				= ([;])
+e4x_AmperItem			= ([&][^; \t]*[;]?)
+e4x_InTagIdentifier		= ([^ \t\n\"\'=\/>]+)
+e4x_CDataBegin			= ("<![CDATA[")
+e4x_CDataEnd			= ("]]>")
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
-URLUnreserved			= ({Letter}|"_"|{Digit}|[\-\.\~])
+URLUnreserved			= ({LetterOrDigit}|"_"|[\-\.\~])
 URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
 URLCharacters			= ({URLCharacter}*)
-URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URLEndCharacter			= ([\/\$]|{LetterOrDigit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
@@ -351,6 +497,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state JS_CHAR
 %state JS_MLC
 %state JS_EOL_COMMENT
+%state E4X
+%state E4X_COMMENT
+%state E4X_PI
+%state E4X_DTD
+%state E4X_INTAG
+%state E4X_INATTR_DOUBLE
+%state E4X_INATTR_SINGLE
+%state E4X_CDATA
 
 
 %%
@@ -379,6 +533,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"each" 						{if(isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
 	//JavaScript 1.7
 	"let" 						{if(isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	// e4x miscellaneous
+	{JS_E4xAttribute}			{ addToken(isE4xSupported() ? Token.MARKUP_TAG_ATTRIBUTE : Token.ERROR_IDENTIFIER); }
 	
 	// Reserved (but not yet used) ECMA keywords.
 	"abstract"					{ addToken(Token.RESERVED_WORD); }
@@ -478,9 +634,27 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
-	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
+	{JS_Separator2}					{ addToken(Token.IDENTIFIER); }
 
 	/* Operators. */
+	[\+]?"="{Whitespace}*"<"		{
+										int start = zzStartRead;
+										int operatorLen = yycharat(0)=='+' ? 2 : 1;
+										int yylen = yylength(); // Cache before first addToken() invalidates it
+										//System.out.println("'" + yytext() + "': " + yylength() + ", " + (operatorLen+1));
+										addToken(zzStartRead,zzStartRead+operatorLen-1, Token.OPERATOR);
+										if (yylen>operatorLen+1) {
+											//System.out.println((start+operatorLen) + ", " + (zzMarkedPos-2));
+											addToken(start+operatorLen,zzMarkedPos-2, Token.WHITESPACE);
+										}
+										zzStartRead = zzCurrentPos = zzMarkedPos = zzMarkedPos - 1;
+										if (isE4xSupported()) {
+											// Scanning will continue with "<" as markup tag start
+											yybegin(E4X, LANG_INDEX_E4X);
+										}
+										// Found e4x (or syntax error) but option not enabled;
+										// Scanning will continue at "<" as operator
+									}
 	{JS_Operator}					{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
@@ -501,7 +675,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <JS_STRING> {
 	[^\n\\\"]+				{}
-	\n						{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
 	\\u{HexDigit}{4}		{}
@@ -519,12 +692,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								return firstToken;
 							}
 	\"						{ int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 }
 
 <JS_CHAR> {
 	[^\n\\\']+				{}
-	\n						{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
 	\\u{HexDigit}{4}		{}
@@ -542,6 +715,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								return firstToken;
 							}
 	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken; }
 }
 
@@ -550,9 +724,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[^hwf\n\*]+			{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 	{JS_MLCEnd}				{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 }
 
@@ -562,4 +736,91 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[hwf]					{}
 	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+}
+
+<E4X> {
+	"<!--"						{ start = zzStartRead; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
+	{e4x_CDataBegin}			{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(E4X_CDATA); }
+	"<!"						{ start = zzMarkedPos-2; e4x_inInternalDtd = false; yybegin(E4X_DTD); }
+	"<?"						{ start = zzMarkedPos-2; yybegin(E4X_PI); }
+	"<"{e4x_TagName}			{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									yybegin(E4X_INTAG);
+								}
+	"</"{e4x_TagName}			{
+									int count = yylength();
+									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									yybegin(E4X_INTAG);
+								}
+	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
+	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
+	{e4x_Identifier}			{ addToken(Token.IDENTIFIER); }
+	{e4x_EndXml}				{ yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(Token.IDENTIFIER); }
+	{e4x_AmperItem}				{ addToken(Token.DATA_TYPE); }
+	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	{LineTerminator} |
+	<<EOF>>						{ addEndToken(INTERNAL_E4X); return firstToken; }
+}
+
+<E4X_COMMENT> {
+	[^hwf\n\-]+					{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	[hwf]						{}
+	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); start = temp; yybegin(e4x_prevState); }
+	"-"							{}
+	{LineTerminator} |
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken; }
+}
+
+<E4X_PI> {
+	[^\n\?]+					{}
+	"?>"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
+	"?"							{}
+	{LineTerminator} |
+	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
+}
+
+<E4X_DTD> {
+	[^\n\[\]<>]+				{}
+	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.FUNCTION); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
+	"<"							{}
+	"["							{ e4x_inInternalDtd = true; }
+	"]"							{ e4x_inInternalDtd = false; }
+	">"							{ if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, Token.FUNCTION); } }
+	{LineTerminator} |
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken; }
+}
+
+<E4X_INTAG> {
+	{e4x_InTagIdentifier}		{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	"="							{ addToken(Token.OPERATOR); }
+	"/"							{ addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */ }
+	"/>"						{ yybegin(E4X); addToken(Token.MARKUP_TAG_DELIMITER); }
+	">"							{ yybegin(E4X); addToken(Token.MARKUP_TAG_DELIMITER); }
+	[\"]						{ start = zzMarkedPos-1; yybegin(E4X_INATTR_DOUBLE); }
+	[\']						{ start = zzMarkedPos-1; yybegin(E4X_INATTR_SINGLE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_INTAG); return firstToken; }
+}
+
+<E4X_INATTR_DOUBLE> {
+	[^\"]*						{}
+	[\"]						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_DOUBLE); return firstToken; }
+}
+
+<E4X_INATTR_SINGLE> {
+	[^\']*						{}
+	[\']						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_SINGLE); return firstToken; }
+}
+
+<E4X_CDATA> {
+	[^\]]+						{}
+	{e4x_CDataEnd}					{ int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
+	"]"							{}
+	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_MARKUP_CDATA); return firstToken; }
 }
