@@ -529,8 +529,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"with"						{ addToken(Token.RESERVED_WORD); }
 	"return"					{ addToken(Token.RESERVED_WORD_2); }
 	
-	//JavaScript 1.6
-	"each" 						{if(isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	//e4X
+	"each" 						{if(e4xSupported){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
 	//JavaScript 1.7
 	"let" 						{if(isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
 	// e4x miscellaneous
