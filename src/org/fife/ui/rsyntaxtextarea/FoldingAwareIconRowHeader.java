@@ -145,12 +145,12 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 					int line = root.getElementIndex(offs);
 					if (line<=lastLine && line>=topLine) {
 						try {
-							int lineY = rsta.yForLine(line);
-							if (lineY>=y && lineY<=y+visibleRect.height) {
-								Icon icon = ti.getIcon();
-								if (icon!=null) {
+							Icon icon = ti.getIcon();
+							if (icon!=null) {
+								int lineY = rsta.yForLine(line);
+								if (lineY>=y && lineY<=visibleRect.y+visibleRect.height) {
 									int y2 = lineY + (cellHeight-icon.getIconHeight())/2;
-									ti.getIcon().paintIcon(this, g, 0, y2);
+									icon.paintIcon(this, g, 0, y2);
 									lastLine = line-1; // Paint only 1 icon per line
 								}
 							}
