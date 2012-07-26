@@ -98,6 +98,9 @@ public class IconGroup {
 					String extension, String jar) {
 		this.name = name;
 		this.path = path;
+		if (path!=null && path.length()>0 && !path.endsWith("/")) {
+			this.path += "/";
+		}
 		this.separateLargeIcons = (largeIconSubDir!=null);
 		this.largeIconSubDir = largeIconSubDir;
 		this.extension = extension!=null ? extension : DEFAULT_EXTENSION;

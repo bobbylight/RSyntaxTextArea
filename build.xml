@@ -39,7 +39,7 @@
 		<mkdir dir="${class-dir}"/>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
 			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
-			source="${java-level}" target="${java-level}"/>
+			source="${java-level}" target="${java-level}" includeantruntime="false"/>
 	</target>
 
 
