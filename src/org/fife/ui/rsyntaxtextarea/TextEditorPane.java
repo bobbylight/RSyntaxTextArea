@@ -18,13 +18,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import org.fife.io.UnicodeReader;
 import org.fife.io.UnicodeWriter;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 
 
@@ -421,6 +421,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		if (loc.isLocal() && !loc.isLocalAndExists()) {
 			this.charSet = defaultEnc!=null ? defaultEnc : getDefaultEncoding();
 			this.loc = loc;
+			setText(null);
+			discardAllEdits();
+			setDirty(false);
 			return;
 		}
 
@@ -444,6 +447,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		charSet = ur.getEncoding();
 		String old = getFileFullPath();
 		this.loc = loc;
+		setDirty(false);
 		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 
 	}
