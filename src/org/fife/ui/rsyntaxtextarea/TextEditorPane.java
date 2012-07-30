@@ -448,6 +448,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		String old = getFileFullPath();
 		this.loc = loc;
 		setDirty(false);
+		setCaretPosition(0);
 		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 
 	}

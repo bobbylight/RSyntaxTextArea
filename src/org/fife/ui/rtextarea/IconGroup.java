@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.security.AccessControlException;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -183,6 +184,8 @@ public class IconGroup {
 				//System.err.println("***** " + url.toString());
 				return new ImageIcon(url);
 			}
+		} catch (AccessControlException ace) {
+			return null; // Likely in an applet or WebStart
 		} catch (IOException ioe) {
 			return null;
 		}
