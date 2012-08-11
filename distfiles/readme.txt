@@ -23,6 +23,9 @@ robert -at- fifesoft dot com.
   If you wish to compile RSyntaxTextArea from source, the easiest way to do so
   is via the included Ant build script.  The default target builds the jar.
   
+    cd RSyntaxTextArea
+    ant
+  
   Note that RSyntaxTextArea should be built with a 1.4 JDK, to ensure strict
   compatibility when running in a 1.4 JVM.  If you choose to compile with
   Java 5 or later, you will run into the following compiler error:
@@ -38,7 +41,11 @@ robert -at- fifesoft dot com.
   In a future release, RSyntaxTextArea may drop support for Java 1.4, at which
   time the XmlParser class will of course be modified to compile cleanly with
   Java 5 compilers.
-     
+  
+* Thanks
+
+  TODO: Add translators
+  
 * Feedback
 
   I hope you find RSyntaxTextArea useful.  Bug reports, feature requests, and
