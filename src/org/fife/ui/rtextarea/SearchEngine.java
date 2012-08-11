@@ -709,6 +709,7 @@ public class SearchEngine {
 	 *
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
+	 * @return The number of replacements done.
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the replacement text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
