@@ -8,7 +8,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenMaker;
@@ -34,17 +33,6 @@ public abstract class TokenMakerFactory {
 	 * The singleton default <code>TokenMakerFactory</code> instance.
 	 */
 	private static TokenMakerFactory DEFAULT_INSTANCE;
-
-
-	/**
-	 * Creates and returns a mapping from keys to the names of
-	 * {@link TokenMaker} implementation classes.  When
-	 * {@link #getTokenMaker(String)} is called with a key defined in this
-	 * map, a <code>TokenMaker</code> of the corresponding type is returned.
-	 *
-	 * @return The map.
-	 */
-	protected abstract Map createTokenMakerKeyToClassNameMap();
 
 
 	/**
@@ -109,7 +97,7 @@ public abstract class TokenMakerFactory {
 	/**
 	 * Returns the set of keys that this factory maps to token makers.
 	 *
-	 * return The set of keys.
+	 * @return The set of keys.
 	 */
 	public abstract Set keySet();
 
