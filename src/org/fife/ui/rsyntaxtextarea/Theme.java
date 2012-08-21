@@ -74,6 +74,7 @@ public class Theme {
 	private boolean markOccurrencesBorder;
 	private Color matchedBracketFG;
 	private Color matchedBracketBG;
+	private boolean matchedBracketHighlightBoth;
 	private boolean matchedBracketAnimate;
 	private Color hyperlinkFG;
 	private Color[] secondaryLanguages;
@@ -117,6 +118,7 @@ public class Theme {
 		markOccurrencesBorder = textArea.getPaintMarkOccurrencesBorder();
 		matchedBracketBG = textArea.getMatchedBracketBGColor();
 		matchedBracketFG = textArea.getMatchedBracketBorderColor();
+		matchedBracketHighlightBoth = textArea.getPaintMatchedBracketPair();
 		matchedBracketAnimate = textArea.getAnimateBracketMatching();
 		hyperlinkFG = textArea.getHyperlinkForeground();
 
@@ -162,6 +164,7 @@ public class Theme {
 		textArea.setPaintMarkOccurrencesBorder(markOccurrencesBorder);
 		textArea.setMatchedBracketBGColor(matchedBracketBG);
 		textArea.setMatchedBracketBorderColor(matchedBracketFG);
+		textArea.setPaintMatchedBracketPair(matchedBracketHighlightBoth);
 		textArea.setAnimateBracketMatching(matchedBracketAnimate);
 		textArea.setHyperlinkForeground(hyperlinkFG);
 
@@ -287,6 +290,7 @@ public class Theme {
 			elem = doc.createElement("matchedBracket");
 			elem.setAttribute("fg", colorToString(matchedBracketFG));
 			elem.setAttribute("bg", colorToString(matchedBracketBG));
+			elem.setAttribute("highlightBoth", Boolean.toString(matchedBracketHighlightBoth));
 			elem.setAttribute("animate", Boolean.toString(matchedBracketAnimate));
 			root.appendChild(elem);
 
@@ -556,6 +560,8 @@ public class Theme {
 				theme.matchedBracketFG = stringToColor(fg);
 				String bg = attrs.getValue("bg");
 				theme.matchedBracketBG = stringToColor(bg);
+				String highlightBoth = attrs.getValue("highlightBoth");
+				theme.matchedBracketHighlightBoth = Boolean.valueOf(highlightBoth).booleanValue();
 				String animate = attrs.getValue("animate");
 				theme.matchedBracketAnimate = Boolean.valueOf(animate).booleanValue();
 			}

@@ -145,6 +145,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String HYPERLINKS_ENABLED_PROPERTY				= "RSTA.hyperlinksEnabled";
 	public static final String MARK_OCCURRENCES_PROPERTY				= "RSTA.markOccurrences";
 	public static final String MARKED_OCCURRENCES_CHANGED_PROPERTY		= "RSTA.markedOccurrencesChanged";
+	public static final String PAINT_MATCHED_BRACKET_PAIR_PROPERTY		= "RSTA.paintMatchedBracketPair";
 	public static final String PARSER_NOTICES_PROPERTY					= "RSTA.parserNotices";
 	public static final String SYNTAX_SCHEME_PROPERTY					= "RSTA.syntaxScheme";
 	public static final String SYNTAX_STYLE_PROPERTY					= "RSTA.syntaxStyle";
@@ -180,7 +181,13 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * The rectangle surrounding the "matched bracket" if bracket matching
 	 * is enabled.
 	 */
-Rectangle match;
+	private Rectangle match;
+
+	/**
+	 * The rectangle surrounding the current offset if both bracket matching and
+	 * "match both brackets" are enabled.
+	 */
+	private Rectangle dotRect;
 
 	/**
 	 * Colors used for the "matched bracket" if bracket matching is enabled.
@@ -196,6 +203,9 @@ Rectangle match;
 
 	/** Whether or not bracket matching is animated. */
 	private boolean animateBracketMatching;
+
+	/** Whether <b>both</b> brackets are highlighted when bracket matching. */
+	private boolean paintMatchedBracketPair;
 
 	private BracketMatchingTimer bracketRepaintTimer;
 
@@ -702,6 +712,9 @@ private boolean fractionalFontMetricsEnabled;
 		// exists.
 		if (match!=null) {
 			repaint(match);
+			if (dotRect!=null) {
+				repaint(dotRect);
+			}
 		}
 
 		// If a matching bracket is found, get its bounds and paint it!
@@ -710,10 +723,19 @@ private boolean fractionalFontMetricsEnabled;
 			try {
 				match = modelToView(pos);
 				if (match!=null) { // Happens if we're not yet visible
+					if (getPaintMatchedBracketPair()) {
+						dotRect = modelToView(getCaretPosition()-1);
+					}
+					else {
+						dotRect = null;
+					}
 					if (getAnimateBracketMatching()) {
 						bracketRepaintTimer.restart();
 					}
 					repaint(match);
+					if (dotRect!=null) {
+						repaint(dotRect);
+					}
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Shouldn't happen.
@@ -722,6 +744,7 @@ private boolean fractionalFontMetricsEnabled;
 		else if (pos==-1) {
 			// Set match to null so the old value isn't still repainted.
 			match = null;
+			dotRect = null;
 			bracketRepaintTimer.stop();
 		}
 		lastBracketMatchPos = pos;
@@ -813,6 +836,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void foldToggled(Fold fold) {
 		match = null; // TODO: Update the bracket rect rather than hide it
+		dotRect = null;
 		possiblyUpdateCurrentLineHighlightLocation();
 		revalidate();
 		repaint();
@@ -1258,13 +1282,28 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the matched bracket's rectangle, or <code>null</code> if there
-	 * is currently no matched bracket.  Note that this shouldn't ever be
-	 * called by the user.
+	 * Returns the caret's offset's rectangle, or <code>null</code> if there
+	 * is currently no matched bracket, bracket matching is disabled, or "paint
+	 * both matched brackets" is disabled.  This should never be called by the
+	 * programmer directly.
 	 *
 	 * @return The rectangle surrounding the matched bracket.
+	 * @see #getMatchRectangle()
 	 */
-	public final Rectangle getMatchRectangle() {
+	Rectangle getDotRectangle() {
+		return dotRect;
+	}
+
+
+	/**
+	 * Returns the matched bracket's rectangle, or <code>null</code> if there
+	 * is currently no matched bracket.  This should never be called by the
+	 * programmer directly.
+	 *
+	 * @return The rectangle surrounding the matched bracket.
+	 * @see #getDotRectangle()
+	 */
+	Rectangle getMatchRectangle() {
 		return match;
 	}
 
@@ -1276,6 +1315,23 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public int getMaxAscent() {
 		return maxAscent;
+	}
+
+
+	/**
+	 * Returns whether the bracket at the caret position is painted as a
+	 * "match" when a matched bracket is found.  Note that this property does
+	 * nothing if {@link #isBracketMatchingEnabled()} returns
+	 * <code>false</code>.
+	 * 
+	 * @return Whether both brackets in a bracket pair are highlighted when
+	 *         bracket matching is enabled.
+	 * @see #setPaintMatchedBracketPair(boolean)
+	 * @see #isBracketMatchingEnabled()
+	 * @see #setBracketMatchingEnabled(boolean)
+	 */
+	public boolean getPaintMatchedBracketPair() {
+		return paintMatchedBracketPair;
 	}
 
 
@@ -2310,8 +2366,9 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void setMatchedBracketBGColor(Color color) {
 		matchedBracketBGColor = color;
-		if (match!=null)
+		if (match!=null) {
 			repaint();
+		}
 	}
 
 
@@ -2324,8 +2381,9 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void setMatchedBracketBorderColor(Color color) {
 		matchedBracketBorderColor = color;
-		if (match!=null)
+		if (match!=null) {
 			repaint();
+		}
 	}
 
 
@@ -2341,6 +2399,31 @@ private boolean fractionalFontMetricsEnabled;
 		paintMarkOccurrencesBorder = paintBorder;
 		if (markOccurrencesSupport!=null) {
 			markOccurrencesSupport.setPaintBorder(paintBorder);
+		}
+	}
+
+
+	/**
+	 * Sets whether the bracket at the caret position is painted as a "match"
+	 * when a matched bracket is found.  Note that this property does nothing
+	 * if {@link #isBracketMatchingEnabled()} returns <code>false</code>.<p>
+	 *
+	 * This method fires a property change event of type
+	 * {@link #PAINT_MATCHED_BRACKET_PAIR_PROPERTY}.
+	 * 
+	 * @param paintPair Whether both brackets in a bracket pair should be
+	 *        highlighted when bracket matching is enabled.
+	 * @see #getPaintMatchedBracketPair()
+	 * @see #isBracketMatchingEnabled()
+	 * @see #setBracketMatchingEnabled(boolean)
+	 */
+	public void setPaintMatchedBracketPair(boolean paintPair) {
+		if (paintPair!=paintMatchedBracketPair) {
+			paintMatchedBracketPair = paintPair;
+			doBracketMatching();
+			repaint();
+			firePropertyChange(PAINT_MATCHED_BRACKET_PAIR_PROPERTY,
+					!paintMatchedBracketPair, paintMatchedBracketPair);
 		}
 	}
 
@@ -2630,37 +2713,49 @@ private boolean fractionalFontMetricsEnabled;
 		public void actionPerformed(ActionEvent e) {
 			if (isBracketMatchingEnabled()) {
 				if (match!=null) {
-					if (pulseCount<5) {
-						pulseCount++;
-						match.x--;
-						match.y--;
-						match.width += 2;
-						match.height += 2;
-						repaint(match.x,match.y, match.width,match.height);
-					}
-					else if (pulseCount<7) {
-						pulseCount++;
-						match.x++;
-						match.y++;
-						match.width -= 2;
-						match.height -= 2;
-						repaint(match.x-2,match.y-2, match.width+5,match.height+5);
-					}
-					else {
-						stop();
-						pulseCount = 0;
-					}
+					updateAndInvalidate(match);
+				}
+				if (dotRect!=null && getPaintMatchedBracketPair()) {
+					updateAndInvalidate(dotRect);
+				}
+				if (++pulseCount==8) {
+					pulseCount = 0;
+					stop();
 				}
 			}
 		}
 
+		private void init(Rectangle r) {
+			r.x += 3;
+			r.y += 3;
+			r.width -= 6;
+			r.height -= 6; // So animation can "grow" match
+		}
+
 		public void start() {
-			match.x += 3;
-			match.y += 3;
-			match.width -= 6;
-			match.height -= 6; // So animation can "grow" match
+			init(match);
+			if (dotRect!=null && getPaintMatchedBracketPair()) {
+				init(dotRect);
+			}
 			pulseCount = 0;
 			super.start();
+		}
+
+		private void updateAndInvalidate(Rectangle r) {
+			if (pulseCount<5) {
+				r.x--;
+				r.y--;
+				r.width += 2;
+				r.height += 2;
+				repaint(r.x,r.y, r.width,r.height);
+			}
+			else if (pulseCount<7) {
+				r.x++;
+				r.y++;
+				r.width -= 2;
+				r.height -= 2;
+				repaint(r.x-2,r.y-2, r.width+5,r.height+5);
+			}
 		}
 
 	}

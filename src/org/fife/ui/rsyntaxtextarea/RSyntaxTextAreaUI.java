@@ -146,33 +146,46 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * @param g The graphics context.
 	 */
 	protected void paintMatchedBracket(Graphics g) {
-		// We must add "-1" to the height because otherwise we'll paint below
-		// the region that gets invalidated.
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 		if (rsta.isBracketMatchingEnabled()) {
-			Rectangle match = rsta.match;
+			Rectangle match = rsta.getMatchRectangle();
 			if (match!=null) {
-				if (rsta.getAnimateBracketMatching()) {
-					Color bg = rsta.getMatchedBracketBGColor();
-					if (bg!=null) {
-						g.setColor(bg);
-						g.fillRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
-					}
-					g.setColor(rsta.getMatchedBracketBorderColor());
-					g.drawRoundRect(match.x,match.y, match.width,match.height-1, 5,5);
-				}
-				else {
-					Color bg = rsta.getMatchedBracketBGColor();
-					if (bg!=null) {
-						g.setColor(bg);
-						g.fillRect(match.x,match.y, match.width,match.height-1);
-					}
-					g.setColor(rsta.getMatchedBracketBorderColor());
-					g.drawRect(match.x,match.y, match.width,match.height-1);
+				paintMatchedBracketImpl(g, rsta, match);
+			}
+			if (rsta.getPaintMatchedBracketPair()) {
+				Rectangle dotRect = rsta.getDotRectangle();
+				if (dotRect!=null) { // should always be true
+					paintMatchedBracketImpl(g, rsta, dotRect);
 				}
 			}
 		}
 	}
+
+
+	private void paintMatchedBracketImpl(Graphics g, RSyntaxTextArea rsta,
+			Rectangle r) {
+		// We must add "-1" to the height because otherwise we'll paint below
+		// the region that gets invalidated.
+		if (rsta.getAnimateBracketMatching()) {
+			Color bg = rsta.getMatchedBracketBGColor();
+			if (bg!=null) {
+				g.setColor(bg);
+				g.fillRoundRect(r.x,r.y, r.width,r.height-1, 5,5);
+			}
+			g.setColor(rsta.getMatchedBracketBorderColor());
+			g.drawRoundRect(r.x,r.y, r.width,r.height-1, 5,5);
+		}
+		else {
+			Color bg = rsta.getMatchedBracketBGColor();
+			if (bg!=null) {
+				g.setColor(bg);
+				g.fillRect(r.x,r.y, r.width,r.height-1);
+			}
+			g.setColor(rsta.getMatchedBracketBorderColor());
+			g.drawRect(r.x,r.y, r.width,r.height-1);
+		}
+	}
+
 
 	/**
 	 * Gets called whenever a bound property is changed on this UI's

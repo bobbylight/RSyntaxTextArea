@@ -45,9 +45,10 @@
       color      CDATA #REQUIRED
       border     (true|false) "false">
 <!ATTLIST matchedBracket
-      fg         CDATA #REQUIRED
-      bg         CDATA #IMPLIED
-      animate    (true|false) "false">
+      fg            CDATA #REQUIRED
+      bg            CDATA #IMPLIED
+      highlightBoth (true|false) "false"
+      animate       (true|false) "false">
 <!ATTLIST hyperlinks
       fg         CDATA #REQUIRED>
 <!ATTLIST language
