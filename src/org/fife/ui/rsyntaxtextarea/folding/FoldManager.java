@@ -505,6 +505,13 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	}
 
 
+	/**
+	 * Checks whether a single fold was there in the "old" set of folds.  If
+	 * it was, its collapsed state is preserved.
+	 *
+	 * @param newFold The "new" fold to check for.
+	 * @param oldFolds The previous folds before an edit occurred.
+	 */
 	private void keepFoldState(Fold newFold, List oldFolds) {
 		int previousLoc = Collections.binarySearch(oldFolds, newFold);
 		//System.out.println(newFold + " => " + previousLoc);
@@ -517,10 +524,34 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 			int insertionPoint = -(previousLoc + 1);
 			if (insertionPoint>0) {
 				Fold possibleParentFold = (Fold)oldFolds.get(insertionPoint-1);
-				List children = possibleParentFold.getChildren();
-				if (children!=null) {
-					keepFoldState(newFold, children);
+				if (possibleParentFold.containsOffset(
+						newFold.getStartOffset())) {
+					List children = possibleParentFold.getChildren();
+					if (children!=null) {
+						keepFoldState(newFold, children);
+					}
 				}
+			}
+		}
+	}
+
+
+	/**
+	 * Called when new folds come in from the fold parser.  Checks whether any
+	 * folds from the "old" fold list are still in the "new" list; if so, their
+	 * collapsed state is preserved.
+	 *
+	 * @param newFolds The "new" folds after an edit occurred.  This cannot be
+	 *        <code>null</code>.
+	 * @param oldFolds The previous folds before the edit occurred.
+	 */
+	private void keepFoldStates(List newFolds, List oldFolds) {
+		for (int i=0; i<newFolds.size(); i++) {
+			Fold newFold = (Fold)newFolds.get(i);
+			keepFoldState(newFold, folds);
+			List newChildFolds = newFold.getChildren();
+			if (newChildFolds!=null) {
+				keepFoldStates(newChildFolds, oldFolds);
 			}
 		}
 	}
@@ -553,13 +584,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 				newFolds = Collections.EMPTY_LIST;
 			}
 			else {
-				for (int i=0; i<newFolds.size(); i++) {
-					Fold newFold = (Fold)newFolds.get(i);
-					keepFoldState(newFold, folds);
-					for (int j=0; j<newFold.getChildCount(); j++) {
-						keepFoldState(newFold.getChild(j), folds);
-					}
-				}
+				keepFoldStates(newFolds, folds);
 			}
 			folds = newFolds;
 
@@ -573,6 +598,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 		}
 
 	}
+
 
 	/**
 	 * Sets whether code folding is enabled.  Note that only certain

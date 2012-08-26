@@ -181,9 +181,10 @@ public class Fold implements Comparable {
 
 
 	/**
-	 * Returns the array of child folds.
+	 * Returns the array of child folds.  This is a shallow copy.
 	 *
-	 * @return The array of child folds.
+	 * @return The array of child folds, or <code>null</code> if there are
+	 *         none.
 	 */
 	List getChildren() {
 		return children;
