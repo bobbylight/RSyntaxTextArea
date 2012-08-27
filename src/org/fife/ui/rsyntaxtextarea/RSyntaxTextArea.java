@@ -1149,7 +1149,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #setSecondaryLanguageBackground(int, Color)
 	 */
 	public boolean getHighlightSecondaryLanguages() {
-		return true;
+		return highlightSecondaryLanguages;
 	}
 
 
@@ -1486,7 +1486,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param index The language index.  Note that these are 1-based, not
 	 *        0-based, and should be in the range
-	 *        <code>1-getSecondaryLanugageBackgroundCount()</code>, inclusive.
+	 *        <code>1-getSecondaryLanguageCount()</code>, inclusive.
 	 * @return The color, or <code>null</code> if none.
 	 * @see #getSecondaryLanguageCount()
 	 * @see #setSecondaryLanguageBackground(int, Color)
@@ -2252,11 +2252,9 @@ private boolean fractionalFontMetricsEnabled;
 	public void setHighlightSecondaryLanguages(boolean highlight) {
 		if (this.highlightSecondaryLanguages!=highlight) {
 			highlightSecondaryLanguages = highlight;
-			if (highlight) {
-				repaint();
-				firePropertyChange(HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY,
-						!highlight, highlight);
-			}
+			repaint();
+			firePropertyChange(HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY,
+					!highlight, highlight);
 		}
 	}
 
@@ -2450,7 +2448,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param index The language index.  Note that these are 1-based, not
 	 *        0-based, and should be in the range
-	 *        <code>1-getSecondaryLanugageBackgroundCount()</code>, inclusive.
+	 *        <code>1-getSecondaryLanguageCount()</code>, inclusive.
 	 * @param color The new color, or <code>null</code> for none.
 	 * @see #getSecondaryLanguageBackground(int)
 	 * @see #getSecondaryLanguageCount()

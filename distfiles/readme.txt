@@ -63,7 +63,7 @@ robert -at- fifesoft dot com.
   Translations:
      
      * Arabic:                 Linostar
-     * Chinese:                peter_barnes, Sunquan, sonyichi, zvest
+     * Chinese:                Terrance, peter_barnes, Sunquan, sonyichi, zvest
      * Chinese (Traditional):  kin Por Fok, liou xiao
      * Dutch:                  Roel, Sebastiaan, lovepuppy
      * French:                 PivWan
@@ -74,8 +74,7 @@ robert -at- fifesoft dot com.
      * Japanese:               izumi, tomoM
      * Korean:                 sbrownii
      * Polish:                 Chris, Maciej Mrug
-     * Portuguese (Brazil):    Marcos Parmeggiani, Leandro
+     * Portuguese (Brazil):    Pat, Marcos Parmeggiani, Leandro
      * Russian:                Nadiya, Vladimir
-     * Spanish:                Leandro, phrodo, daloporhecho
+     * Spanish:                Leonardo, phrodo, daloporhecho
      * Turkish:                Burak
-  
