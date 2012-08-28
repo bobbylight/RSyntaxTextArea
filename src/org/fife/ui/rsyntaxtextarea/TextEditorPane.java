@@ -15,10 +15,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -546,8 +544,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 */
 	private void saveImpl(FileLocation loc) throws IOException {
 		OutputStream out = loc.getOutputStream();
-		PrintWriter w = new PrintWriter(
-			new BufferedWriter(new UnicodeWriter(out, getEncoding())));
+		BufferedWriter w = new BufferedWriter(
+				new UnicodeWriter(out, getEncoding()));
 		try {
 			write(w);
 		} finally {
