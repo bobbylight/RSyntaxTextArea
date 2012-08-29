@@ -358,7 +358,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Returns whether features for a specific JS version should be honored
 	 * while highlighting.
 	 * 
-	 * @param JavaScript version required 
+	 * @param version JavaScript version required 
 	 * @return Whether the JavaScript version is the same or greater than
 	 *         version required. 
 	 */

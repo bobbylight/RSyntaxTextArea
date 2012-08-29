@@ -40,7 +40,7 @@ public abstract class AbstractJFlexTokenMaker extends TokenMakerBase {
 	/**
 	 * Starts a new JFlex state and changes the current language index.
 	 *
-	 * @param newState The new JFlex state to enter.
+	 * @param state The new JFlex state to enter.
 	 * @param languageIndex The new language index.
 	 */
 	protected void yybegin(int state, int languageIndex) {

@@ -64,9 +64,12 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 
 	/**
 	 * Populates the mapping from keys to instances of
-	 * {@link TokenMakerCreator}s.  Subclasses should override this method and
-	 * call one of the <code>putMapping</code> overloads to register
+	 * <code>TokenMakerCreator</code>s.  Subclasses should override this method
+	 * and call one of the <code>putMapping</code> overloads to register
 	 * {@link TokenMaker}s for syntax constants.
+	 *
+	 * @see #putMapping(String, String)
+	 * @see #putMapping(String, String, ClassLoader)
 	 */
 	protected abstract void initTokenMakerMap();
 
@@ -85,6 +88,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	 *
 	 * @param key The key.
 	 * @param className The <code>TokenMaker</code> class name.
+	 * @see #putMapping(String, String, ClassLoader)
 	 */
 	public void putMapping(String key, String className) {
 		putMapping(key, className, null);
@@ -98,6 +102,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	 * @param key The key.
 	 * @param className The <code>TokenMaker</code> class name.
 	 * @param cl The class loader to use when loading the class.
+	 * @see #putMapping(String, String)
 	 */
 	public void putMapping(String key, String className, ClassLoader cl) {
 		tokenMakerMap.put(key, new TokenMakerCreator(className, cl));
