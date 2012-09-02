@@ -72,7 +72,7 @@ robert -at- fifesoft dot com.
      * Indonesian:             azis, Sonny
      * Italian:                Luca, stepagweb
      * Japanese:               izumi, tomoM
-     * Korean:                 sbrownii
+     * Korean:                 Changkyoon sbrownii
      * Polish:                 Chris, Maciej Mrug
      * Portuguese (Brazil):    Pat, Marcos Parmeggiani, Leandro
      * Russian:                Nadiya, Vladimir
