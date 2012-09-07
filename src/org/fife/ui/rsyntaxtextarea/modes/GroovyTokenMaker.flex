@@ -345,6 +345,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"default" |
 	"do" |
 	"else" |
+	"enum" |
 	"extends" |
 	"final" |
 	"finally" |
@@ -354,6 +355,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"implements" |
 	"import" |
 	"instanceof" |
+	"interface" |
 	"native" |
 	"new" |
 	"null" |
@@ -361,7 +363,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"private" |
 	"protected" |
 	"public" |
-	"return" |
 	"static" |
 	"strictfp" |
 	"super" |
@@ -375,6 +376,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"void" |
 	"volatile" |
 	"while"				{ addToken(Token.RESERVED_WORD); }
+	"return"			{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Groovy keywords */
 	"as" |
@@ -399,19 +401,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 
-	/* java.lang stuff */
+	/* java.lang classes */
 	"Appendable" |
+	"AutoCloseable" |
 	"CharSequence" |
 	"Cloneable" |
 	"Comparable" |
 	"Iterable" |
 	"Readable" |
 	"Runnable" |
+	"Thread.UncaughtExceptionHandler" |
 	"Boolean" |
 	"Byte" |
 	"Character" |
-	"Character.Subset" |
-	"Character.UnicodeBlock" |
+	"Character.Subset" | 
+	"Character.UnicodeBlock" | 
 	"Class" |
 	"ClassLoader" |
 	"Compiler" |
@@ -427,6 +431,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Package" |
 	"Process" |
 	"ProcessBuilder" |
+	"ProcessBuilder.Redirect" |
 	"Runtime" |
 	"RuntimePermission" |
 	"SecurityManager" |
@@ -442,6 +447,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"ThreadLocal" |
 	"Throwable" |
 	"Void" |
+	"Character.UnicodeScript" |
+	"ProcessBuilder.Redirect.Type" |
 	"Thread.State" |
 	"ArithmeticException" |
 	"ArrayIndexOutOfBoundsException" |
@@ -490,7 +497,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" 		{ addToken(Token.FUNCTION); }
 
 	/* Commonly used methods added to Object class */
 	"addShutdownHook" |
