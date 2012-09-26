@@ -16,6 +16,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -1152,6 +1154,67 @@ return c.getLineStartOffset(line);
 		if (ch>='A' && ch<='Z')
 			return (char)(ch | 0x20);
 		return ch;
+	}
+
+
+	/**
+	 * Creates a regular expression pattern that matches a "wildcard" pattern.
+	 * 
+	 * @param wildcard The wildcard pattern.
+	 * @param matchCase Whether the pattern should be case sensitive.
+	 * @param escapeStartChar Whether to escape a starting <code>'^'</code>
+	 *        character.
+	 * @return The pattern.
+	 */
+	public static Pattern wildcardToPattern(String wildcard, boolean matchCase,
+			boolean escapeStartChar) {
+
+		int flags = 0;
+		if (!matchCase) {
+			flags = Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
+		}
+
+		StringBuffer sb = new StringBuffer();
+		for (int i=0; i<wildcard.length(); i++) {
+			char ch = wildcard.charAt(i);
+			switch (ch) {
+				case '*':
+					sb.append(".*");
+					break;
+				case '?':
+					sb.append('.');
+					break;
+				case '^':
+					if (i>0 || escapeStartChar) {
+						sb.append('\\');
+					}
+					sb.append('^');
+					break;
+				case '\\':
+				case '.': case '|':
+				case '+': case '-':
+				case '$':
+				case '[': case ']':
+				case '{': case '}':
+				case '(': case ')':
+					sb.append('\\').append(ch);
+					break;
+				default:
+					sb.append(ch);
+					break;
+			}
+		}
+
+		Pattern p = null;
+		try {
+			p = Pattern.compile(sb.toString(), flags);
+		} catch (PatternSyntaxException pse) {
+			pse.printStackTrace();
+			p = Pattern.compile(".+");
+		}
+
+		return p;
+
 	}
 
 
