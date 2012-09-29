@@ -127,6 +127,12 @@ public class RTextArea extends RTextAreaBase
 	 */
 	private JPopupMenu popupMenu;
 
+	private JMenuItem undoMenuItem;
+	private JMenuItem redoMenuItem;
+	private JMenuItem cutMenuItem;
+	private JMenuItem pasteMenuItem;
+	private JMenuItem deleteMenuItem;
+
 	/**
 	 * Whether the popup menu has been created.
 	 */
@@ -391,6 +397,19 @@ public class RTextArea extends RTextAreaBase
 	 * @see #setPopupMenu(JPopupMenu)
 	 */
 	protected void configurePopupMenu(JPopupMenu popupMenu) {
+
+		boolean canType = isEditable() && isEnabled();
+
+		// Since the user can customize the popup menu, these actions may not
+		// have been created.
+		if (undoMenuItem!=null) {
+			undoMenuItem.setEnabled(undoAction.isEnabled() && canType);
+			redoMenuItem.setEnabled(redoAction.isEnabled() && canType);
+			cutMenuItem.setEnabled(cutAction.isEnabled() && canType);
+			pasteMenuItem.setEnabled(pasteAction.isEnabled() && canType);
+			deleteMenuItem.setEnabled(deleteAction.isEnabled() && canType);
+		}
+
 	}
 
 
@@ -426,13 +445,13 @@ public class RTextArea extends RTextAreaBase
 	 */
 	protected JPopupMenu createPopupMenu() {
 		JPopupMenu menu = new JPopupMenu();
-		menu.add(createPopupMenuItem(undoAction));
-		menu.add(createPopupMenuItem(redoAction));
+		menu.add(undoMenuItem = createPopupMenuItem(undoAction));
+		menu.add(redoMenuItem = createPopupMenuItem(redoAction));
 		menu.addSeparator();
-		menu.add(createPopupMenuItem(cutAction));
+		menu.add(cutMenuItem = createPopupMenuItem(cutAction));
 		menu.add(createPopupMenuItem(copyAction));
-		menu.add(createPopupMenuItem(pasteAction));
-		menu.add(createPopupMenuItem(deleteAction));
+		menu.add(pasteMenuItem = createPopupMenuItem(pasteAction));
+		menu.add(deleteMenuItem = createPopupMenuItem(deleteAction));
 		menu.addSeparator();
 		menu.add(createPopupMenuItem(selectAllAction));
 		return menu;
