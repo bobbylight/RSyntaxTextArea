@@ -592,6 +592,7 @@ public abstract class Token implements TokenTypes {
 	 * @param lexeme The lexeme to check for.
 	 * @return Whether this token has that type and lexeme.
 	 * @see #is(int, String)
+	 * @see #isSingleChar(int, char)
 	 * @see #startsWith(char[])
 	 */
 	public boolean is(int type, char[] lexeme) {
@@ -618,6 +619,8 @@ public abstract class Token implements TokenTypes {
 	 * @param lexeme The lexeme to check for.
 	 * @return Whether this token has that type and lexeme.
 	 * @see #is(int, char[])
+	 * @see #isSingleChar(int, char)
+	 * @see #startsWith(char[])
 	 */
 	public boolean is(int type, String lexeme) {
 		return this.type==type && textCount==lexeme.length() &&
@@ -699,9 +702,25 @@ public abstract class Token implements TokenTypes {
 	 *
 	 * @param ch The character to check for.
 	 * @return Whether this token's lexeme is the single character specified.
+	 * @see #isSingleChar(int, char)
 	 */
 	public boolean isSingleChar(char ch) {
 		return textCount==1 && text[textOffset]==ch;
+	}
+
+
+	/**
+	 * Returns whether this token is the specified single character, and of a
+	 * specific type.
+	 *
+	 * @param type The token type.
+	 * @param ch The character to check for.
+	 * @return Whether this token is of the specified type, and with a lexeme
+	 *         Equaling the single character specified.
+	 * @see #isSingleChar(char)
+	 */
+	public boolean isSingleChar(int type, char ch) {
+		return this.type==type && isSingleChar(ch);
 	}
 
 

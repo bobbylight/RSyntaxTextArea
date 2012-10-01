@@ -85,7 +85,7 @@ public class XmlFoldParser implements FoldParser {
 
 					}
 
-					else if (t.type==Token.MARKUP_TAG_DELIMITER && t.isSingleChar('<')) {
+					else if (t.isSingleChar(Token.MARKUP_TAG_DELIMITER, '<')) {
 						if (currentFold==null) {
 							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
 							folds.add(currentFold);

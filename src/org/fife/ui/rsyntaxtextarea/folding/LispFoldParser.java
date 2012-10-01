@@ -21,12 +21,12 @@ public class LispFoldParser extends CurlyFoldParser {
 
 
 	public boolean isLeftCurly(Token t) {
-		return t.type==Token.SEPARATOR && t.isSingleChar('(');
+		return t.isSingleChar(Token.SEPARATOR, '(');
 	}
 
 
 	public boolean isRightCurly(Token t) {
-		return t.type==Token.SEPARATOR && t.isSingleChar(')');
+		return t.isSingleChar(Token.SEPARATOR, ')');
 	}
 
 
