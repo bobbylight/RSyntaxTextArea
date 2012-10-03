@@ -52,7 +52,7 @@ public class CurlyFoldParser implements FoldParser {
 	/**
 	 * Whether this parser is folding Java.
 	 */
-	private boolean java;
+	private final boolean java;
 
 	/**
 	 * Used to find import statements when folding Java code.

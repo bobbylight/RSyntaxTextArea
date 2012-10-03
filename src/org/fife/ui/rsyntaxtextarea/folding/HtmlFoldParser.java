@@ -1,7 +1,7 @@
 /*
  * 09/30/2012
  *
- * HtmlFoldParser.java - Fold parser for HTML 5.
+ * HtmlFoldParser.java - Fold parser for HTML 5 and PHP.
  * 
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -21,13 +20,20 @@ import org.fife.ui.rsyntaxtextarea.Token;
 
 
 /**
- * Fold parser for HTML 5.  We currently don't fold <em>everything</em>
- * possible, just the "big" stuff.
+ * Fold parser for HTML 5 and PHP.  For HTML, we currently don't fold
+ * <em>everything</em> possible, just the "big" stuff.  For PHP, we only
+ * fold the "big" HTML stuff and PHP regions, not code blocks in the actual
+ * PHP.
  *
  * @author Robert Futrell
  * @version 1.0
  */
 public class HtmlFoldParser implements FoldParser {
+
+	/**
+	 * Whether we're folding PHP (as opposed to plain HTML).
+	 */
+	private final boolean php;
 
 	/**
 	 * The set of tags we allow to be folded.  These are tags that must have
@@ -38,6 +44,9 @@ public class HtmlFoldParser implements FoldParser {
 	private static final char[] MARKUP_CLOSING_TAG_START = { '<', '/' };
 	//private static final char[] MARKUP_SHORT_TAG_END = { '/', '>' };
 	private static final char[] MLC_END = { '-', '-', '>' };
+
+	private static final char[] PHP_START = { '<', '?' };
+	private static final char[] PHP_END = { '?', '>' };
 
 
 	static {
@@ -63,17 +72,27 @@ public class HtmlFoldParser implements FoldParser {
 
 
 	/**
+	 * Constructor.
+	 *
+	 * @param php Whether to fold PHP instead of just HTML.
+	 */
+	public HtmlFoldParser(boolean php) {
+		this.php = php;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public List getFolds(RSyntaxTextArea textArea) {
 
 		List folds = new ArrayList();
 		Stack tagNameStack = new Stack();
+		boolean inPhp = false;
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
 		boolean inMLC = false;
-		int mlcStart = 0;
 		TagCloseInfo tci = new TagCloseInfo();
 
 		try {
@@ -83,83 +102,120 @@ public class HtmlFoldParser implements FoldParser {
 				Token t = textArea.getTokenListForLine(line);
 				while (t!=null && t.isPaintable()) {
 
-					if (t.isComment()) {
+					// If we're folding PHP.  Note that PHP folding can only be
+					// "one level deep," so our logic here is simple.
+					if (php && t.type==Token.SEPARATOR) {
 
-						// Continuing an MLC from a previous line
-						if (inMLC) {
-							// Found the end of the MLC starting on a previous line...
-							if (t.endsWith(MLC_END)) {
-								int mlcEnd = t.offset + t.textCount - 1;
-								if (currentFold==null) {
-									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
-									currentFold.setEndOffset(mlcEnd);
-									folds.add(currentFold);
-									currentFold = null;
-								}
-								else {
-									currentFold = currentFold.createChild(FoldType.COMMENT, mlcStart);
-									currentFold.setEndOffset(mlcEnd);
-									currentFold = currentFold.getParent();
-								}
-								inMLC = false;
-								mlcStart = 0;
+						// "<?" and "<?php"
+						if (t.startsWith(PHP_START)) {
+							if (currentFold==null) {
+								currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+								folds.add(currentFold);
 							}
-							// Otherwise, this MLC is continuing on to yet
-							// another line.
+							else {
+								currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+							}
+							inPhp = true;
 						}
 
-						else {
-							// If we're an MLC that ends on a later line...
-							if (t.type==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
-								inMLC = true;
-								mlcStart = t.offset;
+						else if (t.startsWith(PHP_END)) {
+							int phpEnd = t.offset + t.textCount - 1;
+							currentFold.setEndOffset(phpEnd);
+							Fold parentFold = currentFold.getParent();
+							// Don't add fold markers for single-line blocks
+							if (currentFold.isOnSingleLine()) {
+								currentFold.removeFromParent();
 							}
+							currentFold = parentFold;
+							inPhp = false;
+							t = t.getNextToken();
+							continue;
 						}
 
 					}
 
-					// If we're starting a new tag...
-					else if (t.isSingleChar(Token.MARKUP_TAG_DELIMITER, '<')) {
-						Token tagStartToken = t;
-						Token tagNameToken = t.getNextToken();
-						if (isFoldableTag(tagNameToken)) {
-							getTagCloseInfo(tagNameToken, textArea, line, tci);
-							if (tci.line==-1) { // EOF reached before end of tag
-								return folds;
-							}
-							// We have found either ">" or "/>" with tci.
-							Token tagCloseToken = tci.closeToken;
-							if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
-								if (currentFold==null) {
-									currentFold = new Fold(FoldType.CODE, textArea, tagStartToken.offset);
-									folds.add(currentFold);
-								}
-								else {
-									currentFold = currentFold.createChild(FoldType.CODE, tagStartToken.offset);
-								}
-								tagNameStack.push(tagNameToken.getLexeme());
-							}
-							t = tagCloseToken; // Continue parsing after tag
-						}
-					}
+					if (!inPhp) {
 
-					// If we've found a closing tag (e.g. "</div>").
-					else if (t.is(Token.MARKUP_TAG_DELIMITER, MARKUP_CLOSING_TAG_START)) {
-						if (currentFold!=null) {
+						if (t.isComment()) {
+
+							// Continuing an MLC from a previous line
+							if (inMLC) {
+								// Found the end of the MLC starting on a previous line...
+								if (t.type==Token.COMMENT_MULTILINE && t.endsWith(MLC_END)) {
+									int mlcEnd = t.offset + t.textCount - 1;
+									currentFold.setEndOffset(mlcEnd);
+									Fold parentFold = currentFold.getParent();
+									// Don't add fold markers for single-line blocks
+									if (currentFold.isOnSingleLine()) {
+										currentFold.removeFromParent();
+									}
+									currentFold = parentFold;
+									inMLC = false;
+								}
+								// Otherwise, this MLC is continuing on to yet
+								// another line.
+							}
+	
+							else {
+								// If we're an MLC that ends on a later line...
+								if (t.type==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
+									if (currentFold==null) {
+										currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+										folds.add(currentFold);
+									}
+									else {
+										currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+									}
+									inMLC = true;
+								}
+							}
+
+						}
+
+						// If we're starting a new tag...
+						else if (t.isSingleChar(Token.MARKUP_TAG_DELIMITER, '<')) {
+							Token tagStartToken = t;
 							Token tagNameToken = t.getNextToken();
-							if (isFoldableTag(tagNameToken) &&
-									isEndOfLastFold(tagNameStack, tagNameToken)) {
-								tagNameStack.pop();
-								currentFold.setEndOffset(t.offset);
-								Fold parentFold = currentFold.getParent();
-								// Don't add fold markers for single-line blocks
-								if (currentFold.isOnSingleLine()) {
-									currentFold.removeFromParent();
+							if (isFoldableTag(tagNameToken)) {
+								getTagCloseInfo(tagNameToken, textArea, line, tci);
+								if (tci.line==-1) { // EOF reached before end of tag
+									return folds;
 								}
-								currentFold = parentFold;
-								t = tagNameToken;
+								// We have found either ">" or "/>" with tci.
+								Token tagCloseToken = tci.closeToken;
+								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
+									if (currentFold==null) {
+										currentFold = new Fold(FoldType.CODE, textArea, tagStartToken.offset);
+										folds.add(currentFold);
+									}
+									else {
+										currentFold = currentFold.createChild(FoldType.CODE, tagStartToken.offset);
+									}
+									tagNameStack.push(tagNameToken.getLexeme());
+								}
+								t = tagCloseToken; // Continue parsing after tag
 							}
 						}
+
+						// If we've found a closing tag (e.g. "</div>").
+						else if (t.is(Token.MARKUP_TAG_DELIMITER, MARKUP_CLOSING_TAG_START)) {
+							if (currentFold!=null) {
+								Token tagNameToken = t.getNextToken();
+								if (isFoldableTag(tagNameToken) &&
+										isEndOfLastFold(tagNameStack, tagNameToken)) {
+									tagNameStack.pop();
+									currentFold.setEndOffset(t.offset);
+									Fold parentFold = currentFold.getParent();
+									// Don't add fold markers for single-line blocks
+									if (currentFold.isOnSingleLine()) {
+										currentFold.removeFromParent();
+									}
+									currentFold = parentFold;
+									t = tagNameToken;
+								}
+							}
+						}
+
 					}
 
 					t = t.getNextToken();
