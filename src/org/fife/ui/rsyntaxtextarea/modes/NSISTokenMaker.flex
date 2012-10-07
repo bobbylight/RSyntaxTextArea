@@ -235,12 +235,9 @@ NonzeroDigit						= ([1-9])
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
-AnyCharacterButApostropheOrBackSlash	= ([^\\'])
-AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({LetterOrUnderscore}|"$")
+IdentifierStart					= ({LetterOrUnderscore}|[$/])
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 
 LineTerminator				= (\n)
@@ -252,14 +249,7 @@ LineCommentBegin			= ([;#])
 
 IntegerLiteral				= (({NonzeroDigit}{Digit}*)|"0")
 HexLiteral					= ("0"(([xX]{HexDigit}+)|({OctalDigit}*)))
-
-FloatHelper					= ([eE][+-]?{Digit}+)
-FloatLiteral1				= ({Digit}+"."({FloatHelper}|{Digit}+{FloatHelper}))
-FloatLiteral2				= ("."{Digit}+{FloatHelper})
-FloatLiteral3				= ({Digit}+{FloatHelper})
-FloatLiteral				= ({FloatLiteral1}|{FloatLiteral2}|{FloatLiteral3}|({Digit}+))
-
-ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
+ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}){NonSeparator}+)
 BooleanLiteral				= ("true"|"false")
 
 Separator					= ([\(\)\{\}\[\]])
@@ -678,7 +668,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
 
 	/* Ended with a line not in a string or comment. */
@@ -692,33 +681,45 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <STRING> {
 	[^\n\\\$\"]+		{}
-	\\.?					{ /* Skip escaped chars. */ }
+	\\.					{ /* Skip all escaped chars. */ }
+	\\					{ /* Line ending in '\' => continue to next line. */
+							addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+							return firstToken;
+						}
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); return firstToken; }
 }
 
 
 <CHAR_LITERAL> {
 	[^\n\\\$\']+		{}
-	\\.?				{ /* Skip escaped single quotes only, but this should still work. */ }
+	\\.					{ /* Skip all escaped chars. */ }
+	\\					{ /* Line ending in '\' => continue to next line. */
+							addToken(start,zzStartRead, Token.LITERAL_CHAR);
+							return firstToken;
+						}
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); return firstToken; }
 }
 
 
 <BACKTICKS> {
 	[^\n\\\$\`]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
-	\\.?					{ /* Skip escaped chars. */ }
+	\\.					{ /* Skip all escaped chars. */ }
+	\\					{ /* Line ending in '\' => continue to next line. */
+							addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+							return firstToken;
+						}
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
 }
 

@@ -161,6 +161,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting NSIS install scripts.
+	 */
+	public static final String SYNTAX_STYLE_NSIS			= "text/nsis";
+
+
+	/**
 	 * Style for highlighting Perl.
 	 */
 	public static final String SYNTAX_STYLE_PERL			= "text/perl";
