@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -123,6 +124,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		// of the parent Gutter.
 		updateBackground();
 
+		ToolTipManager.sharedInstance().registerComponent(this);
+
 	}
 
 
@@ -140,8 +143,27 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon)
 												throws BadLocationException {
+		return addOffsetTrackingIcon(offs, icon, null);
+	}
+
+
+	/**
+	 * Adds an icon that tracks an offset in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking things such
+	 * as source code errors.
+	 *
+	 * @param offs The offset to track.
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @param tip A tool tip for the icon.
+	 * @return A tag for this icon.
+	 * @throws BadLocationException If <code>offs</code> is an invalid offset
+	 *         into the text area.
+	 * @see #removeTrackingIcon(Object)
+	 */
+	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon, String tip)
+												throws BadLocationException {
 		Position pos = textArea.getDocument().createPosition(offs);
-		GutterIconImpl ti = new GutterIconImpl(icon, pos);
+		GutterIconImpl ti = new GutterIconImpl(icon, pos, tip);
 		if (trackingIcons==null) {
 			trackingIcons = new ArrayList(1); // Usually small
 		}
@@ -238,6 +260,28 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
+	/**
+	 * Overridden to display the tool tip of any icons on this line.
+	 *
+	 * @param e The location the mouse is hovering over.
+	 */
+	public String getToolTipText(MouseEvent e) {
+		try {
+			int line = viewToModelLine(e.getPoint());
+			if (line>-1) {
+				GutterIconInfo[] infos = getTrackingIcons(line);
+				if (infos.length>0) {
+					// TODO: Display all messages?
+					return infos[infos.length-1].getToolTip();
+				}
+			}
+		} catch (BadLocationException ble) {
+			ble.printStackTrace(); // Never happens
+		}
+		return null;
+	}
+
+
 	protected GutterIconImpl getTrackingIcon(int index) {
 		return (GutterIconImpl)trackingIcons.get(index);
 	}
@@ -314,9 +358,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	public void mousePressed(MouseEvent e) {
 		if (bookmarkingEnabled && bookmarkIcon!=null) {
 			try {
-				int offs = textArea.viewToModel(e.getPoint());
-				if (offs>-1) {
-					int line = textArea.getLineOfOffset(offs);
+				int line = viewToModelLine(e.getPoint());
+				if (line>-1) {
 					toggleBookmark(line);
 				}
 			} catch (BadLocationException ble) {
@@ -761,16 +804,31 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 
 	/**
+	 * Returns the line rendered at the specified location.
+	 *
+	 * @param p The location in this row header.
+	 * @return The corresponding line in the editor.
+	 * @throws BadLocationException ble If an error occurs.
+	 */
+	private int viewToModelLine(Point p) throws BadLocationException {
+		int offs = textArea.viewToModel(p);
+		return offs>-1 ? textArea.getLineOfOffset(offs) : -1;
+	}
+
+
+	/**
 	 * Implementation of the icons rendered.
 	 */
 	private static class GutterIconImpl implements GutterIconInfo, Comparable {
 
 		private Icon icon;
 		private Position pos;
+		private String toolTip;
 
-		public GutterIconImpl(Icon icon, Position pos) {
+		public GutterIconImpl(Icon icon, Position pos, String toolTip) {
 			this.icon = icon;
 			this.pos = pos;
+			this.toolTip = toolTip;
 		}
 
 		public int compareTo(Object o) {
@@ -790,6 +848,10 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 		public int getMarkedOffset() {
 			return pos.getOffset();
+		}
+
+		public String getToolTip() {
+			return toolTip;
 		}
 
 		public int hashCode() {

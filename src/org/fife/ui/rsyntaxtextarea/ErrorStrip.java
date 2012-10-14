@@ -269,7 +269,7 @@ public class ErrorStrip extends JComponent {
 			text = msg.getString("Line");
 			// TODO: 1.5: Use Integer.valueOf(line)
 			text = MessageFormat.format(text,
-						new Object[] { new Integer(line) });
+						new Object[] { new Integer(line+1) });
 		}
 		return text;
 	}

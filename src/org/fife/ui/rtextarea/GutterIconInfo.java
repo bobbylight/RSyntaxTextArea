@@ -42,4 +42,12 @@ public interface GutterIconInfo {
 	 */
 	public int getMarkedOffset();
 
+
+	/**
+	 * Returns the tool tip to display when the mouse hovers over this icon.
+	 *
+	 * @return The tool tip to display.
+	 */
+	public String getToolTip();
+
 }

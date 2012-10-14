@@ -158,13 +158,37 @@ public class Gutter extends JPanel {
 	 *         icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
+	 * @see #addLineTrackingIcon(int, Icon, String)
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addLineTrackingIcon(int line, Icon icon)
 											throws BadLocationException {
+		return addLineTrackingIcon(line, icon, null);
+	}
+
+
+	/**
+	 * Adds an icon that tracks an offset in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking things such
+	 * as source code errors.
+	 *
+	 * @param line The line to track (zero-based).
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @param tip An optional tool tip for the icon.
+	 * @return A tag for this icon.  This can later be used in a call to
+	 *         {@link #removeTrackingIcon(GutterIconInfo)} to remove this
+	 *         icon.
+	 * @throws BadLocationException If <code>offs</code> is an invalid offset
+	 *         into the text area.
+	 * @see #addLineTrackingIcon(int, Icon)
+	 * @see #addOffsetTrackingIcon(int, Icon)
+	 * @see #removeTrackingIcon(GutterIconInfo)
+	 */
+	public GutterIconInfo addLineTrackingIcon(int line, Icon icon, String tip)
+											throws BadLocationException {
 		int offs = textArea.getLineStartOffset(line);
-		return addOffsetTrackingIcon(offs, icon);
+		return addOffsetTrackingIcon(offs, icon, tip);
 	}
 
 
@@ -178,12 +202,34 @@ public class Gutter extends JPanel {
 	 * @return A tag for this icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
+	 * @see #addOffsetTrackingIcon(int, Icon, String)
 	 * @see #addLineTrackingIcon(int, Icon)
 	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon)
 												throws BadLocationException {
-		return iconArea.addOffsetTrackingIcon(offs, icon);
+		return addOffsetTrackingIcon(offs, icon, null);
+	}
+
+
+	/**
+	 * Adds an icon that tracks an offset in the document, and is displayed
+	 * adjacent to the line numbers.  This is useful for marking things such
+	 * as source code errors.
+	 *
+	 * @param offs The offset to track.
+	 * @param icon The icon to display.  This should be small (say 16x16).
+	 * @param tip An optional tool tip for the icon.
+	 * @return A tag for this icon.
+	 * @throws BadLocationException If <code>offs</code> is an invalid offset
+	 *         into the text area.
+	 * @see #addOffsetTrackingIcon(int, Icon)
+	 * @see #addLineTrackingIcon(int, Icon)
+	 * @see #removeTrackingIcon(GutterIconInfo)
+	 */
+	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon, String tip)
+												throws BadLocationException {
+		return iconArea.addOffsetTrackingIcon(offs, icon, tip);
 	}
 
 
@@ -334,7 +380,8 @@ public class Gutter extends JPanel {
 	 *         icons there, this will be an empty array.
 	 * @throws BadLocationException If <code>p</code> is invalid.
 	 */
-	public Object[] getTrackingIcons(Point p) throws BadLocationException {
+	public GutterIconInfo[] getTrackingIcons(Point p)
+			throws BadLocationException {
 		int offs = textArea.viewToModel(new Point(0, p.y));
 		int line = textArea.getLineOfOffset(offs);
 		return iconArea.getTrackingIcons(line);
