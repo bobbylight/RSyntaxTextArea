@@ -67,7 +67,7 @@ robert -at- fifesoft dot com.
      * Chinese (Traditional):  kin Por Fok, liou xiao
      * Dutch:                  Roel, Sebastiaan, lovepuppy
      * French:                 PivWan
-     * German:                 bikerpete
+     * German:                 Domenic, bikerpete
      * Hungarian:              flatron
      * Indonesian:             azis, Sonny
      * Italian:                Luca, stepagweb
