@@ -74,15 +74,16 @@ public class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_CLOJURE,			new LispFoldParser());
 		map.put(SYNTAX_STYLE_CSS,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_GROOVY,			new CurlyFoldParser());
-		map.put(SYNTAX_STYLE_HTML,				new HtmlFoldParser(false));
+		map.put(SYNTAX_STYLE_HTML,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_HTML));
 		map.put(SYNTAX_STYLE_JAVA,				new CurlyFoldParser(true, true));
 		map.put(SYNTAX_STYLE_JAVASCRIPT,		new CurlyFoldParser());
+		map.put(SYNTAX_STYLE_JSP,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_JSP));
 		map.put(SYNTAX_STYLE_LATEX,				new LatexFoldParser());
 		map.put(SYNTAX_STYLE_LISP,				new LispFoldParser());
 		map.put(SYNTAX_STYLE_MXML,				new XmlFoldParser());
 		map.put(SYNTAX_STYLE_NSIS,				new NsisFoldParser());
 		map.put(SYNTAX_STYLE_PERL,				new CurlyFoldParser());
-		map.put(SYNTAX_STYLE_PHP,				new HtmlFoldParser(true));
+		map.put(SYNTAX_STYLE_PHP,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP));
 		map.put(SYNTAX_STYLE_XML,				new XmlFoldParser());
 
 		return map;

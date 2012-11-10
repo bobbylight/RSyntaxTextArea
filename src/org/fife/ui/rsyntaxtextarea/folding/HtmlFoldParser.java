@@ -20,10 +20,11 @@ import org.fife.ui.rsyntaxtextarea.Token;
 
 
 /**
- * Fold parser for HTML 5 and PHP.  For HTML, we currently don't fold
- * <em>everything</em> possible, just the "big" stuff.  For PHP, we only
- * fold the "big" HTML stuff and PHP regions, not code blocks in the actual
- * PHP.
+ * Fold parser for HTML 5, PHP and JSP.  For HTML, we currently don't fold
+ * <em>everything</em> possible, just the "big" stuff.  For PHP, we only fold
+ * the "big" HTML stuff and PHP regions, not code blocks in the actual PHP.
+ * For JSP we only fold the "big" HTML stuff and JSP blocks, not anything in
+ * the actual Java code.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -31,9 +32,24 @@ import org.fife.ui.rsyntaxtextarea.Token;
 public class HtmlFoldParser implements FoldParser {
 
 	/**
-	 * Whether we're folding PHP (as opposed to plain HTML).
+	 * Constant denoting we're folding HTML.
 	 */
-	private final boolean php;
+	public static final int LANGUAGE_HTML	= -1;
+
+	/**
+	 * Constant denoting we're folding PHP.
+	 */
+	public static final int LANGUAGE_PHP	= 0;
+
+	/**
+	 * Constant denoting we're folding JSP.
+	 */
+	public static final int LANGUAGE_JSP	= 1;
+
+	/**
+	 * The language we're folding.
+	 */
+	private final int language;
 
 	/**
 	 * The set of tags we allow to be folded.  These are tags that must have
@@ -41,13 +57,23 @@ public class HtmlFoldParser implements FoldParser {
 	 */
 	private static final Set FOLDABLE_TAGS;
 
-	private static final char[] MARKUP_CLOSING_TAG_START = { '<', '/' };
-	//private static final char[] MARKUP_SHORT_TAG_END = { '/', '>' };
-	private static final char[] MLC_END = { '-', '-', '>' };
+	private static final char[] MARKUP_CLOSING_TAG_START = "</".toCharArray();
+	//private static final char[] MARKUP_SHORT_TAG_END = "/>".toCharArray();
+	private static final char[] MLC_START = "<!--".toCharArray();
+	private static final char[] MLC_END   = "-->".toCharArray();
 
-	private static final char[] PHP_START = { '<', '?' };
-	private static final char[] PHP_END = { '?', '>' };
+	private static final char[] PHP_START = "<?".toCharArray(); // <? and <?php
+	private static final char[] PHP_END = "?>".toCharArray();
 
+	// Scriptlets, declarations, and expressions all start the same way.
+	private static final char[] JSP_START = "<%".toCharArray();
+	private static final char[] JSP_END = "%>".toCharArray();
+
+	private static final char[][] LANG_START = { PHP_START, JSP_START };
+	private static final char[][] LANG_END   = { PHP_END, JSP_END };
+
+	private static final char[] JSP_COMMENT_START = "<%--".toCharArray();
+	private static final char[] JSP_COMMENT_END   = "--%>".toCharArray();
 
 	static {
 		FOLDABLE_TAGS = new HashSet();
@@ -74,10 +100,13 @@ public class HtmlFoldParser implements FoldParser {
 	/**
 	 * Constructor.
 	 *
-	 * @param php Whether to fold PHP instead of just HTML.
+	 * @param language The language to fold, such as {@link #LANGUAGE_PHP}.
 	 */
-	public HtmlFoldParser(boolean php) {
-		this.php = php;
+	public HtmlFoldParser(int language) {
+		if (language<LANGUAGE_HTML && language>LANGUAGE_JSP) {
+			throw new IllegalArgumentException("Invalid language: " + language);
+		}
+		this.language = language;
 	}
 
 
@@ -88,11 +117,12 @@ public class HtmlFoldParser implements FoldParser {
 
 		List folds = new ArrayList();
 		Stack tagNameStack = new Stack();
-		boolean inPhp = false;
+		boolean inSublanguage = false;
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
 		boolean inMLC = false;
+		boolean inJSMLC = false;
 		TagCloseInfo tci = new TagCloseInfo();
 
 		try {
@@ -104,50 +134,51 @@ public class HtmlFoldParser implements FoldParser {
 
 					// If we're folding PHP.  Note that PHP folding can only be
 					// "one level deep," so our logic here is simple.
-					if (php && t.type==Token.SEPARATOR) {
+					if (language>=0 && t.type==Token.SEPARATOR) {
 
-						// "<?" and "<?php"
-						if (t.startsWith(PHP_START)) {
+						// <?, <?php, <%, <%!, ...
+						if (t.startsWith(LANG_START[language])) {
 							if (currentFold==null) {
-								currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+								currentFold = new Fold(FoldType.CODE, textArea, t.offset);
 								folds.add(currentFold);
 							}
 							else {
-								currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+								currentFold = currentFold.createChild(FoldType.CODE, t.offset);
 							}
-							inPhp = true;
+							inSublanguage = true;
 						}
 
-						else if (t.startsWith(PHP_END)) {
+						// ?> or %>
+						else if (t.startsWith(LANG_END[language])) {
 							int phpEnd = t.offset + t.textCount - 1;
 							currentFold.setEndOffset(phpEnd);
 							Fold parentFold = currentFold.getParent();
 							// Don't add fold markers for single-line blocks
 							if (currentFold.isOnSingleLine()) {
-								currentFold.removeFromParent();
+								removeFold(currentFold, folds);
 							}
 							currentFold = parentFold;
-							inPhp = false;
+							inSublanguage = false;
 							t = t.getNextToken();
 							continue;
 						}
 
 					}
 
-					if (!inPhp) {
+					if (!inSublanguage) {
 
-						if (t.isComment()) {
+						if (t.type==Token.COMMENT_MULTILINE) {
 
 							// Continuing an MLC from a previous line
 							if (inMLC) {
 								// Found the end of the MLC starting on a previous line...
-								if (t.type==Token.COMMENT_MULTILINE && t.endsWith(MLC_END)) {
+								if (t.endsWith(MLC_END)) {
 									int mlcEnd = t.offset + t.textCount - 1;
 									currentFold.setEndOffset(mlcEnd);
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
 									if (currentFold.isOnSingleLine()) {
-										currentFold.removeFromParent();
+										removeFold(currentFold, folds);
 									}
 									currentFold = parentFold;
 									inMLC = false;
@@ -156,18 +187,48 @@ public class HtmlFoldParser implements FoldParser {
 								// another line.
 							}
 	
-							else {
-								// If we're an MLC that ends on a later line...
-								if (t.type==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
-									if (currentFold==null) {
-										currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
-										folds.add(currentFold);
+							// Continuing a JS MLC from a previous line
+							else if (inJSMLC) {
+								// Found the end of the MLC starting on a previous line...
+								if (t.endsWith(JSP_COMMENT_END)) {
+									int mlcEnd = t.offset + t.textCount - 1;
+									currentFold.setEndOffset(mlcEnd);
+									Fold parentFold = currentFold.getParent();
+									// Don't add fold markers for single-line blocks
+									if (currentFold.isOnSingleLine()) {
+										removeFold(currentFold, folds);
 									}
-									else {
-										currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
-									}
-									inMLC = true;
+									currentFold = parentFold;
+									inJSMLC = false;
 								}
+								// Otherwise, this MLC is continuing on to yet
+								// another line.
+							}
+
+							// Starting a MLC that ends on a later line...
+							else if (t.startsWith(MLC_START) && !t.endsWith(MLC_END)) {
+								if (currentFold==null) {
+									currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+									folds.add(currentFold);
+								}
+								else {
+									currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+								}
+								inMLC = true;
+							}
+
+							// Starting a JSP comment that ends on a later line...
+							else if (language==LANGUAGE_JSP &&
+									t.startsWith(JSP_COMMENT_START) &&
+									!t.endsWith(JSP_COMMENT_END)) {
+								if (currentFold==null) {
+									currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+									folds.add(currentFold);
+								}
+								else {
+									currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+								}
+								inJSMLC = true;
 							}
 
 						}
@@ -208,7 +269,7 @@ public class HtmlFoldParser implements FoldParser {
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
 									if (currentFold.isOnSingleLine()) {
-										currentFold.removeFromParent();
+										removeFold(currentFold, folds);
 									}
 									currentFold = parentFold;
 									t = tagNameToken;
@@ -296,6 +357,21 @@ public class HtmlFoldParser implements FoldParser {
 	private static final boolean isFoldableTag(Token tagNameToken) {
 		return tagNameToken!=null &&
 				FOLDABLE_TAGS.contains(tagNameToken.getLexeme().toLowerCase());
+	}
+
+
+	/**
+	 * If this fold has a parent fold, this method removes it from its parent.
+	 * Otherwise, it's assumed to be the most recent (top-level) fold in the
+	 * <code>folds</code> list, and is removed from that.
+	 *
+	 * @param fold The fold to remove.
+	 * @param folds The list of top-level folds.
+	 */
+	private static final void removeFold(Fold fold, List folds) {
+		if (!fold.removeFromParent()) {
+			folds.remove(folds.size()-1);
+		}
 	}
 
 

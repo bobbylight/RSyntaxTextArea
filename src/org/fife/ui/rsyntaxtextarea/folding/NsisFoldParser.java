@@ -130,10 +130,7 @@ public class NsisFoldParser implements FoldParser {
 							endWordStack.pop();
 							// Don't add fold markers for single-line blocks
 							if (currentFold.isOnSingleLine()) {
-								if (parentFold!=null) {
-									currentFold.removeFromParent();
-								}
-								else {
+								if (!currentFold.removeFromParent()) {
 									folds.remove(folds.size()-1);
 								}
 							}

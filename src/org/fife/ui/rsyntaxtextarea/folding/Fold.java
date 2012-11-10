@@ -440,13 +440,16 @@ public class Fold implements Comparable {
 	 * {@link FoldParser} implementations if they determine that a fold is all
 	 * on a single line (and thus shouldn't be remembered) after creating it.
 	 *
+	 * @return Whether this fold had a parent to be removed from.
 	 * @see #isOnSingleLine()
 	 */
-	public void removeFromParent() {
+	public boolean removeFromParent() {
 		if (parent!=null) {
 			parent.removeMostRecentChild();
-			this.parent = null;
+			parent = null;
+			return true;
 		}
+		return false;
 	}
 
 
