@@ -84,6 +84,7 @@ public class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_NSIS,				new NsisFoldParser());
 		map.put(SYNTAX_STYLE_PERL,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_PHP,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP));
+		map.put(SYNTAX_STYLE_SCALA,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_XML,				new XmlFoldParser());
 
 		return map;

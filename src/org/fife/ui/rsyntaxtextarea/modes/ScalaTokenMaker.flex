@@ -154,17 +154,20 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
+			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+				state = MULTILINE_STRING_DOUBLE;
+				break;
 			case Token.COMMENT_MULTILINE:
 				state = MLC;
-				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
+		start = text.offset;
 		try {
 			yyreset(zzReader);
 			yybegin(state);
@@ -272,6 +275,7 @@ URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
+%state MULTILINE_STRING_DOUBLE
 %state MLC
 %state EOL_COMMENT
 
@@ -328,6 +332,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{Whitespace}					{ addToken(Token.WHITESPACE); }
 
 	/* String/Character literals. */
+	\"\"\"						{ start = zzMarkedPos-3; yybegin(MULTILINE_STRING_DOUBLE); }
 	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
 	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
 	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
@@ -353,25 +358,29 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 }
 
+<MULTILINE_STRING_DOUBLE> {
+	[^\"\\\n]*				{}
+	\\.?						{ /* Skip escaped chars, handles case: '\"""'. */ }
+	\"\"\"					{ addToken(start,zzStartRead+2, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL); }
+	\"						{}
+	\n |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+}
 
 <MLC> {
-
 	[^hwf\n\*]+				{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
-
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
 	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*						{}
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-
 }
-
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 }
