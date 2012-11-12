@@ -257,6 +257,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 Letter							= [A-Za-z]
 LetterOrUnderscore				= ({Letter}|"_")
 NonzeroDigit						= [1-9]
+BinaryDigit						= ([0-1])
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
@@ -279,16 +280,29 @@ MLCEnd					= "*/"
 DocCommentBegin			= "/**"
 LineCommentBegin			= "//"
 
-IntegerHelper1				= (({NonzeroDigit}{Digit}*)|"0")
-IntegerHelper2				= ("0"(([xX]{HexDigit}+)|({OctalDigit}*)))
-IntegerLiteral				= ({IntegerHelper1}[lL]?)
-HexLiteral				= ({IntegerHelper2}[lL]?)
+DigitOrUnderscore			= ({Digit}|[_])
+DigitsAndUnderscoresEnd		= ({DigitOrUnderscore}*{Digit})
+IntegerHelper				= (({NonzeroDigit}{DigitsAndUnderscoresEnd}?)|"0")
+IntegerLiteral				= ({IntegerHelper}[lL]?)
+
+BinaryDigitOrUnderscore		= ({BinaryDigit}|[_])
+BinaryDigitsAndUnderscores	= ({BinaryDigit}({BinaryDigitOrUnderscore}*{BinaryDigit})?)
+BinaryLiteral				= ("0"[bB]{BinaryDigitsAndUnderscores})
+
+HexDigitOrUnderscore		= ({HexDigit}|[_])
+HexDigitsAndUnderscores		= ({HexDigit}({HexDigitOrUnderscore}*{HexDigit})?)
+OctalDigitOrUnderscore		= ({OctalDigit}|[_])
+OctalDigitsAndUnderscoresEnd= ({OctalDigitOrUnderscore}*{OctalDigit})
+HexHelper					= ("0"(([xX]{HexDigitsAndUnderscores})|({OctalDigitsAndUnderscoresEnd})))
+HexLiteral					= ({HexHelper}[lL]?)
+
 FloatHelper1				= ([fFdD]?)
 FloatHelper2				= ([eE][+-]?{Digit}+{FloatHelper1})
 FloatLiteral1				= ({Digit}+"."({FloatHelper1}|{FloatHelper2}|{Digit}+({FloatHelper1}|{FloatHelper2})))
 FloatLiteral2				= ("."{Digit}+({FloatHelper1}|{FloatHelper2}))
 FloatLiteral3				= ({Digit}+{FloatHelper2})
 FloatLiteral				= ({FloatLiteral1}|{FloatLiteral2}|{FloatLiteral3}|({Digit}+[fFdD]))
+
 ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 BooleanLiteral				= ("true"|"false")
 Regex						= ([~]?"/"([^\*\\/]|\\.)([^/\\]|\\.)*"/")
@@ -497,7 +511,197 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" 		{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" |
+
+	/* java.io classes*/
+    "Closeable" |
+    "DataInput" |
+    "DataOutput" |
+    "Externalizable" |
+    "FileFilter" |
+    "FilenameFilter" |
+    "Flushable" |
+    "ObjectInput" |
+    "ObjectInputValidation" |
+    "ObjectOutput" |
+    "ObjectStreamConstants" |
+    "Serializable" |
+
+    "BufferedInputStream" |
+    "BufferedOutputStream" |
+    "BufferedReader" |
+    "BufferedWriter" |
+    "ByteArrayInputStream" |
+    "ByteArrayOutputStream" |
+    "CharArrayReader" |
+    "CharArrayWriter" |
+    "Console" |
+    "DataInputStream" |
+    "DataOutputStream" |
+    "File" |
+    "FileDescriptor" |
+    "FileInputStream" |
+    "FileOutputStream" |
+    "FilePermission" |
+    "FileReader" |
+    "FileWriter" |
+    "FilterInputStream" |
+    "FilterOutputStream" |
+    "FilterReader" |
+    "FilterWriter" |
+    "InputStream" |
+    "InputStreamReader" |
+    "LineNumberInputStream" |
+    "LineNumberReader" |
+    "ObjectInputStream" |
+    "ObjectInputStream.GetField" |
+    "ObjectOutputStream" |
+    "ObjectOutputStream.PutField" |
+    "ObjectStreamClass" |
+    "ObjectStreamField" |
+    "OutputStream" |
+    "OutputStreamWriter" |
+    "PipedInputStream" |
+    "PipedOutputStream" |
+    "PipedReader" |
+    "PipedWriter" |
+    "PrintStream" |
+    "PrintWriter" |
+    "PushbackInputStream" |
+    "PushbackReader" |
+    "RandomAccessFile" |
+    "Reader" |
+    "SequenceInputStream" |
+    "SerializablePermission" |
+    "StreamTokenizer" |
+    "StringBufferInputStream" |
+    "StringReader" |
+    "StringWriter" |
+    "Writer" |
+
+    "CharConversionException" |
+    "EOFException" |
+    "FileNotFoundException" |
+    "InterruptedIOException" |
+    "InvalidClassException" |
+    "InvalidObjectException" |
+    "IOException" |
+    "NotActiveException" |
+    "NotSerializableException" |
+    "ObjectStreamException" |
+    "OptionalDataException" |
+    "StreamCorruptedException" |
+    "SyncFailedException" |
+    "UnsupportedEncodingException" |
+    "UTFDataFormatException" |
+    "WriteAbortedException" |
+
+    "IOError" |
+
+	/* java.util classes */
+    "Collection" |
+    "Comparator" |
+    "Deque" |
+    "Enumeration" |
+    "EventListener" |
+    "Formattable" |
+    "Iterator" |
+    "List" |
+    "ListIterator" |
+    "Map" |
+    "Map.Entry" |
+    "NavigableMap" |
+    "NavigableSet" |
+    "Observer" |
+    "Queue" |
+    "RandomAccess" |
+    "Set" |
+    "SortedMap" |
+    "SortedSet" |
+
+    "AbstractCollection" |
+    "AbstractList" |
+    "AbstractMap" |
+    "AbstractMap.SimpleEntry" |
+    "AbstractMap.SimpleImmutableEntry" |
+    "AbstractQueue" |
+    "AbstractSequentialList" |
+    "AbstractSet" |
+    "ArrayDeque" |
+    "ArrayList" |
+    "Arrays" |
+    "BitSet" |
+    "Calendar" |
+    "Collections" |
+    "Currency" |
+    "Date" |
+    "Dictionary" |
+    "EnumMap" |
+    "EnumSet" |
+    "EventListenerProxy" |
+    "EventObject" |
+    "FormattableFlags" |
+    "Formatter" |
+    "GregorianCalendar" |
+    "HashMap" |
+    "HashSet" |
+    "Hashtable" |
+    "IdentityHashMap" |
+    "LinkedHashMap" |
+    "LinkedHashSet" |
+    "LinkedList" |
+    "ListResourceBundle" |
+    "Locale" |
+    "Locale.Builder" |
+    "Objects" |
+    "Observable" |
+    "PriorityQueue" |
+    "Properties" |
+    "PropertyPermission" |
+    "PropertyResourceBundle" |
+    "Random" |
+    "ResourceBundle" |
+    "ResourceBundle.Control" |
+    "Scanner" |
+    "ServiceLoader" |
+    "SimpleTimeZone" |
+    "Stack" |
+    "StringTokenizer" |
+    "Timer" |
+    "TimerTask" |
+    "TimeZone" |
+    "TreeMap" |
+    "TreeSet" |
+    "UUID" |
+    "Vector" |
+    "WeakHashMap" |
+
+    "Formatter.BigDecimalLayoutForm" |
+    "Locale.Category" |
+
+    "ConcurrentModificationException" |
+    "DuplicateFormatFlagsException" |
+    "EmptyStackException" |
+    "FormatFlagsConversionMismatchException" |
+    "FormatterClosedException" |
+    "IllegalFormatCodePointException" |
+    "IllegalFormatConversionException" |
+    "IllegalFormatException" |
+    "IllegalFormatFlagsException" |
+    "IllegalFormatPrecisionException" |
+    "IllegalFormatWidthException" |
+    "IllformedLocaleException" |
+    "InputMismatchException" |
+    "InvalidPropertiesFormatException" |
+    "MissingFormatArgumentException" |
+    "MissingFormatWidthException" |
+    "MissingResourceException" |
+    "NoSuchElementException" |
+    "TooManyListenersException" |
+    "UnknownFormatConversionException" |
+    "UnknownFormatFlagsException" |
+
+    "ServiceConfigurationError" 		{ addToken(Token.FUNCTION); }
 
 	/* Commonly used methods added to Object class */
 	"addShutdownHook" |
@@ -601,6 +805,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
