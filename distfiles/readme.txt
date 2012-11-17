@@ -68,7 +68,7 @@ robert -at- fifesoft dot com.
      * Dutch:                  Roel, Sebastiaan, lovepuppy
      * French:                 PivWan
      * German:                 Domenic, bikerpete
-     * Hungarian:              flatron
+     * Hungarian:              Zityi, flatron
      * Indonesian:             azis, Sonny
      * Italian:                Luca, stepagweb
      * Japanese:               Josh, izumi, tomoM
