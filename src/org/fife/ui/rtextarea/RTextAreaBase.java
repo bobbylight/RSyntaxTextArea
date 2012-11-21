@@ -26,6 +26,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.StyleContext;
 
 
@@ -1034,10 +1035,12 @@ try {
 	public void setRoundedSelectionEdges(boolean rounded) {
 		if (roundedSelectionEdges!=rounded) {
 			roundedSelectionEdges = rounded;
-			ConfigurableCaret cc = (ConfigurableCaret)getCaret();
-			cc.setRoundedSelectionEdges(rounded);
-			if (cc.getDot()!=cc.getMark()) { // ie, if there is a selection
-				repaint();
+			Caret c = getCaret();
+			if (c instanceof ConfigurableCaret) {
+				((ConfigurableCaret)c).setRoundedSelectionEdges(rounded);
+				if (c.getDot()!=c.getMark()) { // e.g., there's is a selection
+					repaint();
+				}
 			}
 			firePropertyChange(ROUNDED_SELECTION_PROPERTY, !rounded,
 											rounded);
