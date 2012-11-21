@@ -41,7 +41,14 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),				RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
 		put(KeyStroke.getKeyStroke('}'),									RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
-		put(KeyStroke.getKeyStroke('/'), 									RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		// *nix causes trouble with CloseMarkupTagAction and ToggleCommentAction.
+		// It triggers both KEY_PRESSED ctrl+'/' and KEY_TYPED '/' events when the
+		// user presses ctrl+'/', but Windows and OS X do not.  So to appease
+		// *nix, we remove the KEY_TYPED action and act on the KEY_PRESSED action.
+		// Note we cannot simply remove the key-typed action; we must map it
+		// to nothing to stop default action.
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, 0),					RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		put(KeyStroke.getKeyStroke('/'),									"DoNothing");
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, defaultMod),			RSyntaxTextAreaEditorKit.rstaToggleCommentAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, defaultMod),	RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, defaultMod),		RSyntaxTextAreaEditorKit.rstaCollapseFoldAction);
