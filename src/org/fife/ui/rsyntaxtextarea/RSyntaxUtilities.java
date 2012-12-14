@@ -43,6 +43,30 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  */
 public class RSyntaxUtilities implements SwingConstants {
 
+	/**
+	 * Integer constant representing a Windows-variant OS.
+	 */
+	public static final int OS_WINDOWS			= 1;
+
+	/**
+	 * Integer constant representing Mac OS X.
+	 */
+	public static final int OS_MAC_OSX			= 2;
+
+	/**
+	 * Integer constant representing Linux.
+	 */
+	public static final int OS_LINUX			= 4;
+
+	/**
+	 * Integer constant representing an "unknown" OS.  99.99% of the
+	 * time, this means some UNIX variant (AIX, SunOS, etc.).
+	 */
+	public static final int OS_OTHER			= 8;
+
+	
+	private static final int OS = getOSImpl();
+
 	//private static final int DIGIT_MASK			= 1;
 	private static final int LETTER_MASK			= 2;
 	//private static final int WHITESPACE_MASK		= 4;
@@ -1154,6 +1178,43 @@ return c.getLineStartOffset(line);
 		if (ch>='A' && ch<='Z')
 			return (char)(ch | 0x20);
 		return ch;
+	}
+
+
+	/**
+	 * Returns an integer constant representing the OS.  This can be handy for
+	 * special case situations such as Mac OS-X (special application
+	 * registration) or Windows (allow mixed case, etc.).
+	 *
+	 * @return An integer constant representing the OS.
+	 */
+	public static final int getOS() {
+		return OS;
+	}
+
+
+	/**
+	 * Returns an integer constant representing the OS.  This can be handy for
+	 * special case situations such as Mac OS-X (special application
+	 * registration) or Windows (allow mixed case, etc.).
+	 *
+	 * @return An integer constant representing the OS.
+	 */
+	private static final int getOSImpl() {
+		int os = OS_OTHER;
+		String osName = System.getProperty("os.name");
+		if (osName!=null) { // Should always be true.
+			osName = osName.toLowerCase();
+			if (osName.indexOf("windows") > -1)
+				os = OS_WINDOWS;
+			else if (osName.indexOf("mac os x") > -1)
+				os = OS_MAC_OSX;
+			else if (osName.indexOf("linux") > -1)
+				os = OS_LINUX;
+			else
+				os = OS_OTHER;
+		}
+		return os;
 	}
 
 
