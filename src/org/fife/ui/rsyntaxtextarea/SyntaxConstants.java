@@ -125,6 +125,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting JSON.
+	 */
+	public static final String SYNTAX_STYLE_JSON		= "text/json";
+
+
+	/**
 	 * Style for highlighting JSP.
 	 */
 	public static final String SYNTAX_STYLE_JSP			= "text/jsp";
