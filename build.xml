@@ -29,7 +29,7 @@
 	<property name="dist-dir"         location="dist"/>
 	<property name="doc-dir"          location="javadoc"/>
 	<property name="debug"            value="true"/>
-	<property name="debuglevel"       value="lines,var,source"/>
+	<property name="debuglevel"       value="lines,vars,source"/>
 	<property name="java-level"       value="1.4"/>
 
 
@@ -90,8 +90,10 @@
 		<zip destfile="./rsyntaxtextarea_${version}_Source.zip">
 			<fileset dir=".">
 				<include name="distfiles/**"/>
-				<include name="i18n/**"/>
 				<include name="src/**"/>
+				<include name="i18n/**"/>
+				<include name="test/**"/>
+				<include name="themes/**"/>
 				<include name="build.xml"/>
 				<include name=".project"/>
 				<include name=".classpath"/>
