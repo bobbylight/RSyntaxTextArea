@@ -19,7 +19,7 @@ import java.io.Writer;
 
 /**
  * Writes Unicode text to an output stream.  If the specified encoding is a
- * Unicode, then the text is preceeded by the proper Unicode BOM.  If it is any
+ * Unicode, then the text is preceded by the proper Unicode BOM.  If it is any
  * other encoding, this class behaves just like <code>OutputStreamWriter</code>.
  * This class is here because Java's <code>OutputStreamWriter</code> apparently
  * doesn't believe in writing BOMs.
