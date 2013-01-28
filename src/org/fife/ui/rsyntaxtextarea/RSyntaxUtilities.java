@@ -113,6 +113,11 @@ public class RSyntaxUtilities implements SwingConstants {
 	 */
 	private static final char[] JS_KEYWORD_RETURN = { 'r', 'e', 't', 'u', 'r', 'n' };
 
+	/**
+	 * Used internally.
+	 */
+	private static final String BRACKETS = "{([})]";
+
 
 	/**
 	 * Returns a string with characters that are special to HTML (such as
@@ -370,67 +375,47 @@ public class RSyntaxUtilities implements SwingConstants {
 			int caretPosition = textArea.getCaretPosition() - 1;
 			if (caretPosition>-1) {
 
-				// Some variables that will be used later.
-				Token token;
-				Element map;
-				int curLine;
-				Element line;
-				int start, end;
 				RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 				char bracket  = doc.charAt(caretPosition);
 
-				// First, see if the previous char was a bracket
-				// ('{', '}', '(', ')', '[', ']').
+				// Try to match a bracket "to the right" of the caret if one
+				// was not found on the left.
+				int index = BRACKETS.indexOf(bracket);
+				if (index==-1 && caretPosition<doc.getLength()-1) {
+					bracket = doc.charAt(++caretPosition);
+				}
+
+				// First, see if the char was a bracket (one of "{[()]}").
+				if (index==-1) {
+					index = BRACKETS.indexOf(bracket);
+					if (index==-1) {
+						return -1;
+					}
+				}
+
 				// If it was, then make sure this bracket isn't sitting in
 				// the middle of a comment or string.  If it isn't, then
 				// initialize some stuff so we can continue on.
 				char bracketMatch;
 				boolean goForward;
-				switch (bracket) {
-
-					case '{':
-					case '(':
-					case '[':
-
-						// Ensure this bracket isn't in a comment.
-						map = doc.getDefaultRootElement();
-						curLine = map.getElementIndex(caretPosition);
-						line = map.getElement(curLine);
-						start = line.getStartOffset();
-						end = line.getEndOffset();
-						token = doc.getTokenListForLine(curLine);
-						token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
-						// All brackets are always returned as "separators."
-						if (token.type!=Token.SEPARATOR) {
-							return -1;
-						}
-						bracketMatch = bracket=='{' ? '}' : (bracket=='(' ? ')' : ']');
-						goForward = true;
-						break;
-
-					case '}':
-					case ')':
-					case ']':
-
-						// Ensure this bracket isn't in a comment.
-						map = doc.getDefaultRootElement();
-						curLine = map.getElementIndex(caretPosition);
-						line = map.getElement(curLine);
-						start = line.getStartOffset();
-						end = line.getEndOffset();
-						token = doc.getTokenListForLine(curLine);
-						token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
-						// All brackets are always returned as "separators."
-						if (token.type!=Token.SEPARATOR) {
-							return -1;
-						}
-						bracketMatch = bracket=='}' ? '{' : (bracket==')' ? '(' : '[');
-						goForward = false;
-						break;
-
-					default:
-						return -1;
-
+				Element map = doc.getDefaultRootElement();
+				int curLine = map.getElementIndex(caretPosition);
+				Element line = map.getElement(curLine);
+				int start = line.getStartOffset();
+				int end = line.getEndOffset();
+				Token token = doc.getTokenListForLine(curLine);
+				token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
+				// All brackets are always returned as "separators."
+				if (token.type!=Token.SEPARATOR) {
+					return -1;
+				}
+				if (index<3) { // One of "{[("
+					goForward = true;
+					bracketMatch = BRACKETS.charAt(index + 3);
+				}
+				else { // One of ")]}"
+					goForward = false;
+					bracketMatch = BRACKETS.charAt(index - 3);
 				}
 
 				if (goForward) {
