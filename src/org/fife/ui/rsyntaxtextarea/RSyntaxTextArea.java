@@ -649,8 +649,16 @@ private boolean fractionalFontMetricsEnabled;
 	protected JPopupMenu createPopupMenu() {
 
 		JPopupMenu popup = super.createPopupMenu();
-		popup.addSeparator();
+		
+		createFoldingMenu(popup);
+		
+		return popup;
 
+	}
+	
+	protected void createFoldingMenu(JPopupMenu popup)
+	{
+		popup.addSeparator();
 		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
 		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
 		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
@@ -658,9 +666,7 @@ private boolean fractionalFontMetricsEnabled;
 		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
 		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
 		popup.add(foldingMenu);
-
-		return popup;
-
+		
 	}
 
 
