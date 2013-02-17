@@ -563,6 +563,29 @@ public class RSyntaxUtilities implements SwingConstants {
 
 
 	/**
+	 * Returns the next non-whitespace, non-comment token in a text area.
+	 *
+	 * @param t The next token in this line's token list.
+	 * @param textArea The text area.
+	 * @param line The current line index (the line index of <code>t</code>).
+	 * @return The next non-whitespace, non-comment token, or <code>null</code>
+	 *         if there isn't one.
+	 * @see #getPreviousImportantToken(RSyntaxTextArea, int)
+	 */
+	public static final Token getNextImportantToken(Token t,
+			RSyntaxTextArea textArea, int line) {
+		while (t!=null && t.isPaintable() && t.isCommentOrWhitespace()) {
+			t = t.getNextToken();
+		}
+		if ((t==null || !t.isPaintable()) && line<textArea.getLineCount()-1) {
+			t = textArea.getTokenListForLine(++line);
+			return getNextImportantToken(t, textArea, line);
+		}
+		return t;
+	}
+
+
+	/**
 	 * Provides a way to determine the next visually represented model 
 	 * location at which one might place a caret.
 	 * Some views may not be visible,
@@ -757,6 +780,32 @@ return c.getLineStartOffset(line);
 
 
 	/**
+	 * Returns the last non-whitespace, non-comment token, starting with the
+	 * specified line.
+	 *
+	 * @param textArea The text area.
+	 * @param line The line at which to start looking.
+	 * @return The last non-whitespace, non-comment token, or <code>null</code>
+	 *         if there isn't one.
+	 * @see #getNextImportantToken(Token, RSyntaxTextArea, int)
+	 */
+	public static final Token getPreviousImportantToken(
+			RSyntaxTextArea textArea, int line){
+		if (line<0) {
+			return null;
+		}
+		Token t = textArea.getTokenListForLine(line);
+		if (t!=null) {
+			t = t.getLastNonCommentNonWhitespaceToken();
+			if (t!=null) {
+				return t;
+			}
+		}
+		return getPreviousImportantToken(textArea, line-1);
+	}
+
+
+	/**
 	 * Returns the token at the specified index, or <code>null</code> if
 	 * the given offset isn't in this token list's range.<br>
 	 * Note that this method does NOT check to see if <code>tokenList</code>
@@ -768,7 +817,7 @@ return c.getLineStartOffset(line);
 	 *         none of the tokens are at that offset.
 	 */
 	public static final Token getTokenAtOffset(Token tokenList, int offset) {
-		for (Token t=tokenList; t!=null; t=t.getNextToken()) {
+		for (Token t=tokenList; t!=null && t.isPaintable(); t=t.getNextToken()){
 			if (t.containsPosition(offset))
 				return t;
 		}

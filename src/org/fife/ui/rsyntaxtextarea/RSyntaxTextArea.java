@@ -288,6 +288,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	private int hoveredOverLinkOffset;
 
+	private LinkGenerator linkGenerator;
+	private LinkGeneratorResult linkGeneratorResult;
+
 	private FoldManager foldManager;
 
 	/** Whether "focusable" tool tips are used instead of standard ones. */
@@ -450,6 +453,26 @@ private boolean fractionalFontMetricsEnabled;
 			parserManager = new ParserManager(this);
 		}
 		parserManager.addParser(parser);
+	}
+
+
+	/**
+	 * Appends a submenu with code folding options to this text component's
+	 * popup menu.
+	 *
+	 * @param popup The popup menu to append to.
+	 * @see #createPopupMenu()
+	 */
+	protected void appendFoldingMenu(JPopupMenu popup) {
+		popup.addSeparator();
+		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
+		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
+		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
+		foldingMenu.add(createPopupMenuItem(collapseAllCommentFoldsAction));
+		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
+		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
+		popup.add(foldingMenu);
+		
 	}
 
 
@@ -645,28 +668,12 @@ private boolean fractionalFontMetricsEnabled;
 	 * Overridden to add menu items related to cold folding.
 	 *
 	 * @return The popup menu.
+	 * @see #appendFoldingMenu(JPopupMenu)
 	 */
 	protected JPopupMenu createPopupMenu() {
-
 		JPopupMenu popup = super.createPopupMenu();
-		
-		createFoldingMenu(popup);
-		
+		appendFoldingMenu(popup);
 		return popup;
-
-	}
-	
-	protected void createFoldingMenu(JPopupMenu popup)
-	{
-		popup.addSeparator();
-		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
-		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
-		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
-		foldingMenu.add(createPopupMenuItem(collapseAllCommentFoldsAction));
-		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
-		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
-		popup.add(foldingMenu);
-		
 	}
 
 
@@ -1082,8 +1089,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getBackgroundForToken(Token)
 	 */
 	public Color getForegroundForToken(Token t) {
-		if (getHyperlinksEnabled() && t.isHyperlink() &&
-				hoveredOverLinkOffset==t.offset) {
+		if (getHyperlinksEnabled() && hoveredOverLinkOffset==t.offset &&
+				(t.isHyperlink() || linkGeneratorResult!=null)) {
 			return hyperlinkFG;
 		}
 		return getForegroundForTokenType(t.type);
@@ -1207,6 +1214,11 @@ private boolean fractionalFontMetricsEnabled;
 	public int getLineHeight() {
 		//System.err.println("... getLineHeight() returning " + lineHeight);
 		return lineHeight;
+	}
+
+
+	public LinkGenerator getLinkGenerator() {
+		return linkGenerator;
 	}
 
 
@@ -1665,7 +1677,9 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return Whether the specified token should be underlined.
 	 */
 	public boolean getUnderlineForToken(Token t) {
-		return (t.isHyperlink() && getHyperlinksEnabled()) ||
+		return (getHyperlinksEnabled() &&
+				(t.isHyperlink() ||
+					(linkGeneratorResult!=null && linkGeneratorResult.getSourceOffset()==t.offset))) ||
 				syntaxScheme.getStyle(t.type).underline;
 	}
 
@@ -1805,17 +1819,12 @@ private boolean fractionalFontMetricsEnabled;
 	 *         position.
 	 * @see #viewToToken(Point)
 	 */
-	private Token modelToToken(int offs) {
+	public Token modelToToken(int offs) {
 		if (offs>=0) {
 			try {
 				int line = getLineOfOffset(offs);
 				Token t = getTokenListForLine(line);
-				while (t!=null && t.isPaintable()) {
-					if (t.containsPosition(offs)) {
-						return t;
-					}
-					t = t.getNextToken();
-				}
+				return RSyntaxUtilities.getTokenAtOffset(t, offs);
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Never happens
 			}
@@ -2294,6 +2303,11 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
+	public void setLinkGenerator(LinkGenerator generator) {
+		this.linkGenerator = generator;
+	}
+
+
 	/**
 	 * Sets the mask for the key used to toggle whether we are scanning for
 	 * hyperlinks with mouse hovering.
@@ -2669,6 +2683,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (isScanningForLinks) {
 			Cursor c = getCursor();
 			isScanningForLinks = false;
+			linkGeneratorResult = null;
 			hoveredOverLinkOffset = -1;
 			if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
@@ -2692,7 +2707,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * are, we're calling getTokenListForLine() twice (once in viewToModel()
 	 * and once here).
 	 */
-	private Token viewToToken(Point p) {
+	public Token viewToToken(Point p) {
 		return modelToToken(viewToModel(p));
 	}
 
@@ -2771,9 +2786,13 @@ private boolean fractionalFontMetricsEnabled;
 			super(textArea);
 		}
 
-		public void mouseClicked(MouseEvent e) {
-			if (getHyperlinksEnabled() && isScanningForLinks &&
-					hoveredOverLinkOffset>-1) {
+		private HyperlinkEvent createHyperlinkEvent() {
+			HyperlinkEvent he = null;
+			if (linkGeneratorResult!=null) {
+				he = linkGeneratorResult.execute();
+				linkGeneratorResult = null;
+			}
+			else {
 				Token t = modelToToken(hoveredOverLinkOffset);
 				URL url = null;
 				String desc = null;
@@ -2787,10 +2806,25 @@ private boolean fractionalFontMetricsEnabled;
 				} catch (MalformedURLException mue) {
 					desc = mue.getMessage();
 				}
-				HyperlinkEvent he = new HyperlinkEvent(this,
+				he = new HyperlinkEvent(RSyntaxTextArea.this,
 						HyperlinkEvent.EventType.ACTIVATED,
 						url, desc);
-				fireHyperlinkUpdate(he);
+			}
+			return he;
+		}
+
+		private final boolean equal(LinkGeneratorResult e1,
+				LinkGeneratorResult e2) {
+			return e1.getSourceOffset()==e2.getSourceOffset();
+		}
+
+		public void mouseClicked(MouseEvent e) {
+			if (getHyperlinksEnabled() && isScanningForLinks &&
+					hoveredOverLinkOffset>-1) {
+				HyperlinkEvent he = createHyperlinkEvent();
+				if (he!=null) {
+					fireHyperlinkUpdate(he);
+				}
 				stopScanningForLinks();
 			}
 		}
@@ -2806,9 +2840,34 @@ private boolean fractionalFontMetricsEnabled;
 						hoveredOverLinkOffset = t.offset;
 						c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 					}
+					else if (t!=null && linkGenerator!=null) {
+						int offs = viewToModel(e.getPoint());
+						LinkGeneratorResult newResult = linkGenerator.
+								isLinkAtOffset(RSyntaxTextArea.this, offs);
+						if (newResult!=null) {
+							// Repaint if we're at a new link now.
+							if (linkGeneratorResult==null ||
+									!equal(newResult, linkGeneratorResult)) {
+								repaint();
+							}
+							linkGeneratorResult = newResult;
+							hoveredOverLinkOffset = t.offset;
+							c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+						}
+						else {
+							// Repaint if we've moved off of a link.
+							if (linkGeneratorResult!=null) {
+								repaint();
+							}
+							c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+							hoveredOverLinkOffset = -1;
+							linkGeneratorResult = null;
+						}
+					}
 					else {
 						c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
 						hoveredOverLinkOffset = -1;
+						linkGeneratorResult = null;
 					}
 					if (getCursor()!=c2) {
 						setCursor(c2);

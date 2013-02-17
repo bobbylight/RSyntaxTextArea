@@ -117,7 +117,7 @@ public abstract class Token implements TokenTypes {
 
 
 	/**
-	 * Creates this token as a deep copy of the passed-in token.
+	 * Creates this token as a copy of the passed-in token.
 	 *
 	 * @param t2 The token from which to make a copy.
 	 */
@@ -398,6 +398,8 @@ public abstract class Token implements TokenTypes {
 				case COMMENT_DOCUMENTATION:
 				case COMMENT_EOL:
 				case COMMENT_MULTILINE:
+				case COMMENT_KEYWORD:
+				case COMMENT_MARKUP:
 				case WHITESPACE:
 					break;
 				default:
@@ -433,7 +435,7 @@ public abstract class Token implements TokenTypes {
 	 * Returns the text of this token, as a string.<p>
 	 *
 	 * Note that this method isn't used much by the
-	 * <code>rsyntaxtextarea</code> package internally, as it tries to limit
+	 * <code>ryntaxtextarea</code> package internally, as it tries to limit
 	 * memory allocation.
 	 *
 	 * @return The text of this token.
@@ -633,9 +635,22 @@ public abstract class Token implements TokenTypes {
 	 *
 	 * @return Whether this token is a comment.
 	 * @see #isWhitespace()
+	 * @see #isCommentOrWhitespace()
 	 */
 	public boolean isComment() {
 		return type>=Token.COMMENT_EOL && type<=Token.COMMENT_MARKUP;
+	}
+
+
+	/**
+	 * Returns whether this token is a comment or whitespace.
+	 *
+	 * @return Whether this token is a comment or whitespace.
+	 * @see #isComment()
+	 * @see #isWhitespace()
+	 */
+	public boolean isCommentOrWhitespace() {
+		return isComment() || isWhitespace();
 	}
 
 
@@ -729,6 +744,7 @@ public abstract class Token implements TokenTypes {
 	 *
 	 * @return <code>true</code> iff this token is whitespace.
 	 * @see #isComment()
+	 * @see #isCommentOrWhitespace()
 	 */
 	public boolean isWhitespace() {
 		return type==WHITESPACE;

@@ -95,6 +95,16 @@ public class DefaultToken extends Token {
 
 
 	/**
+	 * Copy constructor.
+	 *
+	 * @param other Another token whose contents should be (shallow) copied.
+	 */
+	public DefaultToken(Token other) {
+		super(other);
+	}
+
+
+	/**
 	 * Determines the offset into this token list (i.e., into the
 	 * document) that covers pixel location <code>x</code> if the token list
 	 * starts at pixel location <code>x0</code><p>.
