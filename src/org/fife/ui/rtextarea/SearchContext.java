@@ -53,7 +53,20 @@ public class SearchContext {
 	 * @param searchFor The text to search for.
 	 */
 	public SearchContext(String searchFor) {
+		this(searchFor, false);
+	}
+
+
+	/**
+	 * Creates a new search context.  Specifies a forward search, not
+	 * whole-word, not a regular expression.
+	 *
+	 * @param searchFor The text to search for.
+	 * @param matchCase Whether to do a case-sensitive search.
+	 */
+	public SearchContext(String searchFor, boolean matchCase) {
 		this.searchFor = searchFor;
+		this.matchCase = matchCase;
 		forward = true;
 	}
 

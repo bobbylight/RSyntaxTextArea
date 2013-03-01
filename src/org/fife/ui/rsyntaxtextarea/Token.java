@@ -584,6 +584,29 @@ public abstract class Token implements TokenTypes {
 
 
 	/**
+	 * Returns whether this token's lexeme matches a specific character array.
+	 *
+	 * @param lexeme The lexeme to check for.
+	 * @return Whether this token has that lexeme.
+	 * @see #is(int, char[])
+	 * @see #is(int, String)
+	 * @see #isSingleChar(int, char)
+	 * @see #startsWith(char[])
+	 */
+	public boolean is(char[] lexeme) {
+		if (textCount==lexeme.length) {
+			for (int i=0; i<textCount; i++) {
+				if (text[textOffset+i]!=lexeme[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
 	 * Returns whether this token is of the specified type, with the specified
 	 * lexeme.<p>
 	 * This method is preferred over the other overload in performance-critical
@@ -594,6 +617,7 @@ public abstract class Token implements TokenTypes {
 	 * @param lexeme The lexeme to check for.
 	 * @return Whether this token has that type and lexeme.
 	 * @see #is(int, String)
+	 * @see #is(char[])
 	 * @see #isSingleChar(int, char)
 	 * @see #startsWith(char[])
 	 */
