@@ -28,7 +28,6 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 %public
 %class PythonTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 

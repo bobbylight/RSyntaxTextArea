@@ -317,6 +317,16 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns the occurrence marker for the current language.
+	 *
+	 * @return The occurrence marker.
+	 */
+	OccurrenceMarker getOccurrenceMarker() {
+		return tokenMaker.getOccurrenceMarker();
+	}
+
+
+	/**
 	 * This method returns whether auto indentation should be done if Enter
 	 * is pressed at the end of the specified line.
 	 *

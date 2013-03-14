@@ -57,7 +57,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 %public
 %class FortranTokenMaker
 %extends AbstractJFlexTokenMaker
-%implements TokenMaker
 %unicode
 %ignorecase
 %type org.fife.ui.rsyntaxtextarea.Token

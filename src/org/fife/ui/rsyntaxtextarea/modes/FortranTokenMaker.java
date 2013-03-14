@@ -55,7 +55,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  */
 
-public class FortranTokenMaker extends AbstractJFlexTokenMaker implements TokenMaker {
+public class FortranTokenMaker extends AbstractJFlexTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;

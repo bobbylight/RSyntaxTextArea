@@ -10,7 +10,6 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
-import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -27,6 +26,7 @@ import javax.swing.text.Caret;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see OccurrenceMarker
  */
 class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
@@ -98,59 +98,53 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 		}
 
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
-		//long time = System.currentTimeMillis();
-		doc.readLock();
-		try {
+		OccurrenceMarker occurrenceMarker = doc.getOccurrenceMarker();
+		boolean occurrencesChanged = false;
 
-			// Get the token at the caret position.
-			int line = textArea.getCaretLineNumber();
-			Token tokenList = textArea.getTokenListForLine(line);
-			int dot = c.getDot();
-			Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-			if (t==null /* EOL */ || !isValidType(t) || isNonWordChar(t)) {
-				// Try to the "left" of the caret.
-				dot--;
-				try {
-					if (dot>=textArea.getLineStartOffset(line)) {
-						t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-					}
-				} catch (BadLocationException ble) {
-					ble.printStackTrace(); // Never happens
-				}
-			}
+		if (occurrenceMarker!=null) {
 
-			// Add new highlights if an identifier is selected.
-			if (t!=null && isValidType(t) && !isNonWordChar(t)) {
-				removeHighlights();
-				RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
-													textArea.getHighlighter();
-				char[] lexeme = t.getLexeme().toCharArray();
-				int type = t.type;
-				for (int i=0; i<textArea.getLineCount(); i++) {
-					Token temp = textArea.getTokenListForLine(i);
-					while (temp!=null && temp.isPaintable()) {
-						if (temp.is(type, lexeme)) {
-							try {
-								int end = temp.offset + temp.textCount;
-								h.addMarkedOccurrenceHighlight(temp.offset, end, p);
-							} catch (BadLocationException ble) {
-								ble.printStackTrace(); // Never happens
-							}
+			doc.readLock();
+			try {
+
+				// Get the token at the caret position.
+				int line = textArea.getCaretLineNumber();
+				Token tokenList = textArea.getTokenListForLine(line);
+				int dot = c.getDot();
+				Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
+				if (t==null /* EOL */ || !isValidType(t) || isNonWordChar(t)) {
+					// Try to the "left" of the caret.
+					dot--;
+					try {
+						if (dot>=textArea.getLineStartOffset(line)) {
+							t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
 						}
-						temp = temp.getNextToken();
+					} catch (BadLocationException ble) {
+						ble.printStackTrace(); // Never happens
 					}
 				}
-//textArea.repaint();
-// TODO: Do a textArea.repaint() instead of repainting each marker as it's added if count is huge
+
+				if (t!=null && isValidType(t) && !isNonWordChar(t)) {
+					removeHighlights();
+					RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+							textArea.getHighlighter();
+					occurrenceMarker.markOccurrences(doc, t, h, p);
+					//textArea.repaint();
+					// TODO: Do a textArea.repaint() instead of repainting each
+					// marker as it's added if count is huge
+					occurrencesChanged = true;
+				}
+
+			} finally {
+				doc.readUnlock();
+				//time = System.currentTimeMillis() - time;
+				//System.out.println("MarkOccurrencesSupport took: " + time + " ms");
 			}
 
-		} finally {
-			doc.readUnlock();
-			//time = System.currentTimeMillis() - time;
-			//System.out.println("MarkOccurrencesSupport took: " + time + " ms");
 		}
 
-		textArea.fireMarkedOccurrencesChanged();
+		if (occurrencesChanged) {
+			textArea.fireMarkedOccurrencesChanged();
+		}
 
 	}
 
@@ -169,7 +163,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * Returns the color being used to mark occurrences.
 	 *
 	 * @return The color being used.
-	 * @see #setColor(Paint)
+	 * @see #setColor(Color)
 	 */
 	public Color getColor() {
 		return p.getColor();

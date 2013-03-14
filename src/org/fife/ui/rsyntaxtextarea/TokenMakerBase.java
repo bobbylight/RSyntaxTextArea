@@ -41,6 +41,12 @@ abstract class TokenMakerBase implements TokenMaker {
 	private TokenFactory tokenFactory;
 
 	/**
+	 * Highlights occurrences of the current token in the editor, if it is
+	 * relevant.
+	 */
+	private OccurrenceMarker occurrenceMarker;
+
+	/**
 	 * "0" implies this is the "main" language being highlighted.  Positive
 	 * values imply various "secondary" or "embedded" languages, such as CSS
 	 * or JavaScript in HTML.  While this value is non-zero, tokens will be
@@ -134,6 +140,17 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns the occurrence marker to use for this token maker.  Subclasses
+	 * can override to use different implementations.
+	 *
+	 * @return The occurrence marker to use.
+	 */
+	protected OccurrenceMarker createOccurrenceMarker() {
+		return new DefaultOccurrenceMarker();
+	}
+
+
+	/**
 	 * Returns whether this programming language uses curly braces
 	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.<p>
 	 *
@@ -196,6 +213,17 @@ abstract class TokenMakerBase implements TokenMaker {
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public OccurrenceMarker getOccurrenceMarker() {
+		if (occurrenceMarker==null) {
+			occurrenceMarker = createOccurrenceMarker();
+		}
+		return occurrenceMarker;
 	}
 
 

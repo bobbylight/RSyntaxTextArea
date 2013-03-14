@@ -194,6 +194,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	protected OccurrenceMarker createOccurrenceMarker() {
+		return new XmlOccurrenceMarker();
+	}
+
+
+	/**
 	 * Returns whether markup close tags should be completed.  For XML, the
 	 * default value is <code>true</code>.
 	 *
@@ -219,15 +227,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Always returns <tt>false</tt>, as you never want "mark occurrences"
-	 * working in XML files.
+	 * Returns <code>Token.MARKUP_TAG_NAME</code>.
 	 *
 	 * @param type The token type.
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return false;
+		return type==Token.MARKUP_TAG_NAME;
 	}
 
 
@@ -251,7 +258,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		inInternalDtd = false;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case Token.COMMENT_MULTILINE:
 				state = COMMENT;

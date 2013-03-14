@@ -16,7 +16,6 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.DefaultToken;
 import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
 
 
 /**
@@ -26,7 +25,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
  * @version 0.3
  */
 
-public class PythonTokenMaker extends AbstractJFlexTokenMaker implements TokenMaker {
+public class PythonTokenMaker extends AbstractJFlexTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;

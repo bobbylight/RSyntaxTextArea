@@ -111,6 +111,18 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns the object in charge of marking all occurrences of the token
+	 * at the current caret position, if it is a relevant token.  If
+	 * <code>null</code> is returned, a default <code>OccurrenceMarker</code>
+	 * is used.
+	 *
+	 * @return The occurrence marker for this language, or <code>null</code>
+	 *         for none.
+	 */
+	public OccurrenceMarker getOccurrenceMarker();
+
+
+	/**
 	 * If a line ends in the specified token, this method returns whether
 	 * a new line inserted after that line should be indented.
 	 *
