@@ -44,6 +44,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Segment;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
@@ -523,6 +524,21 @@ public class RTextArea extends RTextAreaBase
 	 */
 	protected RTextAreaUI createRTextAreaUI() {
 		return new RTextAreaUI(this);
+	}
+
+
+	/**
+	 * Creates a string of space characters of the specified size.
+	 *
+	 * @param size The number of spaces.
+	 * @return The string of spaces.
+	 */
+	private final String createSpacer(int size) {
+		StringBuffer sb = new StringBuffer();
+		for (int i=0; i<size; i++) {
+			sb.append(' ');
+		}
+		return sb.toString();
 	}
 
 
@@ -1156,8 +1172,16 @@ public class RTextArea extends RTextAreaBase
 			return;
 		}
 
-		if (getTabsEmulated() && text.indexOf('\t')>-1) {
-			text = replaceTabsWithSpaces(text, getTabSize());
+		if (getTabsEmulated()) {
+			int firstTab = text.indexOf('\t');
+			if (firstTab>-1) {
+				int docOffs = getSelectionStart();
+				try {
+					text = replaceTabsWithSpaces(text, docOffs, firstTab);
+				} catch (BadLocationException ble) { // Never happens
+					ble.printStackTrace();
+				}
+			}
 		}
 
 		// If the user wants to overwrite text...
@@ -1200,6 +1224,7 @@ public class RTextArea extends RTextAreaBase
 
 
 	private static StringBuffer repTabsSB;
+	private static Segment repTabsSeg = new Segment();
 	/**
 	 * Replaces all instances of the tab character in <code>text</code> with
 	 * the number of spaces equivalent to a tab in this text area.<p>
@@ -1210,45 +1235,77 @@ public class RTextArea extends RTextAreaBase
 	 * @param text The <code>java.lang.String</code> in which to replace tabs
 	 *        with spaces.  This has already been verified to have at least
 	 *        one tab character in it.
-	 * @return A <code>java.lang.String</code> just like <code>text</code>,
-	 *         but with spaces instead of tabs.
+	 * @param docOffs The offset in the document at which the text is being
+	 *        inserted.
+	 * @param firstTab The offset into <code>text</code> of the first tab.  Assumed
+	 *        to be &gt;= 0.
+	 * @return A <code>String</code> just like <code>text</code>, but with
+	 *         spaces instead of tabs.
 	 */
-	public static final String replaceTabsWithSpaces(String text,
-			int tabSize) {
+	private final String replaceTabsWithSpaces(String text, int docOffs, int firstTab)
+			throws BadLocationException {
 
-		String tabText = "";
-		for (int i=0; i<tabSize; i++) {
-			tabText += ' ';
+		int tabSize = getTabSize();
+
+		// Get how many chars into the current line we are
+		Document doc = getDocument();
+		Element root = doc.getDefaultRootElement();
+		int lineIndex = root.getElementIndex(docOffs);
+		Element line = root.getElement(lineIndex);
+		int lineStart = line.getStartOffset();
+		int charCount = docOffs - lineStart;
+
+		// Figure out how many chars into the "current tab" we are
+		if (charCount>0) {
+			doc.getText(lineStart, charCount, repTabsSeg);
+			charCount = 0;
+			for (int i=0; i<repTabsSeg.count; i++) {
+				char ch = repTabsSeg.array[repTabsSeg.offset + i];
+				if (ch=='\t') {
+					charCount = 0;
+				}
+				else {
+					charCount = (charCount + 1) % tabSize;
+				}
+			}
 		}
 
-		// Common case: User's entering a single tab (pressed the tab key).
+		// Common case: The user's entering a single tab (pressed the tab key).
 		if (text.length()==1) {
-			return tabText;
+			return createSpacer(tabSize - charCount);
 		}
 
-		// Otherwise, there may be more than one tab.  Manually search for
-		// tabs for performance, as opposed to using String#replaceAll().
-		// This method is called for each character inserted when "replace
-		// tabs with spaces" is enabled, so we need to be quick.
+		// Otherwise, there may be more than one tab.
 
-		//return text.replaceAll("\t", tabText);
 		if (repTabsSB==null) {
 			repTabsSB = new StringBuffer();
 		}
 		repTabsSB.setLength(0);
-		char[] array = text.toCharArray(); // Wouldn't be needed in 1.5!
-		int oldPos = 0;
-		int pos = 0;
-		while ((pos=text.indexOf('\t', oldPos))>-1) {
-			//repTabsSB.append(text, oldPos, pos); // Added in Java 1.5
-			if (pos>oldPos) {
-				repTabsSB.append(array, oldPos, pos-oldPos);
+		char[] array = text.toCharArray();
+		int lastPos = 0;
+		int offsInLine = charCount; // Accurate enough for our start
+		for (int pos=firstTab; pos<array.length; pos++) {
+			char ch = array[pos];
+			switch (ch) {
+				case '\t':
+					if (pos>lastPos) {
+						repTabsSB.append(array, lastPos, pos-lastPos);
+					}
+					int thisTabSize = tabSize - (offsInLine%tabSize);
+					repTabsSB.append(createSpacer(thisTabSize));
+					lastPos = pos + 1;
+					offsInLine = 0;
+					break;
+				case '\n':
+					offsInLine = 0;
+					break;
+				default:
+					offsInLine++;
+					break;
 			}
-			repTabsSB.append(tabText);
-			oldPos = pos + 1;
 		}
-		if (oldPos<array.length) {
-			repTabsSB.append(array, oldPos, array.length-oldPos);
+		if (lastPos<array.length) {
+			repTabsSB.append(array, lastPos, array.length-lastPos);
 		}
 
 		return repTabsSB.toString();
