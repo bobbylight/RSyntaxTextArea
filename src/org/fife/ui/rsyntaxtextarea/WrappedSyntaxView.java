@@ -171,14 +171,15 @@ return p + 1;
 	 * Draws a single view (i.e., a line of text for a wrapped view),
 	 * wrapping the text onto multiple lines if necessary.
 	 *
+	 * @param painter The painter to use to render tokens.
 	 * @param g The graphics context in which to paint.
 	 * @param r The rectangle in which to paint.
 	 * @param view The <code>View</code> to paint.
 	 * @param fontHeight The height of the font being used.
 	 * @param y The y-coordinate at which to begin painting.
 	 */
-	protected void drawView(Graphics2D g, Rectangle r, View view,
-						int fontHeight, int y) {
+	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r,
+							View view, int fontHeight, int y) {
 
 		float x = r.x;
 
@@ -213,16 +214,16 @@ return p + 1;
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
 			while (token!=null && token.isPaintable() && token.offset+token.textCount-1<p) {//<=p) {
-				x = token.paint(g, x,y, host, this);
+				x = painter.paint(token, g, x,y, host, this);
 				token = token.getNextToken();
 			}
 			
 			if (token!=null && token.isPaintable() && token.offset<p) {
 				int tokenOffset = token.offset;
-				Token temp = new DefaultToken(drawSeg, tokenOffset-start,
+				Token temp = new Token(drawSeg, tokenOffset-start,
 									p-1-start, tokenOffset,
 									token.type);
-				temp.paint(g, x,y, host, this);
+				painter.paint(temp, g, x,y, host, this);
 				temp = null;
 				token.makeStartAt(p);
 			}
@@ -635,6 +636,7 @@ return p + 1;
 		int ascent = host.getMaxAscent();
 		int fontHeight = host.getLineHeight();
 		FoldManager fm = host.getFoldManager();
+		TokenPainter painter = host.getTokenPainter();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
@@ -648,7 +650,8 @@ return p + 1;
 			//System.err.println("For line " + i + ": tempRect==" + tempRect);
 			if (tempRect.intersects(clip)) {
 				View view = getView(i);
-				drawView(g2d, alloc, view, fontHeight, tempRect.y+ascent);
+				drawView(painter, g2d, alloc, view, fontHeight,
+						tempRect.y+ascent);
 			}
 			tempRect.y += tempRect.height;
 			Fold possibleFold = fm.getFoldForLine(i);

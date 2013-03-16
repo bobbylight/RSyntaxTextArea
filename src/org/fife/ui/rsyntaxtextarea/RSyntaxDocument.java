@@ -12,7 +12,6 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import javax.swing.Action;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -379,17 +378,6 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 
 
 	/**
-	 * Returns whether whitespace is visible.
-	 *
-	 * @return Whether whitespace is visible.
-	 * @see #setWhitespaceVisible(boolean)
-	 */
-	public boolean isWhitespaceVisible() {
-		return tokenMaker==null ? false : tokenMaker.isWhitespaceVisible();
-	}
-
-
-	/**
 	 * Deserializes a document.
 	 *
 	 * @param in The stream to read from.
@@ -411,7 +399,6 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 		int lineCount = getDefaultRootElement().getElementCount();
 		lastTokensOnLines = new DynamicIntArray(lineCount);
 		setSyntaxStyle(syntaxStyle); // Actually install (transient) TokenMaker
-		setWhitespaceVisible(in.readBoolean()); // Do after setSyntaxStyle()
 
 	}
 
@@ -455,11 +442,10 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.  If this style is not
 	 *        known or supported by this document, then
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} is used.
+	 * @see #setSyntaxStyle(TokenMaker)
 	 */
 	public void setSyntaxStyle(String styleKey) {
-		boolean wsVisible = isWhitespaceVisible();
 		tokenMaker = tokenMakerFactory.getTokenMaker(styleKey);
-		tokenMaker.setWhitespaceVisible(wsVisible);
 		updateSyntaxHighlightingInformation();
 		this.syntaxStyle = styleKey;
 	}
@@ -472,9 +458,9 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 * <code>RSyntaxTextArea</code>.
 	 *
 	 * @param tokenMaker The new token maker to use.
+	 * @see #setSyntaxStyle(String)
 	 */
 	public void setSyntaxStyle(TokenMaker tokenMaker) {
-		tokenMaker.setWhitespaceVisible(isWhitespaceVisible());
 		this.tokenMaker = tokenMaker;
 		updateSyntaxHighlightingInformation();
 	}
@@ -489,19 +475,6 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	public void setTokenMakerFactory(TokenMakerFactory tmf) {
 		tokenMakerFactory = tmf!=null ? tmf :
 			TokenMakerFactory.getDefaultInstance();
-	}
-
-
-	/**
-	 * Sets whether whitespace is visible.  This property is actually setting
-	 * whether the tokens generated from this document "paint" something when
-	 * they represent whitespace.
-	 *
-	 * @param visible Whether whitespace should be visible.
-	 * @see #isWhitespaceVisible()
-	 */
-	public void setWhitespaceVisible(boolean visible) {
-		tokenMaker.setWhitespaceVisible(visible);
 	}
 
 
@@ -597,18 +570,6 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 		fireChangedUpdate(new DefaultDocumentEvent(
 						0, numLines-1, DocumentEvent.EventType.CHANGE));
 
-	}
-
-
-	/**
-	 * Overridden for custom serialization purposes.
-	 *
-	 * @param out The stream to write to.
-	 * @throws IOException If an IO error occurs.
-	 */
-	private void writeObject(ObjectOutputStream out)throws IOException {
-		out.defaultWriteObject();
-		out.writeBoolean(isWhitespaceVisible());
 	}
 
 

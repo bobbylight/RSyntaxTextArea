@@ -149,7 +149,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new DefaultToken();
+			return new Token();
 		}
 
 	}

@@ -21,6 +21,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -768,6 +769,27 @@ public class Gutter extends JPanel {
 	}
 
 
+//	public void setUI(ComponentUI ui) {
+//
+//		Border gutterBorder = getBorder();
+//
+//		super.setUI(ui);
+//
+//		// Some LaFs, such as WebLookAndFeel, override borders even when
+//		// they aren't UIResources.
+//		Border border = getBorder();
+//		if (border != gutterBorder) {
+//			setBorder(gutterBorder);
+//		}
+//
+//	}
+//
+//
+public void setBorder(Border border) {
+	if (border instanceof GutterBorder) {
+		super.setBorder(border);
+	}
+}
 	/**
 	 * The border used by the gutter.
 	 */

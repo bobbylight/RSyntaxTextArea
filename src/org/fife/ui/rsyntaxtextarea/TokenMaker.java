@@ -156,22 +156,4 @@ public interface TokenMaker {
 	public boolean isMarkupLanguage();
 
 
-	/**
-	 * Returns whether whitespace is visible.
-	 *
-	 * @return Whether whitespace is visible.
-	 * @see #setWhitespaceVisible(boolean)
-	 */
-	public boolean isWhitespaceVisible();
-
-
-	/**
-	 * Sets whether tokens are generated that "show" whitespace.
-	 *
-	 * @param visible Whether whitespace should be visible.
-	 * @see #isWhitespaceVisible()
-	 */
-	public void setWhitespaceVisible(boolean visible);
-
-
 }

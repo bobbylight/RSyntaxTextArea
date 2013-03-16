@@ -158,18 +158,20 @@ public class SyntaxView extends View implements TabExpander,
 	 * language.  The tokens used to decide how to paint the syntax
 	 * highlighting are grabbed from the text area's document.
 	 *
+	 * @param painter The painter to render the tokens.
 	 * @param token The list of tokens to draw.
 	 * @param g The graphics context in which to draw.
 	 * @param x The x-coordinate at which to draw.
 	 * @param y The y-coordinate at which to draw.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float drawLine(Token token, Graphics2D g, float x, float y) {
+	public float drawLine(TokenPainter painter, Token token, Graphics2D g,
+			float x, float y) {
 
 		float nextX = x;	// The x-value at the end of our text.
 
 		while (token!=null && token.isPaintable() && nextX<clipEnd) {
-			nextX = token.paint(g, nextX,y, host, this, clipStart);
+			nextX = painter.paint(token, g, nextX,y, host, this, clipStart);
 			token = token.getNextToken();
 		}
 
@@ -574,7 +576,7 @@ if (host.isCodeFoldingEnabled()) {
 		Token token;
 		//System.err.println("Painting lines: " + linesAbove + " to " + (endLine-1));
 
-
+		TokenPainter painter = host.getTokenPainter();
 		int line = linesAbove;
 //int count = 0;
 		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
@@ -590,7 +592,7 @@ if (host.isCodeFoldingEnabled()) {
 	
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);
-			drawLine(token, g2d, x,y);
+			drawLine(painter, token, g2d, x,y);
 
 			if (fold!=null && fold.isCollapsed()) {
 

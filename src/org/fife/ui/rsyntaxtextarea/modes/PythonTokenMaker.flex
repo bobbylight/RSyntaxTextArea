@@ -12,7 +12,6 @@ import java.io.*;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
-import org.fife.ui.rsyntaxtextarea.DefaultToken;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 
@@ -130,7 +129,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new DefaultToken();
+			return new Token();
 		}
 
 	}

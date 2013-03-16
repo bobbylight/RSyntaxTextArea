@@ -11,10 +11,10 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
+import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
+import javax.swing.text.Utilities;
 
 
 /**
@@ -33,7 +33,7 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 0.3
  */
-public abstract class Token implements TokenTypes {
+public class Token implements TokenTypes {
 
 	/**
 	 * The text this token represents.  This is implemented as a segment so we
@@ -69,18 +69,6 @@ public abstract class Token implements TokenTypes {
 	 */
 	private int languageIndex;
 
-	/**
-	 * Rectangle used for filling token backgrounds.
-	 */
-	private Rectangle2D.Float bgRect;
-
-	/**
-	 * Micro-optimization; buffer used to compute tab width.  If the width is
-	 * correct it's not re-allocated, to prevent lots of very small garbage.
-	 * Only used when painting tab lines.
-	 */
-	private static char[] tabBuf;
-
 
 	/**
 	 * Creates a "null token."  The token itself is not null; rather, it
@@ -95,7 +83,6 @@ public abstract class Token implements TokenTypes {
 		offset = -1;
 		hyperlink = false;
 		nextToken = null;
-		bgRect = new Rectangle2D.Float();
 	}
 
 
@@ -109,8 +96,22 @@ public abstract class Token implements TokenTypes {
 	 *        token begins.
 	 * @param type A token type listed as "generic" above.
 	 */
-	public Token(final char[] line, final int beg, final int end,
-							final int startOffset, final int type) {
+	public Token(Segment line, int beg, int end, int startOffset, int type) {
+		this(line.array, beg,end, startOffset, type);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param line The segment from which to get the token.
+	 * @param beg The first character's position in <code>line</code>.
+	 * @param end The last character's position in <code>line</code>.
+	 * @param startOffset The offset into the document at which this
+	 *        token begins.
+	 * @param type A token type listed as "generic" above.
+	 */
+	public Token(char[] line, int beg, int end, int startOffset, int type) {
 		this();
 		set(line, beg,end, startOffset, type);
 	}
@@ -456,12 +457,7 @@ public abstract class Token implements TokenTypes {
 	 * the left-half places the caret between the <code>a</code> and
 	 * <code>w</code>).  This makes it useful for methods such as
 	 * <code>viewToModel</code> found in <code>javax.swing.text.View</code>
-	 * subclasses.<p>
-	 *
-	 * This method is abstract so subclasses who paint themselves differently
-	 * (i.e., {@link VisibleWhitespaceToken} is painted a tad differently than
-	 * {@link DefaultToken} when rendering hints are enabled) can still return
-	 * accurate results.
+	 * subclasses.
 	 *
 	 * @param textArea The text area from which the token list was derived.
 	 * @param e How to expand tabs.
@@ -475,8 +471,55 @@ public abstract class Token implements TokenTypes {
 	 *         <code>-1</code is returned; the caller should recognize this and
 	 *         return the actual end position of the (empty) line.
 	 */
-	public abstract int getListOffset(RSyntaxTextArea textArea, TabExpander e,
-								float x0, float x);
+	public int getListOffset(RSyntaxTextArea textArea, TabExpander e,
+			float x0, float x) {
+
+		// If the coordinate in question is before this line's start, quit.
+		if (x0 >= x)
+			return offset;
+
+		float currX = x0; // x-coordinate of current char.
+		float nextX = x0; // x-coordinate of next char.
+		float stableX = x0; // Cached ending x-coord. of last tab or token.
+		Token token = this;
+		int last = offset;
+		FontMetrics fm = null;
+
+		while (token != null && token.isPaintable()) {
+
+			fm = textArea.getFontMetricsForTokenType(token.type);
+			char[] text = token.text;
+			int start = token.textOffset;
+			int end = start + token.textCount;
+
+			for (int i = start; i < end; i++) {
+				currX = nextX;
+				if (text[i] == '\t') {
+					nextX = e.nextTabStop(nextX, 0);
+					stableX = nextX; // Cache ending x-coord. of tab.
+					start = i + 1; // Do charsWidth() from next char.
+				}
+				else {
+					nextX = stableX + fm.charsWidth(text, start, i - start + 1);
+				}
+				if (x >= currX && x < nextX) {
+					if ((x - currX) < (nextX - x)) {
+						return last + i - token.textOffset;
+					}
+					return last + i + 1 - token.textOffset;
+				}
+			}
+
+			stableX = nextX; // Cache ending x-coordinate of token.
+			last += token.textCount;
+			token = token.getNextToken();
+
+		}
+
+		// If we didn't find anything, return the end position of the text.
+		return last;
+
+	}
 
 
 	/**
@@ -564,12 +607,7 @@ public abstract class Token implements TokenTypes {
 	/**
 	 * Returns the width of a specified number of characters in this token.
 	 * For example, for the token "while", specifying a value of <code>3</code>
-	 * here returns the width of the "whi" portion of the token.<p>
-	 *
-	 * This method is abstract so subclasses who paint themselves differently
-	 * (i.e., {@link VisibleWhitespaceToken} is painted a tad differently than
-	 * {@link DefaultToken} when rendering hints are enabled) can still return
-	 * accurate results.
+	 * here returns the width of the "whi" portion of the token.
 	 *
 	 * @param numChars The number of characters for which to get the width.
 	 * @param textArea The text area in which the token is being painted.
@@ -579,8 +617,35 @@ public abstract class Token implements TokenTypes {
 	 * @return The width of the specified number of characters in this token.
 	 * @see #getWidth
 	 */
-	public abstract float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
-										TabExpander e, float x0);
+	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
+			TabExpander e, float x0) {
+		float width = x0;
+		FontMetrics fm = textArea.getFontMetricsForTokenType(type);
+		if (fm != null) {
+			int w;
+			int currentStart = textOffset;
+			int endBefore = textOffset + numChars;
+			for (int i = currentStart; i < endBefore; i++) {
+				if (text[i] == '\t') {
+					// Since TokenMaker implementations usually group all
+					// adjacent whitespace into a single token, there
+					// aren't usually any characters to compute a width
+					// for here, so we check before calling.
+					w = i - currentStart;
+					if (w > 0)
+						width += fm.charsWidth(text, currentStart, w);
+					currentStart = i + 1;
+					width = e.nextTabStop(width, 0);
+				}
+			}
+			// Most (non-whitespace) tokens will have characters at this
+			// point to get the widths for, so we don't check for w>0 (mini-
+			// optimization).
+			w = endBefore - currentStart;
+			width += fm.charsWidth(text, currentStart, w);
+		}
+		return width - x0;
+	}
 
 
 	/**
@@ -790,9 +855,74 @@ public abstract class Token implements TokenTypes {
 	 *        object is reused to keep from frequent memory allocations.
 	 * @return The bounding box for the specified position in the model.
 	 */
-	public abstract Rectangle listOffsetToView(RSyntaxTextArea textArea,
-								TabExpander e, int pos, int x0,
-								Rectangle rect);
+	public Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
+			int pos, int x0, Rectangle rect) {
+
+		int stableX = x0; // Cached ending x-coord. of last tab or token.
+		Token token = this;
+		FontMetrics fm = null;
+		Segment s = new Segment();
+
+		while (token != null && token.isPaintable()) {
+
+			fm = textArea.getFontMetricsForTokenType(token.type);
+			if (fm == null) {
+				return rect; // Don't return null as things'll error.
+			}
+			char[] text = token.text;
+			int start = token.textOffset;
+			int end = start + token.textCount;
+
+			// If this token contains the position for which to get the
+			// bounding box...
+			if (token.containsPosition(pos)) {
+
+				s.array = token.text;
+				s.offset = token.textOffset;
+				s.count = pos - token.offset;
+
+				// Must use this (actually fm.charWidth()), and not
+				// fm.charsWidth() for returned value to match up with where
+				// text is actually painted on OS X!
+				int w = Utilities.getTabbedTextWidth(s, fm, stableX, e,
+						token.offset);
+				rect.x = stableX + w;
+				end = token.documentToToken(pos);
+
+				if (text[end] == '\t') {
+					rect.width = fm.charWidth(' ');
+				}
+				else {
+					rect.width = fm.charWidth(text[end]);
+				}
+
+				return rect;
+
+			}
+
+			// If this token does not contain the position for which to get
+			// the bounding box...
+			else {
+				s.array = token.text;
+				s.offset = token.textOffset;
+				s.count = token.textCount;
+				stableX += Utilities.getTabbedTextWidth(s, fm, stableX, e,
+						token.offset);
+			}
+
+			token = token.getNextToken();
+
+		}
+
+		// If we didn't find anything, we're at the end of the line. Return
+		// a width of 1 (so selection highlights don't extend way past line's
+		// text). A ConfigurableCaret will know to paint itself with a larger
+		// width.
+		rect.x = stableX;
+		rect.width = 1;
+		return rect;
+
+	}
 
 
 	/**
@@ -833,143 +963,6 @@ public abstract class Token implements TokenTypes {
 		offset += amt;
 		textOffset += amt;
 		textCount -= amt;
-	}
-
-
-	/**
-	 * Paints this token.
-	 *
-	 * @param g The graphics context in which to paint.
-	 * @param x The x-coordinate at which to paint.
-	 * @param y The y-coordinate at which to paint.
-	 * @param host The text area this token is in.
-	 * @param e How to expand tabs.
-	 * @return The x-coordinate representing the end of the painted text.
-	 */
-	public final float paint(Graphics2D g, float x, float y,
-						RSyntaxTextArea host, TabExpander e) {
-		return paint(g, x,y, host, e, 0);
-	}
-
-
-	/**
-	 * Paints this token.
-	 *
-	 * @param g The graphics context in which to paint.
-	 * @param x The x-coordinate at which to paint.
-	 * @param y The y-coordinate at which to paint.
-	 * @param host The text area this token is in.
-	 * @param e How to expand tabs.
-	 * @param clipStart The left boundary of the clip rectangle in which we're
-	 *        painting.  This optimizes painting by allowing us to not paint
-	 *        paint when this token is "to the left" of the clip rectangle.
-	 * @return The x-coordinate representing the end of the painted text.
-	 */
-	public abstract float paint(Graphics2D g, float x, float y,
-							RSyntaxTextArea host,
-							TabExpander e, float clipStart);
-
-
-	/**
-	 * Paints the background of a token.
-	 *
-	 * @param x The x-coordinate of the token.
-	 * @param y The y-coordinate of the token.
-	 * @param width The width of the token (actually, the width of the part of
-	 *        the token to paint).
-	 * @param height The height of the token.
-	 * @param g The graphics context with which to paint.
-	 * @param fontAscent The ascent of the token's font.
-	 * @param host The text area.
-	 * @param color The color with which to paint.
-	 */
-	protected void paintBackground(float x, float y, float width, float height,
-							Graphics2D g, int fontAscent,
-							RSyntaxTextArea host, Color color) {
-		// RSyntaxTextArea's bg can be null, so we must check for this.
-		Color temp = host.getBackground();
-		g.setXORMode(temp!=null ? temp : Color.WHITE);
-		g.setColor(color);
-		bgRect.setRect(x,y-fontAscent, width,height);
-		//g.fill(bgRect);
-		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
-		g.setPaintMode();
-	}
-
-
-	/**
-	 * Paints dotted "tab" lines; that is, lines that show where your caret
-	 * would go to on the line if you hit "tab".  This visual effect is usually
-	 * done in the leading whitespace token(s) of lines.
-	 *
-	 * @param x The starting x-offset of this token.  It is assumed that this
-	 *        is the left margin of the text area (may be non-zero due to
-	 *        insets), since tab lines are only painted for leading whitespace.
-	 * @param y The baseline where this token was painted.
-	 * @param endX The ending x-offset of this token.
-	 * @param g The graphics context.
-	 * @param e Used to expand tabs.
-	 * @param host The text area.
-	 */
-	protected void paintTabLines(int x, int y, int endX, Graphics2D g,
-								TabExpander e, RSyntaxTextArea host) {
-
-		// We allow tab lines to be painted in more than just Token.WHITESPACE,
-		// i.e. for MLC's and Token.IDENTIFIERS (for TokenMakers that return
-		// whitespace as identifiers for performance).  But we only paint tab
-		// lines for the leading whitespace in the token.  So, if this isn't a
-		// WHITESPACE token, figure out the leading whitespace's length.
-		if (type!=Token.WHITESPACE) {
-			int offs = textOffset;
-			for (; offs<textOffset+textCount; offs++) {
-				if (!RSyntaxUtilities.isWhitespace(text[offs])) {
-					break; // MLC text, etc.
-				}
-			}
-			int len = offs - textOffset;
-			if (len<2) { // Must be at least two whitespaces to see tab line
-				return;
-			}
-			//endX = x + (int)getWidthUpTo(len, host, e, x);
-			endX = (int)getWidthUpTo(len, host, e, 0);
-		}
-
-		// Get the length of a tab.
-		FontMetrics fm = host.getFontMetricsForTokenType(type);
-		int tabSize = host.getTabSize();
-		if (tabBuf==null || tabBuf.length<tabSize) {
-			tabBuf = new char[tabSize];
-			for (int i=0; i<tabSize; i++) {
-				tabBuf[i] = ' ';
-			}
-		}
-		// Note different token types (MLC's, whitespace) could possibly be
-		// using different fonts, which means we can't cache the actual width
-		// of a tab as it may be different per-token-type.  We could keep a
-		// per-token-type cache, but we'd have to clear it whenever they
-		// modified token styles.
-		int tabW = fm.charsWidth(tabBuf, 0, tabSize);
-
-		// Draw any tab lines.  Here we're assuming that "x" is the left
-		// margin of the editor.
-		g.setColor(host.getTabLineColor());
-		int x0 = x + tabW;
-		int y0 = y - fm.getAscent();
-		if ((y0&1)>0) {
-			// Only paint on even y-pixels to prevent doubling up between lines
-			y0++;
-		}
-		while (x0<endX) {
-			int y1 = y0;
-			int y2 = y0 + host.getLineHeight();
-			while (y1<y2) {
-				g.drawLine(x0, y1, x0, y1);
-				y1 += 2;
-			}
-			//g.drawLine(x0,y0, x0,y0+host.getLineHeight());
-			x0 += tabW;
-		}
-
 	}
 
 

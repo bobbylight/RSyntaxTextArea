@@ -252,14 +252,6 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isWhitespaceVisible() {
-		return tokenFactory instanceof VisibleWhitespaceTokenFactory;
-	}
-
-
-	/**
 	 * Deletes the linked list of tokens so we can begin anew.  This should
 	 * never have to be called by the programmer, as it is automatically
 	 * called whenever the user calls
@@ -284,16 +276,6 @@ abstract class TokenMakerBase implements TokenMaker {
 	 */
 	public void setLanguageIndex(int languageIndex) {
 		this.languageIndex = Math.max(0, languageIndex);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setWhitespaceVisible(boolean visible) {
-		// FIXME:  Initialize with the proper sizes.
-		tokenFactory = visible ? new VisibleWhitespaceTokenFactory() :
-									new DefaultTokenFactory();
 	}
 
 

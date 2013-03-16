@@ -302,6 +302,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Cached desktop anti-aliasing hints, if anti-aliasing is enabled. */
 	private Map aaHints;
 
+	/** Renders tokens. */
+	private TokenPainter tokenPainter;
+
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
 private boolean fractionalFontMetricsEnabled;
@@ -539,12 +542,12 @@ private boolean fractionalFontMetricsEnabled;
 			return null;
 		}
 
-		Token clone = new DefaultToken();
+		Token clone = new Token();
 		clone.copyFrom(t);
 		Token cloneEnd = clone;
 
 		while ((t=t.getNextToken())!=null) {
-			Token temp = new DefaultToken();
+			Token temp = new Token();
 			temp.copyFrom(t);
 			cloneEnd.setNextToken(temp);
 			cloneEnd = temp;
@@ -1572,7 +1575,7 @@ private boolean fractionalFontMetricsEnabled;
 				// Document offset MUST be correct to prevent exceptions
 				// in getTokenListFor()
 				int docOffs = map.getElement(line).getEndOffset()-1;
-				t = new DefaultToken(new char[] { '\n' }, 0,0, docOffs,
+				t = new Token(new char[] { '\n' }, 0,0, docOffs,
 								Token.WHITESPACE);
 				lastToken.setNextToken(t);
 				lastToken = t;
@@ -1619,6 +1622,16 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public Token getTokenListForLine(int line) {
 		return ((RSyntaxDocument)getDocument()).getTokenListForLine(line);
+	}
+
+
+	/**
+	 * Returns the painter to use for rendering tokens.
+	 *
+	 * @return The painter to use for rendering tokens.
+	 */
+	TokenPainter getTokenPainter() {
+		return tokenPainter;
 	}
 
 
@@ -1703,6 +1716,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * editor.
 	 */
 	protected void init() {
+
+		tokenPainter = new DefaultTokenPainter();
 
 		// NOTE: Our actions are created here instead of in a static block
 		// so they are only created when the first RTextArea is instantiated,
@@ -2663,12 +2678,13 @@ private boolean fractionalFontMetricsEnabled;
 	 * of type {@link #VISIBLE_WHITESPACE_PROPERTY}.
 	 *
 	 * @param visible Whether whitespace should be visible.
-	 * @see #isWhitespaceVisible
+	 * @see #isWhitespaceVisible()
 	 */
 	public void setWhitespaceVisible(boolean visible) {
 		if (whitespaceVisible!=visible) {
-			whitespaceVisible = visible;
-			((RSyntaxDocument)getDocument()).setWhitespaceVisible(visible);
+			this.whitespaceVisible = visible;
+			tokenPainter = visible ? new VisibleWhitespaceTokenPainter() :
+					(TokenPainter)new DefaultTokenPainter();
 			repaint();
 			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY, !visible, visible);
 		}

@@ -460,7 +460,7 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new DefaultToken();
+			return new Token();
 		}
 
 	}

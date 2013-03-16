@@ -57,8 +57,9 @@ interface TokenFactory {
 
 
 	/**
-	 * Resets the state of this token maker, if necessary.
-	 * FIXME:  Improve documentation.
+	 * Resets the state of this token maker.  This method should be called
+	 * by the <code>TokenMaker</code> every time a token list is generated for
+	 * a new line so the tokens can be reused.
 	 */
 	public void resetAllTokens();
 
