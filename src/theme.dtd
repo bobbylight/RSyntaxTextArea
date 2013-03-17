@@ -1,5 +1,5 @@
-<!-- DTD for RSyntaxTextArea Theme XML. -->
-<!ELEMENT RSyntaxTheme (baseFont, background, caret, selection,
+<!-- DTD for RSyntaxTextArea Theme XML. See /themes folder for examples. -->
+<!ELEMENT RSyntaxTheme (baseFont?, background, caret, selection,
       currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
       matchedBracket, hyperlinks, secondaryLanguages, gutterBorder, lineNumbers,
       foldIndicator, iconRowHeader, tokenStyles)>
@@ -28,10 +28,12 @@
       color    CDATA #REQUIRED>
 <!ATTLIST baseFont
       family    CDATA #IMPLIED
-      size      CDATA #REQUIRED>
+      size      CDATA #IMPLIED>
 <!ATTLIST caret
       color     CDATA #REQUIRED>
 <!ATTLIST selection
+      fg        CDATA #IMPLIED
+      useFG     (true|false) "true"
       bg        CDATA #REQUIRED
       roundedEdges (true|false) "false">
 <!ATTLIST currentLineHighlight

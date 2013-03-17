@@ -125,7 +125,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 2.0.5
+ * @version 2.0.7
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
@@ -151,6 +151,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String SYNTAX_STYLE_PROPERTY					= "RSTA.syntaxStyle";
 	public static final String TAB_LINE_COLOR_PROPERTY					= "RSTA.tabLineColor";
 	public static final String TAB_LINES_PROPERTY						= "RSTA.tabLines";
+	public static final String USE_SELECTED_TEXT_COLOR_PROPERTY			= "RSTA.useSelectedTextColor";
 	public static final String VISIBLE_WHITESPACE_PROPERTY				= "RSTA.visibleWhitespace";
 
 	private static final Color DEFAULT_BRACKET_MATCH_BG_COLOR		= new Color(234,234,255);
@@ -261,6 +262,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	/** Whether secondary languages have their backgrounds colored. */
 	private boolean highlightSecondaryLanguages;
+
+	/** Whether the "selected text" color should be used with selected text. */
+	private boolean useSelectedTextColor;
 
 	/** Used during "Copy as RTF" operations. */
 	private RtfGenerator rtfGenerator;
@@ -1712,6 +1716,22 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether selected text should use the "selected text color"
+	 * property set via {@link #setSelectedTextColor(Color)}.  This is the
+	 * typical behavior of text components.  By default, RSyntaxTextArea does
+	 * not do this, so that token styles are visible even in selected regions
+	 * of text.
+	 *
+	 * @return Whether the "selected text" color is used when painting text
+	 *         in selected regions.
+	 * @see #setUseSelectedTextColor(boolean)
+	 */
+	public boolean getUseSelectedTextColor() {
+		return useSelectedTextColor;
+	}
+
+
+	/**
 	 * Called by constructors to initialize common properties of the text
 	 * editor.
 	 */
@@ -2669,6 +2689,26 @@ private boolean fractionalFontMetricsEnabled;
 		if (use!=useFocusableTips) {
 			useFocusableTips = use;
 			firePropertyChange(FOCUSABLE_TIPS_PROPERTY, !use, use);
+		}
+	}
+
+
+	/**
+	 * Sets whether selected text should use the "selected text color" property
+	 * (set via {@link #setSelectedTextColor(Color)}).  This is the typical
+	 * behavior of text components.  By default, RSyntaxTextArea does not do
+	 * this, so that token styles are visible even in selected regions of text.
+	 * This method fires a property change event of type
+	 * {@link #USE_SELECTED_TEXT_COLOR_PROPERTY}.
+	 *
+	 * @param use Whether to use the "selected text" color when painting text
+	 *        in selected regions.
+	 * @see #getUseSelectedTextColor()
+	 */
+	public void setUseSelectedTextColor(boolean use) {
+		if (use!=useSelectedTextColor) {
+			useSelectedTextColor = use;
+			firePropertyChange(USE_SELECTED_TEXT_COLOR_PROPERTY, !use, use);
 		}
 	}
 

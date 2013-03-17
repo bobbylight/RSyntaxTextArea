@@ -3,16 +3,17 @@
 
 <!--
 	Theme that mimics Eclipse's defaults.
+	See theme.dtd and org.fife.ui.rsyntaxtextarea.Theme for more information.
 -->
 <RSyntaxTheme version="1.0">
 
-   <!-- Specify family="..." attribute to override system default monospaced. -->
-   <baseFont size="12"/>
+   <!-- Omitting baseFont will use a system-appropriate monospaced. -->
+   <!--<baseFont family="..." size="13"/>-->
    
    <!--  General editor colors. -->
    <background color="ffffff"/>
    <caret color="000000"/>
-   <selection bg="c8c8ff"/>
+   <selection bg="default" fg="default"/>
    <currentLineHighlight color="e8f2fe" fade="false"/>
    <marginLine fg="b0b4b9"/>
    <markAllHighlight color="6b8189"/> <!-- TODO: Fix me -->
@@ -24,7 +25,6 @@
       <language index="2" bg="dafeda"/>
       <language index="3" bg="ffe0f0"/>
    </secondaryLanguages>
-   
    
    <!-- Gutter styling. -->
    <gutterBorder color="dddddd"/>

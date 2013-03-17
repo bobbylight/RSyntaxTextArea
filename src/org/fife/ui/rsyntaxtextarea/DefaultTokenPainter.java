@@ -55,14 +55,65 @@ class DefaultTokenPainter implements TokenPainter {
 	 */
 	public float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart) {
+		return paintImpl(token, g, x, y, host, e, clipStart, false);
+	}
+
+
+	/**
+	 * Paints the background of a token.
+	 *
+	 * @param x The x-coordinate of the token.
+	 * @param y The y-coordinate of the token.
+	 * @param width The width of the token (actually, the width of the part of
+	 *        the token to paint).
+	 * @param height The height of the token.
+	 * @param g The graphics context with which to paint.
+	 * @param fontAscent The ascent of the token's font.
+	 * @param host The text area.
+	 * @param color The color with which to paint.
+	 * @param xor Whether the color should be XOR'd against the editor's
+	 *        background.  This should be <code>true</code> when the selected
+	 *        text color is being ignored.
+	 */
+	protected void paintBackground(float x, float y, float width, float height,
+							Graphics2D g, int fontAscent, RSyntaxTextArea host,
+							Color color, boolean xor) {
+		// RSyntaxTextArea's bg can be null, so we must check for this.
+		Color temp = host.getBackground();
+		if (xor) { // XOR painting is pretty slow on Windows
+			g.setXORMode(temp!=null ? temp : Color.WHITE);
+		}
+		g.setColor(color);
+		bgRect.setRect(x,y-fontAscent, width,height);
+		//g.fill(bgRect);
+		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
+		if (xor) {
+			g.setPaintMode();
+		}
+	}
+
+
+	/**
+	 * Does the dirty-work of actually painting the token.
+	 */
+	protected float paintImpl(Token token, Graphics2D g, float x, float y,
+			RSyntaxTextArea host, TabExpander e, float clipStart,
+			boolean selected) {
 
 		int origX = (int)x;
 		int end = token.textOffset + token.textCount;
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = token.textOffset;
-		Color fg = host.getForegroundForToken(token);
-		Color bg = host.getBackgroundForToken(token);
+		Color fg, bg;
+		if (selected) {
+			fg = host.getSelectedTextColor();
+			bg = null;
+		}
+		else {
+			fg = host.getForegroundForToken(token);
+			bg = host.getBackgroundForToken(token);
+		}
 		g.setFont(host.getFontForTokenType(token.type));
 		FontMetrics fm = host.getFontMetricsForTokenType(token.type);
 
@@ -73,7 +124,7 @@ class DefaultTokenPainter implements TokenPainter {
 						x+fm.charsWidth(token.text, flushIndex,flushLen), 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,fm.getHeight(),
-										g, fm.getAscent(), host, bg);
+									g, fm.getAscent(), host, bg, !selected);
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
@@ -94,7 +145,7 @@ class DefaultTokenPainter implements TokenPainter {
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
 				paintBackground(x,y, nextX-x,fm.getHeight(),
-								g, fm.getAscent(), host, bg);
+								g, fm.getAscent(), host, bg, !selected);
 			}
 			g.setColor(fg);
 			g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
@@ -119,29 +170,20 @@ class DefaultTokenPainter implements TokenPainter {
 
 
 	/**
-	 * Paints the background of a token.
-	 *
-	 * @param x The x-coordinate of the token.
-	 * @param y The y-coordinate of the token.
-	 * @param width The width of the token (actually, the width of the part of
-	 *        the token to paint).
-	 * @param height The height of the token.
-	 * @param g The graphics context with which to paint.
-	 * @param fontAscent The ascent of the token's font.
-	 * @param host The text area.
-	 * @param color The color with which to paint.
+	 * {@inheritDoc}
 	 */
-	protected void paintBackground(float x, float y, float width, float height,
-							Graphics2D g, int fontAscent,
-							RSyntaxTextArea host, Color color) {
-		// RSyntaxTextArea's bg can be null, so we must check for this.
-		Color temp = host.getBackground();
-		g.setXORMode(temp!=null ? temp : Color.WHITE);
-		g.setColor(color);
-		bgRect.setRect(x,y-fontAscent, width,height);
-		//g.fill(bgRect);
-		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
-		g.setPaintMode();
+	public float paintSelected(Token token, Graphics2D g, float x, float y,
+			RSyntaxTextArea host, TabExpander e) {
+		return paintSelected(token, g, x, y, host, e, 0);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public float paintSelected(Token token, Graphics2D g, float x, float y,
+			RSyntaxTextArea host, TabExpander e, float clipStart) {
+		return paintImpl(token, g, x, y, host, e, clipStart, true);
 	}
 
 

@@ -51,16 +51,24 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public float paint(Token token, Graphics2D g, float x, float y,
-					RSyntaxTextArea host, TabExpander e, float clipStart) {
+	protected float paintImpl(Token token, Graphics2D g, float x, float y,
+			RSyntaxTextArea host, TabExpander e, float clipStart,
+			boolean selected) {
 
 		int origX = (int)x;
 		int end = token.textOffset + token.textCount;
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = token.textOffset;
-		Color fg = host.getForegroundForToken(token);
-		Color bg = host.getBackgroundForToken(token);
+		Color fg, bg;
+		if (selected) {
+			fg = host.getSelectedTextColor();
+			bg = null;
+		}
+		else {
+			fg = host.getForegroundForToken(token);
+			bg = host.getBackgroundForToken(token);
+		}
 		g.setFont(host.getFontForTokenType(token.type));
 		FontMetrics fm = host.getFontMetricsForTokenType(token.type);
 
@@ -78,7 +86,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 					float nextNextX = e.nextTabStop(nextX, 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextNextX-x,height, g,
-										ascent, host, bg);
+										ascent, host, bg, !selected);
 					}
 					g.setColor(fg);
 
@@ -118,7 +126,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 					// Paint background.
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,height, g,
-										ascent, host, bg);
+										ascent, host, bg, !selected);
 					}
 					g.setColor(fg);
 
@@ -153,7 +161,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
 				paintBackground(x,y, nextX-x,height, g,
-							ascent, host, bg);
+							ascent, host, bg, !selected);
 			}
 			g.setColor(fg);
 			g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);

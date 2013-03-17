@@ -2,7 +2,7 @@
 <!DOCTYPE RSyntaxTheme SYSTEM "theme.dtd">
 
 <!--
-	Theme that mimics Visual Studio's defaults.
+	RSyntaxTextArea's default theme, using the "standard" selection style.
 	See theme.dtd and org.fife.ui.rsyntaxtextarea.Theme for more information.
 -->
 <RSyntaxTheme version="1.0">
@@ -12,13 +12,13 @@
    
    <!--  General editor colors. -->
    <background color="ffffff"/>
-   <caret color="000000"/>
+   <caret color="ff0000"/>
    <selection fg="default" bg="default"/>
-   <currentLineHighlight color="e8f2fe" fade="false"/>
+   <currentLineHighlight color="ffffaa" fade="false"/>
    <marginLine fg="b0b4b9"/>
    <markAllHighlight color="6b8189"/> <!-- TODO: Fix me -->
-   <markOccurrencesHighlight color="d4d4d4" border="false"/> <!-- TODO: Fix me -->
-   <matchedBracket fg="DBE0CC" highlightBoth="false" animate="false"/>
+   <markOccurrencesHighlight color="d4d4d4" border="false"/>
+   <matchedBracket fg="000080" bg="eaeaff" highlightBoth="false" animate="true"/>
    <hyperlinks fg="0000ff"/>
    <secondaryLanguages>
       <language index="1" bg="fff0cc"/>
@@ -28,8 +28,8 @@
    
    
    <!-- Gutter styling. -->
-   <gutterBorder color="808080"/>
-   <lineNumbers fg="2B91AF"/>
+   <gutterBorder color="dddddd"/>
+   <lineNumbers fg="787878"/>
    <foldIndicator fg="808080" iconBg="ffffff"/>
    <iconRowHeader activeLineRange="3399ff"/>
    
@@ -39,31 +39,31 @@
       <style token="RESERVED_WORD" fg="0000ff" bold="true"/>
       <style token="RESERVED_WORD_2" fg="0000ff" bold="true"/>
       <style token="ANNOTATION" fg="808080"/>
-      <style token="COMMENT_DOCUMENTATION" fg="008000"/>
-      <style token="COMMENT_EOL" fg="008000"/>
-      <style token="COMMENT_MULTILINE" fg="008000"/>
-      <style token="COMMENT_KEYWORD" fg="ae9fbf"/>
+      <style token="COMMENT_DOCUMENTATION" fg="a40000" italic="true"/>
+      <style token="COMMENT_EOL" fg="008000" italic="true"/>
+      <style token="COMMENT_MULTILINE" fg="008000" italic="true"/>
+      <style token="COMMENT_KEYWORD" fg="ff9900" bold="true"/>
       <style token="COMMENT_MARKUP" fg="808080"/>
       <style token="DATA_TYPE" fg="008080" bold="true"/>
-      <style token="FUNCTION" fg="000000"/>
+      <style token="FUNCTION" fg="ad8000"/>
       <style token="LITERAL_BOOLEAN" fg="0000ff" bold="true"/>
-      <style token="LITERAL_NUMBER_DECIMAL_INT" fg="000000"/>
-      <style token="LITERAL_NUMBER_FLOAT" fg="000000"/>
-      <style token="LITERAL_NUMBER_HEXADECIMAL" fg="000000"/>
-      <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="A31515"/>
-      <style token="LITERAL_CHAR" fg="A31515"/>
-      <style token="LITERAL_BACKQUOTE" fg="A31515"/>
-      <style token="MARKUP_TAG_DELIMITER" fg="0000ff"/>
-      <style token="MARKUP_TAG_NAME" fg="A31515"/>
-      <style token="MARKUP_TAG_ATTRIBUTE" fg="ff0000"/>
-      <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="A31515"/>
+      <style token="LITERAL_NUMBER_DECIMAL_INT" fg="6400C8"/>
+      <style token="LITERAL_NUMBER_FLOAT" fg="6400C8"/>
+      <style token="LITERAL_NUMBER_HEXADECIMAL" fg="6400C8"/>
+      <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="DC009C"/>
+      <style token="LITERAL_CHAR" fg="DC009C"/>
+      <style token="LITERAL_BACKQUOTE" fg="DC009C"/>
+      <style token="MARKUP_TAG_DELIMITER" fg="ff0000"/>
+      <style token="MARKUP_TAG_NAME" fg="0000ff"/>
+      <style token="MARKUP_TAG_ATTRIBUTE" fg="3f7f7f"/>
+      <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="DC009C"/>
       <style token="MARKUP_PROCESSING_INSTRUCTION" fg="808080"/>
       <style token="MARKUP_CDATA" fg="cc6600"/>
       <style token="OPERATOR" fg="000000"/>
       <style token="PREPROCESSOR" fg="808080"/>
-      <style token="REGEX" fg="000000"/>
-      <style token="SEPARATOR" fg="000000"/>
-      <style token="VARIABLE" fg="ff9900" bold="true"/>
+      <style token="REGEX" fg="008040"/>
+      <style token="SEPARATOR" fg="ff0000"/>
+      <style token="VARIABLE" fg="ee8800" bold="true"/>
       <style token="WHITESPACE" fg="000000"/>
       
       <style token="ERROR_IDENTIFIER" fg="000000" bg="ffcccc"/>

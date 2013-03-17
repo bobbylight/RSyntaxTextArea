@@ -47,6 +47,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 */
 	private RSyntaxTextArea host;
 	private FontMetrics metrics;
+	private Token tempToken;
 
 //	/**
 //	 * The end-of-line marker.
@@ -68,6 +69,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 */
 	public WrappedSyntaxView(Element elem) {
 		super(elem, Y_AXIS);
+		tempToken = new Token();
 		s = new Segment();
 		drawSeg = new Segment();
 		tempRect = new Rectangle();
@@ -164,6 +166,12 @@ return p + 1;
 		alloc.y += y;
 		alloc.width = getSpan(X_AXIS, line);
 		alloc.height = getSpan(Y_AXIS, line);
+
+		// FIXME: This is required due to a bug that I can't track down.  The
+		// top margin is being added twice somewhere in wrapped views, so we
+		// have to adjust for it here.
+		alloc.y -= host.getMargin().top;
+
 	}
 
 
@@ -220,12 +228,184 @@ return p + 1;
 			
 			if (token!=null && token.isPaintable() && token.offset<p) {
 				int tokenOffset = token.offset;
-				Token temp = new Token(drawSeg, tokenOffset-start,
-									p-1-start, tokenOffset,
-									token.type);
-				painter.paint(temp, g, x,y, host, this);
-				temp = null;
+				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
+						tokenOffset, token.type);
+				painter.paint(tempToken, g, x,y, host, this);
 				token.makeStartAt(p);
+			}
+
+			p0 = (p==p0) ? p1 : p;
+			y += fontHeight;
+			
+		} // End of while (token!=null && token.isPaintable()).
+
+		// NOTE: We should re-use code from Token (paintBackground()) here,
+		// but don't because I'm just too lazy.
+		if (host.getEOLMarkersVisible()) {
+			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
+			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
+			g.drawString("\u00B6", x, y-fontHeight);
+		}
+
+	}
+
+
+	/**
+	 * Draws a single view (i.e., a line of text for a wrapped view), wrapping
+	 * the text onto multiple lines if necessary.  Any selected text is
+	 * rendered with the editor's "selected text" color.
+	 *
+	 * @param painter The painter to use to render tokens.
+	 * @param g The graphics context in which to paint.
+	 * @param r The rectangle in which to paint.
+	 * @param view The <code>View</code> to paint.
+	 * @param fontHeight The height of the font being used.
+	 * @param y The y-coordinate at which to begin painting.
+	 * @param selStart The start of the selection.
+	 * @param selEnd The end of the selection.
+	 */
+	protected void drawViewWithSelection(TokenPainter painter, Graphics2D g,
+				Rectangle r, View view, int fontHeight, int y, int selStart,
+				int selEnd) {
+
+		float x = r.x;
+
+		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
+
+		RSyntaxDocument document = (RSyntaxDocument)getDocument();
+		Element map = getElement();
+
+		int p0 = view.getStartOffset();
+		int lineNumber = map.getElementIndex(p0);
+		int p1 = view.getEndOffset();// - 1;
+
+		setSegment(p0,p1-1, document, drawSeg);
+		//System.err.println("drawSeg=='" + drawSeg + "' (p0/p1==" + p0 + "/" + p1 + ")");
+		int start = p0 - drawSeg.offset;
+		Token token = document.getTokenListForLine(lineNumber);
+
+		// If this line is an empty line, then the token list is simply a
+		// null token.  In this case, the line highlight will be skipped in
+		// the loop below, so unfortunately we must manually do it here.
+		if (token!=null && token.type==Token.NULL) {
+			h.paintLayeredHighlights(g, p0,p1, r, host, this);
+			return;
+		}
+
+		// Loop through all tokens in this view and paint them!
+		while (token!=null && token.isPaintable()) {
+
+			int p = calculateBreakPosition(p0, token, x);
+			x = r.x;
+
+			h.paintLayeredHighlights(g, p0,p, r, host, this);
+
+			while (token!=null && token.isPaintable() && token.offset+token.textCount-1<p) {//<=p) {
+
+				// Selection starts in this token
+				if (token.containsPosition(selStart)) {
+
+
+					if (selStart>token.offset) {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selStart - tempToken.offset;
+						x = painter.paint(tempToken,g,x,y,host, this);
+						token.makeStartAt(selStart);
+					}
+
+					int selCount = Math.min(token.textCount, selEnd-token.offset);
+					if (selCount==token.textCount) {
+						x = painter.paintSelected(token, g, x,y, host, this);
+					}
+					else {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selCount;
+						x = painter.paintSelected(tempToken, g, x,y, host, this);
+						token.makeStartAt(token.offset + selCount);
+						x = painter.paint(token, g, x,y, host, this);
+					}
+
+				}
+
+				// Selection ends in this token
+				else if (token.containsPosition(selEnd)) {
+					tempToken.copyFrom(token);
+					tempToken.textCount = selEnd - tempToken.offset;
+					x = painter.paintSelected(tempToken, g, x,y, host, this);
+					token.makeStartAt(selEnd);
+					x = painter.paint(token, g, x,y, host, this);
+				}
+
+				// This token is entirely selected
+				else if (token.offset>=selStart &&
+						(token.offset+token.textCount)<=selEnd) {
+					x = painter.paintSelected(token, g, x,y, host, this);
+				}
+
+				// This token is entirely unselected
+				else {
+					x = painter.paint(token, g, x,y, host, this);
+				}
+
+				token = token.getNextToken();
+
+			}
+
+			// If there's a token that's going to be split onto the next line
+			if (token!=null && token.isPaintable() && token.offset<p) {
+
+				int tokenOffset = token.offset;
+				Token orig = token;
+				token = new Token(drawSeg, tokenOffset-start, p-1-start,
+									tokenOffset, token.type);
+
+				// Selection starts in this token
+				if (token.containsPosition(selStart)) {
+
+					if (selStart>token.offset) {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selStart - tempToken.offset;
+						x = painter.paint(tempToken,g,x,y,host, this);
+						token.makeStartAt(selStart);
+					}
+
+					int selCount = Math.min(token.textCount, selEnd-token.offset);
+					if (selCount==token.textCount) {
+						x = painter.paintSelected(token, g, x,y, host, this);
+					}
+					else {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selCount;
+						x = painter.paintSelected(tempToken, g, x,y, host, this);
+						token.makeStartAt(token.offset + selCount);
+						x = painter.paint(token, g, x,y, host, this);
+					}
+
+				}
+
+				// Selection ends in this token
+				else if (token.containsPosition(selEnd)) {
+					tempToken.copyFrom(token);
+					tempToken.textCount = selEnd - tempToken.offset;
+					x = painter.paintSelected(tempToken, g, x,y, host, this);
+					token.makeStartAt(selEnd);
+					x = painter.paint(token, g, x,y, host, this);
+				}
+
+				// This token is entirely selected
+				else if (token.offset>=selStart &&
+						(token.offset+token.textCount)<=selEnd) {
+					x = painter.paintSelected(token, g, x,y, host, this);
+				}
+
+				// This token is entirely unselected
+				else {
+					x = painter.paint(token, g, x,y, host, this);
+				}
+
+				token = orig;
+				token.makeStartAt(p);
+
 			}
 
 			p0 = (p==p0) ? p1 : p;
@@ -637,23 +817,44 @@ return p + 1;
 		int fontHeight = host.getLineHeight();
 		FoldManager fm = host.getFoldManager();
 		TokenPainter painter = host.getTokenPainter();
+		Element root = getElement();
+
+		// Whether token styles should always be painted, even in selections
+		int selStart = host.getSelectionStart();
+		int selEnd = host.getSelectionEnd();
+		boolean useSelectedTextColor = host.getUseSelectedTextColor();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
 		tempRect.y = alloc.y + getTopInset();
 		Rectangle clip = g.getClipBounds();
 		for (int i = 0; i < n; i++) {
+
 			tempRect.x = x + getOffset(X_AXIS, i);
 			//tempRect.y = y + getOffset(Y_AXIS, i);
 			tempRect.width = getSpan(X_AXIS, i);
 			tempRect.height = getSpan(Y_AXIS, i);
 			//System.err.println("For line " + i + ": tempRect==" + tempRect);
+
 			if (tempRect.intersects(clip)) {
+				Element lineElement = root.getElement(i);
+				int startOffset = lineElement.getStartOffset();
+				int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
 				View view = getView(i);
-				drawView(painter, g2d, alloc, view, fontHeight,
-						tempRect.y+ascent);
+				if (!useSelectedTextColor || selStart==selEnd ||
+						(startOffset>=selEnd || endOffset<selStart)) {
+					drawView(painter, g2d, alloc, view, fontHeight,
+							tempRect.y+ascent);
+				}
+				else {
+					//System.out.println("Drawing line with selection: " + i);
+					drawViewWithSelection(painter, g2d, alloc, view, fontHeight,
+							tempRect.y+ascent, selStart, selEnd);
+				}
 			}
+
 			tempRect.y += tempRect.height;
+
 			Fold possibleFold = fm.getFoldForLine(i);
 			if (possibleFold!=null && possibleFold.isCollapsed()) {
 				i += possibleFold.getCollapsedLineCount();
@@ -664,6 +865,7 @@ return p + 1;
 					g.drawLine(x,tempRect.y-1, alloc.width,tempRect.y-1);
 				}
 			}
+
 		}
 
 	}
