@@ -353,7 +353,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state = Token.NULL;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case Token.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
 			case Token.VARIABLE:
@@ -545,7 +545,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 Whitespace					= ([ \t\f]+)
 LineTerminator				= ([\n])
 Identifier					= ([^ \t\n<&]+)
-AmperItem					= ([&][^; \t]*[;]?)
+EntityReference					= ([&][^; \t]*[;]?)
 InTagIdentifier				= ([^ \t\n\"\'/=>]+)
 EndScriptTag				= ("</" [sS][cC][rR][iI][pP][tT] ">")
 EndStyleTag					= ("</" [sS][tT][yY][lL][eE] ">")
@@ -667,7 +667,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								  start = zzMarkedPos; cssPrevState = zzLexicalState; yybegin(INTAG_STYLE);
 								}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
-	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ addToken(Token.MARKUP_TAG_DELIMITER); phpInState = zzLexicalState; yybegin(PHP); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
@@ -684,26 +684,26 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
 	{Identifier}				{ addToken(Token.IDENTIFIER); } // Catches everything.
-	{AmperItem}				{ addToken(Token.DATA_TYPE); }
+	{EntityReference}				{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
 <COMMENT> {
 	[^hwf\n\-]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); }
+	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); }
 	"-"						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	{LineTerminator} |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken; }
 }
 
 <DTD> {
 	[^\n>]+					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
-	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.VARIABLE); }
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
+	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); }
+	{LineTerminator} |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); return firstToken; }
 }
 
 <INTAG_CHECK_TAG_NAME> {
@@ -1259,7 +1259,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <PHP> {
 
-	"?>"						{ addToken(Token.SEPARATOR); start = zzMarkedPos; yybegin(phpInState); }
+	"?>"						{ addToken(Token.MARKUP_TAG_DELIMITER); start = zzMarkedPos; yybegin(phpInState); }
 
 	/* Error control operator */
 	("@"{JS_Identifier})		{

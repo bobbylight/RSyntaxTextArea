@@ -260,7 +260,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state = YYINITIAL;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case Token.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
 			case INTERNAL_DTD:
@@ -375,7 +375,7 @@ TagName				= ({NameStartChar}{NameChar}*)
 Whitespace			= ([ \t\f])
 LineTerminator			= ([\n])
 Identifier			= ([^ \t\n<&]+)
-AmperItem				= ([&][^; \t]*[;]?)
+EntityReference		= ([&][^; \t]*[;]?)
 InTagIdentifier		= ([^ \t\n\"\'=\/>]+)
 CDataBegin			= ("<![CDATA[")
 CDataEnd				= ("]]>")
@@ -400,7 +400,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 	"<!--"							{ start = zzStartRead; prevState = zzLexicalState; yybegin(COMMENT); }
-	{CDataBegin}					{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(CDATA); }
+	{CDataBegin}					{ addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(CDATA); }
 	"<!"							{ start = zzMarkedPos-2; inInternalDtd = false; yybegin(DTD); }
 	"<?"							{ start = zzMarkedPos-2; yybegin(PI); }
 	"<"{TagName}				{
@@ -419,19 +419,19 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	{AmperItem}					{ addToken(Token.DATA_TYPE); }
+	{EntityReference}				{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
 	{Whitespace}+					{ addToken(Token.WHITESPACE); }
 	<<EOF>>						{ addNullToken(); return firstToken; }
 }
 
 <COMMENT> {
 	[^hwf\n\-]+					{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]						{}
-	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); start = temp; yybegin(prevState); }
+	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(prevState); }
 	"-"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken; }
 }
 
 <PI> {
@@ -444,13 +444,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <DTD> {
 	[^\n\[\]<>]+				{}
-	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.FUNCTION); start = temp; prevState = zzLexicalState; yybegin(COMMENT); }
+	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; prevState = zzLexicalState; yybegin(COMMENT); }
 	"<"							{}
 	"["							{ inInternalDtd = true; }
 	"]"							{ inInternalDtd = false; }
-	">"							{ if (!inInternalDtd) { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.FUNCTION); } }
+	">"							{ if (!inInternalDtd) { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); } }
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken; }
 }
 
 <INTAG> {
@@ -479,7 +479,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CDATA> {
 	[^\]]+						{}
-	{CDataEnd}					{ int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
+	{CDataEnd}					{ int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER); }
 	"]"							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_CDATA); return firstToken; }
 }

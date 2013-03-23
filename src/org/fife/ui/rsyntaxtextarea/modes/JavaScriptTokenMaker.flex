@@ -479,7 +479,7 @@ e4x_NameChar			= ({e4x_NameStartChar}|[\-\.0-9])
 e4x_TagName				= ({e4x_NameStartChar}{e4x_NameChar}*)
 e4x_Identifier			= ([^ \t\n<&;]+)
 e4x_EndXml				= ([;])
-e4x_AmperItem			= ([&][^; \t]*[;]?)
+e4x_EntityReference			= ([&][^; \t]*[;]?)
 e4x_InTagIdentifier		= ([^ \t\n\"\'=\/>]+)
 e4x_CDataBegin			= ("<![CDATA[")
 e4x_CDataEnd			= ("]]>")
@@ -740,7 +740,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <E4X> {
 	"<!--"						{ start = zzStartRead; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
-	{e4x_CDataBegin}			{ addToken(Token.DATA_TYPE); start = zzMarkedPos; yybegin(E4X_CDATA); }
+	{e4x_CDataBegin}			{ addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(E4X_CDATA); }
 	"<!"						{ start = zzMarkedPos-2; e4x_inInternalDtd = false; yybegin(E4X_DTD); }
 	"<?"						{ start = zzMarkedPos-2; yybegin(E4X_PI); }
 	"<"{e4x_TagName}			{
@@ -759,7 +759,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
 	{e4x_Identifier}			{ addToken(Token.IDENTIFIER); }
 	{e4x_EndXml}				{ yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(Token.IDENTIFIER); }
-	{e4x_AmperItem}				{ addToken(Token.DATA_TYPE); }
+	{e4x_EntityReference}				{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 	{LineTerminator} |
 	<<EOF>>						{ addEndToken(INTERNAL_E4X); return firstToken; }
@@ -767,31 +767,31 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <E4X_COMMENT> {
 	[^hwf\n\-]+					{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]						{}
-	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); start = temp; yybegin(e4x_prevState); }
+	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(e4x_prevState); }
 	"-"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken; }
 }
 
 <E4X_PI> {
 	[^\n\?]+					{}
-	"?>"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
+	"?>"						{ yybegin(E4X); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
 	"?"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
 }
 
 <E4X_DTD> {
 	[^\n\[\]<>]+				{}
-	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.FUNCTION); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
+	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
 	"<"							{}
 	"["							{ e4x_inInternalDtd = true; }
 	"]"							{ e4x_inInternalDtd = false; }
-	">"							{ if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, Token.FUNCTION); } }
+	">"							{ if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, Token.MARKUP_DTD); } }
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken; }
 }
 
 <E4X_INTAG> {
@@ -820,7 +820,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <E4X_CDATA> {
 	[^\]]+						{}
-	{e4x_CDataEnd}					{ int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.DATA_TYPE); }
+	{e4x_CDataEnd}				{ int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER); }
 	"]"							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_MARKUP_CDATA); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addEndToken(INTERNAL_E4X_MARKUP_CDATA); return firstToken; }
 }

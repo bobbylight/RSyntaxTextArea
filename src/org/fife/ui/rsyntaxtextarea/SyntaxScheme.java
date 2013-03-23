@@ -228,7 +228,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 
 	/**
-	 * Loads a syntax scheme from an input stream.
+	 * Loads a syntax scheme from an input stream.<p>
+	 * 
+	 * Consider using the {@link Theme} class for saving and loading RSTA
+	 * styles rather than using this API.
 	 *
 	 * @param baseFont The font to use as the "base" for the syntax scheme.
 	 *        If this is <code>null</code>, a default monospaced font is used.
@@ -249,7 +252,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	/**
 	 * Loads a syntax highlighting color scheme from a string created from
 	 * <code>toCommaSeparatedString</code>.  This method is useful for saving
-	 * and restoring color schemes.
+	 * and restoring color schemes.<p>
+	 * 
+	 * Consider using the {@link Theme} class for saving and loading RSTA
+	 * styles rather than using this API.
 	 *
 	 * @param string A string generated from {@link #toCommaSeparatedString()}.
 	 * @return A color scheme.
@@ -368,9 +374,12 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		// Colors used by tokens.
 		Color comment			= new Color(0,128,0);
 		Color docComment		= new Color(164,0,0);
+		Color markupComment		= new Color(0, 96, 0);
 		Color keyword			= Color.BLUE;
+		Color dataType			= new Color(0,128,128);
 		Color function			= new Color(173,128,0);
-		Color preprocessor		= new Color(128,64,64);
+		Color preprocessor		= new Color(128,128,128);
+		Color operator			= new Color(128, 64, 64);
 		Color regex				= new Color(0,128,164);
 		Color variable			= new Color(255,153,0);
 		Color literalNumber		= new Color(100,0,200);
@@ -410,21 +419,25 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		styles[LITERAL_STRING_DOUBLE_QUOTE]	= new Style(literalString);
 		styles[LITERAL_CHAR]				= new Style(literalString);
 		styles[LITERAL_BACKQUOTE]			= new Style(literalString);
-		styles[DATA_TYPE]				= new Style(new Color(0,128,128));
+		styles[DATA_TYPE]				= new Style(dataType, null, keywordFont);
 		styles[VARIABLE]					= new Style(variable);
 		styles[REGEX]						= new Style(regex);
 		styles[ANNOTATION]				= new Style(Color.gray);
 		styles[IDENTIFIER]				= new Style(null);
 		styles[WHITESPACE]				= new Style(Color.gray);
 		styles[SEPARATOR]				= new Style(Color.RED);
-		styles[OPERATOR]					= new Style(preprocessor);
-		styles[PREPROCESSOR]				= new Style(Color.gray);
+		styles[OPERATOR]					= new Style(operator);
+		styles[PREPROCESSOR]				= new Style(preprocessor);
 		styles[MARKUP_TAG_DELIMITER]		= new Style(Color.RED);
 		styles[MARKUP_TAG_NAME]			= new Style(Color.BLUE);
 		styles[MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127));
 		styles[MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString);
+		styles[MARKUP_COMMENT]              = new Style(markupComment, null, commentFont);
+		styles[MARKUP_DTD]              = new Style(function);
 		styles[MARKUP_PROCESSING_INSTRUCTION] = new Style(preprocessor);
-		styles[MARKUP_CDATA]				= new Style(variable);
+		styles[MARKUP_CDATA]				= new Style(new Color(0xcc6600));
+		styles[MARKUP_CDATA_DELIMITER]		= new Style(new Color(0x008080));
+		styles[MARKUP_ENTITY_REFERENCE]		= new Style(dataType);
 		styles[ERROR_IDENTIFIER]			= new Style(error);
 		styles[ERROR_NUMBER_FORMAT]		= new Style(error);
 		styles[ERROR_STRING_DOUBLE]		= new Style(error);

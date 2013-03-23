@@ -44,7 +44,7 @@
       <style token="COMMENT_MULTILINE" fg="008000"/>
       <style token="COMMENT_KEYWORD" fg="ae9fbf"/>
       <style token="COMMENT_MARKUP" fg="808080"/>
-      <style token="DATA_TYPE" fg="008080" bold="true"/>
+      <style token="DATA_TYPE" fg="0000ff" bold="true"/>
       <style token="FUNCTION" fg="000000"/>
       <style token="LITERAL_BOOLEAN" fg="0000ff" bold="true"/>
       <style token="LITERAL_NUMBER_DECIMAL_INT" fg="000000"/>
@@ -56,9 +56,12 @@
       <style token="MARKUP_TAG_DELIMITER" fg="0000ff"/>
       <style token="MARKUP_TAG_NAME" fg="A31515"/>
       <style token="MARKUP_TAG_ATTRIBUTE" fg="ff0000"/>
-      <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="A31515"/>
+      <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="0000ff"/>
+      <style token="MARKUP_COMMENT" fg="006000" italic="true"/>
+      <style token="MARKUP_DTD" fg="ad8000"/>
       <style token="MARKUP_PROCESSING_INSTRUCTION" fg="808080"/>
-      <style token="MARKUP_CDATA" fg="cc6600"/>
+      <style token="MARKUP_CDATA" fg="000000"/>
+      <style token="MARKUP_CDATA_DELIMITER" fg="0000ff"/>
       <style token="OPERATOR" fg="000000"/>
       <style token="PREPROCESSOR" fg="808080"/>
       <style token="REGEX" fg="000000"/>

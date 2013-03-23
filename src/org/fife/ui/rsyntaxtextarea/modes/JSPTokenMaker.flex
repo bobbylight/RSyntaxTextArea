@@ -350,7 +350,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state = Token.NULL;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case Token.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
 			case Token.PREPROCESSOR:
@@ -549,7 +549,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 Whitespace					= ([ \t\f])
 LineTerminator				= ([\n])
 Identifier					= ([^ \t\n<&]+)
-AmperItem					= ([&][^; \t]*[;]?)
+EntityReference				= ([&][^; \t]*[;]?)
 InTagIdentifier				= ([^ \t\n\"\'/=>]+)
 UnclosedStringLiteral		= ([\"][^\"]*)
 StringLiteral				= ({UnclosedStringLiteral}[\"])
@@ -710,8 +710,8 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
 	"<?"						{ start = zzMarkedPos-2; yybegin(PI); }
 	"<%--"					{ start = zzMarkedPos-4; yybegin(HIDDEN_COMMENT); }
-	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
-	"<%@"                         { addToken(Token.SEPARATOR); yybegin(JSP_DIRECTIVE); }
+	{JspStart}				{ addToken(Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	"<%@"                         { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(JSP_DIRECTIVE); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
@@ -728,44 +728,44 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
 	{Identifier}				{ addToken(Token.IDENTIFIER); } // Catches everything.
-	{AmperItem}				{ addToken(Token.DATA_TYPE); }
+	{EntityReference}			{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
 <COMMENT> {
 	[^hwf\n\-]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.COMMENT_MULTILINE); }
+	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); }
 	"-"						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	{LineTerminator} |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken; }
 }
 
 <HIDDEN_COMMENT> {
 	[^hwf\n\-]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_HIDDEN_COMMENT); return firstToken; }
-	"--%>"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+3, Token.COMMENT_MULTILINE); }
+	"--%>"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+3, Token.MARKUP_COMMENT); }
 	"-"						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_HIDDEN_COMMENT); return firstToken; }
+	{LineTerminator} |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_HIDDEN_COMMENT); return firstToken; }
 }
 
 <PI> {
 	[^\n\?]+					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
-	"?>"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.PREPROCESSOR); }
+	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
+	"?>"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
 	"?"						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
 }
 
 <DTD> {
 	[^\n>]+					{}
-	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
-	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.VARIABLE); }
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.VARIABLE); return firstToken; }
+	{LineTerminator}			{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); return firstToken; }
+	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); return firstToken; }
 }
 
 <INTAG_CHECK_TAG_NAME> {
@@ -901,7 +901,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INTAG> {
-	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ addToken(Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
@@ -914,7 +914,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INATTR_DOUBLE> {
-	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	[^\"<]*					{}
 	"<"						{ /* Allowing JSP expressions, etc. */ }
 	[\"]					{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
@@ -922,7 +922,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INATTR_SINGLE> {
-	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	[^\'<]*					{}
 	"<"						{ /* Allowing JSP expressions, etc. */ }
 	[\']					{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
@@ -930,7 +930,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INTAG_SCRIPT> {
-	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ addToken(Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
@@ -943,7 +943,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INATTR_DOUBLE_SCRIPT> {
-	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	[^\"<]*					{}
 	"<"						{ /* Allowing JSP expressions, etc. */ }
 	[\"]					{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
@@ -951,7 +951,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 }
 
 <INATTR_SINGLE_SCRIPT> {
-	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 	[^\'<]*					{}
 	"<"						{ /* Allowing JSP expressions, etc. */ }
 	[\']					{ yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
@@ -1106,7 +1106,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
 	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
 
-	{JspStart}				{ addToken(Token.SEPARATOR); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
+	{JspStart}				{ addToken(Token.MARKUP_TAG_DELIMITER); jspInState = zzLexicalState; yybegin(JAVA_EXPRESSION); }
 
 	/* Operators. */
 	{JS_Operator}					{ addToken(Token.OPERATOR); }
@@ -1314,7 +1314,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 
 <JAVA_EXPRESSION> {
 
-	"%>"							{ addToken(Token.SEPARATOR); start = zzMarkedPos; yybegin(jspInState); }
+	"%>"							{ addToken(Token.MARKUP_TAG_DELIMITER); start = zzMarkedPos; yybegin(jspInState); }
 
 	/* Keywords */
 	"abstract"|
@@ -1551,7 +1551,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	{InTagIdentifier}			{ addToken(Token.IDENTIFIER); }
 	{Whitespace}+				{ addToken(Token.WHITESPACE); }
 	"="						{ addToken(Token.OPERATOR); }
-	"%>"						{ yybegin(YYINITIAL); addToken(Token.SEPARATOR); }
+	"%>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
 	"%"						{ addToken(Token.IDENTIFIER); }
 	">"						{ addToken(Token.IDENTIFIER); /* Needed as InTagIdentifier ignores it. */ }
 	{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); }
