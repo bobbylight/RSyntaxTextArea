@@ -286,6 +286,7 @@ public class Token implements TokenTypes {
 		textCount = t2.textCount;
 		offset = t2.offset;
 		type = t2.type;
+		hyperlink = t2.hyperlink;
 		languageIndex = t2.languageIndex;
 		nextToken = t2.nextToken;
 	}

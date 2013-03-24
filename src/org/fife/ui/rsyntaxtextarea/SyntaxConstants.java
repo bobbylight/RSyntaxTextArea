@@ -233,6 +233,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Visual Basic.
+	 */
+	public static final String SYNTAX_STYLE_VISUAL_BASIC	= "text/vb";
+
+
+	/**
 	 * Style for highlighting Windows batch files.
 	 */
 	public static final String SYNTAX_STYLE_WINDOWS_BATCH	= "text/bat";
