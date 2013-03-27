@@ -10,11 +10,11 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import org.fife.ui.rtextarea.RTextArea;
 
 
 /**
@@ -52,7 +52,6 @@ public class RtfGenerator {
 	private boolean lastBold;
 	private boolean lastItalic;
 	private int lastFontSize;
-	private String monospacedFontName;
 
 	/**
 	 * Java2D assumes a 72 dpi screen resolution, but on Windows the screen
@@ -175,7 +174,7 @@ public class RtfGenerator {
 
 			// Set styles to use.
 			if (f!=null) {
-				int fontSize = fixFontSize(f.getSize2D()); // Half points
+				int fontSize = fixFontSize(f.getSize2D()*2); // Half points!
 				if (fontSize!=lastFontSize) {
 					document.append("\\fs").append(fontSize);
 					lastFontSize = fontSize;
@@ -303,9 +302,10 @@ public class RtfGenerator {
 
 
 	/**
-	 * Returns a font point size adjusted for the current screen resolution.
+	 * Returns a font point size, adjusted for the current screen resolution.<p>
+	 * 
 	 * Java2D assumes 72 dpi.  On systems with larger dpi (Windows, GTK, etc.),
-	 * font rendering will appear to small if we simply return a Java "Font"
+	 * font rendering will appear too small if we simply return a Java "Font"
 	 * object's getSize() value.  We need to adjust it for the screen
 	 * resolution.
 	 *
@@ -317,7 +317,7 @@ public class RtfGenerator {
 	 */
 	private int fixFontSize(float pointSize) {
 		if (screenRes!=72) { // Java2D assumes 72 dpi
-			pointSize = (int)Math.round(pointSize*screenRes/72.0);
+			pointSize = Math.round(pointSize*72f/screenRes);
 		}
 		return (int)pointSize;
 	}
@@ -380,7 +380,7 @@ public class RtfGenerator {
 		// Workaround for text areas using the Java logical font "Monospaced"
 		// by default.  There's no way to know what it's mapped to, so we
 		// just search for a monospaced font on the system.
-		String monoFamilyName = getMonospacedFontName();
+		String monoFamilyName = getMonospacedFontFamily();
 
 		sb.append("{\\fonttbl{\\f0\\fnil\\fcharset0 " + monoFamilyName + ";}");
 		for (int i=0; i<fontList.size(); i++) {
@@ -418,74 +418,17 @@ public class RtfGenerator {
 
 
 	/**
-	 * Try to pick a monospaced font installed on this system.  We try
-	 * to check for monospaced fonts that are commonly installed on
-	 * different OS's.  This information was gleaned from
-	 * http://www.codestyle.org/css/font-family/sampler-Monospace.shtml.
+	 * Returns a good "default" monospaced font to use when Java's logical
+	 * font "Monospaced" is found.
 	 *
-	 * @return The name of a monospaced font.
+	 * @return The monospaced font family to use.
 	 */
-	private String getMonospacedFontName() {
-
-		if (monospacedFontName==null) {
-
-			GraphicsEnvironment ge = GraphicsEnvironment.
-									getLocalGraphicsEnvironment();
-			String[] familyNames = ge.getAvailableFontFamilyNames();
-			Arrays.sort(familyNames);
-			boolean windows = System.getProperty("os.name").toLowerCase().
-								indexOf("windows")>=0;
-
-			// "Monaco" is the "standard" monospaced font on OS X.  We'll
-			// check for it first so on Macs we don't get stuck with the
-			// uglier Courier New. It'll look funny on Windows though, so
-			// don't pick it if we're on Windows.
-			// It's found on Windows 1.76% of the time, OS X 96.73%
-			// of the time, and UNIX 00.00% (?) of the time.
-			if (!windows && Arrays.binarySearch(familyNames, "Monaco")>=0) {
-				monospacedFontName = "Monaco";
-			}
-
-			// "Courier New" is found on Windows 96.48% of the time,
-			// OS X 92.38% of the time, and UNIX 61.95% of the time.
-			else if (Arrays.binarySearch(familyNames, "Courier New")>=0) {
-				monospacedFontName = "Courier New";
-			}
-
-			// "Courier" is found on Windows ??.??% of the time,
-			// OS X 96.27% of the time, and UNIX 74.04% of the time.
-			else if (Arrays.binarySearch(familyNames, "Courier")>=0) {
-				monospacedFontName = "Courier";
-			}
-
-			// "Nimbus Mono L" is on Windows 00.00% (?) of the time,
-			// OS X 00.00% (?) of the time, but on UNIX 88.79% of the time.
-			else if (Arrays.binarySearch(familyNames, "Nimbus Mono L")>=0) {
-				monospacedFontName = "Nimbus Mono L";
-			}
-
-			// "Lucida Sans Typewriter" is on Windows 49.37% of the time,
-			// OS X 90.43% of the time, and UNIX 00.00% (?) of the time.
-			else if (Arrays.binarySearch(familyNames, "Lucida Sans Typewriter")>=0) {
-				monospacedFontName = "Lucida Sans Typewriter";
-			}
-
-			// "Bitstream Vera Sans Mono" is on Windows 29.81% of the time,
-			// OS X 25.53% of the time, and UNIX 80.71% of the time.
-			else if (Arrays.binarySearch(familyNames, "Bitstream Vera Sans Mono")>=0) {
-				monospacedFontName = "Bitstream Vera Sans Mono";
-			}
-
-			// Windows: 34.16% of the time, OS X: 00.00% (?) of the time,
-			// UNIX: 33.92% of the time.
-			if (monospacedFontName==null) {
-				monospacedFontName = "Terminal";
-			}
-
+	private static final String getMonospacedFontFamily() {
+		String family = RTextArea.getDefaultFont().getFamily();
+		if ("Monospaced".equals(family)) {
+			family = "Courier";
 		}
-
-		return monospacedFontName;
-
+		return family;
 	}
 
 
