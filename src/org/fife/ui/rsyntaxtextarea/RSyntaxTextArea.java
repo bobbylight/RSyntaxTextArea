@@ -24,7 +24,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.font.FontRenderContext;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
@@ -1774,7 +1777,8 @@ private boolean fractionalFontMetricsEnabled;
 		isScanningForLinks = false;
 		setUseFocusableTips(true);
 
-		setAntiAliasingEnabled(true);
+		//setAntiAliasingEnabled(true);
+		setDefaultAntiAliasingState();
 		restoreDefaultSyntaxScheme();
 
 		setHighlightSecondaryLanguages(true);
@@ -2167,6 +2171,58 @@ private boolean fractionalFontMetricsEnabled;
 			foldManager.setCodeFoldingEnabled(enabled);
 			firePropertyChange(CODE_FOLDING_PROPERTY, !enabled, enabled);
 		}
+	}
+
+
+	/**
+	 * Sets anti-aliasing to whatever the user's desktop vaule is.
+	 *
+	 * @see #getAntiAliasingEnabled()
+	 */
+	private final void setDefaultAntiAliasingState() {
+
+		// Most accurate technique, but not available on all OSes.
+		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
+
+		if (aaHints==null) {
+
+			aaHints = new HashMap();
+
+			// In Java 6+, you can figure out what text AA hint Swing uses for
+			// JComponents...
+			JLabel label = new JLabel();
+			FontMetrics fm = label.getFontMetrics(label.getFont());
+			Object hint = null;
+			//FontRenderContext frc = fm.getFontRenderContext();
+			//hint = fm.getAntiAliasingHint();
+			try {
+				Method m = FontMetrics.class.getMethod("getFontRenderContext", null);
+				FontRenderContext frc = (FontRenderContext)m.invoke(fm, null);
+				m = FontRenderContext.class.getMethod("getAntiAliasingHint", null);
+				hint = m.invoke(frc, null);
+			} catch (RuntimeException re) {
+				throw re; // FindBugs
+			} catch (Exception e) {
+				// Swallow, either Java 1.4 or 1.5, or running in an applet
+			}
+
+			// If not running Java 6+, just hope that Java's "default" really
+			// is the desktop value.
+			//System.out.println("Rendering hint: " + hint);
+			if (hint==null) {
+				hint = RenderingHints.VALUE_ANTIALIAS_DEFAULT;
+			}
+			aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
+
+		}
+
+		// We must be connected to a screen resource for our graphics
+		// to be non-null.
+		if (isDisplayable()) {
+			refreshFontMetrics(getGraphics2D(getGraphics()));
+		}
+		repaint();
+
 	}
 
 
