@@ -2210,7 +2210,7 @@ private boolean fractionalFontMetricsEnabled;
 			// is the desktop value.
 			//System.out.println("Rendering hint: " + hint);
 			if (hint==null) {
-				hint = RenderingHints.VALUE_ANTIALIAS_DEFAULT;
+				hint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
 			}
 			aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
 
