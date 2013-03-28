@@ -93,9 +93,12 @@ class RtfToText {
 							}
 							else {
 								endControlWord();
+								inControlWord = true;
 							}
 						}
-						inControlWord = true;
+						else {
+							inControlWord = true;
+						}
 					}
 					break;
 				case ' ':
