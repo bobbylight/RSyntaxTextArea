@@ -2183,7 +2183,6 @@ private boolean fractionalFontMetricsEnabled;
 
 		// Most accurate technique, but not available on all OSes.
 		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
-
 		if (aaHints==null) {
 
 			aaHints = new HashMap();
@@ -2206,11 +2205,19 @@ private boolean fractionalFontMetricsEnabled;
 				// Swallow, either Java 1.4 or 1.5, or running in an applet
 			}
 
-			// If not running Java 6+, just hope that Java's "default" really
-			// is the desktop value.
+			// If not running Java 6+, default to AA enabled on Windows where
+			// the software AA is pretty fast, and default (e.g. disabled) on
+			// non-Windows.  Note that OS X always uses AA no matter what
+			// rendering hints you give it, so this is a moot point there.
 			//System.out.println("Rendering hint: " + hint);
 			if (hint==null) {
-				hint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
+				String os = System.getProperty("os.name").toLowerCase();
+				if (os.indexOf("windows")>-1) {
+					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
+				}
+				else {
+					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
+				}
 			}
 			aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
 

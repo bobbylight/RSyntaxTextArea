@@ -204,10 +204,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * @param e The mouse location.
 	 */
 	public Point getToolTipLocation(MouseEvent e) {
-		//return super.getToolTipLocation(e);
+
+		// ToolTipManager requires both location and text to be null to hide
+		// a currently-visible tool tip window.  If text is null but location
+		// has some value, it will show a tool tip with empty content, the size
+		// of its border (!).
+		String text = getToolTipText(e);
+		if (text==null) {
+			return null;
+		}
+
+		// Try to overlap the tip's text directly over the code
 		Point p = e.getPoint();
 		p.y = (p.y/textArea.getLineHeight()) * textArea.getLineHeight();
-		p.x = getWidth();
+		p.x = getWidth() + textArea.getMargin().left;
+		Gutter gutter = getGutter();
+		int gutterMargin = gutter.getInsets().right;
+		p.x += gutterMargin;
+		JToolTip tempTip = createToolTip();
+		p.x -= tempTip.getInsets().left;
+		p.y += 16;
 		return p;
 	}
 
