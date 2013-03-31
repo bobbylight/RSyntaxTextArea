@@ -288,6 +288,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		
 		private static final long serialVersionUID = 1L;
 
+		private Point bracketInfo;
 		private Segment seg;
 
 		public CloseCurlyBraceAction() {
@@ -338,10 +339,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 					// Locate the matching '{' bracket, and replace the leading
 					// whitespace for the '}' to match that of the '{' char's line.
-					int match = RSyntaxUtilities.getMatchingBracketPosition(rsta);
-					if (match>-1) {
+					bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(
+							rsta, bracketInfo);
+					if (bracketInfo.y>-1) {
 						try {
-							String ws = RSyntaxUtilities.getLeadingWhitespace(doc, match);
+							String ws = RSyntaxUtilities.getLeadingWhitespace(
+									doc, bracketInfo.y);
 							rsta.replaceRange(ws, start, dot);
 						} catch (BadLocationException ble) {
 							ble.printStackTrace();
@@ -1083,6 +1086,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		private static final long serialVersionUID = 1L;
 
+		private Point bracketInfo;
+
 		public GoToMatchingBracketAction() {
 			super(rstaGoToMatchingBracketAction);
 		}
@@ -1094,11 +1099,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-			int pos = RSyntaxUtilities.getMatchingBracketPosition(rsta);
-			if (pos>-1) {
+			bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(rsta,
+					bracketInfo);
+			if (bracketInfo.y>-1) {
 				// Go to the position AFTER the bracket so the previous
 				// bracket (which we were just on) is highlighted.
-				rsta.setCaretPosition(pos+1);
+				rsta.setCaretPosition(bracketInfo.y+1);
 			}
 			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);

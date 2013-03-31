@@ -194,6 +194,12 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private Rectangle dotRect;
 
 	/**
+	 * Used to store the location of the bracket at the caret position (either
+	 * just before or just after it) and the location of its match.
+	 */
+	private Point bracketInfo;
+
+	/**
 	 * Colors used for the "matched bracket" if bracket matching is enabled.
 	 */
 	private Color matchedBracketBGColor;
@@ -737,13 +743,17 @@ private boolean fractionalFontMetricsEnabled;
 		}
 
 		// If a matching bracket is found, get its bounds and paint it!
-		int pos = RSyntaxUtilities.getMatchingBracketPosition(this);
-		if (pos>-1 && pos!=lastBracketMatchPos) {
+		int lastCaretBracketPos = bracketInfo==null ? -1 : bracketInfo.x;
+		bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(this,
+				bracketInfo);
+		if (bracketInfo.y>-1 &&
+				(bracketInfo.y!=lastBracketMatchPos ||
+				 bracketInfo.x!=lastCaretBracketPos)) {
 			try {
-				match = modelToView(pos);
+				match = modelToView(bracketInfo.y);
 				if (match!=null) { // Happens if we're not yet visible
 					if (getPaintMatchedBracketPair()) {
-						dotRect = modelToView(getCaretPosition()-1);
+						dotRect = modelToView(bracketInfo.x);
 					}
 					else {
 						dotRect = null;
@@ -760,13 +770,13 @@ private boolean fractionalFontMetricsEnabled;
 				ble.printStackTrace(); // Shouldn't happen.
 			}
 		}
-		else if (pos==-1) {
+		else if (bracketInfo.y==-1) {
 			// Set match to null so the old value isn't still repainted.
 			match = null;
 			dotRect = null;
 			bracketRepaintTimer.stop();
 		}
-		lastBracketMatchPos = pos;
+		lastBracketMatchPos = bracketInfo.y;
 
 	}
 
