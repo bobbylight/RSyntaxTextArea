@@ -42,7 +42,7 @@
       <style token="COMMENT_EOL" fg="808080" italic="true" />
       <style token="COMMENT_MULTILINE" fg="808080" italic="true" />
       <style token="COMMENT_KEYWORD" fg="808080" bold="true" underline="true" italic="true" />
-      <style token="COMMENT_MARKUP" fg="808080" italic="true" />
+      <style token="COMMENT_MARKUP" fg="808080" bg="e2ffe2" italic="true" />
       <style token="DATA_TYPE" fg="000080" bold="true" />
       <style token="FUNCTION" fg="000000" />
       <style token="LITERAL_BOOLEAN" fg="000080" bold="true" />
