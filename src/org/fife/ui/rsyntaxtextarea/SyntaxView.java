@@ -628,7 +628,6 @@ if (host.isCodeFoldingEnabled()) {
 	 *
 	 * @param g The graphics context with which to paint.
 	 * @param a The allocated region in which to render.
-	 * @see #drawLine
 	 */
 	public void paint(Graphics g, Shape a) {
 

@@ -239,6 +239,19 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 
 
 	/**
+	 * Returns the closest {@link TokenTypes "standard" token type} for a given
+	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
+	 *
+	 * @param type The token type.
+	 * @return The closest "standard" token type.  If a mapping is not defined
+	 *         for this language, then <code>type</code> is returned.
+	 */
+	public int getClosestStandardTokenTypeForInternalType(int type) {
+		return tokenMaker.getClosestStandardTokenTypeForInternalType(type);
+	}
+
+
+	/**
 	 * Returns whether closing markup tags should be automatically completed.
 	 * This method only returns <code>true</code> if
 	 * {@link #getLanguageIsMarkup()} also returns <code>true</code>.

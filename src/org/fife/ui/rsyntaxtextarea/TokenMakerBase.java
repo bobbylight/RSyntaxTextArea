@@ -151,6 +151,22 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns the closest {@link TokenTypes "standard" token type} for a given
+	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).<p>
+	 * 
+	 * The default implementation returns <code>type</code> always, which
+	 * denotes that a mapping from internal token types to standard token types
+	 * is not defined; subclasses can override.
+	 *
+	 * @param type The token type.
+	 * @return The closest "standard" token type.
+	 */
+	public int getClosestStandardTokenTypeForInternalType(int type) {
+		return type;
+	}
+
+
+	/**
 	 * Returns whether this programming language uses curly braces
 	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.<p>
 	 *

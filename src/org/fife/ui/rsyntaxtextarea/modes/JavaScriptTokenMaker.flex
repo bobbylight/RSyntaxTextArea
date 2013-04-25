@@ -71,42 +71,47 @@ import org.fife.ui.rsyntaxtextarea.*;
 	private static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
+	 * Token type specifying we're in a JavaScript documentation comment.
+	 */
+	private static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -9;
+	
+	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -9;
+	private static final int INTERNAL_IN_JS_STRING_INVALID	= -10;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -10;
+	private static final int INTERNAL_IN_JS_STRING_VALID		= -11;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -11;
+	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -12;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_VALID		= -12;
+	private static final int INTERNAL_IN_JS_CHAR_VALID		= -13;
 
-	private static final int INTERNAL_E4X = -13;
+	private static final int INTERNAL_E4X = -14;
 
-	private static final int INTERNAL_E4X_INTAG = -14;
+	private static final int INTERNAL_E4X_INTAG = -15;
 
-	private static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -15;
+	private static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -16;
 
-	private static final int INTERNAL_IN_E4X_COMMENT = -16;
+	private static final int INTERNAL_IN_E4X_COMMENT = -17;
 
-	private static final int INTERNAL_E4X_DTD = -17;
+	private static final int INTERNAL_E4X_DTD = -18;
 
-	private static final int INTERNAL_E4X_DTD_INTERNAL = -18;
+	private static final int INTERNAL_E4X_DTD_INTERNAL = -19;
 
-	private static final int INTERNAL_E4X_ATTR_SINGLE = -19;
+	private static final int INTERNAL_E4X_ATTR_SINGLE = -20;
 
-	private static final int INTERNAL_E4X_ATTR_DOUBLE = -20;
+	private static final int INTERNAL_E4X_ATTR_DOUBLE = -21;
 
-	private static final int INTERNAL_E4X_MARKUP_CDATA = -21;
+	private static final int INTERNAL_E4X_MARKUP_CDATA = -22;
 
 	/**
 	 * When in the JS_STRING state, whether the current string is valid.
@@ -219,6 +224,27 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Returns the closest {@link TokenTypes "standard" token type} for a given
+	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
+	 * 
+	 */
+	public int getClosestStandardTokenTypeForInternalType(int type) {
+		switch (type) {
+			case INTERNAL_IN_JS_MLC:
+				return TokenTypes.COMMENT_MULTILINE;
+			case INTERNAL_IN_JS_COMMENT_DOCUMENTATION:
+				return TokenTypes.COMMENT_DOCUMENTATION;
+			case INTERNAL_IN_JS_STRING_INVALID:
+			case INTERNAL_IN_JS_STRING_VALID:
+			case INTERNAL_IN_JS_CHAR_INVALID:
+			case INTERNAL_IN_JS_CHAR_VALID:
+				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
+		}
+		return type;
+	}
+
+
+	/**
 	 * Returns the JavaScript version being highlighted.
 	 *
 	 * @return Supported JavaScript version.
@@ -259,10 +285,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
+				break;
+			case INTERNAL_IN_JS_COMMENT_DOCUMENTATION:
+				state = JS_DOCCOMMENT;
+				start = text.offset;
 				break;
 			case INTERNAL_IN_JS_STRING_INVALID:
 				state = JS_STRING;
@@ -451,6 +481,7 @@ NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\
 IdentifierStart					= ({Letter}|"_"|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 JS_MLCBegin				= "/*"
+JS_DocCommentBegin			= "/**"
 JS_MLCEnd					= "*/"
 JS_LineCommentBegin			= "//"
 JS_IntegerHelper1			= (({NonzeroDigit}{Digit}*)|"0")
@@ -474,6 +505,18 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
 JS_E4xAttribute				= ("@"{Letter}{LetterOrDigit}*)
 
+JS_BlockTag					= ("abstract"|"access"|"alias"|"augments"|"author"|"borrows"|
+								"callback"|"classdesc"|"constant"|"constructor"|"constructs"|
+								"copyright"|"default"|"deprecated"|"desc"|"enum"|"event"|
+								"example"|"exports"|"external"|"file"|"fires"|"global"|
+								"ignore"|"inner"|"instance"|"kind"|"lends"|"license"|
+								"link"|"member"|"memberof"|"method"|"mixes"|"mixin"|"module"|
+								"name"|"namespace"|"param"|"private"|"property"|"protected"|
+								"public"|"readonly"|"requires"|"return"|"returns"|"see"|"since"|
+								"static"|"summary"|"this"|"throws"|"todo"|
+								"type"|"typedef"|"variation"|"version")
+JS_InlineTag				= ("link"|"linkplain"|"linkcode"|"tutorial")
+
 e4x_NameStartChar		= ([\:A-Z_a-z])
 e4x_NameChar			= ({e4x_NameStartChar}|[\-\.0-9])
 e4x_TagName				= ({e4x_NameStartChar}{e4x_NameChar}*)
@@ -496,6 +539,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state JS_STRING
 %state JS_CHAR
 %state JS_MLC
+%state JS_DOCCOMMENT
 %state JS_EOL_COMMENT
 %state E4X
 %state E4X_COMMENT
@@ -603,8 +647,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
 
 	/* Comment literals. */
-	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
+	"/**/"							{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
+	{JS_DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(JS_DOCCOMMENT); }
 	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
 
 	/* Attempt to identify regular expressions (not foolproof) - do after comments! */
@@ -728,6 +773,23 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\*						{}
 	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+}
+
+<JS_DOCCOMMENT> {
+	[^hwf\@\{\n\<\*]+			{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
+
+	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"							{}
+	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{"							{}
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }
+	\<							{}
+	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
+	\*							{}
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
 }
 
 <JS_EOL_COMMENT> {

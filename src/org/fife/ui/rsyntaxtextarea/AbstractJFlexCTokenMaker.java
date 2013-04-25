@@ -97,6 +97,9 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 			int line = textArea.getCaretLineNumber();
 			int type = doc.getLastTokenTypeOnLine(line);
+			if (type<0) {
+				type = doc.getClosestStandardTokenTypeForInternalType(type);
+			}
 
 			// Only in MLC's should we try this
 			if (type==Token.COMMENT_DOCUMENTATION ||

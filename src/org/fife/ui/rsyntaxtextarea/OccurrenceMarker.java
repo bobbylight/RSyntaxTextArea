@@ -17,7 +17,6 @@ package org.fife.ui.rsyntaxtextarea;
  *
  * @author Robert Futrell
  * @version 1.0
- * @see DefaultOccurrenceMarker
  */
 public interface OccurrenceMarker {
 
