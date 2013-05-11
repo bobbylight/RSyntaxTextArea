@@ -8,7 +8,6 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -28,7 +26,31 @@ import org.fife.io.UnicodeReader;
 
 
 /**
- * A macro as recorded/played back by an <code>RTextArea</code>.
+ * A macro as recorded/played back by an {@link RTextArea}.<p>
+ * 
+ * <code>Macro</code>s are static; when a Macro is loaded, it can be run by any
+ * instance of <code>RTextArea</code> in the application.  To activate and play
+ * back a macro, use the following methods:
+ * 
+ * <ul>
+ *    <li>{@link RTextArea#loadMacro(Macro)}
+ *    <li>{@link RTextArea#playbackLastMacro()}
+ * </ul>
+ *
+ * To record and save a new macro, you'd use the following methods:
+ * 
+ * <ul>
+ *    <li>{@link RTextArea#beginRecordingMacro()} (this discards the previous
+ *        "current" macro, if any)
+ *    <li>{@link RTextArea#endRecordingMacro()} (at this point, you could call
+ *        <code>playbackLastMacro()</code> to play this macro immediately if
+ *        desired)
+ *    <li>{@link RTextArea#getCurrentMacro()}.{@link #saveToFile(File)}
+ * </ul>
+ * 
+ * As <code>Macro</code>s save themselves as XML files, a common technique is
+ * to save all macros in files named "<code>{@link #getName()}.xml</code>", and
+ * place them all in a common directory.
  *
  * @author Robert Futrell
  * @version 0.1
@@ -60,16 +82,14 @@ public class Macro {
 	 * Loads a macro from a file on disk.
 	 *
 	 * @param file The file from which to load the macro.
-	 * @throws java.io.EOFException If an EOF is reached unexpectedly (i.e.,
-	 *         the file is corrupt).
 	 * @throws FileNotFoundException If the specified file does not exist, is
 	 *         a directory instead of a regular file, or otherwise cannot be
 	 *         opened.
 	 * @throws IOException If an I/O exception occurs while reading the file.
-	 * @see #saveToFile
+	 * @see #saveToFile(String)
+	 * @see #saveToFile(File)
 	 */
-	public Macro(File file) throws EOFException, FileNotFoundException,
-								IOException {
+	public Macro(File file) throws FileNotFoundException, IOException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -163,10 +183,12 @@ public class Macro {
 
 
 	/**
-	 * Returns the name of this macro.
+	 * Returns the name of this macro.  A macro's name is simply something to
+	 * identify it with in a UI; it has nothing to do with the name of the file
+	 * to save the macro to.
 	 *
 	 * @return The macro's name.
-	 * @see #setName
+	 * @see #setName(String)
 	 */
 	public String getName() {
 		return name;
@@ -272,13 +294,29 @@ public class Macro {
 
 
 	/**
-	 * Saves this macro to a text file.  This file can later be read in by
-	 * the constructor taking a <code>File</code> parameter; this is the
-	 * mechanism for saving macros.
+	 * Saves this macro to an XML file.  This file can later be read in by the
+	 * constructor taking a <code>File</code> parameter; this is the mechanism
+	 * for saving macros.
+	 *
+	 * @param file The file in which to save the macro.
+	 * @throws IOException If an error occurs while generating the XML for
+	 *         the output file.
+	 * @see #saveToFile(String)
+	 */
+	public void saveToFile(File file) throws IOException {
+		saveToFile(file.getAbsolutePath());
+	}
+
+
+	/**
+	 * Saves this macro to a  file.  This file can later be read in by the
+	 * constructor taking a <code>File</code> parameter; this is the mechanism
+	 * for saving macros.
 	 *
 	 * @param fileName The name of the file in which to save the macro.
 	 * @throws IOException If an error occurs while generating the XML for
 	 *         the output file.
+	 * @see #saveToFile(File)
 	 */
 	public void saveToFile(String fileName) throws IOException {
 
@@ -356,10 +394,12 @@ public class Macro {
 
 
 	/**
-	 * Sets the name of this macro.
+	 * Sets the name of this macro.  A macro's name is simply something to
+	 * identify it with in a UI; it has nothing to do with the name of the file
+	 * to save the macro to.
 	 *
 	 * @param name The new name for the macro.
-	 * @see #getName
+	 * @see #getName()
 	 */
 	public void setName(String name) {
 		this.name = name;
