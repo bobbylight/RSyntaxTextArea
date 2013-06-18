@@ -2964,6 +2964,10 @@ private boolean fractionalFontMetricsEnabled;
 				if ((e.getModifiersEx()&linkScanningMask)!=0) {
 					isScanningForLinks = true;
 					Token t = viewToToken(e.getPoint());
+					if( t != null) {
+						//copy token
+						t = new Token(t);
+					}
 					Cursor c2 = null;
 					if (t!=null && t.isHyperlink()) {
 						hoveredOverLinkOffset = t.offset;
