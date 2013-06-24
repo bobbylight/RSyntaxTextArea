@@ -15,6 +15,7 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 
 
 /**
@@ -705,7 +706,7 @@ public class PythonTokenMaker extends AbstractJFlexTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

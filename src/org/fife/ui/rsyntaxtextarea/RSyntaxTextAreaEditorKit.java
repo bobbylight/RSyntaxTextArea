@@ -410,7 +410,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						Token t = doc.getTokenListForLine(
 											rsta.getCaretLineNumber());
 						t = RSyntaxUtilities.getTokenAtOffset(t, dot-1);
-						if (t!=null && t.type==Token.MARKUP_TAG_DELIMITER) {
+						if (t!=null && t.getType()==Token.MARKUP_TAG_DELIMITER) {
 							//System.out.println("Huzzah - closing tag!");
 							String tagName = discoverTagName(doc, dot);
 							if (tagName!=null) {
@@ -452,37 +452,37 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				Token t = doc.getTokenListForLine(i);
 				while (t!=null && t.isPaintable()) {
 
-					if (t.type==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<') || t.isSingleChar('[')) {
 							t = t.getNextToken();
 							while (t!=null && t.isPaintable()) {
-								if (t.type==Token.MARKUP_TAG_NAME ||
+								if (t.getType()==Token.MARKUP_TAG_NAME ||
 										// Being lenient here and also checking
 										// for attributes, in case they
 										// (incorrectly) have whitespace between
 										// the '<' char and the element name.
-										t.type==Token.MARKUP_TAG_ATTRIBUTE) {
+										t.getType()==Token.MARKUP_TAG_ATTRIBUTE) {
 									stack.push(t.getLexeme());
 									break;
 								}
 								t = t.getNextToken();
 							}
 						}
-						else if (t.textCount==2 && t.text[t.textOffset]=='/' &&
-								(t.text[t.textOffset+1]=='>' ||
-										t.text[t.textOffset+1]==']')) {
+						else if (t.length()==2 && t.charAt(0)=='/' &&
+								(t.charAt(1)=='>' ||
+										t.charAt(1)==']')) {
 							if (!stack.isEmpty()) { // Always true for valid XML
 								stack.pop();
 							}
 						}
-						else if (t.textCount==2 && 
-								(t.text[t.textOffset]=='<' || t.text[t.textOffset]=='[') &&
-								t.text[t.textOffset+1]=='/') {
+						else if (t.length()==2 && 
+								(t.charAt(0)=='<' || t.charAt(0)=='[') &&
+								t.charAt(1)=='/') {
 							String tagName = null;
 							if (!stack.isEmpty()) { // Always true for valid XML
 								tagName = (String)stack.pop();
 							}
-							if (t.offset+t.textCount>=dot) {
+							if (t.getEndOffset()>=dot) {
 								return tagName;
 							}
 						}
@@ -1269,8 +1269,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			for (int i=0; i<lineCount; i++) {
 				Token t = doc.getTokenListForLine(i);
 				while (t!=null && t.isPaintable()) {
-					if (t.type==Token.SEPARATOR && t.textCount==1) {
-						char ch = t.text[t.textOffset];
+					if (t.getType()==Token.SEPARATOR && t.length()==1) {
+						char ch = t.charAt(0);
 						if (ch=='{') {
 							openCount++;
 						}

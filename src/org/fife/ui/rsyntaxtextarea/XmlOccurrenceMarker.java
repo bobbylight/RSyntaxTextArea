@@ -32,10 +32,10 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 			RSyntaxTextAreaHighlighter h, MarkOccurrencesHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();
-		int tokenOffs = t.offset;
+		int tokenOffs = t.getOffset();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
-		int curLine = root.getElementIndex(t.offset);
+		int curLine = root.getElementIndex(t.getOffset());
 
 		// For now, we only check for tags on the current line, for
 		// simplicity.  Tags spanning multiple lines aren't common anyway.
@@ -43,12 +43,12 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 		boolean forward = true;
 		t = doc.getTokenListForLine(curLine);
 		while (t!=null && t.isPaintable()) {
-			if (t.type==Token.MARKUP_TAG_DELIMITER) {
-				if (t.isSingleChar('<') && t.offset+1==tokenOffs) {
+			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+				if (t.isSingleChar('<') && t.getOffset()+1==tokenOffs) {
 					found = true;
 					break;
 				}
-				else if (t.is(CLOSE_TAG_START) && t.offset+2==tokenOffs) {
+				else if (t.is(CLOSE_TAG_START) && t.getOffset()+2==tokenOffs) {
 					found = true;
 					forward = false;
 					break;
@@ -69,7 +69,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 			do {
 
 				while (t!=null && t.isPaintable()) {
-					if (t.type==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<')) {
 							depth++;
 						}
@@ -89,9 +89,9 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 								Token match = t.getNextToken();
 								if (match!=null && match.is(lexeme)) {
 									try {
-										int end = match.offset + match.textCount;
-										h.addMarkedOccurrenceHighlight(match.offset, end, p);
-										end = tokenOffs + match.textCount;
+										int end = match.getOffset() + match.length();
+										h.addMarkedOccurrenceHighlight(match.getOffset(), end, p);
+										end = tokenOffs + match.length();
 										h.addMarkedOccurrenceHighlight(tokenOffs, end, p);
 									} catch (BadLocationException ble) {
 										ble.printStackTrace(); // Never happens
@@ -122,8 +122,8 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 
 			do {
 
-				while (t!=null && t.offset<endBefore && t.isPaintable()) {
-					if (t.type==Token.MARKUP_TAG_DELIMITER) {
+				while (t!=null && t.getOffset()<endBefore && t.isPaintable()) {
+					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<')) {
 							Token next = t.getNextToken();
 							if (next!=null) {
@@ -160,9 +160,9 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 				if (!matches.isEmpty()) {
 					try {
 						Token match = (Token)matches.pop();
-						int end = match.offset + match.textCount;
-						h.addMarkedOccurrenceHighlight(match.offset, end, p);
-						end = tokenOffs + match.textCount;
+						int end = match.getOffset() + match.length();
+						h.addMarkedOccurrenceHighlight(match.getOffset(), end, p);
+						end = tokenOffs + match.length();
 						h.addMarkedOccurrenceHighlight(tokenOffs, end, p);
 					} catch (BadLocationException ble) {
 						ble.printStackTrace(); // Never happens

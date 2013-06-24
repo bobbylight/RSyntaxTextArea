@@ -101,10 +101,12 @@ class DefaultTokenPainter implements TokenPainter {
 			boolean selected) {
 
 		int origX = (int)x;
-		int end = token.textOffset + token.textCount;
+		int textOffs = token.getTextOffset();
+		char[] text = token.getTextArray();
+		int end = textOffs + token.length();
 		float nextX = x;
 		int flushLen = 0;
-		int flushIndex = token.textOffset;
+		int flushIndex = textOffs;
 		Color fg, bg;
 		if (selected) {
 			fg = host.getSelectedTextColor();
@@ -114,21 +116,21 @@ class DefaultTokenPainter implements TokenPainter {
 			fg = host.getForegroundForToken(token);
 			bg = host.getBackgroundForToken(token);
 		}
-		g.setFont(host.getFontForTokenType(token.type));
-		FontMetrics fm = host.getFontMetricsForTokenType(token.type);
+		g.setFont(host.getFontForTokenType(token.getType()));
+		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
 
-		for (int i=token.textOffset; i<end; i++) {
-			switch (token.text[i]) {
+		for (int i=textOffs; i<end; i++) {
+			switch (text[i]) {
 				case '\t':
 					nextX = e.nextTabStop(
-						x+fm.charsWidth(token.text, flushIndex,flushLen), 0);
+						x+fm.charsWidth(text, flushIndex,flushLen), 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,fm.getHeight(),
 									g, fm.getAscent(), host, bg, !selected);
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
-						g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
+						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
@@ -140,7 +142,7 @@ class DefaultTokenPainter implements TokenPainter {
 			}
 		}
 
-		nextX = x+fm.charsWidth(token.text, flushIndex,flushLen);
+		nextX = x+fm.charsWidth(text, flushIndex,flushLen);
 
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
@@ -148,7 +150,7 @@ class DefaultTokenPainter implements TokenPainter {
 								g, fm.getAscent(), host, bg, !selected);
 			}
 			g.setColor(fg);
-			g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
+			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 		}
 
 		if (host.getUnderlineForToken(token)) {
@@ -210,23 +212,22 @@ class DefaultTokenPainter implements TokenPainter {
 		// whitespace as identifiers for performance).  But we only paint tab
 		// lines for the leading whitespace in the token.  So, if this isn't a
 		// WHITESPACE token, figure out the leading whitespace's length.
-		if (token.type!=Token.WHITESPACE) {
-			int offs = token.textOffset;
-			for (; offs<token.textOffset+token.textCount; offs++) {
-				if (!RSyntaxUtilities.isWhitespace(token.text[offs])) {
+		if (token.getType()!=Token.WHITESPACE) {
+			int offs = 0;
+			for (; offs<token.length(); offs++) {
+				if (!RSyntaxUtilities.isWhitespace(token.charAt(offs))) {
 					break; // MLC text, etc.
 				}
 			}
-			int len = offs - token.textOffset;
-			if (len<2) { // Must be at least two spaces to see tab line
+			if (offs<2) { // Must be at least two spaces to see tab line
 				return;
 			}
-			//endX = x + (int)getWidthUpTo(len, host, e, x);
-			endX = (int)token.getWidthUpTo(len, host, e, 0);
+			//endX = x + (int)getWidthUpTo(offs, host, e, x);
+			endX = (int)token.getWidthUpTo(offs, host, e, 0);
 		}
 
 		// Get the length of a tab.
-		FontMetrics fm = host.getFontMetricsForTokenType(token.type);
+		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
 		int tabSize = host.getTabSize();
 		if (tabBuf==null || tabBuf.length<tabSize) {
 			tabBuf = new char[tabSize];

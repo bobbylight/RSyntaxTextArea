@@ -70,7 +70,7 @@ public class NsisFoldParser implements FoldParser {
 							// If we found the end of an MLC that started
 							// on a previous line...
 							if (t.endsWith(C_MLC_END)) {
-								int mlcEnd = t.offset + t.textCount - 1;
+								int mlcEnd = t.getEndOffset() - 1;
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
 									currentFold.setEndOffset(mlcEnd);
@@ -91,10 +91,10 @@ public class NsisFoldParser implements FoldParser {
 						}
 						else {
 							// If we're an MLC that ends on a later line...
-							if (t.type!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
+							if (t.getType()!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
 								//System.out.println("Starting MLC at: " + t.offset);
 								inMLC = true;
-								mlcStart = t.offset;
+								mlcStart = t.getOffset();
 							}
 						}
 
@@ -102,22 +102,22 @@ public class NsisFoldParser implements FoldParser {
 
 					else if (t.is(Token.RESERVED_WORD, KEYWORD_SECTION)) {
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 						endWordStack.push(KEYWORD_SECTION_END);
 					}
 
 					else if (t.is(Token.RESERVED_WORD, KEYWORD_FUNCTION)) {
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 						endWordStack.push(KEYWORD_FUNCTION_END);
 					}
@@ -125,7 +125,7 @@ public class NsisFoldParser implements FoldParser {
 					else if (foundEndKeyword(KEYWORD_SECTION_END, t, endWordStack) ||
 							foundEndKeyword(KEYWORD_FUNCTION_END, t, endWordStack)) {
 						if (currentFold!=null) {
-							currentFold.setEndOffset(t.offset);
+							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
 							endWordStack.pop();
 							// Don't add fold markers for single-line blocks

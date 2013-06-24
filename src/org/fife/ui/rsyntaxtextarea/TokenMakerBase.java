@@ -23,17 +23,17 @@ abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * The first token in the returned linked list.
 	 */
-	protected Token firstToken;
+	protected TokenImpl firstToken;
 	
 	/**
 	 * Used in the creation of the linked list.
 	 */
-	protected Token currentToken;
+	protected TokenImpl currentToken;
 	
 	/**
 	 * Used in the creation of the linked list.
 	 */
-	protected Token previousToken;
+	protected TokenImpl previousToken;
 
 	/**
 	 * The factory that gives us our tokens to use.
@@ -75,9 +75,10 @@ abstract class TokenMakerBase implements TokenMaker {
 			currentToken = firstToken;
 		}
 		else {
-			currentToken.setNextToken(tokenFactory.createToken());
+			TokenImpl next = tokenFactory.createToken();
+			currentToken.setNextToken(next);
 			previousToken = currentToken;
-			currentToken = currentToken.getNextToken();
+			currentToken = next;
 		}
 	}
 
@@ -127,10 +128,11 @@ abstract class TokenMakerBase implements TokenMaker {
 			currentToken = firstToken; // previous token is still null.
 		}
 		else {
-			currentToken.setNextToken(tokenFactory.createToken(array,
-								start,end, startOffset, tokenType));
+			TokenImpl next = tokenFactory.createToken(array, start,end,
+													startOffset, tokenType);
+			currentToken.setNextToken(next);
 			previousToken = currentToken;
-			currentToken = currentToken.getNextToken();
+			currentToken = next;
 		}
 
 		currentToken.setLanguageIndex(languageIndex);
@@ -203,7 +205,7 @@ abstract class TokenMakerBase implements TokenMaker {
 		while (t.getNextToken()!=null)
 			t = t.getNextToken();
 
-		return t.type;
+		return t.getType();
 
 	}
 

@@ -549,19 +549,17 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param t The token list to clone.
 	 * @return The clone of the token list.
 	 */
-	private Token cloneTokenList(Token t) {
+	private TokenImpl cloneTokenList(Token t) {
 
 		if (t==null) {
 			return null;
 		}
 
-		Token clone = new Token();
-		clone.copyFrom(t);
-		Token cloneEnd = clone;
+		TokenImpl clone = new TokenImpl(t);
+		TokenImpl cloneEnd = clone;
 
 		while ((t=t.getNextToken())!=null) {
-			Token temp = new Token();
-			temp.copyFrom(t);
+			TokenImpl temp = new TokenImpl(t);
 			cloneEnd.setNextToken(temp);
 			cloneEnd = temp;
 		}
@@ -627,11 +625,11 @@ private boolean fractionalFontMetricsEnabled;
 		Token tokenList = getTokenListFor(selStart, selEnd);
 		for (Token t=tokenList; t!=null; t=t.getNextToken()) {
 			if (t.isPaintable()) {
-				if (t.textCount==1 && t.text[t.textOffset]=='\n') {
+				if (t.length()==1 && t.charAt(0)=='\n') {
 					gen.appendNewline();
 				}
 				else {
-					Font font = getFontForTokenType(t.type);
+					Font font = getFontForTokenType(t.getType());
 					Color bg = getBackgroundForToken(t);
 					boolean underline = getUnderlineForToken(t);
 					// Small optimization - don't print fg color if this
@@ -953,7 +951,7 @@ private boolean fractionalFontMetricsEnabled;
 			}
 		}
 		if (c==null) {
-			c = syntaxScheme.getStyle(token.type).background;
+			c = syntaxScheme.getStyle(token.getType()).background;
 		}
 		// Don't default to this.getBackground(), as Tokens simply don't
 		// paint a background if they get a null Color.
@@ -1109,11 +1107,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getBackgroundForToken(Token)
 	 */
 	public Color getForegroundForToken(Token t) {
-		if (getHyperlinksEnabled() && hoveredOverLinkOffset==t.offset &&
+		if (getHyperlinksEnabled() && hoveredOverLinkOffset==t.getOffset() &&
 				(t.isHyperlink() || linkGeneratorResult!=null)) {
 			return hyperlinkFG;
 		}
-		return getForegroundForTokenType(t.type);
+		return getForegroundForTokenType(t.getType());
 	}
 
 
@@ -1567,15 +1565,15 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	private Token getTokenListFor(int startOffs, int endOffs) {
 
-		Token tokenList = null;
-		Token lastToken = null;
+		TokenImpl tokenList = null;
+		TokenImpl lastToken = null;
 
 		Element map = getDocument().getDefaultRootElement();
 		int startLine = map.getElementIndex(startOffs);
 		int endLine = map.getElementIndex(endOffs);
 
 		for (int line=startLine; line<=endLine; line++) {
-			Token t = getTokenListForLine(line);
+			TokenImpl t = (TokenImpl)getTokenListForLine(line);
 			t = cloneTokenList(t);
 			if (tokenList==null) {
 				tokenList = t;
@@ -1586,13 +1584,13 @@ private boolean fractionalFontMetricsEnabled;
 			}
 			while (lastToken.getNextToken()!=null &&
 					lastToken.getNextToken().isPaintable()) {
-				lastToken = lastToken.getNextToken();
+				lastToken = (TokenImpl)lastToken.getNextToken();
 			}
 			if (line<endLine) {
 				// Document offset MUST be correct to prevent exceptions
 				// in getTokenListFor()
 				int docOffs = map.getElement(line).getEndOffset()-1;
-				t = new Token(new char[] { '\n' }, 0,0, docOffs,
+				t = new TokenImpl(new char[] { '\n' }, 0,0, docOffs,
 								Token.WHITESPACE);
 				lastToken.setNextToken(t);
 				lastToken = t;
@@ -1608,21 +1606,21 @@ private boolean fractionalFontMetricsEnabled;
 		// list returned for that line will be null, so the first token in
 		// the final token list will be from the next line and have a
 		// starting offset > startOffs?).
-		if (startOffs>=tokenList.offset) {
+		if (startOffs>=tokenList.getOffset()) {
 			while (!tokenList.containsPosition(startOffs)) {
-				tokenList = tokenList.getNextToken();
+				tokenList = (TokenImpl)tokenList.getNextToken();
 			}
 			tokenList.makeStartAt(startOffs);
 		}
 
-		Token temp = tokenList;
+		TokenImpl temp = tokenList;
 		// Be careful to check temp for null here.  It is possible that no
 		// token contains endOffs, if endOffs is at the end of a line.
 		while (temp!=null && !temp.containsPosition(endOffs)) {
-			temp = temp.getNextToken();
+			temp = (TokenImpl)temp.getNextToken();
 		}
 		if (temp!=null) {
-			temp.textCount = endOffs - temp.offset;
+			temp.textCount = endOffs - temp.getOffset();
 			temp.setNextToken(null);
 		}
 
@@ -1709,8 +1707,8 @@ private boolean fractionalFontMetricsEnabled;
 	public boolean getUnderlineForToken(Token t) {
 		return (getHyperlinksEnabled() &&
 				(t.isHyperlink() ||
-					(linkGeneratorResult!=null && linkGeneratorResult.getSourceOffset()==t.offset))) ||
-				syntaxScheme.getStyle(t.type).underline;
+					(linkGeneratorResult!=null && linkGeneratorResult.getSourceOffset()==t.getOffset()))) ||
+				syntaxScheme.getStyle(t.getType()).underline;
 	}
 
 
@@ -2964,13 +2962,13 @@ private boolean fractionalFontMetricsEnabled;
 				if ((e.getModifiersEx()&linkScanningMask)!=0) {
 					isScanningForLinks = true;
 					Token t = viewToToken(e.getPoint());
-					if( t != null) {
-						//copy token
-						t = new Token(t);
+					if (t!=null) {
+						// Copy token, viewToModel() unfortunately modifies Token
+						t = new TokenImpl(t);
 					}
 					Cursor c2 = null;
 					if (t!=null && t.isHyperlink()) {
-						hoveredOverLinkOffset = t.offset;
+						hoveredOverLinkOffset = t.getOffset();
 						c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 					}
 					else if (t!=null && linkGenerator!=null) {
@@ -2984,7 +2982,7 @@ private boolean fractionalFontMetricsEnabled;
 								repaint();
 							}
 							linkGeneratorResult = newResult;
-							hoveredOverLinkOffset = t.offset;
+							hoveredOverLinkOffset = t.getOffset();
 							c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 						}
 						else {

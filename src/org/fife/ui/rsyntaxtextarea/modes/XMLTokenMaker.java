@@ -535,7 +535,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

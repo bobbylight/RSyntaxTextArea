@@ -57,7 +57,6 @@ public class SyntaxView extends View implements TabExpander,
 
 	private int tabSize;
 	protected int tabBase;
-    
 
 	/**
 	 * Cached for each paint() call so each drawLine() call has access to it.
@@ -71,12 +70,13 @@ public class SyntaxView extends View implements TabExpander,
 	private int ascent;
 	private int clipStart;
 	private int clipEnd;
-	private Token tempToken;
-
-//	/**
-//	 * The end-of-line marker.
-//	 */
-//	private static final char[] eolMarker = { '.' };
+	
+	/**
+	 * Temporary token used when we need to "modify" tokens for rendering
+	 * purposes.  Since tokens returned from RSyntaxDocuments are treated as
+	 * immutable, we use this temporary token to do that work.
+	 */
+	private TokenImpl tempToken;
 
 
 	/**
@@ -86,7 +86,7 @@ public class SyntaxView extends View implements TabExpander,
 	 */
 	public SyntaxView(Element elem) {
 		super(elem);
-		tempToken = new Token();
+		tempToken = new TokenImpl();
 	}
 
 
@@ -216,15 +216,18 @@ public class SyntaxView extends View implements TabExpander,
 			// Selection starts in this token
 			if (token.containsPosition(selStart)) {
 
-				if (selStart>token.offset) {
+				if (selStart>token.getOffset()) {
 					tempToken.copyFrom(token);
-					tempToken.textCount = selStart - tempToken.offset;
+					tempToken.textCount = selStart - tempToken.getOffset();
 					nextX = painter.paint(tempToken,g,nextX,y,host, this, clipStart);
-					token.makeStartAt(selStart);
+					tempToken.textCount = token.length();
+					tempToken.makeStartAt(selStart);
+					token = tempToken;
 				}
 
-				int selCount = Math.min(token.textCount, selEnd-token.offset);
-				if (selCount==token.textCount) {
+				int tokenLen = token.length();
+				int selCount = Math.min(tokenLen, selEnd-token.getOffset());
+				if (selCount==tokenLen) {
 					nextX = painter.paintSelected(token, g, nextX,y, host,
 												this, clipStart);
 				}
@@ -233,7 +236,9 @@ public class SyntaxView extends View implements TabExpander,
 					tempToken.textCount = selCount;
 					nextX = painter.paintSelected(tempToken, g, nextX,y, host,
 							this, clipStart);
-					token.makeStartAt(token.offset + selCount);
+					tempToken.textCount = token.length();
+					tempToken.makeStartAt(token.getOffset() + selCount);
+					token = tempToken;
 					nextX = painter.paint(token, g, nextX,y, host, this,
 											clipStart);
 				}
@@ -243,16 +248,18 @@ public class SyntaxView extends View implements TabExpander,
 			// Selection ends in this token
 			else if (token.containsPosition(selEnd)) {
 				tempToken.copyFrom(token);
-				tempToken.textCount = selEnd - tempToken.offset;
+				tempToken.textCount = selEnd - tempToken.getOffset();
 				nextX = painter.paintSelected(tempToken, g, nextX,y, host, this,
 						clipStart);
-				token.makeStartAt(selEnd);
+				tempToken.textCount = token.length();
+				tempToken.makeStartAt(selEnd);
+				token = tempToken;
 				nextX = painter.paint(token, g, nextX,y, host, this, clipStart);
 			}
 
 			// This token is entirely selected
-			else if (token.offset>=selStart &&
-					(token.offset+token.textCount)<=selEnd) {
+			else if (token.getOffset()>=selStart &&
+					token.getEndOffset()<=selEnd) {
 				nextX = painter.paintSelected(token, g, nextX,y, host, this,
 						clipStart);
 			}
@@ -673,7 +680,7 @@ if (host.isCodeFoldingEnabled()) {
 		TokenPainter painter = host.getTokenPainter();
 		int line = linesAbove;
 		//int count = 0;
-		while (y<clip.y+clip.height+lineHeight && line<lineCount) {
+		while (y<clip.y+clip.height+ascent && line<lineCount) {
 
 			Fold fold = fm.getFoldForLine(line);
 			Element lineElement = map.getElement(line);

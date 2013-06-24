@@ -32,7 +32,7 @@ class DefaultTokenFactory implements TokenFactory {
 
 	private int size;
 	private int increment;
-	private Token[] tokenList;
+	private TokenImpl[] tokenList;
 	private int currentFreeToken;
 
 	protected static final int DEFAULT_START_SIZE	= 30;
@@ -61,9 +61,9 @@ class DefaultTokenFactory implements TokenFactory {
 		this.currentFreeToken = 0;
 
 		// Give us some tokens to initially work with.
-		tokenList = new Token[size];
+		tokenList = new TokenImpl[size];
 		for (int i=0; i<size; i++) {
-			tokenList[i] = new Token();
+			tokenList[i] = new TokenImpl();
 		}
 
 	}
@@ -74,12 +74,12 @@ class DefaultTokenFactory implements TokenFactory {
 	 * request is made and no more tokens are available.
 	 */
 	private final void augmentTokenList() {
-		Token[] temp = new Token[size + increment];
+		TokenImpl[] temp = new TokenImpl[size + increment];
 		System.arraycopy(tokenList,0, temp,0, size);
 		size += increment;
 		tokenList = temp;
 		for (int i=0; i<increment; i++) {
-			tokenList[size-i-1] = new Token();
+			tokenList[size-i-1] = new TokenImpl();
 		}
 		//System.err.println("... size up to: " + size);
 	}
@@ -88,11 +88,11 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Token createToken() {
-		Token token = tokenList[currentFreeToken];
+	public TokenImpl createToken() {
+		TokenImpl token = tokenList[currentFreeToken];
 		token.text = null;
-		token.type = Token.NULL;
-		token.offset = -1;
+		token.setType(Token.NULL);
+		token.setOffset(-1);
 		token.setNextToken(null);
 		currentFreeToken++;
 		if (currentFreeToken==size)
@@ -104,7 +104,7 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Token createToken(final Segment line, final int beg,
+	public TokenImpl createToken(final Segment line, final int beg,
 					final int end, final int startOffset, final int type) {
 		return createToken(line.array, beg,end, startOffset, type);
 	}
@@ -113,9 +113,9 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Token createToken(final char[] line, final int beg,
+	public TokenImpl createToken(final char[] line, final int beg,
 					final int end, final int startOffset, final int type) {
-		Token token = tokenList[currentFreeToken];
+		TokenImpl token = tokenList[currentFreeToken];
 		token.set(line, beg,end, startOffset, type);
 		currentFreeToken++;
 		if (currentFreeToken==size)

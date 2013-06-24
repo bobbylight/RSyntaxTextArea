@@ -56,7 +56,7 @@ public class XmlFoldParser implements FoldParser {
 						if (inMLC) {
 							// Found the end of the MLC starting on a previous line...
 							if (t.endsWith(MLC_END)) {
-								int mlcEnd = t.offset + t.textCount - 1;
+								int mlcEnd = t.getEndOffset() - 1;
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
 									currentFold.setEndOffset(mlcEnd);
@@ -77,9 +77,9 @@ public class XmlFoldParser implements FoldParser {
 
 						else {
 							// If we're an MLC that ends on a later line...
-							if (t.type==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
+							if (t.getType()==Token.COMMENT_MULTILINE && !t.endsWith(MLC_END)) {
 								inMLC = true;
-								mlcStart = t.offset;
+								mlcStart = t.getOffset();
 							}
 						}
 
@@ -87,11 +87,11 @@ public class XmlFoldParser implements FoldParser {
 
 					else if (t.isSingleChar(Token.MARKUP_TAG_DELIMITER, '<')) {
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 					}
 
@@ -105,7 +105,7 @@ public class XmlFoldParser implements FoldParser {
 
 					else if (t.is(Token.MARKUP_TAG_DELIMITER, MARKUP_CLOSING_TAG_START)) {
 						if (currentFold!=null) {
-							currentFold.setEndOffset(t.offset);
+							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
 							// Don't add fold markers for single-line blocks
 							if (currentFold.isOnSingleLine()) {

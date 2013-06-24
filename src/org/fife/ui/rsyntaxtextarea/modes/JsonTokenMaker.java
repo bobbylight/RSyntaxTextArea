@@ -331,8 +331,8 @@ public class JsonTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	public boolean getShouldIndentNextLineAfter(Token t) {
-		if (t!=null && t.textCount==1) {
-			char ch = t.text[t.textOffset];
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
 			return ch=='{' || ch=='[';
 		}
 		return false;
@@ -367,7 +367,7 @@ public class JsonTokenMaker extends AbstractJFlexTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

@@ -1554,7 +1554,7 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}
@@ -1572,8 +1572,8 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 		// We basically try to mimic Eclipse's JS editor's behavior here.
 		return t==null ||
 				//t.isOperator() ||
-				(t.textCount==1 && (
-					(ch=t.text[t.textOffset])=='=' ||
+				(t.length()==1 && (
+					(ch=t.charAt(0))=='=' ||
 					ch=='(' ||
 					ch==',' ||
 					ch=='?' ||
@@ -1583,8 +1583,8 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 					ch=='&'
 				)) ||
 				/* Operators "==", "===", "!=", "!==", etc. */
-				(t.type==Token.OPERATOR &&
-					((ch=t.text[t.textOffset+t.textCount-1])=='=' || ch=='~'));
+				(t.getType()==Token.OPERATOR &&
+					((ch=t.charAt(t.length()-1))=='=' || ch=='~'));
 	}
 
 

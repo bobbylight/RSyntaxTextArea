@@ -156,7 +156,7 @@ public class CurlyFoldParser implements FoldParser {
 							// If we found the end of an MLC that started
 							// on a previous line...
 							if (t.endsWith(C_MLC_END)) {
-								int mlcEnd = t.offset + t.textCount - 1;
+								int mlcEnd = t.getEndOffset() - 1;
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.COMMENT, textArea, mlcStart);
 									currentFold.setEndOffset(mlcEnd);
@@ -177,10 +177,10 @@ public class CurlyFoldParser implements FoldParser {
 						}
 						else {
 							// If we're an MLC that ends on a later line...
-							if (t.type!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
+							if (t.getType()!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
 								//System.out.println("Starting MLC at: " + t.offset);
 								inMLC = true;
-								mlcStart = t.offset;
+								mlcStart = t.getOffset();
 							}
 						}
 
@@ -216,11 +216,11 @@ public class CurlyFoldParser implements FoldParser {
 						}
 
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 
 					}
@@ -228,7 +228,7 @@ public class CurlyFoldParser implements FoldParser {
 					else if (isRightCurly(t)) {
 
 						if (currentFold!=null) {
-							currentFold.setEndOffset(t.offset);
+							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
 							//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
 							// Don't add fold markers for single-line blocks
@@ -248,8 +248,8 @@ public class CurlyFoldParser implements FoldParser {
 						if (t.is(Token.RESERVED_WORD, KEYWORD_IMPORT)) {
 							if (importStartLine==-1) {
 								importStartLine = line;
-								importGroupStartOffs = t.offset;
-								importGroupEndOffs = t.offset;
+								importGroupStartOffs = t.getOffset();
+								importGroupEndOffs = t.getOffset();
 							}
 							lastSeenImportLine = line;
 						}
@@ -257,7 +257,7 @@ public class CurlyFoldParser implements FoldParser {
 						else if (importStartLine>-1 &&
 								t.isIdentifier() &&//SEPARATOR &&
 								t.isSingleChar(';')) {
-							importGroupEndOffs = t.offset;
+							importGroupEndOffs = t.getOffset();
 						}
 
 					}

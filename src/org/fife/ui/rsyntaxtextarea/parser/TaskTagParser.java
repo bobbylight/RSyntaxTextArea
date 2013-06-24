@@ -86,7 +86,7 @@ public class TaskTagParser extends AbstractParser {
 			while (t!=null && t.isPaintable()) {
 				if (t.isComment()) {
 
-					offs = t.offset;
+					offs = t.getOffset();
 					text = t.getLexeme();
 
 					Matcher m = taskPattern.matcher(text);

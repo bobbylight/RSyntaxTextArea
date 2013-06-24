@@ -52,18 +52,18 @@ public class JsonFoldParser implements FoldParser {
 
 					if (t.isLeftCurly()) {
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 						blocks.push(OBJECT_BLOCK);
 					}
 
 					else if (t.isRightCurly() && popOffTop(blocks, OBJECT_BLOCK)) {
 						if (currentFold!=null) {
-							currentFold.setEndOffset(t.offset);
+							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
 							//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
 							// Don't add fold markers for single-line blocks
@@ -78,18 +78,18 @@ public class JsonFoldParser implements FoldParser {
 
 					else if (isLeftBracket(t)) {
 						if (currentFold==null) {
-							currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
 						else {
-							currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 						blocks.push(ARRAY_BLOCK);
 					}
 
 					else if (isRightBracket(t) && popOffTop(blocks, ARRAY_BLOCK)) {
 						if (currentFold!=null) {
-							currentFold.setEndOffset(t.offset);
+							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
 							//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
 							// Don't add fold markers for single-line blocks
@@ -125,7 +125,7 @@ public class JsonFoldParser implements FoldParser {
 	 * @see #isRightBracket(Token)
 	 */
 	private static final boolean isLeftBracket(Token t) {
-		return t.type==TokenTypes.SEPARATOR && t.isSingleChar('[');
+		return t.getType()==TokenTypes.SEPARATOR && t.isSingleChar('[');
 	}
 
 
@@ -137,7 +137,7 @@ public class JsonFoldParser implements FoldParser {
 	 * @see #isLeftBracket(Token)
 	 */
 	private static final boolean isRightBracket(Token t) {
-		return t.type==TokenTypes.SEPARATOR && t.isSingleChar(']');
+		return t.getType()==TokenTypes.SEPARATOR && t.isSingleChar(']');
 	}
 
 

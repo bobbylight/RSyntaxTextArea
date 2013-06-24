@@ -4513,7 +4513,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

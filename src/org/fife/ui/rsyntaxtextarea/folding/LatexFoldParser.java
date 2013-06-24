@@ -52,13 +52,13 @@ public class LatexFoldParser implements FoldParser {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.type==Token.RESERVED_WORD) {
+							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
 								if (currentFold==null) {
-									currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+									currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 									folds.add(currentFold);
 								}
 								else {
-									currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+									currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 								}
 								expectedStack.push(temp.getLexeme());
 								t = temp;
@@ -71,11 +71,11 @@ public class LatexFoldParser implements FoldParser {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.type==Token.RESERVED_WORD) {
+							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
 								String value = temp.getLexeme();
 								if (expectedStack.peek().equals(value)) {
 									expectedStack.pop();
-									currentFold.setEndOffset(t.offset);
+									currentFold.setEndOffset(t.getOffset());
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
 									if (currentFold.isOnSingleLine()) {

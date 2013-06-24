@@ -129,8 +129,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	public boolean getShouldIndentNextLineAfter(Token t) {
-		if (t!=null && t.textCount==1) {
-			char ch = t.text[t.textOffset];
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
 			return ch=='{' || ch=='[';
 		}
 		return false;
@@ -165,7 +165,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

@@ -67,8 +67,8 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	 * {@inheritDoc}
 	 */
 	public boolean getShouldIndentNextLineAfter(Token t) {
-		if (t!=null && t.textCount==1) {
-			char ch = t.text[t.textOffset];
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
 			return ch=='{' || ch=='(';
 		}
 		return false;
@@ -142,10 +142,11 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 					i = t.documentToToken(offs);
 				}
 				else {
-					i = t.textOffset;
+					i = t.getTextOffset();
 				}
-				while (i<t.textOffset+t.textCount-1) {
-					if (t.text[i]=='/' && t.text[i+1]=='*') {
+				int textOffset = t.getTextOffset();
+				while (i<textOffset+t.length()-1) {
+					if (t.charAt(i-textOffset)=='/' && t.charAt(i-textOffset+1)=='*') {
 						return true;
 					}
 					i++;

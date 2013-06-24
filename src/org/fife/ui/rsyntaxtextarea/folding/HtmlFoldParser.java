@@ -134,23 +134,23 @@ public class HtmlFoldParser implements FoldParser {
 
 					// If we're folding PHP.  Note that PHP folding can only be
 					// "one level deep," so our logic here is simple.
-					if (language>=0 && t.type==Token.SEPARATOR) {
+					if (language>=0 && t.getType()==Token.SEPARATOR) {
 
 						// <?, <?php, <%, <%!, ...
 						if (t.startsWith(LANG_START[language])) {
 							if (currentFold==null) {
-								currentFold = new Fold(FoldType.CODE, textArea, t.offset);
+								currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 								folds.add(currentFold);
 							}
 							else {
-								currentFold = currentFold.createChild(FoldType.CODE, t.offset);
+								currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 							}
 							inSublanguage = true;
 						}
 
 						// ?> or %>
 						else if (t.startsWith(LANG_END[language])) {
-							int phpEnd = t.offset + t.textCount - 1;
+							int phpEnd = t.getEndOffset() - 1;
 							currentFold.setEndOffset(phpEnd);
 							Fold parentFold = currentFold.getParent();
 							// Don't add fold markers for single-line blocks
@@ -167,13 +167,13 @@ public class HtmlFoldParser implements FoldParser {
 
 					if (!inSublanguage) {
 
-						if (t.type==Token.COMMENT_MULTILINE) {
+						if (t.getType()==Token.COMMENT_MULTILINE) {
 
 							// Continuing an MLC from a previous line
 							if (inMLC) {
 								// Found the end of the MLC starting on a previous line...
 								if (t.endsWith(MLC_END)) {
-									int mlcEnd = t.offset + t.textCount - 1;
+									int mlcEnd = t.getEndOffset() - 1;
 									currentFold.setEndOffset(mlcEnd);
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
@@ -191,7 +191,7 @@ public class HtmlFoldParser implements FoldParser {
 							else if (inJSMLC) {
 								// Found the end of the MLC starting on a previous line...
 								if (t.endsWith(JSP_COMMENT_END)) {
-									int mlcEnd = t.offset + t.textCount - 1;
+									int mlcEnd = t.getEndOffset() - 1;
 									currentFold.setEndOffset(mlcEnd);
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
@@ -208,11 +208,11 @@ public class HtmlFoldParser implements FoldParser {
 							// Starting a MLC that ends on a later line...
 							else if (t.startsWith(MLC_START) && !t.endsWith(MLC_END)) {
 								if (currentFold==null) {
-									currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+									currentFold = new Fold(FoldType.COMMENT, textArea, t.getOffset());
 									folds.add(currentFold);
 								}
 								else {
-									currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+									currentFold = currentFold.createChild(FoldType.COMMENT, t.getOffset());
 								}
 								inMLC = true;
 							}
@@ -222,11 +222,11 @@ public class HtmlFoldParser implements FoldParser {
 									t.startsWith(JSP_COMMENT_START) &&
 									!t.endsWith(JSP_COMMENT_END)) {
 								if (currentFold==null) {
-									currentFold = new Fold(FoldType.COMMENT, textArea, t.offset);
+									currentFold = new Fold(FoldType.COMMENT, textArea, t.getOffset());
 									folds.add(currentFold);
 								}
 								else {
-									currentFold = currentFold.createChild(FoldType.COMMENT, t.offset);
+									currentFold = currentFold.createChild(FoldType.COMMENT, t.getOffset());
 								}
 								inJSMLC = true;
 							}
@@ -246,11 +246,11 @@ public class HtmlFoldParser implements FoldParser {
 								Token tagCloseToken = tci.closeToken;
 								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
 									if (currentFold==null) {
-										currentFold = new Fold(FoldType.CODE, textArea, tagStartToken.offset);
+										currentFold = new Fold(FoldType.CODE, textArea, tagStartToken.getOffset());
 										folds.add(currentFold);
 									}
 									else {
-										currentFold = currentFold.createChild(FoldType.CODE, tagStartToken.offset);
+										currentFold = currentFold.createChild(FoldType.CODE, tagStartToken.getOffset());
 									}
 									tagNameStack.push(tagNameToken.getLexeme());
 								}
@@ -265,7 +265,7 @@ public class HtmlFoldParser implements FoldParser {
 								if (isFoldableTag(tagNameToken) &&
 										isEndOfLastFold(tagNameStack, tagNameToken)) {
 									tagNameStack.pop();
-									currentFold.setEndOffset(t.offset);
+									currentFold.setEndOffset(t.getOffset());
 									Fold parentFold = currentFold.getParent();
 									// Don't add fold markers for single-line blocks
 									if (currentFold.isOnSingleLine()) {
@@ -314,7 +314,7 @@ public class HtmlFoldParser implements FoldParser {
 
 		do {
 
-			while (t!=null && t.type!=Token.MARKUP_TAG_DELIMITER) {
+			while (t!=null && t.getType()!=Token.MARKUP_TAG_DELIMITER) {
 				t = t.getNextToken();
 			}
 

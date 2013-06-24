@@ -29,7 +29,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 			RSyntaxTextAreaHighlighter h, MarkOccurrencesHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();
-		int type = t.type;
+		int type = t.getType();
 		int lineCount = doc.getDefaultRootElement().getElementCount();
 
 		for (int i=0; i<lineCount; i++) {
@@ -37,8 +37,8 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 			while (temp!=null && temp.isPaintable()) {
 				if (temp.is(type, lexeme)) {
 					try {
-						int end = temp.offset + temp.textCount;
-						h.addMarkedOccurrenceHighlight(temp.offset, end, p);
+						int end = temp.getEndOffset();
+						h.addMarkedOccurrenceHighlight(temp.getOffset(), end, p);
 					} catch (BadLocationException ble) {
 						ble.printStackTrace(); // Never happens
 					}

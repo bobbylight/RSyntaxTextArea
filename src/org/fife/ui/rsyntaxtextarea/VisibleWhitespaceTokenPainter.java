@@ -56,10 +56,12 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 			boolean selected) {
 
 		int origX = (int)x;
-		int end = token.textOffset + token.textCount;
+		int textOffs = token.getTextOffset();
+		char[] text = token.getTextArray();
+		int end = token.getEndOffset();
 		float nextX = x;
 		int flushLen = 0;
-		int flushIndex = token.textOffset;
+		int flushIndex = textOffs;
 		Color fg, bg;
 		if (selected) {
 			fg = host.getSelectedTextColor();
@@ -69,20 +71,20 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 			fg = host.getForegroundForToken(token);
 			bg = host.getBackgroundForToken(token);
 		}
-		g.setFont(host.getFontForTokenType(token.type));
-		FontMetrics fm = host.getFontMetricsForTokenType(token.type);
+		g.setFont(host.getFontForTokenType(token.getType()));
+		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
 
 		int ascent = fm.getAscent();
 		int height = fm.getHeight();
 
-		for (int i=token.textOffset; i<end; i++) {
+		for (int i=textOffs; i<end; i++) {
 
-			switch (token.text[i]) {
+			switch (text[i]) {
 
 				case '\t':
 
 					// Fill in background.
-					nextX = x+fm.charsWidth(token.text, flushIndex,flushLen);
+					nextX = x+fm.charsWidth(text, flushIndex,flushLen);
 					float nextNextX = e.nextTabStop(nextX, 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextNextX-x,height, g,
@@ -92,7 +94,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// Paint chars cached before the tab.
 					if (flushLen > 0) {
-						g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
+						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
@@ -120,7 +122,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// "flushLen+1" ensures text is aligned correctly (or,
 					// aligned the same as in getWidth()).
-					nextX = x+fm.charsWidth(token.text, flushIndex,flushLen+1);
+					nextX = x+fm.charsWidth(text, flushIndex,flushLen+1);
 					int width = fm.charWidth(' ');
 
 					// Paint background.
@@ -132,7 +134,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// Paint chars before space.
 					if (flushLen>0) {
-						g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
+						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 						flushLen = 0;
 					}
 
@@ -156,7 +158,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 			}
 		}
 
-		nextX = x+fm.charsWidth(token.text, flushIndex,flushLen);
+		nextX = x+fm.charsWidth(text, flushIndex,flushLen);
 
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
@@ -164,7 +166,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 							ascent, host, bg, !selected);
 			}
 			g.setColor(fg);
-			g.drawChars(token.text, flushIndex, flushLen, (int)x,(int)y);
+			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 		}
 
 		if (host.getUnderlineForToken(token)) {

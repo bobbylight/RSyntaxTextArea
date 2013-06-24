@@ -14,6 +14,7 @@ import javax.swing.text.*;
 import javax.swing.text.Position.Bias;
 import javax.swing.event.*;
 
+import org.fife.ui.rsyntaxtextarea.TokenUtils.TokenSubList;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
@@ -47,7 +48,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 */
 	private RSyntaxTextArea host;
 	private FontMetrics metrics;
-	private Token tempToken;
+	private TokenImpl tempToken;
+	private TokenImpl lineCountTempToken;
 
 //	/**
 //	 * The end-of-line marker.
@@ -69,10 +71,11 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 */
 	public WrappedSyntaxView(Element elem) {
 		super(elem, Y_AXIS);
-		tempToken = new Token();
+		tempToken = new TokenImpl();
 		s = new Segment();
 		drawSeg = new Segment();
 		tempRect = new Rectangle();
+		lineCountTempToken = new TokenImpl();
 	}
 
 
@@ -112,12 +115,12 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				}
 				// Return the first non-whitespace char (i.e., don't start
 				// off the continuation of a wrapped line with whitespace).
-				return t.isWhitespace() ? p+t.textCount : p;
+				return t.isWhitespace() ? p+t.length() : p;
 //return getBreakLocation(t, fm, x0, currentWidth, this);
 			}
 			currentWidth -= tokenWidth;
 			x0 += tokenWidth;
-			p += t.textCount;
+			p += t.length();
 //System.err.println("*** *** *** token fit entirely (width==" + tokenWidth + "), adding " + t.textCount + " to p, now p==" + p);
 			t = t.getNextToken();
 		}
@@ -132,7 +135,7 @@ return p + 1;
 //								TabExpander e) {
 //	Segment s = new Segment();
 //	s.array = t.text;
-//	s.offset = t.textOffset;
+//	s.offset = t.getTextOffset();
 //	s.count = t.textCount;
 //	return t.offset + Utilities.getBreakLocation(s, fm, x0, x, e, t.offset);
 //}
@@ -208,7 +211,7 @@ return p + 1;
 		// If this line is an empty line, then the token list is simply a
 		// null token.  In this case, the line highlight will be skipped in
 		// the loop below, so unfortunately we must manually do it here.
-		if (token!=null && token.type==Token.NULL) {
+		if (token!=null && token.getType()==Token.NULL) {
 			h.paintLayeredHighlights(g, p0,p1, r, host, this);
 			return;
 		}
@@ -221,15 +224,15 @@ return p + 1;
 
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
-			while (token!=null && token.isPaintable() && token.offset+token.textCount-1<p) {//<=p) {
+			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
 				x = painter.paint(token, g, x,y, host, this);
 				token = token.getNextToken();
 			}
 			
-			if (token!=null && token.isPaintable() && token.offset<p) {
-				int tokenOffset = token.offset;
+			if (token!=null && token.isPaintable() && token.getOffset()<p) {
+				int tokenOffset = token.getOffset();
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
-						tokenOffset, token.type);
+						tokenOffset, token.getType());
 				painter.paint(tempToken, g, x,y, host, this);
 				token.makeStartAt(p);
 			}
@@ -287,7 +290,7 @@ return p + 1;
 		// If this line is an empty line, then the token list is simply a
 		// null token.  In this case, the line highlight will be skipped in
 		// the loop below, so unfortunately we must manually do it here.
-		if (token!=null && token.type==Token.NULL) {
+		if (token!=null && token.getType()==Token.NULL) {
 			h.paintLayeredHighlights(g, p0,p1, r, host, this);
 			return;
 		}
@@ -300,28 +303,28 @@ return p + 1;
 
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
-			while (token!=null && token.isPaintable() && token.offset+token.textCount-1<p) {//<=p) {
+			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
 
 				// Selection starts in this token
 				if (token.containsPosition(selStart)) {
 
 
-					if (selStart>token.offset) {
+					if (selStart>token.getOffset()) {
 						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.offset;
+						tempToken.textCount = selStart - tempToken.getOffset();
 						x = painter.paint(tempToken,g,x,y,host, this);
 						token.makeStartAt(selStart);
 					}
 
-					int selCount = Math.min(token.textCount, selEnd-token.offset);
-					if (selCount==token.textCount) {
+					int selCount = Math.min(token.length(), selEnd-token.getOffset());
+					if (selCount==token.length()) {
 						x = painter.paintSelected(token, g, x,y, host, this);
 					}
 					else {
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
 						x = painter.paintSelected(tempToken, g, x,y, host, this);
-						token.makeStartAt(token.offset + selCount);
+						token.makeStartAt(token.getOffset() + selCount);
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
@@ -330,15 +333,15 @@ return p + 1;
 				// Selection ends in this token
 				else if (token.containsPosition(selEnd)) {
 					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.offset;
+					tempToken.textCount = selEnd - tempToken.getOffset();
 					x = painter.paintSelected(tempToken, g, x,y, host, this);
 					token.makeStartAt(selEnd);
 					x = painter.paint(token, g, x,y, host, this);
 				}
 
 				// This token is entirely selected
-				else if (token.offset>=selStart &&
-						(token.offset+token.textCount)<=selEnd) {
+				else if (token.getOffset()>=selStart &&
+						token.getEndOffset()<=selEnd) {
 					x = painter.paintSelected(token, g, x,y, host, this);
 				}
 
@@ -352,32 +355,32 @@ return p + 1;
 			}
 
 			// If there's a token that's going to be split onto the next line
-			if (token!=null && token.isPaintable() && token.offset<p) {
+			if (token!=null && token.isPaintable() && token.getOffset()<p) {
 
-				int tokenOffset = token.offset;
+				int tokenOffset = token.getOffset();
 				Token orig = token;
-				token = new Token(drawSeg, tokenOffset-start, p-1-start,
-									tokenOffset, token.type);
+				token = new TokenImpl(drawSeg, tokenOffset-start, p-1-start,
+									tokenOffset, token.getType());
 
 				// Selection starts in this token
 				if (token.containsPosition(selStart)) {
 
-					if (selStart>token.offset) {
+					if (selStart>token.getOffset()) {
 						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.offset;
+						tempToken.textCount = selStart - tempToken.getOffset();
 						x = painter.paint(tempToken,g,x,y,host, this);
 						token.makeStartAt(selStart);
 					}
 
-					int selCount = Math.min(token.textCount, selEnd-token.offset);
-					if (selCount==token.textCount) {
+					int selCount = Math.min(token.length(), selEnd-token.getOffset());
+					if (selCount==token.length()) {
 						x = painter.paintSelected(token, g, x,y, host, this);
 					}
 					else {
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
 						x = painter.paintSelected(tempToken, g, x,y, host, this);
-						token.makeStartAt(token.offset + selCount);
+						token.makeStartAt(token.getOffset() + selCount);
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
@@ -386,15 +389,15 @@ return p + 1;
 				// Selection ends in this token
 				else if (token.containsPosition(selEnd)) {
 					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.offset;
+					tempToken.textCount = selEnd - tempToken.getOffset();
 					x = painter.paintSelected(tempToken, g, x,y, host, this);
 					token.makeStartAt(selEnd);
 					x = painter.paint(token, g, x,y, host, this);
 				}
 
 				// This token is entirely selected
-				else if (token.offset>=selStart &&
-						(token.offset+token.textCount)<=selEnd) {
+				else if (token.getOffset()>=selStart &&
+						token.getEndOffset()<=selEnd) {
 					x = painter.paintSelected(token, g, x,y, host, this);
 				}
 
@@ -1093,8 +1096,10 @@ return p + 1;
 			for (int p0=startOffset; p0<p1; ) {
 //System.err.println("... ... " + p0 + ", " + p1);
 				nlines += 1;
-				x0 = RSyntaxUtilities.makeTokenListStartAt(tokenList, p0,
-							WrappedSyntaxView.this, textArea, x0);
+				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+				x0 = subList!=null ? subList.x : x0;
+				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
 
 //System.err.println("... ... ... break position p==" + p);
@@ -1194,8 +1199,10 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 			float x0 = alloc.x;//0;
 
 			while (p0 < p1) {
-				x0 = RSyntaxUtilities.makeTokenListStartAt(tokenList, p0,
-							WrappedSyntaxView.this, textArea, x0);
+				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+				x0 = subList!=null ? subList.x : x0;
+				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
 				if ((pos >= p0) && (testP<p)) {//pos < p)) {
 					// it's in this line
@@ -1285,8 +1292,9 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 					// We can always use alloc.x since we always break
 					// lines so they start at the beginning of a physical
 					// line.
-					RSyntaxUtilities.makeTokenListStartAt(tlist, p0,
-						WrappedSyntaxView.this, textArea, alloc.x);
+					TokenSubList subList = TokenUtils.getSubTokenList(tlist, p0,
+							WrappedSyntaxView.this, textArea, alloc.x, lineCountTempToken);
+					tlist = subList!=null ? subList.tokenList : null;
 					int p = calculateBreakPosition(p0, tlist, alloc.x);
 
 					// If desired view position is in this physical chunk.

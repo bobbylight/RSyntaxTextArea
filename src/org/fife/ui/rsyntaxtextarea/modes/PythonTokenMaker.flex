@@ -129,7 +129,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new Token();
+			return new TokenImpl();
 		}
 
 	}

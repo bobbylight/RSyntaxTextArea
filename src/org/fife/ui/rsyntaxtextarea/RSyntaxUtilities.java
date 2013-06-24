@@ -28,6 +28,7 @@ import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.TokenUtils.TokenSubList;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
@@ -107,6 +108,11 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * Used in bracket matching methods.
 	 */
 	private static Segment charSegment = new Segment();
+
+	/**
+	 * Used in token list manipulation methods.
+	 */
+	private static final TokenImpl tempToken = new TokenImpl();
 
 	/**
 	 * Used internally.
@@ -350,7 +356,9 @@ public class RSyntaxUtilities implements SwingConstants {
 		// Modify the token list 't' to begin at p0 (but still have correct
 		// token types, etc.), and get the x-location (in pixels) of the
 		// beginning of this new token list.
-		makeTokenListStartAt(t, p0, e, textArea, 0);
+		TokenSubList subList = TokenUtils.getSubTokenList(t, p0, e, textArea,
+				0, tempToken);
+		t = subList.tokenList;
 
 		rect = t.listOffsetToView(textArea, e, p1, x0, rect);
 		return rect;
@@ -420,7 +428,7 @@ public class RSyntaxUtilities implements SwingConstants {
 			Token token = doc.getTokenListForLine(curLine);
 			token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
 			// All brackets are always returned as "separators."
-			if (token.type!=Token.SEPARATOR) {
+			if (token.getType()!=Token.SEPARATOR) {
 				return input;
 			}
 			if (index<3) { // One of "{[("
@@ -458,7 +466,7 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							token = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (token.type==Token.SEPARATOR)
+							if (token.getType()==Token.SEPARATOR)
 								numEmbedded++;
 						}
 
@@ -469,7 +477,7 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							token = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (token.type==Token.SEPARATOR) {
+							if (token.getType()==Token.SEPARATOR) {
 								if (numEmbedded==0) {
 									if (textArea.isCodeFoldingEnabled() &&
 											textArea.getFoldManager().isLineHidden(curLine)) {
@@ -528,7 +536,7 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							t2 = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (t2.type==Token.SEPARATOR)
+							if (t2.getType()==Token.SEPARATOR)
 								numEmbedded++;
 						}
 
@@ -539,7 +547,7 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							t2 = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (t2.type==Token.SEPARATOR) {
+							if (t2.getType()==Token.SEPARATOR) {
 								if (numEmbedded==0) {
 									input.setLocation(caretPosition, offset);
 									return input;
@@ -746,7 +754,7 @@ public class RSyntaxUtilities implements SwingConstants {
 			return -1;
 
 		// A line containing only Token.NULL is an empty line.
-		else if (token.type==Token.NULL) {
+		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be >0 ??
 			return c.getLineStartOffset(line-1);
 		}
@@ -780,7 +788,7 @@ public class RSyntaxUtilities implements SwingConstants {
 			return -1;
 
 		// A line containing only Token.NULL is an empty line.
-		else if (token.type==Token.NULL) {
+		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be > c.getLineCount()-1 ??
 //			return c.getLineStartOffset(line+1);
 FoldManager fm = c.getFoldManager();
@@ -996,7 +1004,7 @@ return c.getLineStartOffset(line);
 		float width = 0;
 		for (Token t=tokenList; t!=null&&t.isPaintable(); t=t.getNextToken()) {
 			if (t.containsPosition(upTo)) {
-				return width + t.getWidthUpTo(upTo-t.offset, textArea, e,
+				return width + t.getWidthUpTo(upTo-t.getOffset(), textArea, e,
 													x0+width);
 			}
 			width += t.getWidth(textArea, e, x0+width);
@@ -1109,77 +1117,6 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Modifies the passed-in token list to start at the specified offset.
-	 * For example, if the token list covered positions 20-60 in the document
-	 * (inclusive) like so:
-	 * <pre>
-	 *   [token1] -> [token2] -> [token3] -> [token4]
-	 *   20     30   31     40   41     50   51     60
-	 * </pre>
-	 * and you used this method to make the token list start at position 44,
-	 * then the token list would be modified to be the following:
-	 * <pre>
-	 *   [part-of-old-token3] -> [token4]
-	 *   44                 50   51     60
-	 * </pre>
-	 * Tokens that come before the specified position are forever lost, and
-	 * the token containing that position is made to begin at that position if
-	 * necessary.  All token types remain the same as they were originally.<p>
-	 *
-	 * This method can be useful if you are only interested in part of a token
-	 * list (i.e., the line it represents), but you don't want to modify the
-	 * token list yourself.
-	 *
-	 * @param tokenList The list to make start at the specified position.
-	 *        This parameter is modified.
-	 * @param pos The position at which the new token list is to start.  If
-	 *        this position is not in the passed-in token list,
-	 *        returned token list will either be <code>null</code> or the
-	 *        unpaintable token(s) at the end of the passed-in token list.
-	 * @param e How to expand tabs.
-	 * @param textArea The text area from which the token list came.
-	 * @param x0 The initial x-pixel position of the old token list.
-	 * @return The width, in pixels, of the part of the token list "removed
-	 *         from the front."  This way, you know the x-offset of the "new"
-	 *         token list.
-	 */
-	public static float makeTokenListStartAt(Token tokenList, int pos,
-									TabExpander e,
-									final RSyntaxTextArea textArea,
-									float x0) {
-
-		Token t = tokenList;
-
-		// Loop through the token list until you find the one that contains
-		// pos.  Remember the cumulative width of all of these tokens.
-		while (t!=null && t.isPaintable() && !t.containsPosition(pos)) {
-			x0 += t.getWidth(textArea, e, x0);
-			t = t.getNextToken();
-		}
-
-		// Make the token that contains pos start at pos.
-		if (t!=null && t.isPaintable() && t.offset!=pos) {
-			// Number of chars between p0 and token start.
-			int difference = pos - t.offset;
-			x0 += t.getWidthUpTo(t.textCount-difference+1, textArea, e, x0);
-			t.makeStartAt(pos);
-		}
-
-		// Make the passed-in token list point to the proper place.
-		// t can be null, for example, if line ends with unended MLC.
-		if (t!=null && t.isPaintable())
-			tokenList.copyFrom(t);
-		else
-			tokenList = null;
-		t = null;
-
-		// Return the x-offset (in pixels) of the newly-modified t.
-		return x0;
-
-	}
-
-
-	/**
 	 * Returns whether a regular expression token can follow the specified
 	 * token in JavaScript.
 	 *
@@ -1192,8 +1129,8 @@ return c.getLineStartOffset(line);
 		// We basically try to mimic Eclipse's JS editor's behavior here.
 		return t==null ||
 				//t.isOperator() ||
-				(t.textCount==1 && (
-					(ch=t.text[t.textOffset])=='=' ||
+				(t.length()==1 && (
+					(ch=t.charAt(0))=='=' ||
 					ch=='(' ||
 					ch==',' ||
 					ch=='?' ||
@@ -1203,8 +1140,8 @@ return c.getLineStartOffset(line);
 					ch=='&'
 				)) ||
 				/* Operators "==", "===", "!=", "!==" */
-				(t.type==Token.OPERATOR &&
-						t.text[t.textOffset+t.textCount-1]=='=') ||
+				(t.getType()==Token.OPERATOR &&
+						t.charAt(t.length()-1)=='=') ||
 				t.is(Token.RESERVED_WORD, JS_KEYWORD_RETURN);
 	}
 

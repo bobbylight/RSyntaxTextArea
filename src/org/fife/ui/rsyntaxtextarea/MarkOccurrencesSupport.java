@@ -222,8 +222,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @return Whether the token is a single non-word char.
 	 */
 	private static final boolean isNonWordChar(Token t) {
-		return t.textCount==1 &&
-				!RSyntaxUtilities.isLetter(t.text[t.textOffset]);
+		return t.length()==1 &&
+				!RSyntaxUtilities.isLetter(t.charAt(0));
 	}
 
 
@@ -235,7 +235,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @return Whether we should mark all occurrences of this token.
 	 */
 	private boolean isValidType(Token t) {
-		return textArea.getMarkOccurrencesOfTokenType(t.type);
+		return textArea.getMarkOccurrencesOfTokenType(t.getType());
 	}
 
 

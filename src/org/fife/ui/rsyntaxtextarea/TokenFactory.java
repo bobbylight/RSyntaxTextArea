@@ -25,7 +25,7 @@ interface TokenFactory {
 	 *
 	 * @return A null token.
 	 */
-	public Token createToken();
+	public TokenImpl createToken();
 
 
 	/**
@@ -38,7 +38,7 @@ interface TokenFactory {
 	 * @param type The type of token.
 	 * @return The token.
 	 */
-	public Token createToken(final Segment line, final int beg,
+	public TokenImpl createToken(final Segment line, final int beg,
 					final int end, final int startOffset, final int type);
 
 
@@ -52,7 +52,7 @@ interface TokenFactory {
 	 * @param type The type of token.
 	 * @return The token.
 	 */
-	public Token createToken(final char[] line, final int beg,
+	public TokenImpl createToken(final char[] line, final int beg,
 					final int end, final int startOffset, final int type);
 
 

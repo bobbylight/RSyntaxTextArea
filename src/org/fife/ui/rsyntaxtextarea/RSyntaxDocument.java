@@ -42,7 +42,7 @@ import org.fife.util.DynamicIntArray;
  * and should really be corrected, but oh well. 
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
 public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 
@@ -71,7 +71,18 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 */
 	protected transient DynamicIntArray lastTokensOnLines;
 
+	private transient int lastLine = -1;
+	private transient Token cachedTokenList;
+	private transient int useCacheCount = 0;
+	private transient int tokenRetrievalCount = 0;
+
 	private transient Segment s;
+
+	/**
+	 * If this is set to <code>true</code>, debug information about how much
+	 * token caching is helping is printed to stdout.
+	 */
+	private static final boolean DEBUG_TOKEN_CACHING = false;
 
 
 	/**
@@ -113,6 +124,8 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 * @param e The change.
 	 */
 	protected void fireInsertUpdate(DocumentEvent e) {
+
+		cachedTokenList = null;
 
 		/*
 		 * Now that the text is actually inserted into the content and
@@ -186,6 +199,7 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 */
 	protected void fireRemoveUpdate(DocumentEvent chng) {
 
+		cachedTokenList =  null;
 		Element lineMap = getDefaultRootElement();
 		int numLines = lineMap.getElementCount();
 
@@ -362,6 +376,18 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 * @return A token list representing the specified line.
 	 */
 	public final Token getTokenListForLine(int line) {
+
+		tokenRetrievalCount++;
+		if (line==lastLine && cachedTokenList!=null) {
+			if (DEBUG_TOKEN_CACHING) {
+				useCacheCount++;
+				System.err.println("--- Using cached line; ratio now: " +
+						useCacheCount + "/" + tokenRetrievalCount);
+			}
+			return cachedTokenList;
+		}
+		lastLine = line;
+		
 		Element map = getDefaultRootElement();
 		Element elem = map.getElement(line);
 		int startOffset = elem.getStartOffset();
@@ -376,7 +402,11 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 		}
 		int initialTokenType = line==0 ? Token.NULL :
 								getLastTokenTypeOnLine(line-1);
-		return tokenMaker.getTokenList(s, initialTokenType, startOffset);
+
+		//return tokenMaker.getTokenList(s, initialTokenType, startOffset);
+		cachedTokenList = tokenMaker.getTokenList(s, initialTokenType, startOffset);
+		return cachedTokenList;
+
 	}
 
 
