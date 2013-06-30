@@ -234,7 +234,9 @@ return p + 1;
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
 						tokenOffset, token.getType());
 				painter.paint(tempToken, g, x,y, host, this);
-				token.makeStartAt(p);
+				tempToken.copyFrom(token);
+				tempToken.makeStartAt(p);
+				token = new TokenImpl(tempToken);
 			}
 
 			p0 = (p==p0) ? p1 : p;
@@ -423,7 +425,7 @@ return p + 1;
 				}
 
 				token = new TokenImpl(orig);
-				token.makeStartAt(p);
+				((TokenImpl)token).makeStartAt(p);
 
 			}
 

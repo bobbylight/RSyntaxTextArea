@@ -18,17 +18,7 @@ import javax.swing.text.Utilities;
 
 
 /**
- * A generic token that functions as a node in a linked list of syntax
- * highlighted tokens for some language.<p>
- *
- * A <code>Token</code> is a piece of text representing some logical token in
- * source code for a programming language.  For example, the line of C code:<p>
- * <pre>
- * int i = 0;
- * </pre>
- * would be broken into 8 <code>Token</code>s: the first representing
- * <code>int</code>, the second whitespace, the third <code>i</code>, the fourth
- * whitespace, the fifth <code>=</code>, etc.<p>
+ * The default implementation of {@link Token}.<p>
  *
  * <b>Note:</b> The instances of <code>Token</code> returned by
  * {@link RSyntaxDocument}s are pooled and should always be treated as
@@ -256,27 +246,14 @@ public class TokenImpl implements Token {
 	 * @param t2 The token from which to copy.
 	 */
 	public void copyFrom(Token t2) {
-//		if (t2 instanceof TokenImpl) {
-//			TokenImpl ti2 = (TokenImpl)t2;
-//			text = ti2.text;
-//			textOffset = ti2.textOffset;
-//			textCount = ti2.textCount;
-//			setOffset(ti2.getOffset());
-//			setType(ti2.getType());
-//			hyperlink = ti2.hyperlink;
-//			languageIndex = ti2.languageIndex;
-//			nextToken = ti2.nextToken;
-//		}
-//		else {
-			text = t2.getTextArray();
-			textOffset = t2.getTextOffset();
-			textCount = t2.length();
-			setOffset(t2.getOffset());
-			setType(t2.getType());
-			hyperlink = t2.isHyperlink();
-			languageIndex = t2.getLanguageIndex();
-			nextToken = t2.getNextToken();
-//		}
+		text = t2.getTextArray();
+		textOffset = t2.getTextOffset();
+		textCount = t2.length();
+		setOffset(t2.getOffset());
+		setType(t2.getType());
+		hyperlink = t2.isHyperlink();
+		languageIndex = t2.getLanguageIndex();
+		nextToken = t2.getNextToken();
 	}
 
 
@@ -682,7 +659,12 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Makes this token start at the specified offset into the document.
+	 * Makes this token start at the specified offset into the document.<p>
+	 * 
+	 * <b>Note:</b> You should not modify <code>Token</code> instances you
+	 * did not create yourself (e.g., came from an
+	 * <code>RSyntaxDocument</code>).  If you do, rendering issues and/or
+	 * runtime exceptions will likely occur.  You have been warned!
 	 *
 	 * @param pos The offset into the document this token should start at.
 	 *        Note that this token must already contain this position; if
@@ -704,7 +686,12 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Moves the starting offset of this token.
+	 * Moves the starting offset of this token.<p>
+	 * 
+	 * <b>Note:</b> You should not modify <code>Token</code> instances you
+	 * did not create yourself (e.g., came from an
+	 * <code>RSyntaxDocument</code>).  If you do, rendering issues and/or
+	 * runtime exceptions will likely occur.  You have been warned!
 	 *
 	 * @param amt The amount to move the starting offset.  This should be
 	 *        between <code>0</code> and <code>textCount</code>, inclusive.
@@ -796,11 +783,7 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Sets the type of this token.
-	 *
-	 * @param type The new token type.
-	 * @see TokenTypes
-	 * @see #getType()
+	 * {@inheritDoc}
 	 */
 	public void setType(int type) {
 		this.type = type;
@@ -808,12 +791,7 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Returns whether this token starts with the specified characters.
-	 *
-	 * @param chars The characters.
-	 * @return Whether this token starts with those characters.
-	 * @see #endsWith(char[])
-	 * @see #is(int, char[])
+	 * {@inheritDoc}
 	 */
 	public boolean startsWith(char[] chars) {
 		if (chars.length<=textCount){
@@ -829,18 +807,7 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Returns the position in the document corresponding to the specified
-	 * position in this token's internal char array (<code>textOffset</code> -
-	 * <code>textOffset+textCount-1</code>).<p>
-	 * Note that this method does NOT do any bounds checking; you can pass in
-	 * an invalid token position, and you will not receive an Exception or any
-	 * other indication that the returned document position is invalid.  It is
-	 * up to the user to ensure valid input.
-	 *
-	 * @param pos A position in the token's internal char array
-	 *        (<code>textOffset</code> - <code>textOffset+textCount</code>).
-	 * @return The corresponding position in the document.
-	 * @see #documentToToken(int)
+	 * {@inheritDoc}
 	 */
 	public int tokenToDocument(int pos) {
 		return pos + (getOffset()-textOffset);

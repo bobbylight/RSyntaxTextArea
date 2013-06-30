@@ -503,19 +503,6 @@ public interface Token extends TokenTypes {
 
 
 	/**
-	 * Makes this token start at the specified offset into the document.
-	 *
-	 * @param pos The offset into the document this token should start at.
-	 *        Note that this token must already contain this position; if
-	 *        it doesn't, an exception is thrown.
-	 * @throws IllegalArgumentException If pos is not already contained by
-	 *         this token.
-	 * @see #moveOffset(int)
-	 */
-	public void makeStartAt(int pos);
-
-
-	/**
 	 * Sets whether this token is a hyperlink.
 	 *
 	 * @param hyperlink Whether this token is a hyperlink.
