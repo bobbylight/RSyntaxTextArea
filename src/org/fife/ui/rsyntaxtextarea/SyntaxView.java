@@ -222,7 +222,9 @@ public class SyntaxView extends View implements TabExpander,
 					nextX = painter.paint(tempToken,g,nextX,y,host, this, clipStart);
 					tempToken.textCount = token.length();
 					tempToken.makeStartAt(selStart);
-					token = tempToken;
+					// Clone required since token and tempToken must be
+					// different tokens for else statement below
+					token = new TokenImpl(tempToken);
 				}
 
 				int tokenLen = token.length();

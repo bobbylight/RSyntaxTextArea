@@ -313,7 +313,11 @@ return p + 1;
 						tempToken.copyFrom(token);
 						tempToken.textCount = selStart - tempToken.getOffset();
 						x = painter.paint(tempToken,g,x,y,host, this);
-						token.makeStartAt(selStart);
+						tempToken.textCount = token.length();
+						tempToken.makeStartAt(selStart);
+						// Clone required since token and tempToken must be
+						// different tokens for else statement below
+						token = new TokenImpl(tempToken);
 					}
 
 					int selCount = Math.min(token.length(), selEnd-token.getOffset());
@@ -324,7 +328,9 @@ return p + 1;
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
 						x = painter.paintSelected(tempToken, g, x,y, host, this);
-						token.makeStartAt(token.getOffset() + selCount);
+						tempToken.textCount = token.length();
+						tempToken.makeStartAt(token.getOffset() + selCount);
+						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
@@ -335,7 +341,9 @@ return p + 1;
 					tempToken.copyFrom(token);
 					tempToken.textCount = selEnd - tempToken.getOffset();
 					x = painter.paintSelected(tempToken, g, x,y, host, this);
-					token.makeStartAt(selEnd);
+					tempToken.textCount = token.length();
+					tempToken.makeStartAt(selEnd);
+					token = tempToken;
 					x = painter.paint(token, g, x,y, host, this);
 				}
 
@@ -369,7 +377,11 @@ return p + 1;
 						tempToken.copyFrom(token);
 						tempToken.textCount = selStart - tempToken.getOffset();
 						x = painter.paint(tempToken,g,x,y,host, this);
-						token.makeStartAt(selStart);
+						tempToken.textCount = token.length();
+						tempToken.makeStartAt(selStart);
+						// Clone required since token and tempToken must be
+						// different tokens for else statement below
+						token = new TokenImpl(tempToken);
 					}
 
 					int selCount = Math.min(token.length(), selEnd-token.getOffset());
@@ -380,7 +392,9 @@ return p + 1;
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
 						x = painter.paintSelected(tempToken, g, x,y, host, this);
-						token.makeStartAt(token.getOffset() + selCount);
+						tempToken.textCount = token.length();
+						tempToken.makeStartAt(token.getOffset() + selCount);
+						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
@@ -391,7 +405,9 @@ return p + 1;
 					tempToken.copyFrom(token);
 					tempToken.textCount = selEnd - tempToken.getOffset();
 					x = painter.paintSelected(tempToken, g, x,y, host, this);
-					token.makeStartAt(selEnd);
+					tempToken.textCount = token.length();
+					tempToken.makeStartAt(selEnd);
+					token = tempToken;
 					x = painter.paint(token, g, x,y, host, this);
 				}
 
@@ -406,7 +422,7 @@ return p + 1;
 					x = painter.paint(token, g, x,y, host, this);
 				}
 
-				token = orig;
+				token = new TokenImpl(orig);
 				token.makeStartAt(p);
 
 			}
