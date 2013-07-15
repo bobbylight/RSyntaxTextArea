@@ -107,6 +107,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting .htaccess files.
+	 */
+	public static final String SYNTAX_STYLE_HTACCESS		= "text/htaccess";
+
+
+	/**
 	 * Style for highlighting HTML.
 	 */
 	public static final String SYNTAX_STYLE_HTML			= "text/html";
