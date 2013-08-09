@@ -25,14 +25,14 @@ public class DefaultParseResult implements ParseResult {
 	private Parser parser;
 	private int firstLineParsed;
 	private int lastLineParsed;
-	private List notices;
+	private List<ParserNotice> notices;
 	private long parseTime;
 	private Exception error;
 
 
 	public DefaultParseResult(Parser parser) {
 		this.parser = parser;
-		notices = new ArrayList();
+		notices = new ArrayList<ParserNotice>();
 	}
 
 
@@ -84,7 +84,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getNotices() {
+	public List<ParserNotice> getNotices() {
 		return notices;
 	}
 

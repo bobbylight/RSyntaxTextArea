@@ -206,6 +206,7 @@ public class SearchEngine {
 	 *         an invalid group (less than zero or greater than the number of
 	 *         groups matched).
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static List getMatches(Matcher m, String replaceStr) {
 		ArrayList matches = new ArrayList();
 		while (m.find()) {
@@ -398,7 +399,7 @@ public class SearchEngine {
 
 		// Search backwards
 		else {
-			List matches = getMatches(m, replaceStr);
+			List<?> matches = getMatches(m, replaceStr);
 			if (!matches.isEmpty()) {
 				return matches.get(matches.size()-1);
 			}

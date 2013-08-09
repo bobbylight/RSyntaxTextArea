@@ -35,7 +35,7 @@ public interface FoldParser {
 	 * @return The list of folds.  If this method returns <code>null</code>,
 	 *         it is treated as if no folds were found.
 	 */
-	public List getFolds(RSyntaxTextArea textArea);
+	public List<Fold> getFolds(RSyntaxTextArea textArea);
 
 
 }

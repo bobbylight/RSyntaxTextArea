@@ -34,9 +34,9 @@ public class XmlFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List folds = new ArrayList();
+		List<Fold> folds = new ArrayList<Fold>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
@@ -138,7 +138,7 @@ public class XmlFoldParser implements FoldParser {
 	 * @param fold The fold to remove.
 	 * @param folds The list of top-level folds.
 	 */
-	private static final void removeFold(Fold fold, List folds) {
+	private static final void removeFold(Fold fold, List<Fold> folds) {
 		if (!fold.removeFromParent()) {
 			folds.remove(folds.size()-1);
 		}

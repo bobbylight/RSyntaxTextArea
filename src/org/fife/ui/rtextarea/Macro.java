@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -58,7 +57,7 @@ import org.fife.io.UnicodeReader;
 public class Macro {
 
 	private String name;
-	private ArrayList macroRecords;
+	private ArrayList<MacroRecord> macroRecords;
 
 	private static final String ROOT_ELEMENT			= "macro";
 	private static final String MACRO_NAME				= "macroName";
@@ -110,7 +109,7 @@ public class Macro {
 			throw new IOException("Error parsing XML: " + desc);
 		}
 
-		macroRecords = new ArrayList();
+		macroRecords = new ArrayList<MacroRecord>();
 
 		// Traverse the XML tree.
 		boolean parsedOK = initializeFromXMLFile(doc.getDocumentElement());
@@ -140,20 +139,18 @@ public class Macro {
 	 * @param name The name of the macro.
 	 * @param records The initial records of the macro.
 	 */
-	public Macro(String name, List records) {
+	public Macro(String name, List<MacroRecord> records) {
 		
 		this.name = name;
 
 		if (records!=null) {
-			macroRecords = new ArrayList(records.size());
-			Iterator i = records.iterator();
-			while (i.hasNext()) {
-				MacroRecord record = (MacroRecord)i.next();
+			macroRecords = new ArrayList<MacroRecord>(records.size());
+			for (MacroRecord record : records) {
 				macroRecords.add(record);
 			}
 		}
 		else {
-			macroRecords = new ArrayList(10);
+			macroRecords = new ArrayList<MacroRecord>(10);
 		}
 	
 	}
@@ -177,7 +174,7 @@ public class Macro {
 	 * @return The macro records.
 	 * @see #addMacroRecord
 	 */
-	public List getMacroRecords() {
+	public List<MacroRecord> getMacroRecords() {
 		return macroRecords;
 	}
 
@@ -347,9 +344,7 @@ public class Macro {
 			rootElement.appendChild(nameElement);
 
 			// Write all actions (the meat) in the macro.
-			int numActions = macroRecords.size();
-			for (int i=0; i<numActions; i++) {
-				MacroRecord record = (MacroRecord)macroRecords.get(i);
+			for (MacroRecord record : macroRecords) {
 				Element actionElement = doc.createElement(ACTION);
 				actionElement.setAttribute(ID, record.id);
 				if (record.actionCommand!=null &&

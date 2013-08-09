@@ -26,7 +26,7 @@ import javax.swing.plaf.basic.*;
  * @author Robert Futrell
  * @version 0.5
  */
-public class RTextAreaUI extends BasicTextAreaUI implements ViewFactory {
+public class RTextAreaUI extends BasicTextAreaUI {
 
 	private static final String SHARED_ACTION_MAP_NAME	= "RTextAreaUI.actionMap";
 	private static final String SHARED_INPUT_MAP_NAME	= "RTextAreaUI.inputMap";

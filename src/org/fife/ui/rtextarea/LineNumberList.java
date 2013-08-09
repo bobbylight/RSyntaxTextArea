@@ -53,7 +53,7 @@ public class LineNumberList extends AbstractGutterComponent
 	private int cellWidth;		// The width used for all line number cells.
 	private int ascent;			// The ascent to use when painting line numbers.
 
-	private Map aaHints;
+	private Map<?,?> aaHints;
 
 	private int mouseDragStartOffset;
 

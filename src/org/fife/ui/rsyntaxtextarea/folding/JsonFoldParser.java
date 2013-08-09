@@ -35,10 +35,10 @@ public class JsonFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		Stack blocks = new Stack();
-		List folds = new ArrayList();
+		Stack<Object> blocks = new Stack<Object>();
+		List<Fold> folds = new ArrayList<Fold>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
@@ -149,7 +149,7 @@ public class JsonFoldParser implements FoldParser {
 	 * @param value The value to check for.
 	 * @return Whether the value was found on top of the stack.
 	 */
-	private static final boolean popOffTop(Stack stack, Object value) {
+	private static final boolean popOffTop(Stack<Object> stack, Object value) {
 		if (stack.size()>0 && stack.peek()==value) {
 			stack.pop();
 			return true;

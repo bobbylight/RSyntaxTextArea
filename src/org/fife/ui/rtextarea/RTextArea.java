@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -77,8 +76,7 @@ import org.fife.ui.rtextarea.Macro.MacroRecord;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextArea extends RTextAreaBase
-								implements Printable, Serializable {
+public class RTextArea extends RTextAreaBase implements Printable {
 
 	/**
 	 * Constant representing insert mode.
@@ -166,7 +164,7 @@ public class RTextArea extends RTextAreaBase
 
 	private transient LineHighlightManager lineHighlightManager;
 
-	private ArrayList markAllHighlights;		// Highlights from "mark all".
+	private ArrayList<Object> markAllHighlights;		// Highlights from "mark all".
 	private String markedWord;				// Expression marked in "mark all."
 	private ChangeableHighlightPainter markAllHighlightPainter;
 
@@ -935,7 +933,7 @@ public class RTextArea extends RTextAreaBase
 			if (markAllHighlights!=null)
 				clearMarkAllHighlights();
 			else
-				markAllHighlights = new ArrayList(10);
+				markAllHighlights = new ArrayList<Object>();
 			int caretPos = getCaretPosition();
 			markedWord = toMark;
 			setCaretPosition(0);
@@ -985,20 +983,17 @@ public class RTextArea extends RTextAreaBase
 	 */
 	public synchronized void playbackLastMacro() {
 		if (currentMacro!=null) {
-			Action[] actions = getActions();
-			int numActions = actions.length;
-			List macroRecords = currentMacro.getMacroRecords();
-			int num = macroRecords.size();
-			if (num>0) {
+			List<MacroRecord> macroRecords = currentMacro.getMacroRecords();
+			if (!macroRecords.isEmpty()) {
+				Action[] actions = getActions();
 				undoManager.beginInternalAtomicEdit();
 				try {
-					for (int i=0; i<num; i++) {
-						MacroRecord record = (MacroRecord)macroRecords.get(i);
-						for (int j=0; j<numActions; j++) {
-							if ((actions[j] instanceof RecordableTextAction) &&
+					for (MacroRecord record : macroRecords) {
+						for (int i=0; i<actions.length; i++) {
+							if ((actions[i] instanceof RecordableTextAction) &&
 								record.id.equals(
-								((RecordableTextAction)actions[j]).getMacroID())) {
-								actions[j].actionPerformed(
+								((RecordableTextAction)actions[i]).getMacroID())) {
+								actions[i].actionPerformed(
 									new ActionEvent(this,
 												ActionEvent.ACTION_PERFORMED,
 												record.actionCommand));

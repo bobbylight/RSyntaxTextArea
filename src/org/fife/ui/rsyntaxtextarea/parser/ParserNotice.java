@@ -18,7 +18,7 @@ import java.awt.Color;
  * @version 1.0
  * @see DefaultParserNotice
  */
-public interface ParserNotice extends Comparable {
+public interface ParserNotice extends Comparable<ParserNotice> {
 
 	/**
 	 * Indicates an info notice.

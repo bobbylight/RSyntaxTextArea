@@ -28,14 +28,14 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	 * defined in this map, a <code>TokenMaker</code> of the corresponding type
 	 * is returned.
 	 */
-	private Map tokenMakerMap;
+	private Map<String, Object> tokenMakerMap;
 
 
 	/**
 	 * Constructor.
 	 */
 	protected AbstractTokenMakerFactory() {
-		tokenMakerMap = new HashMap();
+		tokenMakerMap = new HashMap<String, Object>();
 		initTokenMakerMap();
 	}
 
@@ -77,7 +77,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set keySet() {
+	public Set<String> keySet() {
 		return tokenMakerMap.keySet();
 	}
 

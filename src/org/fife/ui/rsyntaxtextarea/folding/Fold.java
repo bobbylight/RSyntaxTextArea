@@ -33,14 +33,14 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @author Robert Futrell
  * @version 1.0
  */
-public class Fold implements Comparable {
+public class Fold implements Comparable<Fold> {
 
 	private int type;
 	private RSyntaxTextArea textArea;
 	private Position startOffs;
 	private Position endOffs;
 	private Fold parent;
-	private List children;
+	private List<Fold> children;
 	private boolean collapsed;
 	private int childCollapsedLineCount;
 
@@ -72,7 +72,7 @@ public class Fold implements Comparable {
 		Fold child = new Fold(type, textArea, startOffs);
 		child.parent = this;
 		if (children==null) {
-			children = new ArrayList();
+			children = new ArrayList<Fold>();
 		}
 		children.add(child);
 		return child;
@@ -85,11 +85,11 @@ public class Fold implements Comparable {
 	 * @param otherFold Another fold to compare this one to.
 	 * @return How this fold compares to the other.
 	 */
-	public int compareTo(Object otherFold) {
+	public int compareTo(Fold otherFold) {
 		int result = -1;
-		if (otherFold instanceof Fold) {
-			result = startOffs.getOffset() - ((Fold)otherFold).startOffs.getOffset();
-			//result = getStartLine() - ((Fold)otherFold).getStartLine();
+		if (otherFold!=null) {
+			result = startOffs.getOffset() - otherFold.startOffs.getOffset();
+			//result = getStartLine() - otherFold.getStartLine();
 		}
 		return result;
 	}
@@ -153,7 +153,7 @@ public class Fold implements Comparable {
 	 * @see #compareTo(Object)
 	 */
 	public boolean equals(Object otherFold) {
-		return compareTo(otherFold)==0;
+		return otherFold instanceof Fold && compareTo((Fold)otherFold)==0;
 	}
 
 
@@ -165,7 +165,7 @@ public class Fold implements Comparable {
 	 * @see #getChildCount()
 	 */
 	public Fold getChild(int index) {
-		return (Fold)children.get(index);
+		return children.get(index);
 	}
 
 
@@ -186,7 +186,7 @@ public class Fold implements Comparable {
 	 * @return The array of child folds, or <code>null</code> if there are
 	 *         none.
 	 */
-	List getChildren() {
+	List<Fold> getChildren() {
 		return children;
 	}
 

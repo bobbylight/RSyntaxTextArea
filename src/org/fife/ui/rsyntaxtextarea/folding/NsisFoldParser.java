@@ -38,7 +38,7 @@ public class NsisFoldParser implements FoldParser {
 
 
 	private static final boolean foundEndKeyword(char[] keyword, Token t,
-			Stack endWordStack) {
+			Stack<char[]> endWordStack) {
 		return t.is(Token.RESERVED_WORD, keyword) && !endWordStack.isEmpty() &&
 			keyword==endWordStack.peek();
 	}
@@ -47,15 +47,15 @@ public class NsisFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List folds = new ArrayList();
+		List<Fold> folds = new ArrayList<Fold>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
 		boolean inMLC = false;
 		int mlcStart = 0;
-		Stack endWordStack = new Stack();
+		Stack<char[]> endWordStack = new Stack<char[]>();
 
 		try {
 

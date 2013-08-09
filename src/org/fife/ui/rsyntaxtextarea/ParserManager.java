@@ -28,6 +28,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaHighlighter.HighlightInfo;
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
@@ -46,7 +47,7 @@ class ParserManager implements DocumentListener, ActionListener,
 								HyperlinkListener {
 
 	private RSyntaxTextArea textArea;
-	private List parsers;
+	private List<Parser> parsers;
 	private Timer timer;
 	private boolean running;
 	private Parser parserForTip;
@@ -60,7 +61,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * compiler will return 2+ identical error messages if the same error is
 	 * committed in a single line more than once.
 	 */
-	private List noticeHighlightPairs;
+	private List<NoticeHighlightPair> noticeHighlightPairs;
 
 	/**
 	 * Painter used to underline errors.
@@ -108,7 +109,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	public ParserManager(int delay, RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		textArea.getDocument().addDocumentListener(this);
-		parsers = new ArrayList(1); // Usually small
+		parsers = new ArrayList<Parser>(1); // Usually small
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
 		running = true;
@@ -215,24 +216,23 @@ class ParserManager implements DocumentListener, ActionListener,
 		}
 
 		if (noticeHighlightPairs==null) {
-			noticeHighlightPairs = new ArrayList();
+			noticeHighlightPairs = new ArrayList<NoticeHighlightPair>();
 		}
 
 		removeParserNotices(res);
 
-		List notices = res.getNotices();
+		List<ParserNotice> notices = res.getNotices();
 		if (notices.size()>0) { // Guaranteed non-null
 
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 													textArea.getHighlighter();
 
-			for (Iterator i=notices.iterator(); i.hasNext(); ) {
-				ParserNotice notice = (ParserNotice)i.next();
+			for (ParserNotice notice : notices) {
 				if (DEBUG_PARSING) {
 					System.out.println("[DEBUG]: ... adding: " + notice);
 				}
 				try {
-					Object highlight = null;
+					HighlightInfo highlight = null;
 					if (notice.getShowInEditor()) {
 						highlight = h.addParserHighlight(notice,
 											parserErrorHighlightPainter);
@@ -286,8 +286,8 @@ class ParserManager implements DocumentListener, ActionListener,
 			h.clearParserHighlights(parser);
 		}
 		if (noticeHighlightPairs!=null) {
-			for (Iterator i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
-				NoticeHighlightPair pair = (NoticeHighlightPair)i.next();
+			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+				NoticeHighlightPair pair = i.next();
 				if (pair.notice.getParser()==parser) {
 					i.remove();
 				}
@@ -364,7 +364,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @see #removeParser(Parser)
 	 */
 	public Parser getParser(int index) {
-		return (Parser)parsers.get(index);
+		return parsers.get(index);
 	}
 
 
@@ -386,11 +386,10 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @return The list of notices.  This will be an empty list if there are
 	 *         none.
 	 */
-	public List getParserNotices() {
-		List notices = new ArrayList();
+	public List<ParserNotice> getParserNotices() {
+		List<ParserNotice> notices = new ArrayList<ParserNotice>();
 		if (noticeHighlightPairs!=null) {
-			for (Iterator i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
-				NoticeHighlightPair pair = (NoticeHighlightPair)i.next();
+			for (NoticeHighlightPair pair : noticeHighlightPairs) {
 				notices.add(pair.notice);
 			}
 		}
@@ -432,9 +431,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			}
 			*/
 			if (noticeHighlightPairs!=null) {
-				for (int j=0; j<noticeHighlightPairs.size(); j++) {
-					NoticeHighlightPair pair =
-						(NoticeHighlightPair)noticeHighlightPairs.get(j);
+				for (NoticeHighlightPair pair : noticeHighlightPairs) {
 					ParserNotice notice = pair.notice;
 					if (notice.containsPosition(pos)) {
 						tip = notice.getToolTipText();
@@ -535,8 +532,8 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (noticeHighlightPairs!=null) {
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 												textArea.getHighlighter();
-			for (Iterator i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
-				NoticeHighlightPair pair = (NoticeHighlightPair)i.next();
+			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+				NoticeHighlightPair pair = i.next();
 				if (pair.notice.getParser()==parser && pair.highlight!=null) {
 					h.removeParserHighlight(pair.highlight);
 					i.remove();
@@ -557,8 +554,8 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (noticeHighlightPairs!=null) {
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 												textArea.getHighlighter();
-			for (Iterator i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
-				NoticeHighlightPair pair = (NoticeHighlightPair)i.next();
+			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+				NoticeHighlightPair pair = i.next();
 				boolean removed = false;
 				if (shouldRemoveNotice(pair.notice, res)) {
 					if (pair.highlight!=null) {
@@ -682,9 +679,9 @@ class ParserManager implements DocumentListener, ActionListener,
 	private static class NoticeHighlightPair {
 
 		public ParserNotice notice;
-		public Object highlight;
+		public HighlightInfo highlight;
 
-		public NoticeHighlightPair(ParserNotice notice, Object highlight) {
+		public NoticeHighlightPair(ParserNotice notice, HighlightInfo highlight) {
 			this.notice = notice;
 			this.highlight = highlight;
 		}

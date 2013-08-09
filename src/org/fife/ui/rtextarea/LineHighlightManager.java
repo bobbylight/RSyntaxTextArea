@@ -27,7 +27,7 @@ import javax.swing.text.Position;
 class LineHighlightManager {
 
 	private RTextArea textArea;
-	private List lineHighlights;
+	private List<LineHighlightInfo> lineHighlights;
 
 
 	/**
@@ -56,7 +56,7 @@ class LineHighlightManager {
 		LineHighlightInfo lhi = new LineHighlightInfo(
 						textArea.getDocument().createPosition(offs), color);
 		if (lineHighlights==null) {
-			lineHighlights = new ArrayList(1);
+			lineHighlights = new ArrayList<LineHighlightInfo>(1);
 		}
 		int index = Collections.binarySearch(lineHighlights, lhi);
 		if (index<0) { // Common case
@@ -85,8 +85,7 @@ class LineHighlightManager {
 			try {
 
 				for (int i=0; i<count; i++) {
-					LineHighlightInfo lhi =(LineHighlightInfo)
-													lineHighlights.get(i);
+					LineHighlightInfo lhi = lineHighlights.get(i);
 					int offs = lhi.getOffset();
 					if (offs>=0 && offs<=docLen) {
 						int y = textArea.yForLineContaining(offs);
@@ -162,7 +161,7 @@ class LineHighlightManager {
 	/**
 	 * Information about a line highlight.
 	 */
-	private static class LineHighlightInfo implements Comparable {
+	private static class LineHighlightInfo implements Comparable<LineHighlightInfo> {
 
 		private Position offs;
 		private Color color;
@@ -172,9 +171,9 @@ class LineHighlightManager {
 			this.color = c;
 		}
 
-		public int compareTo(Object o) {
-			if (o instanceof LineHighlightInfo) {
-				return offs.getOffset() - ((LineHighlightInfo)o).getOffset();
+		public int compareTo(LineHighlightInfo o) {
+			if (o!=null) {
+				return offs.getOffset() - o.getOffset();
 			}
 			return -1;
 		}

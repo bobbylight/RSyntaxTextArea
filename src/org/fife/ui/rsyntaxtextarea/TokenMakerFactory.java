@@ -99,7 +99,7 @@ public abstract class TokenMakerFactory {
 	 *
 	 * @return The set of keys.
 	 */
-	public abstract Set keySet();
+	public abstract Set<String> keySet();
 
 
 	/**

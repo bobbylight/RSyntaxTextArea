@@ -44,7 +44,7 @@ import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 public class CodeTemplateManager {
 
 	private int maxTemplateIDLength;
-	private List templates;
+	private List<CodeTemplate> templates;
 
 	private KeyStroke insertTrigger;
 	private String insertTriggerString;
@@ -68,7 +68,7 @@ public class CodeTemplateManager {
 
 		s = new Segment();
 		comparator = new TemplateComparator();
-		templates = new ArrayList();
+		templates = new ArrayList<CodeTemplate>();
 
 	}
 
@@ -149,6 +149,7 @@ public class CodeTemplateManager {
 		try {
 			Document doc = textArea.getDocument();
 			doc.getText(caretPos-charsToGet, charsToGet, s);
+			@SuppressWarnings("unchecked")
 			int index = Collections.binarySearch(templates, s, comparator);
 			return index>=0 ? (CodeTemplate)templates.get(index) : null;
 		} catch (BadLocationException ble) {
@@ -175,7 +176,7 @@ public class CodeTemplateManager {
 	 */
 	public synchronized CodeTemplate[] getTemplates() {
 		CodeTemplate[] temp = new CodeTemplate[templates.size()];
-		return (CodeTemplate[])templates.toArray(temp);
+		return templates.toArray(temp);
 	}
 
 
@@ -231,8 +232,8 @@ public class CodeTemplateManager {
 		}
 
 		// TODO: Do a binary search
-		for (Iterator i=templates.iterator(); i.hasNext(); ) {
-			CodeTemplate template = (CodeTemplate)i.next();
+		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext(); ) {
+			CodeTemplate template = i.next();
 			if (id.equals(template.getID())) {
 				i.remove();
 				return template;
@@ -286,8 +287,7 @@ public class CodeTemplateManager {
 
 		// Save all current templates as XML.
 		boolean wasSuccessful = true;
-		for (Iterator i=templates.iterator(); i.hasNext(); ) {
-			CodeTemplate template = (CodeTemplate)i.next();
+		for (CodeTemplate template : templates) {
 			File xmlFile = new File(directory, template.getID() + ".xml");
 			try {
 				XMLEncoder e = new XMLEncoder(new BufferedOutputStream(
@@ -353,7 +353,8 @@ public class CodeTemplateManager {
 			int newCount = files==null ? 0 : files.length;
 			int oldCount = templates.size();
 
-			List temp = new ArrayList(oldCount+newCount);
+			List<CodeTemplate> temp =
+					new ArrayList<CodeTemplate>(oldCount+newCount);
 			temp.addAll(templates);
 
 			for (int i=0; i<newCount; i++) {
@@ -365,7 +366,7 @@ public class CodeTemplateManager {
 						throw new IOException("Not a CodeTemplate: " +
 										files[i].getAbsolutePath());
 					}
-					temp.add(obj);
+					temp.add((CodeTemplate)obj);
 					d.close();
 				} catch (/*IO, NoSuchElement*/Exception e) {
 					// NoSuchElementException can be thrown when reading
@@ -399,8 +400,8 @@ public class CodeTemplateManager {
 		// Remove any null entries (should only happen because of
 		// IOExceptions, etc. when loading from files), and sort
 		// the remaining list.
-		for (Iterator i=templates.iterator(); i.hasNext(); ) {
-			CodeTemplate temp = (CodeTemplate)i.next();
+		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext(); ) {
+			CodeTemplate temp = i.next();
 			if (temp==null || temp.getID()==null) {
 				i.remove();
 			}
@@ -420,6 +421,7 @@ public class CodeTemplateManager {
 	 * parameter and a <code>Segment</code> as its second, and knows
 	 * to compare the template's ID to the segment's text.
 	 */
+	@SuppressWarnings("rawtypes")
 	private static class TemplateComparator implements Comparator, Serializable{
 
 		public int compare(Object template, Object segment) {

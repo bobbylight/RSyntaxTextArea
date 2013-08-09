@@ -55,7 +55,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * The set of tags we allow to be folded.  These are tags that must have
 	 * explicit close tags in both HTML 4 and HTML 5.
 	 */
-	private static final Set FOLDABLE_TAGS;
+	private static final Set<String> FOLDABLE_TAGS;
 
 	private static final char[] MARKUP_CLOSING_TAG_START = "</".toCharArray();
 	//private static final char[] MARKUP_SHORT_TAG_END = "/>".toCharArray();
@@ -76,7 +76,7 @@ public class HtmlFoldParser implements FoldParser {
 	private static final char[] JSP_COMMENT_END   = "--%>".toCharArray();
 
 	static {
-		FOLDABLE_TAGS = new HashSet();
+		FOLDABLE_TAGS = new HashSet<String>();
 		FOLDABLE_TAGS.add("body");
 		FOLDABLE_TAGS.add("canvas");
 		FOLDABLE_TAGS.add("div");
@@ -113,10 +113,10 @@ public class HtmlFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List folds = new ArrayList();
-		Stack tagNameStack = new Stack();
+		List<Fold> folds = new ArrayList<Fold>();
+		Stack<String> tagNameStack = new Stack<String>();
 		boolean inSublanguage = false;
 
 		Fold currentFold = null;
@@ -339,10 +339,10 @@ public class HtmlFoldParser implements FoldParser {
 	 *        tag.
 	 * @return Whether it's the end of the current fold region.
 	 */
-	private static final boolean isEndOfLastFold(Stack tagNameStack,
+	private static final boolean isEndOfLastFold(Stack<String> tagNameStack,
 			Token tagNameToken) {
 		if (tagNameToken!=null && !tagNameStack.isEmpty()) {
-			return tagNameToken.getLexeme().equalsIgnoreCase((String)tagNameStack.peek());
+			return tagNameToken.getLexeme().equalsIgnoreCase(tagNameStack.peek());
 		}
 		return false;
 	}
@@ -368,7 +368,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * @param fold The fold to remove.
 	 * @param folds The list of top-level folds.
 	 */
-	private static final void removeFold(Fold fold, List folds) {
+	private static final void removeFold(Fold fold, List<Fold> folds) {
 		if (!fold.removeFromParent()) {
 			folds.remove(folds.size()-1);
 		}

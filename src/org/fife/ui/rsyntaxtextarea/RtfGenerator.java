@@ -43,8 +43,8 @@ import org.fife.ui.rtextarea.RTextArea;
  */
 public class RtfGenerator {
 
-	private List fontList;
-	private List colorList;
+	private List<Font> fontList;
+	private List<Color> colorList;
 	private StringBuffer document;
 	private boolean lastWasControlWord;
 	private int lastFontIndex;
@@ -72,8 +72,8 @@ public class RtfGenerator {
 	 * Constructor.
 	 */
 	public RtfGenerator() {
-		fontList = new ArrayList(1); // Usually only 1.
-		colorList = new ArrayList(1); // Usually only 1.
+		fontList = new ArrayList<Font>(1); // Usually only 1.
+		colorList = new ArrayList<Color>(1); // Usually only 1.
 		document = new StringBuffer();
 		reset();
 	}
@@ -217,7 +217,7 @@ public class RtfGenerator {
 			if (setFG) {
 				int fgIndex = 0;
 				if (fg!=null) { // null => fg color index 0
-					fgIndex = getIndex(colorList, fg)+1;
+					fgIndex = getColorIndex(colorList, fg)+1;
 				}
 				if (fgIndex!=lastFGIndex) {
 					document.append("\\cf").append(fgIndex);
@@ -228,7 +228,7 @@ public class RtfGenerator {
 
 			// Set the background color.
 			if (bg!=null) {
-				int pos = getIndex(colorList, bg);
+				int pos = getColorIndex(colorList, bg);
 				document.append("\\highlight").append(pos+1);
 				lastWasControlWord = true;
 			}
@@ -323,6 +323,24 @@ public class RtfGenerator {
 	}
 
 
+	/**
+	 * Returns the index of the specified item in a list.  If the item
+	 * is not in the list, it is added, and its new index is returned.
+	 *
+	 * @param list The list (possibly) containing the item.
+	 * @param item The item to get the index of.
+	 * @return The index of the item.
+	 */
+	private static int getColorIndex(List<Color> list, Color item) {
+		int pos = list.indexOf(item);
+		if (pos==-1) {
+			list.add(item);
+			pos = list.size()-1;
+		}
+		return pos;
+	}
+
+
 	private String getColorTableRtf() {
 
 		// Example:
@@ -331,8 +349,7 @@ public class RtfGenerator {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("{\\colortbl ;");
-		for (int i=0; i<colorList.size(); i++) {
-			Color c = (Color)colorList.get(i);
+		for (Color c : colorList) {
 			sb.append("\\red").append(c.getRed());
 			sb.append("\\green").append(c.getGreen());
 			sb.append("\\blue").append(c.getBlue());
@@ -357,10 +374,10 @@ public class RtfGenerator {
 	 * @param font The font to get the index of.
 	 * @return The index of the font.
 	 */
-	private static int getFontIndex(List list, Font font) {
+	private static int getFontIndex(List<Font> list, Font font) {
 		String fontName = font.getFamily();
 		for (int i=0; i<list.size(); i++) {
-			Font font2 = (Font)list.get(i);
+			Font font2 = list.get(i);
 			if (font2.getFamily().equals(fontName)) {
 				return i;
 			}
@@ -384,7 +401,7 @@ public class RtfGenerator {
 
 		sb.append("{\\fonttbl{\\f0\\fnil\\fcharset0 " + monoFamilyName + ";}");
 		for (int i=0; i<fontList.size(); i++) {
-			Font f = (Font)fontList.get(i);
+			Font f = fontList.get(i);
 			String familyName = f.getFamily();
 			if (familyName.equals("Monospaced")) {
 				familyName = monoFamilyName;
@@ -396,24 +413,6 @@ public class RtfGenerator {
 
 		return sb.toString();
 
-	}
-
-
-	/**
-	 * Returns the index of the specified item in a list.  If the item
-	 * is not in the list, it is added, and its new index is returned.
-	 *
-	 * @param list The list (possibly) containing the item.
-	 * @param item The item to get the index of.
-	 * @return The index of the item.
-	 */
-	private static int getIndex(List list, Object item) {
-		int pos = list.indexOf(item);
-		if (pos==-1) {
-			list.add(item);
-			pos = list.size()-1;
-		}
-		return pos;
 	}
 
 

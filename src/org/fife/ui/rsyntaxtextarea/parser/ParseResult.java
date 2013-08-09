@@ -59,7 +59,7 @@ public interface ParseResult {
 	 *
 	 * @return A list of {@link ParserNotice}s.
 	 */
-	public List getNotices();
+	public List<ParserNotice> getNotices();
 
 
 	/**

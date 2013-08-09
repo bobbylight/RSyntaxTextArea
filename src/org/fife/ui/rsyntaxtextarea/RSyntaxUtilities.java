@@ -205,8 +205,9 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * @return The rendering hints, or <code>null</code> if they cannot be
 	 *         determined.
 	 */
-	public static Map getDesktopAntiAliasHints() {
-		return (Map)Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+	public static Map<?,?> getDesktopAntiAliasHints() {
+		return (Map<?,?>)Toolkit.getDefaultToolkit().
+				getDesktopProperty("awt.font.desktophints");
 	}
 
 

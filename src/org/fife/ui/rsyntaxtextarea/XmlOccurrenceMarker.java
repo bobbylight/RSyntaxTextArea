@@ -115,7 +115,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 
 		else { // !forward
 
-			Stack matches = new Stack();
+			Stack<Token> matches = new Stack<Token>();
 			boolean inPossibleMatch = false;
 			t = doc.getTokenListForLine(curLine);
 			final int endBefore = tokenOffs - 2; // Stop before "</".
@@ -159,7 +159,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 
 				if (!matches.isEmpty()) {
 					try {
-						Token match = (Token)matches.pop();
+						Token match = matches.pop();
 						int end = match.getOffset() + match.length();
 						h.addMarkedOccurrenceHighlight(match.getOffset(), end, p);
 						end = tokenOffs + match.length();

@@ -442,7 +442,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		private String discoverTagName(RSyntaxDocument doc, int dot) {
 
-			Stack stack = new Stack();
+			Stack<String> stack = new Stack<String>();
 
 			Element root = doc.getDefaultRootElement();
 			int curLine = root.getElementIndex(dot);
@@ -480,7 +480,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 								t.charAt(1)=='/') {
 							String tagName = null;
 							if (!stack.isEmpty()) { // Always true for valid XML
-								tagName = (String)stack.pop();
+								tagName = stack.pop();
 							}
 							if (t.getEndOffset()>=dot) {
 								return tagName;

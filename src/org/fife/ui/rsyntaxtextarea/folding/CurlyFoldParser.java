@@ -103,9 +103,9 @@ public class CurlyFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List folds = new ArrayList();
+		List<Fold> folds = new ArrayList<Fold>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();

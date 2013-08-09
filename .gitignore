@@ -1,0 +1,7 @@
+ant-classes
+bin
+dist
+javadoc
+rsyntaxtextarea_*_Source.zip
+*.java~
+

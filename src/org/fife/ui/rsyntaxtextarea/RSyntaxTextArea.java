@@ -52,6 +52,7 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
@@ -313,7 +314,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private FocusableTip focusableTip;
 
 	/** Cached desktop anti-aliasing hints, if anti-aliasing is enabled. */
-	private Map aaHints;
+	private Map<?,?> aaHints;
 
 	/** Renders tokens. */
 	private TokenPainter tokenPainter;
@@ -1246,7 +1247,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return The list of marked occurrences.
 	 */
-	public List getMarkedOccurrences() {
+	public List<DocumentRange> getMarkedOccurrences() {
 		return ((RSyntaxTextAreaHighlighter)getHighlighter()).
 											getMarkedOccurrences();
 	}
@@ -1411,9 +1412,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The list of notices.  This will be an empty list if there are
 	 *         none.
 	 */
-	public List getParserNotices() {
-		return parserManager==null ? Collections.EMPTY_LIST :
-									parserManager.getParserNotices();
+	public List<ParserNotice> getParserNotices() {
+		if (parserManager==null) {
+			return Collections.emptyList();
+		}
+		return parserManager.getParserNotices();
 	}
 
 
@@ -2053,9 +2056,11 @@ private boolean fractionalFontMetricsEnabled;
 				// nice as what would be used if the getDesktopAntiAliasHints()
 				// call worked.
 				if (aaHints==null) {
-					aaHints = new HashMap();
-					aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING,
+					Map<RenderingHints.Key, Object> temp =
+							new HashMap<RenderingHints.Key, Object>();
+					temp.put(RenderingHints.KEY_TEXT_ANTIALIASING,
 							RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+					aaHints = temp;
 				}
 			}
 			else {
@@ -2183,7 +2188,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets anti-aliasing to whatever the user's desktop vaule is.
+	 * Sets anti-aliasing to whatever the user's desktop value is.
 	 *
 	 * @see #getAntiAliasingEnabled()
 	 */
@@ -2193,7 +2198,8 @@ private boolean fractionalFontMetricsEnabled;
 		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
 		if (aaHints==null) {
 
-			aaHints = new HashMap();
+			Map<RenderingHints.Key, Object> temp =
+					new HashMap<RenderingHints.Key, Object>();
 
 			// In Java 6+, you can figure out what text AA hint Swing uses for
 			// JComponents...
@@ -2203,10 +2209,10 @@ private boolean fractionalFontMetricsEnabled;
 			//FontRenderContext frc = fm.getFontRenderContext();
 			//hint = fm.getAntiAliasingHint();
 			try {
-				Method m = FontMetrics.class.getMethod("getFontRenderContext", null);
-				FontRenderContext frc = (FontRenderContext)m.invoke(fm, null);
-				m = FontRenderContext.class.getMethod("getAntiAliasingHint", null);
-				hint = m.invoke(frc, null);
+				Method m = FontMetrics.class.getMethod("getFontRenderContext");
+				FontRenderContext frc = (FontRenderContext)m.invoke(fm);
+				m = FontRenderContext.class.getMethod("getAntiAliasingHint");
+				hint = m.invoke(frc);
 			} catch (RuntimeException re) {
 				throw re; // FindBugs
 			} catch (Exception e) {
@@ -2227,8 +2233,10 @@ private boolean fractionalFontMetricsEnabled;
 					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
 				}
 			}
-			aaHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
+			temp.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
 
+			aaHints = temp;
+			
 		}
 
 		// We must be connected to a screen resource for our graphics
@@ -2360,8 +2368,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * imposes a fair performance penalty.  This method fires a property change
 	 * event of type {@link #HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY}.
 	 *
-	 * @return Whether secondary languages have their backgrounds colored
-	 *         differently.
 	 * @see #getHighlightSecondaryLanguages()
 	 * @see #setSecondaryLanguageBackground(int, Color)
 	 * @see #getSecondaryLanguageCount()

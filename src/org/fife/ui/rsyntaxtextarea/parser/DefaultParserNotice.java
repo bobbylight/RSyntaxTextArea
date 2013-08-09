@@ -77,19 +77,18 @@ public class DefaultParserNotice implements ParserNotice {
 	/**
 	 * Compares this parser notice to another.
 	 *
-	 * @param obj Another parser notice.
+	 * @param other Another parser notice.
 	 * @return How the two parser notices should be sorted relative to one
 	 *         another.
 	 */
-	public int compareTo(Object obj) {
+	public int compareTo(ParserNotice other) {
 		int diff = -1;
-		if (obj instanceof ParserNotice) {
-			ParserNotice p2 = (ParserNotice)obj;
-			diff = level - p2.getLevel();
+		if (other!=null) {
+			diff = level - other.getLevel();
 			if (diff==0) {
-				diff = line - p2.getLine();
+				diff = line - other.getLine();
 				if (diff==0) {
-					diff = message.compareTo(p2.getMessage());
+					diff = message.compareTo(other.getMessage());
 				}
 			}
 		}
@@ -112,7 +111,10 @@ public class DefaultParserNotice implements ParserNotice {
 	 * @return Whether the two notices are equal.
 	 */
 	public boolean equals(Object obj) {
-		return compareTo(obj)==0;
+		if (!(obj instanceof ParserNotice)) {
+			return false;
+		}
+		return compareTo((ParserNotice)obj)==0;
 	}
 
 

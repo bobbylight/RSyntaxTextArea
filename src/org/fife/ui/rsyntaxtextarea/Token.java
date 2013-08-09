@@ -218,7 +218,6 @@ public interface Token extends TokenTypes {
 	 * Returns the token after this one in the linked list.
 	 *
 	 * @return The next token.
-	 * @see #setNextToken
 	 */
 	public Token getNextToken();
 
@@ -227,7 +226,6 @@ public interface Token extends TokenTypes {
 	 * Returns the offset into the document at which this token resides.
 	 *
 	 * @return The offset into the document.
-	 * @see #setOffset(int)
 	 * @see #getEndOffset()
 	 */
 	public int getOffset();

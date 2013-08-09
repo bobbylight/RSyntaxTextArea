@@ -33,10 +33,10 @@ public class LatexFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getFolds(RSyntaxTextArea textArea) {
+	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List folds = new ArrayList();
-		Stack expectedStack = new Stack();
+		List<Fold> folds = new ArrayList<Fold>();
+		Stack<String> expectedStack = new Stack<String>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();

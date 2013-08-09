@@ -60,7 +60,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * The icons to render.
 	 */
-	protected List trackingIcons;
+	protected List<GutterIconImpl> trackingIcons;
 
 	/**
 	 * The width of this component.
@@ -165,7 +165,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		Position pos = textArea.getDocument().createPosition(offs);
 		GutterIconImpl ti = new GutterIconImpl(icon, pos, tip);
 		if (trackingIcons==null) {
-			trackingIcons = new ArrayList(1); // Usually small
+			trackingIcons = new ArrayList<GutterIconImpl>(1); // Usually small
 		}
 		int index = Collections.binarySearch(trackingIcons, ti);
 		if (index<0) {
@@ -222,7 +222,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	public GutterIconInfo[] getBookmarks() {
 
-		List retVal = new ArrayList(1);
+		List<GutterIconInfo> retVal = new ArrayList<GutterIconInfo>(1);
 
 		if (trackingIcons!=null) {
 			for (int i=0; i<trackingIcons.size(); i++) {
@@ -234,7 +234,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		}
 
 		GutterIconInfo[] array = new GutterIconInfo[retVal.size()];
-		return (GutterIconInfo[])retVal.toArray(array);
+		return retVal.toArray(array);
 
 	}
 
@@ -283,7 +283,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 
 	protected GutterIconImpl getTrackingIcon(int index) {
-		return (GutterIconImpl)trackingIcons.get(index);
+		return trackingIcons.get(index);
 	}
 
 
@@ -298,7 +298,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	public GutterIconInfo[] getTrackingIcons(int line)
 								throws BadLocationException {
 
-		List retVal = new ArrayList(1);
+		List<GutterIconInfo> retVal = new ArrayList<GutterIconInfo>(1);
 
 		if (trackingIcons!=null) {
 			int start = textArea.getLineStartOffset(line);
@@ -319,7 +319,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		}
 
 		GutterIconInfo[] array = new GutterIconInfo[retVal.size()];
-		return (GutterIconInfo[])retVal.toArray(array);
+		return retVal.toArray(array);
 
 	}
 
@@ -640,8 +640,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	private void removeBookmarkTrackingIcons() {
 		if (trackingIcons!=null) {
-			for (Iterator i=trackingIcons.iterator(); i.hasNext(); ) {
-				GutterIconImpl ti = (GutterIconImpl)i.next();
+			for (Iterator<GutterIconImpl> i=trackingIcons.iterator();
+					i.hasNext(); ) {
+				GutterIconImpl ti = i.next();
 				if (ti.getIcon()==bookmarkIcon) {
 					i.remove();
 				}
@@ -819,7 +820,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * Implementation of the icons rendered.
 	 */
-	private static class GutterIconImpl implements GutterIconInfo, Comparable {
+	private static class GutterIconImpl implements GutterIconInfo,
+			Comparable<GutterIconInfo> {
 
 		private Icon icon;
 		private Position pos;
@@ -831,9 +833,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			this.toolTip = toolTip;
 		}
 
-		public int compareTo(Object o) {
-			if (o instanceof GutterIconInfo) {
-				return pos.getOffset() - ((GutterIconInfo)o).getMarkedOffset();
+		public int compareTo(GutterIconInfo other) {
+			if (other!=null) {
+				return pos.getOffset() - other.getMarkedOffset();
 			}
 			return -1;
 		}

@@ -70,12 +70,11 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	 * @throws ClassCastException If <code>o</code> is
 	 *         not an instance of <code>CodeTemplate</code>.
 	 */
-	public int compareTo(Object o) {
-		if (!(o instanceof CodeTemplate)) {
+	public int compareTo(CodeTemplate o) {
+		if (o==null) {
 			return -1;
 		}
-		CodeTemplate t2 = (CodeTemplate)o;
-		return getID().compareTo(t2.getID());
+		return getID().compareTo(o.getID());
 	}
 
 
@@ -87,7 +86,7 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	 */
 	public boolean equals(Object obj) {
 		if (obj instanceof CodeTemplate) {
-			return compareTo(obj)==0;
+			return compareTo(((CodeTemplate)obj))==0;
 		}
 		return false;
 	}

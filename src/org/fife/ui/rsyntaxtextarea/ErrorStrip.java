@@ -22,7 +22,6 @@ import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -96,7 +95,7 @@ public class ErrorStrip extends JComponent {
 	 * Mapping of colors to brighter colors.  This is kept to prevent
 	 * unnecessary creation of the same Colors over and over.
 	 */
-	private Map brighterColors;
+	private Map<Color, Color> brighterColors;
 
 	/**
 	 * Only notices of this severity (or worse) will be displayed in this
@@ -188,9 +187,9 @@ public class ErrorStrip extends JComponent {
 	 */
 	private Color getBrighterColor(Color c) {
 		if (brighterColors==null) {
-			brighterColors = new HashMap(5); // Usually small
+			brighterColors = new HashMap<Color, Color>(5); // Usually small
 		}
-		Color brighter = (Color)brighterColors.get(c);
+		Color brighter = brighterColors.get(c);
 		if (brighter==null) {
 			// Don't use c.brighter() as it doesn't work well for blue, and
 			// also doesn't return something brighter "enough."
@@ -324,16 +323,14 @@ public class ErrorStrip extends JComponent {
 	private void refreshMarkers() {
 
 		removeAll(); // listener is removed in Marker.removeNotify()
-		Map markerMap = new HashMap();
+		Map<Integer, Marker> markerMap = new HashMap<Integer, Marker>();
 
-		List notices = textArea.getParserNotices();
-		for (Iterator i=notices.iterator(); i.hasNext(); ) {
-			ParserNotice notice = (ParserNotice)i.next();
+		List<ParserNotice> notices = textArea.getParserNotices();
+		for (ParserNotice notice : notices) {
 			if (notice.getLevel()<=levelThreshold ||
 					(notice instanceof TaskNotice)) {
-				// 1.5: Use Integer.valueOf(notice.getLine())
-				Integer key = new Integer(notice.getLine());
-				Marker m = (Marker)markerMap.get(key);
+				Integer key = Integer.valueOf(notice.getLine());
+				Marker m = markerMap.get(key);
 				if (m==null) {
 					m = new Marker(notice);
 					m.addMouseListener(listener);
@@ -347,9 +344,8 @@ public class ErrorStrip extends JComponent {
 		}
 
 		if (getShowMarkedOccurrences() && textArea.getMarkOccurrences()) {
-			List occurrences = textArea.getMarkedOccurrences();
-			for (Iterator i=occurrences.iterator(); i.hasNext(); ) {
-				DocumentRange range = (DocumentRange)i.next();
+			List<DocumentRange> occurrences = textArea.getMarkedOccurrences();
+			for (DocumentRange range : occurrences) {
 				int line = 0;
 				try {
 					line = textArea.getLineOfOffset(range.getStartOffset());
@@ -359,7 +355,7 @@ public class ErrorStrip extends JComponent {
 				ParserNotice notice = new MarkedOccurrenceNotice(range);
 				// 1.5: Use Integer.valueOf(notice.getLine())
 				Integer key = new Integer(line);
-				Marker m = (Marker)markerMap.get(key);
+				Marker m = markerMap.get(key);
 				if (m==null) {
 					m = new Marker(notice);
 					m.addMouseListener(listener);
@@ -564,7 +560,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 			this.range = range;
 		}
 
-		public int compareTo(Object o) {
+		public int compareTo(ParserNotice other) {
 			return 0; // Value doesn't matter
 		}
 
@@ -574,7 +570,10 @@ private static final Color COLOR = new Color(220, 220, 220);
 
 		public boolean equals(Object o) {
 			// FindBugs - Define equals() when defining compareTo()
-			return compareTo(o)==0;
+			if (!(o instanceof ParserNotice)) {
+				return false;
+			}
+			return compareTo((ParserNotice)o)==0;
 		}
 
 		public Color getColor() {
@@ -604,7 +603,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 				String word = textArea.getText(range.getStartOffset(),
 												getLength());
 				text = msg.getString("OccurrenceOf");
-				text = MessageFormat.format(text, new String[] { word });
+				text = MessageFormat.format(text, word);
 			} catch (BadLocationException ble) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
@@ -639,10 +638,10 @@ private static final Color COLOR = new Color(220, 220, 220);
 	 */
 	private class Marker extends JComponent {
 
-		private List notices;
+		private List<ParserNotice> notices;
 
 		public Marker(ParserNotice notice) {
-			notices = new ArrayList(1); // Usually just 1
+			notices = new ArrayList<ParserNotice>(1); // Usually just 1
 			addNotice(notice);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			setSize(getPreferredSize());
@@ -668,8 +667,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 			// Return the color for the highest-level parser.
 			Color c = null;
 			int lowestLevel = Integer.MAX_VALUE; // ERROR is 0
-			for (Iterator i=notices.iterator(); i.hasNext(); ) {
-				ParserNotice notice = (ParserNotice)i.next();
+			for (ParserNotice notice : notices) {
 				if (notice.getLevel()<lowestLevel) {
 					lowestLevel = notice.getLevel();
 					c = notice.getColor();
@@ -688,14 +686,14 @@ private static final Color COLOR = new Color(220, 220, 220);
 			String text = null;
 
 			if (notices.size()==1) {
-				text = ((ParserNotice)notices.get(0)).getMessage();
+				text = notices.get(0).getMessage();
 			}
 			else { // > 1
 				StringBuffer sb = new StringBuffer("<html>");
 				sb.append(msg.getString("MultipleMarkers"));
 				sb.append("<br>");
 				for (int i=0; i<notices.size(); i++) {
-					ParserNotice pn = (ParserNotice)notices.get(i);
+					ParserNotice pn = notices.get(i);
 					sb.append("&nbsp;&nbsp;&nbsp;- ");
 					sb.append(pn.getMessage());
 					sb.append("<br>");
@@ -708,7 +706,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 		}
 
 		protected void mouseClicked(MouseEvent e) {
-			ParserNotice pn = (ParserNotice)notices.get(0);
+			ParserNotice pn = notices.get(0);
 			int offs = pn.getOffset();
 			int len = pn.getLength();
 			if (offs>-1 && len>-1) { // These values are optional
@@ -755,7 +753,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 		}
 
 		public void updateLocation() {
-			int line = ((ParserNotice)notices.get(0)).getLine();
+			int line = notices.get(0).getLine();
 			int y = lineToY(line);
 			setLocation(2, y);
 		}

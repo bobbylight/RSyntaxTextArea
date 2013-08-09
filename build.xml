@@ -30,19 +30,13 @@
 	<property name="doc-dir"          location="javadoc"/>
 	<property name="debug"            value="true"/>
 	<property name="debuglevel"       value="lines,vars,source"/>
-	<property name="java-level"       value="1.4"/>
+	<property name="java-level"       value="1.5"/>
 
 
 	<!-- Compiles the classes.  -->
 	<target name="compile" description="Compile the source">
 		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
 		<mkdir dir="${class-dir}"/>
-		<echo>NOTE: *** RSyntaxTextArea is built with a 1.4.2 JDK!</echo>
-		<echo>NOTE: *** If you build with Java 5 or newer, you will receive a compile error</echo>
-		<echo>NOTE: *** about an XmlParser.java method missing IOException in its throws</echo>
-		<echo>NOTE: *** clause.  This is caused by a binary incompatibility between Java</echo>
-		<echo>NOTE: *** 1.4 and Java 5.  To remedy this, either build with 1.4.2, or add</echo>
-		<echo>NOTE: *** IOException to the throws clause.</echo>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"
 			deprecation="yes" debug="${debug}" debuglevel="${debuglevel}"
 			source="${java-level}" target="${java-level}" includeantruntime="false"/>

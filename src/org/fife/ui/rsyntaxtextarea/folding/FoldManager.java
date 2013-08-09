@@ -38,7 +38,7 @@ public class FoldManager {
 
 	private RSyntaxTextArea textArea;
 	private FoldParser parser;
-	private List folds;
+	private List<Fold> folds;
 	private boolean codeFoldingEnabled;
 	private PropertyChangeSupport support;
 
@@ -60,7 +60,7 @@ public class FoldManager {
 		Listener l = new Listener();
 		textArea.getDocument().addDocumentListener(l);
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
-		folds = new ArrayList();
+		folds = new ArrayList<Fold>();
 		updateFoldParser(); 
 	}
 
@@ -165,7 +165,7 @@ public class FoldManager {
 	 * @see #getFoldCount()
 	 */
 	public Fold getFold(int index) {
-		return (Fold)folds.get(index);
+		return folds.get(index);
 	}
 
 
@@ -193,14 +193,14 @@ public class FoldManager {
 	}
 
 
-private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
+private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 
 	int low = 0;
 	int high = folds.size() - 1;
 
 	while (low <= high) {
 		int mid = (low + high) >> 1;
-		Fold midFold = (Fold)folds.get(mid);
+		Fold midFold = folds.get(mid);
 		int startLine = midFold.getStartLine();
 		if (line==startLine) {
 			return midFold;
@@ -214,7 +214,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 				low = mid + 1;
 			}
 			else { // line>startLine && line<=endLine
-				List children = midFold.getChildren();
+				List<Fold> children = midFold.getChildren();
 				return children!=null ? getFoldForLineImpl(midFold, children, line) : null;
 			}
 		}
@@ -232,8 +232,8 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	 */
 	public int getHiddenLineCount() {
 		int count = 0;
-		for (int i=0; i<folds.size(); i++) {
-			count += ((Fold)folds.get(i)).getCollapsedLineCount();
+		for (Fold fold : folds) {
+			count += fold.getCollapsedLineCount();
 		}
 		return count;
 	}
@@ -272,8 +272,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 
 		int count = 0;
 
-		for (int i=0; i<folds.size(); i++) {
-			Fold fold = (Fold)folds.get(i);
+		for (Fold fold : folds) {
 			int comp = physical ? line+count : line;
 			if (fold.getStartLine()>=comp) {
 				break;
@@ -474,8 +473,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	 * @return Whether the line is hidden in a collapsed fold.
 	 */
 	public boolean isLineHidden(int line) {
-		for (int i=0; i<folds.size(); i++) {
-			Fold fold = (Fold)folds.get(i);
+		for (Fold fold : folds) {
 			if (fold.containsLine(line)) {
 				if (fold.isCollapsed()) {
 					return true;
@@ -512,21 +510,21 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	 * @param newFold The "new" fold to check for.
 	 * @param oldFolds The previous folds before an edit occurred.
 	 */
-	private void keepFoldState(Fold newFold, List oldFolds) {
+	private void keepFoldState(Fold newFold, List<Fold> oldFolds) {
 		int previousLoc = Collections.binarySearch(oldFolds, newFold);
 		//System.out.println(newFold + " => " + previousLoc);
 		if (previousLoc>=0) {
-			Fold prevFold = (Fold)oldFolds.get(previousLoc);
+			Fold prevFold = oldFolds.get(previousLoc);
 			newFold.setCollapsed(prevFold.isCollapsed());
 		}
 		else {
 			//previousLoc = -(insertion point) - 1;
 			int insertionPoint = -(previousLoc + 1);
 			if (insertionPoint>0) {
-				Fold possibleParentFold = (Fold)oldFolds.get(insertionPoint-1);
+				Fold possibleParentFold = oldFolds.get(insertionPoint-1);
 				if (possibleParentFold.containsOffset(
 						newFold.getStartOffset())) {
-					List children = possibleParentFold.getChildren();
+					List<Fold> children = possibleParentFold.getChildren();
 					if (children!=null) {
 						keepFoldState(newFold, children);
 					}
@@ -545,11 +543,10 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 	 *        <code>null</code>.
 	 * @param oldFolds The previous folds before the edit occurred.
 	 */
-	private void keepFoldStates(List newFolds, List oldFolds) {
-		for (int i=0; i<newFolds.size(); i++) {
-			Fold newFold = (Fold)newFolds.get(i);
+	private void keepFoldStates(List<Fold> newFolds, List<Fold> oldFolds) {
+		for (Fold newFold : newFolds) {
 			keepFoldState(newFold, folds);
-			List newChildFolds = newFold.getChildren();
+			List<Fold> newChildFolds = newFold.getChildren();
 			if (newChildFolds!=null) {
 				keepFoldStates(newChildFolds, oldFolds);
 			}
@@ -579,9 +576,9 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 
 			// Re-calculate folds.  Keep the fold state of folds that are
 			// still around.
-			List newFolds = parser.getFolds(textArea);
+			List<Fold> newFolds = parser.getFolds(textArea);
 			if (newFolds==null) {
-				newFolds = Collections.EMPTY_LIST;
+				newFolds = Collections.emptyList();
 			}
 			else {
 				keepFoldStates(newFolds, folds);
@@ -626,7 +623,7 @@ private Fold getFoldForLineImpl(Fold parent, List folds, int line) {
 				//reparse();
 			}
 			else {
-				folds = Collections.EMPTY_LIST;
+				folds = Collections.emptyList();
 				textArea.repaint();
 				support.firePropertyChange(PROPERTY_FOLDS_UPDATED, null, null);
 			}
@@ -640,7 +637,7 @@ private Parser tempParser;
 	 *
 	 * @param folds The new folds.  This should not be <code>null</code>.
 	 */
-	public void setFolds(List folds) {
+	public void setFolds(List<Fold> folds) {
 		this.folds = folds;
 	}
 

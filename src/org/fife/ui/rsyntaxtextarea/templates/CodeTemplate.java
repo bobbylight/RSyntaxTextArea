@@ -41,7 +41,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  * @version 0.1
  * @see StaticCodeTemplate
  */
-public interface CodeTemplate extends Cloneable, Comparable, Serializable {
+public interface CodeTemplate extends Cloneable, Comparable<CodeTemplate>,
+		Serializable {
 
 
 	/**

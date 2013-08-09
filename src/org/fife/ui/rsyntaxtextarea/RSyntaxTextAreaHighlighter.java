@@ -54,13 +54,13 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * Marked occurrences in the document (to be painted separately from
 	 * other highlights).
 	 */
-	private List markedOccurrences;
+	private List<HighlightInfo> markedOccurrences;
 
 	/**
 	 * Highlights from document parsers.  These should be painted "on top of"
 	 * all other highlights to ensure they are always above the selection.
 	 */
-	private List parserHighlights;
+	private List<HighlightInfo> parserHighlights;
 
 	/**
 	 * The default color used for parser notices when none is specified.
@@ -72,8 +72,8 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * Constructor.
 	 */
 	public RSyntaxTextAreaHighlighter() {
-		markedOccurrences = new ArrayList();
-		parserHighlights = new ArrayList(0); // Often unused
+		markedOccurrences = new ArrayList<HighlightInfo>();
+		parserHighlights = new ArrayList<HighlightInfo>(0); // Often unused
 	}
 
 
@@ -92,7 +92,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
 		// Always layered highlights for marked occurrences.
-		HighlightInfo i = new LayeredHighlightInfo();
+		HighlightInfoImpl i = new LayeredHighlightInfoImpl();
 		i.painter = p;
 		i.p0 = doc.createPosition(start);
 		// HACK: Use "end-1" to prevent chars the user types at the "end" of
@@ -113,7 +113,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @throws BadLocationException
 	 * @see {@link #clearParserHighlights()}
 	 */
-	Object addParserHighlight(ParserNotice notice, HighlightPainter p)
+	HighlightInfo addParserHighlight(ParserNotice notice, HighlightPainter p)
 								throws BadLocationException {
 
 		Document doc = textArea.getDocument();
@@ -135,7 +135,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 		}
 
 		// Always layered highlights for parser highlights.
-		HighlightInfo i = new LayeredHighlightInfo();
+		HighlightInfoImpl i = new LayeredHighlightInfoImpl();
 		i.painter = p;
 		i.p0 = doc.createPosition(start);
 		i.p1 = doc.createPosition(end);
@@ -154,10 +154,10 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @see #addMarkedOccurrenceHighlight(int, int, MarkOccurrencesHighlightPainter)
 	 */
 	void clearMarkOccurrencesHighlights() {
-		// Don't remove via the iterator; since our List is an ArrayList, this
-		// implies tons of System.arrayCopy()s 
-		for (Iterator i=markedOccurrences.iterator(); i.hasNext(); ) {
-			repaintListHighlight(i.next());
+		// Don't remove via an iterator; since our List is an ArrayList, this
+		// implies tons of System.arrayCopy()s
+		for (HighlightInfo info : markedOccurrences) {
+			repaintListHighlight(info);
 		}
 		markedOccurrences.clear();
 	}
@@ -185,13 +185,13 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 */
 	public void clearParserHighlights(Parser parser) {
 
-		for (Iterator i=parserHighlights.iterator(); i.hasNext(); ) {
+		for (Iterator<HighlightInfo> i=parserHighlights.iterator(); i.hasNext(); ) {
 
-			HighlightInfo info = (HighlightInfo)i.next();
+			HighlightInfoImpl info = (HighlightInfoImpl)i.next();
 
 			if (info.notice.getParser()==parser) {
-				if (info instanceof LayeredHighlightInfo) {
-					LayeredHighlightInfo lhi = (LayeredHighlightInfo)info;
+				if (info instanceof LayeredHighlightInfoImpl) {
+					LayeredHighlightInfoImpl lhi = (LayeredHighlightInfoImpl)info;
 				    if (lhi.width > 0 && lhi.height > 0) {
 				    	textArea.repaint(lhi.x, lhi.y, lhi.width, lhi.height);
 				    }
@@ -226,10 +226,9 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @return The list of marked occurrences, or an empty list if none.  The
 	 *         contents of this list will be of type {@link DocumentRange}.
 	 */
-	public List getMarkedOccurrences() {
-		List list = new ArrayList(markedOccurrences.size());
-		for (Iterator i=markedOccurrences.iterator(); i.hasNext(); ) {
-			HighlightInfo info = (HighlightInfo)i.next();
+	public List<DocumentRange> getMarkedOccurrences() {
+		List<DocumentRange> list = new ArrayList<DocumentRange>(markedOccurrences.size());
+		for (HighlightInfo info : markedOccurrences) {
 			int start = info.getStartOffset();
 			int end = info.getEndOffset() + 1; // HACK
 			DocumentRange range = new DocumentRange(start, end);
@@ -260,13 +259,13 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	private void paintList(Graphics g, List highlights) {
+	private void paintList(Graphics g, List<HighlightInfo> highlights) {
 
 		int len = highlights.size();
 
 		for (int i = 0; i < len; i++) {
-			HighlightInfo info = (HighlightInfo)highlights.get(i);
-			if (!(info instanceof LayeredHighlightInfo)) {
+			HighlightInfo info = highlights.get(i);
+			if (!(info instanceof LayeredHighlightInfoImpl)) {
 				// Avoid allocating unless we need it.
 				Rectangle a = textArea.getBounds();
 				Insets insets = textArea.getInsets();
@@ -275,9 +274,9 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 				a.width -= insets.left + insets.right;
 				a.height -= insets.top + insets.bottom;
 				for (; i < len; i++) {
-					info = (HighlightInfo)markedOccurrences.get(i);
-					if (!(info instanceof LayeredHighlightInfo)) {
-						Color c = info.getColor();
+					info = markedOccurrences.get(i);
+					if (!(info instanceof LayeredHighlightInfoImpl)) {
+						Color c = ((HighlightInfoImpl)info).getColor();
 						Highlighter.HighlightPainter p = info.getPainter();
 						if (c!=null && p instanceof ChangeableColorHighlightPainter) {
 							((ChangeableColorHighlightPainter)p).setColor(c);
@@ -313,11 +312,11 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 
 
 	private void paintListLayered(Graphics g, int p0, int p1, Shape viewBounds,
-						JTextComponent editor, View view, List highlights) {
+						JTextComponent editor, View view, List<HighlightInfo> highlights) {
 		for (int i=highlights.size()-1; i>=0; i--) {
 			Object tag = highlights.get(i);
-			if (tag instanceof LayeredHighlightInfo) {
-				LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
+			if (tag instanceof LayeredHighlightInfoImpl) {
+				LayeredHighlightInfoImpl lhi = (LayeredHighlightInfoImpl)tag;
 				int start = lhi.getStartOffset();
 				int end = lhi.getEndOffset();
 				if ((p0 < start && p1 > start) ||
@@ -330,15 +329,14 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	private void repaintListHighlight(Object tag) {
-		if (tag instanceof LayeredHighlightInfo) {
-			LayeredHighlightInfo lhi = (LayeredHighlightInfo)tag;
+	private void repaintListHighlight(HighlightInfo info) {
+		if (info instanceof LayeredHighlightInfoImpl) {
+			LayeredHighlightInfoImpl lhi = (LayeredHighlightInfoImpl)info;
 		    if (lhi.width > 0 && lhi.height > 0) {
 		    	textArea.repaint(lhi.x, lhi.y, lhi.width, lhi.height);
 		    }
 		}
 		else {
-			HighlightInfo info = (HighlightInfo) tag;
 			TextUI ui = textArea.getUI();
 			ui.damageRange(textArea, info.getStartOffset(),info.getEndOffset());
 			//safeDamageRange(info.p0, info.p1);
@@ -352,13 +350,17 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	 * @param tag The reference to the highlight.
 	 * @see #addParserHighlight(ParserNotice, javax.swing.text.Highlighter.HighlightPainter)
 	 */
-	void removeParserHighlight(Object tag) {
+	void removeParserHighlight(HighlightInfo tag) {
 		repaintListHighlight(tag);
 		parserHighlights.remove(tag);
 	}
 
 
-	private static class HighlightInfo implements Highlighter.Highlight {
+	public static interface HighlightInfo extends Highlighter.Highlight {
+	}
+
+
+	private static class HighlightInfoImpl implements HighlightInfo {
 	
 		private Position p0;
 		private Position p1;
@@ -392,7 +394,7 @@ public class RSyntaxTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	private static class LayeredHighlightInfo extends HighlightInfo {
+	private static class LayeredHighlightInfoImpl extends HighlightInfoImpl {
 	
 		private int x;
 		private int y;
