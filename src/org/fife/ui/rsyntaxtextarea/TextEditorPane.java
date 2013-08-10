@@ -193,11 +193,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @return The default encoding.
 	 */
 	private static final String getDefaultEncoding() {
-		// TODO: Change to "Charset.defaultCharset().name()" when 1.4 support
-		// is no longer needed.
-		// NOTE:  The "file.encoding" property is not guaranteed to be set by
-		// the spec, so we cannot rely on it.
-		String encoding = System.getProperty("file.encoding");
+		// NOTE:  The "file.encoding" system property is not guaranteed to be
+		// set by the spec, so we cannot rely on it.
+		String encoding = Charset.defaultCharset().name();
 		if (encoding==null) {
 			try {
 				File f = File.createTempFile("rsta", null);

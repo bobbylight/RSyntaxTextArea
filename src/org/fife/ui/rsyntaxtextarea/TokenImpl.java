@@ -124,14 +124,14 @@ public class TokenImpl implements Token {
 	}
 
 
-	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 											RSyntaxTextArea textArea,
 											boolean fontFamily) {
 		return appendHTMLRepresentation(sb, textArea, fontFamily, false);
 	}
 
 
-	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 								RSyntaxTextArea textArea, boolean fontFamily,
 								boolean tabsToSpaces) {
 
@@ -175,8 +175,8 @@ public class TokenImpl implements Token {
 	 * @param tabsToSpaces Whether to convert tabs into spaces.
 	 * @return The same buffer.
 	 */
-	private final StringBuffer appendHtmlLexeme(RSyntaxTextArea textArea,
-								StringBuffer sb, boolean tabsToSpaces) {
+	private final StringBuilder appendHtmlLexeme(RSyntaxTextArea textArea,
+								StringBuilder sb, boolean tabsToSpaces) {
 
 		boolean lastWasSpace = false;
 		int i = textOffset;
@@ -307,7 +307,7 @@ public class TokenImpl implements Token {
 
 
 	public String getHTMLRepresentation(RSyntaxTextArea textArea) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		appendHTMLRepresentation(buf, textArea, true);
 		return buf.toString();
 	}

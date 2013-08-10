@@ -532,7 +532,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @return The string of spaces.
 	 */
 	private final String createSpacer(int size) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<size; i++) {
 			sb.append(' ');
 		}
@@ -843,7 +843,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param content The content to add.
 	 */
 	protected void handleReplaceSelection(String content) {
-		// Call into super to handle composed text (1.5+ only though).
+		// Call into super to handle composed text.
 		super.replaceSelection(content);
 	}
 
@@ -1218,7 +1218,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	}
 
 
-	private static StringBuffer repTabsSB;
+	private static StringBuilder repTabsSB;
 	private static Segment repTabsSeg = new Segment();
 	/**
 	 * Replaces all instances of the tab character in <code>text</code> with
@@ -1273,7 +1273,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		// Otherwise, there may be more than one tab.
 
 		if (repTabsSB==null) {
-			repTabsSB = new StringBuffer();
+			repTabsSB = new StringBuilder();
 		}
 		repTabsSB.setLength(0);
 		char[] array = text.toCharArray();

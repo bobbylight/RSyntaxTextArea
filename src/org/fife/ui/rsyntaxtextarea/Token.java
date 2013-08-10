@@ -49,7 +49,7 @@ public interface Token extends TokenTypes {
 	 * @return The buffer appended to.
 	 * @see #getHTMLRepresentation(RSyntaxTextArea)
 	 */
-	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 											RSyntaxTextArea textArea,
 											boolean fontFamily);
 
@@ -69,7 +69,7 @@ public interface Token extends TokenTypes {
 	 * @return The buffer appended to.
 	 * @see #getHTMLRepresentation(RSyntaxTextArea)
 	 */
-	public StringBuffer appendHTMLRepresentation(StringBuffer sb,
+	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 								RSyntaxTextArea textArea, boolean fontFamily,
 								boolean tabsToSpaces);
 
@@ -138,7 +138,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @param textArea The text area whose color scheme to use.
 	 * @return The HTML representation of the token.
-	 * @see #appendHTMLRepresentation(StringBuffer, RSyntaxTextArea, boolean)
+	 * @see #appendHTMLRepresentation(StringBuilder, RSyntaxTextArea, boolean)
 	 */
 	public String getHTMLRepresentation(RSyntaxTextArea textArea);
 

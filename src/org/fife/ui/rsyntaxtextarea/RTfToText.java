@@ -23,8 +23,8 @@ import java.io.*;
 class RtfToText {
 
 	private Reader r;
-	private StringBuffer sb;
-	private StringBuffer controlWord;
+	private StringBuilder sb;
+	private StringBuilder controlWord;
 	private int blockCount;
 	private boolean inControlWord;
 
@@ -36,8 +36,8 @@ class RtfToText {
 	 */
 	private RtfToText(Reader r) {
 		this.r = r;
-		sb = new StringBuffer();
-		controlWord = new StringBuffer();
+		sb = new StringBuilder();
+		controlWord = new StringBuilder();
 		blockCount = 0;
 		inControlWord = false;
 	}
@@ -186,7 +186,8 @@ class RtfToText {
 	 * Converts the contents of the specified input stream to plain text.
 	 * The input stream will be closed when this method returns.
 	 *
-	 * @param in The input stream to convert.
+	 * @param in The input stream to convert.  This will be closed when this
+	 *        method returns.
 	 * @return The contents of the stream, in plain text.
 	 * @throws IOException If an IO error occurs.
 	 */
@@ -198,7 +199,8 @@ class RtfToText {
 	/**
 	 * Converts the contents of the specified <code>Reader</code> to plain text.
 	 *
-	 * @param r The <code>Reader</code>.
+	 * @param r The <code>Reader</code>.  This will be closed when this method
+	 *        returns.
 	 * @return The contents of the <code>Reader</code>, in plain text.
 	 * @throws IOException If an IO error occurs.
 	 */

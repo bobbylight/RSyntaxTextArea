@@ -245,7 +245,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		if (baseFont==null) {
 			baseFont = RSyntaxTextArea.getDefaultFont();
 		}
-		return XmlParser.load(baseFont, in);
+		return SyntaxSchemeLoader.load(baseFont, in);
 	}
 
 
@@ -509,7 +509,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 */
 	public String toCommaSeparatedString() {
 
-		StringBuffer sb = new StringBuffer(VERSION);
+		StringBuilder sb = new StringBuilder(VERSION);
 		sb.append(',');
 
 		for (int i=0; i<NUM_TOKEN_TYPES; i++) {
@@ -549,46 +549,25 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	/**
 	 * Loads a <code>SyntaxScheme</code> from an XML file.
 	 */
-	private static class XmlParser extends DefaultHandler {
+	private static class SyntaxSchemeLoader extends DefaultHandler {
 
 		private Font baseFont;
 		private SyntaxScheme scheme;
 
-		public XmlParser(Font baseFont) {
+		public SyntaxSchemeLoader(Font baseFont) {
 			scheme = new SyntaxScheme(baseFont);
 		}
 
-		/**
-		 * Creates the XML reader to use.  Note that in 1.4 JRE's, the reader
-		 * class wasn't defined by default, but in 1.5+ it is.
-		 *
-		 * @return The XML reader to use.
-		 */
-		private static XMLReader createReader() throws IOException {
-			XMLReader reader = null;
+		public static SyntaxScheme load(Font baseFont, InputStream in)
+				throws IOException {
+			SyntaxSchemeLoader parser = null;
 			try {
-				reader = XMLReaderFactory.createXMLReader();
-			} catch (SAXException e) {
-				// Happens in JRE 1.4.x; 1.5+ define the reader class properly
-				try {
-					reader = XMLReaderFactory.createXMLReader(
-							"org.apache.crimson.parser.XMLReaderImpl");
-				} catch (SAXException se) {
-					throw new IOException(se.toString());
-				}
-			}
-			return reader;
-		}
-
-		public static SyntaxScheme load(Font baseFont,
-										InputStream in) throws IOException {
-			XMLReader reader = createReader();
-			XmlParser parser = new XmlParser(baseFont);
-			parser.baseFont = baseFont;
-			reader.setContentHandler(parser);
-			InputSource is = new InputSource(in);
-			is.setEncoding("UTF-8");
-			try {
+				XMLReader reader = XMLReaderFactory.createXMLReader();
+				parser = new SyntaxSchemeLoader(baseFont);
+				parser.baseFont = baseFont;
+				reader.setContentHandler(parser);
+				InputSource is = new InputSource(in);
+				is.setEncoding("UTF-8");
 				reader.parse(is);
 			} catch (SAXException se) {
 				throw new IOException(se.toString());

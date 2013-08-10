@@ -116,14 +116,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	private ChangeableHighlightPainter selectionPainter;
 
 	/**
-	 * Whether this is Java 1.4.
-	 */
-	/* TODO: Remove me when 1.4 support is removed. */
-	private static final boolean IS_JAVA_1_4 =
-				"1.4".equals(System.getProperty("java.specification.version"));
-
-
-	/**
 	 * Creates the caret using {@link #VERTICAL_LINE_STYLE}.
 	 */
 	public ConfigurableCaret() {
@@ -283,21 +275,7 @@ public class ConfigurableCaret extends DefaultCaret {
 			int nclicks = e.getClickCount();
 
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (nclicks<=2) {
-					// Only handle these clicks for 1.4.  In 1.5 the word
-					// selection is (also?) handled in mousePressed, and if we
-					// handle it here, our word selection gets doubled-up.
-					if (IS_JAVA_1_4) {
-						if (nclicks==1) {
-							selectedWordEvent = null;
-						}
-						else { // 2
-							selectWord(e);
-							selectedWordEvent = null;
-						}
-					}
-				}
-				else {
+				if (nclicks>2) {
 					nclicks %= 2; // Alternate selecting word/line.
 					switch (nclicks) {
 						case 0:

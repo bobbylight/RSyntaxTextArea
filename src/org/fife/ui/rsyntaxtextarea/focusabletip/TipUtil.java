@@ -49,7 +49,7 @@ public class TipUtil {
 			return null;
 		}
 
-		StringBuffer sb = new StringBuffer("#");
+		StringBuilder sb = new StringBuilder("#");
 		int r = c.getRed();
 		if (r<16) {
 			sb.append('0');

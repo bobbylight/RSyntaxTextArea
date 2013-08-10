@@ -18,7 +18,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,7 +58,6 @@ import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.RecordableTextAction;
-
 
 
 /**
@@ -275,9 +273,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	/** Whether the "selected text" color should be used with selected text. */
 	private boolean useSelectedTextColor;
-
-	/** Used during "Copy as RTF" operations. */
-	private RtfGenerator rtfGenerator;
 
 	/** Handles "mark occurrences" support. */
 	private MarkOccurrencesSupport markOccurrencesSupport;
@@ -619,10 +614,10 @@ private boolean fractionalFontMetricsEnabled;
 				return;
 			}
 		}
-		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Clipboard cb = getToolkit().getSystemClipboard();
 
 		// Create the RTF selection.
-		RtfGenerator gen = getRTFGenerator();
+		RtfGenerator gen = new RtfGenerator();
 		Token tokenList = getTokenListFor(selStart, selEnd);
 		for (Token t=tokenList; t!=null; t=t.getNextToken()) {
 			if (t.isPaintable()) {
@@ -1417,23 +1412,6 @@ private boolean fractionalFontMetricsEnabled;
 			return Collections.emptyList();
 		}
 		return parserManager.getParserNotices();
-	}
-
-
-	/**
-	 * Returns the RTF generator for this text area, lazily creating it
-	 * if necessary.
-	 *
-	 * @return The RTF generator.
-	 */
-	private RtfGenerator getRTFGenerator() {
-		if (rtfGenerator==null) {
-			rtfGenerator = new RtfGenerator();
-		}
-		else {
-			rtfGenerator.reset();
-		}
-		return rtfGenerator;
 	}
 
 

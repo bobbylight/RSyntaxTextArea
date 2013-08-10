@@ -150,9 +150,7 @@ public class RSyntaxUtilities implements SwingConstants {
 		final String tabString = "   ";
 		boolean lastWasSpace = false;
 
-		// TODO: When updating to 1.5, replace with StringBuilder, and change
-		// loop to use new append(str, offs,len) method.
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for (int i=0; i<s.length(); i++) {
 			char ch = s.charAt(i);
@@ -1223,7 +1221,7 @@ return c.getLineStartOffset(line);
 			flags = Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
 		}
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<wildcard.length(); i++) {
 			char ch = wildcard.charAt(i);
 			switch (ch) {

@@ -154,7 +154,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * apparent difference between the JRE 1.4.2 and 1.5.0 (needed on 1.4.2,
 	 * not needed on 1.5.0).
 	 */
-	protected void addCurrentLineHighlightListeners() {
+	private void addCurrentLineHighlightListeners() {
 		boolean add = true;
 		MouseMotionListener[] mouseMotionListeners = getMouseMotionListeners();
 		for (int i=0; i<mouseMotionListeners.length; i++) {
@@ -237,7 +237,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
-		StringBuffer tabInSpaces = new StringBuffer();
+		StringBuilder tabInSpaces = new StringBuilder();
 		for (int i=0; i<tabSize; i++)
 			tabInSpaces.append(' ');
 		String text = getText();

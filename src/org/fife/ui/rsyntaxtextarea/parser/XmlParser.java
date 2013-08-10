@@ -205,13 +205,7 @@ public class XmlParser extends AbstractParser {
 		public InputSource resolveEntity(String publicId, String systemId)
 								throws IOException, SAXException {
 			if (entityResolver!=null) {
-				try {
-					return entityResolver.resolveEntity(publicId, systemId);
-				} catch (IOException ioe) {
-					// TODO: Remove when removing 1.4.2-compatibility, as
-					// IOExceptions are thrown then
-					ioe.printStackTrace();
-				}
+				return entityResolver.resolveEntity(publicId, systemId);
 			}
 			return super.resolveEntity(publicId, systemId);
 		}

@@ -45,7 +45,7 @@ public class RtfGenerator {
 
 	private List<Font> fontList;
 	private List<Color> colorList;
-	private StringBuffer document;
+	private StringBuilder document;
 	private boolean lastWasControlWord;
 	private int lastFontIndex;
 	private int lastFGIndex;
@@ -74,7 +74,7 @@ public class RtfGenerator {
 	public RtfGenerator() {
 		fontList = new ArrayList<Font>(1); // Usually only 1.
 		colorList = new ArrayList<Color>(1); // Usually only 1.
-		document = new StringBuffer();
+		document = new StringBuilder();
 		reset();
 	}
 
@@ -267,11 +267,7 @@ public class RtfGenerator {
 	 * @param text The text to append (with tab chars substituted).
 	 * @param sb The buffer to append to.
 	 */
-	private final void escapeAndAdd(StringBuffer sb, String text) {
-		// TODO: On the move to 1.5 use StringBuffer append() overloads that
-		// can take a CharSequence and a range of that CharSequence to speed
-		// things up.
-		//int last = 0;
+	private final void escapeAndAdd(StringBuilder sb, String text) {
 		int count = text.length();
 		for (int i=0; i<count; i++) {
 			char ch = text.charAt(i);
@@ -346,7 +342,7 @@ public class RtfGenerator {
 		// Example:
 		// "{\\colortbl ;\\red255\\green0\\blue0;\\red0\\green0\\blue255; }"
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append("{\\colortbl ;");
 		for (Color c : colorList) {
@@ -392,7 +388,7 @@ public class RtfGenerator {
 		// Example:
 		// "{\\fonttbl{\\f0\\fmodern\\fcharset0 Courier;}}"
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		// Workaround for text areas using the Java logical font "Monospaced"
 		// by default.  There's no way to know what it's mapped to, so we
@@ -438,7 +434,7 @@ public class RtfGenerator {
 	 */
 	public String getRtf() {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 
 		// Header

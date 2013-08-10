@@ -257,7 +257,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 						endLine = fold.getStartLine() + 25;
 					}
 
-					StringBuffer sb = new StringBuffer("<html><nobr>");
+					StringBuilder sb = new StringBuilder("<html><nobr>");
 					while (line<=endLine && line<rsta.getLineCount()) { // Sanity
 						Token t = rsta.getTokenListForLine(line);
 						while (t!=null && t.isPaintable()) {

@@ -266,9 +266,8 @@ public class ErrorStrip extends JComponent {
 		int line = yToLine(e.getY());
 		if (line>-1) {
 			text = msg.getString("Line");
-			// TODO: 1.5: Use Integer.valueOf(line)
 			text = MessageFormat.format(text,
-						new Object[] { new Integer(line+1) });
+						new Object[] { Integer.valueOf(line+1) });
 		}
 		return text;
 	}
@@ -353,8 +352,7 @@ public class ErrorStrip extends JComponent {
 					continue;
 				}
 				ParserNotice notice = new MarkedOccurrenceNotice(range);
-				// 1.5: Use Integer.valueOf(notice.getLine())
-				Integer key = new Integer(line);
+				Integer key = Integer.valueOf(line);
 				Marker m = markerMap.get(key);
 				if (m==null) {
 					m = new Marker(notice);
@@ -689,7 +687,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 				text = notices.get(0).getMessage();
 			}
 			else { // > 1
-				StringBuffer sb = new StringBuffer("<html>");
+				StringBuilder sb = new StringBuilder("<html>");
 				sb.append(msg.getString("MultipleMarkers"));
 				sb.append("<br>");
 				for (int i=0; i<notices.size(); i++) {
