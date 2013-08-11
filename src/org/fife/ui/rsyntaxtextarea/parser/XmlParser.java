@@ -194,14 +194,17 @@ public class XmlParser extends AbstractParser {
 			result.addNotice(pn);
 		}
 
+		@Override
 		public void error(SAXParseException e) {
 			doError(e, ParserNotice.ERROR);
 		}
 
+		@Override
 		public void fatalError(SAXParseException e) {
 			doError(e, ParserNotice.ERROR);
 		}
 
+		@Override
 		public InputSource resolveEntity(String publicId, String systemId)
 								throws IOException, SAXException {
 			if (entityResolver!=null) {
@@ -210,6 +213,7 @@ public class XmlParser extends AbstractParser {
 			return super.resolveEntity(publicId, systemId);
 		}
 
+		@Override
 		public void warning(SAXParseException e) {
 			doError(e, ParserNotice.WARNING);
 		}

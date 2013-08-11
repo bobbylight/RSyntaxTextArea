@@ -133,6 +133,7 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @throws IOException If an IO exception occurs.
 	 */
+	@Override
 	public void close() throws IOException {
 		internalOut.close();
 	}
@@ -143,6 +144,7 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @throws IOException If an IO exception occurs.
 	 */
+	@Override
 	public void flush() throws IOException {
 		internalOut.flush();
 	}
@@ -221,6 +223,7 @@ public class UnicodeWriter extends Writer {
 	 * @param len The number of characters to write.
 	 * @throws IOException If an I/O error occurs.
 	 */
+	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException {
 		internalOut.write(cbuf, off, len);
 	}
@@ -232,6 +235,7 @@ public class UnicodeWriter extends Writer {
 	 * @param c An integer specifying the character to write.
 	 * @throws IOException If an IO error occurs.
 	 */
+	@Override
 	public void write(int c) throws IOException {
 		internalOut.write(c);
 	}
@@ -245,6 +249,7 @@ public class UnicodeWriter extends Writer {
 	 * @param len The number of characters to write.
 	 * @throws IOException If an IO error occurs.
 	 */
+	@Override
 	public void write(String str, int off, int len) throws IOException {
 		internalOut.write(str, off, len);
 	}

@@ -50,6 +50,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 * @param tokenType The token's type.
 	 * @param startOffset The offset in the document at which the token occurs.
 	 */
+	@Override
 	public void addToken(Segment segment, int start, int end, int tokenType, int startOffset) {
 
 		switch (tokenType) {
@@ -92,6 +93,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "#", null };
 	}
@@ -105,6 +107,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER || type==Token.VARIABLE;
 	}
@@ -117,6 +120,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 *         UNIX shell scripts.
 	 * @see org.fife.ui.rsyntaxtextarea.AbstractTokenMaker#getWordsToHighlight
 	 */
+	@Override
 	public TokenMap getWordsToHighlight() {
 
 		TokenMap tokenMap = new TokenMap();

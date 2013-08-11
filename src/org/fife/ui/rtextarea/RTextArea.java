@@ -419,6 +419,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @return The default document.
 	 */
+	@Override
 	protected Document createDefaultModel() {
 		return new RDocument();
 	}
@@ -428,6 +429,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @return The caret event/mouse listener.
 	 */
+	@Override
 	protected RTAMouseListener createMouseListener() {
 		return new RTextAreaMutableCaretEvent(this);
 	}
@@ -505,6 +507,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	protected JMenuItem createPopupMenuItem(Action a) {
 		JMenuItem item = new JMenuItem(a) {
+			@Override
 			public void setToolTipText(String text) {
 				// Ignore!  Actions (e.g. undo/redo) set this when changing
 				// their text due to changing enabled state.
@@ -520,6 +523,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @return The UI.
 	 */
+	@Override
 	protected RTextAreaUI createRTextAreaUI() {
 		return new RTextAreaUI(this);
 	}
@@ -603,6 +607,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @param e The caret event.
 	 */
+	@Override
 	protected void fireCaretUpdate(CaretEvent e) {
 
 		// Decide whether we need to repaint the current line background.
@@ -826,6 +831,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #getToolTipSupplier()
 	 * @see #setToolTipSupplier(ToolTipSupplier)
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String tip = null;
 		if (getToolTipSupplier()!=null) {
@@ -966,6 +972,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void paste() {
 		// Treat paste operations as atomic, otherwise the removal and
 		// insertion are treated as two separate undo-able operations.
@@ -1027,6 +1034,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * new <code>Document</code>, thus requiring us to re-attach our Undo
 	 * manager.  With this version we just replace the text.
 	 */
+	@Override
 	public void read(Reader in, Object desc) throws IOException {
 
 		RTextAreaEditorKit kit = (RTextAreaEditorKit)getUI().getEditorKit(this);
@@ -1127,6 +1135,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #insert(String, int)
 	 * @see #replaceRange(String, int, int)
 	 */
+	@Override
 	public void replaceRange(String str, int start, int end) {
 		if (end < start)
 			throw new IllegalArgumentException("end before start");
@@ -1159,6 +1168,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @param text The content to replace the selection with.
 	 */
+	@Override
 	public void replaceSelection(String text) {
 
 		// It's legal for null to be used here...
@@ -1378,6 +1388,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *         <code>ConfigurableCaret</code>.
 	 * @see #setCaretStyle(int, int)
 	 */
+	@Override
 	public void setCaret(Caret caret) {
 		super.setCaret(caret);
 		if (carets!=null && // Called by setUI() before carets is initialized
@@ -1414,6 +1425,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @throws IllegalArgumentException If the document is not an instance of
 	 *         {@link RDocument}.
 	 */
+	@Override
 	public void setDocument(Document document) {
 		if (!(document instanceof RDocument)) {
 			throw new IllegalArgumentException("RTextArea requires " +
@@ -1510,6 +1522,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setRoundedSelectionEdges(boolean rounded) {
 		if (getRoundedSelectionEdges()!=rounded) {
 			markAllHighlightPainter.setRoundedEdges(rounded);
@@ -1583,6 +1596,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @param ui This parameter is ignored.
 	 */
+	@Override
 	public final void setUI(TextUI ui) {
 
 		// Update the popup menu's ui.
@@ -1645,6 +1659,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			super(textArea);
 		}
 
+		@Override
 		public void focusGained(FocusEvent e) {
 			Caret c = getCaret();
 			boolean enabled = c.getDot()!=c.getMark();
@@ -1653,9 +1668,11 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			undoManager.updateActions(); // To reflect this text area.
 		}
 
+		@Override
 		public void focusLost(FocusEvent e) {
 		}
 
+		@Override
 		public void mouseDragged(MouseEvent e) {
 			if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 				Caret caret = getCaret();
@@ -1665,6 +1682,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			}
 		}
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			// WORKAROUND:  Since JTextComponent only updates the caret
 			// location on mouse clicked and released, we'll do it on dragged
@@ -1677,6 +1695,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			}
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 			if ((e.getModifiers()&MouseEvent.BUTTON3_MASK)!=0)
 				showPopup(e);

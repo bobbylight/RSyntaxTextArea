@@ -568,10 +568,12 @@ public class Theme {
 
 		private Theme theme;
 
+		@Override
 		public void error(SAXParseException e) throws SAXException {
 			throw e;
 		}
 
+		@Override
 		public void fatalError(SAXParseException e) throws SAXException {
 			throw e;
 		}
@@ -611,12 +613,14 @@ public class Theme {
 			return value;
 		}
 
-	    public InputSource resolveEntity(String publicID, 
+		@Override
+		public InputSource resolveEntity(String publicID, 
 				String systemID) throws SAXException {
 			return new InputSource(getClass().
 					getResourceAsStream("/theme.dtd"));
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName,
 								Attributes attrs) {
 
@@ -832,6 +836,7 @@ public class Theme {
 
 		}
 
+		@Override
 		public void warning(SAXParseException e) throws SAXException {
 			throw e;
 		}

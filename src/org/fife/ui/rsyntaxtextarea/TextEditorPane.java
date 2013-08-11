@@ -581,6 +581,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @param doc The new document.
 	 */
+	@Override
 	public void setDocument(Document doc) {
 		Document old = getDocument();
 		if (old!=null) {

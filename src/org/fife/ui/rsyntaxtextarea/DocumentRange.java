@@ -54,6 +54,7 @@ public class DocumentRange {
 	 *
 	 * @return A string representation of this object.
 	 */
+	@Override
 	public String toString() {
 		return "[DocumentRange: " + startOffs + "-" + endOffs + "]";
 	}

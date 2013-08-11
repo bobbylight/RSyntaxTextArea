@@ -125,6 +125,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * @param f the factory to use to rebuild if the view has children
 	 * @see View#changedUpdate
 	 */
+	@Override
 	public void changedUpdate(DocumentEvent changes, Shape a, ViewFactory f) {
 		updateDamage(changes, a, f);
 	}
@@ -322,6 +323,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * @exception BadLocationException
 	 * @exception IllegalArgumentException for an invalid direction
 	 */
+	@Override
 	public int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a, 
 							int direction, Position.Bias[] biasRet)
 							throws BadLocationException {
@@ -341,6 +343,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *           The parent may choose to resize or break the view.
 	 * @exception IllegalArgumentException for an invalid axis
 	 */
+	@Override
 	public float getPreferredSpan(int axis) {
 		updateMetrics();
 		switch (axis) {
@@ -461,6 +464,7 @@ else {
 	 * @param a The current allocation of the view.
 	 * @param f The factory to use to rebuild if the view has children.
 	 */
+	@Override
 	public void insertUpdate(DocumentEvent changes, Shape a, ViewFactory f) {
 		updateDamage(changes, a, f);
 	}
@@ -505,6 +509,7 @@ if (host.isCodeFoldingEnabled()) {
 	 *   represent a valid location in the associated document
 	 * @see View#modelToView
 	 */
+	@Override
 	public Shape modelToView(int pos, Shape a, Position.Bias b)
 										throws BadLocationException {
 
@@ -565,6 +570,7 @@ if (host.isCodeFoldingEnabled()) {
 	 *		legal <code>Position.Bias</code> values listed above
 	 * @see View#viewToModel
 	 */
+	@Override
 	public Shape modelToView(int p0, Position.Bias b0,
 							int p1, Position.Bias b1,
 							Shape a) throws BadLocationException {
@@ -638,6 +644,7 @@ if (host.isCodeFoldingEnabled()) {
 	 * @param g The graphics context with which to paint.
 	 * @param a The allocated region in which to render.
 	 */
+	@Override
 	public void paint(Graphics g, Shape a) {
 
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
@@ -768,11 +775,13 @@ if (host.isCodeFoldingEnabled()) {
 	 * @param a the current allocation of the view
 	 * @param f the factory to use to rebuild if the view has children
 	 */
+	@Override
 	public void removeUpdate(DocumentEvent changes, Shape a, ViewFactory f) {
 		updateDamage(changes, a, f);
 	}
 
 
+	@Override
 	public void setSize(float width, float height) {
 		super.setSize(width, height);
 		updateMetrics();
@@ -880,6 +889,7 @@ if (host.isCodeFoldingEnabled()) {
 	 * @return the location within the model that best represents the
 	 *  given point in the view >= 0
 	 */
+	@Override
 	public int viewToModel(float fx, float fy, Shape a, Position.Bias[] bias) {
 
 		bias[0] = Position.Bias.Forward;

@@ -194,7 +194,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * a macro.
 	 *
 	 * @return Whether or not this action will be recorded and replayed.
-	 * @see #setRecordable
+	 * @see #setRecordable(boolean)
 	 */
 	public boolean isRecordable() {
 		return isRecordable;
@@ -269,7 +269,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 *
 	 * @param recordable Whether or not this action should be recorded
 	 *        and replayed.
-	 * @see #isRecordable
+	 * @see #isRecordable()
 	 */
 	public void setRecordable(boolean recordable) {
 		isRecordable = recordable;

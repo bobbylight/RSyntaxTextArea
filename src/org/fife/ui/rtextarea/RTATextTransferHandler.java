@@ -185,6 +185,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * @return If the text component is editable, COPY_OR_MOVE is returned,
 	 *         otherwise just COPY is allowed.
 	 */
+	@Override
 	public int getSourceActions(JComponent c) {
 		if (((JTextComponent)c).isEditable())
 			return COPY_OR_MOVE;
@@ -202,6 +203,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * @return  The representation of the data to be transfered. 
 	 *  
 	 */
+	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		exportComp = (JTextComponent)comp;
 		shouldRemove = true;
@@ -220,6 +222,7 @@ public class RTATextTransferHandler extends TransferHandler {
      *               if the action is <code>NONE</code>.
 	 * @param action The actual action that was performed.  
 	 */
+	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
 		// only remove the text if shouldRemove has not been set to
 		// false by importData and only if the action is a move
@@ -246,6 +249,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * @param t The data to import
 	 * @return <code>true</code> iff the data was inserted into the component.
 	 */
+	@Override
 	public boolean importData(JComponent comp, Transferable t) {
 
 		JTextComponent c = (JTextComponent)comp;
@@ -293,6 +297,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * @param flavors The data formats available.
 	 * @return <code>true</code> iff the data can be inserted.
 	 */
+	@Override
 	public boolean canImport(JComponent comp, DataFlavor[] flavors) {
 		JTextComponent c = (JTextComponent)comp;
 		if (!(c.isEditable() && c.isEnabled()))

@@ -48,6 +48,7 @@ public class ColorBackgroundPainterStrategy
 	 *         <code>ColorBackgroundPainterStrategy</code> representing
 	 *         the same color as this one.
 	 */
+	@Override
 	public boolean equals(Object o2) {
 		return o2!=null &&
 			(o2 instanceof ColorBackgroundPainterStrategy) &&
@@ -74,6 +75,7 @@ public class ColorBackgroundPainterStrategy
 	 *
 	 * @return The hash code.
 	 */
+	@Override
 	public int hashCode() {
 		return color.hashCode();
 	}

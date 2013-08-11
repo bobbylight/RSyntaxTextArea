@@ -160,6 +160,7 @@ public class UnicodeReader extends Reader {
 	/**
 	 * Closes this reader.
 	 */
+	@Override
 	public void close() throws IOException {
 		internalIn.close();
 	}
@@ -260,6 +261,7 @@ public class UnicodeReader extends Reader {
 	 * @return The number of characters read, or <code>-1</code> if the end
 	 *         of the stream has been reached.
 	 */
+	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
 		return internalIn.read(cbuf, off, len);
 	}

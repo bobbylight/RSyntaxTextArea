@@ -242,6 +242,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	void handleDocumentEvent(DocumentEvent e) {
 		int newLineCount = textArea.getLineCount();
 		if (newLineCount!=currentLineCount) {
@@ -254,6 +255,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
 		return new Dimension(width, h);
@@ -265,6 +267,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 *
 	 * @param e The location the mouse is hovering over.
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		try {
 			int line = viewToModelLine(e.getPoint());
@@ -338,6 +341,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	void lineHeightsChanged() {
 		repaint();
 	}
@@ -376,6 +380,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 
 		if (textArea==null) {
@@ -730,6 +735,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 *
 	 * @param textArea The text area.
 	 */
+	@Override
 	public void setTextArea(RTextArea textArea) {
 		removeAllTrackingIcons();
 		super.setTextArea(textArea);
@@ -798,6 +804,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI(); // Does nothing
 		updateBackground();
@@ -840,6 +847,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			return -1;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			return o==this;
 		}
@@ -856,6 +864,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			return toolTip;
 		}
 
+		@Override
 		public int hashCode() {
 			return icon.hashCode(); // FindBugs
 		}

@@ -820,6 +820,7 @@ public class TokenImpl implements Token {
 	 *
 	 * @return A string describing this token.
 	 */
+	@Override
 	public String toString() {
 		return "[Token: " +
 			(getType()==Token.NULL ? "<null token>" :

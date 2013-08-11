@@ -530,6 +530,7 @@ public class Gutter extends JPanel {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setComponentOrientation(ComponentOrientation o) {
 		// Reuse the border to preserve its color.
 		if (o.isLeftToRight()) {
@@ -787,6 +788,7 @@ public class Gutter extends JPanel {
 //	}
 //
 //
+@Override
 public void setBorder(Border border) {
 	if (border instanceof GutterBorder) {
 		super.setBorder(border);
@@ -810,6 +812,7 @@ public void setBorder(Border border) {
 			return color;
 		}
 
+		@Override
 		public void paintBorder(Component c, Graphics g, int x, int y,
 								int width, int height) {
 
@@ -878,6 +881,7 @@ public void setBorder(Border border) {
 
 		public void changedUpdate(DocumentEvent e) {}
 
+		@Override
 		public void componentResized(java.awt.event.ComponentEvent e) {
 			revalidate();
 		}

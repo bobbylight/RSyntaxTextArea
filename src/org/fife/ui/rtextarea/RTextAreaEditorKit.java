@@ -314,6 +314,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 *
 	 * @return the command list
 	 */ 
+	@Override
 	public Action[] getActions() {
 		return defaultActions;
 	}
@@ -332,6 +333,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * @exception BadLocationException if pos represents an invalid
 	 *   location within the document.
 	*/
+	@Override
 	public void read(Reader in, Document doc, int pos) 
 				throws IOException, BadLocationException {
 
@@ -443,10 +445,12 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(beepAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return beepAction;
 		}
@@ -466,6 +470,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (select)
 				textArea.moveCaretPosition(0);
@@ -473,6 +478,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				textArea.setCaretPosition(0);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -494,6 +500,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			int newPos = 0;
@@ -572,6 +579,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			return pos;
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -594,14 +602,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RTextArea.beginRecordingMacro();
 		}
 
+		@Override
 		public boolean isRecordable() {
 			return false; // Never record the recording of a macro!
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaBeginRecordingMacroAction;
 		}
@@ -621,6 +632,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			try {
 				int offs = textArea.getCaretPosition();
@@ -634,6 +646,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -661,11 +674,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.copy();
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.copyAction;
 		}
@@ -687,11 +702,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.cut();
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.cutAction;
 		}
@@ -720,6 +737,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			initialize();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			Font font = textArea.getFont();
 			float oldSize = font.getSize2D();
@@ -742,6 +760,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaDecreaseFontSizeAction;
 		}
@@ -767,6 +786,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			delegate = new DefaultEditorKit.DefaultKeyTypedAction();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			// DefaultKeyTypedAction *is* different across different JVM's
 			// (at least the OSX implementation must be different - Alt+Numbers
@@ -777,6 +797,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			delegate.actionPerformed(e);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.defaultKeyTypedAction;
 		}
@@ -794,6 +815,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 						null);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -826,6 +848,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return RTextAreaEditorKit.rtaDeleteLineAction;
 		}
@@ -849,6 +872,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
@@ -887,6 +911,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.deleteNextCharAction;
 		}
@@ -904,6 +929,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(deletePrevCharAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
@@ -940,6 +966,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.deletePrevCharAction;
 		}
@@ -956,6 +983,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaDeletePrevWordAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -972,6 +1000,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public String getMacroID() {
 			return rtaDeletePrevWordAction;
 		}
@@ -999,6 +1028,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaDeleteRestOfLineAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			try {
@@ -1023,6 +1053,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaDeleteRestOfLineAction;
 		}
@@ -1048,6 +1079,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			lastWordStart = searchOffs = lastDot = -1;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -1108,6 +1140,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1127,6 +1160,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			int dot = getVisibleEnd(textArea);
 			if (select)
@@ -1135,6 +1169,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				textArea.setCaretPosition(dot);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1158,6 +1193,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			int offs = textArea.getCaretPosition();
 			int endOffs = 0;
@@ -1186,6 +1222,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1208,14 +1245,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RTextArea.endRecordingMacro();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaEndRecordingMacroAction;
 		}
 
+		@Override
 		public boolean isRecordable() {
 			return false; // Never record the recording of a macro!
 		}
@@ -1235,6 +1275,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			try {
 				int offs = textArea.getCaretPosition();
@@ -1248,6 +1289,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1281,6 +1323,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			initialize();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			Font font = textArea.getFont();
 			float oldSize = font.getSize2D();
@@ -1303,6 +1346,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaIncreaseFontSizeAction;
 		}
@@ -1324,6 +1368,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(DefaultEditorKit.insertBreakAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1332,6 +1377,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.replaceSelection("\n");
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.insertBreakAction;
 		}
@@ -1341,6 +1387,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		 * way, but I'm not sure why.  See BasicTextUI#getActionMap() and
 		 * BasicTextUI.TextActionWrapper.
 		 */
+		@Override
 		public boolean isEnabled() {
 			JTextComponent tc = getTextComponent(null);
 			return (tc==null || tc.isEditable()) ? super.isEnabled() : false;
@@ -1360,6 +1407,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					null);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1372,6 +1420,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.insertContentAction;
 		}
@@ -1390,6 +1439,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(insertTabAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1398,6 +1448,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.replaceSelection("\t");
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.insertTabAction;
 		}
@@ -1414,6 +1465,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaInvertSelectionCaseAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1435,6 +1487,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1451,6 +1504,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaJoinLinesAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1479,6 +1533,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1498,6 +1553,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.moveAmt = moveAmt;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1526,6 +1582,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1588,6 +1645,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaLowerSelectionCaseAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1599,6 +1657,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1618,6 +1677,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.forward = forward;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			Gutter gutter = RSyntaxUtilities.getGutter(textArea);
@@ -1685,6 +1745,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1701,6 +1762,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			String selectedText = textArea.getSelectedText();
 			if (selectedText == null || selectedText.length() == 0) {
@@ -1717,6 +1779,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			RTextArea.setSelectedOccurrenceText(selectedText);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1739,6 +1802,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.direction = dir;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			Caret caret = textArea.getCaret();
@@ -1810,6 +1874,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1829,6 +1894,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			int offs = textArea.getCaretPosition();
@@ -1860,6 +1926,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1887,6 +1954,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.left = left;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			int selectedIndex;
@@ -1924,6 +1992,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -1946,11 +2015,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.paste();
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.pasteAction;
 		}
@@ -1973,14 +2044,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.playbackLastMacro();
 		}
 
+		@Override
 		public boolean isRecordable() {
 			return false; // Don't record macro playbacks.
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaPlaybackLastMacroAction;
 		}
@@ -1997,6 +2071,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			String selectedText = textArea.getSelectedText();
 			if (selectedText == null || selectedText.length() == 0) {
@@ -2014,6 +2089,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			RTextArea.setSelectedOccurrenceText(selectedText);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -2033,6 +2109,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.select = select;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			int offs = textArea.getCaretPosition();
@@ -2064,6 +2141,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -2091,6 +2169,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (textArea.isEnabled() && textArea.isEditable()) {
 				textArea.redoLastAction();
@@ -2098,6 +2177,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaRedoAction;
 		}
@@ -2118,6 +2198,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.delta = delta;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			Container parent = textArea.getParent();
 			if (parent instanceof JViewport) {
@@ -2138,6 +2219,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -2160,12 +2242,14 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			Document doc = textArea.getDocument();
 			textArea.setCaretPosition(0);
 			textArea.moveCaretPosition(doc.getLength());
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.selectAllAction;
 		}
@@ -2187,11 +2271,13 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			end = new EndLineAction("pigdog", true);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			start.actionPerformed(e);
 			end.actionPerformed(e);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.selectLineAction;
 		}
@@ -2212,6 +2298,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			createActions();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			start.actionPerformed(e);
 			end.actionPerformed(e);
@@ -2222,6 +2309,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			end = new EndWordAction("pigdog", true);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.selectWordAction;
 		}
@@ -2239,14 +2327,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(readOnlyAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.setEditable(false);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.readOnlyAction;
 		}
 
+		@Override
 		public boolean isRecordable() {
 			return false; // Why would you want to record this?
 		}
@@ -2264,14 +2355,17 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(writableAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.setEditable(true);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return DefaultEditorKit.writableAction;
 		}
 
+		@Override
 		public boolean isRecordable() {
 			return false; // Why would you want to record this?
 		}
@@ -2294,6 +2388,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -2305,6 +2400,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.replaceSelection(dateString);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaTimeDateAction;
 		}
@@ -2321,6 +2417,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaToggleBookmarkAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			Gutter gutter = RSyntaxUtilities.getGutter(textArea);
 			if (gutter!=null) {
@@ -2335,6 +2432,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaToggleBookmarkAction;
 		}
@@ -2351,6 +2449,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaToggleTextModeAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			int textMode = textArea.getTextMode();
 			if (textMode==RTextArea.INSERT_MODE)
@@ -2359,6 +2458,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				textArea.setTextMode(RTextArea.INSERT_MODE);
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaToggleTextModeAction;
 		}
@@ -2380,6 +2480,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (textArea.isEnabled() && textArea.isEditable()) {
 				textArea.undoLastAction();
@@ -2387,6 +2488,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaUndoAction;
 		}
@@ -2404,10 +2506,12 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaUnselectAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			textArea.setCaretPosition(textArea.getCaretPosition());
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rtaUnselectAction;
 		}
@@ -2425,6 +2529,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			super(rtaUpperSelectionCaseAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -2436,6 +2541,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -2458,6 +2564,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			this.direction = direction;
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			Rectangle visible = textArea.getVisibleRect();
@@ -2571,6 +2678,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			} catch (BadLocationException ble) {}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}

@@ -35,6 +35,7 @@
 
 	<!-- Compiles the classes.  -->
 	<target name="compile" description="Compile the source">
+		<echo>Compiling with java: ${java.runtime.version}</echo>
 		<delete includeEmptyDirs="true" quiet="true" dir="${class-dir}"/>
 		<mkdir dir="${class-dir}"/>
 		<javac srcdir="${source-dir}" destdir="${class-dir}"

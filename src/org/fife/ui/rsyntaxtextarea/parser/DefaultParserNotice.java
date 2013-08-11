@@ -110,6 +110,7 @@ public class DefaultParserNotice implements ParserNotice {
 	 * @param obj Another parser notice.
 	 * @return Whether the two notices are equal.
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ParserNotice)) {
 			return false;
@@ -199,6 +200,7 @@ public class DefaultParserNotice implements ParserNotice {
 	 *
 	 * @return The hash code.
 	 */
+	@Override
 	public int hashCode() {
 		return (line<<16) | offset;
 	}
@@ -262,6 +264,7 @@ public class DefaultParserNotice implements ParserNotice {
 	 *
 	 * @return This parser notice as a string.
 	 */
+	@Override
 	public String toString() {
 		return "Line " + getLine() + ": " + getMessage();
 	}

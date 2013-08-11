@@ -68,6 +68,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void setUp() throws Exception {
 
 		// setUp() is called once per test, each with a new instantiation of

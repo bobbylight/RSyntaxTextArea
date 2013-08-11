@@ -106,6 +106,7 @@ class RDocumentCharSequence implements CharSequence {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		try {
 			return doc.getText(start, length());

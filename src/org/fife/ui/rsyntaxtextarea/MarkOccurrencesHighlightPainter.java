@@ -58,6 +58,7 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Shape paintLayer(Graphics g, int p0, int p1, Shape viewBounds,
 								JTextComponent c, View view) {
 
@@ -118,6 +119,7 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setColor(Color c) {
 		super.setColor(c);
 		borderColor = c.darker();

@@ -154,6 +154,7 @@ public class ErrorStrip extends JComponent {
 	 * Overridden so we only start listening for parser notices when this
 	 * component (and presumably the text area) are visible.
 	 */
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		textArea.addCaretListener(listener);
@@ -170,6 +171,7 @@ public class ErrorStrip extends JComponent {
 	/**
 	 * Manually manages layout since this component uses no layout manager.
 	 */
+	@Override
 	public void doLayout() {
 		for (int i=0; i<getComponentCount(); i++) {
 			Marker m = (Marker)getComponent(i);
@@ -228,6 +230,7 @@ public class ErrorStrip extends JComponent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		int height = textArea.getPreferredScrollableViewportSize().height;
 		return new Dimension(PREFERRED_WIDTH, height);
@@ -261,13 +264,13 @@ public class ErrorStrip extends JComponent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getToolTipText(MouseEvent e) {
 		String text = null;
 		int line = yToLine(e.getY());
 		if (line>-1) {
 			text = msg.getString("Line");
-			text = MessageFormat.format(text,
-						new Object[] { Integer.valueOf(line+1) });
+			text = MessageFormat.format(text, Integer.valueOf(line+1));
 		}
 		return text;
 	}
@@ -293,6 +296,7 @@ public class ErrorStrip extends JComponent {
 	 *
 	 * @param g The graphics context.
 	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (caretLineY>-1) {
@@ -377,6 +381,7 @@ public class ErrorStrip extends JComponent {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void removeNotify() {
 		super.removeNotify();
 		textArea.removeCaretListener(listener);
@@ -497,6 +502,7 @@ public class ErrorStrip extends JComponent {
 			}
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 
 			Component source = (Component)e.getSource();
@@ -566,6 +572,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 			return pos>=range.getStartOffset() && pos<range.getEndOffset();
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			// FindBugs - Define equals() when defining compareTo()
 			if (!(o instanceof ParserNotice)) {
@@ -624,6 +631,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 			return null;
 		}
 
+		@Override
 		public int hashCode() { // FindBugs, since we override equals()
 			return 0; // Value doesn't matter for us.
 		}
@@ -674,11 +682,13 @@ private static final Color COLOR = new Color(220, 220, 220);
 			return c;
 		}
 
+		@Override
 		public Dimension getPreferredSize() {
 			int w = PREFERRED_WIDTH - 4; // 2-pixel empty border
 			return new Dimension(w, 5);
 		}
 
+		@Override
 		public String getToolTipText() {
 
 			String text = null;
@@ -722,6 +732,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 			}
 		}
 
+		@Override
 		protected void paintComponent(Graphics g) {
 
 			// TODO: Give "priorities" and always pick color of a notice with
@@ -744,6 +755,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 
 		}
 
+		@Override
 		public void removeNotify() {
 			super.removeNotify();
 			ToolTipManager.sharedInstance().unregisterComponent(this);

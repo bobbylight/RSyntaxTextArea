@@ -116,6 +116,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *
 	 * @return The copy.
 	 */
+	@Override
 	public Object clone() {
 		SyntaxScheme shcs = null;
 		try {
@@ -143,6 +144,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *         <code>otherScheme</code> are the same scheme;
 	 *         <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean equals(Object otherScheme) {
 
 		// No need for null check; instanceof takes care of this for us,
@@ -212,6 +214,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *
 	 * @return The hash code for this object.
 	 */
+	@Override
 	public int hashCode() {
 		// Keep me fast.  Iterating over *all* syntax schemes contained is
 		// probably much slower than a "bad" hash code here.
@@ -575,6 +578,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			return parser.scheme;
 		}
 
+		@Override
 		public void startElement(String uri, String localName, String qName,
 								Attributes attrs) {
 

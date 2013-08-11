@@ -150,8 +150,9 @@ public class Fold implements Comparable<Fold> {
 	 *
 	 * @param otherFold Another fold to compare this one to.
 	 * @return Whether the two folds are equal.
-	 * @see #compareTo(Object)
+	 * @see #compareTo(Fold)
 	 */
+	@Override
 	public boolean equals(Object otherFold) {
 		return otherFold instanceof Fold && compareTo((Fold)otherFold)==0;
 	}
@@ -405,6 +406,7 @@ public class Fold implements Comparable<Fold> {
 	}
 
 
+	@Override
 	public int hashCode() {
 		return getStartLine();
 	}
@@ -552,6 +554,7 @@ public class Fold implements Comparable<Fold> {
 	 *
 	 * @return A string representation of this <code>Fold</code>.
 	 */
+	@Override
 	public String toString() {
 		return "[Fold: " +
 				"startOffs=" + getStartOffset() +

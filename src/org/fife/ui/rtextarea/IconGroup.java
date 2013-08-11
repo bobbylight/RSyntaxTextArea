@@ -116,6 +116,7 @@ public class IconGroup {
 	 * @return Whether <code>o2</code> represents the same icons as this icon
 	 *         group.
 	 */
+	@Override
 	public boolean equals(Object o2) {
 		if (o2!=null && o2 instanceof IconGroup) {
 			IconGroup ig2 = (IconGroup)o2;
@@ -237,6 +238,7 @@ public class IconGroup {
 	 * the invariant that equal objects must have equal hashcodes.  This also
 	 * keeps FindBugs happy.
 	 */
+	@Override
 	public int hashCode() {
 		return getName().hashCode();
 	}

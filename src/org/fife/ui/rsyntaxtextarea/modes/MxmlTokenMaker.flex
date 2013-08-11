@@ -207,6 +207,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return Whether closing markup tags are completed.
 	 * @see #setCompleteCloseTags(boolean)
 	 */
+	@Override
 	public boolean getCompleteCloseTags() {
 		return completeCloseTags;
 	}

@@ -148,6 +148,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 * @param elem The element.
 	 * @return The view.
 	 */
+	@Override
 	public View create(Element elem) {
 		if (textArea.getLineWrap())
 			return new WrappedPlainView(elem, textArea.getWrapStyleWord());
@@ -162,6 +163,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 *
 	 * @return The caret.
 	 */
+	@Override
 	protected Caret createCaret() {
 		Caret caret = new ConfigurableCaret();
 		caret.setBlinkRate(500);
@@ -177,6 +179,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 *
 	 * @return The keymap.
 	 */
+	@Override
 	protected Keymap createKeymap() {
 
 		// Load the keymap we'll be using (it's saved by
@@ -249,6 +252,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 * @return the editor capabilities
 	 * @see TextUI#getEditorKit
 	 */
+	@Override
 	public EditorKit getEditorKit(JTextComponent tc) {
 		return defaultKit;
 	}
@@ -330,6 +334,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 *
 	 * @return the bounding box for the root view
 	 */
+	@Override
 	protected Rectangle getVisibleEditorRect() {
 		Rectangle alloc = textArea.getBounds();
 		if ((alloc.width > 0) && (alloc.height > 0)) {
@@ -345,6 +350,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	}
 
 
+	@Override
 	protected void installDefaults() {
 
 		super.installDefaults();
@@ -364,6 +370,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void installKeyboardActions() {
 
 		// NOTE: Don't call super.installKeyboardActions(), as that causes
@@ -400,6 +407,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	/**
 	 * Installs this UI to the given text component.
 	 */
+	@Override
 	public void installUI(JComponent c) {
 		if (!(c instanceof RTextArea)) {
 			throw new Error("RTextAreaUI needs an instance of RTextArea!");
@@ -408,6 +416,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	}
 
 
+	@Override
 	protected void paintBackground(Graphics g) {
 
 		// Only fill in the background if an image isn't being used.
@@ -571,6 +580,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 			textArea.requestFocus();
 		}
 
+		@Override
 		public boolean isEnabled() {
 			return textArea.isEditable();
 		}

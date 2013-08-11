@@ -45,6 +45,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 
 		// When line wrap is not enabled, take the faster code path.

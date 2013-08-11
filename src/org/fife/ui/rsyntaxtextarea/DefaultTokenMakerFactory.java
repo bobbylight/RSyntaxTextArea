@@ -24,6 +24,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void initTokenMakerMap() {
 
 		String pkg = "org.fife.ui.rsyntaxtextarea.modes.";

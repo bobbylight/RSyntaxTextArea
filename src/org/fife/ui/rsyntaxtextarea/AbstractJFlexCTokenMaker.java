@@ -38,6 +38,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return <code>true</code> always.
 	 */
+	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return true;
 	}
@@ -50,6 +51,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return The action.
 	 */
+	@Override
 	public Action getInsertBreakAction() {
 		return INSERT_BREAK_ACTION;
 	}
@@ -58,6 +60,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER || type==Token.FUNCTION;
 	}
@@ -66,6 +69,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean getShouldIndentNextLineAfter(Token t) {
 		if (t!=null && t.length()==1) {
 			char ch = t.charAt(0);
@@ -85,6 +89,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 		private static final Pattern p =
 							Pattern.compile("([ \\t]*)(/?[\\*]+)([ \\t]*)");
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {

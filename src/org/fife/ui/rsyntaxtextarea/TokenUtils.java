@@ -46,9 +46,6 @@ public class TokenUtils {
 	 * @param e How to expand tabs.
 	 * @param textArea The text area from which the token list came.
 	 * @param x0 The initial x-pixel position of the old token list.
-	 * @return The width, in pixels, of the part of the token list "removed
-	 *         from the front."  This way, you know the x-offset of the "new"
-	 *         token list.
 	 * @return Information about the "sub" token list.  This will be
 	 *         <code>null</code> if <code>pos</code> was not a valid offset
 	 *         into the token list.

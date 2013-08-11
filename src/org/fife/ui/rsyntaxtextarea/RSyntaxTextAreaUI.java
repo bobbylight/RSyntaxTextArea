@@ -56,6 +56,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
      * @param elem The element.
      * @return The view.
      */
+	@Override
 	public View create(Element elem) {
 		RTextArea c = getRTextArea();
 		if (c instanceof RSyntaxTextArea) {
@@ -76,6 +77,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 *
 	 * @return The highlighter.
 	 */
+	@Override
 	protected Highlighter createHighlighter() {
 		return new RSyntaxTextAreaHighlighter();
 	}
@@ -88,6 +90,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 *
 	 * @return The name of the cached action map.
 	 */
+	@Override
 	protected String getActionMapName() {
 		return SHARED_ACTION_MAP_NAME;
 	}
@@ -100,6 +103,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * @return The editor capabilities.
 	 * @see javax.swing.plaf.TextUI#getEditorKit
 	 */
+	@Override
 	public EditorKit getEditorKit(JTextComponent tc) {
 		return defaultKit;
 	}
@@ -114,6 +118,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * issue warnings that you are not actually overriding the original method
 	 * (since it is package-private).
 	 */
+	@Override
 	protected InputMap getRTextAreaInputMap() {
 		InputMap map = new InputMapUIResource();
 		InputMap shared = (InputMap)UIManager.get(SHARED_INPUT_MAP_NAME);
@@ -134,6 +139,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 *
 	 * @param g The graphics component on which to paint.
 	 */
+	@Override
 	protected void paintBackground(Graphics g) {
 		super.paintBackground(g);
 		paintMatchedBracket(g);
@@ -193,6 +199,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 *
 	 * @param e The property change event.
 	 */
+	@Override
 	protected void propertyChange(PropertyChangeEvent e) {
 
 		String name = e.getPropertyName();
@@ -227,6 +234,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * <code>modelToView(int)</code> calls, as the entire bounding box isn't
 	 * computed.
 	 */
+	@Override
 	public int yForLine(int line) throws BadLocationException {
 		Rectangle alloc = getVisibleEditorRect();
 		if (alloc!=null) {
@@ -243,6 +251,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 * This is faster than calling <code>modelToView(offs).y</code>, so it is
 	 * preferred if you do not need the actual bounding box.
 	 */
+	@Override
 	public int yForLineContaining(int offs) throws BadLocationException {
 		Rectangle alloc = getVisibleEditorRect();
 		if (alloc!=null) {

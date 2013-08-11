@@ -133,6 +133,7 @@ public class LineNumberList extends AbstractGutterComponent
 	 * displayed (as keying off of the RTextArea gives us (0,0) when it isn't
 	 * yet displayed.
 	 */
+	@Override
 	public void addNotify() {
 		super.addNotify();
 		if (textArea!=null) {
@@ -172,6 +173,7 @@ public class LineNumberList extends AbstractGutterComponent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
 		return new Dimension(cellWidth, h);
@@ -198,6 +200,7 @@ public class LineNumberList extends AbstractGutterComponent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	void handleDocumentEvent(DocumentEvent e) {
 		int newLastLine = calculateLastVisibleLineNumber();
 		if (newLastLine!=lastVisibleLine) {
@@ -215,6 +218,7 @@ public class LineNumberList extends AbstractGutterComponent
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	void lineHeightsChanged() {
 		updateCellHeights();
 	}
@@ -273,6 +277,7 @@ public class LineNumberList extends AbstractGutterComponent
 	 *
 	 * @param g The graphics context.
 	 */
+	@Override
 	protected void paintComponent(Graphics g) {
 
 		if (textArea==null) {
@@ -502,6 +507,7 @@ public class LineNumberList extends AbstractGutterComponent
 	/**
 	 * Called when this component is removed from the view hierarchy.
 	 */
+	@Override
 	public void removeNotify() {
 		super.removeNotify();
 		if (textArea!=null) {
@@ -528,6 +534,7 @@ public class LineNumberList extends AbstractGutterComponent
 	 *
 	 * @param font The new font to use for line numbers.
 	 */
+	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
 		updateCellWidths();
@@ -557,6 +564,7 @@ public class LineNumberList extends AbstractGutterComponent
 	 *
 	 * @param textArea The text area.
 	 */
+	@Override
 	public void setTextArea(RTextArea textArea) {
 
 		if (l==null) {

@@ -123,6 +123,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 *
 	 * @return The document.
 	 */
+	@Override
 	public Document createDefaultDocument() {
 		return new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
 	}
@@ -134,6 +135,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * @param textArea The text area.
 	 * @return The icon row header.
 	 */
+	@Override
 	public IconRowHeader createIconRowHeader(RTextArea textArea) {
 		return new FoldingAwareIconRowHeader((RSyntaxTextArea)textArea);
 	}
@@ -146,6 +148,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 *
 	 * @return the command list
 	 */ 
+	@Override
 	public Action[] getActions() {
 		return TextAction.augmentList(super.getActions(),
 							RSyntaxTextAreaEditorKit.defaultActions);
@@ -179,6 +182,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			seg = new Segment();
 		}
 
+		@Override
 		protected int getWordStart(RTextArea textArea, int offs)
 										throws BadLocationException {
 
@@ -259,6 +263,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
@@ -273,6 +278,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -296,6 +302,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			seg = new Segment();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
@@ -362,6 +369,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaCloseCurlyBraceAction;
 		}
@@ -380,6 +388,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(rstaCloseMarkupTagAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -498,6 +507,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
+		@Override
 		public String getMacroID() {
 			return getName();
 		}
@@ -522,6 +532,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
@@ -534,6 +545,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaCollapseAllCommentFoldsAction;
 		}
@@ -564,10 +576,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				FoldCollapser collapser = new FoldCollapser() {
+					@Override
 					public boolean getShouldCollapse(Fold fold) {
 						return true;
 					}
@@ -580,6 +594,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaCollapseAllFoldsAction;
 		}
@@ -603,11 +618,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			((RSyntaxTextArea)textArea).copyAsRtf();
 			textArea.requestFocusInWindow();
 		}
 
+		@Override
 		public final String getMacroID() {
 			return getName();
 		}
@@ -632,6 +649,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
@@ -730,6 +748,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			s = new Segment();
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -787,6 +806,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaDecreaseIndentAction;
 		}
@@ -845,6 +865,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		private Segment seg = new Segment();
 
+		@Override
 		protected int getPreviousWordStart(RTextArea textArea, int offs)
 				throws BadLocationException {
 
@@ -916,6 +937,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, select);
 		}
 
+		@Override
 		protected int getVisibleEnd(RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			return rsta.getLastVisibleOffset();
@@ -938,6 +960,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			seg = new Segment();
 		}
 
+		@Override
 		protected int getWordEnd(RTextArea textArea, int offs)
 									throws BadLocationException {
 
@@ -1009,6 +1032,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
@@ -1030,6 +1054,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaExpandAllFoldsAction;
 		}
@@ -1097,6 +1122,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(rsta,
@@ -1111,6 +1137,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaGoToMatchingBracketAction;
 		}
@@ -1135,6 +1162,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
@@ -1223,6 +1251,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -1425,6 +1454,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -1489,6 +1519,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
+		@Override
 		public final String getMacroID() {
 			return insertTabAction;
 		}
@@ -1514,6 +1545,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		/**
 		 * Overridden to do better with skipping "words" in code.
 		 */
+		@Override
 		protected int getNextWord(RTextArea textArea, int offs)
 									throws BadLocationException {
 
@@ -1589,6 +1621,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(rstaPossiblyInsertTemplateAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled())
@@ -1654,6 +1687,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			textArea.replaceSelection(" ");
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaPossiblyInsertTemplateAction;
 		}
@@ -1679,6 +1713,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		/**
 		 * Overridden to do better with skipping "words" in code.
 		 */
+		@Override
 		protected int getPreviousWord(RTextArea textArea, int offs)
 										throws BadLocationException {
 
@@ -1751,6 +1786,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static class SelectWordAction
 					extends RTextAreaEditorKit.SelectWordAction {
 
+		@Override
 		protected void createActions() {
 			start = new BeginWordAction("pigdog", false);
 			end = new EndWordAction("pigdog", true);
@@ -1769,6 +1805,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(rstaToggleCommentAction);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
@@ -1855,6 +1892,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaToggleCommentAction;
 		}
@@ -1879,6 +1917,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
+		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
@@ -1893,6 +1932,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+		@Override
 		public final String getMacroID() {
 			return rstaToggleCurrentFoldAction;
 		}

@@ -1954,6 +1954,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	 * @param startOffset The offset in the document at which this token
 	 *                    occurs.
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
 		super.addToken(array, start,end, tokenType, startOffset);
 		zzStartRead = zzMarkedPos;
@@ -1968,6 +1969,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	 * @return Whether closing markup tags are completed.
 	 * @see #setCompleteCloseTags(boolean)
 	 */
+	@Override
 	public boolean getCompleteCloseTags() {
 		return completeCloseTags;
 	}
@@ -2229,7 +2231,8 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
    *
    * @param newState the new lexical state
    */
-  public final void yybegin(int newState) {
+  @Override
+public final void yybegin(int newState) {
     zzLexicalState = newState;
   }
 

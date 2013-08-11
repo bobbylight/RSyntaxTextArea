@@ -319,10 +319,12 @@ public class FocusableTip {
 		public void keyTyped(KeyEvent e) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent e) {
 			// possiblyDisposeOfTipWindow();
 		}
 
+		@Override
 		public void mouseMoved(MouseEvent e) {
 			if (tipVisibleBounds==null ||
 					!tipVisibleBounds.contains(e.getPoint())) {

@@ -61,6 +61,7 @@ public class BufferedImageBackgroundPainterStrategy
 	 * @param x The x-coordinate at which to paint.
 	 * @param y The y-coordinate at which to paint.
 	 */
+	@Override
 	protected void paintImage(Graphics g, int x, int y) {
 		if (bgImage != null)
 			g.drawImage(bgImage, x,y, null);
@@ -74,6 +75,7 @@ public class BufferedImageBackgroundPainterStrategy
 	 * @param height The new height of the image.
 	 * @param hint The scaling hint to use.
 	 */
+	@Override
 	protected void rescaleImage(int width, int height, int hint) {
 		Image master = getMasterImage();
 		if (master!=null) {

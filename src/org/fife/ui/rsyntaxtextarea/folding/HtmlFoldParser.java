@@ -389,6 +389,7 @@ public class HtmlFoldParser implements FoldParser {
 			line = -1;
 		}
 
+		@Override
 		public String toString() {
 			return "[TagCloseInfo: " +
 					"closeToken=" + closeToken +

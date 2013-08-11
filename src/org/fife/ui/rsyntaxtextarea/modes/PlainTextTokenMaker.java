@@ -280,6 +280,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
 	 *        <code>text</code>).
 	 * @return <code>Token.NULL</code>.
 	 */
+	@Override
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
 		return Token.NULL;
 	}
@@ -291,6 +292,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return <code>null</code>, as there are no comments in plain text.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return null;
 	}
@@ -304,6 +306,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return false;
 	}
@@ -447,7 +450,8 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
    *
    * @param newState the new lexical state
    */
-  public final void yybegin(int newState) {
+  @Override
+public final void yybegin(int newState) {
     zzLexicalState = newState;
   }
 

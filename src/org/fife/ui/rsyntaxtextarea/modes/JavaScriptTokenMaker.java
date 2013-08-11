@@ -1238,6 +1238,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	 * @param startOffset The offset in the document at which this token
 	 *                    occurs.
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
 		super.addToken(array, start,end, tokenType, startOffset);
 		zzStartRead = zzMarkedPos;
@@ -1249,6 +1250,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
 	 * 
 	 */
+	@Override
 	public int getClosestStandardTokenTypeForInternalType(int type) {
 		switch (type) {
 			case INTERNAL_IN_JS_MLC:
@@ -1279,6 +1281,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "//", null };
 	}
@@ -1551,7 +1554,8 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
    *
    * @param newState the new lexical state
    */
-  public final void yybegin(int newState) {
+  @Override
+public final void yybegin(int newState) {
     zzLexicalState = newState;
   }
 

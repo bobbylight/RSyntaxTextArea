@@ -49,6 +49,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	 * @param tokenType The token's type.
 	 * @param startOffset The offset in the document at which the token occurs.
 	 */
+	@Override
 	public void addToken(Segment segment, int start, int end, int tokenType, int startOffset) {
 
 		switch (tokenType) {
@@ -74,6 +75,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "rem ", null };
 	}
@@ -87,6 +89,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER || type==Token.VARIABLE;
 	}
@@ -99,6 +102,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	 *         Windows batch files.
 	 * @see org.fife.ui.rsyntaxtextarea.AbstractTokenMaker#getWordsToHighlight
 	 */
+	@Override
 	public TokenMap getWordsToHighlight() {
 
 		TokenMap tokenMap = new TokenMap(true); // Ignore case.

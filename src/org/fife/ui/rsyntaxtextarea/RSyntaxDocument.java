@@ -123,6 +123,7 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 *
 	 * @param e The change.
 	 */
+	@Override
 	protected void fireInsertUpdate(DocumentEvent e) {
 
 		cachedTokenList = null;
@@ -197,6 +198,7 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 	 * @param chng The change that occurred.
 	 * @see #removeUpdate
 	 */
+	@Override
 	protected void fireRemoveUpdate(DocumentEvent chng) {
 
 		cachedTokenList =  null;

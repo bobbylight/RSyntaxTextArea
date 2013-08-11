@@ -325,6 +325,7 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 	 *                    occurs.
 	 * @param hyperlink Whether this token is a hyperlink.
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
@@ -335,6 +336,7 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 	/**
 	 * ${inheritDoc}
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "%", null };
 	}
@@ -480,7 +482,8 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
    *
    * @param newState the new lexical state
    */
-  public final void yybegin(int newState) {
+  @Override
+public final void yybegin(int newState) {
     zzLexicalState = newState;
   }
 
