@@ -1329,7 +1329,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public static void setActionProperties(int action, String name,
 							char mnemonic, KeyStroke accelerator) {
-		setActionProperties(action, name, new Integer(mnemonic), accelerator);
+		setActionProperties(action, name, Integer.valueOf(mnemonic), accelerator);
 	}
 
 

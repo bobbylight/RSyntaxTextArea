@@ -11,8 +11,8 @@
 		3. make-javadoc:    Creates the javadoc for RSyntaxTextArea.
 
 	Author:   Robert Futrell
-	Version:  1.4
-	Date:     20feb2009
+	Version:  1.5
+	Date:     11aug2013
 
 -->
 
@@ -23,7 +23,7 @@
 
 
 	<!-- Set global properties for this build. -->
-	<property name="version"          value="2.0.7"/>
+	<property name="version"          value="2.5.0"/>
 	<property name="source-dir"       location="src"/>
 	<property name="class-dir"        location="ant-classes"/>
 	<property name="dist-dir"         location="dist"/>

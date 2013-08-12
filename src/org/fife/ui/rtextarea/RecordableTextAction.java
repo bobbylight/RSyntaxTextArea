@@ -220,7 +220,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * @see #getMnemonic()
 	 */
 	public void setMnemonic(char mnemonic) {
-		setMnemonic(new Integer(mnemonic));
+		setMnemonic(Integer.valueOf(mnemonic));
 	}
 
 

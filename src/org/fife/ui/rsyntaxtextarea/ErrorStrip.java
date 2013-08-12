@@ -70,8 +70,6 @@ import org.fife.ui.rsyntaxtextarea.parser.TaskTagParser.TaskNotice;
  *       For each property change, call a method that removes the notices
  *       being reloaded from the Markers (removing any Markers that are now
  *       "empty").
- *    2. When 1.4 support is dropped, replace new Integer(int) with
- *       Integer.valueOf(int).
  */
 public class ErrorStrip extends JComponent {
 

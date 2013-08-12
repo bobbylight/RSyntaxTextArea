@@ -2206,7 +2206,7 @@ private boolean fractionalFontMetricsEnabled;
 			} catch (RuntimeException re) {
 				throw re; // FindBugs
 			} catch (Exception e) {
-				// Swallow, either Java 1.4 or 1.5, or running in an applet
+				// Swallow, either Java 1.5, or running in an applet
 			}
 
 			// If not running Java 6+, default to AA enabled on Windows where
