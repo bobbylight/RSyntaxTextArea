@@ -259,6 +259,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "//", null };
 	}

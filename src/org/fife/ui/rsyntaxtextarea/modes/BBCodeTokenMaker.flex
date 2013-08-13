@@ -140,6 +140,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return <code>null</code> always.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return null;
 	}

@@ -117,6 +117,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *                    occurs.
 	 * @param hyperlink Whether this token is a hyperlink.
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
@@ -127,6 +128,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * ${inheritDoc}
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "%", null };
 	}

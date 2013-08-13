@@ -147,6 +147,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *                    occurs.
 	 * @param hyperlink Whether this token is a hyperlink.
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
@@ -161,6 +162,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "//", null };
 	}

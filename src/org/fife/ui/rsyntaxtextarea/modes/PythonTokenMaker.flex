@@ -88,6 +88,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd() {
 		return new String[] { "#", null };
 	}
