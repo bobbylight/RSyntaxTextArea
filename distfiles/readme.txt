@@ -51,8 +51,8 @@ robert -at- fifesoft dot com.
          Has a forum for RSyntaxTextArea and related projects, where you can
          ask questions and get feedback quickly.
 
-    * http://sourceforge.net/projects/rsyntaxtextarea
-         Has a tracker for bug reports, feature requests, etc.
+    * https://github.com/bobbylight/RSyntaxTextArea
+         Add a bug or enhancement request, peruse the Wiki, etc.
 
     * http://fifesoft.com/rsyntaxtextarea
          Project home page, which contains general information and example
