@@ -1141,7 +1141,7 @@ return c.getLineStartOffset(line);
 				/* Operators "==", "===", "!=", "!==" */
 				(t.getType()==Token.OPERATOR &&
 						t.charAt(t.length()-1)=='=') ||
-				t.is(Token.RESERVED_WORD, JS_KEYWORD_RETURN);
+				t.is(Token.RESERVED_WORD_2, JS_KEYWORD_RETURN);
 	}
 
 
