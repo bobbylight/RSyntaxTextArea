@@ -26,21 +26,8 @@ robert -at- fifesoft dot com.
     cd RSyntaxTextArea
     ant
   
-  Note that RSyntaxTextArea should be built with a 1.4 JDK, to ensure strict
-  compatibility when running in a 1.4 JVM.  If you choose to compile with
-  Java 5 or later, you will run into the following compiler error:
-  
-      [javac] ...\XmlParser.java:216: unreported exception java.io.IOException;
-              must be caught or declared to be thrown
-      [javac] 			return super.resolveEntity(publicId, systemId);
-  
-  This occurs because Java 5 changed the signature of the resolveEntity()
-  method to also throw IOExceptions.  Simply adding IOException to the throws
-  clause of the method in XmlParser.java will clear up the problem.
-  
-  In a future release, RSyntaxTextArea may drop support for Java 1.4, at which
-  time the XmlParser class will of course be modified to compile cleanly with
-  Java 5 compilers.
+  Other targets are defined to build the source zip for the project, and
+  generate its Javadoc.
   
 * Feedback
 

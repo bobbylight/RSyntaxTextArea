@@ -26,9 +26,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * The set of colors and styles used by an <code>RSyntaxTextArea</code> to
- * color tokens.  You can use this class to programmatically set the fonts
- * and colors used in an RSyntaxTextArea, but for more powerful, externalized
- * control, consider using {@link Theme}s instead.
+ * color tokens.<p>
+ * You can use this class to programmatically set the fonts and colors used in
+ * an RSyntaxTextArea, but for more powerful, externalized control, consider
+ * using {@link Theme}s instead.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -50,7 +51,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *        will be initially <code>null</code>.
 	 */
 	public SyntaxScheme(boolean useDefaults) {
-		styles = new Style[NUM_TOKEN_TYPES];
+		styles = new Style[DEFAULT_NUM_TOKEN_TYPES];
 		if (useDefaults) {
 			restoreDefaults(null);
 		}
@@ -79,7 +80,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *        (vs. all tokens using a plain font).
 	 */
 	public SyntaxScheme(Font baseFont, boolean fontStyles) {
-		styles = new Style[NUM_TOKEN_TYPES];
+		styles = new Style[DEFAULT_NUM_TOKEN_TYPES];
 		restoreDefaults(baseFont, fontStyles);
 	}
 
@@ -125,8 +126,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			cnse.printStackTrace();
 			return null;
 		}
-		shcs.styles = new Style[NUM_TOKEN_TYPES];
-		for (int i=0; i<NUM_TOKEN_TYPES; i++) {
+		shcs.styles = new Style[styles.length];
+		for (int i=0; i<styles.length; i++) {
 			Style s = styles[i];
 			if (s!=null) {
 				shcs.styles[i] = (Style)s.clone();
@@ -209,6 +210,22 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 
 	/**
+	 * Used by third party implementors e.g. SquirreL SQL. Most applications do
+	 * not need to call this method.
+	 * <p>
+	 * Note that the returned array is not a copy of the style data; editing the
+	 * array will modify the styles used by any <code>RSyntaxTextArea</code>
+	 * using this scheme.
+	 *
+	 * @return The style array.
+	 * @see #setStyles(Style[])
+	 */
+	public Style[] getStyles() {
+		return styles;
+	}
+
+
+	/**
 	 * This is implemented to be consistent with {@link #equals(Object)}.
 	 * This is a requirement to keep FindBugs happy.
 	 *
@@ -262,8 +279,33 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *
 	 * @param string A string generated from {@link #toCommaSeparatedString()}.
 	 * @return A color scheme.
+	 * @see #toCommaSeparatedString()
 	 */
 	public static SyntaxScheme loadFromString(String string) {
+		return loadFromString(string, DEFAULT_NUM_TOKEN_TYPES);
+	}
+
+
+	/**
+	 * Loads a syntax highlighting color scheme from a string created from
+	 * <code>toCommaSeparatedString</code>.  This method is useful for saving
+	 * and restoring color schemes.<p>
+	 * 
+	 * Consider using the {@link Theme} class for saving and loading RSTA
+	 * styles rather than using this API.
+	 *
+	 * @param string A string generated from {@link #toCommaSeparatedString()}.
+	 * @param tokenTypeCount The number of token types saved in this string.
+	 *        This should be the number of token types saved by your custom
+	 *        SyntaxScheme subclass,
+	 *        or {@link TokenTypes#DEFAULT_NUM_TOKEN_TYPES} if you used the
+	 *        standard implementation (which most people will).
+	 * @return A color scheme.
+	 * @see #loadFromString(String)
+	 * @see #toCommaSeparatedString()
+	 */
+	public static SyntaxScheme loadFromString(String string,
+			int tokenTypeCount) {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 
@@ -278,7 +320,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					return scheme; // Still set to defaults
 				}
 
-				int tokenTypeCount = NUM_TOKEN_TYPES;
 				int tokenCount = tokenTypeCount*7 + 1; // Version string
 				if (tokens.length!=tokenCount) {
 					throw new Exception(
@@ -462,6 +503,22 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 
 	/**
+	 * Used by third party implementors e.g. SquirreL SQL. Most applications do
+	 * not need to call this method; individual styles can be set via
+	 * {@link #setStyle(int, Style)}.
+	 *
+	 * @param styles The new array of styles to use.  Note that this should
+	 *        have length of at least
+	 *        {@link TokenTypes#DEFAULT_NUM_TOKEN_TYPES}.
+	 * @see #setStyle(int, Style)
+	 * @see #getStyles()
+	 */
+	public void setStyles(Style[] styles) {
+		this.styles = styles;
+	}
+
+
+	/**
 	 * Returns the color represented by a string.  If the first char in the
 	 * string is '<code>$</code>', it is assumed to be in hex, otherwise it is
 	 * assumed to be decimal.  So, for example, both of these:
@@ -509,13 +566,14 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * </ul>
 	 *
 	 * @return A string representing the rgb values of the colors.
+	 * @see #loadFromString(String)
 	 */
 	public String toCommaSeparatedString() {
 
 		StringBuilder sb = new StringBuilder(VERSION);
 		sb.append(',');
 
-		for (int i=0; i<NUM_TOKEN_TYPES; i++) {
+		for (int i=0; i<styles.length; i++) {
 
 			sb.append(i).append(',');
 
@@ -547,7 +605,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		return sb.substring(0,sb.length()-1); // Take off final ','.
 
 	}
-
 
 	/**
 	 * Loads a <code>SyntaxScheme</code> from an XML file.

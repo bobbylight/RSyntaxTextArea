@@ -449,7 +449,7 @@ public class Theme {
 			for (int i=0; i<fields.length; i++) {
 				Field field = fields[i];
 				int value = field.getInt(null);
-				if (value!=TokenTypes.NUM_TOKEN_TYPES) {
+				if (value!=TokenTypes.DEFAULT_NUM_TOKEN_TYPES) {
 					Style style = scheme.getStyle(value);
 					if (style!=null) {
 						Element elem2 = doc.createElement("style");
