@@ -47,7 +47,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
  * multiple instances of <code>RSyntaxTextArea</code>.<p>
  *
  * For a more complete XML parsing solution, see the
- * <a href="http://svn.fifesoft.com/viewvc-1.0.5/bin/cgi/viewvc.cgi/RSTALanguageSupport/trunk/?root=RSyntaxTextArea">RSTALanguageSupport
+ * <a href="https://github.com/bobbylight/RSTALanguageSupport">RSTALanguageSupport
  * project</a>'s <code>XmlLanguageSupport</code> class.
  * 
  * @author Robert Futrell

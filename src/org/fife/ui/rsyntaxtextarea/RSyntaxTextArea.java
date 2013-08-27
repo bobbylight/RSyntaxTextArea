@@ -2216,7 +2216,7 @@ private boolean fractionalFontMetricsEnabled;
 			//System.out.println("Rendering hint: " + hint);
 			if (hint==null) {
 				String os = System.getProperty("os.name").toLowerCase();
-				if (os.indexOf("windows")>-1) {
+				if (os.contains("windows")) {
 					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 				}
 				else {
