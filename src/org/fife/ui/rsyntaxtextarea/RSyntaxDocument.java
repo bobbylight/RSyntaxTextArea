@@ -12,6 +12,8 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Iterator;
+
 import javax.swing.Action;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -44,7 +46,8 @@ import org.fife.util.DynamicIntArray;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxDocument extends RDocument implements SyntaxConstants {
+public class RSyntaxDocument extends RDocument implements Iterable<Token>,
+		SyntaxConstants {
 
 	/**
 	 * Creates a {@link TokenMaker} appropriate for a given programming
@@ -419,6 +422,21 @@ public class RSyntaxDocument extends RDocument implements SyntaxConstants {
 			return true;
 		}
 		return false;
+	}
+
+
+	/**
+	 * Returns an iterator over the tokens in this document.  Results are
+	 * undefined if this document is modified while the iterator is being
+	 * iterated through, so this should only be used on the EDT.<p>
+	 *
+	 * The <code>remove()</code> method of the returned iterator will throw
+	 * an <code>UnsupportedOperationException</code>.
+	 *
+	 * @return An iterator.
+	 */
+	public Iterator<Token> iterator() {
+		return new TokenIterator(this);
 	}
 
 

@@ -97,8 +97,9 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 * @param text The initial text to display.
 	 */
 	public RTextAreaBase(String text) {
-		super(text);
+		// Don't call super(text) to avoid NPE due to our funky RTextAreaUI...
 		init();
+		setText(text);
 	}
 
 
@@ -126,8 +127,11 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 *         <code>cols</code> is negative.
 	 */
 	public RTextAreaBase(String text, int rows, int cols) {
-		super(text, rows, cols);
+		// Don't call this super() due to NPE from our funky RTextAreaUI...
+		//super(text, rows, cols);
+		super(rows, cols);
 		init();
+		setText(text);
 	}
 
 
@@ -143,8 +147,10 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	 */
 	public RTextAreaBase(AbstractDocument doc, String text, int rows,
 							int cols) {
-		super(doc, text, rows, cols);
+		// Don't call super() with text due to NPE from our funky RTextAreaUI...
+		super(doc, null/*text*/, rows, cols);
 		init();
+		setText(text);
 	}
 
 
@@ -614,7 +620,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 	/**
 	 * Initializes this text area.
 	 */
-	private void init() {
+	protected void init() {
 
 		// Sets the UI.  Note that setUI() is overridden in RTextArea to only
 		// update the popup menu; this method must be called to set the real

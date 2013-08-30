@@ -325,7 +325,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * Constructor.
 	 */
 	public RSyntaxTextArea() {
-		init();
 	}
 
 
@@ -336,7 +335,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc) {
 		super(doc);
-		init();
 	}
 
 	/**
@@ -346,7 +344,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(String text) {
 		super(text);
-		init();
 	}
 
 
@@ -360,7 +357,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(int rows, int cols) {
 		super(rows, cols);
-		init();
 	}
 
 
@@ -375,7 +371,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(String text, int rows, int cols) {
 		super(text, rows, cols);
-		init();
 	}
 
 
@@ -391,7 +386,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc, String text,int rows,int cols) {
 		super(doc, text, rows, cols);
-		init();
 	}
 
 
@@ -403,7 +397,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(int textMode) {
 		super(textMode);
-		init();
 	}
 
 
@@ -1737,7 +1730,10 @@ private boolean fractionalFontMetricsEnabled;
 	 * Called by constructors to initialize common properties of the text
 	 * editor.
 	 */
+	@Override
 	protected void init() {
+
+		super.init();
 
 		tokenPainter = new DefaultTokenPainter();
 

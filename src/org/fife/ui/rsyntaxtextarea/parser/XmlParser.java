@@ -46,7 +46,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
  * Also note that a single instance of this class can be installed on
  * multiple instances of <code>RSyntaxTextArea</code>.<p>
  *
- * For a more complete XML parsing solution, see the
+ * For a more complete XML parsing/validation solution, see the
  * <a href="https://github.com/bobbylight/RSTALanguageSupport">RSTALanguageSupport
  * project</a>'s <code>XmlLanguageSupport</code> class.
  * 

@@ -177,7 +177,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * Constructor.
 	 */
 	public RTextArea() {
-		init(INSERT_MODE);
 	}
 
 
@@ -188,7 +187,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public RTextArea(AbstractDocument doc) {
 		super(doc);
-		init(INSERT_MODE);
 	}
 
 
@@ -199,7 +197,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public RTextArea(String text) {
 		super(text);
-		init(INSERT_MODE);
 	}
 
 
@@ -213,7 +210,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public RTextArea(int rows, int cols) {
 		super(rows, cols);
-		init(INSERT_MODE);
 	}
 
 
@@ -228,7 +224,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public RTextArea(String text, int rows, int cols) {
 		super(text, rows, cols);
-		init(INSERT_MODE);
 	}
 
 
@@ -244,7 +239,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public RTextArea(AbstractDocument doc, String text, int rows, int cols) {
 		super(doc, text, rows, cols);
-		init(INSERT_MODE);
 	}
 
 
@@ -255,7 +249,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *        <code>OVERWRITE_MODE</code>.
 	 */
 	public RTextArea(int textMode) {
-		init(textMode);
+		setTextMode(textMode);
 	}
 
 
@@ -855,11 +849,12 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Initializes this text area.
-	 *
-	 * @param textMode The text mode.
+	 * {@inheritDoc}
 	 */
-	private void init(int textMode) {
+	@Override
+	protected void init() {
+
+		super.init();
 
 		// NOTE: Our actions are created here instead of in a static block
 		// so they are only created when the first RTextArea is instantiated,
@@ -885,8 +880,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		setCaretStyle(OVERWRITE_MODE, ConfigurableCaret.BLOCK_STYLE);
 		setDragEnabled(true);			// Enable drag-and-drop.
 
-		// Set values for stuff the user passed in.
-		setTextMode(textMode); // carets array must be initialized first!
+		setTextMode(INSERT_MODE); // Carets array must be created first!
 
 		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
 		fixCtrlH();
