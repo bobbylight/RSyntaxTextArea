@@ -17,8 +17,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 /**
  * Scanner for the Clojure programming language.<p>
  *
- * This was graciously donated by the folks at the
+ * The original version of this class was graciously donated by the folks at the
  * <a href="http://pacific.mpi-cbg.de/wiki/index.php/Fiji">Fiji</a> project.
+ * This version has been modified to fix a few issues.
  * Its original location was
  * <a href="http://pacific.mpi-cbg.de/cgi-bin/gitweb.cgi?p=fiji.git;a=tree;f=src-plugins/Script_Editor/fiji/scripting;hb=935d85d9d88dd780c6d5f2765937ddc18b5008ca">here</a>.
  * <p>
@@ -245,9 +246,7 @@ OctalDigit						        = ([0-7])
 EscapedSourceCharacter				    = ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							        = ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
-UnclosedStringLiteral					= ([\"]([\\].|[^\\\"])*[^\"]?)
-ErrorStringLiteral						= ({UnclosedStringLiteral}[\"])
-StringLiteral                           = ([\"])
+StringLiteralStart                      = ([\"])
 CharLiteral                        		= ("\\."|"\\space"|"\\tab"|"\\newline")
 AnyCharacter                            = ([.]*)
 Separator								= ([\(\)\{\}\[\]])
@@ -517,9 +516,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 {WhiteSpace}+					{ addToken(Token.WHITESPACE); }
 
 {CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-{StringLiteral}				{ start = zzMarkedPos-1; yybegin(STRING); }
-	//{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-	//{ErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
+{StringLiteralStart}			{ start = zzMarkedPos-1; yybegin(STRING); }
 
 {Nil}                           { addToken(Token.DATA_TYPE); }
 
@@ -551,20 +548,19 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <STRING> {
-
-	[^\n\"]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-	"\"\""				{}
-	"\""					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	[^\n\\\"]+			{}
+	\\.?				{ /* Skip escaped chars. */ }
+	\"\"				{}
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-
 }
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
 	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
 }
