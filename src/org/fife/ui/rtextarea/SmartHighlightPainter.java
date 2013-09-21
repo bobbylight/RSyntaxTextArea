@@ -1,15 +1,17 @@
 /*
  * 10/01/2009
  *
- * MarkOccurrencesHighlightPainter.java - Renders "marked occurrences."
+ * SmartHighlightPainter.java - A highlight painter whose rendered highlights
+ * don't "grow" when the user appends text to the end of them.
  * 
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
-package org.fife.ui.rsyntaxtextarea;
+package org.fife.ui.rtextarea;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import javax.swing.text.BadLocationException;
@@ -19,17 +21,22 @@ import javax.swing.text.View;
 
 
 /**
- * Highlight painter that renders "mark occurrences."
+ * A "smart" highlight painter designed for use in RSyntaxTextArea.  Adds the
+ * following features:
+ * 
+ * <ul>
+ *    <li>Rendered highlights don't "grow" when users append text to the "end"
+ *        of them.  This is implemented by assuming that the highlights
+ *        themselves specify their end offset as one offset "too short".  This
+ *        behavior is baked into various RSTA highlights (mark all, mark
+ *        occurrences, etc.).
+ *    <li>Ability to paint a border line around highlights.
+ * </ul>
  *
  * @author Robert Futrell
  * @version 1.0
  */
-/*
- * NOTE: This implementation is a "hack" so typing at the "end" of the highlight
- * does not extend it to include the newly-typed chars, which is the standard
- * behavior of Swing Highlights.
- */
-class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
+public class SmartHighlightPainter extends ChangeableHighlightPainter {
 
 	private Color borderColor;
 	private boolean paintBorder;
@@ -38,8 +45,18 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	/**
 	 * Creates a highlight painter that defaults to blue.
 	 */
-	public MarkOccurrencesHighlightPainter() {
+	public SmartHighlightPainter() {
 		super(Color.BLUE);
+	}
+
+
+	/**
+	 * Constructor.
+	 *
+	 * @param paint The color or paint to use for this painter.
+	 */
+	public SmartHighlightPainter(Paint paint) {
+		super(paint);
 	}
 
 
@@ -62,8 +79,7 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	public Shape paintLayer(Graphics g, int p0, int p1, Shape viewBounds,
 								JTextComponent c, View view) {
 
-		g.setColor(getColor());
-		p1++; // Workaround for Java Highlight issues.
+		g.setColor((Color)getPaint());
 
 		// This special case isn't needed for most standard Swing Views (which
 		// always return a width of 1 for modelToView() calls), but it is
@@ -120,9 +136,11 @@ class MarkOccurrencesHighlightPainter extends ChangeableColorHighlightPainter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setColor(Color c) {
-		super.setColor(c);
-		borderColor = c.darker();
+	public void setPaint(Paint paint) {
+		super.setPaint(paint);
+		if (paint instanceof Color) {
+			borderColor = ((Color)paint).darker();
+		}
 	}
 
 

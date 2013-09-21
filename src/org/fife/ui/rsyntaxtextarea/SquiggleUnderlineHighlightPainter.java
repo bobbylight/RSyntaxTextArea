@@ -19,6 +19,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
+import org.fife.ui.rtextarea.ChangeableHighlightPainter;
+
 
 /**
  * Highlight painter that paints a squiggly underline underneath text, similar
@@ -31,7 +33,7 @@ import javax.swing.text.View;
  * @version 1.0
  */
 public class SquiggleUnderlineHighlightPainter
-				extends ChangeableColorHighlightPainter {
+				extends ChangeableHighlightPainter {
 
 	private static final int AMT			= 2;
 
@@ -43,7 +45,7 @@ public class SquiggleUnderlineHighlightPainter
 	 */
 	public SquiggleUnderlineHighlightPainter(Color color) {
 		super(color);
-		setColor(color);
+		setPaint(color);
 	}
 
 
@@ -63,7 +65,7 @@ public class SquiggleUnderlineHighlightPainter
 	public Shape paintLayer(Graphics g, int offs0, int offs1,
 						Shape bounds, JTextComponent c, View view) {
 
-		g.setColor(getColor());
+		g.setColor((Color)getPaint());
 
 		if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset()) {
 			// Contained in view, can just use bounds.

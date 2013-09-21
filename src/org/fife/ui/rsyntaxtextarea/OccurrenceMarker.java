@@ -8,6 +8,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.ui.rtextarea.SmartHighlightPainter;
+
 
 /**
  * An <code>OccurrenceMarker</code> is called when the caret stops moving after
@@ -30,7 +32,7 @@ public interface OccurrenceMarker {
 	 * @param p The painter for the highlights.
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,
-			RSyntaxTextAreaHighlighter h, MarkOccurrencesHighlightPainter p);
+			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p);
 
 
 }

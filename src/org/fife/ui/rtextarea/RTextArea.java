@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,12 +41,12 @@ import javax.swing.text.Caret;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import javax.swing.text.Highlighter;
 import javax.swing.text.Segment;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import org.fife.print.RPrintUtilities;
+import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rtextarea.Macro.MacroRecord;
 
 
@@ -164,9 +163,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	private transient LineHighlightManager lineHighlightManager;
 
-	private ArrayList<Object> markAllHighlights;		// Highlights from "mark all".
-	private String markedWord;				// Expression marked in "mark all."
-	private ChangeableHighlightPainter markAllHighlightPainter;
+	private SmartHighlightPainter markAllHighlightPainter;
 
 	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
 
@@ -356,19 +353,13 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Clears any "mark all" highlights, if any.
 	 *
-	 * @see #markAll
-	 * @see #getMarkAllHighlightColor
-	 * @see #setMarkAllHighlightColor
+	 * @see #markAll(List)
+	 * @see #getMarkAllHighlightColor()
+	 * @see #setMarkAllHighlightColor(Color)
 	 */
-	public void clearMarkAllHighlights() {
-		Highlighter h = getHighlighter();
-		if (h!=null && markAllHighlights!=null) {
-			int count = markAllHighlights.size();
-			for (int i=0; i<count; i++)
-				h.removeHighlight(markAllHighlights.get(i));
-			markAllHighlights.clear();
-		}
-		markedWord = null;
+	void clearMarkAllHighlights() {
+		((RTextAreaHighlighter)getHighlighter()).clearMarkAllHighlights();
+		//markedWord = null;
 		repaint();
 	}
 
@@ -872,7 +863,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 		// Set the defaults for various stuff.
 		Color markAllHighlightColor = getDefaultMarkAllHighlightColor();
-		markAllHighlightPainter = new ChangeableHighlightPainter(
+		markAllHighlightPainter = new SmartHighlightPainter(
 										markAllHighlightColor);
 		setMarkAllHighlightColor(markAllHighlightColor);
 		carets = new int[2];
@@ -913,53 +904,39 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Marks all instances of the specified text in this text area.
+	 * Marks all ranges specified with the "mark all" highlighter.  Typically,
+	 * this method is called indirectly from {@link SearchEngine} when doing
+	 * a fine or replace operation.
 	 *
-	 * @param toMark The text to mark.
-	 * @param matchCase Whether the match should be case-sensitive.
-	 * @param wholeWord Whether the matches should be surrounded by spaces
-	 *        or tabs.
-	 * @param regex Whether <code>toMark</code> is a Java regular expression.
-	 * @return The number of matches marked.
-	 * @see #clearMarkAllHighlights
-	 * @see #getMarkAllHighlightColor
-	 * @see #setMarkAllHighlightColor
+	 * @param ranges The ranges to mark.  This should not be <code>null</code>.
+	 * @see SearchEngine
+	 * @see SearchContext#setMarkAll(boolean)
+	 * @see #clearMarkAllHighlights()
+	 * @see #getMarkAllHighlightColor()
+	 * @see #setMarkAllHighlightColor(Color)
 	 */
-	public int markAll(String toMark, boolean matchCase, boolean wholeWord,
-					boolean regex) {
-		Highlighter h = getHighlighter();
-		int numMarked = 0;
-		if (toMark!=null && !toMark.equals(markedWord) && h!=null) {
-			if (markAllHighlights!=null)
-				clearMarkAllHighlights();
-			else
-				markAllHighlights = new ArrayList<Object>();
-			int caretPos = getCaretPosition();
-			markedWord = toMark;
-			setCaretPosition(0);
-			SearchContext context = new SearchContext();
-			context.setSearchFor(toMark);
-			context.setMatchCase(matchCase);
-			context.setRegularExpression(regex);
-			context.setSearchForward(true);
-			context.setWholeWord(wholeWord);
-			boolean found = SearchEngine.find(this, context);
-			while (found) {
-				int start = getSelectionStart();
-				int end = getSelectionEnd();
-				try {
-					markAllHighlights.add(h.addHighlight(start, end,
-										markAllHighlightPainter));
-				} catch (BadLocationException ble) {
-					ble.printStackTrace();
+	void markAll(List<DocumentRange> ranges) {
+
+		RTextAreaHighlighter h = (RTextAreaHighlighter)getHighlighter();
+		if (/*toMark!=null && !toMark.equals(markedWord) && */h!=null) {
+
+			//markedWord = toMark;
+			if (ranges!=null) {
+				for (DocumentRange range : ranges) {
+					try {
+						h.addMarkAllHighlight(
+								range.getStartOffset(), range.getEndOffset(),
+								markAllHighlightPainter);
+					} catch (BadLocationException ble) {
+						ble.printStackTrace();
+					}
 				}
-				numMarked++;
-				found = SearchEngine.find(this, context);
 			}
-			setCaretPosition(caretPos);
+
 			repaint();
+
 		}
-		return numMarked;
+
 	}
 
 
@@ -1488,8 +1465,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		Color old = (Color)markAllHighlightPainter.getPaint();
 		if (old!=null && !old.equals(color)) {
 			markAllHighlightPainter.setPaint(color);
-			if (markedWord!=null)
+			RTextAreaHighlighter h = (RTextAreaHighlighter)getHighlighter();
+			if (h.getMarkAllHighlightCount()>0) {
 				repaint();	// Repaint if words are highlighted.
+			}
 			firePropertyChange(MARK_ALL_COLOR_PROPERTY, old, color);
 		}
 	}

@@ -264,7 +264,6 @@ public class ChangeableHighlightPainter
 	public Shape paintLayer(Graphics g, int offs0, int offs1,
 						Shape bounds, JTextComponent c, View view) {
 
-
 		// Set up translucency if necessary.
 		Graphics2D g2d = (Graphics2D)g;
 		Composite originalComposite = null;

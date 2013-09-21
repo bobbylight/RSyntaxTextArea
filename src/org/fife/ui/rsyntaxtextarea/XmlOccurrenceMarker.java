@@ -12,6 +12,8 @@ import java.util.Stack;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 
+import org.fife.ui.rtextarea.SmartHighlightPainter;
+
 
 /**
  * Marks occurrences of the current token for XML.
@@ -29,7 +31,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 	 * {@inheritDoc}
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,
-			RSyntaxTextAreaHighlighter h, MarkOccurrencesHighlightPainter p) {
+			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();
 		int tokenOffs = t.getOffset();

@@ -11,6 +11,8 @@ package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.BadLocationException;
 
+import org.fife.ui.rtextarea.SmartHighlightPainter;
+
 
 /**
  * The default implementation of {@link OccurrenceMarker}.  It goes through
@@ -26,7 +28,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	 * {@inheritDoc}
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,
-			RSyntaxTextAreaHighlighter h, MarkOccurrencesHighlightPainter p) {
+			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();
 		int type = t.getType();

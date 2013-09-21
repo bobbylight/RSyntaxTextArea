@@ -28,12 +28,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaHighlighter.HighlightInfo;
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
+import org.fife.ui.rtextarea.RTextAreaHighlighter.HighlightInfo;
 
 
 

@@ -20,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 
+import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
@@ -64,6 +65,12 @@ public class SearchEngine {
 	 */
 	public static boolean find(JTextArea textArea, SearchContext context) {
 
+		// Always clear previous "mark all" highlights
+		if (textArea instanceof RTextArea || context.getMarkAll()) {
+			((RTextArea)textArea).clearMarkAllHighlights();
+		}
+		boolean doMarkAll = textArea instanceof RTextArea && context.getMarkAll();
+
 		String text = context.getSearchFor();
 		if (text==null || text.length()==0) {
 			return false;
@@ -81,6 +88,10 @@ public class SearchEngine {
 		String findIn = getFindInText(textArea, start, forward);
 		if (findIn==null || findIn.length()==0) return false;
 
+		if (doMarkAll) {
+			markAll((RTextArea)textArea, context);
+		}
+
 		// Find the next location of the text we're searching for.
 		if (!context.isRegularExpression()) {
 			int pos = getNextMatchPos(text, findIn, forward,
@@ -95,6 +106,7 @@ public class SearchEngine {
 				return true;
 			}
 		}
+
 		else {
 			// Regex matches can have varying widths.  The returned point's
 			// x- and y-values represent the start and end indices of the
@@ -379,7 +391,12 @@ public class SearchEngine {
 		// Make a pattern that takes into account whether or not to match case.
 		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 		flags |= matchCase ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
-		Pattern pattern = Pattern.compile(regEx, flags);
+		Pattern pattern = null;
+		try {
+			pattern = Pattern.compile(regEx, flags);
+		} catch (PatternSyntaxException pse) {
+			return null; // e.g. a "mark all" request with incomplete regex
+		}
 
 		// Make a Matcher to find the regEx instances.
 		Matcher m = pattern.matcher(searchIn);
@@ -578,13 +595,52 @@ public class SearchEngine {
 	 *        document (<code>false</code> means backward).
 	 * @return The new dot and mark position.
 	 */
-	private static int makeMarkAndDotEqual(JTextArea textArea,
+	private static final int makeMarkAndDotEqual(JTextArea textArea,
 										boolean forward) {
 		Caret c = textArea.getCaret();
 		int val = forward ? Math.min(c.getDot(), c.getMark()) :
 						Math.max(c.getDot(), c.getMark());
 		c.setDot(val);
 		return val;
+	}
+
+
+	/**
+	 * Marks all instances of the specified text in this text area.  This
+	 * method is typically only called directly in response to search events
+	 * of type <code>SearchEvent.Type.MARK_ALL</code>.  "Mark all" behavior
+	 * is automatically performed when {@link #find(JTextArea, SearchContext)
+	 * or #replace(RTextArea, SearchContext) is called.
+	 *
+	 * @param textArea The text area in which to mark occurrences.
+	 * @param context The search context specifying the text to search for.
+	 *        It is assumed that <code>context.getMarkAll()</code> has already
+	 *        been checked and returns <code>true</code>.
+	 */
+	public static final void markAll(RTextArea textArea,
+			SearchContext context) {
+
+		String toMark = context.getSearchFor();
+
+		if (toMark!=null /*&& !toMark.equals(markedWord)*/) {
+			List<DocumentRange> highlights = new ArrayList<DocumentRange>();
+			int caretPos = textArea.getCaretPosition();
+			textArea.setCaretPosition(0);
+			context = context.clone();
+			context.setSearchForward(true);
+			context.setMarkAll(false);
+			boolean found = SearchEngine.find(textArea, context);
+			while (found) {
+				int start = textArea.getSelectionStart();
+				int end = textArea.getSelectionEnd();
+				highlights.add(new DocumentRange(start, end));
+				found = SearchEngine.find(textArea, context);
+			}
+			textArea.markAll(highlights);
+			textArea.setCaretPosition(caretPos);
+			textArea.repaint();
+		}
+
 	}
 
 
