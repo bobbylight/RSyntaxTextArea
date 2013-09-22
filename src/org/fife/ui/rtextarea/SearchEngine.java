@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -34,6 +35,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  *    <li>{@link #find(JTextArea, SearchContext)}
  *    <li>{@link #replace(RTextArea, SearchContext)}
  *    <li>{@link #replaceAll(RTextArea, SearchContext)}
+ *    <li>{@link #markAll(RTextArea, SearchContext)}
  * </ul>
  *
  * @author Robert Futrell
@@ -57,13 +59,13 @@ public class SearchEngine {
 	 *
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
-	 * @return Whether a match was found (and thus selected).
+	 * @return The result of the operation.
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the search text is an invalid regular expression.
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #replaceAll(RTextArea, SearchContext)
 	 */
-	public static boolean find(JTextArea textArea, SearchContext context) {
+	public static SearchResult find(JTextArea textArea, SearchContext context) {
 
 		// Always clear previous "mark all" highlights
 		if (textArea instanceof RTextArea || context.getMarkAll()) {
@@ -73,7 +75,7 @@ public class SearchEngine {
 
 		String text = context.getSearchFor();
 		if (text==null || text.length()==0) {
-			return false;
+			return new SearchResult(0, 0);
 		}
 
 		// Be smart about what position we're "starting" at.  We don't want
@@ -86,13 +88,18 @@ public class SearchEngine {
 						Math.min(c.getDot(), c.getMark());
 
 		String findIn = getFindInText(textArea, start, forward);
-		if (findIn==null || findIn.length()==0) return false;
+		if (findIn==null || findIn.length()==0) {
+			return new SearchResult(0, 0);
+		}
 
+		int markAllCount = 0;
 		if (doMarkAll) {
-			markAll((RTextArea)textArea, context);
+			markAllCount = markAll((RTextArea)textArea, context).
+					getMarkedCount();
 		}
 
 		// Find the next location of the text we're searching for.
+		int findCount = 0;
 		if (!context.isRegularExpression()) {
 			int pos = getNextMatchPos(text, findIn, forward,
 								context.getMatchCase(), context.getWholeWord());
@@ -103,7 +110,7 @@ public class SearchEngine {
 				c.setSelectionVisible(true);
 				pos = forward ? start+pos : pos;
 				selectAndPossiblyCenter(textArea, pos, pos+text.length());
-				return true;
+				findCount = 1;
 			}
 		}
 
@@ -122,12 +129,12 @@ public class SearchEngine {
 					regExPos.translate(start, start);
 				}
 				selectAndPossiblyCenter(textArea, regExPos.x, regExPos.y);
-				return true;
+				findCount = 1;
 			}
 		}
 
 		// No match.
-		return false;
+		return new SearchResult(findCount, markAllCount);
 
 	}
 
@@ -616,11 +623,13 @@ public class SearchEngine {
 	 * @param context The search context specifying the text to search for.
 	 *        It is assumed that <code>context.getMarkAll()</code> has already
 	 *        been checked and returns <code>true</code>.
+	 * @return The results of the operation.
 	 */
-	public static final void markAll(RTextArea textArea,
+	public static final SearchResult markAll(RTextArea textArea,
 			SearchContext context) {
 
 		String toMark = context.getSearchFor();
+		int markAllCount = 0;
 
 		if (toMark!=null /*&& !toMark.equals(markedWord)*/) {
 			List<DocumentRange> highlights = new ArrayList<DocumentRange>();
@@ -629,17 +638,20 @@ public class SearchEngine {
 			context = context.clone();
 			context.setSearchForward(true);
 			context.setMarkAll(false);
-			boolean found = SearchEngine.find(textArea, context);
-			while (found) {
+			SearchResult res = SearchEngine.find(textArea, context);
+			while (res.wasFound()) {
 				int start = textArea.getSelectionStart();
 				int end = textArea.getSelectionEnd();
 				highlights.add(new DocumentRange(start, end));
-				found = SearchEngine.find(textArea, context);
+				res = SearchEngine.find(textArea, context);
 			}
 			textArea.markAll(highlights);
 			textArea.setCaretPosition(caretPos);
 			textArea.repaint();
+			markAllCount = highlights.size();
 		}
+
+		return new SearchResult(markAllCount, markAllCount);
 
 	}
 
@@ -651,7 +663,7 @@ public class SearchEngine {
 	 *
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
-	 * @return Whether a match was found (and thus replaced).
+	 * @return The result of the operation.
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the search text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
@@ -660,7 +672,7 @@ public class SearchEngine {
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
-	private static boolean regexReplace(RTextArea textArea,
+	private static SearchResult regexReplace(RTextArea textArea,
 			SearchContext context) throws PatternSyntaxException {
 
 		// Be smart about what position we're "starting" at.  For example,
@@ -674,7 +686,12 @@ public class SearchEngine {
 		int start = makeMarkAndDotEqual(textArea, forward);
 
 		CharSequence findIn = getFindInCharSequence(textArea, start, forward);
-		if (findIn==null) return false;
+		if (findIn==null) return new SearchResult(0, 0);
+
+		int markAllCount = 0;
+		if (context.getMarkAll()) {
+			markAllCount = markAll(textArea, context).getMarkedCount();
+		}
 
 		// Find the next location of the text we're searching for.
 		RegExReplaceInfo info = getRegExReplaceInfo(findIn, context);
@@ -682,6 +699,7 @@ public class SearchEngine {
 		findIn = null; // May help garbage collecting.
 
 		// If a match was found, do the replace and return!
+		int replaceCount = 0;
 		if (info!=null) {
 
 			// Without this, if JTextArea isn't in focus, selection won't
@@ -696,13 +714,11 @@ public class SearchEngine {
 			}
 			selectAndPossiblyCenter(textArea, matchStart, matchEnd);
 			textArea.replaceSelection(info.getReplacement());
-
-			return true;
+			replaceCount = 1;
 
 		}
 
-		// No match.
-		return false;
+		return new SearchResult(replaceCount, markAllCount);
 
 	}
 
@@ -714,7 +730,7 @@ public class SearchEngine {
 	 *
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
-	 * @return Whether a match was found (and thus replaced).
+	 * @return The result of the operation.
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the search text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
@@ -723,12 +739,17 @@ public class SearchEngine {
 	 * @see #replaceAll(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
-	public static boolean replace(RTextArea textArea, SearchContext context)
-									throws PatternSyntaxException {
+	public static SearchResult replace(RTextArea textArea,
+			SearchContext context) throws PatternSyntaxException {
+
+		// Always clear previous "mark all" highlights
+		if (context.getMarkAll()) {
+			textArea.clearMarkAllHighlights();
+		}
 
 		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
-			return false;
+			return new SearchResult(0, 0);
 		}
 
 		textArea.beginAtomicEdit();
@@ -746,16 +767,15 @@ public class SearchEngine {
 			// selection. Since our find() method searches from an endpoint of
 			// the selection, we must remove the selection to work properly.
 			makeMarkAndDotEqual(textArea, context.getSearchForward());
-			if (find(textArea, context)) {
+			SearchResult res = find(textArea, context);
+			if (res.wasFound()) {
 				textArea.replaceSelection(context.getReplaceWith());
-				return true;
 			}
+			return res;
 
 		} finally {
 			textArea.endAtomicEdit();
 		}
-
-		return false;
 
 	}
 
@@ -766,7 +786,7 @@ public class SearchEngine {
 	 *
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
-	 * @return The number of replacements done.
+	 * @return The result of the operation.
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the replacement text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
@@ -775,23 +795,39 @@ public class SearchEngine {
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
-	public static int replaceAll(RTextArea textArea, SearchContext context)
-									throws PatternSyntaxException {
+	public static SearchResult replaceAll(RTextArea textArea,
+			SearchContext context) throws PatternSyntaxException {
+
+		// Always clear previous "mark all" highlights
+		if (context.getMarkAll()) {
+			textArea.clearMarkAllHighlights();
+		}
 
 		context.setSearchForward(true); // Replace all always searches forward
 		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
-			return 0;
+			return new SearchResult(0, 0);
+		}
+
+		// We call into SearchEngine.replace() multiple times, but we don't
+		// want the "mark all" to run multiple times.
+		int markAllCount = 0;
+		if (context.getMarkAll()) {
+			markAllCount = SearchEngine.markAll(textArea, context).
+					getMarkedCount();
+			context = context.clone();
+			context.setMarkAll(false);
 		}
 
 		int count = 0;
-
 		textArea.beginAtomicEdit();
 		try {
 			int oldOffs = textArea.getCaretPosition();
 			textArea.setCaretPosition(0);
-			while (SearchEngine.replace(textArea, context)) {
+			SearchResult res = SearchEngine.replace(textArea, context);
+			while (res.wasFound()) {
 				count++;
+				res = SearchEngine.replace(textArea, context);
 			}
 			if (count==0) { // If nothing was found, don't move the caret.
 				textArea.setCaretPosition(oldOffs);
@@ -800,7 +836,7 @@ public class SearchEngine {
 			textArea.endAtomicEdit();
 		}
 
-		return count;
+		return new SearchResult(count, markAllCount);
 
 	}
 

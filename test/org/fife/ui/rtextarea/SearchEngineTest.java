@@ -65,6 +65,21 @@ public class SearchEngineTest extends TestCase {
 	}
 
 
+	private final boolean findImpl(SearchContext context) {
+		return SearchEngine.find(textArea, context).wasFound();
+	}
+
+
+	private final boolean replaceImpl(SearchContext context) {
+		return SearchEngine.replace(textArea, context).wasFound();
+	}
+
+
+	private final int replaceAllImpl(SearchContext context) {
+		return SearchEngine.replaceAll(textArea, context).getCount();
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -114,29 +129,29 @@ public class SearchEngineTest extends TestCase {
 		context.setSearchFor("chuck");
 		context.setMatchCase(false);
 		textArea.setCaretPosition(end);
-		boolean found = SearchEngine.find(textArea, context);
+		boolean found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 48, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 26, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
 		context.setMatchCase(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("Chuck", 26, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "chuck", ignoring case, whole word
@@ -144,13 +159,13 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "wood", matching case, whole word
@@ -158,10 +173,10 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wood", 9, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, ignoring case
@@ -170,13 +185,13 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, matching case
@@ -185,10 +200,10 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea,context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
@@ -197,13 +212,13 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, matching case, whole word
@@ -212,10 +227,10 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(end);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 	}
@@ -232,29 +247,29 @@ public class SearchEngineTest extends TestCase {
 
 		// Search for "chuck", ignoring case.
 		context.setSearchFor("chuck");
-		boolean found = SearchEngine.find(textArea, context);
+		boolean found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 26, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 48, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
 		context.setMatchCase(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("Chuck", 26, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "chuck", ignoring case, whole word
@@ -262,13 +277,13 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "wood", matching case, whole word
@@ -276,10 +291,10 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wood", 9, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, ignoring case
@@ -288,13 +303,13 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for ".ould", regex, matching case
@@ -303,10 +318,10 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
@@ -315,13 +330,13 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 		// Search for "[cd]huck", regex, matching case, whole word
@@ -330,10 +345,10 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(0);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
-		found = SearchEngine.find(textArea, context);
+		found = findImpl(context);
 		assertEquals(false, found);
 
 	}
@@ -357,15 +372,15 @@ public class SearchEngineTest extends TestCase {
 		textArea.setText(text);
 		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
 		textArea.setCaretPosition(offs);
-		boolean found = SearchEngine.replace(textArea, context);
+		boolean found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -377,11 +392,11 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -393,11 +408,11 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -409,9 +424,9 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(false);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -423,15 +438,15 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -443,13 +458,13 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -461,11 +476,11 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -477,9 +492,9 @@ public class SearchEngineTest extends TestCase {
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
 		textArea.setCaretPosition(offs);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(true, found);
-		found = SearchEngine.replace(textArea, context);
+		found = replaceImpl(context);
 		assertEquals(false, found);
 		assertEquals(expected, textArea.getText());
 
@@ -514,7 +529,7 @@ public class SearchEngineTest extends TestCase {
 		context.setSearchFor("chuck");
 		textArea.setText(text);
 		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
-		int count = SearchEngine.replaceAll(textArea, context);
+		int count = replaceAllImpl(context);
 		assertEquals(4, count);
 		assertEquals(expected, textArea.getText());
 
@@ -525,7 +540,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(false);
 		context.setRegularExpression(false);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
@@ -536,7 +551,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(true);
 		context.setRegularExpression(false);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(2, count);
 		assertEquals(expected, textArea.getText());
 
@@ -547,7 +562,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(true);
 		context.setRegularExpression(false);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(1, count);
 		assertEquals(expected, textArea.getText());
 
@@ -558,7 +573,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(5, count);
 		assertEquals(expected, textArea.getText());
 
@@ -569,7 +584,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(false);
 		context.setRegularExpression(true);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
@@ -580,7 +595,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
@@ -591,7 +606,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(true);
 		context.setWholeWord(true);
 		context.setRegularExpression(true);
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(2, count);
 		assertEquals(expected, textArea.getText());
 
@@ -614,7 +629,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(false);
 		context.setReplaceWith("$1");
-		int count = SearchEngine.replaceAll(textArea, context);
+		int count = replaceAllImpl(context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
@@ -625,7 +640,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(false);
 		context.setReplaceWith("$1.$2");
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
@@ -637,7 +652,7 @@ public class SearchEngineTest extends TestCase {
 		context.setMatchCase(false);
 		context.setWholeWord(false);
 		context.setReplaceWith("$1.$2");
-		count = SearchEngine.replaceAll(textArea, context);
+		count = replaceAllImpl(context);
 		assertEquals(0, count);
 		assertEquals(expected, textArea.getText());
 		assertEquals(8, textArea.getCaretPosition()); // Caret doesn't move

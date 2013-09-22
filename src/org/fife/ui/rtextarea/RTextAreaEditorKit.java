@@ -1773,7 +1773,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				}
 			}
 			SearchContext context = new SearchContext(selectedText);
-			if (!SearchEngine.find(textArea, context)) {
+			if (!SearchEngine.find(textArea, context).wasFound()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
 			RTextArea.setSelectedOccurrenceText(selectedText);
@@ -2083,7 +2083,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 			SearchContext context = new SearchContext(selectedText);
 			context.setSearchForward(false);
-			if (!SearchEngine.find(textArea, context)) {
+			if (!SearchEngine.find(textArea, context).wasFound()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
 			RTextArea.setSelectedOccurrenceText(selectedText);
