@@ -21,6 +21,12 @@ public class DocumentRange {
 	private int endOffs;
 
 
+	/**
+	 * Constructor.
+	 *
+	 * @param startOffs The starting offset in the document, inclusive.
+	 * @param endOffs The ending offset in the document, exclusive.
+	 */
 	public DocumentRange(int startOffs, int endOffs) {
 		this.startOffs = startOffs;
 		this.endOffs = endOffs;

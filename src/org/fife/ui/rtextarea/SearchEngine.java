@@ -66,6 +66,24 @@ public class SearchEngine {
 	 * @see #replaceAll(RTextArea, SearchContext)
 	 */
 	public static SearchResult find(JTextArea textArea, SearchContext context) {
+		return find(textArea, context, true);
+	}
+
+
+	/**
+	 * Finds the next instance of the string/regular expression specified
+	 * from the caret position.  If a match is found, it is selected in this
+	 * text area.
+	 *
+	 * @param textArea The text area in which to search.
+	 * @param context What to search for and all search options.
+	 * @param select Whether to select the found text in the editor.
+	 * @return The result of the operation.
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
+	 */
+	private static SearchResult find(JTextArea textArea,
+			SearchContext context, boolean select) {
 
 		// Always clear previous "mark all" highlights
 		if (textArea instanceof RTextArea || context.getMarkAll()) {
@@ -75,7 +93,7 @@ public class SearchEngine {
 
 		String text = context.getSearchFor();
 		if (text==null || text.length()==0) {
-			return new SearchResult(0, 0);
+			return new SearchResult();
 		}
 
 		// Be smart about what position we're "starting" at.  We don't want
@@ -89,7 +107,7 @@ public class SearchEngine {
 
 		String findIn = getFindInText(textArea, start, forward);
 		if (findIn==null || findIn.length()==0) {
-			return new SearchResult(0, 0);
+			return new SearchResult();
 		}
 
 		int markAllCount = 0;
@@ -99,7 +117,7 @@ public class SearchEngine {
 		}
 
 		// Find the next location of the text we're searching for.
-		int findCount = 0;
+		DocumentRange range = null;
 		if (!context.isRegularExpression()) {
 			int pos = getNextMatchPos(text, findIn, forward,
 								context.getMatchCase(), context.getWholeWord());
@@ -109,8 +127,8 @@ public class SearchEngine {
 				// won't appear selected.
 				c.setSelectionVisible(true);
 				pos = forward ? start+pos : pos;
-				selectAndPossiblyCenter(textArea, pos, pos+text.length());
-				findCount = 1;
+				range = new DocumentRange(pos, pos+text.length());
+				selectAndPossiblyCenter(textArea, range);
 			}
 		}
 
@@ -128,13 +146,13 @@ public class SearchEngine {
 				if (forward) {
 					regExPos.translate(start, start);
 				}
-				selectAndPossiblyCenter(textArea, regExPos.x, regExPos.y);
-				findCount = 1;
+				range = new DocumentRange(regExPos.x, regExPos.y);
+				selectAndPossiblyCenter(textArea, range);
 			}
 		}
 
-		// No match.
-		return new SearchResult(findCount, markAllCount);
+		int count = range!=null ? 1 : 0;
+		return new SearchResult(range, count, markAllCount);
 
 	}
 
@@ -651,7 +669,7 @@ public class SearchEngine {
 			markAllCount = highlights.size();
 		}
 
-		return new SearchResult(markAllCount, markAllCount);
+		return new SearchResult(null, 0, markAllCount);
 
 	}
 
@@ -686,7 +704,7 @@ public class SearchEngine {
 		int start = makeMarkAndDotEqual(textArea, forward);
 
 		CharSequence findIn = getFindInCharSequence(textArea, start, forward);
-		if (findIn==null) return new SearchResult(0, 0);
+		if (findIn==null) return new SearchResult();
 
 		int markAllCount = 0;
 		if (context.getMarkAll()) {
@@ -699,7 +717,7 @@ public class SearchEngine {
 		findIn = null; // May help garbage collecting.
 
 		// If a match was found, do the replace and return!
-		int replaceCount = 0;
+		DocumentRange range = null;
 		if (info!=null) {
 
 			// Without this, if JTextArea isn't in focus, selection won't
@@ -712,13 +730,14 @@ public class SearchEngine {
 				matchStart += start;
 				matchEnd += start;
 			}
-			selectAndPossiblyCenter(textArea, matchStart, matchEnd);
+			range = new DocumentRange(matchStart, matchEnd);
+			selectAndPossiblyCenter(textArea, range);
 			textArea.replaceSelection(info.getReplacement());
-			replaceCount = 1;
 
 		}
 
-		return new SearchResult(replaceCount, markAllCount);
+		int count = range!=null ? 1 : 0;
+		return new SearchResult(range, count, markAllCount);
 
 	}
 
@@ -749,7 +768,7 @@ public class SearchEngine {
 
 		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
-			return new SearchResult(0, 0);
+			return new SearchResult();
 		}
 
 		textArea.beginAtomicEdit();
@@ -770,6 +789,9 @@ public class SearchEngine {
 			SearchResult res = find(textArea, context);
 			if (res.wasFound()) {
 				textArea.replaceSelection(context.getReplaceWith());
+				DocumentRange range = new DocumentRange(
+					textArea.getSelectionStart(), textArea.getSelectionEnd());
+				res.setMatchRange(range);
 			}
 			return res;
 
@@ -806,19 +828,17 @@ public class SearchEngine {
 		context.setSearchForward(true); // Replace all always searches forward
 		String toFind = context.getSearchFor();
 		if (toFind==null || toFind.length()==0) {
-			return new SearchResult(0, 0);
+			return new SearchResult();
 		}
 
 		// We call into SearchEngine.replace() multiple times, but we don't
-		// want the "mark all" to run multiple times.
-		int markAllCount = 0;
+		// want to perform a "mark all" ever.
 		if (context.getMarkAll()) {
-			markAllCount = SearchEngine.markAll(textArea, context).
-					getMarkedCount();
 			context = context.clone();
 			context.setMarkAll(false);
 		}
 
+		SearchResult lastFound = null;
 		int count = 0;
 		textArea.beginAtomicEdit();
 		try {
@@ -826,17 +846,20 @@ public class SearchEngine {
 			textArea.setCaretPosition(0);
 			SearchResult res = SearchEngine.replace(textArea, context);
 			while (res.wasFound()) {
+				lastFound = res;
 				count++;
 				res = SearchEngine.replace(textArea, context);
 			}
-			if (count==0) { // If nothing was found, don't move the caret.
+			if (lastFound==null) { // If nothing was found, don't move the caret
 				textArea.setCaretPosition(oldOffs);
+				lastFound = new SearchResult();
 			}
 		} finally {
 			textArea.endAtomicEdit();
 		}
 
-		return new SearchResult(count, markAllCount);
+		lastFound.setCount(count);
+		return lastFound;
 
 	}
 
@@ -847,11 +870,13 @@ public class SearchEngine {
 	 * around the new selection.
 	 *
 	 * @param textArea The text component whose selection is to be centered.
-	 * @param start The start of the range to select.
-	 * @param end The end of the range to select.
+	 * @param range The range to select.
 	 */
-	private static void selectAndPossiblyCenter(JTextArea textArea, int start,
-												int end) {
+	private static void selectAndPossiblyCenter(JTextArea textArea,
+			DocumentRange range) {
+
+		int start = range.getStartOffset();
+		int end = range.getEndOffset();
 
 		boolean foldsExpanded = false;
 		if (textArea instanceof RSyntaxTextArea) {
