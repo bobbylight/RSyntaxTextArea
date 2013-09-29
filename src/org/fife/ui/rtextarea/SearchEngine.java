@@ -66,24 +66,6 @@ public class SearchEngine {
 	 * @see #replaceAll(RTextArea, SearchContext)
 	 */
 	public static SearchResult find(JTextArea textArea, SearchContext context) {
-		return find(textArea, context, true);
-	}
-
-
-	/**
-	 * Finds the next instance of the string/regular expression specified
-	 * from the caret position.  If a match is found, it is selected in this
-	 * text area.
-	 *
-	 * @param textArea The text area in which to search.
-	 * @param context What to search for and all search options.
-	 * @param select Whether to select the found text in the editor.
-	 * @return The result of the operation.
-	 * @throws PatternSyntaxException If this is a regular expression search
-	 *         but the search text is an invalid regular expression.
-	 */
-	private static SearchResult find(JTextArea textArea,
-			SearchContext context, boolean select) {
 
 		// Always clear previous "mark all" highlights
 		if (textArea instanceof RTextArea || context.getMarkAll()) {
@@ -112,9 +94,43 @@ public class SearchEngine {
 
 		int markAllCount = 0;
 		if (doMarkAll) {
-			markAllCount = markAll((RTextArea)textArea, context).
+			markAllCount = markAllImpl((RTextArea)textArea, context).
 					getMarkedCount();
 		}
+
+		SearchResult result = SearchEngine.findImpl(findIn, context);
+		if (result.wasFound()) {
+			// Without this, if JTextArea isn't in focus, selection
+			// won't appear selected.
+			textArea.getCaret().setSelectionVisible(true);
+			if (forward && start>-1) {
+				result.getMatchRange().translate(start);
+			}
+			selectAndPossiblyCenter(textArea, result.getMatchRange());
+		}
+
+		result.setMarkedCount(markAllCount);
+		return result;
+
+	}
+
+
+	/**
+	 * Finds the next instance of the string/regular expression specified
+	 * from the caret position.  If a match is found, it is selected in this
+	 * text area.
+	 *
+	 * @param findIn The text to search in.
+	 * @param context The search context.
+	 * @return The result of the operation.  "Mark all" will always be zero,
+	 *         since this method does not perform that operation.
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
+	 */
+	private static SearchResult findImpl(String findIn, SearchContext context) {
+
+		String text = context.getSearchFor();
+		boolean forward = context.getSearchForward();
 
 		// Find the next location of the text we're searching for.
 		DocumentRange range = null;
@@ -123,12 +139,7 @@ public class SearchEngine {
 								context.getMatchCase(), context.getWholeWord());
 			findIn = null; // May help garbage collecting.
 			if (pos!=-1) {
-				// Without this, if JTextArea isn't in focus, selection
-				// won't appear selected.
-				c.setSelectionVisible(true);
-				pos = forward ? start+pos : pos;
 				range = new DocumentRange(pos, pos+text.length());
-				selectAndPossiblyCenter(textArea, range);
 			}
 		}
 
@@ -140,19 +151,12 @@ public class SearchEngine {
 								context.getMatchCase(), context.getWholeWord());
 			findIn = null; // May help garbage collecting.
 			if (regExPos!=null) {
-				// Without this, if JTextArea isn't in focus, selection
-				// won't appear selected.
-				c.setSelectionVisible(true);
-				if (forward) {
-					regExPos.translate(start, start);
-				}
 				range = new DocumentRange(regExPos.x, regExPos.y);
-				selectAndPossiblyCenter(textArea, range);
 			}
 		}
 
 		int count = range!=null ? 1 : 0;
-		return new SearchResult(range, count, markAllCount);
+		return new SearchResult(range, count, 0);
 
 	}
 
@@ -645,26 +649,62 @@ public class SearchEngine {
 	 */
 	public static final SearchResult markAll(RTextArea textArea,
 			SearchContext context) {
+		textArea.clearMarkAllHighlights();
+		if (context.getMarkAll()) {
+			return markAllImpl(textArea, context);
+		}
+		return new SearchResult();
+	}
+
+
+	/**
+	 * Marks all instances of the specified text in this text area.  This
+	 * method is typically only called directly in response to search events
+	 * of type <code>SearchEvent.Type.MARK_ALL</code>.  "Mark all" behavior
+	 * is automatically performed when {@link #find(JTextArea, SearchContext)
+	 * or #replace(RTextArea, SearchContext) is called.
+	 *
+	 * @param textArea The text area in which to mark occurrences.
+	 * @param context The search context specifying the text to search for.
+	 *        It is assumed that <code>context.getMarkAll()</code> has already
+	 *        been checked and returns <code>true</code>.
+	 * @return The results of the operation.
+	 */
+	private static final SearchResult markAllImpl(RTextArea textArea,
+			SearchContext context) {
 
 		String toMark = context.getSearchFor();
 		int markAllCount = 0;
 
-		if (toMark!=null /*&& !toMark.equals(markedWord)*/) {
+		if (toMark!=null && toMark.length()>0
+				/*&& !toMark.equals(markedWord)*/) {
+
 			List<DocumentRange> highlights = new ArrayList<DocumentRange>();
-			int caretPos = textArea.getCaretPosition();
-			textArea.setCaretPosition(0);
 			context = context.clone();
 			context.setSearchForward(true);
 			context.setMarkAll(false);
-			SearchResult res = SearchEngine.find(textArea, context);
+
+			String findIn = textArea.getText();
+			int start = 0;
+
+			// Optimization for pedantic worst-case of thousands of matches
+			// while doing a case-insensitive search.  Go ahead and normalize
+			// case just once, so that toLowerCase() isn't done for toMark and
+			// findIn for each match found.
+			if (!context.getMatchCase()) {
+				context.setMatchCase(true);
+				context.setSearchFor(toMark.toLowerCase());
+				findIn = findIn.toLowerCase();
+			}
+
+			SearchResult res = SearchEngine.findImpl(findIn, context);
 			while (res.wasFound()) {
-				int start = textArea.getSelectionStart();
-				int end = textArea.getSelectionEnd();
-				highlights.add(new DocumentRange(start, end));
-				res = SearchEngine.find(textArea, context);
+				DocumentRange match = res.getMatchRange().translate(start);
+				highlights.add(match);
+				start = match.getEndOffset();
+				res = SearchEngine.findImpl(findIn.substring(start), context);
 			}
 			textArea.markAll(highlights);
-			textArea.setCaretPosition(caretPos);
 			textArea.repaint();
 			markAllCount = highlights.size();
 		}
@@ -708,7 +748,7 @@ public class SearchEngine {
 
 		int markAllCount = 0;
 		if (context.getMarkAll()) {
-			markAllCount = markAll(textArea, context).getMarkedCount();
+			markAllCount = markAllImpl(textArea, context).getMarkedCount();
 		}
 
 		// Find the next location of the text we're searching for.
@@ -731,8 +771,14 @@ public class SearchEngine {
 				matchEnd += start;
 			}
 			range = new DocumentRange(matchStart, matchEnd);
+			textArea.setSelectionStart(range.getStartOffset());
+			textArea.setSelectionEnd(range.getEndOffset());
+			String replacement = info.getReplacement();
+			textArea.replaceSelection(replacement);
+
+			int dot = textArea.getCaretPosition();
+			range.set(dot-replacement.length(), dot);
 			selectAndPossiblyCenter(textArea, range);
-			textArea.replaceSelection(info.getReplacement());
 
 		}
 
@@ -788,10 +834,13 @@ public class SearchEngine {
 			makeMarkAndDotEqual(textArea, context.getSearchForward());
 			SearchResult res = find(textArea, context);
 			if (res.wasFound()) {
-				textArea.replaceSelection(context.getReplaceWith());
+				String replacement = context.getReplaceWith();
+				textArea.replaceSelection(replacement);
+				int dot = textArea.getCaretPosition();
 				DocumentRange range = new DocumentRange(
-					textArea.getSelectionStart(), textArea.getSelectionEnd());
+						dot-replacement.length(), dot);
 				res.setMatchRange(range);
+				selectAndPossiblyCenter(textArea, range);
 			}
 			return res;
 

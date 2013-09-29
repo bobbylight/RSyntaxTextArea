@@ -18,7 +18,7 @@ import org.fife.ui.rsyntaxtextarea.DocumentRange;
  * @version 1.0
  * @see SearchEngine
  */
-public class SearchResult {
+public class SearchResult implements Comparable<SearchResult> {
 
 	/**
 	 * If a find or replace operation is successful, this will be the range
@@ -73,6 +73,54 @@ public class SearchResult {
 
 
 	/**
+	 * Compares this search result to another.
+	 *
+	 * @param other Another search result to compare to.
+	 * @return How this result object should be sorted compared to
+	 *         <code>other</code>.
+	 */
+	public int compareTo(SearchResult other) {
+		if (other==null) {
+			return 1;
+		}
+		if (other==this) {
+			return 0;
+		}
+		int diff = count - other.count;
+		if (diff!=0) {
+			return diff;
+		}
+		diff = markedCount - other.markedCount;
+		if (diff!=0) {
+			return diff;
+		}
+		if (matchRange==null) {
+			return other.matchRange==null ? 0 : -1;
+		}
+		return matchRange.compareTo(other.matchRange);
+	}
+
+
+	/**
+	 * Returns whether this search result represents the same logical result
+	 * as another.
+	 *
+	 * @param other Another object (presumably another
+	 *        <code>SearchResult</code>).
+	 */
+	@Override
+	public boolean equals(Object other) {
+		if (other==this) {
+			return true;
+		}
+		if (other instanceof SearchResult) {
+			return this.compareTo((SearchResult)other)==0;
+		}
+		return false;
+	}
+
+
+	/**
 	 * Returns the number of matches found or replaced.  For regular "find" and
 	 * "replace" operations, this will be zero or <code>1</code>.  For "replace
 	 * all" operations, this will be the number of replacements.  For "mark
@@ -91,6 +139,7 @@ public class SearchResult {
 	 * this will be <code>0</code>.
 	 *
 	 * @return The number of instances marked.
+	 * @see #setMarkedCount(int)
 	 */
 	public int getMarkedCount() {
 		return markedCount;
@@ -114,6 +163,22 @@ public class SearchResult {
 
 
 	/**
+	 * Overridden simply as a best practice, since {@link #equals(Object)} is
+	 * overridden.
+	 *
+	 * @return The hash code for this object.
+	 */
+	@Override
+	public int hashCode() {
+		int hash = count + markedCount;
+		if (matchRange!=null) {
+			hash += matchRange.hashCode();
+		}
+		return hash;
+	}
+
+
+	/**
 	 * Sets the number of matches found or replaced.  For regular "find" and
 	 * "replace" operations, this should be zero or <code>1</code>.  For
 	 * "replace all" operations, this should be the number of replacements. 
@@ -124,6 +189,17 @@ public class SearchResult {
 	 */
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+
+	/**
+	 * Sets the number of marked occurrences found.
+	 *
+	 * @param markedCount The number of marked occurrences found.
+	 * @see #getMarkedCount()
+	 */
+	public void setMarkedCount(int markedCount) {
+		this.markedCount = markedCount;
 	}
 
 

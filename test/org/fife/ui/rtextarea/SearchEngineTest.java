@@ -15,6 +15,7 @@ import javax.swing.text.BadLocationException;
 
 import junit.framework.TestCase;
 
+import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchEngine;
 
@@ -30,6 +31,7 @@ public class SearchEngineTest extends TestCase {
 	private RSyntaxTextArea textArea = new RSyntaxTextArea();
 
 	private static String text;
+	private SearchResult result;
 
 
 	/**
@@ -42,6 +44,17 @@ public class SearchEngineTest extends TestCase {
 		expected = expected != null ? expected.toLowerCase() : null;
 		actual = actual != null ? actual.toLowerCase() : null;
 		assertEquals(expected, actual);
+	}
+
+
+	/**
+	 * Checks whether the result of the last find or replace operation matches
+	 * the given criteria.
+	 *
+	 * @param expected The expected search result.
+	 */
+	private void assertResult(SearchResult expected) {
+		assertEquals(expected, this.result);
 	}
 
 
@@ -66,17 +79,20 @@ public class SearchEngineTest extends TestCase {
 
 
 	private final boolean findImpl(SearchContext context) {
-		return SearchEngine.find(textArea, context).wasFound();
+		result = SearchEngine.find(textArea, context);
+		return result.wasFound();
 	}
 
 
 	private final boolean replaceImpl(SearchContext context) {
-		return SearchEngine.replace(textArea, context).wasFound();
+		result = SearchEngine.replace(textArea, context);
+		return result.wasFound();
 	}
 
 
 	private final int replaceAllImpl(SearchContext context) {
-		return SearchEngine.replaceAll(textArea, context).getCount();
+		result = SearchEngine.replaceAll(textArea, context);
+		return result.getCount();
 	}
 
 
@@ -132,17 +148,22 @@ public class SearchEngineTest extends TestCase {
 		boolean found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 48, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(48, 53), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 26, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(26, 31), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
@@ -151,8 +172,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("Chuck", 26, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(26, 31), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "chuck", ignoring case, whole word
 		context.setSearchFor("Chuck");
@@ -162,11 +185,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "wood", matching case, whole word
 		context.setSearchFor("wood");
@@ -176,8 +202,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wood", 9, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(9, 13), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for ".ould", regex, ignoring case
 		context.setSearchFor(".ould");
@@ -188,11 +216,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
+		assertResult(new SearchResult(new DocumentRange(54, 59), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
+		assertResult(new SearchResult(new DocumentRange(14, 19), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for ".ould", regex, matching case
 		context.setSearchFor(".ould");
@@ -205,6 +236,7 @@ public class SearchEngineTest extends TestCase {
 		assertSelected("could", 54, true);
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
 		context.setSearchFor("[cd]hUCk");
@@ -215,11 +247,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "[cd]huck", regex, matching case, whole word
 		context.setSearchFor("[cd]huck");
@@ -230,8 +265,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 	}
 
@@ -250,17 +287,22 @@ public class SearchEngineTest extends TestCase {
 		boolean found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 26, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(26, 31), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 48, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(48, 53), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
@@ -269,8 +311,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("Chuck", 26, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(26, 31), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "chuck", ignoring case, whole word
 		context.setSearchFor("chuck");
@@ -280,11 +324,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "wood", matching case, whole word
 		context.setSearchFor("wood");
@@ -294,8 +341,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wood", 9, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(9, 13), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for ".ould", regex, ignoring case
 		context.setSearchFor(".ould");
@@ -306,11 +355,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("wOuld", 14, true);
+		assertResult(new SearchResult(new DocumentRange(14, 19), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
+		assertResult(new SearchResult(new DocumentRange(54, 59), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for ".ould", regex, matching case
 		context.setSearchFor(".ould");
@@ -321,8 +373,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("could", 54, true);
+		assertResult(new SearchResult(new DocumentRange(54, 59), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "[cd]huck", regex, ignoring case, whole word
 		context.setSearchFor("[cd]hUCk");
@@ -333,11 +387,14 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 32, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(32, 37), 1, 0));
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, context.getMatchCase());
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 		// Search for "[cd]huck", regex, matching case, whole word
 		context.setSearchFor("[cd]huck");
@@ -348,8 +405,10 @@ public class SearchEngineTest extends TestCase {
 		found = findImpl(context);
 		assertEquals(true, found);
 		assertSelected("chuck", 60, true);
+		assertResult(new SearchResult(new DocumentRange(60, 65), 1, 0));
 		found = findImpl(context);
 		assertEquals(false, found);
+		assertResult(new SearchResult());
 
 	}
 
@@ -374,6 +433,7 @@ public class SearchEngineTest extends TestCase {
 		textArea.setCaretPosition(offs);
 		boolean found = replaceImpl(context);
 		assertEquals(true, found);
+		//assertResult(new SearchResult(new DocumentRange(26, 32), 1, 0));
 		found = replaceImpl(context);
 		assertEquals(true, found);
 		found = replaceImpl(context);
