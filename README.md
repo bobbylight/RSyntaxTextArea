@@ -20,7 +20,6 @@ public class TextEditorDemo extends JFrame {
       RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
       textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
       textArea.setCodeFoldingEnabled(true);
-      textArea.setAntiAliasingEnabled(true);
       RTextScrollPane sp = new RTextScrollPane(textArea);
       sp.setFoldIndicatorEnabled(true);
       cp.add(sp);

@@ -846,11 +846,11 @@ try {
 	public void setBackgroundImage(Image image) {
 		Object oldBG = getBackgroundObject();
 		if (oldBG instanceof Image) { // Just change image being displayed.
-			((BufferedImageBackgroundPainterStrategy)backgroundPainter).
+			((ImageBackgroundPainterStrategy)backgroundPainter).
 					setImage(image);
 		}
 		else { // Was a color strategy...
-			BufferedImageBackgroundPainterStrategy strategy =
+			ImageBackgroundPainterStrategy strategy =
 				new BufferedImageBackgroundPainterStrategy(this);
 			strategy.setImage(image);
 			backgroundPainter = strategy;

@@ -86,7 +86,7 @@ public class VolatileImageBackgroundPainterStrategy
 	 * @param height The height of the volatile image to render into.
 	 * @param hint The scaling hint to use.
 	 */
-	protected void renderImage(int width, int height, int hint) {
+	private void renderImage(int width, int height, int hint) {
 		Image master = getMasterImage();
 		if (master!=null) {
 			do {
