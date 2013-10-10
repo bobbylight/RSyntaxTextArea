@@ -65,7 +65,12 @@ public class RSyntaxUtilities implements SwingConstants {
 	 */
 	public static final int OS_OTHER			= 8;
 
-	
+	/**
+	 * Used for the color of hyperlinks when a LookAndFeel uses light text
+	 * against a dark background.
+	 */
+	private static final Color LIGHT_HYPERLINK_FG = new Color(0xd8ffff);
+
 	private static final int OS = getOSImpl();
 
 	//private static final int DIGIT_MASK			= 1;
@@ -245,6 +250,29 @@ public class RSyntaxUtilities implements SwingConstants {
 			}
 		}
 		return gutter;
+	}
+
+
+	/**
+	 * Returns the color to use for hyperlink-style components.  This method
+	 * will return <code>Color.blue</code> unless it appears that the current
+	 * LookAndFeel uses light text on a dark background, in which case a
+	 * brighter alternative is returned.
+	 *
+	 * @return The color to use for hyperlinks.
+	 * @see #isLightForeground(Color)
+	 */
+	public static final Color getHyperlinkForeground() {
+
+		// This property is defined by all standard LaFs, even Nimbus (!),
+		// but you never know what crazy LaFs there are...
+		Color fg = UIManager.getColor("Label.foreground");
+		if (fg==null) {
+			fg = new JLabel().getForeground();
+		}
+
+		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.blue;
+
 	}
 
 
@@ -1096,6 +1124,20 @@ return c.getLineStartOffset(line);
 		// We need the first condition as it could be that ch>255 (and thus
 		// not a valid index into our table).
 		return (ch<='z') && (dataTable[ch]&LETTER_OR_DIGIT_MASK)>0;
+	}
+
+
+	/**
+	 * Returns whether the specified color is "light" to use as a foreground.
+	 * Colors that return <code>true</code> indicate that the current Look and
+	 * Feel probably uses light text colors on a dark background.
+	 *
+	 * @param fg The foreground color.
+	 * @return Whether it is a "light" foreground color.
+	 * @see #getHyperlinkForeground()
+	 */
+	public static final boolean isLightForeground(Color fg) {
+		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
 	}
 
 

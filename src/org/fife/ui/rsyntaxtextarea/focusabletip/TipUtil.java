@@ -22,6 +22,8 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.html.HTMLDocument;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+
 
 /**
  * Static utility methods for focusable tips.
@@ -219,6 +221,13 @@ public class TipUtil {
 				"body { font-family: " + font.getFamily() +
 						"; font-size: " + font.getSize() + "pt" +
 						"; color: " + getHexString(fg) + "; }");
+
+		// Always add link foreground rule.  Unfortunately these CSS rules
+		// stack each time the LaF is changed (how can we overwrite them
+		// without clearing out the important "standard" ones?).
+		Color linkFG = RSyntaxUtilities.getHyperlinkForeground();
+		doc.getStyleSheet().addRule(
+				"a { color: " + getHexString(linkFG) + "; }");
 
 	}
 
