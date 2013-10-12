@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
@@ -860,7 +861,21 @@ private boolean fractionalFontMetricsEnabled;
 	public void foldToggled(Fold fold) {
 		match = null; // TODO: Update the bracket rect rather than hide it
 		dotRect = null;
-		possiblyUpdateCurrentLineHighlightLocation();
+		if (getLineWrap()) {
+			// NOTE: Without doing this later, the caret position is out of
+			// sync with the Element structure when word wrap is enabled, and
+			// causes BadLocationExceptions when an entire folded region is
+			// deleted (see GitHub issue #22:
+			// https://github.com/bobbylight/RSyntaxTextArea/issues/22)
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					possiblyUpdateCurrentLineHighlightLocation();
+				}
+			});
+		}
+		else {
+			possiblyUpdateCurrentLineHighlightLocation();
+		}
 		revalidate();
 		repaint();
 	}
