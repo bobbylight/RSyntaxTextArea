@@ -106,7 +106,7 @@ public class SquiggleUnderlineHighlightPainter
 	 */
 	protected void paintSquiggle(Graphics g, Rectangle r) {
 		int x = r.x;
-		int y = r.y + r.height - 1;
+		int y = r.y + r.height - AMT;
 		int delta = -AMT;
 		while (x<r.x+r.width) {
 			g.drawLine(x,y, x+AMT,y+delta);
