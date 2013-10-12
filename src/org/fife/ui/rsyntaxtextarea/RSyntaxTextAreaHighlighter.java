@@ -96,7 +96,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 
 
 	/**
-	 * Adds a special "marked occurrence" highlight.
+	 * Adds a highlight from a parser.
 	 *
 	 * @param notice The notice from a {@link Parser}.
 	 * @return A tag with which to reference the highlight.
@@ -129,7 +129,10 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 		SyntaxLayeredHighlightInfoImpl i = new SyntaxLayeredHighlightInfoImpl();
 		i.setPainter(p);
 		i.setStartOffset(doc.createPosition(start));
-		i.setEndOffset(doc.createPosition(end));
+		// HACK: Use "end-1" to prevent chars the user types at the "end" of
+		// the highlight to be absorbed into the highlight (default Highlight
+		// behavior).
+		i.setEndOffset(doc.createPosition(end-1));
 		i.notice = notice;//i.color = notice.getColor();
 
 		parserHighlights.add(i);
