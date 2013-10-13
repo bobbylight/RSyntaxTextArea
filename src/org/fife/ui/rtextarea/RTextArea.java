@@ -109,7 +109,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public static final int UNDO_ACTION				= 6;
 	private static final int MAX_ACTION_CONSTANT	= 6;
 
-	private static final Color DEFAULT_MARK_ALL_COLOR		= Color.ORANGE;
+	private static final Color DEFAULT_MARK_ALL_COLOR = new Color(0xceccf7);
 
 	/**
 	 * The current text mode ({@link #INSERT_MODE} or {@link #OVERWRITE_MODE}).

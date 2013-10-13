@@ -835,6 +835,9 @@ public class SearchEngine {
 			SearchResult res = find(textArea, context);
 			if (res.wasFound()) {
 				String replacement = context.getReplaceWith();
+				if (replacement==null) {
+					replacement = "";
+				}
 				textArea.replaceSelection(replacement);
 				int dot = textArea.getCaretPosition();
 				DocumentRange range = new DocumentRange(
