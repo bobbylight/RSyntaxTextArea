@@ -38,6 +38,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		//int ctrl = InputEvent.CTRL_MASK;
 		int shift = InputEvent.SHIFT_MASK;
 		//int alt = InputEvent.ALT_MASK;
+		int defaultShift = defaultMod|shift;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),				RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
 		put(KeyStroke.getKeyStroke('}'),									RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
@@ -64,14 +65,11 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DIVIDE, defaultMod),			RSyntaxTextAreaEditorKit.rstaCollapseAllFoldsAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_MULTIPLY, defaultMod),		RSyntaxTextAreaEditorKit.rstaExpandAllFoldsAction);
 
-		// FIXME:  The keystroke associated with this action should be dynamic and
-		// configurable and synchronized with the "trigger" defined in RSyntaxTextArea's
-		// CodeTemplateManager.
 		// NOTE:  no modifiers => mapped to keyTyped.  If we had "0" as a second
 		// second parameter, we'd get the template action (keyPressed) AND the
 		// default space action (keyTyped).
 		//put(KeyStroke.getKeyStroke(' '),			RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction);
-		put(CodeTemplateManager.TEMPLATE_KEYSTROKE,	RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, defaultShift),		RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction);
 
 	}
 

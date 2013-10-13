@@ -8,8 +8,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
@@ -21,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;
@@ -36,40 +33,34 @@ import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
  * best practice, you should probably only modify the templates known to a
  * <code>CodeTemplateManager</code> on the EDT.  Modifying a
  * <code>CodeTemplate</code> retrieved from a <code>CodeTemplateManager</code>
- * while <em>not</em> on the EDT could cause problems.
+ * while <em>not</em> on the EDT could cause problems.<p>
+ *
+ * For more flexible boilerplate code insertion, consider using the
+ * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
+ * class</a> in the
+ * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
+ * add-on library</a>.
  *
  * @author Robert Futrell
- * @version 0.1
+ * @version 1.0
  */
 public class CodeTemplateManager {
 
 	private int maxTemplateIDLength;
 	private List<CodeTemplate> templates;
 
-	private KeyStroke insertTrigger;
-	private String insertTriggerString;
 	private Segment s;
 	private TemplateComparator comparator;
 	private File directory;
-
-	private static final int mask = InputEvent.CTRL_MASK|InputEvent.SHIFT_MASK;
-	static final KeyStroke TEMPLATE_KEYSTROKE = KeyStroke.
-								getKeyStroke(KeyEvent.VK_SPACE, mask);
 
 
 	/**
 	 * Constructor.
 	 */
 	public CodeTemplateManager() {
-
-		// Default insert trigger is a space.
-		// FIXME:  See notes in RSyntaxTextAreaDefaultInputMap.
-		setInsertTrigger(TEMPLATE_KEYSTROKE);
-
 		s = new Segment();
 		comparator = new TemplateComparator();
 		templates = new ArrayList<CodeTemplate>();
-
 	}
 
 
@@ -88,50 +79,6 @@ public class CodeTemplateManager {
 		}
 		templates.add(template);
 		sortTemplates();
-	}
-
-
-	/**
-	 * Returns the keystroke that is the "insert trigger" for templates;
-	 * that is, the character that, when inserted into an instance of
-	 * <code>RSyntaxTextArea</code>, triggers the search for
-	 * a template matching the token ending at the caret position.
-	 *
-	 * @return The insert trigger.
-	 * @see #getInsertTriggerString()
-	 * @see #setInsertTrigger(KeyStroke)
-	 */
-	/*
-	 * FIXME:  This text IS what's inserted if the trigger character is pressed
-	 * in a text area but no template matches, but it is NOT the trigger
-	 * character used in the text areas.  This is because space (" ") is
-	 * hard-coded into RSyntaxTextAreaDefaultInputMap.java.  We need to make
-	 * this dynamic somehow.  See RSyntaxTextAreaDefaultInputMap.java.
-	 */
-	public KeyStroke getInsertTrigger() {
-		return insertTrigger;
-	}
-
-
-	/**
-	 * Returns the "insert trigger" for templates; that is, the character
-	 * that, when inserted into an instance of <code>RSyntaxTextArea</code>,
-	 * triggers the search for a template matching the token ending at the
-	 * caret position.
-	 *
-	 * @return The insert trigger character.
-	 * @see #getInsertTrigger()
-	 * @see #setInsertTrigger(KeyStroke)
-	 */
-	/*
-	 * FIXME:  This text IS what's inserted if the trigger character is pressed
-	 * in a text area but no template matches, but it is NOT the trigger
-	 * character used in the text areas.  This is because space (" ") is
-	 * hard-coded into RSyntaxTextAreaDefaultInputMap.java.  We need to make
-	 * this dynamic somehow.  See RSyntaxTextAreaDefaultInputMap.java.
-	 */
-	public String getInsertTriggerString() {
-		return insertTriggerString;
 	}
 
 
@@ -306,35 +253,6 @@ public class CodeTemplateManager {
 
 
 	/**
-	 * Sets the "trigger" character for templates.
-	 *
-	 * @param trigger The trigger character to set for templates.  This means
-	 *        that when this character is pressed in an
-	 *        <code>RSyntaxTextArea</code>,  the last-typed token is found,
-	 *        and is checked against all template ID's to see if a template
-	 *        should be inserted.  If a template ID matches, that template is
-	 *        inserted; if not, the trigger character is inserted.  If this
-	 *        parameter is <code>null</code>, no change is made to the trigger
-	 *        character.
-	 * @see #getInsertTrigger()
-	 * @see #getInsertTriggerString()
-	 */
-	/*
-	 * FIXME:  The trigger set here IS inserted when no matching template
-	 * is found, but a space character (" ") is always used as the "trigger"
-	 * to look for templates.  This is because it is hard-coded in
-	 * RSyntaxTextArea's input map this way.  We need to change this.
-	 * See RSyntaxTextAreaDefaultInputMap.java.
-	 */
-	public void setInsertTrigger(KeyStroke trigger) {
-		if (trigger!=null) {
-			insertTrigger = trigger;
-			insertTriggerString = Character.toString(trigger.getKeyChar());
-		}
-	}
-
-
-	/**
 	 * Sets the directory in which to look for templates.  Calling this
 	 * method adds any new templates found in the specified directory to
 	 * the templates already registered.
@@ -459,8 +377,7 @@ public class CodeTemplateManager {
 
 
 	/**
-	 * A file filter for File.listFiles() (NOT for JFileChoosers!) that
-	 * accepts only XML files.
+	 * A file filter that accepts only XML files.
 	 */
 	private static class XMLFileFilter implements FileFilter {
 		public boolean accept(File f) {

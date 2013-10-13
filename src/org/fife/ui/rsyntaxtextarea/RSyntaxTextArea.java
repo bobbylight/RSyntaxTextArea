@@ -1542,7 +1542,13 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Returns whether or not templates are enabled for all instances
-	 * of <code>RSyntaxTextArea</code>.
+	 * of <code>RSyntaxTextArea</code>.<p>
+	 * 
+	 * For more flexible boilerplate code insertion, consider using the
+	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
+	 * class</a> in the
+	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
+	 * add-on library</a>.
 	 *
 	 * @return Whether templates are enabled.
 	 * @see #saveTemplates()
@@ -2718,7 +2724,13 @@ private boolean fractionalFontMetricsEnabled;
 	 * enabled/disabled for all text areas globally, not individually, and
 	 * all text areas have access of the same templates.  This should not
 	 * be an issue; rather, it should be beneficial as it promotes
-	 * uniformity among all text areas in an application.
+	 * uniformity among all text areas in an application.<p>
+	 * 
+	 * For more flexible boilerplate code insertion, consider using the
+	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
+	 * class</a> in the
+	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
+	 * add-on library</a>.
 	 *
 	 * @param enabled Whether or not templates should be enabled.
 	 * @see #getTemplatesEnabled()
