@@ -1,3 +1,11 @@
+/*
+ * 10/13/2013
+ *
+ * RTextAreaHighlighter.java - Highlighter for RTextAreas.
+ * 
+ * This library is distributed under a modified BSD license.  See the included
+ * RSyntaxTextArea.License.txt file for details.
+ */
 package org.fife.ui.rtextarea;
 
 import java.awt.Color;
@@ -17,10 +25,12 @@ import javax.swing.text.LayeredHighlighter;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
+import org.fife.ui.rsyntaxtextarea.DocumentRange;
+
 
 /**
  * The highlighter implementation used by {@link RTextArea}s.  It knows to
- * always paint "marked all" highlights below selection highlights.<p>
+ * always paint "mark all" highlights below selection highlights.<p>
  *
  * Most of this code is copied from javax.swing.text.DefaultHighlighter;
  * unfortunately, we cannot re-use much of it since it is package private.
@@ -110,6 +120,25 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 */
 	public int getMarkAllHighlightCount() {
 		return markAllHighlights.size();
+	}
+
+
+	/**
+	 * Returns a list of "mark all" highlights in the text area.  If there are
+	 * no such highlights, this will be an empty list.
+	 *
+	 * @return The list of "mark all" highlight ranges.
+	 */
+	public List<DocumentRange> getMarkAllHighlightRanges() {
+		List<DocumentRange> list = new ArrayList<DocumentRange>(
+				markAllHighlights.size());
+		for (HighlightInfo info : markAllHighlights) {
+			int start = info.getStartOffset();
+			int end = info.getEndOffset() + 1; // HACK
+			DocumentRange range = new DocumentRange(start, end);
+			list.add(range);
+		}
+		return list;
 	}
 
 

@@ -96,6 +96,12 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public static final String MARK_ALL_COLOR_PROPERTY	= "RTA.markAllColor";
 
+	/**
+	 * The property fired when what ranges are labeled "mark all" changes.
+	 */
+	public static final String MARK_ALL_OCCURRENCES_CHANGED_PROPERTY =
+			"RTA.markAllOccurrencesChanged";
+
 	/*
 	 * Constants for all actions.
 	 */
@@ -109,7 +115,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public static final int UNDO_ACTION				= 6;
 	private static final int MAX_ACTION_CONSTANT	= 6;
 
-	private static final Color DEFAULT_MARK_ALL_COLOR = new Color(0xceccf7);
+	private static final Color DEFAULT_MARK_ALL_COLOR = new Color(0xffc800);
 
 	/**
 	 * The current text mode ({@link #INSERT_MODE} or {@link #OVERWRITE_MODE}).
@@ -906,7 +912,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Marks all ranges specified with the "mark all" highlighter.  Typically,
 	 * this method is called indirectly from {@link SearchEngine} when doing
-	 * a fine or replace operation.
+	 * a fine or replace operation.<p>
+	 * 
+	 * This method fires a property change event of type
+	 * {@link #MARK_ALL_OCCURRENCES_CHANGED_PROPERTY}.
 	 *
 	 * @param ranges The ranges to mark.  This should not be <code>null</code>.
 	 * @see SearchEngine
@@ -934,6 +943,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			}
 
 			repaint();
+			firePropertyChange(MARK_ALL_OCCURRENCES_CHANGED_PROPERTY,
+					null, ranges);
 
 		}
 

@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -707,6 +708,13 @@ public class SearchEngine {
 			textArea.markAll(highlights);
 			textArea.repaint();
 			markAllCount = highlights.size();
+		}
+
+		else {
+			// Force a repaint of "mark all" highlights so ErrorStrips can
+			// get updated
+			List<DocumentRange> empty = Collections.emptyList();
+			textArea.markAll(empty);
 		}
 
 		return new SearchResult(null, 0, markAllCount);

@@ -1,7 +1,7 @@
 /*
  * 04/23/2009
  *
- * RSyntaxTextAreaHighlighter.java - Highlighter for RTextAreas.
+ * RSyntaxTextAreaHighlighter.java - Highlighter for RSyntaxTextAreas.
  * 
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.

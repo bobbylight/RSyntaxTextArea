@@ -1253,6 +1253,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns a list of "mark all" highlights in the text area.  If there are
+	 * no such highlights, this will be an empty list.
+	 *
+	 * @return The list of "mark all" highlight ranges.
+	 */
+	public List<DocumentRange> getMarkAllHighlightRanges() {
+		return ((RSyntaxTextAreaHighlighter)getHighlighter()).
+				getMarkAllHighlightRanges();
+	}
+
+
+	/**
 	 * Returns a list of "marked occurrences" in the text area.  If there are
 	 * no marked occurrences, this will be an empty list.
 	 *

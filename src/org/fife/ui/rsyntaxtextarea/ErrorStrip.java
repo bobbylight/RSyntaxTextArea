@@ -35,6 +35,7 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.TaskTagParser.TaskNotice;
+import org.fife.ui.rtextarea.RTextArea;
 
 
 /**
@@ -66,10 +67,10 @@ import org.fife.ui.rsyntaxtextarea.parser.TaskTagParser.TaskNotice;
  */
 /*
  * Possible improvements:
- *    1. Handle marked occurrence changes separately from parser changes.
- *       For each property change, call a method that removes the notices
- *       being reloaded from the Markers (removing any Markers that are now
- *       "empty").
+ *    1. Handle marked occurrence changes & "mark all" changes separately from
+ *       parser changes. For each property change, call a method that removes
+ *       the notices being reloaded from the Markers (removing any Markers that
+ *       are now "empty").
  */
 public class ErrorStrip extends JComponent {
 
@@ -88,6 +89,12 @@ public class ErrorStrip extends JComponent {
 	 * error strip.
 	 */
 	private boolean showMarkedOccurrences;
+
+	/**
+	 * Whether markers for "mark all" highlights should be shown in this
+	 * error strip.
+	 */
+	private boolean showMarkAll;
 
 	/**
 	 * Mapping of colors to brighter colors.  This is kept to prevent
@@ -129,6 +136,8 @@ public class ErrorStrip extends JComponent {
 	private static final String MSG = "org.fife.ui.rsyntaxtextarea.ErrorStrip";
 	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
+	private static final Color MARKED_OCCURRENCE_COLOR = new Color(220, 220, 220);
+
 
 	/**
 	 * Constructor.
@@ -142,6 +151,7 @@ public class ErrorStrip extends JComponent {
 		setLayout(null); // Manually layout Markers as they can overlap
 		addMouseListener(listener);
 		setShowMarkedOccurrences(true);
+		setShowMarkAll(true);
 		setLevelThreshold(ParserNotice.WARNING);
 		setFollowCaret(true);
 		setCaretMarkerColor(Color.BLACK);
@@ -162,6 +172,8 @@ public class ErrorStrip extends JComponent {
 				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
 		textArea.addPropertyChangeListener(
 				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
+		textArea.addPropertyChangeListener(
+			RSyntaxTextArea.MARK_ALL_OCCURRENCES_CHANGED_PROPERTY, listener);
 		refreshMarkers();
 	}
 
@@ -249,6 +261,17 @@ public class ErrorStrip extends JComponent {
 
 
 	/**
+	 * Returns whether "mark all" highlights are shown in this error strip.
+	 *
+	 * @return Whether markers are shown for "mark all" highlights.
+	 * @see #setShowMarkAll(boolean)
+	 */
+	public boolean getShowMarkAll() {
+		return showMarkAll;
+	}
+
+
+	/**
 	 * Returns whether marked occurrences are shown in this error strip.
 	 *
 	 * @return Whether marked occurrences are shown.
@@ -322,7 +345,7 @@ public class ErrorStrip extends JComponent {
 	 * Refreshes the markers displayed in this error strip.
 	 */
 	private void refreshMarkers() {
-
+System.out.println("Called");
 		removeAll(); // listener is removed in Marker.removeNotify()
 		Map<Integer, Marker> markerMap = new HashMap<Integer, Marker>();
 
@@ -346,33 +369,52 @@ public class ErrorStrip extends JComponent {
 
 		if (getShowMarkedOccurrences() && textArea.getMarkOccurrences()) {
 			List<DocumentRange> occurrences = textArea.getMarkedOccurrences();
-			for (DocumentRange range : occurrences) {
-				int line = 0;
-				try {
-					line = textArea.getLineOfOffset(range.getStartOffset());
-				} catch (BadLocationException ble) { // Never happens
-					continue;
-				}
-				ParserNotice notice = new MarkedOccurrenceNotice(range);
-				Integer key = Integer.valueOf(line);
-				Marker m = markerMap.get(key);
-				if (m==null) {
-					m = new Marker(notice);
-					m.addMouseListener(listener);
-					markerMap.put(key, m);
-					add(m);
-				}
-				else {
-					if (!m.containsMarkedOccurence()) {
-						m.addNotice(notice);
-					}
-				}
-			}
+			addMarkersForRanges(occurrences, markerMap,MARKED_OCCURRENCE_COLOR);
+		}
+
+		if (getShowMarkAll() /*&& textArea.getMarkAll()*/) {
+			Color markAllColor = textArea.getMarkAllHighlightColor();
+			List<DocumentRange> ranges = textArea.getMarkAllHighlightRanges();
+			addMarkersForRanges(ranges, markerMap, markAllColor);
 		}
 
 		revalidate();
 		repaint();
 
+	}
+
+
+	/**
+	 * Adds markers for a list of ranges in the document.
+	 *
+	 * @param ranges The list of ranges in the document.
+	 * @param markerMap A mapping from line number to <code>Marker</code>.
+	 * @param color The color to use for the markers.
+	 */
+	private void addMarkersForRanges(List<DocumentRange> ranges,
+			Map<Integer, Marker> markerMap, Color color) {
+		for (DocumentRange range : ranges) {
+			int line = 0;
+			try {
+				line = textArea.getLineOfOffset(range.getStartOffset());
+			} catch (BadLocationException ble) { // Never happens
+				continue;
+			}
+			ParserNotice notice = new MarkedOccurrenceNotice(range, color);
+			Integer key = Integer.valueOf(line);
+			Marker m = markerMap.get(key);
+			if (m==null) {
+				m = new Marker(notice);
+				m.addMouseListener(listener);
+				markerMap.put(key, m);
+				add(m);
+			}
+			else {
+				if (!m.containsMarkedOccurence()) {
+					m.addNotice(notice);
+				}
+			}
+		}
 	}
 
 
@@ -389,6 +431,8 @@ public class ErrorStrip extends JComponent {
 				RSyntaxTextArea.MARK_OCCURRENCES_PROPERTY, listener);
 		textArea.removePropertyChangeListener(
 				RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY, listener);
+		textArea.removePropertyChangeListener(
+			RSyntaxTextArea.MARK_ALL_OCCURRENCES_CHANGED_PROPERTY, listener);
 	}
 
 
@@ -439,6 +483,22 @@ public class ErrorStrip extends JComponent {
 		levelThreshold = level;
 		if (isDisplayable()) {
 			refreshMarkers();
+		}
+	}
+
+
+	/**
+	 * Sets whether "mark all" highlights are shown in this error strip.
+	 *
+	 * @param show Whether to show markers for "mark all" highlights.
+	 * @see #getShowMarkAll()
+	 */
+	public void setShowMarkAll(boolean show) {
+		if (show!=showMarkAll) {
+			showMarkAll = show;
+			if (isDisplayable()) { // Skip this when we're first created
+				refreshMarkers();
+			}
 		}
 	}
 
@@ -533,14 +593,25 @@ public class ErrorStrip extends JComponent {
 			}
 
 			// If parser notices changed.
+			// TODO: Don't update "mark all/occurrences" markers.
 			else if (RSyntaxTextArea.PARSER_NOTICES_PROPERTY.equals(propName)) {
 				refreshMarkers();
 			}
 
 			// If marked occurrences changed.
+			// TODO: Only update "mark occurrences" markers, not all of them.
 			else if (RSyntaxTextArea.MARKED_OCCURRENCES_CHANGED_PROPERTY.
 					equals(propName)) {
 				if (getShowMarkedOccurrences()) {
+					refreshMarkers();
+				}
+			}
+
+			// If "mark all" occurrences changed.
+			// TODO: Only update "mark all" markers, not all of them.
+			else if (RTextArea.MARK_ALL_OCCURRENCES_CHANGED_PROPERTY.
+					equals(propName)) {
+				if (getShowMarkAll()) {
 					refreshMarkers();
 				}
 			}
@@ -550,16 +621,17 @@ public class ErrorStrip extends JComponent {
 	}
 
 
-private static final Color COLOR = new Color(220, 220, 220);
 	/**
 	 * A notice that wraps a "marked occurrence."
 	 */
 	private class MarkedOccurrenceNotice implements ParserNotice {
 
 		private DocumentRange range;
+		private Color color;
 
-		public MarkedOccurrenceNotice(DocumentRange range) {
+		public MarkedOccurrenceNotice(DocumentRange range, Color color) {
 			this.range = range;
+			this.color = color;
 		}
 
 		public int compareTo(ParserNotice other) {
@@ -580,8 +652,7 @@ private static final Color COLOR = new Color(220, 220, 220);
 		}
 
 		public Color getColor() {
-			return COLOR;
-			//return textArea.getMarkOccurrencesColor();
+			return color;
 		}
 
 		public int getLength() {
