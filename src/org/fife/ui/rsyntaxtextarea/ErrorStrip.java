@@ -345,7 +345,7 @@ public class ErrorStrip extends JComponent {
 	 * Refreshes the markers displayed in this error strip.
 	 */
 	private void refreshMarkers() {
-System.out.println("Called");
+
 		removeAll(); // listener is removed in Marker.removeNotify()
 		Map<Integer, Marker> markerMap = new HashMap<Integer, Marker>();
 

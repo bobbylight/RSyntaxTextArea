@@ -453,11 +453,10 @@ public class RTextAreaUI extends BasicTextAreaUI {
 				Color highlight = textArea.getCurrentLineHighlightColor();
 				// NOTE:  We use the getLineHeight() method below instead
 				// of currentCaretRect.height because of a bug where
-				// currentCaretRect.height is incorrect when an
-				// RSyntaxTextArea is first displayed (it is initialized 
-				// with the text area's font.getHeight() (via RTextArea),
-				// but isn't changed to account for the syntax styles
-				// before it is displayed).
+				// currentCaretRect.height is incorrect when an RSyntaxTextArea
+				// is first displayed (it is initialized  with the text area's
+				// font.getHeight() (via RTextArea), but isn't changed to
+				// account for the syntax styles before it is displayed).
 				//int height = textArea.currentCaretRect.height);
 				int height = textArea.getLineHeight();
 
@@ -478,9 +477,9 @@ public class RTextAreaUI extends BasicTextAreaUI {
 									visibleRect.width, height);
 				}
 
-			} // End of if (caret.getDot()==caret.getMark()).
+			}
 
-		} // End of if (textArea.isCurrentLineHighlightEnabled()...
+		}
 
 	}
 

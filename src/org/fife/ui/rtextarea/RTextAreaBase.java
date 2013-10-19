@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
@@ -982,6 +983,25 @@ try {
 	public void setLineWrap(boolean wrap) {
 		super.setLineWrap(wrap);
 		forceCurrentLineHighlightRepaint();
+	}
+
+
+	/**
+	 * Overridden to update the current line highlight location.
+	 *
+	 * @param insets The new insets.
+	 */
+	@Override
+	public void setMargin(Insets insets) {
+		Insets old = getInsets();
+		int oldTop = old!=null ? old.top : 0;
+		int newTop = insets!=null ? insets.top : 0;
+		if (oldTop!=newTop) {
+			// The entire editor will be automatically repainted if it is
+			// visible, so no need to call repaint() or forceCurrentLine...().
+			previousCaretY = currentCaretY = newTop;
+		}
+		super.setMargin(insets);
 	}
 
 
