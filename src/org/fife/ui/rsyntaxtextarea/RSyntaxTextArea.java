@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -2444,21 +2445,25 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets the mask for the key used to toggle whether we are scanning for
-	 * hyperlinks with mouse hovering.
+	 * hyperlinks with mouse hovering.  The default value is
+	 * <code>CTRL_DOWN_MASK</code>.
 	 *
-	 * @param mask The mask to use.  This should be a value such as
-	 *        {@link InputEvent#CTRL_DOWN_MASK} or
+	 * @param mask The mask to use.  This should be some bitwise combination of
+	 *        {@link InputEvent#CTRL_DOWN_MASK},
+	 *        {@link InputEvent#ALT_DOWN_MASK},
+	 *        {@link InputEvent#SHIFT_DOWN_MASK} or
 	 *        {@link InputEvent#META_DOWN_MASK}.
 	 *        For invalid values, behavior is undefined.
 	 * @see InputEvent
 	 */
 	public void setLinkScanningMask(int mask) {
-		if (mask==InputEvent.CTRL_DOWN_MASK ||
-				mask==InputEvent.META_DOWN_MASK ||
-				mask==InputEvent.ALT_DOWN_MASK ||
-				mask==InputEvent.SHIFT_DOWN_MASK) {
-			linkScanningMask = mask;
+		mask &= (InputEvent.CTRL_DOWN_MASK|InputEvent.META_DOWN_MASK|
+				InputEvent.ALT_DOWN_MASK|InputEvent.SHIFT_DOWN_MASK);
+		if (mask==0) {
+			throw new IllegalArgumentException("mask argument should be " +
+					"some combination of InputEvent.*_DOWN_MASK fields");
 		}
+		linkScanningMask = mask;
 	}
 
 
@@ -2944,8 +2949,11 @@ private boolean fractionalFontMetricsEnabled;
 	private class RSyntaxTextAreaMutableCaretEvent
 					extends RTextAreaMutableCaretEvent {
 
+		private Insets insets;
+
 		protected RSyntaxTextAreaMutableCaretEvent(RTextArea textArea) {
 			super(textArea);
+			insets = new Insets(0, 0, 0, 0);
 		}
 
 		private HyperlinkEvent createHyperlinkEvent() {
@@ -2994,61 +3002,86 @@ private boolean fractionalFontMetricsEnabled;
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
+
 			super.mouseMoved(e);
-			if (getHyperlinksEnabled()) {
-				if ((e.getModifiersEx()&linkScanningMask)!=0) {
-					isScanningForLinks = true;
-					Token t = viewToToken(e.getPoint());
-					if (t!=null) {
-						// Copy token, viewToModel() unfortunately modifies Token
-						t = new TokenImpl(t);
+
+			if (!getHyperlinksEnabled()) {
+				return;
+			}
+
+			// If our link scanning mask is pressed...
+			if ((e.getModifiersEx()&linkScanningMask)==linkScanningMask) {
+
+				// GitHub issue #25 - links identified at "edges" of editor
+				// should not be activated if mouse is in margin insets.
+				insets = getInsets(insets);
+				if (insets!=null) {
+					int x = e.getX();
+					int y = e.getY();
+					if (x<=insets.left || y<insets.top) {
+						if (isScanningForLinks) {
+							stopScanningForLinks();
+						}
+						return;
 					}
-					Cursor c2 = null;
-					if (t!=null && t.isHyperlink()) {
+				}
+
+				isScanningForLinks = true;
+				Token t = viewToToken(e.getPoint());
+				if (t!=null) {
+					// Copy token, viewToModel() unfortunately modifies Token
+					t = new TokenImpl(t);
+				}
+				Cursor c2 = null;
+				if (t!=null && t.isHyperlink()) {
+					if (hoveredOverLinkOffset==-1 ||
+							hoveredOverLinkOffset!=t.getOffset()) {
+						hoveredOverLinkOffset = t.getOffset();
+						repaint();
+					}
+					c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+				}
+				else if (t!=null && linkGenerator!=null) {
+					int offs = viewToModel(e.getPoint());
+					LinkGeneratorResult newResult = linkGenerator.
+							isLinkAtOffset(RSyntaxTextArea.this, offs);
+					if (newResult!=null) {
+						// Repaint if we're at a new link now.
+						if (linkGeneratorResult==null ||
+								!equal(newResult, linkGeneratorResult)) {
+							repaint();
+						}
+						linkGeneratorResult = newResult;
 						hoveredOverLinkOffset = t.getOffset();
 						c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 					}
-					else if (t!=null && linkGenerator!=null) {
-						int offs = viewToModel(e.getPoint());
-						LinkGeneratorResult newResult = linkGenerator.
-								isLinkAtOffset(RSyntaxTextArea.this, offs);
-						if (newResult!=null) {
-							// Repaint if we're at a new link now.
-							if (linkGeneratorResult==null ||
-									!equal(newResult, linkGeneratorResult)) {
-								repaint();
-							}
-							linkGeneratorResult = newResult;
-							hoveredOverLinkOffset = t.getOffset();
-							c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-						}
-						else {
-							// Repaint if we've moved off of a link.
-							if (linkGeneratorResult!=null) {
-								repaint();
-							}
-							c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
-							hoveredOverLinkOffset = -1;
-							linkGeneratorResult = null;
-						}
-					}
 					else {
+						// Repaint if we've moved off of a link.
+						if (linkGeneratorResult!=null) {
+							repaint();
+						}
 						c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
 						hoveredOverLinkOffset = -1;
 						linkGeneratorResult = null;
 					}
-					if (getCursor()!=c2) {
-						setCursor(c2);
-						// TODO: Repaint just the affected line(s).
-						repaint(); // Link either left or went into.
-					}
 				}
 				else {
-					if (isScanningForLinks) {
-						stopScanningForLinks();
-					}
+					c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+					hoveredOverLinkOffset = -1;
+					linkGeneratorResult = null;
+				}
+				if (getCursor()!=c2) {
+					setCursor(c2);
+					// TODO: Repaint just the affected line(s).
+					repaint(); // Link either left or went into.
 				}
 			}
+			else {
+				if (isScanningForLinks) {
+					stopScanningForLinks();
+				}
+			}
+
 		}
 
 	}
