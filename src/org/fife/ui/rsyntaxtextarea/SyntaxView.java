@@ -40,23 +40,23 @@ public class SyntaxView extends View implements TabExpander,
 	 * The default font used by the text area.  If this changes we need to
 	 * recalculate the longest line.
 	 */
-	Font font;
+	private Font font;
 
 	/**
 	 * Font metrics for the current font.
 	 */
-	protected FontMetrics metrics;
+	private FontMetrics metrics;
 
 	/**
 	 * The current longest line.  This is used to calculate the preferred width
 	 * of the view.  Since the calculation is potentially expensive, we try to
 	 * avoid it by stashing which line is currently the longest.
 	 */
-	Element longLine;
-	float longLineWidth;
+	private Element longLine;
+	private float longLineWidth;
 
 	private int tabSize;
-	protected int tabBase;
+	private int tabBase;
 
 	/**
 	 * Cached for each paint() call so each drawLine() call has access to it.
@@ -348,7 +348,7 @@ public class SyntaxView extends View implements TabExpander,
 		updateMetrics();
 		switch (axis) {
 			case View.X_AXIS:
-				float span = longLineWidth + 10; // "fudge factor."
+				float span = longLineWidth + getRhsCorrection(); // fudge factor
 				if (host.getEOLMarkersVisible()) {
 					span += metrics.charWidth('\u00B6');
 				}
@@ -371,11 +371,26 @@ return visibleLineCount * lineHeight;
 
 
 	/**
+	 * Workaround for JTextComponents allowing the caret to be rendered
+	 * entirely off-screen if the entire "previous" character fit entirely.
+	 *
+	 * @return The amount of space to add to the x-axis preferred span.
+	 */
+	private final int getRhsCorrection() {
+		int rhsCorrection = 10;
+		if (host!=null) {
+			rhsCorrection = host.getRightHandSideCorrection();
+		}
+		return rhsCorrection;
+	}
+
+
+	/**
 	 * Returns the tab size set for the document, defaulting to 5.
 	 *
 	 * @return The tab size.
 	 */
-	protected int getTabSize() {
+	private int getTabSize() {
 		Integer i = (Integer)getDocument().getProperty(
 									PlainDocument.tabSizeAttribute);
 		int size = (i != null) ? i.intValue() : 5;
@@ -756,7 +771,7 @@ if (host.isCodeFoldingEnabled()) {
 	 * @param lineNumber The line number of the passed-in line.
 	 * @return <code>true</code> iff the current longest line was updated.
 	 */
-	protected boolean possiblyUpdateLongLine(Element line, int lineNumber) {
+	private boolean possiblyUpdateLongLine(Element line, int lineNumber) {
 		float w = getLineWidth(lineNumber);
 		if (w > longLineWidth) {
 			longLineWidth = w;
@@ -868,7 +883,7 @@ if (host.isCodeFoldingEnabled()) {
 	/**
 	 * Checks to see if the font metrics and longest line are up-to-date.
 	 */
-	protected void updateMetrics() {
+	private void updateMetrics() {
 		host = (RSyntaxTextArea)getContainer();
 		Font f = host.getFont();
 		if (font != f) {

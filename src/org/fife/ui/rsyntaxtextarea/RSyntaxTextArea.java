@@ -302,6 +302,8 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private LinkGenerator linkGenerator;
 	private LinkGeneratorResult linkGeneratorResult;
 
+	private int rhsCorrection;
+
 	private FoldManager foldManager;
 
 	/** Whether "focusable" tool tips are used instead of standard ones. */
@@ -1446,6 +1448,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Workaround for JTextComponents allowing the caret to be rendered
+	 * entirely off-screen if the entire "previous" character fit entirely.
+	 *
+	 * @return The amount of space to add to the x-axis preferred span.
+	 * @see #setRightHandSideCorrection(int)
+	 */
+	public int getRightHandSideCorrection() {
+		return rhsCorrection;
+	}
+
+
+	/**
 	 * If auto-indent is enabled, this method returns whether a new line after
 	 * this one should be indented (based on the standard indentation rules for
 	 * the current programming language). For example, in Java, for a line
@@ -1815,6 +1829,8 @@ private boolean fractionalFontMetricsEnabled;
 		secondaryLanguageBackgrounds[0] = new Color(0xfff0cc);
 		secondaryLanguageBackgrounds[1] = new Color(0xdafeda);
 		secondaryLanguageBackgrounds[2] = new Color(0xffe0f0);
+
+		setRightHandSideCorrection(0);
 
 	}
 
@@ -2594,6 +2610,28 @@ private boolean fractionalFontMetricsEnabled;
 			paintTabLines = paint;
 			repaint();
 			firePropertyChange(TAB_LINES_PROPERTY, !paint, paint);
+		}
+	}
+
+
+	/**
+	 * Applications typically have no need to modify this value.<p>
+	 *
+	 * Workaround for JTextComponents allowing the caret to be rendered
+	 * entirely off-screen if the entire "previous" character fit entirely.
+	 *
+	 * @param rhsCorrection The amount of space to add to the x-axis preferred
+	 *        span.  This should be non-negative.
+	 * @see #getRightHandSideCorrection()
+	 */
+	public void setRightHandSideCorrection(int rhsCorrection) {
+		if (rhsCorrection<0) {
+			throw new IllegalArgumentException("correction should be > 0");
+		}
+		if (rhsCorrection!=this.rhsCorrection) {
+			this.rhsCorrection = rhsCorrection;
+			revalidate();
+			repaint();
 		}
 	}
 
