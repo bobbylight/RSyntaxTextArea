@@ -327,6 +327,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.FUNCTION || type==Token.VARIABLE;
 	}
@@ -1710,6 +1711,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"jewishtojd" |
 	"join" |
 	"jpeg2wbmp" |
+	("json_"("decode"|"encode"|"last_error"("_msg")?)) |
 	"juliantojd" |
 	"key" |
 	"krsort" |
