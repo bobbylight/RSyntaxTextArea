@@ -106,19 +106,15 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	public TokenMap getWordsToHighlight() {
 
 		TokenMap tokenMap = new TokenMap(true); // Ignore case.
-
 		int reservedWord = Token.RESERVED_WORD;
-		tokenMap.put("call",			reservedWord);
-		tokenMap.put("choice",		reservedWord);
-		tokenMap.put("cls",			reservedWord);
-		tokenMap.put("echo",			reservedWord);
-		tokenMap.put("exit",			reservedWord);
+
+		// Batch-file specific stuff (?)
 		tokenMap.put("goto",			reservedWord);
 		tokenMap.put("if",			reservedWord);
-		tokenMap.put("pause",		reservedWord);
 		tokenMap.put("shift",		reservedWord);
 		tokenMap.put("start",		reservedWord);
 
+		// General command line stuff
 		tokenMap.put("ansi.sys",		reservedWord);
 		tokenMap.put("append",		reservedWord);
 		tokenMap.put("arp",			reservedWord);
@@ -178,6 +174,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("in",			reservedWord);
 		tokenMap.put("ipconfig",		reservedWord);
 		tokenMap.put("keyb",			reservedWord);
+		tokenMap.put("kill",		reservedWord);
 		tokenMap.put("label",		reservedWord);
 		tokenMap.put("lh",			reservedWord);
 		tokenMap.put("loadfix",		reservedWord);
@@ -186,6 +183,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("md",			reservedWord);
 		tokenMap.put("mem",			reservedWord);
 		tokenMap.put("mkdir",		reservedWord);
+		tokenMap.put("mklink",		reservedWord);
 		tokenMap.put("mode",			reservedWord);
 		tokenMap.put("more",			reservedWord);
 		tokenMap.put("move",			reservedWord);
