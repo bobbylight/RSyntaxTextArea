@@ -59,7 +59,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 		int origX = (int)x;
 		int textOffs = token.getTextOffset();
 		char[] text = token.getTextArray();
-		int end = token.getEndOffset();
+		int end = textOffs + token.length();
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = textOffs;
