@@ -1658,16 +1658,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-				Caret caret = getCaret();
-				dot = caret.getDot();
-				mark = caret.getMark();
-				fireCaretUpdate(this);
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
 			// WORKAROUND:  Since JTextComponent only updates the caret
 			// location on mouse clicked and released, we'll do it on dragged
 			// events when the left mouse button is clicked.
@@ -1680,9 +1670,23 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			if ((e.getModifiers()&MouseEvent.BUTTON3_MASK)!=0)
+		public void mousePressed(MouseEvent e) {
+			if (e.isPopupTrigger()) { // OS X popup triggers are on pressed
 				showPopup(e);
+			}
+			else if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+				Caret caret = getCaret();
+				dot = caret.getDot();
+				mark = caret.getMark();
+				fireCaretUpdate(this);
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				showPopup(e);
+			}
 		}
 
 		/**
@@ -1696,6 +1700,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			if (popupMenu!=null) {
 				configurePopupMenu(popupMenu);
 				popupMenu.show(e.getComponent(), e.getX(), e.getY());
+				e.consume();
 			}
 		}
 
