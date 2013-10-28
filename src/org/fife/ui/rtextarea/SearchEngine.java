@@ -107,7 +107,7 @@ public class SearchEngine {
 			if (forward && start>-1) {
 				result.getMatchRange().translate(start);
 			}
-			selectAndPossiblyCenter(textArea, result.getMatchRange());
+			selectAndPossiblyCenter(textArea, result.getMatchRange(), true);
 		}
 
 		result.setMarkedCount(markAllCount);
@@ -786,7 +786,7 @@ public class SearchEngine {
 
 			int dot = textArea.getCaretPosition();
 			range.set(dot-replacement.length(), dot);
-			selectAndPossiblyCenter(textArea, range);
+			selectAndPossiblyCenter(textArea, range, /*true*/false);
 
 		}
 
@@ -851,7 +851,7 @@ public class SearchEngine {
 				DocumentRange range = new DocumentRange(
 						dot-replacement.length(), dot);
 				res.setMatchRange(range);
-				selectAndPossiblyCenter(textArea, range);
+				selectAndPossiblyCenter(textArea, range, /*true*/false);
 			}
 			return res;
 
@@ -933,7 +933,7 @@ public class SearchEngine {
 	 * @param range The range to select.
 	 */
 	private static void selectAndPossiblyCenter(JTextArea textArea,
-			DocumentRange range) {
+			DocumentRange range, boolean select) {
 
 		int start = range.getStartOffset();
 		int end = range.getEndOffset();
@@ -948,8 +948,10 @@ public class SearchEngine {
 			}
 		}
 
-		textArea.setSelectionStart(start);
-		textArea.setSelectionEnd(end);
+		if (select) {
+			textArea.setSelectionStart(start);
+			textArea.setSelectionEnd(end);
+		}
 
 		Rectangle r = null;
 		try {
@@ -962,8 +964,10 @@ public class SearchEngine {
 			}
 		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
-			textArea.setSelectionStart(start);
-			textArea.setSelectionEnd(end);
+			if (select) {
+				textArea.setSelectionStart(start);
+				textArea.setSelectionEnd(end);
+			}
 			return;
 		}
 
@@ -972,8 +976,10 @@ public class SearchEngine {
 		// If the new selection is already in the view, don't scroll,
 		// as that is visually jarring.
 		if (!foldsExpanded && visible.contains(r)) {
-			textArea.setSelectionStart(start);
-			textArea.setSelectionEnd(end);
+			if (select) {
+				textArea.setSelectionStart(start);
+				textArea.setSelectionEnd(end);
+			}
 			return;
 		}
 
