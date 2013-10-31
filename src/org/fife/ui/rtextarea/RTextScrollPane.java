@@ -11,13 +11,17 @@ package org.fife.ui.rtextarea;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
+import java.util.Arrays;
+import java.util.Stack;
 import javax.swing.JScrollPane;
 
 
 /**
- * An extension of <code>javax.swing.JScrollPane</code> that will only take
- * <code>RTextArea</code>s for its view.  This class has the ability to show:
+ * An extension of <code>JScrollPane</code> that will only take
+ * <code>RTextArea</code>s (or <code>javax.swing.JLayer</code>s decorating
+ * <code>RTextArea</code>s) for its view.  This class has the ability to show:
  * <ul>
  *    <li>Line numbers
  *    <li>Per-line icons (for bookmarks, debugging breakpoints, error markers, etc.)
@@ -30,11 +34,10 @@ import javax.swing.JScrollPane;
  * features is being used (line numbering, folding, and/or icons).
  *
  * @author Robert Futrell
- * @version 0.9
+ * @version 1.0
  */
 public class RTextScrollPane extends JScrollPane {
 
-	private RTextArea textArea;
 	private Gutter gutter;
 
 
@@ -52,10 +55,16 @@ public class RTextScrollPane extends JScrollPane {
 	 * Creates a scroll pane.  A default value will be used for line number
 	 * color (gray), and the current line's line number will be highlighted.
 	 *
-	 * @param textArea The text area this scroll pane will contain.
+	 * @param comp The component this scroll pane should display.  This should
+	 *        be an instance of {@link RTextArea},
+	 *        <code>javax.swing.JLayer</code> (or the older
+	 *        <code>org.jdesktop.jxlayer.JXLayer</code>), or <code>null</code>.
+	 *        If this argument is <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an instance of
+	 *        one of the types above.
 	 */
-	public RTextScrollPane(RTextArea textArea) {
-		this(textArea, true);
+	public RTextScrollPane(Component comp) {
+		this(comp, true);
 	}
 
 
@@ -63,34 +72,39 @@ public class RTextScrollPane extends JScrollPane {
 	 * Creates a scroll pane.  A default value will be used for line number
 	 * color (gray), and the current line's line number will be highlighted.
 	 *
-	 * @param textArea The text area this scroll pane will contain.  If this is
-	 *        <code>null</code>, you must call
-	 *        {@link #setViewportView(Component)}, passing in an
-	 *        {@link RTextArea}.
+	 * @param comp The component this scroll pane should display.  This should
+	 *        be an instance of {@link RTextArea},
+	 *        <code>javax.swing.JLayer</code> (or the older
+	 *        <code>org.jdesktop.jxlayer.JXLayer</code>), or <code>null</code>.
+	 *        If this argument is <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an instance of
+	 *        one of the types above.
 	 * @param lineNumbers Whether line numbers should be enabled.
 	 */
-	public RTextScrollPane(RTextArea textArea, boolean lineNumbers) {
-		this(textArea, lineNumbers, Color.GRAY);
+	public RTextScrollPane(Component comp, boolean lineNumbers) {
+		this(comp, lineNumbers, Color.GRAY);
 	}
 
 
 	/**
-	 * Creates a scroll pane with preferred size (width, height).
+	 * Creates a scroll pane.
 	 *
-	 * @param area The text area this scroll pane will contain.  If this is
-	 *        <code>null</code>, you must call
-	 *        {@link #setViewportView(Component)}, passing in an
-	 *        {@link RTextArea}.
+	 * @param comp The component this scroll pane should display.  This should
+	 *        be an instance of {@link RTextArea},
+	 *        <code>javax.swing.JLayer</code> (or the older
+	 *        <code>org.jdesktop.jxlayer.JXLayer</code>), or <code>null</code>.
+	 *        If this argument is <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an instance of
+	 *        one of the types above.
 	 * @param lineNumbers Whether line numbers are initially enabled.
 	 * @param lineNumberColor The color to use for line numbers.
 	 */
-	public RTextScrollPane(RTextArea area, boolean lineNumbers,
+	public RTextScrollPane(Component comp, boolean lineNumbers,
 							Color lineNumberColor) {
 
-		super(area);
+		super(comp);
 
-		// Create the text area and set it inside this scroll bar area.
-		textArea = area;
+		RTextArea textArea = getFirstRTextAreaDescendant(comp);
 
 		// Create the gutter for this document.
 		Font defaultFont = new Font("Monospaced", Font.PLAIN, 12);
@@ -223,14 +237,49 @@ public class RTextScrollPane extends JScrollPane {
 	 */
 	@Override
 	public void setViewportView(Component view) {
+
+		RTextArea rtaCandidate = null;
+
 		if (!(view instanceof RTextArea)) {
-			throw new IllegalArgumentException("view must be an RTextArea");
+			rtaCandidate = getFirstRTextAreaDescendant(view);
+			if (rtaCandidate==null) {
+				throw new IllegalArgumentException(
+				"view must be either an RTextArea or a JLayer wrapping one");
+			}
+		}
+		else {
+			rtaCandidate = (RTextArea)view;
 		}
 		super.setViewportView(view);
-		textArea = (RTextArea)view;
 		if (gutter!=null) {
-			gutter.setTextArea(textArea);
+			gutter.setTextArea(rtaCandidate);
 		}
+	}
+
+
+	/**
+	 * Returns the first descendant of a component that is an
+	 * <code>RTextArea</code>.  This is primarily here to support
+	 * <code>javax.swing.JLayer</code>s that wrap <code>RTextArea</code>s.
+	 * 
+	 * @param comp The component to recursively look through.
+	 * @return The first descendant text area, or <code>null</code> if none
+	 *         is found.
+	 */
+	private static final RTextArea getFirstRTextAreaDescendant(Component comp) {
+		Stack<Component> stack = new Stack<Component>();
+		stack.add(comp);
+		while (!stack.isEmpty()) {
+			Component current = stack.pop();
+			if (current instanceof RTextArea) {
+				return (RTextArea)current;
+			}
+			if (current instanceof Container) {
+				Container container = (Container)current;
+				stack.addAll(Arrays.asList(container.getComponents()));
+			}
+		}
+		return null;
 	}
 
 
