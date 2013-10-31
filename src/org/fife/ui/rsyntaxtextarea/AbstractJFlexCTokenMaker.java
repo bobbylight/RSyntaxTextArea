@@ -172,10 +172,11 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 			Matcher m = null;
 			int start = -1;
 			int end = -1;
+			String text = null;
 			try {
 				start = textArea.getLineStartOffset(line);
 				end = textArea.getLineEndOffset(line);
-				String text = textArea.getText(start, end-start);
+				text = textArea.getText(start, end-start);
 				m = p.matcher(text);
 			} catch (BadLocationException ble) { // Never happens
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -200,6 +201,22 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 						return;
 					}
 					textArea.setCaretPosition(end-1);
+				}
+				else {
+					// Ensure caret is at the "end" of any whitespace
+					// immediately after the '*', but before any possible
+					// non-whitespace chars.
+					boolean moved = false;
+					System.out.println("Original dot==" + dot + " (end==" + end + ")");
+					while (dot<end-1 &&
+							Character.isWhitespace(text.charAt(dot-start))) {
+						moved = true;
+						dot++;
+					}
+					if (moved) {
+						System.out.println("New dot==" + dot);
+						textArea.setCaretPosition(dot);
+					}
 				}
 
 				boolean firstMlcLine = mlcMarker.charAt(0)=='/';
