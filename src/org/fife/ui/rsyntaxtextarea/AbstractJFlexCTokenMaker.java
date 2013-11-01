@@ -207,14 +207,12 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 					// immediately after the '*', but before any possible
 					// non-whitespace chars.
 					boolean moved = false;
-					System.out.println("Original dot==" + dot + " (end==" + end + ")");
 					while (dot<end-1 &&
 							Character.isWhitespace(text.charAt(dot-start))) {
 						moved = true;
 						dot++;
 					}
 					if (moved) {
-						System.out.println("New dot==" + dot);
 						textArea.setCaretPosition(dot);
 					}
 				}
