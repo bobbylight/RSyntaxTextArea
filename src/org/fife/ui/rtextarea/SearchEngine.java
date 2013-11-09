@@ -639,8 +639,8 @@ public class SearchEngine {
 	 * Marks all instances of the specified text in this text area.  This
 	 * method is typically only called directly in response to search events
 	 * of type <code>SearchEvent.Type.MARK_ALL</code>.  "Mark all" behavior
-	 * is automatically performed when {@link #find(JTextArea, SearchContext)
-	 * or #replace(RTextArea, SearchContext) is called.
+	 * is automatically performed when {@link #find(JTextArea, SearchContext)}
+	 * or {@link #replace(RTextArea, SearchContext)} is called.
 	 *
 	 * @param textArea The text area in which to mark occurrences.
 	 * @param context The search context specifying the text to search for.

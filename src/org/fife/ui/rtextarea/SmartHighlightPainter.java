@@ -65,7 +65,7 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 	 *
 	 * @return Whether a border is painted.
 	 * @see #setPaintBorder(boolean)
-	 * @see #getColor()
+	 * @see #getPaint()
 	 */
 	public boolean getPaintBorder() {
 		return paintBorder;
@@ -149,7 +149,7 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 	 *
 	 * @param paint Whether to paint a border.
 	 * @see #getPaintBorder()
-	 * @see #setColor(Color)
+	 * @see #setPaint(Paint)
 	 */
 	public void setPaintBorder(boolean paint) {
 		this.paintBorder = paint;

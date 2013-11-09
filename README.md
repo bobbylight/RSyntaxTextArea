@@ -7,7 +7,7 @@ RSyntaxTextArea is available under a [modified BSD license](https://github.com/b
 RSyntaxTextArea is simply a subclass of JTextComponent, so it can be dropped into any Swing application with ease.
 
 ```java
-import java.awt.*;
+import javax.swing.*;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
@@ -21,7 +21,6 @@ public class TextEditorDemo extends JFrame {
       textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
       textArea.setCodeFoldingEnabled(true);
       RTextScrollPane sp = new RTextScrollPane(textArea);
-      sp.setFoldIndicatorEnabled(true);
       cp.add(sp);
 
       setContentPane(cp);
