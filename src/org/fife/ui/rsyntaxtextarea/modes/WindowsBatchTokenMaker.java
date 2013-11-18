@@ -28,7 +28,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	private int currentTokenStart;
 	private int currentTokenType;
 
-	private boolean bracketVariable;			// Whether a variable is of the format %{...}
+	private VariableType varType;
 
 
 	/**
@@ -203,6 +203,8 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("power",		reservedWord);
 		tokenMap.put("print",		reservedWord);
 		tokenMap.put("prompt",		reservedWord);
+		tokenMap.put("pushd",		reservedWord);
+		tokenMap.put("popd",		reservedWord);
 		tokenMap.put("qbasic",		reservedWord);
 		tokenMap.put("rd",			reservedWord);
 		tokenMap.put("ren",			reservedWord);
@@ -537,13 +539,19 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 				case Token.VARIABLE:
 
 						if (i==currentTokenStart+1) { // first character after '%'.
-							bracketVariable = false;
+							varType = VariableType.NORMAL_VAR;
 							switch (c) {
 								case '{':
-									bracketVariable = true;
+									varType = VariableType.BRACKET_VAR;
+									break;
+								case '~':
+									varType = VariableType.TILDE_VAR;
+									break;
+								case '%':
+									varType = VariableType.DOUBLE_PERCENT_VAR;
 									break;
 								default:
-									if (RSyntaxUtilities.isLetter(c) || c==' ') { // No tab, just space; spaces are okay in variable names.
+									if (RSyntaxUtilities.isLetter(c) || c=='_' || c==' ') { // No tab, just space; spaces are okay in variable names.
 										break;
 									}
 									else if (RSyntaxUtilities.isDigit(c)) { // Single-digit command-line argument ("%1").
@@ -560,19 +568,43 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 							} // End of switch (c).
 						}
 						else { // Character other than first after the '%'.
-							if (bracketVariable==true) {
-								if (c=='}') {
-									addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
-									currentTokenType = Token.NULL;
-								}
+							switch (varType) {
+								case BRACKET_VAR:
+									if (c=='}') {
+										addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+										currentTokenType = Token.NULL;
+									}
+									break;
+								case TILDE_VAR:
+									if (!RSyntaxUtilities.isLetterOrDigit(c)) {
+										addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										i--;
+										currentTokenType = Token.NULL;
+									}
+									break;
+								case DOUBLE_PERCENT_VAR:
+									// Can be terminated with "%%", or (essentially) a space.
+									// substring chars are valid
+									if (c=='%') {
+										if (i<end-1 && array[i+1]=='%') {
+											i++;
+											addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+											currentTokenType = Token.NULL;
+										}
+									}
+									else if (!RSyntaxUtilities.isLetterOrDigit(c) && c!=':' && c!='~' && c!=',' && c!='-') {
+										addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										currentTokenType = Token.NULL;
+										i--;
+									}
+									break;
+								default:
+									if (c=='%') {
+										addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+										currentTokenType = Token.NULL;
+									}
+									break;
 							}
-							else {
-								if (c=='%') {
-									addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
-									currentTokenType = Token.NULL;
-								}
-							}
-							break;
 						}
 						break;
 
@@ -599,6 +631,14 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		// Return the first token in our linked list.
 		return firstToken;
 
+	}
+
+
+	private enum VariableType {
+		BRACKET_VAR,
+		TILDE_VAR,
+		NORMAL_VAR,
+		DOUBLE_PERCENT_VAR; // Escaped '%' var, special highlighting rules?
 	}
 
 
