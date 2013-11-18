@@ -58,7 +58,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class CSSTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
@@ -175,8 +175,31 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return <code>true</code> always.
 	 */
+	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return true;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return type==Token.RESERVED_WORD; // Used for CSS keys
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean getShouldIndentNextLineAfter(Token t) {
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
+			return ch=='{' || ch=='(';
+		}
+		return false;
 	}
 
 
