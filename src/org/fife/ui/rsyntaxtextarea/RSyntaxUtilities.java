@@ -458,6 +458,7 @@ public class RSyntaxUtilities implements SwingConstants {
 			if (token.getType()!=Token.SEPARATOR) {
 				return input;
 			}
+			int languageIndex = token.getLanguageIndex();
 			if (index<3) { // One of "{[("
 				goForward = true;
 				bracketMatch = BRACKETS.charAt(index + 3);
@@ -493,7 +494,8 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							token = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (token.getType()==Token.SEPARATOR)
+							if (token.getType()==Token.SEPARATOR &&
+									token.getLanguageIndex()==languageIndex)
 								numEmbedded++;
 						}
 
@@ -504,7 +506,8 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							token = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (token.getType()==Token.SEPARATOR) {
+							if (token.getType()==Token.SEPARATOR &&
+									token.getLanguageIndex()==languageIndex) {
 								if (numEmbedded==0) {
 									if (textArea.isCodeFoldingEnabled() &&
 											textArea.getFoldManager().isLineHidden(curLine)) {
@@ -563,7 +566,8 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							t2 = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (t2.getType()==Token.SEPARATOR)
+							if (t2.getType()==Token.SEPARATOR &&
+									token.getLanguageIndex()==languageIndex)
 								numEmbedded++;
 						}
 
@@ -574,7 +578,8 @@ public class RSyntaxUtilities implements SwingConstants {
 							}
 							int offset = start + (i-segOffset);
 							t2 = RSyntaxUtilities.getTokenAtOffset(token, offset);
-							if (t2.getType()==Token.SEPARATOR) {
+							if (t2.getType()==Token.SEPARATOR &&
+									token.getLanguageIndex()==languageIndex) {
 								if (numEmbedded==0) {
 									input.setLocation(caretPosition, offset);
 									return input;
@@ -853,6 +858,23 @@ return c.getLineStartOffset(line);
 			}
 		}
 		return getPreviousImportantToken(textArea, line-1);
+	}
+
+
+	/**
+	 * REturns the token at the specified offset.
+	 *
+	 * @param textArea The text area.
+	 * @param offset The offset of the token.
+	 * @return The token, or <code>null</code> if the offset is not valid.
+	 */
+	public static final Token getTokenAtOffset(RSyntaxTextArea textArea,
+			int offset) {
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		Element root = doc.getDefaultRootElement();
+		int lineIndex = root.getElementIndex(offset);
+		Token t = doc.getTokenListForLine(lineIndex);
+		return RSyntaxUtilities.getTokenAtOffset(t, offset);
 	}
 
 

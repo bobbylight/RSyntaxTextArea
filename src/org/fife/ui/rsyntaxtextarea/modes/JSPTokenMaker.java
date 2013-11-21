@@ -4158,6 +4158,29 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
+	@Override
+	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS;
+	}
+
+
+	/**
+	 * Overridden to handle newlines in JS and CSS differently than those in
+	 * markup.
+	 */
+	@Override
+	public boolean getShouldIndentNextLineAfter(Token token) {
+		int languageIndex = token==null ? 0 : token.getLanguageIndex();
+		if (getCurlyBracesDenoteCodeBlocks(languageIndex)) {
+			if (token!=null && token.length()==1) {
+				char ch = token.charAt(0);
+				return ch=='{' || ch=='(';
+			}
+		}
+		return false;
+	}
+
+
 	/**
 	 * Returns the first token in the linked list of tokens generated
 	 * from <code>text</code>.  This method must be implemented by

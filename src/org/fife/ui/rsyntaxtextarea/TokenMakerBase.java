@@ -170,14 +170,18 @@ abstract class TokenMakerBase implements TokenMaker {
 
 	/**
 	 * Returns whether this programming language uses curly braces
-	 * ('<tt>{</tt>' and '<tt>}</tt>') to denote code blocks.<p>
+	 * ('<code>{</code>' and '<code>}</code>') to denote code blocks.
 	 *
 	 * The default implementation returns <code>false</code>; subclasses can
 	 * override this method if necessary.
 	 *
+	 * @param languageIndex The language index at the offset in question.
+	 *        Since some <code>TokenMaker</code>s effectively have nested
+	 *        languages (such as JavaScript in HTML), this parameter tells the
+	 *        <code>TokenMaker</code> what sub-language to look at.
 	 * @return Whether curly braces denote code blocks.
 	 */
-	public boolean getCurlyBracesDenoteCodeBlocks() {
+	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
 		return false;
 	}
 

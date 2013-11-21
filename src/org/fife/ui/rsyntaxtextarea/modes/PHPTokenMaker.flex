@@ -324,12 +324,35 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
+	@Override
+	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS;
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.FUNCTION || type==Token.VARIABLE;
+	}
+
+
+	/**
+	 * Overridden to handle newlines in JS and CSS differently than those in
+	 * markup.
+	 */
+	@Override
+	public boolean getShouldIndentNextLineAfter(Token token) {
+		int languageIndex = token==null ? 0 : token.getLanguageIndex();
+		if (getCurlyBracesDenoteCodeBlocks(languageIndex)) {
+			if (token!=null && token.length()==1) {
+				char ch = token.charAt(0);
+				return ch=='{' || ch=='(';
+			}
+		}
+		return false;
 	}
 
 

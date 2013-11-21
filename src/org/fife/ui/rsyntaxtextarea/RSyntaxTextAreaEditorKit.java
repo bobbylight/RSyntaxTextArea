@@ -307,8 +307,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
+
+			int languageIndex = 0;
+			int dot = textArea.getCaretPosition();
+			if (dot>0) {
+				Token t = RSyntaxUtilities.getTokenAtOffset(rsta, dot-1);
+				languageIndex = t==null ? 0 : t.getLanguageIndex();
+			}
 			boolean alignCurlyBraces = rsta.isAutoIndentEnabled() &&
-										doc.getCurlyBracesDenoteCodeBlocks();
+							doc.getCurlyBracesDenoteCodeBlocks(languageIndex);
 
 			if (alignCurlyBraces) {
 				textArea.beginAtomicEdit();
@@ -322,7 +329,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				if (alignCurlyBraces) {
 
 					Element root = doc.getDefaultRootElement();
-					int dot = rsta.getCaretPosition() - 1; // Start before '{'
+					dot = rsta.getCaretPosition() - 1; // Start before '}'
 					int line = root.getElementIndex(dot);
 					Element elem = root.getElement(line);
 					int start = elem.getStartOffset();
@@ -928,25 +935,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
-	 * Moves the caret to the end of the document, taking into account code
-	 * folding.
-	 */
-	public static class EndAction extends RTextAreaEditorKit.EndAction {
-
-		public EndAction(String name, boolean select) {
-			super(name, select);
-		}
-
-		@Override
-		protected int getVisibleEnd(RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-			return rsta.getLastVisibleOffset();
-		}
-
-	}
-
-
-	/**
 	 * Positions the caret at the end of the word.  This class is here to
 	 * better handle finding the "end of the word" in programming languages.
 	 */
@@ -1108,6 +1096,24 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	public static class GoToMatchingBracketAction
 									extends RecordableTextAction {
+
+		/**
+		 * Moves the caret to the end of the document, taking into account code
+		 * folding.
+		 */
+		public static class EndAction extends RTextAreaEditorKit.EndAction {
+		
+			public EndAction(String name, boolean select) {
+				super(name, select);
+			}
+		
+			@Override
+			protected int getVisibleEnd(RTextArea textArea) {
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+				return rsta.getLastVisibleOffset();
+			}
+		
+		}
 
 		private static final long serialVersionUID = 1L;
 
@@ -1291,23 +1297,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			return -1;
 		}
 
-		private static final int getOpenBraceCount(RSyntaxDocument doc) {
+		private static final int getOpenBraceCount(RSyntaxDocument doc,
+				int languageIndex) {
 			int openCount = 0;
-			Element root = doc.getDefaultRootElement();
-			int lineCount = root.getElementCount();
-			for (int i=0; i<lineCount; i++) {
-				Token t = doc.getTokenListForLine(i);
-				while (t!=null && t.isPaintable()) {
-					if (t.getType()==Token.SEPARATOR && t.length()==1) {
-						char ch = t.charAt(0);
-						if (ch=='{') {
-							openCount++;
-						}
-						else if (ch=='}') {
-							openCount--;
-						}
+			for (Token t : doc) {
+				if (t.getType()==Token.SEPARATOR && t.length()==1 &&
+						t.getLanguageIndex()==languageIndex) {
+					char ch = t.charAt(0);
+					if (ch=='{') {
+						openCount++;
 					}
-					t = t.getNextToken();
+					else if (ch=='}') {
+						openCount--;
+					}
 				}
 			}
 			return openCount;
@@ -1401,8 +1403,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 
-			if (textArea.getCloseCurlyBraces() &&
-					doc.getCurlyBracesDenoteCodeBlocks()) {
+			if (textArea.getCloseCurlyBraces()) {
 
 				int line = textArea.getCaretLineNumber();
 				Token t = doc.getTokenListForLine(line-1);
@@ -1410,7 +1411,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 				if (t!=null && t.isLeftCurly()) {
 
-					if (getOpenBraceCount(doc)>0) {
+					int languageIndex = t.getLanguageIndex();
+					if (doc.getCurlyBracesDenoteCodeBlocks(languageIndex) &&
+							getOpenBraceCount(doc, languageIndex)>0) {
 						StringBuilder sb = new StringBuilder();
 						if (line==textArea.getLineCount()-1) {
 							sb.append('\n');

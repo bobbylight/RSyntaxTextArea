@@ -63,11 +63,11 @@ class TokenIterator implements Iterator<Token> {
 		if (token!=null) {
 			if (token.isPaintable()) {
 				token = token.getNextToken();
-			}
-			else if (curLine<getLineCount()-1) {
-				do {
-					token = doc.getTokenListForLine(++curLine);
-				} while (token!=null && !token.isPaintable());
+				int lineCount = getLineCount();
+				while (token!=null && !token.isPaintable() &&
+						++curLine<lineCount-1) {
+					token = doc.getTokenListForLine(curLine);
+				}
 			}
 			else {
 				token = null;
