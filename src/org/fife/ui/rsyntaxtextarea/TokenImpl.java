@@ -356,7 +356,7 @@ public class TokenImpl implements Token {
 
 
 	public String getLexeme() {
-		return new String(text, textOffset, textCount);
+		return text==null ? null : new String(text, textOffset, textCount);
 	}
 
 
