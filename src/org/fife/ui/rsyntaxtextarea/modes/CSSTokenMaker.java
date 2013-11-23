@@ -447,6 +447,23 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 
 
 	/**
+	 * Returns the closest {@link TokenTypes "standard" token type} for a given
+	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
+	 */
+	@Override
+	public int getClosestStandardTokenTypeForInternalType(int type) {
+		switch (type) {
+			case INTERNAL_CSS_STRING:
+			case INTERNAL_CSS_CHAR:
+				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
+			case INTERNAL_CSS_MLC:
+				return TokenTypes.COMMENT_MULTILINE;
+		}
+		return type;
+	}
+
+
+	/**
 	 * Returns <code>true</code> since CSS uses curly braces.
 	 *
 	 * @return <code>true</code> always.
