@@ -285,6 +285,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected OccurrenceMarker createOccurrenceMarker() {
+		return new HtmlOccurrenceMarker();
+	}
+
+
+	/**
 	 * Sets whether markup close tags should be completed.  You might not want
 	 * this to be the case, since some tags in standard HTML aren't usually
 	 * closed.
@@ -301,6 +310,19 @@ import org.fife.ui.rsyntaxtextarea.*;
 	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
 		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS;
+	}
+
+
+	/**
+	 * Returns <code>Token.MARKUP_TAG_NAME</code>.
+	 *
+	 * @param type The token type.
+	 * @return Whether tokens of this type should have "mark occurrences"
+	 *         enabled.
+	 */
+	@Override
+	public boolean getMarkOccurrencesOfTokenType(int type) {
+		return type==Token.MARKUP_TAG_NAME;
 	}
 
 
