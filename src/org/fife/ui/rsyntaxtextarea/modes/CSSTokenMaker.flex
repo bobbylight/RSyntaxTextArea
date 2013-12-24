@@ -396,6 +396,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS_PROPERTY> {
 	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	"{"					{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
 	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
 	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
 	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
