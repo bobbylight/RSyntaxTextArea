@@ -51,7 +51,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.4
+ * @version 0.5
  *
  */
 %%
@@ -192,7 +192,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return <code>true</code> always.
 	 */
-	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return true;
 	}

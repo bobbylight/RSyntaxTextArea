@@ -765,6 +765,58 @@ public class RSyntaxUtilities implements SwingConstants {
 
 
 	/**
+	 * Returns an integer constant representing the OS.  This can be handy for
+	 * special case situations such as Mac OS-X (special application
+	 * registration) or Windows (allow mixed case, etc.).
+	 *
+	 * @return An integer constant representing the OS.
+	 */
+	public static final int getOS() {
+		return OS;
+	}
+
+
+	/**
+	 * Returns an integer constant representing the OS.  This can be handy for
+	 * special case situations such as Mac OS-X (special application
+	 * registration) or Windows (allow mixed case, etc.).
+	 *
+	 * @return An integer constant representing the OS.
+	 */
+	private static final int getOSImpl() {
+		int os = OS_OTHER;
+		String osName = System.getProperty("os.name");
+		if (osName!=null) { // Should always be true.
+			osName = osName.toLowerCase();
+			if (osName.indexOf("windows") > -1)
+				os = OS_WINDOWS;
+			else if (osName.indexOf("mac os x") > -1)
+				os = OS_MAC_OSX;
+			else if (osName.indexOf("linux") > -1)
+				os = OS_LINUX;
+			else
+				os = OS_OTHER;
+		}
+		return os;
+	}
+
+
+	/**
+	 * Returns the flags necessary to create a {@link Pattern}.
+	 *
+	 * @param matchCase Whether the pattern should be case sensitive.
+	 * @param others Any other flags.  This may be <code>0</code>.
+	 * @return The flags.
+	 */
+	public static final int getPatternFlags(boolean matchCase, int others) {
+		if (!matchCase) {
+			others |= Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
+		}
+		return others;
+	}
+
+
+	/**
 	 * Determines the position in the model that is closest to the given 
 	 * view location in the row above.  The component given must have a
 	 * size to compute the result.  If the component doesn't have a size
@@ -1232,43 +1284,6 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
-	 *
-	 * @return An integer constant representing the OS.
-	 */
-	public static final int getOS() {
-		return OS;
-	}
-
-
-	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
-	 *
-	 * @return An integer constant representing the OS.
-	 */
-	private static final int getOSImpl() {
-		int os = OS_OTHER;
-		String osName = System.getProperty("os.name");
-		if (osName!=null) { // Should always be true.
-			osName = osName.toLowerCase();
-			if (osName.indexOf("windows") > -1)
-				os = OS_WINDOWS;
-			else if (osName.indexOf("mac os x") > -1)
-				os = OS_MAC_OSX;
-			else if (osName.indexOf("linux") > -1)
-				os = OS_LINUX;
-			else
-				os = OS_OTHER;
-		}
-		return os;
-	}
-
-
-	/**
 	 * Creates a regular expression pattern that matches a "wildcard" pattern.
 	 * 
 	 * @param wildcard The wildcard pattern.
@@ -1280,10 +1295,7 @@ return c.getLineStartOffset(line);
 	public static Pattern wildcardToPattern(String wildcard, boolean matchCase,
 			boolean escapeStartChar) {
 
-		int flags = 0;
-		if (!matchCase) {
-			flags = Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE;
-		}
+		int flags = RSyntaxUtilities.getPatternFlags(matchCase, 0);
 
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<wildcard.length(); i++) {

@@ -858,6 +858,18 @@ public class SearchEngineTest extends TestCase {
 		assertEquals(3, count);
 		assertEquals(expected, textArea.getText());
 
+		// A single captured group - caret location shouldn't matter
+		context.setSearchFor("r(o+)t");
+		textArea.setText("root roOt root");
+		textArea.setCaretPosition(textArea.getText().length()-4);
+		expected = "oo oO oo";
+		context.setMatchCase(false);
+		context.setWholeWord(false);
+		context.setReplaceWith("$1");
+		count = replaceAllImpl(context);
+		assertEquals(3, count);
+		assertEquals(expected, textArea.getText());
+
 		// Multiple captured groups.
 		context.setSearchFor("(\\d)(\\d+)[kM]");
 		textArea.setText("152k 5271143M 3985k");

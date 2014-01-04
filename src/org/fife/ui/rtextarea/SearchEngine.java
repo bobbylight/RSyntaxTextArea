@@ -24,6 +24,7 @@ import javax.swing.text.Caret;
 
 import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
 
@@ -420,7 +421,7 @@ public class SearchEngine {
 
 		// Make a pattern that takes into account whether or not to match case.
 		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
-		flags |= matchCase ? 0 : (Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
+		flags = RSyntaxUtilities.getPatternFlags(matchCase, flags);
 		Pattern pattern = null;
 		try {
 			pattern = Pattern.compile(regEx, flags);
@@ -524,9 +525,9 @@ public class SearchEngine {
 		StringBuilder result = new StringBuilder();
 
 		while (cursor < template.length()) {
-	
+
 			char nextChar = template.charAt(cursor);
-	
+
 			if (nextChar == '\\') { // Escape character.
 				nextChar = template.charAt(++cursor);
 				switch (nextChar) { // Special cases.
@@ -651,10 +652,10 @@ public class SearchEngine {
 	public static final SearchResult markAll(RTextArea textArea,
 			SearchContext context) {
 		textArea.clearMarkAllHighlights();
-		if (context.getMarkAll()) {
+//		if (context.getMarkAll()) {
 			return markAllImpl(textArea, context);
-		}
-		return new SearchResult();
+//		}
+//		return new SearchResult();
 	}
 
 
@@ -677,7 +678,8 @@ public class SearchEngine {
 		String toMark = context.getSearchFor();
 		int markAllCount = 0;
 
-		if (toMark!=null && toMark.length()>0
+		// context.getMarkAll()==false => clear "mark all" highlights
+		if (context.getMarkAll() && toMark!=null && toMark.length()>0
 				/*&& !toMark.equals(markedWord)*/) {
 
 			List<DocumentRange> highlights = new ArrayList<DocumentRange>();
@@ -762,8 +764,6 @@ public class SearchEngine {
 		// Find the next location of the text we're searching for.
 		RegExReplaceInfo info = getRegExReplaceInfo(findIn, context);
 
-		findIn = null; // May help garbage collecting.
-
 		// If a match was found, do the replace and return!
 		DocumentRange range = null;
 		if (info!=null) {
@@ -778,15 +778,29 @@ public class SearchEngine {
 				matchStart += start;
 				matchEnd += start;
 			}
-			range = new DocumentRange(matchStart, matchEnd);
-			textArea.setSelectionStart(range.getStartOffset());
-			textArea.setSelectionEnd(range.getEndOffset());
+			textArea.setSelectionStart(matchStart);
+			textArea.setSelectionEnd(matchEnd);
 			String replacement = info.getReplacement();
 			textArea.replaceSelection(replacement);
 
+			// If there is another match, find and select it.
 			int dot = textArea.getCaretPosition();
-			range.set(dot-replacement.length(), dot);
-			selectAndPossiblyCenter(textArea, range, /*true*/false);
+			dot -= (info.getMatchedText().length() - replacement.length());
+			findIn = getFindInCharSequence(textArea, dot, forward);
+			info = getRegExReplaceInfo(findIn, context);
+			if (info!=null) {
+				matchStart = info.getStartIndex();
+				matchEnd = info.getEndIndex();
+				if (forward) {
+					matchStart += dot;
+					matchEnd += dot;
+				}
+				range = new DocumentRange(matchStart, matchEnd);
+			}
+			else {
+				range = new DocumentRange(dot, dot);
+			}
+			selectAndPossiblyCenter(textArea, range, true);
 
 		}
 
@@ -842,17 +856,32 @@ public class SearchEngine {
 			makeMarkAndDotEqual(textArea, context.getSearchForward());
 			SearchResult res = find(textArea, context);
 			if (res.wasFound()) {
+
+				// Do the replacement
 				String replacement = context.getReplaceWith();
-				if (replacement==null) {
-					replacement = "";
-				}
 				textArea.replaceSelection(replacement);
-				int dot = textArea.getCaretPosition();
-				DocumentRange range = new DocumentRange(
-						dot-replacement.length(), dot);
+
+				// Move the caret to the right position.
+				int dot = res.getMatchRange().getStartOffset();
+				if (context.getSearchForward()) {
+					int length = replacement==null ? 0 : replacement.length();
+					dot += length;
+				}
+				textArea.setCaretPosition(dot);
+
+				SearchResult next = find(textArea, context);
+				DocumentRange range;
+				if (next.wasFound()) {
+					range = next.getMatchRange();
+				}
+				else {
+					range = new DocumentRange(dot, dot);
+				}
 				res.setMatchRange(range);
-				selectAndPossiblyCenter(textArea, range, /*true*/false);
+				selectAndPossiblyCenter(textArea, range, true);
+
 			}
+
 			return res;
 
 		} finally {

@@ -92,6 +92,7 @@ public class SearchContext implements Cloneable {
 		support = new PropertyChangeSupport(this);
 		this.searchFor = searchFor;
 		this.matchCase = matchCase;
+		markAll = true;
 		forward = true;
 	}
 
