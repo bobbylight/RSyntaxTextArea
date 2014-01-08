@@ -619,7 +619,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *
 	 * This is called internally whenever the syntax style changes.
 	 */
-	protected void updateSyntaxHighlightingInformation() {
+	private void updateSyntaxHighlightingInformation() {
 
 		// Reinitialize the "last token on each line" array.  Note that since
 		// the actual text in the document isn't changing, the number of lines
@@ -632,6 +632,10 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			lastTokenType = tokenMaker.getLastTokenTypeOnLine(s, lastTokenType);
 			lastTokensOnLines.set(i, lastTokenType);
 		}
+
+		// Clear our token cache to force re-painting
+		lastLine = -1;
+		cachedTokenList = null;
 
 		// Let everybody know that syntax styles have (probably) changed.
 		fireChangedUpdate(new DefaultDocumentEvent(
