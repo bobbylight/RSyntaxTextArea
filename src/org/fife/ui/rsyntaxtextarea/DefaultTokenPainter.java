@@ -251,6 +251,12 @@ class DefaultTokenPainter implements TokenPainter {
 			// Only paint on even y-pixels to prevent doubling up between lines
 			y0++;
 		}
+
+		// TODO: Go to endX (inclusive) if this token is last token in the line
+		Token next = token.getNextToken();
+		if (next==null || !next.isPaintable()) {
+			endX++;
+		}
 		while (x0<endX) {
 			int y1 = y0;
 			int y2 = y0 + host.getLineHeight();
