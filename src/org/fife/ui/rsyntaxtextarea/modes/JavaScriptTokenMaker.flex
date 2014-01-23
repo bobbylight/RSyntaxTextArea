@@ -227,8 +227,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Returns the closest {@link TokenTypes "standard" token type} for a given
 	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
-	 * 
 	 */
+	 @Override
 	public int getClosestStandardTokenTypeForInternalType(int type) {
 		switch (type) {
 			case INTERNAL_IN_JS_MLC:
@@ -499,7 +499,7 @@ JS_FloatLiteral			= ({JS_FloatLiteral1}|{JS_FloatLiteral2}|{JS_FloatLiteral3}|({
 JS_ErrorNumberFormat		= (({JS_IntegerLiteral}|{JS_HexLiteral}|{JS_FloatLiteral}){NonSeparator}+)
 JS_Separator				= ([\(\)\{\}\[\]\]])
 JS_Separator2				= ([\;,.])
-JS_NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"|"|"&&"|">>>")
+JS_NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"||"|"&&"|">>>")
 JS_AssignmentOperator		= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
 JS_Operator				= ({JS_NonAssignmentOperator}|{JS_AssignmentOperator})
 JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)

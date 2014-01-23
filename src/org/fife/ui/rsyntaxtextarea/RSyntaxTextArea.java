@@ -220,6 +220,8 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	private BracketMatchingTimer bracketRepaintTimer;
 
+	private boolean metricsNeverRefreshed;
+
 	/**
 	 * Whether or not auto-indent is on.
 	 */
@@ -433,10 +435,6 @@ private boolean fractionalFontMetricsEnabled;
 	public void addNotify() {
 
 		super.addNotify();
-
-		// We know we've just been connected to a screen resource (by
-		// definition), so initialize our font metrics objects.
-		refreshFontMetrics(getGraphics2D(getGraphics()));
 
 		// Re-start parsing if we were removed from one container and added
 		// to another
@@ -1782,6 +1780,7 @@ private boolean fractionalFontMetricsEnabled;
 	protected void init() {
 
 		super.init();
+		metricsNeverRefreshed = true;
 
 		tokenPainter = new DefaultTokenPainter();
 
@@ -1923,6 +1922,18 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
+
+		// A call to refreshFontMetrics() used to be in addNotify(), but
+		// unfortunately we cannot always get the graphics context there.  If
+		// the parent frame/dialog is LAF-decorated, there is a chance that the
+		// window's width and/or height is still == 0 at addNotify() (e.g.
+		// WebLaF).  So unfortunately it's safest to do this here, with a flag
+		// to only allow it to happen once.
+		if (metricsNeverRefreshed) {
+			refreshFontMetrics(getGraphics2D(getGraphics()));
+			metricsNeverRefreshed = false;
+		}
+
 		super.paintComponent(getGraphics2D(g));
 	}
 

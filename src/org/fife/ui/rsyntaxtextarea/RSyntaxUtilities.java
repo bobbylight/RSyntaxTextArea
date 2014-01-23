@@ -123,6 +123,8 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * Used internally.
 	 */
 	private static final char[] JS_KEYWORD_RETURN = { 'r', 'e', 't', 'u', 'r', 'n' };
+	private static final char[] JS_AND = { '&', '&' };
+	private static final char[] JS_OR  = { '|', '|' };
 
 	/**
 	 * Used internally.
@@ -1254,9 +1256,10 @@ return c.getLineStartOffset(line);
 					ch=='!' ||
 					ch=='&'
 				)) ||
-				/* Operators "==", "===", "!=", "!==" */
+				/* Operators "==", "===", "!=", "!==", "&&", "||" */
 				(t.getType()==Token.OPERATOR &&
-						t.charAt(t.length()-1)=='=') ||
+					(t.charAt(t.length()-1)=='=' ||
+					t.is(JS_AND) || t.is(JS_OR))) ||
 				t.is(Token.RESERVED_WORD_2, JS_KEYWORD_RETURN);
 	}
 
