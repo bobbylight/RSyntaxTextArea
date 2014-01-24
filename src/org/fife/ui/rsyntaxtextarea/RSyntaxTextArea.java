@@ -19,6 +19,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -435,6 +436,18 @@ private boolean fractionalFontMetricsEnabled;
 	public void addNotify() {
 
 		super.addNotify();
+
+		// Some LookAndFeels (e.g. WebLaF) for some reason have a 0x0 parent
+		// window initially (perhaps something to do with them fading in?),
+		// which will cause an exception from getGraphics(), so we must be
+		// careful here.
+		if (metricsNeverRefreshed) {
+			Window parent = SwingUtilities.getWindowAncestor(this);
+			if (parent!=null && parent.getWidth()>0 && parent.getHeight()>0) {
+				refreshFontMetrics(getGraphics2D(getGraphics()));
+				metricsNeverRefreshed = false;
+			}
+		}
 
 		// Re-start parsing if we were removed from one container and added
 		// to another
