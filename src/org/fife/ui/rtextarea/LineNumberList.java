@@ -313,10 +313,13 @@ public class LineNumberList extends AbstractGutterComponent
 		// the line number (drawString expects y==baseline).
 		// We need to be "scrolled up" just enough for the missing part of
 		// the first line.
-		int topLine = visibleRect.y/cellHeight;
-		int actualTopY = topLine*cellHeight;
 		textAreaInsets = textArea.getInsets(textAreaInsets);
-		actualTopY += textAreaInsets.top;
+		if (visibleRect.y<textAreaInsets.top) {
+			visibleRect.height -= (textAreaInsets.top - visibleRect.y);
+			visibleRect.y = textAreaInsets.top;
+		}
+		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
+		int actualTopY = topLine*cellHeight + textAreaInsets.top;
 		int y = actualTopY + ascent;
 
 		// Get the actual first line to paint, taking into account folding.

@@ -407,6 +407,10 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		textAreaInsets = textArea.getInsets(textAreaInsets);
+		if (visibleRect.y<textAreaInsets.top) {
+			visibleRect.height -= (textAreaInsets.top - visibleRect.y);
+			visibleRect.y = textAreaInsets.top;
+		}
 
 		// Get the first and last lines to paint.
 		int cellHeight = textArea.getLineHeight();

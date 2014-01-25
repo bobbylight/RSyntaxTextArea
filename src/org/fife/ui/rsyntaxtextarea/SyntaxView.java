@@ -733,7 +733,7 @@ if (host.isCodeFoldingEnabled()) {
 				if (c!=null) {
 					g.setColor(c);
 					g.drawLine(x,y+lineHeight-ascent-1,
-							alloc.width,y+lineHeight-ascent-1);
+							host.getWidth(),y+lineHeight-ascent-1);
 				}
 
 				// Skip to next line to paint, taking extra care for lines with

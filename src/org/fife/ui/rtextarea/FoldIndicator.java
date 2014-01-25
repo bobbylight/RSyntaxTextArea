@@ -310,7 +310,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		if (visibleRect==null) { // ???
 			visibleRect = getVisibleRect();
 		}
-		//System.out.println("IconRowHeader repainting: " + visibleRect);
+		//System.out.println("FoldIndicator repainting: " + visibleRect);
 		if (visibleRect==null) {
 			return;
 		}
@@ -335,14 +335,16 @@ public class FoldIndicator extends AbstractGutterComponent {
 		// Get where to start painting (top of the row).
 		// We need to be "scrolled up" up just enough for the missing part of
 		// the first line.
+		textAreaInsets = textArea.getInsets(textAreaInsets);
+		if (visibleRect.y<textAreaInsets.top) {
+			visibleRect.height -= (textAreaInsets.top - visibleRect.y);
+			visibleRect.y = textAreaInsets.top;
+		}
 		int cellHeight = textArea.getLineHeight();
-		int topLine = visibleRect.y/cellHeight;
+		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
 		int y = topLine*cellHeight +
 			(cellHeight-collapsedFoldIcon.getIconHeight())/2;
-		textAreaInsets = textArea.getInsets(textAreaInsets);
-		if (textAreaInsets!=null) {
-			y += textAreaInsets.top;
-		}
+		y += textAreaInsets.top;
 
 		// Get the first and last lines to paint.
 		FoldManager fm = rsta.getFoldManager();

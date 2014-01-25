@@ -79,6 +79,10 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		textAreaInsets = textArea.getInsets(textAreaInsets);
+		if (visibleRect.y<textAreaInsets.top) {
+			visibleRect.height -= (textAreaInsets.top - visibleRect.y);
+			visibleRect.y = textAreaInsets.top;
+		}
 
 		// Get the first line to paint.
 		int cellHeight = textArea.getLineHeight();
@@ -217,26 +221,27 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 			int lastLine = textArea.getLineCount() - 1;
 			for (int i=trackingIcons.size()-1; i>=0; i--) { // Last to first
 				GutterIconInfo ti = getTrackingIcon(i);
-				int offs = ti.getMarkedOffset();
-				if (offs>=0 && offs<=doc.getLength()) {
-					int line = root.getElementIndex(offs);
-					if (line<=lastLine && line>=topLine) {
-						try {
-							int lineY = rsta.yForLine(line);
-							if (lineY>=topY && lineY<bottomY) {
-								Icon icon = ti.getIcon();
-								if (icon!=null) {
-									int y2 = lineY + (cellHeight-icon.getIconHeight())/2;
+				Icon icon = ti.getIcon();
+				if (icon!=null) {
+					int iconH = icon.getIconHeight();
+					int offs = ti.getMarkedOffset();
+					if (offs>=0 && offs<=doc.getLength()) {
+						int line = root.getElementIndex(offs);
+						if (line<=lastLine && line>=topLine) {
+							try {
+								int lineY = rsta.yForLine(line);
+								if (lineY<=bottomY && (lineY+iconH>=topY)) {
+									int y2 = lineY + (cellHeight-iconH)/2;
 									ti.getIcon().paintIcon(this, g, 0, y2);
 									lastLine = line-1; // Paint only 1 icon per line
 								}
+							} catch (BadLocationException ble) {
+								ble.printStackTrace(); // Never happens
 							}
-						} catch (BadLocationException ble) {
-							ble.printStackTrace(); // Never happens
 						}
-					}
-					else if (line<topLine) {
-						break; // All other lines are above us, so quit now
+						else if (line<topLine) {
+							break; // All other lines are above us, so quit now
+						}
 					}
 				}
 			}
