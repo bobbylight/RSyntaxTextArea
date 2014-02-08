@@ -2,7 +2,7 @@
 <!ELEMENT RSyntaxTheme (baseFont?, background, caret, selection,
       currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
       matchedBracket, hyperlinks, secondaryLanguages, gutterBorder, lineNumbers,
-      foldIndicator, iconRowHeader, tokenStyles)>
+      foldIndicator, iconRowHeader?, tokenStyles)>
 <!ELEMENT background EMPTY>
 <!ELEMENT baseFont EMPTY>
 <!ELEMENT caret EMPTY>
