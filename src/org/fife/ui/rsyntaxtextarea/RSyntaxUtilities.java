@@ -893,38 +893,93 @@ return c.getLineStartOffset(line);
 	 * Returns the last non-whitespace, non-comment token, starting with the
 	 * specified line.
 	 *
-	 * @param textArea The text area.
+	 * @param doc The document.
 	 * @param line The line at which to start looking.
 	 * @return The last non-whitespace, non-comment token, or <code>null</code>
 	 *         if there isn't one.
 	 * @see #getNextImportantToken(Token, RSyntaxTextArea, int)
+	 * @see #getPreviousImportantTokenFromOffs(RSyntaxDocument, int)
 	 */
-	public static final Token getPreviousImportantToken(
-			RSyntaxTextArea textArea, int line){
+	public static final Token getPreviousImportantToken(RSyntaxDocument doc,
+			int line) {
 		if (line<0) {
 			return null;
 		}
-		Token t = textArea.getTokenListForLine(line);
+		Token t = doc.getTokenListForLine(line);
 		if (t!=null) {
 			t = t.getLastNonCommentNonWhitespaceToken();
 			if (t!=null) {
 				return t;
 			}
 		}
-		return getPreviousImportantToken(textArea, line-1);
+		return getPreviousImportantToken(doc, line-1);
 	}
 
 
 	/**
-	 * REturns the token at the specified offset.
+	 * Returns the last non-whitespace, non-comment token, before the
+	 * specified offset.
+	 *
+	 * @param doc The document.
+	 * @param offs The ending offset for the search.
+	 * @return The last non-whitespace, non-comment token, or <code>null</code>
+	 *         if there isn't one.
+	 * @see #getPreviousImportantToken(RSyntaxDocument, int)
+	 * @see #getNextImportantToken(Token, RSyntaxTextArea, int)
+	 */
+	public static final Token getPreviousImportantTokenFromOffs(
+			RSyntaxDocument doc, int offs) {
+
+		Element root = doc.getDefaultRootElement();
+		int line = root.getElementIndex(offs);
+		Token t = doc.getTokenListForLine(line);
+
+		// Check line containing offs
+		Token target = null;
+		while (t!=null && t.isPaintable() && !t.containsPosition(offs)) {
+			if (!t.isCommentOrWhitespace()) {
+				target = t;
+			}
+			t = t.getNextToken();
+		}
+
+		// Check previous line(s)
+		if (target==null) {
+			target = RSyntaxUtilities.getPreviousImportantToken(doc, line-1);
+		}
+
+		return target;
+
+	}
+
+
+	/**
+	 * Returns the token at the specified offset.
 	 *
 	 * @param textArea The text area.
 	 * @param offset The offset of the token.
 	 * @return The token, or <code>null</code> if the offset is not valid.
+	 * @see #getTokenAtOffset(RSyntaxDocument, int)
+	 * @see #getTokenAtOffset(Token, int)
 	 */
 	public static final Token getTokenAtOffset(RSyntaxTextArea textArea,
 			int offset) {
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		return RSyntaxUtilities.getTokenAtOffset(doc, offset);
+	}
+
+
+	/**
+	 * Returns the token at the specified offset.
+	 *
+	 * @param doc The document.
+	 * @param offset The offset of the token.
+	 * @return The token, or <code>null</code> if the offset is not valid.
+	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
+	 * @see #getTokenAtOffset(Token, int)
+	 */
+	public static final Token getTokenAtOffset(RSyntaxDocument doc,
+			int offset) {
 		Element root = doc.getDefaultRootElement();
 		int lineIndex = root.getElementIndex(offset);
 		Token t = doc.getTokenListForLine(lineIndex);
@@ -942,6 +997,8 @@ return c.getLineStartOffset(line);
 	 * @param offset The offset at which to get the token.
 	 * @return The token at <code>offset</code>, or <code>null</code> if
 	 *         none of the tokens are at that offset.
+	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
+	 * @see #getTokenAtOffset(RSyntaxDocument, int)
 	 */
 	public static final Token getTokenAtOffset(Token tokenList, int offset) {
 		for (Token t=tokenList; t!=null && t.isPaintable(); t=t.getNextToken()){

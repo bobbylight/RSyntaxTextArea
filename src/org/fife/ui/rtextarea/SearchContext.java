@@ -342,8 +342,10 @@ public class SearchContext implements Cloneable {
 	/**
 	 * Sets whether only the selected text should be searched.  This method
 	 * fires a property change event of type {@link #PROPERTY_SELECTION_ONLY}.
+	 * <p>
 	 *
-	 * This flag is currently not supported.
+	 * This flag is currently not supported.  Calling this method will throw
+	 * an {@link UnsupportedOperationException} until it is implemented.
 	 *
 	 * @param selectionOnly Whether only selected text should be searched.
 	 * @see #getSearchSelectionOnly()
@@ -353,6 +355,10 @@ public class SearchContext implements Cloneable {
 			this.selectionOnly = selectionOnly;
 			firePropertyChange(PROPERTY_SELECTION_ONLY,
 					!selectionOnly, selectionOnly);
+			if (selectionOnly) {
+				throw new UnsupportedOperationException(
+						"Searching in selection is not currently supported");
+			}
 		}
 	}
 
