@@ -134,6 +134,14 @@ public class DefaultParserNotice implements ParserNotice {
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean getKnowsOffsetAndLength() {
+		return offset>=0 && length>=0;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getLength() {
 		return length;
 	}

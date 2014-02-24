@@ -12,7 +12,17 @@ import java.awt.Color;
 
 
 /**
- * A notice (e.g., a warning or error) from a parser.
+ * A notice (e.g., a warning or error) from a parser.<p>
+ *
+ * Since different parsers have different levels of precision when it comes
+ * to identifying errors in code, this class supports marking parser notices
+ * on either a per-line basis or arbitrary regions of a document.  For any
+ * <code>ParserNotice</code>, {@link #getLine()} is guaranteed to return the
+ * (primary) line containing the notice, but {@link #getOffset()} and
+ * {@link #getLength()} are allowed to return <code>-1</code> if that
+ * particular notice isn't mapped to a specific region of code.  Applications
+ * can check whether an instance of this class only has line-level information
+ * with the 
  *
  * @author Robert Futrell
  * @version 1.0
@@ -81,6 +91,18 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 * @return The line number.
 	 */
 	public int getLine();
+
+
+	/**
+	 * Returns whether this parser notice has offset and length information
+	 * (as opposed to just what line number to mark).
+	 *
+	 * @return Whether the offset and length of the notice are specified.
+	 * @see #getLine()
+	 * @see #getOffset()
+	 * @see #getLength()
+	 */
+	public boolean getKnowsOffsetAndLength();
 
 
 	/**

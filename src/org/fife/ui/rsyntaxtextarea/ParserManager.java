@@ -20,6 +20,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
@@ -27,6 +28,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 
@@ -436,7 +438,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			if (noticeHighlightPairs!=null) {
 				for (NoticeHighlightPair pair : noticeHighlightPairs) {
 					ParserNotice notice = pair.notice;
-					if (notice.containsPosition(pos) &&
+					if (noticeContainsPosition(notice, pos) &&
 							noticeContainsPointInView(notice, p)) {
 						tip = notice.getToolTipText();
 						parserForTip = notice.getParser();
@@ -509,6 +511,28 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
+	 * Returns whether a parser notice contains the specified offset.
+	 *
+	 * @param notice The notice.
+	 * @param offs The offset.
+	 * @return Whether the notice contains the offset.
+	 */
+	private final boolean noticeContainsPosition(ParserNotice notice, int offs){
+		if (notice.getKnowsOffsetAndLength()) {
+			return notice.containsPosition(offs);
+		}
+		Document doc = textArea.getDocument();
+		Element root = doc.getDefaultRootElement();
+		int line = notice.getLine();
+		if (line<0) { // Defensive against possible bad user-defined notices.
+			return false;
+		}
+		Element elem = root.getElement(line);
+		return offs>=elem.getStartOffset() && offs<elem.getEndOffset();
+	}
+
+
+	/**
 	 * Since <code>viewToModel()</code> returns the <em>closest</em> model
 	 * position, and the position doesn't <em>necessarily</em> contain the
 	 * point passed in as an argument, this method checks whether the point is
@@ -522,10 +546,29 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private final boolean noticeContainsPointInView(ParserNotice notice,
 			Point p) {
+
 		try {
-			int offs = notice.getOffset();
-			Rectangle r1 = textArea.modelToView(offs);
-			Rectangle r2 = textArea.modelToView(offs+notice.getLength()-1);
+
+			int start, end;
+			if (notice.getKnowsOffsetAndLength()) {
+				start = notice.getOffset();
+				end = start + notice.getLength() - 1;
+			}
+			else {
+				Document doc = textArea.getDocument();
+				Element root = doc.getDefaultRootElement();
+				int line = notice.getLine();
+				// Defend against possible bad user-defined notices.
+				if (line<0) {
+					return false;
+				}
+				Element elem = root.getElement(line);
+				start = elem.getStartOffset();
+				end = elem.getEndOffset() - 1;
+			}
+
+			Rectangle r1 = textArea.modelToView(start);
+			Rectangle r2 = textArea.modelToView(end);
 			if (r1.y!=r2.y) {
 				// If the notice spans multiple lines, give them the benefit
 				// of the doubt.  This is only "wrong" if the user is in empty
@@ -533,15 +576,18 @@ class ParserManager implements DocumentListener, ActionListener,
 				// end of a line anyway.
 				return true;
 			}
+
 			r1.y--; // Be a tiny bit lenient.
 			r1.height += 2; // Ditto
 			return p.x>=r1.x && p.x<(r2.x+r2.width) &&
 					p.y>=r1.y && p.y<(r1.y+r1.height);
+
 		} catch (BadLocationException ble) { // Never occurs
 			// Give them the benefit of the doubt, should 99% of the time be
 			// true anyway
 			return true;
 		}
+
 	}
 
 

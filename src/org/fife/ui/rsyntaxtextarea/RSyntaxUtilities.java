@@ -628,7 +628,8 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * @param line The current line index (the line index of <code>t</code>).
 	 * @return The next non-whitespace, non-comment token, or <code>null</code>
 	 *         if there isn't one.
-	 * @see #getPreviousImportantToken(RSyntaxTextArea, int)
+	 * @see #getPreviousImportantToken(RSyntaxDocument, int)
+	 * @see #getPreviousImportantTokenFromOffs(RSyntaxDocument, int)
 	 */
 	public static final Token getNextImportantToken(Token t,
 			RSyntaxTextArea textArea, int line) {
