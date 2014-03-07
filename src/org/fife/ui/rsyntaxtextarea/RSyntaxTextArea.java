@@ -85,6 +85,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>Fortran
  *       <li>Groovy
  *       <li>HTML
+ *       <li>htaccess
  *       <li>Java
  *       <li>JavaScript
  *       <li>JSP
