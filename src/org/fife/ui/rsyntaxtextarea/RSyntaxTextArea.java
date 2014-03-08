@@ -295,6 +295,10 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Manages running the parser. */
 	private ParserManager parserManager;
 
+	private String cachedTip;
+	/** Used to work around an issue with Apple JVMs. */
+	private Point cachedTipLoc;
+
 	/**
 	 * Whether the editor is currently scanning for hyperlinks on mouse
 	 * movement.
@@ -1703,6 +1707,31 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	public String getToolTipText(MouseEvent e) {
+
+		// Apple JVMS (Java 6 and prior) have their ToolTipManager events
+		// repeat for some reason, so this method gets called every 1 second
+		// or so.  We short-circuit that since some ToolTipManagers may do
+		// expensive calculations (e.g. language supports).
+		if (RSyntaxUtilities.getOS()==RSyntaxUtilities.OS_MAC_OSX) {
+			Point newLoc = e.getPoint();
+			if (newLoc!=null && newLoc.equals(cachedTipLoc)) {
+				return cachedTip;
+			}
+			cachedTipLoc = newLoc;
+		}
+
+		return cachedTip = getToolTipTextImpl(e);
+
+	}
+
+
+	/**
+	 * Does the dirty work of getting the tool tip text.
+	 *
+	 * @param e The mouse event.
+	 * @return The tool tip text.
+	 */
+	protected String getToolTipTextImpl(MouseEvent e) {
 
 		// Check parsers for tool tips first.
 		String text = null;
