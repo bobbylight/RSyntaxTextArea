@@ -174,7 +174,10 @@ return p + 1;
 		// FIXME: This is required due to a bug that I can't track down.  The
 		// top margin is being added twice somewhere in wrapped views, so we
 		// have to adjust for it here.
-		alloc.y -= host.getMargin().top;
+		Insets margin = host.getMargin();
+		if (margin!=null) {
+			alloc.y -= margin.top;
+		}
 
 	}
 
