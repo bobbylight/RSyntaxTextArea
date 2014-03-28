@@ -101,7 +101,7 @@ public class SearchEngine {
 		}
 
 		SearchResult result = SearchEngine.findImpl(findIn, context);
-		if (result.wasFound()) {
+		if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
 			// Without this, if JTextArea isn't in focus, selection
 			// won't appear selected.
 			textArea.getCaret().setSelectionVisible(true);
@@ -149,16 +149,27 @@ public class SearchEngine {
 			// Regex matches can have varying widths.  The returned point's
 			// x- and y-values represent the start and end indices of the
 			// match in findIn.
-			Point regExPos = getNextMatchPosRegEx(text, findIn, forward,
-								context.getMatchCase(), context.getWholeWord());
-			findIn = null; // May help garbage collecting.
-			if (regExPos!=null) {
-				range = new DocumentRange(regExPos.x, regExPos.y);
-			}
+			Point regExPos = null;
+			int start = 0;
+			do {
+				regExPos = getNextMatchPosRegEx(text, findIn.substring(start),
+					forward, context.getMatchCase(), context.getWholeWord());
+				if (regExPos!=null) {
+					if (regExPos.x!=regExPos.y) {
+						regExPos.translate(start, start);
+						range = new DocumentRange(regExPos.x, regExPos.y);
+					}
+					else {
+						start += regExPos.x + 1;
+					}
+				}
+			} while (start<findIn.length() && regExPos!=null && range==null);//while (emptyMatchFound);
 		}
 
-		int count = range!=null ? 1 : 0;
-		return new SearchResult(range, count, 0);
+		if (range!=null) {
+			return new SearchResult(range, 1, 0);
+		}
+		return new SearchResult();
 
 	}
 
@@ -703,8 +714,19 @@ public class SearchEngine {
 			SearchResult res = SearchEngine.findImpl(findIn, context);
 			while (res.wasFound()) {
 				DocumentRange match = res.getMatchRange().translate(start);
-				highlights.add(match);
-				start = match.getEndOffset();
+				if (match.isZeroLength()) {
+					// Searched for a regex like "foo|".  The "empty string"
+					// part of the regex matches space between chars.  We want
+					// to skip these in the case of mark-all.
+					start = match.getEndOffset() + 1;
+					if (start>findIn.length()) {
+						break;
+					}
+				}
+				else {
+					highlights.add(match);
+					start = match.getEndOffset();
+				}
 				res = SearchEngine.findImpl(findIn.substring(start), context);
 			}
 			textArea.markAll(highlights);
@@ -855,7 +877,8 @@ public class SearchEngine {
 			// the selection, we must remove the selection to work properly.
 			makeMarkAndDotEqual(textArea, context.getSearchForward());
 			SearchResult res = find(textArea, context);
-			if (res.wasFound()) {
+
+			if (res.wasFound() && !res.getMatchRange().isZeroLength()) {
 
 				// Do the replacement
 				String replacement = context.getReplaceWith();
