@@ -106,6 +106,19 @@ public class DocumentRange implements Comparable<DocumentRange> {
 
 
 	/**
+	 * Returns whether this document range has zero length.  This can happen,
+	 * for example, with regex searches of forms like
+	 * <code>"foo|"</code>, where the right-hand sub-expression matches empty
+	 * strings.
+	 *
+	 * @return Whether this document range has zero length.
+	 */
+	public boolean isZeroLength() {
+		return startOffs == endOffs;
+	}
+
+
+	/**
 	 * Sets the document range.
 	 *
 	 * @param start The new start value, inclusive.

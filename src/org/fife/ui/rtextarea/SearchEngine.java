@@ -77,6 +77,14 @@ public class SearchEngine {
 
 		String text = context.getSearchFor();
 		if (text==null || text.length()==0) {
+			if (doMarkAll) {
+				// Force "mark all" event to be broadcast so listeners know to
+				// clear their mark-all markers.  The RSTA already cleared its
+				// highlights above, but cleraMarkAllHighlights() doesn't firs
+				// an event itself for performance reasons.
+				List<DocumentRange> emptyRangeList = Collections.emptyList();
+				((RTextArea)textArea).markAll(emptyRangeList);
+			}
 			return new SearchResult();
 		}
 
@@ -730,7 +738,6 @@ public class SearchEngine {
 				res = SearchEngine.findImpl(findIn.substring(start), context);
 			}
 			textArea.markAll(highlights);
-			textArea.repaint();
 			markAllCount = highlights.size();
 		}
 

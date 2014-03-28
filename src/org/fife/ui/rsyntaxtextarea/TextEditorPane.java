@@ -238,7 +238,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @return The file name.
 	 */
 	public String getFileName() {
-		return loc.getFileName();
+		return loc==null ? null : loc.getFileName();
 	}
 
 
