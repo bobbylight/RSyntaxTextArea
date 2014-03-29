@@ -32,7 +32,12 @@ class TokenIterator implements Iterator<Token> {
 	 */
 	public TokenIterator(RSyntaxDocument doc) {
 		this.doc = doc;
-		token = doc.getTokenListForLine(0);
+		loadTokenListForCurLine();
+		int lineCount = getLineCount();
+		while ((token==null || !token.isPaintable()) && curLine<lineCount-1) {
+			curLine++;
+			loadTokenListForCurLine();
+		}
 	}
 
 
@@ -52,6 +57,15 @@ class TokenIterator implements Iterator<Token> {
 	}
 
 
+	private void loadTokenListForCurLine() {
+		token = doc.getTokenListForLine(curLine);
+		if (token!=null && !token.isPaintable()) {
+			// Common end of document scenario
+			token = null;
+		}
+	}
+
+
 	/**
 	 * Returns the next paintable token in the document.
 	 *
@@ -59,22 +73,40 @@ class TokenIterator implements Iterator<Token> {
 	 * @see #hasNext()
 	 */
 	public Token next() {
+
 		Token t = token;
-		if (token!=null) {
-			if (token.isPaintable()) {
-				token = token.getNextToken();
-				int lineCount = getLineCount();
-				while (token!=null && !token.isPaintable() &&
-						++curLine<lineCount) {
-					t = new TokenImpl(t);
-					token = doc.getTokenListForLine(curLine);
-				}
-			}
-			else {
-				token = null;
-			}
+		boolean tIsCloned = false;
+		int lineCount = getLineCount();
+
+		// Get the next token, going to the next line if necessary.
+		if (token!=null && token.isPaintable()) {
+			token = token.getNextToken();
 		}
+		else if (curLine<lineCount-1) {
+			t = new TokenImpl(t); // Clone t since tokens are pooled
+			tIsCloned = true;
+			curLine++;
+			loadTokenListForCurLine();
+		}
+		else if (token!=null && !token.isPaintable()) {
+			// Ends with a non-paintable token (not sure this ever happens)
+			token = null;
+		}
+
+		while ((token==null || !token.isPaintable()) && curLine<lineCount-1) {
+			if (!tIsCloned) {
+				t = new TokenImpl(t); // Clone t since tokens are pooled
+				tIsCloned = true;
+			}
+			curLine++;
+			loadTokenListForCurLine();
+		}
+		if (token!=null && !token.isPaintable() && curLine==lineCount-1) {
+			token = null;
+		}
+
 		return t;
+
 	}
 
 

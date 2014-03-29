@@ -276,6 +276,27 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
+	public boolean equals(Object obj) {
+
+		if (obj==this) {
+			return true;
+		}
+		if (!(obj instanceof Token)) {
+			return false;
+		}
+
+		Token t2 = (Token)obj;
+		return offset==t2.getOffset() &&
+				type==t2.getType() &&
+				languageIndex==t2.getLanguageIndex() &&
+				hyperlink==t2.isHyperlink() &&
+				((getLexeme()==null && t2.getLexeme()==null) ||
+					(getLexeme()!=null && getLexeme().equals(t2.getLexeme())));
+
+	}
+
+
 	public int getEndOffset() {
 		return offset + textCount;
 	}
@@ -498,6 +519,12 @@ public class TokenImpl implements Token {
 			width += fm.charsWidth(text, currentStart, w);
 		}
 		return width - x0;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return offset + (getLexeme()==null ? 0 : getLexeme().hashCode());
 	}
 
 

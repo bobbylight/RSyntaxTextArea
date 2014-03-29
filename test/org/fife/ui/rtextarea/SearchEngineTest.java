@@ -11,13 +11,16 @@ package org.fife.ui.rtextarea;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import javax.swing.text.BadLocationException;
 
-import junit.framework.TestCase;
+import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.SearchEngine;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
@@ -26,7 +29,7 @@ import org.fife.ui.rtextarea.SearchEngine;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SearchEngineTest extends TestCase {
+public class SearchEngineTest {
 
 	private RSyntaxTextArea textArea = new RSyntaxTextArea();
 
@@ -99,8 +102,8 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 
 		// setUp() is called once per test, each with a new instantiation of
 		// SearchEngineTest, so check a static variable to ensure that
@@ -109,7 +112,8 @@ public class SearchEngineTest extends TestCase {
 		if (text == null || text.length() <= 0) {
 
 			StringBuilder sb = new StringBuilder();
-			InputStream in = getClass().getResourceAsStream("text.txt");
+			InputStream in = SearchEngineTest.class.
+					getResourceAsStream("SearchEngineTest.txt");
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String s = null;
 			try {
@@ -125,14 +129,13 @@ public class SearchEngineTest extends TestCase {
 
 		}
 
-		super.setUp();
-
 	}
 
 
 	/**
 	 * Tests <code>SearchEngine.find()</code> when searching backward.
 	 */
+	@Test
 	public void testSearchEngineFindBackward() throws BadLocationException {
 		testSearchEngineFindBackwardImpl(true);
 		testSearchEngineFindBackwardImpl(false);
@@ -299,6 +302,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * Tests <code>SearchEngine.find()</code> when searching forward.
 	 */
+	@Test
 	public void testSearchEngineFindForward() throws BadLocationException {
 		testSearchEngineFindForwardImpl(true);
 		testSearchEngineFindForwardImpl(false);
@@ -310,7 +314,7 @@ public class SearchEngineTest extends TestCase {
 	 *
 	 * @param markAll Whether "mark all" should be enabled during the test.
 	 */
-	public void testSearchEngineFindForwardImpl(boolean markAll)
+	private void testSearchEngineFindForwardImpl(boolean markAll)
 			throws BadLocationException {
 
 		textArea.setText(text);
@@ -460,6 +464,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * https://github.com/bobbylight/RSyntaxTextArea/issues/38
 	 */
+	@Test
 	public void testSearchEngineRegexFindEmptyString() throws Exception {
 
 		textArea.setText("how the who for what is it howhow");
@@ -484,6 +489,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * Tests <code>SearchEngine.markAll()</code>.
 	 */
+	@Test
 	public void testSearchEngineMarkAll() {
 
 		textArea.setText(text);
@@ -753,6 +759,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * Tests <code>SearchEngine.replace()</code> when searching backward.
 	 */
+	@Test
 	public void testSearchEngineReplaceBackward() throws BadLocationException {
 		testSearchEngineReplace(false);
 	}
@@ -761,6 +768,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * Tests <code>SearchEngine.replace()</code> when searching forward.
 	 */
+	@Test
 	public void testSearchEngineReplaceForward() throws BadLocationException {
 		testSearchEngineReplace(true);
 	}
@@ -769,6 +777,7 @@ public class SearchEngineTest extends TestCase {
 	/**
 	 * Tests <code>SearchEngine.replaceAll()</code>.
 	 */
+	@Test
 	public void testSearchEngineReplaceAll() throws BadLocationException {
 
 		SearchContext context = new SearchContext();
@@ -866,6 +875,7 @@ public class SearchEngineTest extends TestCase {
 	 * Tests <code>SearchEngine.replaceAll()</code> when the replacement string
 	 * has captured groups.
 	 */
+	@Test
 	public void testSearchEngineRegexReplaceAllWithCapturedGroups() throws BadLocationException {
 
 		SearchContext context = new SearchContext();

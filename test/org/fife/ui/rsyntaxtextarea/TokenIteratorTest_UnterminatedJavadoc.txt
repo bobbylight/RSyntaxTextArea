@@ -1,0 +1,4 @@
+/**
+ * Hello world
+ * @param foo A parameter
+ * @return Some value

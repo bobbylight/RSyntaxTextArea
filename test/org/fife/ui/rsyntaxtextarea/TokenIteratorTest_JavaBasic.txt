@@ -1,0 +1,14 @@
+package test.clazz;
+
+
+/**
+ * Class comment.
+ */
+public class Test {
+
+	public int getValue() {
+		return 3;
+	}
+	
+}
+
