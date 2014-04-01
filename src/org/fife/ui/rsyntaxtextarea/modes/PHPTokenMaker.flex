@@ -614,7 +614,7 @@ JS_Operator				= ({JS_NonAssignmentOperator}|{JS_AssignmentOperator})
 JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)
 JS_ErrorIdentifier			= ({NonSeparator}+)
 JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
-BooleanLiteral				= ("true"|"false")
+JS_BooleanLiteral			= ("true"|"false")
 
 
 // PHP stuff (most PHP stuff is shared with JS for simplicity)
@@ -622,7 +622,8 @@ PHP_Start					= ("<?""php"?)
 LetterOrUnderscoreOrDigit	= ({LetterOrUnderscore}|{Digit})
 PHP_Variable				= ("$"{LetterOrUnderscore}{LetterOrUnderscoreOrDigit}*)
 PHP_LineCommentBegin		= ("//"|[#])
-
+PHP_BooleanLiteral			= ({JS_BooleanLiteral}|"TRUE"|"FALSE")
+PHP_Null					= ("null"|"NULL")
 
 // CSS stuff.
 CSS_SelectorPiece			= (("*"|"."|{LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
@@ -1022,7 +1023,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"null"						{ addToken(Token.RESERVED_WORD); }
 
 	// Literals.
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	{JS_BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 	"NaN"						{ addToken(Token.RESERVED_WORD); }
 	"Infinity"					{ addToken(Token.RESERVED_WORD); }
 
@@ -2273,7 +2274,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	("velocis_"("autocommit"|"close"|"commit"|"connect"|"exec"|"fetch"|"fieldname"|"fieldnum"|"freeresult"|"off_autocommit"|"result"|"rollback")) |
 	"virtual"							{ addToken(Token.FUNCTION); }
 
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	{PHP_BooleanLiteral}		{ addToken(Token.LITERAL_BOOLEAN); }
+	{PHP_Null}					{ addToken(Token.RESERVED_WORD); }
 	{PHP_Variable}				{ addToken(Token.VARIABLE); }
 
 	{LineTerminator}				{ addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
@@ -2343,4 +2345,3 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\'					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_IN_PHP_CHAR - phpInState); return firstToken; }
 }
-
