@@ -104,6 +104,12 @@ public class Gutter extends JPanel {
 	private IconRowHeader iconArea;
 
 	/**
+	 * Whether the icon area inherits the gutter background (as opposed to
+	 * painting with its own, default "panel" color).
+	 */
+	private boolean iconRowHeaderInheritsGutterBackground;
+
+	/**
 	 * Shows lines that are code-foldable.
 	 */
 	private FoldIndicator foldIndicator;
@@ -125,6 +131,7 @@ public class Gutter extends JPanel {
 		lineNumberColor = Color.gray;
 		lineNumberFont = RTextArea.getDefaultFont();
 		lineNumberingStartIndex = 1;
+		iconRowHeaderInheritsGutterBackground = false;
 
 		setTextArea(textArea);
 		setLayout(new BorderLayout());
@@ -311,6 +318,18 @@ public class Gutter extends JPanel {
 	 */
 	public Color getFoldIndicatorForeground() {
 		return foldIndicator.getForeground();
+	}
+
+
+	/**
+	 * Returns whether the icon area inherits the gutter background (as opposed
+	 * to painting with its own, default "panel" color, which is the default).
+	 *
+	 * @return Whether the gutter background is used in the icon row header.
+	 * @see #setIconRowHeaderInheritsGutterBackground(boolean)
+	 */
+	public boolean getIconRowHeaderInheritsGutterBackground() {
+		return iconRowHeaderInheritsGutterBackground;
 	}
 
 
@@ -626,6 +645,25 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Sets whether the icon area inherits the gutter background (as opposed
+	 * to painting with its own, default "panel" color, which is the default).
+	 *
+	 * @param inherits Whether the gutter background should be used in the icon
+	 *        row header.  If this is <code>false</code>, a default,
+	 *        Look-and-feel-dependent color is used.
+	 * @see #getIconRowHeaderInheritsGutterBackground()
+	 */
+	public void setIconRowHeaderInheritsGutterBackground(boolean inherits) {
+		if (inherits!=iconRowHeaderInheritsGutterBackground) {
+			iconRowHeaderInheritsGutterBackground = inherits;
+			if (iconArea!=null) {
+				iconArea.setInheritsGutterBackground(inherits);
+			}
+		}
+	}
+
+
+	/**
 	 * Sets the color to use to paint line numbers.
 	 *
 	 * @param color The color to use when painting line numbers.
@@ -738,6 +776,8 @@ public class Gutter extends JPanel {
 			}
 			if (iconArea==null) {
 				iconArea = kit.createIconRowHeader(textArea);
+				iconArea.setInheritsGutterBackground(
+						getIconRowHeaderInheritsGutterBackground());
 			}
 			else {
 				iconArea.setTextArea(textArea);

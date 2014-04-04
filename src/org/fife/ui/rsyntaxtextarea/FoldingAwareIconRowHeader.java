@@ -67,9 +67,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		if (visibleRect==null) {
 			return;
 		}
-
-		g.setColor(getBackground());
-		g.fillRect(0,visibleRect.y, width,visibleRect.height);
+		paintBackgroundImpl(g, visibleRect);
 
 		if (textArea.getLineWrap()) {
 			paintComponentWrapped(g);

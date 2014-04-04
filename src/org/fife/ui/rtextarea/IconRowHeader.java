@@ -105,6 +105,13 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	private Color activeLineRangeColor;
 
+	/**
+	 * Whether this component should use the gutter's background color (as
+	 * opposed to using a LookAndFeel-dependent color, which is the default
+	 * behavior).
+	 */
+	private boolean inheritsGutterBackground;
+
 
 	/**
 	 * Constructor.
@@ -395,9 +402,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		if (visibleRect==null) {
 			return;
 		}
-
-		g.setColor(getBackground());
-		g.fillRect(0,visibleRect.y, width,visibleRect.height);
+		paintBackgroundImpl(g, visibleRect);
 
 		if (textArea.getLineWrap()) {
 			paintComponentWrapped(g);
@@ -480,6 +485,22 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			}
 		}
 
+	}
+
+
+	/**
+	 * Paints the background of this component.
+	 *
+	 * @param g The graphics context.
+	 * @param visibleRect The visible bounds of this component.
+	 */
+	protected void paintBackgroundImpl(Graphics g, Rectangle visibleRect) {
+		Color bg = getBackground();
+		if (inheritsGutterBackground && getGutter()!=null) {
+			bg = getGutter().getBackground();
+		}
+		g.setColor(bg);
+		g.fillRect(0,visibleRect.y, width,visibleRect.height);
 	}
 
 
@@ -728,6 +749,22 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			if (!enabled) {
 				removeBookmarkTrackingIcons();
 			}
+			repaint();
+		}
+	}
+
+
+	/**
+	 * Sets whether the icon area inherits the gutter background (as opposed
+	 * to painting with its own, default "panel" color, which is the default).
+	 *
+	 * @param inherits Whether the gutter background should be used in the icon
+	 *        row header.  If this is <code>false</code>, a default,
+	 *        Look-and-feel-dependent color is used.
+	 */
+	public void setInheritsGutterBackground(boolean inherits) {
+		if (inherits!=inheritsGutterBackground) {
+			inheritsGutterBackground = inherits;
 			repaint();
 		}
 	}
