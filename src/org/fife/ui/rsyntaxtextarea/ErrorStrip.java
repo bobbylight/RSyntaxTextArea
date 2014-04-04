@@ -106,7 +106,7 @@ public class ErrorStrip extends JComponent {
 	 * Only notices of this severity (or worse) will be displayed in this
 	 * error strip.
 	 */
-	private int levelThreshold;
+	private ParserNotice.Level levelThreshold;
 
 	/**
 	 * Whether the caret marker's location should be rendered.
@@ -152,7 +152,7 @@ public class ErrorStrip extends JComponent {
 		addMouseListener(listener);
 		setShowMarkedOccurrences(true);
 		setShowMarkAll(true);
-		setLevelThreshold(ParserNotice.WARNING);
+		setLevelThreshold(ParserNotice.Level.WARNING);
 		setFollowCaret(true);
 		setCaretMarkerColor(Color.BLACK);
 	}
@@ -253,9 +253,9 @@ public class ErrorStrip extends JComponent {
 	 * defined in the <code>ParserNotice</code> class.
 	 *
 	 * @return The minimum severity.
-	 * @see #setLevelThreshold(int)
+	 * @see #setLevelThreshold(org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level)
 	 */
-	public int getLevelThreshold() {
+	public ParserNotice.Level getLevelThreshold() {
 		return levelThreshold;
 	}
 
@@ -351,7 +351,7 @@ public class ErrorStrip extends JComponent {
 
 		List<ParserNotice> notices = textArea.getParserNotices();
 		for (ParserNotice notice : notices) {
-			if (notice.getLevel()<=levelThreshold ||
+			if (notice.getLevel().isEqualToOrWorseThan(levelThreshold) ||
 					(notice instanceof TaskNotice)) {
 				Integer key = Integer.valueOf(notice.getLine());
 				Marker m = markerMap.get(key);
@@ -473,13 +473,13 @@ public class ErrorStrip extends JComponent {
 	 * Sets the minimum severity a parser notice must be for it to be displayed
 	 * in this error strip.  This should be one of the constants defined in
 	 * the <code>ParserNotice</code> class.  The default value is
-	 * {@link ParserNotice#WARNING}.
+	 * {@link ParserNotice.Level#WARNING}.
 	 *
 	 * @param level The new severity threshold.
 	 * @see #getLevelThreshold()
 	 * @see ParserNotice
 	 */
-	public void setLevelThreshold(int level) {
+	public void setLevelThreshold(ParserNotice.Level level) {
 		levelThreshold = level;
 		if (isDisplayable()) {
 			refreshMarkers();
@@ -666,8 +666,8 @@ public class ErrorStrip extends JComponent {
 			return range.getEndOffset() - range.getStartOffset();
 		}
 
-		public int getLevel() {
-			return INFO; // Won't matter
+		public Level getLevel() {
+			return Level.INFO; // Won't matter
 		}
 
 		public int getLine() {
@@ -750,8 +750,8 @@ public class ErrorStrip extends JComponent {
 			Color c = null;
 			int lowestLevel = Integer.MAX_VALUE; // ERROR is 0
 			for (ParserNotice notice : notices) {
-				if (notice.getLevel()<lowestLevel) {
-					lowestLevel = notice.getLevel();
+				if (notice.getLevel().getNumericValue()<lowestLevel) {
+					lowestLevel = notice.getLevel().getNumericValue();
 					c = notice.getColor();
 				}
 			}

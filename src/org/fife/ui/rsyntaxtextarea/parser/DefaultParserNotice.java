@@ -23,7 +23,7 @@ import java.awt.Color;
 public class DefaultParserNotice implements ParserNotice {
 
 	private Parser parser;
-	private int level;
+	private Level level;
 	private int line;
 	private int offset;
 	private int length;
@@ -69,7 +69,7 @@ public class DefaultParserNotice implements ParserNotice {
 		this.line = line;
 		this.offset = offset;
 		this.length = length;
-		setLevel(ERROR);
+		setLevel(Level.ERROR);
 		setShowInEditor(true);
 	}
 
@@ -84,7 +84,7 @@ public class DefaultParserNotice implements ParserNotice {
 	public int compareTo(ParserNotice other) {
 		int diff = -1;
 		if (other!=null) {
-			diff = level - other.getLevel();
+			diff = level.getNumericValue() - other.getLevel().getNumericValue();
 			if (diff==0) {
 				diff = line - other.getLine();
 				if (diff==0) {
@@ -125,7 +125,7 @@ public class DefaultParserNotice implements ParserNotice {
 	public Color getColor() {
 		Color c = color; // User-defined
 		if (c==null) {
-			c = DEFAULT_COLORS[getLevel()];
+			c = DEFAULT_COLORS[getLevel().getNumericValue()];
 		}
 		return c;
 	}
@@ -150,7 +150,7 @@ public class DefaultParserNotice implements ParserNotice {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getLevel() {
+	public Level getLevel() {
 		return level;
 	}
 
@@ -231,12 +231,9 @@ public class DefaultParserNotice implements ParserNotice {
 	 * @param level The new level.
 	 * @see #getLevel()
 	 */
-	public void setLevel(int level) {
-		if (level>INFO) {
-			level = INFO;
-		}
-		else if (level<ERROR) {
-			level = ERROR;
+	public void setLevel(Level level) {
+		if (level==null) {
+			level = Level.ERROR;
 		}
 		this.level = level;
 	}

@@ -105,7 +105,7 @@ public class TaskTagParser extends AbstractParser {
 				// TODO: Strip off end of MLC's if they're there.
 				int len = text.length();
 				TaskNotice pn = new TaskNotice(this, text, line, offs, len);
-				pn.setLevel(ParserNotice.INFO);
+				pn.setLevel(ParserNotice.Level.INFO);
 				pn.setShowInEditor(false);
 				pn.setColor(COLOR);
 				result.addNotice(pn);

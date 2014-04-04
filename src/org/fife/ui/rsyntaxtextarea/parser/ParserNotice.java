@@ -31,22 +31,6 @@ import java.awt.Color;
 public interface ParserNotice extends Comparable<ParserNotice> {
 
 	/**
-	 * Indicates an info notice.
-	 */
-	public static final int INFO		= 2;
-
-	/**
-	 * Indicates a warning notice.
-	 */
-	public static final int WARNING		= 1;
-
-	/**
-	 * Indicates an error notice.
-	 */
-	public static final int ERROR		= 0;
-
-
-	/**
 	 * Returns whether this parser notice contains the specified location
 	 * in the document.
 	 *
@@ -80,9 +64,9 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	/**
 	 * Returns the level of this notice.
 	 *
-	 * @return One of {@link #INFO}, {@link #WARNING} OR {@link #ERROR}.
+	 * @return A value from the {@link Level} enumeration.
 	 */
-	public int getLevel();
+	public Level getLevel();
 
 
 	/**
@@ -141,12 +125,61 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 
 
 	/**
-	 * Returns the tooltip text to display for this notice.
+	 * Returns the tool tip text to display for this notice.
 	 *
 	 * @return The tool tip text.  If none has been explicitly set, this
 	 *         method returns the same text as {@link #getMessage()}.
 	 */
 	public String getToolTipText();
+
+
+	/**
+	 * Denotes the severity of a parser notice.
+	 */
+	public static enum Level {
+
+		/**
+		 * Indicates an informational notice.
+		 */
+		INFO(2),
+
+		/**
+		 * Indicates a warning notice.
+		 */
+		WARNING(1),
+
+		/**
+		 * Indicates an error notice.
+		 */
+		ERROR(0);
+
+		private int value;
+
+		private Level(int value) {
+			this.value = value;
+		}
+
+		/**
+		 * Returns the value of this notice level, as an integer.
+		 *
+		 * @return A numeric value for this notice level.
+		 */
+		public int getNumericValue() {
+			return value;
+		}
+
+		/**
+		 * Returns whether this level is as sever as, or worse than, another
+		 * level.
+		 *
+		 * @param other The other level.
+		 * @return Whether this level is equal to or more severe.
+		 */
+		public boolean isEqualToOrWorseThan(Level other) {
+			return value<=other.getNumericValue();
+		}
+
+	}
 
 
 }
