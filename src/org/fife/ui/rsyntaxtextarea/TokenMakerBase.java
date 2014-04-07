@@ -199,6 +199,17 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns the current language index.
+	 *
+	 * @return The current language index.
+	 * @see #setLanguageIndex(int)
+	 */
+	protected int getLanguageIndex() {
+		return languageIndex;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
@@ -295,8 +306,9 @@ abstract class TokenMakerBase implements TokenMaker {
 	 *        <code>0</code> denotes the "main" language, any positive value
 	 *        denotes a specific secondary language.  Negative values will
 	 *        be treated as <code>0</code>.
+	 * @see #getLanguageIndex()
 	 */
-	public void setLanguageIndex(int languageIndex) {
+	protected void setLanguageIndex(int languageIndex) {
 		this.languageIndex = Math.max(0, languageIndex);
 	}
 

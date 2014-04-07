@@ -220,6 +220,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	private int phpInState;
 
 	/**
+	 * The language index we were in when PHP was started.
+	 */
+	private int phpInLangIndex;
+
+	/**
 	 * When in the JS_STRING state, whether the current string is valid.
 	 */
 	private boolean validJSString;
@@ -238,6 +243,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Language state set on CSS tokens.
 	 */
 	private static final int LANG_INDEX_CSS = 2;
+
+
+	/**
+	 * Language state set on PHP.
+	 */
+	private static final int LANG_INDEX_PHP = 3;
 
 
 	/**
@@ -269,6 +280,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 	private void addHyperlinkToken(int start, int end, int tokenType) {
 		int so = start + offsetShift;
 		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
+
+
+	/**
+	 * Adds an end token that encodes the information necessary to return
+	 * to the pre-PHP state and language index.
+	 *
+	 * @param endTokenState The PHP-related end-token state.
+	 */
+	private void addPhpEndToken(int endTokenState) {
+		addEndToken(endTokenState - phpInState - (phpInLangIndex<<16));
 	}
 
 
@@ -326,7 +348,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
-		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS;
+		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS ||
+				languageIndex==LANG_INDEX_PHP;
 	}
 
 
@@ -454,24 +477,32 @@ import org.fife.ui.rsyntaxtextarea.*;
 				break;
 			default:
 				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
-					int main = -(-initialTokenType & 0xffffff00);
+					int main = -(-initialTokenType & 0x0000ff00);
 					switch (main) {
 						default: // Should never happen
 						case INTERNAL_IN_PHP:
 							state = PHP;
+							languageIndex = LANG_INDEX_PHP;
 							phpInState = -initialTokenType&0xff;
+							phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
 							break;
 						case INTERNAL_IN_PHP_MLC:
 							state = PHP_MLC;
+							languageIndex = LANG_INDEX_PHP;
 							phpInState = -initialTokenType&0xff;
+							phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
 							break;
 						case INTERNAL_IN_PHP_STRING:
 							state = PHP_STRING;
+							languageIndex = LANG_INDEX_PHP;
 							phpInState = -initialTokenType&0xff;
+							phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
 							break;
 						case INTERNAL_IN_PHP_CHAR:
 							state = PHP_CHAR;
+							languageIndex = LANG_INDEX_PHP;
 							phpInState = -initialTokenType&0xff;
+							phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
 							break;
 						case INTERNAL_CSS_STRING:
 							state = CSS_STRING;
@@ -491,7 +522,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					}
 				}
 				else {
-					state = Token.NULL;
+					state = YYINITIAL;
 				}
 				break;
 		}
@@ -525,6 +556,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Overridden to remember the language index we're leaving.
+	 */
+	@Override
+	protected void yybegin(int state, int languageIndex) {
+		phpInLangIndex = getLanguageIndex();
+		yybegin(state);
+		setLanguageIndex(languageIndex);
+	}
+
+
+	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
@@ -545,7 +587,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -694,7 +736,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								  start = zzMarkedPos; cssPrevState = zzLexicalState; yybegin(INTAG_STYLE);
 								}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
-	{PHP_Start}					{ addToken(Token.MARKUP_TAG_DELIMITER); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ addToken(Token.MARKUP_TAG_DELIMITER); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
@@ -866,7 +908,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INTAG> {
-	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
@@ -879,7 +921,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_DOUBLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\"<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
@@ -887,7 +929,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_SINGLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\'<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
@@ -895,7 +937,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INTAG_SCRIPT> {
-	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
@@ -908,7 +950,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_DOUBLE_SCRIPT> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\"<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
@@ -916,7 +958,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_SINGLE_SCRIPT> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\'<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
@@ -924,6 +966,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INTAG_STYLE> {
+	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
 	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
@@ -936,13 +979,17 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <INATTR_DOUBLE_STYLE> {
-	[^\"]*						{}
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\"<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\"]						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_STYLE); return firstToken; }
 }
 
 <INATTR_SINGLE_STYLE> {
-	[^\']*						{}
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\'<]*						{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	[\']						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_STYLE); return firstToken; }
 }
@@ -1079,7 +1126,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
 	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
 
-	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP); }
+	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 
 	/* Operators. */
 	{JS_Operator}					{ addToken(Token.OPERATOR); }
@@ -1102,7 +1149,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 <JS_STRING> {
-	[^\n\\\"]+				{}
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\n\\\"<]+				{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\n						{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
@@ -1125,7 +1174,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <JS_CHAR> {
-	[^\n\\\']+				{}
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\n\\\'<]+				{}
+	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\n						{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
@@ -1188,6 +1239,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 <CSS> {
+	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
@@ -1213,6 +1265,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <CSS_PROPERTY> {
+	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
@@ -1230,6 +1283,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <CSS_VALUE> {
+	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
@@ -1258,7 +1312,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <CSS_STRING> {
-	[^\n\\\"]+			{}
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\n\\\"<]+			{}
+	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\\.?				{ /* Skip escaped chars. */ }
 	\"					{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
 	\n |
@@ -1266,7 +1322,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <CSS_CHAR_LITERAL> {
-	[^\n\\\']+			{}
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^\n\\\'<]+			{}
+	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\\.?				{ /* Skip escaped chars. */ }
 	\'					{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState); }
 	\n |
@@ -1274,7 +1332,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <CSS_C_STYLE_COMMENT> {
-	[^hwf\n\*]+			{}
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	[^hwf\n\*<]+			{}
+	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
 	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]				{}
 	{CSS_MlcEnd}		{ addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState); }
@@ -1286,7 +1346,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <PHP> {
 
-	"?>"						{ addToken(Token.MARKUP_TAG_DELIMITER); start = zzMarkedPos; yybegin(phpInState); }
+	"?>"						{ yybegin(phpInState, phpInLangIndex); addToken(Token.MARKUP_TAG_DELIMITER); start = zzMarkedPos; }
 
 	/* Error control operator */
 	("@"{JS_Identifier})		{
@@ -2278,7 +2338,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{PHP_Null}					{ addToken(Token.RESERVED_WORD); }
 	{PHP_Variable}				{ addToken(Token.VARIABLE); }
 
-	{LineTerminator}				{ addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
+	{LineTerminator}				{ addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
 	{JS_Identifier}				{ addToken(Token.IDENTIFIER); }
 	{Whitespace}					{ addToken(Token.WHITESPACE); }
 
@@ -2289,7 +2349,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(PHP_MLC); }
-	{PHP_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
+	{PHP_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
 
 	/* Separators. */
 	{JS_Separator}					{ addToken(Token.SEPARATOR); }
@@ -2307,7 +2367,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
-	<<EOF>>						{ addEndToken(INTERNAL_IN_PHP - phpInState); return firstToken; }
+	<<EOF>>						{ addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
 
 	/* Catch any other (unhandled) characters and assume they are okay. */
 	.							{ addToken(Token.IDENTIFIER); }
@@ -2320,28 +2380,28 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[^hwf\n\*]+					{}
 	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]						{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC - phpInState); return firstToken; }
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_PHP_MLC - phpInState); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 }
 
 
 <PHP_STRING> {
 	[^\n\\\$\"]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_IN_PHP_STRING - phpInState); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
 	\\.?				{ /* Skip escaped chars. */ }
 	{PHP_Variable}		{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	"$"					{}
 	\"					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_IN_PHP_STRING - phpInState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
 }
 
 
 <PHP_CHAR> {
 	[^\n\\\']+			{}
 	\\.?				{ /* Skip escaped single quotes only, but this should still work. */ }
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_IN_PHP_CHAR - phpInState); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
 	\'					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_IN_PHP_CHAR - phpInState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
 }
