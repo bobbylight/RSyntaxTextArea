@@ -10,7 +10,6 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 
@@ -27,6 +26,22 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 
 	private static final char[] CLOSE_TAG_START = { '<', '/' };
 	private static final char[] TAG_SELF_CLOSE = { '/', '>' };
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Token getTokenToMark(RSyntaxTextArea textArea) {
+		return HtmlOccurrenceMarker.getTagNameTokenForCaretOffset(textArea);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isValidType(RSyntaxTextArea textArea, Token t) {
+		return textArea.getMarkOccurrencesOfTokenType(t.getType());
+	}
 
 
 	/**

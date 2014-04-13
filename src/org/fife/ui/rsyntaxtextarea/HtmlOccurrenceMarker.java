@@ -142,6 +142,64 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 
 
 	/**
+	 * If the caret is inside of a tag, this method returns the token
+	 * representing the tag name; otherwise, <code>null</code> is returned.<p>
+	 *
+	 * Currently, this method only checks for tag names on the same line as
+	 * the caret, for simplicity.  In the future it could check prior lines
+	 * until the tag name is found.
+	 * @param textArea
+	 * @return
+	 */
+	public static final Token getTagNameTokenForCaretOffset(
+			RSyntaxTextArea textArea) {
+
+		// Get the tag name token.
+		// For now, we only check for tags on the current line, for simplicity.
+
+		int dot = textArea.getCaretPosition();
+		Token t = textArea.getTokenListForLine(textArea.getCaretLineNumber());
+		Token toMark = null;
+
+		while (t!=null && t.isPaintable()) {
+			if (t.getType()==Token.MARKUP_TAG_NAME) {
+				toMark = t;
+			}
+			if (t.containsPosition(dot)) {
+				// Check for the token containing the caret before checking
+				// if it's the close token.
+				break;
+			}
+			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+				if (t.isSingleChar('>') || t.is(TAG_SELF_CLOSE)) {
+					toMark = null;
+				}
+			}
+			t = t.getNextToken();
+		}
+
+		return toMark;
+
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Token getTokenToMark(RSyntaxTextArea textArea) {
+		return getTagNameTokenForCaretOffset(textArea);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isValidType(RSyntaxTextArea textArea, Token t) {
+		return textArea.getMarkOccurrencesOfTokenType(t.getType());
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,

@@ -15,11 +15,9 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 
 import org.fife.ui.rtextarea.SmartHighlightPainter;
-
 
 
 /**
@@ -108,24 +106,10 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 			doc.readLock();
 			try {
 
-				// Get the token at the caret position.
-				int line = textArea.getCaretLineNumber();
-				Token tokenList = textArea.getTokenListForLine(line);
-				int dot = c.getDot();
-				Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-				if (t==null /* EOL */ || !isValidType(t) || isNonWordChar(t)) {
-					// Try to the "left" of the caret.
-					dot--;
-					try {
-						if (dot>=textArea.getLineStartOffset(line)) {
-							t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
-						}
-					} catch (BadLocationException ble) {
-						ble.printStackTrace(); // Never happens
-					}
-				}
+				Token t = occurrenceMarker.getTokenToMark(textArea);
 
-				if (t!=null && isValidType(t) && !isNonWordChar(t)) {
+				if (t!=null && occurrenceMarker.isValidType(textArea, t) &&
+						!RSyntaxUtilities.isNonWordChar(t)) {
 					removeHighlights();
 					RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 							textArea.getHighlighter();
@@ -210,34 +194,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 		if (textArea.getMarkOccurrencesColor()!=null) {
 			setColor(textArea.getMarkOccurrencesColor());
 		}
-	}
-
-
-	/**
-	 * Returns whether the specified token is a single non-word char (e.g. not
-	 * in <tt>[A-Za-z]</tt>.  This is a HACK to work around the fact that many
-	 * standard token makers return things like semicolons and periods as
-	 * {@link Token#IDENTIFIER}s just to make the syntax highlighting coloring
-	 * look a little better.
-	 * 
-	 * @param t The token to check.  This cannot be <tt>null</tt>.
-	 * @return Whether the token is a single non-word char.
-	 */
-	private static final boolean isNonWordChar(Token t) {
-		return t.length()==1 &&
-				!RSyntaxUtilities.isLetter(t.charAt(0));
-	}
-
-
-	/**
-	 * Returns whether the specified token is a type that we can do a
-	 * "mark occurrences" on.
-	 *
-	 * @param t The token.
-	 * @return Whether we should mark all occurrences of this token.
-	 */
-	private boolean isValidType(Token t) {
-		return textArea.getMarkOccurrencesOfTokenType(t.getType());
 	}
 
 

@@ -10,6 +10,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 
 import org.fife.ui.rtextarea.SmartHighlightPainter;
 
@@ -22,6 +23,44 @@ import org.fife.ui.rtextarea.SmartHighlightPainter;
  * @version 1.0
  */
 class DefaultOccurrenceMarker implements OccurrenceMarker {
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Token getTokenToMark(RSyntaxTextArea textArea) {
+
+		// Get the token at the caret position.
+		int line = textArea.getCaretLineNumber();
+		Token tokenList = textArea.getTokenListForLine(line);
+		Caret c = textArea.getCaret();
+		int dot = c.getDot();
+
+		Token t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
+		if (t==null /* EOL */ || !isValidType(textArea, t) ||
+				RSyntaxUtilities.isNonWordChar(t)) {
+			// Try to the "left" of the caret.
+			dot--;
+			try {
+				if (dot>=textArea.getLineStartOffset(line)) {
+					t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
+				}
+			} catch (BadLocationException ble) {
+				ble.printStackTrace(); // Never happens
+			}
+		}
+
+		return t;
+
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isValidType(RSyntaxTextArea textArea, Token t) {
+		return textArea.getMarkOccurrencesOfTokenType(t.getType());
+	}
 
 
 	/**

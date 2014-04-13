@@ -18,6 +18,7 @@ import java.awt.Toolkit;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -1272,6 +1273,21 @@ return c.getLineStartOffset(line);
 	 */
 	public static final boolean isLightForeground(Color fg) {
 		return fg.getRed()>0xa0 && fg.getGreen()>0xa0 && fg.getBlue()>0xa0;
+	}
+
+
+	/**
+	 * Returns whether the specified token is a single non-word char (e.g. not
+	 * in <code>[A-Za-z]</code>.  This is a HACK to work around the fact that
+	 * many standard token makers return things like semicolons and periods as
+	 * {@link Token#IDENTIFIER}s just to make the syntax highlighting coloring
+	 * look a little better.
+	 * 
+	 * @param t The token to check.  This cannot be <code>null</code>.
+	 * @return Whether the token is a single non-word char.
+	 */
+	public static final boolean isNonWordChar(Token t) {
+		return t.length()==1 && !RSyntaxUtilities.isLetter(t.charAt(0));
 	}
 
 

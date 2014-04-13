@@ -24,6 +24,31 @@ public interface OccurrenceMarker {
 
 
 	/**
+	 * Returns the token to mark occurrences, of, provided it matches the
+	 * criteria put forth by {@link #isValidType(RSyntaxTextArea, Token)}.
+	 * For most languages, this method should return the token at the caret
+	 * position.
+	 *
+	 * @param textArea The text area.
+	 * @return The token to (possibly) mark occurrences of, or
+	 *         <code>null</code> if none.
+	 */
+	public Token getTokenToMark(RSyntaxTextArea textArea);
+
+
+	/**
+	 * Returns whether the specified token is a type that we can do a
+	 * "mark occurrences" of.  Typically, this will delegate to
+	 * {@link RSyntaxTextArea#getMarkOccurrencesOfTokenType(int)}.
+	 *
+	 * @param textArea The text area.
+	 * @param t The token.
+	 * @return Whether we should mark all occurrences of this token.
+	 */
+	public boolean isValidType(RSyntaxTextArea textArea, Token t);
+
+
+	/**
 	 * Called when occurrences of a token should be marked.
 	 *
 	 * @param doc The document.
