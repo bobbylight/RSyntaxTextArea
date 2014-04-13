@@ -59,9 +59,6 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
 
-  /** initial size of the lookahead buffer */
-  private static final int ZZ_BUFFERSIZE = 16384;
-
   /** lexical states */
   public static final int PHP = 18;
   public static final int INATTR_SINGLE_SCRIPT = 9;
@@ -24115,13 +24112,10 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 
   /** this buffer contains the current text to be matched and is
       the source of the yytext() string */
-  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+  private char zzBuffer[];
 
   /** the textposition at the last accepting state */
   private int zzMarkedPos;
-
-  /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
 
   /** the current text position in the buffer */
   private int zzCurrentPos;
@@ -24132,23 +24126,6 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
   /** endRead marks the last character in the buffer, that has been read
       from input */
   private int zzEndRead;
-
-  /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
-
-  /** the number of characters up to the start of the matched text */
-  private int yychar;
-
-  /**
-   * the number of characters from the last newline up to the start of the 
-   * matched text
-   */
-  private int yycolumn;
-
-  /** 
-   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-   */
-  private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
@@ -24692,10 +24669,9 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 		//zzStartRead = zzEndRead = s.offset;
 		zzStartRead = s.offset;
 		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
+		zzCurrentPos = zzMarkedPos = s.offset;
 		zzLexicalState = YYINITIAL;
 		zzReader = reader;
-		zzAtBOL  = true;
 		zzAtEOF  = false;
 	}
 
