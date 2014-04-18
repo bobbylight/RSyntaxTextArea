@@ -165,9 +165,12 @@ public class UnicodeWriter extends Writer {
 	 * Returns whether UTF-8 files should have a BOM in them when written.
 	 *
 	 * @return Whether to write a BOM for UTF-8 files.
+	 * @see #setWriteUtf8BOM(boolean)
+	 * @see UnicodeWriter
 	 */
 	public static boolean getWriteUtf8BOM() {
 		String prop = System.getProperty(PROPERTY_WRITE_UTF8_BOM);
+		// We default to writing the BOM, for some reason.
 		if (prop!=null && Boolean.valueOf(prop).equals(Boolean.FALSE)) {
 			return false;
 		}
@@ -212,6 +215,19 @@ public class UnicodeWriter extends Writer {
 			out.write(UTF32BE_BOM, 0, UTF32BE_BOM.length);
 		}
 
+	}
+
+
+	/**
+	 * Sets whether UTF-8 files should have a BOM written in them.
+	 *
+	 * @param write Whether to write a BOM.
+	 * @see #getWriteUtf8BOM()
+	 * @see UnicodeWriter
+	 */
+	public static void setWriteUtf8BOM(boolean write) {
+		System.setProperty(UnicodeWriter.PROPERTY_WRITE_UTF8_BOM,
+				Boolean.toString(write));
 	}
 
 

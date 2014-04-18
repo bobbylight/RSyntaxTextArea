@@ -40,6 +40,12 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * </ul>
  *
  * Loading and saving is also built into the editor.<p>
+ * 
+ * When saving UTF-8 files, whether or not a BOM is written is controlled by
+ * the {@link UnicodeWriter} class.
+ * Use {@link UnicodeWriter#setWriteUtf8BOM(boolean)} to toggle writing BOMs
+ * for UTF-8 files.<p>
+ *
  * Both local and remote files (e.g. ftp) are supported.  See the
  * {@link FileLocation} class for more information.
  *

@@ -813,8 +813,7 @@ public class SearchEngine {
 			textArea.replaceSelection(replacement);
 
 			// If there is another match, find and select it.
-			int dot = textArea.getCaretPosition();
-			dot -= (info.getMatchedText().length() - replacement.length());
+			int dot = matchStart + replacement.length();
 			findIn = getFindInCharSequence(textArea, dot, forward);
 			info = getRegExReplaceInfo(findIn, context);
 			if (info!=null) {
