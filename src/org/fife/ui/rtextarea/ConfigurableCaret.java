@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
 import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.text.*;
@@ -27,14 +26,9 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * following niceties:
  *
  * <ul>
- *   <li>This caret can paint itself several different ways:
- *      <ol>
- *         <li>As a vertical line (like <code>DefaultCaret</code>)</li>
- *         <li>As a slightly thicker vertical line (like Eclipse)</li>
- *         <li>As an underline</li>
- *         <li>As a "block caret"</li>
- *         <li>As a rectangle around the current character</li>
- *      </ol></li>
+ *   <li>This caret can render itself many different ways; see the
+ *       {@link #setStyle(CaretStyle)} method and {@link CaretStyle} for
+ *       more information.</li>
  *   <li>On Microsoft Windows and other operating systems that do not
  *       support system selection (i.e., selecting text, then pasting
  *       via the middle mouse button), clicking the middle mouse button
@@ -47,41 +41,6 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * @version 0.6
  */
 public class ConfigurableCaret extends DefaultCaret {
-
-	/**
-	 * The minimum value of a caret style.
-	 */
-	public static final int MIN_STYLE				= 0;
-
-	/**
-	 * The vertical line style.
-	 */
-	public static final int VERTICAL_LINE_STYLE		= 0;
-
-	/**
-	 * The horizontal line style.
-	 */
-	public static final int UNDERLINE_STYLE			= 1;
-
-	/**
-	 * The block style.
-	 */
-	public static final int BLOCK_STYLE			= 2;
-
-	/**
-	 * The block border style.
-	 */
-	public static final int BLOCK_BORDER_STYLE		= 3;
-
-	/**
-	 * A thicker vertical line (2 pixels instead of 1).
-	 */
-	public static final int THICK_VERTICAL_LINE_STYLE	= 4;
-
-	/**
-	 * The maximum value of a caret style.
-	 */
-	public static final int MAX_STYLE				= THICK_VERTICAL_LINE_STYLE;
 
 	/**
 	 * Action used to select a word on a double click.
@@ -107,7 +66,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	/**
 	 * Whether the caret is a vertical line, a horizontal line, or a block.
 	 */
-	private int style;
+	private CaretStyle style;
 
 	/**
 	 * The selection painter.  By default this paints selections with the
@@ -116,10 +75,10 @@ public class ConfigurableCaret extends DefaultCaret {
 	private ChangeableHighlightPainter selectionPainter;
 
 	/**
-	 * Creates the caret using {@link #VERTICAL_LINE_STYLE}.
+	 * Creates the caret using {@link CaretStyle#THICK_VERTICAL_LINE_STYLE}.
 	 */
 	public ConfigurableCaret() {
-		this(VERTICAL_LINE_STYLE);
+		this(CaretStyle.THICK_VERTICAL_LINE_STYLE);
 	}
 
 
@@ -127,9 +86,10 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * Constructs a new <code>ConfigurableCaret</code>.
 	 *
 	 * @param style The style to use when painting the caret.  If this is
-	 *        invalid, then {@link #VERTICAL_LINE_STYLE} is used.
+	 *        invalid, then {@link CaretStyle#THICK_VERTICAL_LINE_STYLE} is
+	 *        used.
 	 */
-	public ConfigurableCaret(int style) {
+	public ConfigurableCaret(CaretStyle style) {
 		seg = new Segment();
 		setStyle(style);
 		selectionPainter = new ChangeableHighlightPainter();
@@ -241,9 +201,9 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * Gets the current style of this caret.
 	 *
 	 * @return The caret's style.
-	 * @see #setStyle(int)
+	 * @see #setStyle(CaretStyle)
 	 */
-	public int getStyle() {
+	public CaretStyle getStyle() {
 		return style;
 	}
 
@@ -471,21 +431,6 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
-	 * Deserializes a caret.  This is overridden to read the caret's style.
-	 *
-	 * @param s The stream to read from.
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 */
-	private void readObject(ObjectInputStream s)
-						throws ClassNotFoundException, IOException {
-		s.defaultReadObject();
-		setStyle(s.readInt());
-		seg = new Segment();
-	}
-
-
-	/**
 	 * Selects word based on the MouseEvent
 	 */
 	private void selectWord(MouseEvent e) {
@@ -542,17 +487,17 @@ public class ConfigurableCaret extends DefaultCaret {
 	/**
 	 * Sets the style used when painting the caret.
 	 *
-	 * @param style The style to use.  If this isn't one of
-	 *        <code>VERTICAL_LINE_STYLE</code>, <code>UNDERLINE_STYLE</code>,
-	 *        or <code>BLOCK_STYLE</code>, then
-	 *        <code>VERTICAL_LINE_STYLE</code> is used.
+	 * @param style The style to use.  This should not be <code>null</code>.
 	 * @see #getStyle()
 	 */
-	public void setStyle(int style) {
-		if (style<MIN_STYLE || style>MAX_STYLE)
-			style = VERTICAL_LINE_STYLE;
-		this.style = style;
-		repaint();
+	public void setStyle(CaretStyle style) {
+		if (style==null) {
+			style = CaretStyle.THICK_VERTICAL_LINE_STYLE;
+		}
+		if (style!=this.style) {
+			this.style = style;
+			repaint();
+		}
 	}
 
 
@@ -618,19 +563,6 @@ public class ConfigurableCaret extends DefaultCaret {
 
 		} // End of if (rect!=null && rect.width<=1).
 
-	}
-
-
-	/**
-	 * Serializes this caret.  This is overridden to write the style of the
-	 * caret.
-	 *
-	 * @param s The stream to write to.
-	 * @throws IOException If an IO error occurs.
-	 */
-	private void writeObject(ObjectOutputStream s) throws IOException {
-		s.defaultWriteObject();
-		s.writeInt(getStyle());
 	}
 
 

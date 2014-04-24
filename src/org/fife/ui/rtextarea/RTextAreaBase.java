@@ -948,9 +948,11 @@ try {
 	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
-		updateMarginLineX();
-		if (highlightCurrentLine)
-			possiblyUpdateCurrentLineHighlightLocation();
+		if (font!=null) {
+			updateMarginLineX();
+			if (highlightCurrentLine)
+				possiblyUpdateCurrentLineHighlightLocation();
+		}
 	}
 
 

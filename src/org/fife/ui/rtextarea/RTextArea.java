@@ -171,7 +171,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	private SmartHighlightPainter markAllHighlightPainter;
 
-	private int[] carets;		// Index 0=>insert caret, 1=>overwrite.
+	private CaretStyle[] carets;	// Index 0=>insert caret, 1=>overwrite.
 
 	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
 
@@ -872,9 +872,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		markAllHighlightPainter = new SmartHighlightPainter(
 										markAllHighlightColor);
 		setMarkAllHighlightColor(markAllHighlightColor);
-		carets = new int[2];
-		setCaretStyle(INSERT_MODE, ConfigurableCaret.THICK_VERTICAL_LINE_STYLE);
-		setCaretStyle(OVERWRITE_MODE, ConfigurableCaret.BLOCK_STYLE);
+		carets = new CaretStyle[2];
+		setCaretStyle(INSERT_MODE, CaretStyle.THICK_VERTICAL_LINE_STYLE);
+		setCaretStyle(OVERWRITE_MODE, CaretStyle.BLOCK_STYLE);
 		setDragEnabled(true);			// Enable drag-and-drop.
 
 		setTextMode(INSERT_MODE); // Carets array must be created first!
@@ -1384,14 +1384,13 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * Sets the style of caret used when in insert or overwrite mode.
 	 *
 	 * @param mode Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
-	 * @param style The style for the caret (such as
-	 *        {@link ConfigurableCaret#VERTICAL_LINE_STYLE}).
-	 * @see org.fife.ui.rtextarea.ConfigurableCaret
+	 * @param style The style for the caret.
+	 * @see ConfigurableCaret
 	 */
-	public void setCaretStyle(int mode, int style) {
-		style = (style>=ConfigurableCaret.MIN_STYLE &&
-					style<=ConfigurableCaret.MAX_STYLE ?
-						style : ConfigurableCaret.THICK_VERTICAL_LINE_STYLE);
+	public void setCaretStyle(int mode, CaretStyle style) {
+		if (style==null) {
+			style = CaretStyle.THICK_VERTICAL_LINE_STYLE;
+		}
 		carets[mode] = style;
 		if (mode==getTextMode() && getCaret() instanceof ConfigurableCaret) {
 			// Will repaint the caret if necessary.
