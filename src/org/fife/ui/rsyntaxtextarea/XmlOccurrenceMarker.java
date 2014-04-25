@@ -32,7 +32,8 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 	 * {@inheritDoc}
 	 */
 	public Token getTokenToMark(RSyntaxTextArea textArea) {
-		return HtmlOccurrenceMarker.getTagNameTokenForCaretOffset(textArea);
+		return HtmlOccurrenceMarker.getTagNameTokenForCaretOffset(
+				textArea, this);
 	}
 
 

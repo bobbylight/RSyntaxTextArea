@@ -68,6 +68,21 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
+		markOccurrencesOfToken(doc, t, h, p);
+	}
+
+
+	/**
+	 * Highlights all instances of tokens identical to <code>t</code> in the
+	 * specified document.
+	 *
+	 * @param doc The document.
+	 * @param t The document whose relevant occurrences should be marked.
+	 * @param h The highlighter to add the highlights to.
+	 * @param p The painter for the highlights.
+	 */
+	public static final void markOccurrencesOfToken(RSyntaxDocument doc,
+			Token t, RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();
 		int type = t.getType();
@@ -79,7 +94,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 				if (temp.is(type, lexeme)) {
 					try {
 						int end = temp.getEndOffset();
-						h.addMarkedOccurrenceHighlight(temp.getOffset(), end, p);
+						h.addMarkedOccurrenceHighlight(temp.getOffset(),end,p);
 					} catch (BadLocationException ble) {
 						ble.printStackTrace(); // Never happens
 					}

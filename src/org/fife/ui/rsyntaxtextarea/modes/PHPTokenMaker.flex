@@ -333,6 +333,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected OccurrenceMarker createOccurrenceMarker() {
+		return new HtmlOccurrenceMarker();
+	}
+
+
+	/**
 	 * Sets whether markup close tags should be completed.  You might not want
 	 * this to be the case, since some tags in standard HTML aren't usually
 	 * closed.
@@ -358,7 +367,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.FUNCTION || type==Token.VARIABLE;
+		return type==Token.FUNCTION || type==Token.VARIABLE ||
+				type==Token.MARKUP_TAG_NAME;
 	}
 
 

@@ -148,11 +148,15 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 * Currently, this method only checks for tag names on the same line as
 	 * the caret, for simplicity.  In the future it could check prior lines
 	 * until the tag name is found.
-	 * @param textArea
-	 * @return
+	 *
+	 * @param textArea The text area.
+	 * @param occurrenceMarker The occurrence marker.
+	 * @return The token to mark occurrences of.  Note that, if the
+	 *         specified occurrence marker identifies tokens other than
+	 *         tag names, these other element types may be returned.
 	 */
 	public static final Token getTagNameTokenForCaretOffset(
-			RSyntaxTextArea textArea) {
+			RSyntaxTextArea textArea, OccurrenceMarker occurrenceMarker) {
 
 		// Get the tag name token.
 		// For now, we only check for tags on the current line, for simplicity.
@@ -165,10 +169,18 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 			if (t.getType()==Token.MARKUP_TAG_NAME) {
 				toMark = t;
 			}
-			if (t.containsPosition(dot)) {
-				// Check for the token containing the caret before checking
-				// if it's the close token.
-				break;
+			// Check for the token containing the caret before checking
+			// if it's the close token.
+			if (t.getEndOffset()==dot || t.containsPosition(dot)) {
+				// Some languages, like PHP, mark functions/variables (PHP,
+				// JavaScirpt) as well as HTML tags.
+				if (occurrenceMarker.isValidType(textArea, t) &&
+						t.getType()!=Token.MARKUP_TAG_NAME) {
+					return t;
+				}
+				if (t.containsPosition(dot)) {
+					break;
+				}
 			}
 			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
 				if (t.isSingleChar('>') || t.is(TAG_SELF_CLOSE)) {
@@ -187,7 +199,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 * {@inheritDoc}
 	 */
 	public Token getTokenToMark(RSyntaxTextArea textArea) {
-		return getTagNameTokenForCaretOffset(textArea);
+		return getTagNameTokenForCaretOffset(textArea, this);
 	}
 
 
@@ -204,6 +216,11 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 */
 	public void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
+
+		if (t.getType()!=Token.MARKUP_TAG_NAME) {
+			DefaultOccurrenceMarker.markOccurrencesOfToken(doc, t, h, p);
+			return;
+		}
 
 		String lexemeStr = t.getLexeme();
 		char[] lexeme = lexemeStr.toCharArray();
