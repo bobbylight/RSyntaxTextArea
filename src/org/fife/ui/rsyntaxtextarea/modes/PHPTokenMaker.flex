@@ -1753,7 +1753,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"html_entity_decode" |
 	"htmlentities" |
 	"htmlspecialchars" |
-	"http_build_query" |
+	("http_"("build_query"|"response_code")) |
 	("hw_"("array2objrec"|"changeobject"|"children"|"childrenobj"|"close"|"connect"|"connection_info"|"cp"|"deleteobject"|"docbyanchor"|"docbyanchorobj"|"document_attributes"|"document_bodytag"|"document_content"|"document_setcontent"|"document_size"|"dummy"|"edittext"|"error"|"errormsg"|"free_document"|"getanchors"|"getanchorsobj"|"getandlock"|"getchildcoll"|"getchildcollobj"|"getchilddoccoll"|"getchilddoccollobj"|"getobject"|"getobjectbyquery"|"getobjectbyquerycoll"|"getobjectbyquerycollobj"|"getobjectbyqueryobj"|"getparents"|"getparentsobj"|"getrellink"|"getremote"|"getremotechildren"|"getsrcbydestobj"|"gettext"|"getusername"|"identify"|"incollections"|"info"|"inscoll"|"insdoc"|"insertanchors"|"insertdocument"|"insertobject"|"mapid"|"modifyobject"|"mv"|"new_document"|"objrec2array"|"output_document"|"pconnect"|"pipedocument"|"root"|"setlinkroot"|"stat"|"unlock"|"who")) |
 	"hwapi_hgcsp" |
 	"hwstat" |
