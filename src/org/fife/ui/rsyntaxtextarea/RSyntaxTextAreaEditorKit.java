@@ -780,6 +780,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				dot = Math.min(line1, line2);
 				mark = Math.max(line1, line2);
 				Element elem;
+				textArea.beginAtomicEdit();
 				try {
 					for (line1=dot; line1<mark; line1++) {
 						elem = map.getElement(line1);
@@ -798,6 +799,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					ble.printStackTrace();
 					UIManager.getLookAndFeel().
 								provideErrorFeedback(textArea);
+				} finally {
+					textArea.endAtomicEdit();
 				}
 			}
 			else {
