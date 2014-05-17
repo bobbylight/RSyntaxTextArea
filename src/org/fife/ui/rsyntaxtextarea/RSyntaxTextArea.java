@@ -101,6 +101,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>NSIS
  *       <li>Perl
  *       <li>PHP
+ *       <li>Python
  *       <li>Ruby
  *       <li>SAS
  *       <li>Scala

@@ -107,7 +107,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return <code>null</code>, as there are no comments in plain text.
 	 */
 	@Override
-	public String[] getLineCommentStartAndEnd() {
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return null;
 	}
 

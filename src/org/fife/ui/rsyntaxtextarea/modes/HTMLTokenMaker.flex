@@ -314,6 +314,22 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
+		switch (languageIndex) {
+			case LANG_INDEX_JS:
+				return new String[] { "//", null };
+			case LANG_INDEX_CSS:
+				return new String[] { "/*", "*/" };
+			default:
+				return new String[] { "<!--", "-->" };
+		}
+	}
+
+
+	/**
 	 * Returns <code>Token.MARKUP_TAG_NAME</code>.
 	 *
 	 * @param type The token type.

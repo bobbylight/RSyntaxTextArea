@@ -159,7 +159,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The line comment start and end text for .htaccess files.
 	 */
 	@Override
-	public String[] getLineCommentStartAndEnd() {
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
 	}
 

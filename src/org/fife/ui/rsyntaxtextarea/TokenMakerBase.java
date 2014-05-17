@@ -80,6 +80,7 @@ abstract class TokenMakerBase implements TokenMaker {
 			previousToken = currentToken;
 			currentToken = next;
 		}
+		currentToken.setLanguageIndex(languageIndex);
 	}
 
 
@@ -228,7 +229,7 @@ abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getLineCommentStartAndEnd() {
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return null;
 	}
 

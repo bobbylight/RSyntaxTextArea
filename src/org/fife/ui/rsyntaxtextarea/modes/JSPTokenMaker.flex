@@ -348,6 +348,22 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
+		switch (languageIndex) {
+			case LANG_INDEX_JS:
+				return new String[] { "//", null };
+			case LANG_INDEX_CSS:
+				return new String[] { "/*", "*/" };
+			default:
+				return new String[] { "<!--", "-->" };
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.FUNCTION || type==Token.VARIABLE ||
 				type==Token.MARKUP_TAG_NAME;
