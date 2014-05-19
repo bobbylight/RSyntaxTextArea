@@ -1,28 +1,6 @@
-# Eclipse
-/bin
-/.classpath
-/.project
-/.settings/
-/.metadata/
-
-# Gradle
-/.gradle
-/build
-/out
-
-# IntelliJ
-/*.iml
-/*.ipr
-/*.iws
-/.idea
-/classes
-
-# Java
-*.class
-*.ear
-/*.jar
-*.war
-/dist/
-
-#git
-/.gitignore
+ant-classes
+bin
+dist
+javadoc
+rsyntaxtextarea_*.zip
+*.java~
