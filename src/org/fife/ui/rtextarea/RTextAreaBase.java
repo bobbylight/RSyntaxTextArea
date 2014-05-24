@@ -1145,7 +1145,12 @@ try {
 	 * the margin line to be "80 characters" over.
 	 */
 	protected void updateMarginLineX() {
-		marginLineX = getFontMetrics(getFont()).charWidth('m') *
+		Font font = getFont();
+		if (font == null) {
+			marginLineX = 0;
+			return;
+		}
+		marginLineX = getFontMetrics(font).charWidth('m') *
 												marginSizeInChars;
 	}
 
