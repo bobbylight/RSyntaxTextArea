@@ -80,14 +80,14 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Constant representing insert mode.
 	 *
-	 * @see #setCaretStyle(int, int)
+	 * @see #setCaretStyle(int, CaretStyle)
 	 */
 	public static final int INSERT_MODE				= 0;
 
 	/**
 	 * Constant representing overwrite mode.
 	 *
-	 * @see #setCaretStyle(int, int)
+	 * @see #setCaretStyle(int, CaretStyle)
 	 */
 	public static final int OVERWRITE_MODE				= 1;
 
@@ -1368,7 +1368,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *        <code>ConfigurableCaret</code>, an exception is thrown.
 	 * @throws IllegalArgumentException If the specified caret is not an
 	 *         <code>ConfigurableCaret</code>.
-	 * @see #setCaretStyle(int, int)
+	 * @see #setCaretStyle(int, CaretStyle)
 	 */
 	@Override
 	public void setCaret(Caret caret) {

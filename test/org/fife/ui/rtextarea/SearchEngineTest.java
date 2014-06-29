@@ -99,9 +99,6 @@ public class SearchEngineTest {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
 

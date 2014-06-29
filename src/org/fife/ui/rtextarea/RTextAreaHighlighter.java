@@ -67,7 +67,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * @param p
 	 * @return A tag to reference the highlight later.
 	 * @throws BadLocationException
-	 * @see #clearMarkOccurrencesHighlights()
+	 * @see #clearMarkAllHighlights()
 	 */
 	Object addMarkAllHighlight(int start, int end, HighlightPainter p)
 			throws BadLocationException {
@@ -88,9 +88,9 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 
 
 	/**
-	 * Removes all "marked occurrences" highlights from the view.
+	 * Removes all "mark all" highlights from the view.
 	 *
-	 * @see #addMarkedOccurrenceHighlight(int, int, MarkOccurrencesHighlightPainter)
+	 * @see #addMarkAllHighlight(int, int, javax.swing.text.Highlighter.HighlightPainter)
 	 */
 	void clearMarkAllHighlights() {
 		// Don't remove via an iterator; since our List is an ArrayList, this

@@ -48,8 +48,9 @@ import org.fife.ui.rtextarea.RTextArea;
  * component is to register a <code>Parser</code> on an RSyntaxTextArea and
  * return <code>ParserNotice</code>s for each line to display an icon for.
  * The severity of each notice must be at least the threshold set by
- * {@link #setLevelThreshold(int)} to be displayed in this error strip.  The
- * default threshold is {@link ParserNotice#WARNING}.<p>
+ * {@link #setLevelThreshold(org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level)}
+ * to be displayed in this error strip.  The default threshold is
+ * {@link org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level#WARNING}.<p>
  *   
  * An <code>ErrorStrip</code> can be added to a UI like so:
  * <pre>
@@ -473,7 +474,7 @@ public class ErrorStrip extends JComponent {
 	 * Sets the minimum severity a parser notice must be for it to be displayed
 	 * in this error strip.  This should be one of the constants defined in
 	 * the <code>ParserNotice</code> class.  The default value is
-	 * {@link ParserNotice.Level#WARNING}.
+	 * {@link org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level#WARNING}.
 	 *
 	 * @param level The new severity threshold.
 	 * @see #getLevelThreshold()
