@@ -113,6 +113,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Overridden to return <code>true</code> so paren matching occurs for
+	 * SQL.
+	 *
+	 * @return <code>true</code> always.
+	 */
+	@Override
+	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+		return true;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

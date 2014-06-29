@@ -41,7 +41,7 @@ import javax.swing.text.StyleContext;
  * @author Robert Futrell
  * @version 0.8
  */
-abstract class RTextAreaBase extends JTextArea {
+public abstract class RTextAreaBase extends JTextArea {
 
 	public static final String BACKGROUND_IMAGE_PROPERTY			= "background.image";
 	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY	= "RTA.currentLineHighlightColor";
