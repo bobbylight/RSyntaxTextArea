@@ -107,13 +107,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 	public FoldIndicator(RTextArea textArea) {
 		super(textArea);
-		setForeground(DEFAULT_FOREGROUND);
-		setFoldIconBackground(DEFAULT_FOLD_BACKGROUND);
-		collapsedFoldIcon = new FoldIcon(true);
-		expandedFoldIcon = new FoldIcon(false);
-		listener = new Listener(this);
-		visibleRect = new Rectangle();
-		setShowCollapsedRegionToolTips(true);
 	}
 
 
@@ -290,6 +283,19 @@ public class FoldIndicator extends AbstractGutterComponent {
 			currentLineCount = newLineCount;
 			repaint();
 		}
+	}
+
+
+	@Override
+	protected void init() {
+		super.init();
+		setForeground(DEFAULT_FOREGROUND);
+		setFoldIconBackground(DEFAULT_FOLD_BACKGROUND);
+		collapsedFoldIcon = new FoldIcon(true);
+		expandedFoldIcon = new FoldIcon(false);
+		listener = new Listener(this);
+		visibleRect = new Rectangle();
+		setShowCollapsedRegionToolTips(true);
 	}
 
 

@@ -41,6 +41,7 @@ abstract class AbstractGutterComponent extends JPanel {
 	 * @param textArea The text area.
 	 */
 	public AbstractGutterComponent(RTextArea textArea) {
+		init(); // Called before setTextArea().
 		setTextArea(textArea);
 	}
 
@@ -86,6 +87,15 @@ abstract class AbstractGutterComponent extends JPanel {
 	 * @param e The document event.
 	 */
 	abstract void handleDocumentEvent(DocumentEvent e);
+
+
+	/**
+	 * Called by the constructor before the text area is set.  This is a hook
+	 * to allow subclasses to do any needed initialization.  The default
+	 * implementation does nothing.
+	 */
+	protected void init() {
+	}
 
 
 	/**

@@ -295,7 +295,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 							}
 						}
 					}
-					t = t.getNextToken();
+					t = t==null ? null : t.getNextToken();
 				}
 
 				if (++curLine<lineCount) {

@@ -504,7 +504,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						}
 					}
 
-					t = t.getNextToken();
+					t = t==null ? null : t.getNextToken();
 
 				}
 

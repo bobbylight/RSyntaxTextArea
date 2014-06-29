@@ -113,18 +113,6 @@ public class LineNumberList extends AbstractGutterComponent
 			setForeground(Color.GRAY);
 		}
 
-		// Initialize currentLine; otherwise, the current line won't start
-		// off as highlighted.
-		currentLine = 0;
-		setLineNumberingStartIndex(1);
-
-		visibleRect = new Rectangle(); // Must be initialized
-
-		addMouseListener(this);
-		addMouseMotionListener(this);
-
-		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
-
 	}
 
 
@@ -212,6 +200,26 @@ public class LineNumberList extends AbstractGutterComponent
 			lastVisibleLine = newLastLine;
 			repaint();
 		}
+	}
+
+
+	@Override
+	protected void init() {
+
+		super.init();
+
+		// Initialize currentLine; otherwise, the current line won't start
+		// off as highlighted.
+		currentLine = 0;
+		setLineNumberingStartIndex(1);
+
+		visibleRect = new Rectangle(); // Must be initialized
+
+		addMouseListener(this);
+		addMouseMotionListener(this);
+
+		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
+
 	}
 
 

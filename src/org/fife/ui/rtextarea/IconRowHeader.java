@@ -119,20 +119,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @param textArea The parent text area.
 	 */
 	public IconRowHeader(RTextArea textArea) {
-
 		super(textArea);
-		visibleRect = new Rectangle();
-		width = 16;
-		addMouseListener(this);
-		activeLineRangeStart = activeLineRangeEnd = -1;
-		setActiveLineRangeColor(null);
-
-		// Must explicitly set our background color, otherwise we inherit that
-		// of the parent Gutter.
-		updateBackground();
-
-		ToolTipManager.sharedInstance().registerComponent(this);
-
 	}
 
 
@@ -330,6 +317,26 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 		GutterIconInfo[] array = new GutterIconInfo[retVal.size()];
 		return retVal.toArray(array);
+
+	}
+
+
+	@Override
+	protected void init() {
+
+		super.init();
+
+		visibleRect = new Rectangle();
+		width = 16;
+		addMouseListener(this);
+		activeLineRangeStart = activeLineRangeEnd = -1;
+		setActiveLineRangeColor(null);
+
+		// Must explicitly set our background color, otherwise we inherit that
+		// of the parent Gutter.
+		updateBackground();
+
+		ToolTipManager.sharedInstance().registerComponent(this);
 
 	}
 
