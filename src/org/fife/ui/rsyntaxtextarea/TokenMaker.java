@@ -168,6 +168,18 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns whether a character could be part of an "identifier" token
+	 * in a specific language.  This is used to identify such things as the
+	 * bounds of the "word" to select on double-clicking.
+	 *
+	 * @param languageIndex The language index the character was found in.
+	 * @param ch The character.
+	 * @return Whether the character could be part of an "identifier" token.
+	 */
+	public boolean isIdentifierChar(int languageIndex, char ch);
+
+
+	/**
 	 * Returns whether this language is a markup language.
 	 *
 	 * @return Whether this language is markup.

@@ -292,6 +292,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Overridden to accept letters, digits, underscores, and hyphens.
+	 */
+	@Override
+	public boolean isIdentifierChar(int languageIndex, char ch) {
+		return Character.isLetterOrDigit(ch) || ch=='-' || ch=='.' || ch=='_';
+	}
+
+
+	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise

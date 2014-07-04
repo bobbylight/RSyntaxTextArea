@@ -212,13 +212,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			char nextCh = offs==end ? 0 : seg.array[seg.getIndex() + 1];
 
 			// The "word" is a group of letters and/or digits
-			if (Character.isLetterOrDigit(ch)) {
-				if (offs!=end && !Character.isLetterOrDigit(nextCh)) {
+			int languageIndex = 0; // TODO
+			if (doc.isIdentifierChar(languageIndex, ch)) {
+				if (offs!=end && !doc.isIdentifierChar(languageIndex, nextCh)) {
 					return offs;
 				}
 				do {
 					ch = seg.previous();
-				} while (Character.isLetterOrDigit(ch));
+				} while (doc.isIdentifierChar(languageIndex, ch));
 			}
 
 			// The "word" is whitespace
@@ -911,16 +912,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			// The "word" is a group of letters and/or digits
-			if (Character.isLetterOrDigit(ch)) {
+			int languageIndex = 0; // TODO
+			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.previous();
-				} while (Character.isLetterOrDigit(ch));
+				} while (doc.isIdentifierChar(languageIndex, ch));
 			}
 
 			// The "word" is a series of symbols.
 			else {
 				while (!Character.isWhitespace(ch) &&
-						!Character.isLetterOrDigit(ch)
+						!doc.isIdentifierChar(languageIndex, ch)
 						&& ch!=Segment.DONE) {
 					ch = seg.previous();
 				}
@@ -975,10 +977,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			char ch = seg.first();
 
 			// The "word" is a group of letters and/or digits
-			if (Character.isLetterOrDigit(ch)) {
+			int languageIndex = 0; // TODO
+			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.next();
-				} while (Character.isLetterOrDigit(ch));
+				} while (doc.isIdentifierChar(languageIndex, ch));
 			}
 
 			// The "word" is whitespace.
@@ -1586,10 +1589,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			char ch = seg.first();
 
 			// Skip the group of letters and/or digits
-			if (Character.isLetterOrDigit(ch)) {
+			int languageIndex = 0;
+			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.next();
-				} while (Character.isLetterOrDigit(ch));
+				} while (doc.isIdentifierChar(languageIndex, ch));
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
@@ -1597,7 +1601,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.next();
 				} while (ch!=Segment.DONE &&
-						!(Character.isLetterOrDigit(ch) ||
+						!(doc.isIdentifierChar(languageIndex, ch) ||
 								Character.isWhitespace(ch)));
 			}
 
@@ -1758,10 +1762,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			// Skip the group of letters and/or digits
-			if (Character.isLetterOrDigit(ch)) {
+			int languageIndex = 0;
+			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.previous();
-				} while (Character.isLetterOrDigit(ch));
+				} while (doc.isIdentifierChar(languageIndex, ch));
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
@@ -1769,7 +1774,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.previous();
 				} while (ch!=Segment.DONE &&
-						!(Character.isLetterOrDigit(ch) ||
+						!(doc.isIdentifierChar(languageIndex, ch) ||
 								Character.isWhitespace(ch)));
 			}
 

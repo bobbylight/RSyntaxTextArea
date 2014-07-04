@@ -274,6 +274,16 @@ abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns whether a character could be part of an "identifier" token
+	 * in a specific language.  The default implementation returns
+	 * <code>true</code> for letters, numbers, and certain symbols.
+	 */
+	public boolean isIdentifierChar(int languageIndex, char ch) {
+		return Character.isLetterOrDigit(ch) || ch=='_' || ch=='$';
+	}
+
+
+	/**
 	 * The default implementation returns <code>false</code> always.
 	 * Subclasses that are highlighting a markup language should override this
 	 * method to return <code>true</code>.
