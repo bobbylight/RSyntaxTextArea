@@ -18,7 +18,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-abstract class TokenMakerBase implements TokenMaker {
+public abstract class TokenMakerBase implements TokenMaker {
 
 	/**
 	 * The first token in the returned linked list.
