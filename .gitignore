@@ -4,3 +4,6 @@ dist
 javadoc
 rsyntaxtextarea_*.zip
 *.java~
+build
+.gradle
+

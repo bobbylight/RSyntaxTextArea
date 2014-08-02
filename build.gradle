@@ -1,0 +1,86 @@
+['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+compileJava {
+	sourceCompatibility javaVersion
+	targetCompatibility javaVersion
+	options.debug = true
+	options.debugOptions.debugLevel = 'source,vars,lines'
+	options.compilerArgs << "-Xlint:deprecation"
+}
+
+ext.sharedManifest = manifest {
+	attributes('Specification-Title': 'RSyntaxTextArea',
+		'Specification-Version': version,
+		'Implementation-Title': 'org.fife.ui',
+		'Implementation-Version': version)
+
+}
+jar {
+	manifest { from sharedManifest }
+}
+
+// We use "distributions" to create the zip files uploaded to SourceForge
+distributions {
+	main {
+		baseName = 'rsyntaxtextarea'
+		contents {
+			from { [ 'build/libs', 'distfiles' ] }
+			rename 'RSyntaxTextArea-.*\\.jar', 'rsyntaxtextarea.jar'
+		}
+	}
+	src {
+		baseName = 'rsyntaxtextarea'
+	}
+}
+distZip.classifier = null
+distZip.dependsOn jar
+srcDistZip.classifier = 'src'
+srcDistZip {
+	from projectDir
+	include 'src/**/*'
+	include 'build.gradle'
+	include '.classpath'
+	include '.project'
+	include 'gradle.properties'
+	include 'README.md'
+	include '.settings/**'
+}
+
+task buildSourceForgeZips << {
+	println "Building zip files for SourceForge"
+}
+buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
+
+// Stuff to generate and upload Maven artifacts
+task javadocJar (type: Jar, dependsOn: javadoc) {
+	manifest { from sharedManifest }
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+task sourceJar (type: Jar) {
+	manifest { from sharedManifest }
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+artifacts {
+	archives jar, javadocJar, sourceJar
+}
+signing {
+	sign configurations.archives
+}
+repositories {
+	mavenCentral()
+}
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: 'file:///' + projectDir + '/../localMavenRepo')
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			pom.groupId = 'com.fifesoft'
+		}
+	}
+}

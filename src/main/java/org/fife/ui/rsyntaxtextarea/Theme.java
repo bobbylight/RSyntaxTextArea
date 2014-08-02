@@ -632,7 +632,7 @@ public class Theme {
 		public InputSource resolveEntity(String publicID, 
 				String systemID) throws SAXException {
 			return new InputSource(getClass().
-					getResourceAsStream("/theme.dtd"));
+					getResourceAsStream("themes/theme.dtd"));
 		}
 
 		@Override
