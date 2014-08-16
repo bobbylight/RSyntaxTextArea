@@ -51,7 +51,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.5
+ * @version 0.6
  *
  */
 %%
@@ -180,9 +180,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -197,7 +196,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -237,7 +236,7 @@ OctEscape				= ({OctEscape1}|{OctEscape2}|{OctEscape3})
 HexEscape				= ([\\][xX]{HexDigit}{HexDigit})
 
 AnyChrChr					= ([^\'\n\\])
-Escape					= ([\\]([abfnrtv\'\"\?\\0]))
+Escape					= ([\\]([abfnrtv\'\"\?\\0e]))
 UnclosedCharLiteral			= ([\']({Escape}|{OctEscape}|{HexEscape}|{Trigraph}|{AnyChrChr}))
 CharLiteral				= ({UnclosedCharLiteral}[\'])
 ErrorUnclosedCharLiteral		= ([\'][^\'\n]*)
