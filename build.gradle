@@ -14,6 +14,17 @@ compileJava {
 	targetCompatibility javaVersion
 	options.debug = true
 	options.debugOptions.debugLevel = 'source,vars,lines'
+	// Most folks will compile with the latest JDK available, but official builds
+	// use a Java 5 JDK.  Add this property to gradle.properties for boot classpath
+	if (project.hasProperty('java5CompileBootClasspath')) {
+		if (new File(java5CompileBootClasspath).isFile()) {
+			println "Bootstrap classpath when compiling Java: ${java5CompileBootClasspath}"
+			options.bootClasspath = java5CompileBootClasspath
+		}
+		else {
+			println "Warning: Specified java5CompileBootClasspath does not exist: ${java5CompileBootClasspath}"
+		}
+	}
 	options.compilerArgs << "-Xlint:deprecation"
 }
 
