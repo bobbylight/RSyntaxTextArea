@@ -19,17 +19,42 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rtextarea.RTextArea;
 
 
-
 /**
  * Base class for JFlex-based token makers using C-style syntax.  This class
- * knows how to auto-indent after opening braces and parens.
+ * knows how to:
+ * 
+ * <ul>
+ *    <li>Auto-indent after opening braces and parens
+ *    <li>Automatically close multi-line and documentation comments
+ * </ul>
  *
  * @author Robert Futrell
  * @version 1.0
  */
 public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
-	protected static final Action INSERT_BREAK_ACTION = new InsertBreakAction();
+	private final Action INSERT_BREAK_ACTION;
+
+	private static final Pattern MLC_PATTERN =
+			Pattern.compile("([ \\t]*)(/?[\\*]+)([ \\t]*)");
+
+
+	protected AbstractJFlexCTokenMaker() {
+		INSERT_BREAK_ACTION = createInsertBreakAction();
+	}
+
+
+	/**
+	 * Creates and returns the action to use when the user inserts a newline.
+	 * The default implementation intelligently closes multi-line comments.
+	 * Subclasses can override.
+	 *
+	 * @return The action.
+	 * @see #getInsertBreakAction()
+	 */
+	protected Action createInsertBreakAction() {
+		return new CStyleInsertBreakAction();
+	}
 
 
 	/**
@@ -80,14 +105,34 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	/**
+	 * Returns whether a given token is an internal token type that represents
+	 * an MLC or documentation comment continuing on to the next line.  This is
+	 * done by languages such as JavaScript that are a little more verbose
+	 * than necessary so that their code can be copy-and-pasted into other
+	 * <code>TokenMaker</code>s that use them as nested languages (such as
+	 * HTML, JSP, etc.).
+	 *
+	 * @param t The token to check.  This cannot be <code>null</code>.
+	 * @return Whether the token is an internal token representing the end of
+	 *         a line for an MLC/doc comment continuing on to the next line.
+	 */
+	private boolean isInternalEolTokenForMLCs(Token t) {
+		int type = t.getType();
+		if (type<0) {
+			type = getClosestStandardTokenTypeForInternalType(type);
+			return type==TokenTypes.COMMENT_MULTILINE ||
+					type==TokenTypes.COMMENT_DOCUMENTATION;
+		}
+		return false;	
+	}
+
+
+	/**
 	 * Action that knows how to special-case inserting a newline in a
 	 * multi-line comment for languages like C and Java.
 	 */
-	private static class InsertBreakAction extends
+	protected class CStyleInsertBreakAction extends
 							RSyntaxTextAreaEditorKit.InsertBreakAction {
-
-		private static final Pattern p =
-							Pattern.compile("([ \\t]*)(/?[\\*]+)([ \\t]*)");
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
@@ -157,7 +202,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 					i++;
 				}
 				// If tokens come after this one on this line, our MLC ended.
-				if (t.getNextToken()!=null) {
+				if ((t=t.getNextToken())!=null && !isInternalEolTokenForMLCs(t)) {
 					return false;
 				}
 			}
@@ -177,7 +222,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 				start = textArea.getLineStartOffset(line);
 				end = textArea.getLineEndOffset(line);
 				text = textArea.getText(start, end-start);
-				m = p.matcher(text);
+				m = MLC_PATTERN.matcher(text);
 			} catch (BadLocationException ble) { // Never happens
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				ble.printStackTrace();
