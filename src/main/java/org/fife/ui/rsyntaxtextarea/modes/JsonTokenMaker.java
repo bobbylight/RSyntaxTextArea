@@ -288,7 +288,6 @@ public class JsonTokenMaker extends AbstractJFlexTokenMaker {
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
-	 * @see #addHyperlinkToken(int, int, int)
 	 */
 	private void addToken(int start, int end, int tokenType) {
 		int so = start + offsetShift;
