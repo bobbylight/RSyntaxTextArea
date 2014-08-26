@@ -947,6 +947,9 @@ try {
 	 */
 	@Override
 	public void setFont(Font font) {
+		if (font!=null && font.getSize()<=0) {
+			throw new IllegalArgumentException("Font size must be > 0");
+		}
 		super.setFont(font);
 		if (font!=null) {
 			updateMarginLineX();
