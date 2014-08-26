@@ -21,6 +21,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.ColorUIResource;
@@ -947,6 +948,9 @@ try {
 	 */
 	@Override
 	public void setFont(Font font) {
+		if (font!=null && font.getSize()<=0) {
+			throw new IllegalArgumentException("Font size must be > 0");
+		}
 		super.setFont(font);
 		if (font!=null) {
 			updateMarginLineX();
