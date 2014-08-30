@@ -1,6 +1,6 @@
-RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of the box, it supports syntax highlighting for over 30 programming languages, code folding, search and replace, and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages [can be added](http://fifesoft.com/rsyntaxtextarea/doc/) via tools such as [JFlex](http://jflex.de).
+RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of the box, it supports syntax highlighting for over 30 programming languages, code folding, search and replace, and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 
-RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/distfiles/RSyntaxTextArea.License.txt).  For more information, visit [http://fifesoft.com/rsyntaxtextarea](http://fifesoft.com/rsyntaxtextarea).
+RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt).  For more information, visit [http://fifesoft.com/rsyntaxtextarea](http://fifesoft.com/rsyntaxtextarea).
 
 # Example Usage
 
