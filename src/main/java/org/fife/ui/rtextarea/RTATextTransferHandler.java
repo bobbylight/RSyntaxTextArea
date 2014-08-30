@@ -235,6 +235,9 @@ public class RTATextTransferHandler extends TransferHandler {
 			}
 		}
 		exportComp = null;
+		if (data instanceof TextTransferable) {
+			ClipboardHistory.get().add(((TextTransferable)data).getPlainData());
+		}
 	}
 
 

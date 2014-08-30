@@ -74,6 +74,9 @@ public class ConfigurableCaret extends DefaultCaret {
 	 */
 	private ChangeableHighlightPainter selectionPainter;
 
+	private boolean alwaysVisible;
+
+
 	/**
 	 * Creates the caret using {@link CaretStyle#THICK_VERTICAL_LINE_STYLE}.
 	 */
@@ -226,6 +229,20 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
+	 * Returns whether this caret is always visible (as opposed to
+	 * blinking, or not visible when the editor's window is not focused).
+	 * This can be used by popup windows that want the caret's location
+	 * to still be visible for contextual purposes while they are displayed.
+	 * 
+	 * @return Whether this caret is always visible.
+	 * @see #setAlwaysVisible(boolean)
+	 */
+	public boolean isAlwaysVisible() {
+		return alwaysVisible;
+	}
+
+
+	/**
 	 * Called when the mouse is clicked.  If the click was generated from
 	 * button1, a double click selects a word, and a triple click the
 	 * current line.
@@ -333,7 +350,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	public void paint(Graphics g) {
 
 		// If the cursor is currently visible...
-		if (isVisible()) {
+		if (isVisible() || alwaysVisible) {
 
 			try {
 
@@ -456,6 +473,27 @@ public class ConfigurableCaret extends DefaultCaret {
 							ActionEvent.ACTION_PERFORMED,
 							null, e.getWhen(), e.getModifiers()));
 		selectedWordEvent = e;
+	}
+
+
+	/**
+	 * Toggles whether this caret should always be visible (as opposed to
+	 * blinking, or not visible when the editor's window is not focused).
+	 * This can be used by popup windows that want the caret's location
+	 * to still be visible for contextual purposes while they are displayed.
+	 * 
+	 * @param alwaysVisible Whether this caret should always be visible.
+	 * @see #isAlwaysVisible()
+	 */
+	public void setAlwaysVisible(boolean alwaysVisible) {
+		if (alwaysVisible != this.alwaysVisible) {
+			this.alwaysVisible = alwaysVisible;
+			if (!isVisible()) {
+				// Force painting of caret since super class's "flasher" timer
+				// won't fire when the window doesn't have focus
+				repaint();
+			}
+		}
 	}
 
 

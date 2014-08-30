@@ -117,6 +117,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static final String rtaNextBookmarkAction		= "RTA.NextBookmarkAction";
 
 	/**
+	 * Action to display the paste history popup.
+	 */
+	public static final String clipboardHistoryAction		= "RTA.PasteHistoryAction";
+
+	/**
 	 * Action to jump to the previous bookmark.
 	 */
 	public static final String rtaPrevBookmarkAction		= "RTA.PrevBookmarkAction";
@@ -208,6 +213,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new BeginRecordingMacroAction(),
 		new BeginWordAction(beginWordAction, false),
 		new BeginWordAction(selectionBeginWordAction, true),
+		new ClipboardHistoryAction(),
 		new CopyAction(),
 		new CutAction(),
 		new DefaultKeyTypedAction(),
@@ -591,7 +597,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * Action that begins recording a macro.
 	 */
 	public static class BeginRecordingMacroAction extends RecordableTextAction {
-
  
 		public BeginRecordingMacroAction() {
 			super(rtaBeginRecordingMacroAction);
@@ -660,10 +665,44 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 
 	/**
+	 * Action for displaying a popup with a list of recently pasted text
+	 * snippets.
+	 */
+	public static class ClipboardHistoryAction extends RecordableTextAction {
+
+		private ClipboardHistory clipboardHistory;
+
+ 		public ClipboardHistoryAction() {
+			super(clipboardHistoryAction);
+			clipboardHistory = ClipboardHistory.get();
+		}
+
+		public ClipboardHistoryAction(String name, Icon icon, String desc,
+					Integer mnemonic, KeyStroke accelerator) {
+			super(name, icon, desc, mnemonic, accelerator);
+			clipboardHistory = ClipboardHistory.get();
+		}
+
+		@Override
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+			Window owner = SwingUtilities.getWindowAncestor(textArea);
+			ClipboardHistoryPopup popup = new ClipboardHistoryPopup(owner, textArea);
+			popup.setContents(clipboardHistory.getHistory());
+			popup.setVisible(true);
+		}
+
+		@Override
+		public final String getMacroID() {
+			return clipboardHistoryAction;
+		}
+
+	}
+
+
+	/**
 	 * Action for copying text.
 	 */
 	public static class CopyAction extends RecordableTextAction {
-
  
 		public CopyAction() {
 			super(DefaultEditorKit.copyAction);
@@ -721,7 +760,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class DecreaseFontSizeAction extends RecordableTextAction {
 
- 
 		protected float decreaseAmount;
 
 		protected static final float MINIMUM_SIZE	= 2.0f;
@@ -1023,7 +1061,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class DeleteRestOfLineAction extends RecordableTextAction {
 
- 
 		public DeleteRestOfLineAction() {
 			super(rtaDeleteRestOfLineAction);
 		}
@@ -1234,7 +1271,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * Action that ends recording a macro.
 	 */
 	public static class EndRecordingMacroAction extends RecordableTextAction {
-
  
 		public EndRecordingMacroAction() {
 			super(rtaEndRecordingMacroAction);
@@ -1307,7 +1343,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class IncreaseFontSizeAction extends RecordableTextAction {
 
- 
 		protected float increaseAmount;
 
 		protected static final float MAXIMUM_SIZE	= 40.0f;
@@ -1362,7 +1397,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * Action for when the user presses the Enter key.
 	 */
 	public static class InsertBreakAction extends RecordableTextAction {
-
  
 		public InsertBreakAction() {
 			super(DefaultEditorKit.insertBreakAction);
@@ -1401,7 +1435,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class InsertContentAction extends RecordableTextAction {
 
- 
 		public InsertContentAction() {
 			super(DefaultEditorKit.insertContentAction, null, null, null,
 					null);
@@ -1434,7 +1467,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class InsertTabAction extends RecordableTextAction {
 
- 
 		public InsertTabAction() {
 			super(insertTabAction);
 		}
@@ -1943,7 +1975,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * Pages one view to the left or right.
 	 */
 	static class PageAction extends RecordableTextAction {
-
  
 		private boolean select;
 		private boolean left;
@@ -2005,8 +2036,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class PasteAction extends RecordableTextAction {
 
- 
-		public PasteAction() {
+ 		public PasteAction() {
 			super(DefaultEditorKit.pasteAction);
 		}
 
@@ -2034,7 +2064,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class PlaybackLastMacroAction extends RecordableTextAction {
 
- 
 		public PlaybackLastMacroAction() {
 			super(rtaPlaybackLastMacroAction);
 		}
@@ -2158,7 +2187,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * Re-does the last action undone.
 	 */
 	public static class RedoAction extends RecordableTextAction {
-
  
 		public RedoAction() {
 			super(rtaRedoAction);
@@ -2232,7 +2260,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class SelectAllAction extends RecordableTextAction {
 
- 
 		public SelectAllAction() {
 			super(selectAllAction);
 		}
@@ -2350,7 +2377,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class SetWritableAction extends RecordableTextAction {
 
- 
 		public SetWritableAction() {
 			super(writableAction);
 		}
@@ -2501,7 +2527,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class UnselectAction extends RecordableTextAction {
 
- 
 		public UnselectAction() {
 			super(rtaUnselectAction);
 		}
@@ -2524,7 +2549,6 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 */
 	public static class UpperSelectionCaseAction extends RecordableTextAction {
 
- 
 		public UpperSelectionCaseAction() {
 			super(rtaUpperSelectionCaseAction);
 		}

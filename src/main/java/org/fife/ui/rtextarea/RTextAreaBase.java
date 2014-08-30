@@ -21,6 +21,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JTextArea;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.ColorUIResource;
