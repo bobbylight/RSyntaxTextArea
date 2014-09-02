@@ -38,6 +38,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_CPLUSPLUS,		pkg + "CPlusPlusTokenMaker");
 		putMapping(SYNTAX_STYLE_CSHARP,			pkg + "CSharpTokenMaker");
 		putMapping(SYNTAX_STYLE_CSS,			pkg + "CSSTokenMaker");
+		putMapping(SYNTAX_STYLE_DART,			pkg + "DartTokenMaker");
 		putMapping(SYNTAX_STYLE_DELPHI,			pkg + "DelphiTokenMaker");
 		putMapping(SYNTAX_STYLE_DTD,			pkg + "DtdTokenMaker");
 		putMapping(SYNTAX_STYLE_FORTRAN,		pkg + "FortranTokenMaker");

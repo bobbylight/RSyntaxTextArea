@@ -83,6 +83,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Dart.
+	 */
+	public static final String SYNTAX_STYLE_DART		= "text/dart";
+
+
+	/**
 	 * Style for highlighting Delphi/Pascal.
 	 */
 	public static final String SYNTAX_STYLE_DELPHI			= "text/delphi";
