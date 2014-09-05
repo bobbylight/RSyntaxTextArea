@@ -11,6 +11,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -1335,6 +1336,96 @@ return c.getLineStartOffset(line);
 					(t.charAt(t.length()-1)=='=' ||
 					t.is(JS_AND) || t.is(JS_OR))) ||
 				t.is(Token.RESERVED_WORD_2, JS_KEYWORD_RETURN);
+	}
+
+
+	/**
+	 * Selects a range of text in a text component.  If the new selection is
+	 * outside of the previous viewable rectangle, then the view is centered
+	 * around the new selection.
+	 *
+	 * @param textArea The text component whose selection is to be centered.
+	 * @param range The range to select.
+	 */
+	public static final void selectAndPossiblyCenter(JTextArea textArea,
+			DocumentRange range, boolean select) {
+
+		int start = range.getStartOffset();
+		int end = range.getEndOffset();
+
+		boolean foldsExpanded = false;
+		if (textArea instanceof RSyntaxTextArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			FoldManager fm = rsta.getFoldManager();
+			if (fm.isCodeFoldingSupportedAndEnabled()) {
+				foldsExpanded = fm.ensureOffsetNotInClosedFold(start);
+				foldsExpanded |= fm.ensureOffsetNotInClosedFold(end);
+			}
+		}
+
+		if (select) {
+			textArea.setSelectionStart(start);
+			textArea.setSelectionEnd(end);
+		}
+
+		Rectangle r = null;
+		try {
+			r = textArea.modelToView(start);
+			if (r==null) { // Not yet visible; i.e. JUnit tests
+				return;
+			}
+			if (end!=start) {
+				r = r.union(textArea.modelToView(end));
+			}
+		} catch (BadLocationException ble) { // Never happens
+			ble.printStackTrace();
+			if (select) {
+				textArea.setSelectionStart(start);
+				textArea.setSelectionEnd(end);
+			}
+			return;
+		}
+
+		Rectangle visible = textArea.getVisibleRect();
+
+		// If the new selection is already in the view, don't scroll,
+		// as that is visually jarring.
+		if (!foldsExpanded && visible.contains(r)) {
+			if (select) {
+				textArea.setSelectionStart(start);
+				textArea.setSelectionEnd(end);
+			}
+			return;
+		}
+
+		visible.x = r.x - (visible.width - r.width) / 2;
+		visible.y = r.y - (visible.height - r.height) / 2;
+
+		Rectangle bounds = textArea.getBounds();
+		Insets i = textArea.getInsets();
+		bounds.x = i.left;
+		bounds.y = i.top;
+		bounds.width -= i.left + i.right;
+		bounds.height -= i.top + i.bottom;
+
+		if (visible.x < bounds.x) {
+			visible.x = bounds.x;
+		}
+
+		if (visible.x + visible.width > bounds.x + bounds.width) {
+			visible.x = bounds.x + bounds.width - visible.width;
+		}
+
+		if (visible.y < bounds.y) {
+			visible.y = bounds.y;
+		}
+
+		if (visible.y + visible.height > bounds.y + bounds.height) {
+			visible.y = bounds.y + bounds.height - visible.height;
+		}
+
+		textArea.scrollRectToVisible(visible);
+
 	}
 
 
