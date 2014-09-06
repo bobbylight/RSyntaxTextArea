@@ -21,8 +21,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.TextUI;
@@ -185,6 +185,22 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		if (add==true) {
 			//System.err.println("Adding mouse listener!");
 			addMouseListener(mouseListener);
+		}
+	}
+
+	@Override
+	public void addNotify() {
+		super.addNotify();
+		// If the caret is not on the first line, we must recalculate the line
+		// highlight y-offset after the text area is sized.  This seems to be
+		// the best way to do it.
+		if (getCaretPosition() != 0) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					System.out.println("Yo");
+					possiblyUpdateCurrentLineHighlightLocation();
+				}
+			});
 		}
 	}
 
