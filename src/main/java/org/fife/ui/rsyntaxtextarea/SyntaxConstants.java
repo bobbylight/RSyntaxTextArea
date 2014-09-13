@@ -83,6 +83,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Syntax style for highlighting D.
+	 */
+	public static final String SYNTAX_STYLE_D			= "text/d";
+
+
+	/**
 	 * Style for highlighting Dart.
 	 */
 	public static final String SYNTAX_STYLE_DART		= "text/dart";
