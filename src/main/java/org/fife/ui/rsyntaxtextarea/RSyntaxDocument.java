@@ -444,8 +444,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 
 	/**
-	 * Returns an iterator over the tokens in this document.  Results are
-	 * undefined if this document is modified while the iterator is being
+	 * Returns an iterator over the paintable tokens in this document.  Results
+	 * are undefined if this document is modified while the iterator is being
 	 * iterated through, so this should only be used on the EDT.<p>
 	 *
 	 * The <code>remove()</code> method of the returned iterator will throw
