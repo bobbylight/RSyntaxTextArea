@@ -137,9 +137,6 @@ public class ErrorStrip extends JComponent {
 	private static final String MSG = "org.fife.ui.rsyntaxtextarea.ErrorStrip";
 	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
-	private static final Color MARKED_OCCURRENCE_COLOR = new Color(220, 220, 220);
-
-
 	/**
 	 * Constructor.
 	 *
@@ -370,7 +367,7 @@ public class ErrorStrip extends JComponent {
 
 		if (getShowMarkedOccurrences() && textArea.getMarkOccurrences()) {
 			List<DocumentRange> occurrences = textArea.getMarkedOccurrences();
-			addMarkersForRanges(occurrences, markerMap,MARKED_OCCURRENCE_COLOR);
+			addMarkersForRanges(occurrences, markerMap, textArea.getMarkOccurrencesColor());
 		}
 
 		if (getShowMarkAll() /*&& textArea.getMarkAll()*/) {
