@@ -1449,6 +1449,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the currently set parser delay.
+	 * 
+	 * @return The currently set parser delay in milliseconds.
+	 * @see #setParserDelay(int)
+	 * @see {@link ParserManager#getDelay()}
+	 */
+	public int getParserDelay() {
+		return parserManager.getDelay();
+	}
+
+
+	/**
 	 * Returns a list of the current parser notices for this text area.
 	 * This method (like most Swing methods) should only be called on the
 	 * EDT.
@@ -2666,6 +2678,16 @@ private boolean fractionalFontMetricsEnabled;
 			repaint();
 			firePropertyChange(TAB_LINES_PROPERTY, !paint, paint);
 		}
+	}
+
+
+	/**
+	 * Sets the parser delay. 
+	 * @param millis Parser delay in milliseconds.
+	 * @see {@link ParserManager#setDelay(int)}
+	 */
+	public void setParserDelay(int millis) {
+		parserManager.setDelay(millis);
 	}
 
 
