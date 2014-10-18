@@ -714,6 +714,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (running) {
 			timer.stop();
 		}
+		timer.setInitialDelay(millis);
 		timer.setDelay(millis);
 		if (running) {
 			timer.start();
