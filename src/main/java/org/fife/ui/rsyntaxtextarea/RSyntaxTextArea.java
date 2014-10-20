@@ -2794,8 +2794,10 @@ private boolean fractionalFontMetricsEnabled;
 			refreshFontMetrics(getGraphics2D(getGraphics()));
 		}
 
-		// Updates the margin line.
+		// Updates the margin line and "matched bracket" highlight
 		updateMarginLineX();
+		lastBracketMatchPos = -1;
+		doBracketMatching();
 
 		// Force the current line highlight to be repainted, even though
 		// the caret's location hasn't changed.
