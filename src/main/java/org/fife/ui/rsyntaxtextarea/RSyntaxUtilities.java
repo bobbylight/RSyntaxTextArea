@@ -717,13 +717,15 @@ public class RSyntaxUtilities implements SwingConstants {
 				break;
 
 			case WEST:
+				int endOffs = view.getEndOffset();
 				if(pos == -1) {
-					pos = Math.max(0, view.getEndOffset() - 1);
+					pos = Math.max(0, endOffs - 1);
 				}
 				else {
 					pos = Math.max(0, pos - 1);
 					if (target.isCodeFoldingEnabled()) {
-						int last = target.getLineOfOffset(pos+1);
+						int last = pos==endOffs-1 ? target.getLineCount()-1 :
+							target.getLineOfOffset(pos+1);
 						int current = target.getLineOfOffset(pos);
 						if (last!=current) { // If moving up a line...
 							FoldManager fm = target.getFoldManager();
@@ -743,7 +745,7 @@ public class RSyntaxUtilities implements SwingConstants {
 				else {
 					pos = Math.min(pos + 1, view.getDocument().getLength());
 					if (target.isCodeFoldingEnabled()) {
-						int last = target.getLineOfOffset(pos-1);
+						int last = pos==0 ? 0 : target.getLineOfOffset(pos-1);
 						int current = target.getLineOfOffset(pos);
 						if (last!=current) { // If moving down a line...
 							FoldManager fm = target.getFoldManager();
