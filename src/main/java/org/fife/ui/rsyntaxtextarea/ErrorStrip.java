@@ -306,7 +306,7 @@ public class ErrorStrip extends JComponent {
 	private int lineToY(int line) {
 		int h = textArea.getVisibleRect().height;
 		float lineCount = textArea.getLineCount();
-		return (int)((line/lineCount) * h) - 2;		
+		return (int)(((line-1)/(lineCount-1)) * h) - 2;
 	}
 
 
@@ -530,7 +530,7 @@ public class ErrorStrip extends JComponent {
 		int h = textArea.getVisibleRect().height;
 		if (y<h) {
 			float at = y/(float)h;
-			line = (int)(textArea.getLineCount()*at);
+			line = Math.round((textArea.getLineCount()-1)*at);
 		}
 		return line;
 	}
@@ -547,7 +547,7 @@ public class ErrorStrip extends JComponent {
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
 				int line = textArea.getCaretLineNumber();
-				float percent = line / ((float)textArea.getLineCount());
+				float percent = line / (float)(textArea.getLineCount()-1);
 				textArea.computeVisibleRect(visibleRect);
 				caretLineY = (int)(visibleRect.height*percent);
 				if (caretLineY!=lastLineY) {
@@ -670,7 +670,7 @@ public class ErrorStrip extends JComponent {
 
 		public int getLine() {
 			try {
-				return textArea.getLineOfOffset(range.getStartOffset());
+				return textArea.getLineOfOffset(range.getStartOffset())+1;
 			} catch (BadLocationException ble) {
 				return 0;
 			}
