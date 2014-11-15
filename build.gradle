@@ -1,7 +1,9 @@
 ['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
 
+archivesBaseName = 'rsyntaxtextarea'
+
 dependencies {
-	testCompile group: 'junit', name: 'junit', version: '4.+'
+	testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 // Regenerate local gradlew
@@ -96,7 +98,92 @@ uploadArchives {
 		mavenDeployer {
 			repository(url: 'file:///' + projectDir + '/../localMavenRepo')
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-			pom.groupId = 'com.fifesoft'
+			pom {
+				groupId = 'com.fifesoft'
+				name = 'rsyntaxtextarea'
+				project {
+					parent {
+						groupId 'org.sonatype.oss'
+						artifactId 'oss-parent'
+						version '7'
+						relativePath ''
+					}
+					
+					groupId 'com.fifesoft'
+					artifactId 'rsyntaxtextarea'
+					packaging 'jar'
+					
+					name 'RSyntaxTextArea'
+					description 'RSyntaxTextArea is the syntax highlighting text editor used in RText, pulled out into its ' +
+					    'own jar so it is easily usable in any application. Features include Syntax highlighting for 20+ ' +
+						'languages, Code completion, Regex find and replace, Macros, Code templates, Unlimited undo/red, ' +
+		                'Line numbering and bracket matching.'
+					
+					inceptionYear '2003'
+					url 'http://www.fifesoft.com/rsyntaxtextarea/'
+					licenses {
+						license {
+							name 'Modified BSD License'
+							url 'http://fifesoft.com/rsyntaxtextarea/RSyntaxTextArea.License.txt'
+							distribution 'repo'
+						}
+					}
+					
+					scm {
+						url 'https://github.com/bobbylight/RSyntaxTextArea'
+						connection 'scm:git:git://github.com/bobbylight/RSyntaxTextArea'
+						developerConnection 'scm:git:git@github.com:bobbylight/RSyntaxTextArea'
+						tag '2.5.1'
+					}
+					
+					developers {
+						developer {
+							name 'Robert Futrell'
+							url 'http://www.fifesoft.com'
+							organization = 'Fifesoft' /* https://issues.gradle.org/browse/GRADLE-1200 */
+							organizationUrl 'http://www.fifesoft.com/'
+							roles {
+								role 'architect'
+								role 'developer'
+							}
+							timezone '0'
+						}
+					}
+					
+					// Says to enforce 1.5 compatibility when building
+					// Doesn't work as of Gradle 2.0 due to a Groovy bug; see
+					// http://jira.codehaus.org/browse/GROOVY-7023
+					// For now, append it via XML directly
+					/*
+					build {
+						plugins {
+							plugin {
+								artifactId 'maven-compiler-plugin'
+								version '2.3.2'
+								executions {
+									execution {
+										id 'default-compile'
+										configuration {
+											source '1.5'
+											target '1.5'
+										}
+									}
+								}
+							}
+						}
+					}
+					*/
+					withXml {
+						def pluginNode = asNode().appendNode('build').appendNode('plugins').appendNode('plugin')
+						pluginNode.appendNode('artifactId', 'maven-compiler-plugin')
+						pluginNode.appendNode('version', '2.3.2')
+						def executionNode = pluginNode.appendNode('executions').appendNode('execution')
+						executionNode.appendNode('id', 'default-compile')
+						executionNode.appendNode('configuration').appendNode('source', '1.5').
+						      parent().appendNode('target', '1.5')
+					}
+				}
+			}
 		}
 	}
 }
