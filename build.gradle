@@ -64,6 +64,8 @@ srcDistZip {
 	include '.classpath'
 	include '.project'
 	include 'gradle.properties'
+	include 'gradle/**/*'
+	include 'gradlew*'
 	include 'README.md'
 	include '.settings/**'
 }
