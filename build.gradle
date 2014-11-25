@@ -135,7 +135,7 @@ uploadArchives {
 						url 'https://github.com/bobbylight/RSyntaxTextArea'
 						connection 'scm:git:git://github.com/bobbylight/RSyntaxTextArea'
 						developerConnection 'scm:git:git@github.com:bobbylight/RSyntaxTextArea'
-						tag '2.5.1'
+						tag '2.5.4'
 					}
 					
 					developers {
