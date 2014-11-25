@@ -115,7 +115,7 @@ uploadArchives {
 					artifactId 'rsyntaxtextarea'
 					packaging 'jar'
 					
-					name 'RSyntaxTextArea'
+					name 'rsyntaxtextarea'
 					description 'RSyntaxTextArea is the syntax highlighting text editor used in RText, pulled out into its ' +
 					    'own jar so it is easily usable in any application. Features include Syntax highlighting for 20+ ' +
 						'languages, Code completion, Regex find and replace, Macros, Code templates, Unlimited undo/red, ' +
