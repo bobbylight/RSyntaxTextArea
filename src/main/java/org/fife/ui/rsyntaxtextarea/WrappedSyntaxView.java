@@ -237,6 +237,7 @@ return p + 1;
 				int tokenOffset = token.getOffset();
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
 						tokenOffset, token.getType());
+				tempToken.setLanguageIndex(token.getLanguageIndex());
 				painter.paint(tempToken, g, x,y, host, this);
 				tempToken.copyFrom(token);
 				tempToken.makeStartAt(p);
@@ -278,6 +279,7 @@ return p + 1;
 				int selEnd) {
 
 		float x = r.x;
+		boolean useSTC = host.getUseSelectedTextColor();
 
 		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
 
@@ -328,12 +330,14 @@ return p + 1;
 
 					int selCount = Math.min(token.length(), selEnd-token.getOffset());
 					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this);
+						x = painter.paintSelected(token, g, x,y, host, this,
+								useSTC);
 					}
 					else {
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
-						x = painter.paintSelected(tempToken, g, x,y, host, this);
+						x = painter.paintSelected(tempToken, g, x,y, host, this,
+								useSTC);
 						tempToken.textCount = token.length();
 						tempToken.makeStartAt(token.getOffset() + selCount);
 						token = tempToken;
@@ -346,7 +350,8 @@ return p + 1;
 				else if (token.containsPosition(selEnd)) {
 					tempToken.copyFrom(token);
 					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this);
+					x = painter.paintSelected(tempToken, g, x,y, host, this,
+							useSTC);
 					tempToken.textCount = token.length();
 					tempToken.makeStartAt(selEnd);
 					token = tempToken;
@@ -356,7 +361,7 @@ return p + 1;
 				// This token is entirely selected
 				else if (token.getOffset()>=selStart &&
 						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this);
+					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
 				}
 
 				// This token is entirely unselected
@@ -374,7 +379,8 @@ return p + 1;
 				int tokenOffset = token.getOffset();
 				Token orig = token;
 				token = new TokenImpl(drawSeg, tokenOffset-start, p-1-start,
-									tokenOffset, token.getType());
+						tokenOffset, token.getType(), token.getLanguageIndex());
+				token.setLanguageIndex(token.getLanguageIndex());
 
 				// Selection starts in this token
 				if (token.containsPosition(selStart)) {
@@ -392,12 +398,14 @@ return p + 1;
 
 					int selCount = Math.min(token.length(), selEnd-token.getOffset());
 					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this);
+						x = painter.paintSelected(token, g, x,y, host, this,
+								useSTC);
 					}
 					else {
 						tempToken.copyFrom(token);
 						tempToken.textCount = selCount;
-						x = painter.paintSelected(tempToken, g, x,y, host, this);
+						x = painter.paintSelected(tempToken, g, x,y, host,
+								this, useSTC);
 						tempToken.textCount = token.length();
 						tempToken.makeStartAt(token.getOffset() + selCount);
 						token = tempToken;
@@ -410,7 +418,8 @@ return p + 1;
 				else if (token.containsPosition(selEnd)) {
 					tempToken.copyFrom(token);
 					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this);
+					x = painter.paintSelected(tempToken, g, x,y, host, this,
+							useSTC);
 					tempToken.textCount = token.length();
 					tempToken.makeStartAt(selEnd);
 					token = tempToken;
@@ -420,7 +429,7 @@ return p + 1;
 				// This token is entirely selected
 				else if (token.getOffset()>=selStart &&
 						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this);
+					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
 				}
 
 				// This token is entirely unselected
@@ -857,7 +866,6 @@ return p + 1;
 		// Whether token styles should always be painted, even in selections
 		int selStart = host.getSelectionStart();
 		int selEnd = host.getSelectionEnd();
-		boolean useSelectedTextColor = host.getUseSelectedTextColor();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
@@ -876,8 +884,8 @@ return p + 1;
 				int startOffset = lineElement.getStartOffset();
 				int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
 				View view = getView(i);
-				if (!useSelectedTextColor || selStart==selEnd ||
-						(startOffset>=selEnd || endOffset<selStart)) {
+				if (selStart==selEnd || startOffset>=selEnd ||
+						endOffset<selStart) {
 					drawView(painter, g2d, alloc, view, fontHeight,
 							tempRect.y+ascent);
 				}

@@ -211,6 +211,7 @@ public class SyntaxView extends View implements TabExpander,
 			Graphics2D g, float x, float y, int selStart, int selEnd) {
 
 		float nextX = x;	// The x-value at the end of our text.
+		boolean useSTC = host.getUseSelectedTextColor();
 
 		while (token!=null && token.isPaintable() && nextX<clipEnd) {
 
@@ -232,13 +233,13 @@ public class SyntaxView extends View implements TabExpander,
 				int selCount = Math.min(tokenLen, selEnd-token.getOffset());
 				if (selCount==tokenLen) {
 					nextX = painter.paintSelected(token, g, nextX,y, host,
-												this, clipStart);
+											this, clipStart, useSTC);
 				}
 				else {
 					tempToken.copyFrom(token);
 					tempToken.textCount = selCount;
 					nextX = painter.paintSelected(tempToken, g, nextX,y, host,
-							this, clipStart);
+							this, clipStart, useSTC);
 					tempToken.textCount = token.length();
 					tempToken.makeStartAt(token.getOffset() + selCount);
 					token = tempToken;
@@ -253,7 +254,7 @@ public class SyntaxView extends View implements TabExpander,
 				tempToken.copyFrom(token);
 				tempToken.textCount = selEnd - tempToken.getOffset();
 				nextX = painter.paintSelected(tempToken, g, nextX,y, host, this,
-						clipStart);
+						clipStart, useSTC);
 				tempToken.textCount = token.length();
 				tempToken.makeStartAt(selEnd);
 				token = tempToken;
@@ -264,7 +265,7 @@ public class SyntaxView extends View implements TabExpander,
 			else if (token.getOffset()>=selStart &&
 					token.getEndOffset()<=selEnd) {
 				nextX = painter.paintSelected(token, g, nextX,y, host, this,
-						clipStart);
+						clipStart, useSTC);
 			}
 
 			// This token is entirely unselected
@@ -692,7 +693,6 @@ if (host.isCodeFoldingEnabled()) {
 		// Whether token styles should always be painted, even in selections
 		int selStart = host.getSelectionStart();
 		int selEnd = host.getSelectionEnd();
-		boolean useSelectedTextColor = host.getUseSelectedTextColor();
 
 		RSyntaxTextAreaHighlighter h =
 					(RSyntaxTextAreaHighlighter)host.getHighlighter();
@@ -717,8 +717,8 @@ if (host.isCodeFoldingEnabled()) {
 	
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);
-			if (!useSelectedTextColor || selStart==selEnd ||
-					(startOffset>=selEnd || endOffset<selStart)) {
+			if (selStart==selEnd || startOffset>=selEnd ||
+					endOffset<selStart) {
 				drawLine(painter, token, g2d, x,y);
 			}
 			else {

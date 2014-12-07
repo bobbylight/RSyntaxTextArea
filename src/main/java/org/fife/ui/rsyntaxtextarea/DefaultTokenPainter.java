@@ -55,7 +55,7 @@ class DefaultTokenPainter implements TokenPainter {
 	 */
 	public float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart) {
-		return paintImpl(token, g, x, y, host, e, clipStart, false);
+		return paintImpl(token, g, x, y, host, e, clipStart, false, false);
 	}
 
 
@@ -71,25 +71,14 @@ class DefaultTokenPainter implements TokenPainter {
 	 * @param fontAscent The ascent of the token's font.
 	 * @param host The text area.
 	 * @param color The color with which to paint.
-	 * @param xor Whether the color should be XOR'd against the editor's
-	 *        background.  This should be <code>true</code> when the selected
-	 *        text color is being ignored.
 	 */
 	protected void paintBackground(float x, float y, float width, float height,
 							Graphics2D g, int fontAscent, RSyntaxTextArea host,
-							Color color, boolean xor) {
-		// RSyntaxTextArea's bg can be null, so we must check for this.
-		Color temp = host.getBackground();
-		if (xor) { // XOR painting is pretty slow on Windows
-			g.setXORMode(temp!=null ? temp : Color.WHITE);
-		}
+							Color color) {
 		g.setColor(color);
 		bgRect.setRect(x,y-fontAscent, width,height);
 		//g.fill(bgRect);
 		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
-		if (xor) {
-			g.setPaintMode();
-		}
 	}
 
 
@@ -98,7 +87,7 @@ class DefaultTokenPainter implements TokenPainter {
 	 */
 	protected float paintImpl(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
-			boolean selected) {
+			boolean selected, boolean useSTC) {
 
 		int origX = (int)x;
 		int textOffs = token.getTextOffset();
@@ -107,15 +96,9 @@ class DefaultTokenPainter implements TokenPainter {
 		float nextX = x;
 		int flushLen = 0;
 		int flushIndex = textOffs;
-		Color fg, bg;
-		if (selected) {
-			fg = host.getSelectedTextColor();
-			bg = null;
-		}
-		else {
-			fg = host.getForegroundForToken(token);
-			bg = host.getBackgroundForToken(token);
-		}
+		Color fg = useSTC ? host.getSelectedTextColor() :
+			host.getForegroundForToken(token);
+		Color bg = selected ? null : host.getBackgroundForToken(token);
 		g.setFont(host.getFontForTokenType(token.getType()));
 		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
 
@@ -126,7 +109,7 @@ class DefaultTokenPainter implements TokenPainter {
 						x+fm.charsWidth(text, flushIndex,flushLen), 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,fm.getHeight(),
-									g, fm.getAscent(), host, bg, !selected);
+									g, fm.getAscent(), host, bg);
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
@@ -147,7 +130,7 @@ class DefaultTokenPainter implements TokenPainter {
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
 				paintBackground(x,y, nextX-x,fm.getHeight(),
-								g, fm.getAscent(), host, bg, !selected);
+								g, fm.getAscent(), host, bg);
 			}
 			g.setColor(fg);
 			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
@@ -175,8 +158,8 @@ class DefaultTokenPainter implements TokenPainter {
 	 * {@inheritDoc}
 	 */
 	public float paintSelected(Token token, Graphics2D g, float x, float y,
-			RSyntaxTextArea host, TabExpander e) {
-		return paintSelected(token, g, x, y, host, e, 0);
+			RSyntaxTextArea host, TabExpander e, boolean useSTC) {
+		return paintSelected(token, g, x, y, host, e, 0, useSTC);
 	}
 
 
@@ -184,8 +167,9 @@ class DefaultTokenPainter implements TokenPainter {
 	 * {@inheritDoc}
 	 */
 	public float paintSelected(Token token, Graphics2D g, float x, float y,
-			RSyntaxTextArea host, TabExpander e, float clipStart) {
-		return paintImpl(token, g, x, y, host, e, clipStart, true);
+			RSyntaxTextArea host, TabExpander e, float clipStart,
+			boolean useSTC) {
+		return paintImpl(token, g, x, y, host, e, clipStart, true, useSTC);
 	}
 
 

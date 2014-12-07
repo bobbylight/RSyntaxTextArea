@@ -1651,7 +1651,7 @@ private boolean fractionalFontMetricsEnabled;
 				// in getTokenListFor()
 				int docOffs = map.getElement(line).getEndOffset()-1;
 				t = new TokenImpl(new char[] { '\n' }, 0,0, docOffs,
-								Token.WHITESPACE);
+								Token.WHITESPACE, 0);
 				lastToken.setNextToken(t);
 				lastToken = t;
 			}
