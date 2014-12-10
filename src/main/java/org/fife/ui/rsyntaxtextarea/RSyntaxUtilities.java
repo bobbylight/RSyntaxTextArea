@@ -851,7 +851,7 @@ public class RSyntaxUtilities implements SwingConstants {
 		}
 
 		else {
-			return token.getListOffset(c, e, 0, x);
+			return token.getListOffset(c, e, c.getMargin().left, x);
 		}
 
 	}
@@ -888,7 +888,7 @@ return c.getLineStartOffset(line);
 		}
 
 		else {
-			return token.getListOffset(c, e, 0, x);
+			return token.getListOffset(c, e, c.getMargin().left, x);
 		}
 
 	}
