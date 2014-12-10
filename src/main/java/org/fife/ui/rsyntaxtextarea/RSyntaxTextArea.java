@@ -132,7 +132,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 2.5.3
+ * @version 2.5.5
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {

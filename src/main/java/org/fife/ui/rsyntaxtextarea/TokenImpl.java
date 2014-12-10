@@ -148,19 +148,23 @@ public class TokenImpl implements Token {
 		if (font.isItalic()) sb.append("<em>");
 		if (scheme.underline || isHyperlink()) sb.append("<u>");
 
-		sb.append("<font");
-		if (fontFamily) {
-			sb.append(" face=\"").append(font.getFamily()).append("\"");
+		if (!isWhitespace()) {
+			sb.append("<font");
+			if (fontFamily) {
+				sb.append(" face=\"").append(font.getFamily()).append("\"");
+			}
+			sb.append(" color=\"").
+				append(getHTMLFormatForColor(scheme.foreground)).
+				append("\">");
 		}
-		sb.append(" color=\"").
-			append(getHTMLFormatForColor(scheme.foreground)).
-			append("\">");
 
 		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
 		// be turned into NOTHING.
 		appendHtmlLexeme(textArea, sb, tabsToSpaces);
 
-		sb.append("</font>");
+		if (!isWhitespace()) {
+			sb.append("</font>");
+		}
 		if (scheme.underline || isHyperlink()) sb.append("</u>");
 		if (font.isItalic()) sb.append("</em>");
 		if (font.isBold()) sb.append("</b>");
