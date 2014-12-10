@@ -85,9 +85,13 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	/**
 	 * Called after the caret has been moved and a fixed time delay has
 	 * elapsed.  This locates and highlights all occurrences of the identifier
-	 * at the caret position, if any.
+	 * at the caret position, if any.<p>
+	 * 
+	 * Callers should not call this method directly, but should rather prefer
+	 * {@link #doMarkOccurrences()} to mark occurrences.
 	 *
 	 * @param e The event.
+	 * @see #doMarkOccurrences()
 	 */
 	public void actionPerformed(ActionEvent e) {
 
@@ -110,7 +114,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 				if (t!=null && occurrenceMarker.isValidType(textArea, t) &&
 						!RSyntaxUtilities.isNonWordChar(t)) {
-					removeHighlights();
+					clear();
 					RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 							textArea.getHighlighter();
 					occurrenceMarker.markOccurrences(doc, t, h, p);
@@ -142,6 +146,28 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 */
 	public void caretUpdate(CaretEvent e) {
 		timer.restart();
+	}
+
+
+	/**
+	 * Removes all highlights added to the text area by this listener.
+	 */
+	void clear() {
+		if (textArea!=null) {
+			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
+													textArea.getHighlighter();
+			h.clearMarkOccurrencesHighlights();
+		}
+	}
+
+
+	/**
+	 * Immediately marks all occurrences of the token at the current caret
+	 * position.
+	 */
+	public void doMarkOccurrences() {
+		timer.stop();
+		actionPerformed(null);
 	}
 
 
@@ -198,18 +224,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 
 	/**
-	 * Removes all highlights added to the text area by this listener.
-	 */
-	private void removeHighlights() {
-		if (textArea!=null) {
-			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
-													textArea.getHighlighter();
-			h.clearMarkOccurrencesHighlights();
-		}
-	}
-
-
-	/**
 	 * Sets the color to use when marking occurrences.
 	 *
 	 * @param color The color to use.
@@ -219,7 +233,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	public void setColor(Color color) {
 		p.setPaint(color);
 		if (textArea!=null) {
-			removeHighlights();
+			clear();
 			caretUpdate(null); // Force a highlight repaint.
 		}
 	}
@@ -263,7 +277,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 */
 	public void uninstall() {
 		if (textArea!=null) {
-			removeHighlights();
+			clear();
 			textArea.removeCaretListener(this);
 		}
 	}

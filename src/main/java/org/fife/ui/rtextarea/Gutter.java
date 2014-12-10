@@ -984,6 +984,18 @@ public void setBorder(Border border) {
 				repaint();
 			}
 
+			else if ("document".equals(name)) {
+				// The document switched out from under us
+				RDocument old = (RDocument)e.getOldValue();
+				if (old != null) {
+					old.removeDocumentListener(this);
+				}
+				RDocument newDoc = (RDocument)e.getNewValue();
+				if (newDoc != null) {
+					newDoc.addDocumentListener(this);
+				}
+			}
+
 		}
 
 		public void removeUpdate(DocumentEvent e) {
@@ -994,6 +1006,7 @@ public void setBorder(Border border) {
 			if (installed) {
 				textArea.removeComponentListener(this);
 				textArea.getDocument().removeDocumentListener(this);
+				textArea.removePropertyChangeListener(this);
 				if (textArea instanceof RSyntaxTextArea) {
 					RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 					rsta.removeActiveLineRangeListener(this);

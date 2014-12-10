@@ -15,12 +15,13 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
@@ -37,6 +38,7 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
+import org.fife.ui.rtextarea.RDocument;
 import org.fife.ui.rtextarea.RTextAreaHighlighter.HighlightInfo;
 
 
@@ -48,7 +50,7 @@ import org.fife.ui.rtextarea.RTextAreaHighlighter.HighlightInfo;
  * @version 0.9
  */
 class ParserManager implements DocumentListener, ActionListener,
-								HyperlinkListener {
+								HyperlinkListener, PropertyChangeListener {
 
 	private RSyntaxTextArea textArea;
 	private List<Parser> parsers;
@@ -113,6 +115,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	public ParserManager(int delay, RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		textArea.getDocument().addDocumentListener(this);
+		textArea.addPropertyChangeListener("document", this);
 		parsers = new ArrayList<Parser>(1); // Usually small
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
@@ -586,6 +589,30 @@ class ParserManager implements DocumentListener, ActionListener,
 			// Give them the benefit of the doubt, should 99% of the time be
 			// true anyway
 			return true;
+		}
+
+	}
+
+
+	/**
+	 * Called when a property we're interested in changes.
+	 *
+	 * @param e The property change event.
+	 */
+	public void propertyChange(PropertyChangeEvent e) {
+
+		String name = e.getPropertyName();
+
+		if ("document".equals(name)) {
+			// The document switched out from under us
+			RDocument old = (RDocument)e.getOldValue();
+			if (old != null) {
+				old.removeDocumentListener(this);
+			}
+			RDocument newDoc = (RDocument)e.getNewValue();
+			if (newDoc != null) {
+				newDoc.addDocumentListener(this);
+			}
 		}
 
 	}

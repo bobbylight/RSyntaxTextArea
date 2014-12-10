@@ -14,6 +14,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -26,6 +27,7 @@ import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rtextarea.RDocument;
 
 
 /**
@@ -41,6 +43,7 @@ public class FoldManager {
 	private List<Fold> folds;
 	private boolean codeFoldingEnabled;
 	private PropertyChangeSupport support;
+	private Listener l;
 
 
 	/**
@@ -57,9 +60,10 @@ public class FoldManager {
 	public FoldManager(RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		support = new PropertyChangeSupport(this);
-		Listener l = new Listener();
+		l = new Listener();
 		textArea.getDocument().addDocumentListener(l);
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
+		textArea.addPropertyChangeListener("document", l);
 		folds = new ArrayList<Fold>();
 		updateFoldParser(); 
 	}
@@ -679,10 +683,30 @@ private Parser tempParser;
 		}
 
 		public void propertyChange(PropertyChangeEvent e) {
-			// Syntax style changed in editor.
-			updateFoldParser();
-			reparse(); // Even if no fold parser change, highlighting did
+
+			String name = e.getPropertyName();
+
+			if (RSyntaxTextArea.SYNTAX_STYLE_PROPERTY.equals(name)) {
+				// Syntax style changed in editor.
+				updateFoldParser();
+				reparse(); // Even if no fold parser change, highlighting did
+			}
+
+			else if ("document".equals(name)) {
+				// The document switched out from under us
+				RDocument old = (RDocument)e.getOldValue();
+				if (old != null) {
+					old.removeDocumentListener(this);
+				}
+				RDocument newDoc = (RDocument)e.getNewValue();
+				if (newDoc != null) {
+					newDoc.addDocumentListener(this);
+				}
+				reparse();
+			}
+
 		}
+
 		public void removeUpdate(DocumentEvent e) {
 			// Removing text from the visible line of a folded Fold causes that
 			// Fold to unfold.  We only need to check the removal offset since

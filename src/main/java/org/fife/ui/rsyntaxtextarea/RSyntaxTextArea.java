@@ -2367,7 +2367,13 @@ private boolean fractionalFontMetricsEnabled;
 			throw new IllegalArgumentException("Documents for " +
 					"RSyntaxTextArea must be instances of " +
 					"RSyntaxDocument!");
+		if (markOccurrencesSupport != null) {
+			markOccurrencesSupport.clear();
+		}
 		super.setDocument(document);
+		if (markOccurrencesSupport != null) {
+			markOccurrencesSupport.doMarkOccurrences();
+		}
 	}
 
 
