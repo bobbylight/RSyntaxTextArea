@@ -197,7 +197,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		if (getCaretPosition() != 0) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					System.out.println("Yo");
+					//System.out.println("Yo");
 					possiblyUpdateCurrentLineHighlightLocation();
 				}
 			});
