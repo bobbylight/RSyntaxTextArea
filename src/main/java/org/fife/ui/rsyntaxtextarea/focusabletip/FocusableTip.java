@@ -10,6 +10,7 @@ package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -22,6 +23,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -46,6 +48,8 @@ public class FocusableTip {
 	private TextAreaListener textAreaListener;
 	private HyperlinkListener hyperlinkListener;
 	private String lastText;
+	
+	private Dimension maxSize; // null to automatic.	
 
 	/**
 	 * The screen bounds in which the mouse has to stay for the currently
@@ -243,6 +247,22 @@ public class FocusableTip {
 		}
 
 	}
+	
+	/**
+	 * Sets the maximum size for unfocused tooltips (default is NULL - Automatic)
+	 * @param maxSize
+	 */
+	public void setMaxSize( Dimension maxSize ) {
+        this.maxSize = maxSize;
+    }
+	
+	/**
+	 * Maximum size for unfocused tooltips (default is NULL - Automatic)
+	 * @return
+	 */
+	public Dimension getMaxSize() {
+        return maxSize;
+    }
 
 
 	private class TextAreaListener extends MouseInputAdapter implements
