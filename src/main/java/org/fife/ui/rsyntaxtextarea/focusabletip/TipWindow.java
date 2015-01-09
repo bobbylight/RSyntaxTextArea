@@ -185,10 +185,13 @@ class TipWindow extends JWindow implements ActionListener {
 			// Ensure the text area doesn't start out too tall or wide.
 			d = textArea.getPreferredSize();
 			d.width += 25; // Just a little extra space
-			final int MAX_WINDOW_W = 600;
+			final int MAX_WINDOW_W = ft.getMaxSize() != null ?
+					ft.getMaxSize().width : 600;
+			final int MAX_WINDOW_H = ft.getMaxSize() != null ?
+					ft.getMaxSize().height : 400;
 			d.width = Math.min(d.width, MAX_WINDOW_W);
-			d.height = Math.min(d.height, 400);
-
+			d.height = Math.min(d.height, MAX_WINDOW_H);
+System.out.println(d);
 			// Both needed for modelToView() calculation below...
 			textArea.setPreferredSize(d);
 			textArea.setSize(d);
@@ -198,6 +201,9 @@ class TipWindow extends JWindow implements ActionListener {
 			r = textArea.modelToView(textArea.getDocument().getLength()-1);
 			if (r.y+r.height>d.height) {
 				d.height = r.y + r.height + 5;
+				if(ft.getMaxSize() != null) {
+					d.height = Math.min(d.height, MAX_WINDOW_H);
+				}
 				textArea.setPreferredSize(d);
 			}
 
@@ -337,5 +343,6 @@ class TipWindow extends JWindow implements ActionListener {
 		}
 
 	}
+
 
 }

@@ -6,4 +6,4 @@ rsyntaxtextarea_*.zip
 *.java~
 build
 .gradle
-
+/.settings/
