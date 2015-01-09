@@ -23,7 +23,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;

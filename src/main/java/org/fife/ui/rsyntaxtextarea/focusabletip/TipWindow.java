@@ -191,7 +191,7 @@ class TipWindow extends JWindow implements ActionListener {
 					ft.getMaxSize().height : 400;
 			d.width = Math.min(d.width, MAX_WINDOW_W);
 			d.height = Math.min(d.height, MAX_WINDOW_H);
-System.out.println(d);
+
 			// Both needed for modelToView() calculation below...
 			textArea.setPreferredSize(d);
 			textArea.setSize(d);
