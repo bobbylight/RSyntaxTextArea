@@ -376,12 +376,24 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 
 	/**
+	 * Returns the syntax style being used.
+	 *
+	 * @return The syntax style.
+	 * @see #setSyntaxStyle(String)
+	 */
+	public String getSyntaxStyle() {
+		return syntaxStyle;
+	}
+
+
+	/**
 	 * Returns a token list for the specified segment of text representing
 	 * the specified line number.  This method is basically a wrapper for
 	 * <code>tokenMaker.getTokenList</code> that takes into account the last
 	 * token on the previous line to assure token accuracy.
 	 *
-	 * @param line The line number of <code>text</code> in the document, >= 0.
+	 * @param line The line number of <code>text</code> in the document,
+	 *        &gt;= 0.
 	 * @return A token list representing the specified line.
 	 */
 	public final Token getTokenListForLine(int line) {
@@ -524,6 +536,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *        known or supported by this document, then
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_NONE} is used.
 	 * @see #setSyntaxStyle(TokenMaker)
+	 * @see #getSyntaxStyle()
 	 */
 	public void setSyntaxStyle(String styleKey) {
 		tokenMaker = tokenMakerFactory.getTokenMaker(styleKey);
@@ -544,6 +557,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	public void setSyntaxStyle(TokenMaker tokenMaker) {
 		this.tokenMaker = tokenMaker;
 		updateSyntaxHighlightingInformation();
+		this.syntaxStyle = "text/unknown"; // TODO: Make me public?
 	}
 
 
