@@ -282,6 +282,7 @@ public class Gutter extends JPanel {
 	 *
 	 * @return The bookmarks.  If there are no bookmarks, an empty array is
 	 *         returned.
+	 * @see #toggleBookmark(int)
 	 */
 	public GutterIconInfo[] getBookmarks() {
 		return iconArea.getBookmarks();
@@ -453,6 +454,17 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Removes all tracking icons.
+	 *
+	 * @see #removeTrackingIcon(GutterIconInfo)
+	 * @see #addOffsetTrackingIcon(int, Icon)
+	 */
+	public void removeAllTrackingIcons() {
+		iconArea.removeAllTrackingIcons();
+	}
+
+
+	/**
 	 * Removes the specified tracking icon.
 	 *
 	 * @param tag A tag for an icon in the gutter, as returned from either
@@ -464,17 +476,6 @@ public class Gutter extends JPanel {
 	 */
 	public void removeTrackingIcon(GutterIconInfo tag) {
 		iconArea.removeTrackingIcon(tag);
-	}
-
-
-	/**
-	 * Removes all tracking icons.
-	 *
-	 * @see #removeTrackingIcon(GutterIconInfo)
-	 * @see #addOffsetTrackingIcon(int, Icon)
-	 */
-	public void removeAllTrackingIcons() {
-		iconArea.removeAllTrackingIcons();
 	}
 
 
@@ -806,6 +807,7 @@ public class Gutter extends JPanel {
 	 * @return Whether a bookmark is now at the specified line.
 	 * @throws BadLocationException If <code>line</code> is an invalid line
 	 *         number in the text area.
+	 * @see #getBookmarks()
 	 */
 	public boolean toggleBookmark(int line) throws BadLocationException {
 		return iconArea.toggleBookmark(line);
