@@ -722,6 +722,8 @@ public class GutterTest {
 	public void testToggleBookmark() throws Exception {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
+		gutter.setBookmarkingEnabled(true);
+		gutter.setBookmarkIcon(new TestIcon());
 		Assert.assertTrue(gutter.toggleBookmark(1));
 		Assert.assertFalse(gutter.toggleBookmark(1));
 		Assert.assertTrue(gutter.toggleBookmark(1));
