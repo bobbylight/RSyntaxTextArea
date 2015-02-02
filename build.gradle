@@ -1,4 +1,15 @@
 ['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.dm.gradle:gradle-bundle-plugin:0.6.1'
+    }
+}
+
+apply plugin: 'org.dm.bundle'
 
 archivesBaseName = 'rsyntaxtextarea'
 
@@ -30,15 +41,8 @@ compileJava {
 	options.compilerArgs << "-Xlint:deprecation"
 }
 
-ext.sharedManifest = manifest {
-	attributes('Specification-Title': 'RSyntaxTextArea',
-		'Specification-Version': version,
-		'Implementation-Title': 'org.fife.ui',
-		'Implementation-Version': version)
-
-}
 jar {
-	manifest { from sharedManifest }
+
 }
 
 // We use "distributions" to create the zip files uploaded to SourceForge
@@ -77,14 +81,16 @@ buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
 
 // Stuff to generate and upload Maven artifacts
 task javadocJar (type: Jar, dependsOn: javadoc) {
-	manifest { from sharedManifest }
 	classifier = 'javadoc'
 	from javadoc.destinationDir
 }
 task sourceJar (type: Jar) {
-	manifest { from sharedManifest }
 	classifier = 'sources'
 	from sourceSets.main.allSource
+}
+
+bundle {
+    instruction 'Export-Package', '*'
 }
 artifacts {
 	archives jar, javadocJar, sourceJar
