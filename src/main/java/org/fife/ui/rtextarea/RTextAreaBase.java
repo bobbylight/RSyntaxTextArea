@@ -813,7 +813,7 @@ try {
 
 	/**
 	 * Sets the background color of this text editor.  Note that this is
-	 * equivalent to calling <code>setBackgroundObject(bg)</code>.
+	 * equivalent to calling <code>setBackgroundObject(bg)</code>.<p>
 	 *
 	 * NOTE:  the opaque property is set to <code>true</code> when the
 	 * background is set to a color (by this method).  When an image is used
@@ -837,7 +837,7 @@ try {
 		else { // Was an image painter...
 			backgroundPainter = new ColorBackgroundPainterStrategy(bg);
 		}
-		setOpaque(true);
+		setOpaque(bg.getAlpha()==0xff);
 		firePropertyChange("background", oldBG, bg);
 		repaint();
 	}
