@@ -427,14 +427,21 @@ public class RTextAreaUI extends BasicTextAreaUI {
 			Rectangle r = g.getClipBounds();
 			g.fillRect(r.x,r.y, r.width,r.height);
 		}
-
-		Rectangle visibleRect = textArea.getVisibleRect();
-
-		paintLineHighlights(g);
-		paintCurrentLineHighlight(g, visibleRect);
-		paintMarginLine(g, visibleRect);
-
+                
+                paintEditorAugmentations(g);
 	}
+        
+        /**
+         * Paints editor augmentations such as line highlights etc.
+         * 
+         * @param g the graphics context with which to paint
+         */
+        protected void paintEditorAugmentations(Graphics g) {
+                Rectangle visibleRect = textArea.getVisibleRect();
+                paintLineHighlights(g);
+                paintCurrentLineHighlight(g, visibleRect);
+                paintMarginLine(g, visibleRect);
+        }
 
 
 	/**

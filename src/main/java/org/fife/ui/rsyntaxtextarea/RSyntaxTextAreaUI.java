@@ -134,17 +134,24 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	}
 
 
-	/**
-	 * Paints the text area's background.
-	 *
-	 * @param g The graphics component on which to paint.
-	 */
-	@Override
-	protected void paintBackground(Graphics g) {
-		super.paintBackground(g);
-		paintMatchedBracket(g);
-	}
+        @Override
+        protected void paintSafely(Graphics g) {
+        
+            // paint editor augmentations if editor is not opaque because
+            // paintBackground is not called in this case
+            if (!textArea.isOpaque()) {
+                paintEditorAugmentations(g);
+            }
+        
+            super.paintSafely(g);
+        }
 
+
+        @Override
+        protected void paintEditorAugmentations(Graphics g) {
+            super.paintEditorAugmentations(g);
+            paintMatchedBracket(g);
+        }
 
 	/**
 	 * Paints the "matched bracket", if any.
