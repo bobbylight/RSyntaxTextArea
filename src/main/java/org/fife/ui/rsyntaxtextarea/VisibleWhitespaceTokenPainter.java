@@ -45,7 +45,7 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 1.0
  */
-class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
+public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 
 	/**
