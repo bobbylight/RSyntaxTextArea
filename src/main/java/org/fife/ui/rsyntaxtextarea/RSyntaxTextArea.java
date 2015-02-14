@@ -1709,6 +1709,14 @@ private boolean fractionalFontMetricsEnabled;
 		return tokenPainter;
 	}
 
+	/**
+	 * Sets the painter to use for rendering tokens.
+	 *
+	 * @param tokenPainter The painter to use for rendering tokens.
+	 */
+	public void setTokenPainter(TokenPainter tokenPainter) {
+		this.tokenPainter = tokenPainter;
+	}
 
 	/**
 	 * Returns the tool tip to display for a mouse event at the given
