@@ -1716,6 +1716,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void setTokenPainter(TokenPainter tokenPainter) {
 		this.tokenPainter = tokenPainter;
+		repaint();
 	}
 
 	/**
