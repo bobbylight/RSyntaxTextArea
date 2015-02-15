@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/bobbylight/RSyntaxTextArea.svg?branch=master)](https://travis-ci.org/bobbylight/RSyntaxTextArea)
+[![Coverage Status](https://coveralls.io/repos/bobbylight/RSyntaxTextArea/badge.svg)](https://coveralls.io/r/bobbylight/RSyntaxTextArea)
 
 RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of the box, it supports syntax highlighting for over 30 programming languages, code folding, search and replace, and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 

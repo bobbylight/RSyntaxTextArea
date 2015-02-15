@@ -1,14 +1,33 @@
 ['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+// Jacoco and a coveralls upload plugin needed for publishing coverage results
+['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
 archivesBaseName = 'rsyntaxtextarea'
 
 dependencies {
-	testCompile group: 'junit', name: 'junit', version: '4.11'
+	testCompile 'junit:junit:4.11'
 }
 
 // Regenerate local gradlew
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.0'
+}
+
+// Add coveralls plugin to this build's classpath
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled = true // coveralls plugin depends on xml format report
+		html.enabled = true
+	}
 }
 
 compileJava {

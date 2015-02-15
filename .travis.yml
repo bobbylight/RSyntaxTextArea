@@ -1,12 +1,19 @@
 env:
   - DISPLAY=:99.0
 
+# xvfb is required to simulate a windowing system for Swing GUI tests.
+# http://ecmendenhall.github.io/blog/blog/2013/05/28/two-travis-ci-solutions/
 before_install:
   - "/bin/sh -e /etc/init.d/xvfb start"
 
+# Oldest JDK supported by Travis CI
 jdk:
   - openjdk6
 
 script:
   - ./gradlew assemble -x signArchives -x uploadArchives
   - ./gradlew check
+
+# Update coverage info on coveralls.io
+after_success:
+  - ./gradlew jacocoTestReport coveralls
