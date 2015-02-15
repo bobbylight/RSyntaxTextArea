@@ -1,3 +1,9 @@
+env:
+  - DISPLAY=:99.0
+
+before_install:
+  - "/bin/sh -e /etc/init.d/xvfb start"
+
 jdk:
   - openjdk6
 
