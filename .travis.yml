@@ -4,4 +4,4 @@ jdk:
   - openjdk6
 
 script:
-  - ./gradlew assemble -x signing -x uploadArchives
+  - ./gradlew assemble -x signArchives -x uploadArchives
