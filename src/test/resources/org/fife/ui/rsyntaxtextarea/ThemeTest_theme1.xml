@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE RSyntaxTheme SYSTEM "theme.dtd">
+
+<!--
+	RSyntaxTextArea's default theme.
+	See theme.dtd and org.fife.ui.rsyntaxtextarea.Theme for more information.
+-->
+<RSyntaxTheme version="1.0">
+
+   <!-- Omitting baseFont will use a system-appropriate monospaced. -->
+   <!--<baseFont family="..." size="13"/>-->
+   
+   <!--  General editor colors. -->
+   <background color="ffc800"/>
+   <caret color="ffc800"/>
+   <selection fg="ffc800" useFG="false" bg="ffc800" roundedEdges="true"/>
+   <currentLineHighlight color="ffc800" fade="true"/>
+   <marginLine fg="ffc800"/>
+   <markAllHighlight color="ffc800"/>
+   <markOccurrencesHighlight color="ffc800" border="true"/>
+   <matchedBracket fg="ffc800" bg="ffc800" highlightBoth="true" animate="true"/>
+   <hyperlinks fg="ffc800"/>
+   <secondaryLanguages>
+      <language index="1" bg="ffc800"/>
+      <language index="2" bg="ffc800"/>
+      <language index="3" bg="ffc800"/>
+   </secondaryLanguages>
+   
+   <!-- Gutter styling. -->
+   <gutterBorder color="ffc800"/>
+   <lineNumbers fg="ffc800" fontFamily="Arial" fontSize="22"/>
+   <foldIndicator fg="ffc800" iconBg="ffc800"/>
+   <iconRowHeader activeLineRange="ffc800" inheritsGutterBG="true"/>
+   
+   <!-- Syntax tokens. -->
+   <tokenStyles>
+      <style token="IDENTIFIER" fg="0000ff"/> <!-- Test a hex value without ff for red -->
+      <style token="RESERVED_WORD" fg="$ffc800" bold="true"/> <!-- We all '$' as an optional prefix -->
+      <style token="RESERVED_WORD_2" fg="ffc800" bold="true" fontSize="30"/>
+      <style token="ANNOTATION" fg="ffc800" fontFamily="Arial"/>
+      <style token="COMMENT_DOCUMENTATION" fg="ffc800" italic="true"/>
+      <style token="COMMENT_EOL" fg="ffc800" italic="true"/>
+      <style token="COMMENT_MULTILINE" fg="ffc800" italic="true"/>
+      <style token="COMMENT_KEYWORD" fg="ffc800" bold="true"/>
+      <style token="COMMENT_MARKUP" fg="ffc800"/>
+      <style token="DATA_TYPE" fg="ffc800" bold="true"/>
+      <style token="FUNCTION" fg="ffc800"/>
+      <style token="LITERAL_BOOLEAN" fg="ffc800" bold="true"/>
+      <style token="LITERAL_NUMBER_DECIMAL_INT" fg="ffc800"/>
+      <style token="LITERAL_NUMBER_FLOAT" fg="ffc800"/>
+      <style token="LITERAL_NUMBER_HEXADECIMAL" fg="ffc800"/>
+      <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="ffc800"/>
+      <style token="LITERAL_CHAR" fg="ffc800"/>
+      <style token="LITERAL_BACKQUOTE" fg="ffc800"/>
+      <style token="MARKUP_TAG_DELIMITER" fg="ffc800"/>
+      <style token="MARKUP_TAG_NAME" fg="ffc800"/>
+      <style token="MARKUP_TAG_ATTRIBUTE" fg="ffc800"/>
+      <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="ffc800"/>
+      <style token="MARKUP_COMMENT" fg="ffc800" italic="true"/>
+      <style token="MARKUP_DTD" fg="ffc800"/>
+      <style token="MARKUP_PROCESSING_INSTRUCTION" fg="ffc800"/>
+      <style token="MARKUP_CDATA" fg="ffc800"/>
+      <style token="MARKUP_CDATA_DELIMITER" fg="ffc800"/>
+      <style token="MARKUP_ENTITY_REFERENCE" fg="ffc800"/>
+      <style token="OPERATOR" fg="ffc800"/>
+      <style token="PREPROCESSOR" fg="ffc800"/>
+      <style token="REGEX" fg="ffc800"/>
+      <style token="SEPARATOR" fg="ffc800"/>
+      <style token="VARIABLE" fg="ffc800" bold="true"/>
+      <style token="WHITESPACE" fg="ffc800"/>
+      
+      <style token="ERROR_IDENTIFIER" fg="ffc800" bg="ffc800"/>
+      <style token="ERROR_NUMBER_FORMAT" fg="ffc800" bg="ffc800"/>
+      <style token="ERROR_STRING_DOUBLE" fg="ffc800" bg="ffc800"/>
+      <style token="ERROR_CHAR" fg="ffc800" bg="ffc800"/>
+   </tokenStyles>
+
+</RSyntaxTheme>

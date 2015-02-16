@@ -441,10 +441,10 @@ public class Theme {
 			elem = doc.createElement("lineNumbers");
 			elem.setAttribute("fg", colorToString(lineNumberColor));
 			if (lineNumberFont!=null) {
-				elem.setAttribute("lineNumberFont", lineNumberFont);
+				elem.setAttribute("fontFamily", lineNumberFont);
 			}
 			if (lineNumberFontSize>0) {
-				elem.setAttribute("lineNumberFontSize",
+				elem.setAttribute("fontSize",
 						Integer.toString(lineNumberFontSize));
 			}
 			root.appendChild(elem);

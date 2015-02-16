@@ -1579,7 +1579,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getHighlightSecondaryLanguages()
 	 */
 	public Color getSecondaryLanguageBackground(int index) {
-		return secondaryLanguageBackgrounds[index];
+		return secondaryLanguageBackgrounds[index - 1];
 	}
 
 
