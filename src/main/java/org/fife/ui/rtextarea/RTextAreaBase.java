@@ -61,7 +61,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	private boolean fadeCurrentLineHighlight;	// "Fade effect" for current line highlight.
 	private boolean roundedSelectionEdges;
 	private int previousCaretY;
-int currentCaretY;							// Used to know when to rehighlight current line.
+	int currentCaretY;							// Used to know when to rehighlight current line.
 
 	private BackgroundPainterStrategy backgroundPainter;	// Paints the background.
 
