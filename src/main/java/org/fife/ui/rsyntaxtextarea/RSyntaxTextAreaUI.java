@@ -163,7 +163,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	}
 
 
-	private void paintMatchedBracketImpl(Graphics g, RSyntaxTextArea rsta,
+	protected void paintMatchedBracketImpl(Graphics g, RSyntaxTextArea rsta,
 			Rectangle r) {
 		// We must add "-1" to the height because otherwise we'll paint below
 		// the region that gets invalidated.

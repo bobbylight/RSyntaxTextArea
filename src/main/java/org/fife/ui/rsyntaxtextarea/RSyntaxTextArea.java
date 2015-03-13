@@ -1425,6 +1425,25 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether to paint the backgrounds of tokens on the specified
+	 * line (assuming they are not obstructed by e.g. selection).
+	 *
+	 * @param line The line number.
+	 * @param y The y-offset of the line.  This is used when line wrap is
+	 *        enabled, since each logical line can be rendered as several
+	 *        physical lines.
+	 * @return Whether to paint the token backgrounds on this line.
+	 */
+	boolean getPaintTokenBackgrounds(int line, float y) {
+		//System.out.println(y + ", " + getCurrentCaretY() + "-" + (getCurrentCaretY() + getLineHeight()));
+		int iy = (int)y;
+		int curCaretY = getCurrentCaretY();
+		return iy<curCaretY || iy>=curCaretY+getLineHeight() ||
+				!getHighlightCurrentLine();
+	}
+
+
+	/**
 	 * Returns the specified parser.
 	 *
 	 * @param index The {@link Parser} to retrieve.

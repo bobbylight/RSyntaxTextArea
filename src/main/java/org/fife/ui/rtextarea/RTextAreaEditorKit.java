@@ -1130,26 +1130,26 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					return;
 				}
 
-				int curWordStart = Utilities.getWordStart(textArea, dot - 1);
+				int curWordStart = getWordStart(textArea, dot);
 
 				if (lastWordStart!=curWordStart || dot!=lastDot) {
 					lastPrefix = textArea.getText(curWordStart,dot-curWordStart);
 					// Utilities.getWordStart() treats spans of whitespace and
 					// single non-letter chars as "words."
-					if (lastPrefix.length()==0 ||
-							!Character.isLetter(lastPrefix.charAt(lastPrefix.length()-1))) {
+					if (!isAcceptablePrefix(lastPrefix)) {
 						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 						return;
 					}
 					lastWordStart = dot - lastPrefix.length();
-					searchOffs = lastWordStart;
+//					searchOffs = lastWordStart;
+//searchOffs = getWordStart(textArea, lastWordStart);
+searchOffs = Math.max(lastWordStart - 1, 0);
 				}
 
 				while (searchOffs > 0) {
 					int wordStart = 0;
 					try {
-						wordStart = Utilities.getPreviousWord(textArea,
-							searchOffs);
+						wordStart = getPreviousWord(textArea, searchOffs);
 					} catch (BadLocationException ble) {
 						// No more words.  Sometimes happens for example if the
 						// document starts off with whitespace - then searchOffs
@@ -1161,7 +1161,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 								textArea);
 						break;
 					}
-					int end = Utilities.getWordEnd(textArea, wordStart);
+					int end = getWordEnd(textArea, wordStart);
 					String word = textArea.getText(wordStart, end - wordStart);
 					searchOffs = wordStart;
 					if (word.startsWith(lastPrefix)) {
@@ -1180,6 +1180,36 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		@Override
 		public final String getMacroID() {
 			return getName();
+		}
+
+		protected int getPreviousWord(RTextArea textArea, int offs)
+				throws BadLocationException {
+			return Utilities.getPreviousWord(textArea, offs);
+		}
+
+		protected int getWordEnd(RTextArea textArea, int offs)
+				throws BadLocationException {
+			return Utilities.getWordEnd(textArea, offs);
+		}
+
+		protected int getWordStart(RTextArea textArea, int offs)
+				throws BadLocationException {
+			return Utilities.getWordStart(textArea, offs);
+		}
+
+		/**
+		 * <code>Utilities.getWordStart()</code> treats spans of whitespace and
+		 * single non-letter chars as "words."  This method is used to filter
+		 * that kind of thing out - non-words should not be suggested by this
+		 * action.
+		 *
+		 * @param prefix The prefix characters before the caret.
+		 * @return Whether the prefix could be part of a "word" in the context
+		 *         of the text area's current content.
+		 */
+		protected boolean isAcceptablePrefix(String prefix) {
+			return prefix.length() > 0 && 
+				Character.isLetter(prefix.charAt(prefix.length()-1));
 		}
 
 	}

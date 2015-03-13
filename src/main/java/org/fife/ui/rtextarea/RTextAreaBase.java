@@ -392,6 +392,16 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 
 	/**
+	 * Returns the y-offset of the caret.
+	 *
+	 * @return The y-offset of the caret.
+	 */
+	protected int getCurrentCaretY() {
+		return currentCaretY;
+	}
+
+
+	/**
 	 * Returns the color being used to highlight the current line.  Note that
 	 * if highlighting the current line is turned off, you will not be seeing
 	 * this highlight.

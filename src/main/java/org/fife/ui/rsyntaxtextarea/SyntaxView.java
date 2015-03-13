@@ -170,12 +170,14 @@ public class SyntaxView extends View implements TabExpander,
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
 	private float drawLine(TokenPainter painter, Token token, Graphics2D g,
-			float x, float y) {
+			float x, float y, int line) {
 
 		float nextX = x;	// The x-value at the end of our text.
+		boolean paintBG = host.getPaintTokenBackgrounds(line, y);
 
 		while (token!=null && token.isPaintable() && nextX<clipEnd) {
-			nextX = painter.paint(token, g, nextX,y, host, this, clipStart);
+			nextX = painter.paint(token, g, nextX,y, host, this, clipStart,
+					paintBG);
 			token = token.getNextToken();
 		}
 
@@ -719,7 +721,7 @@ if (host.isCodeFoldingEnabled()) {
 			token = document.getTokenListForLine(line);
 			if (selStart==selEnd || startOffset>=selEnd ||
 					endOffset<selStart) {
-				drawLine(painter, token, g2d, x,y);
+				drawLine(painter, token, g2d, x,y, line);
 			}
 			else {
 				//System.out.println("Drawing line with selection: " + line);

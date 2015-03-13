@@ -194,7 +194,7 @@ return p + 1;
 	 * @param y The y-coordinate at which to begin painting.
 	 */
 	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r,
-							View view, int fontHeight, int y) {
+						View view, int fontHeight, int y, int line) {
 
 		float x = r.x;
 
@@ -229,7 +229,8 @@ return p + 1;
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
-				x = painter.paint(token, g, x,y, host, this);
+				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+				x = painter.paint(token, g, x,y, host, this, 0, paintBG);
 				token = token.getNextToken();
 			}
 			
@@ -238,7 +239,8 @@ return p + 1;
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
 						tokenOffset, token.getType());
 				tempToken.setLanguageIndex(token.getLanguageIndex());
-				painter.paint(tempToken, g, x,y, host, this);
+				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+				painter.paint(tempToken, g, x,y, host, this, 0, paintBG);
 				tempToken.copyFrom(token);
 				tempToken.makeStartAt(p);
 				token = new TokenImpl(tempToken);
@@ -866,6 +868,7 @@ return p + 1;
 		// Whether token styles should always be painted, even in selections
 		int selStart = host.getSelectionStart();
 		int selEnd = host.getSelectionEnd();
+		int curLine = host.getCaretLineNumber();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
@@ -887,7 +890,7 @@ return p + 1;
 				if (selStart==selEnd || startOffset>=selEnd ||
 						endOffset<selStart) {
 					drawView(painter, g2d, alloc, view, fontHeight,
-							tempRect.y+ascent);
+							tempRect.y+ascent, i);
 				}
 				else {
 					//System.out.println("Drawing line with selection: " + i);
