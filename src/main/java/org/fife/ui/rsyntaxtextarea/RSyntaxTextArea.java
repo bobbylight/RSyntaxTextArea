@@ -2715,6 +2715,9 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getParserDelay()
 	 */
 	public void setParserDelay(int millis) {
+		if (parserManager==null) {
+			parserManager = new ParserManager(this);
+		}
 		parserManager.setDelay(millis);
 	}
 
