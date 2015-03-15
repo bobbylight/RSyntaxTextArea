@@ -269,7 +269,10 @@ URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
+<<<<<<< HEAD
 %state EOL_COMMENT
+=======
+>>>>>>> 879124c04a574f7bf71ddc3293f7213858352813
 
 %%
 
@@ -295,7 +298,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 										addToken(Token.IDENTIFIER);
 									}
 								}
+<<<<<<< HEAD
 	"/"							{ addToken(Token.IDENTIFIER); }
+=======
+>>>>>>> 879124c04a574f7bf71ddc3293f7213858352813
 
 	\n |
 	<<EOF>>						{ addNullToken(); return firstToken; }
