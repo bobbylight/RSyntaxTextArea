@@ -427,7 +427,7 @@ public class JavaTokenMakerTest {
 
 		String code = "abstract assert break case catch class const continue " +
 				"default do else enum extends final finally for goto if " +
-				"implements import instanceof interface native new package " +
+				"implements import instanceof interface native new null package " +
 				"private protected public static strictfp super switch " +
 				"synchronized this throw throws transient try void volatile while";
 
