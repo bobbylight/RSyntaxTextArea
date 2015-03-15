@@ -143,6 +143,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting .jshintrc files.
+	 */
+	public static final String SYNTAX_STYLE_JSHINTRC	= "text/jshintrc";
+
+
+	/**
 	 * Style for highlighting JSON.
 	 */
 	public static final String SYNTAX_STYLE_JSON		= "text/json";

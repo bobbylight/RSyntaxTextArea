@@ -1,7 +1,7 @@
 /*
  * 12/23/2012
  *
- * JsonTokenMaker.java - Scanner for the JSON.
+ * JsonTokenMaker.java - Scanner for JSON.
  * 
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
@@ -15,7 +15,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 /**
- * Scanner for the JSON.<p>
+ * Scanner for JSON.<p>
  *
  * This implementation was created using
  * <a href="http://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
@@ -49,7 +49,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.5
+ * @version 0.6
  *
  */
 %%
@@ -63,12 +63,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %{
 
+	private boolean highlightEolComments;
+
 
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
 	 * no-parameter constructor.
 	 */
 	public JsonTokenMaker() {
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
 	}
 
 
@@ -171,6 +185,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
+	protected void setHighlightEolComments(boolean highlightEolComments) {
+		this.highlightEolComments = highlightEolComments;
+	}
+
+
 	/**
 	 * Refills the input buffer.
 	 *
@@ -192,7 +211,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -236,6 +255,17 @@ BooleanLiteral			= ("true"|"false")
 Separator				= ([\{\}\[\]])
 Separator2				= ([\:,])
 
+LineCommentBegin		= "//"
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
+
 %%
 
 <YYINITIAL> {
@@ -251,10 +281,28 @@ Separator2				= ([\:,])
 	{Separator2}				{ addToken(Token.IDENTIFIER); }
 	{IntegerLiteral}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{FloatLiteral}				{ addToken(Token.LITERAL_NUMBER_FLOAT); }
+
+	{LineCommentBegin}			{
+									if (highlightEolComments) {
+										start = zzMarkedPos-2; yybegin(EOL_COMMENT);
+									}
+									else {
+										addToken(Token.IDENTIFIER);
+									}
+								}
+
 	\n |
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as identifiers. */
 	.							{ addToken(Token.IDENTIFIER); }
 
+}
+
+<EOL_COMMENT> {
+	[^hwf\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	\n |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 }
