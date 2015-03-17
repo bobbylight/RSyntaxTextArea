@@ -348,6 +348,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc) {
 		super(doc);
+		setSyntaxEditingStyle(doc.getSyntaxStyle());
 	}
 
 	/**
@@ -2390,6 +2391,7 @@ private boolean fractionalFontMetricsEnabled;
 			markOccurrencesSupport.clear();
 		}
 		super.setDocument(document);
+		setSyntaxEditingStyle(((RSyntaxDocument)document).getSyntaxStyle());
 		if (markOccurrencesSupport != null) {
 			markOccurrencesSupport.doMarkOccurrences();
 		}
