@@ -74,8 +74,6 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 				break;
 
 			default:
-				new Exception("Unknown tokenType: '" + tokenType + "'").
-													printStackTrace();
 				tokenType = Token.IDENTIFIER;
 				break;
 
