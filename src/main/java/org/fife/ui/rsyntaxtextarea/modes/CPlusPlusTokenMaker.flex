@@ -311,7 +311,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"public" |
 	"register" |
 	"reinterpret_cast" |
-	"return" |
 	"sizeof" |
 	"static" |
 	"static_cast" |
@@ -330,19 +329,23 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"volatile" |
 	"while"					{ addToken(Token.RESERVED_WORD); }
 
+	"return"				{ addToken(Token.RESERVED_WORD_2); }
+
 	/* Boolean literals. */
 	"true" |
 	"false" |
 
 	/* Data types. */
-	"bool" |
 	"char" |
+	"div_t" |
 	"double" |
 	"float" |
 	"int" |
+	"ldiv_t" |
 	"long" |
 	"short" |
 	"signed" |
+	"size_t" |
 	"unsigned" |
 	"void" |
 	"wchar_t"				{ addToken(Token.DATA_TYPE); }
@@ -605,6 +608,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"*=" |
 	"/=" |
 	"%=" |
+	"&=" |
+	"|=" |
+	"^=" |
+	">=" |
+	"<=" |
+	"!=" |
 	">>=" |
 	"<<=" |
 	"^" |

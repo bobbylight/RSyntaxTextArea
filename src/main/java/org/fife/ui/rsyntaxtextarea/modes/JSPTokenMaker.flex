@@ -133,7 +133,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	private static final int INTERNAL_IN_JS					= -12;
+	static final int INTERNAL_IN_JS					= -12;
 
 	/**
 	 * Token type specifying we're in a JavaScript multi-line comment.
@@ -201,7 +201,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in Java code.
 	 */
-	private static final int INTERNAL_IN_JAVA_EXPRESSION		= -(5<<11);
+	static final int INTERNAL_IN_JAVA_EXPRESSION		= -(5<<11);
 
 	/**
 	 * Token type specifying we're in Java multiline comment.
@@ -583,7 +583,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -626,6 +626,7 @@ JspStart				= ({JspExpressionStart}|{JspScriptletStart}|{JspDeclarationStart})
 // General stuff.
 Letter							= [A-Za-z]
 NonzeroDigit					= [1-9]
+BinaryDigit						= ([0-1])
 Digit							= ("0"|{NonzeroDigit})
 HexDigit						= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
@@ -648,28 +649,42 @@ JErrorCharLiteral			= ({UnclosedCharLiteral}[\'])
 JStringLiteral				= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
 JUnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
 JErrorStringLiteral			= ({UnclosedStringLiteral}[\"])
+
 MLCBegin					= "/*"
 MLCEnd					= "*/"
 DocCommentBegin			= "/**"
 LineCommentBegin			= "//"
-IntegerHelper1				= (({NonzeroDigit}{Digit}*)|"0")
-IntegerHelper2				= ("0"(([xX]{HexDigit}+)|({OctalDigit}*)))
-IntegerLiteral				= ({IntegerHelper1}[lL]?)
-HexLiteral				= ({IntegerHelper2}[lL]?)
+
+DigitOrUnderscore			= ({Digit}|[_])
+DigitsAndUnderscoresEnd		= ({DigitOrUnderscore}*{Digit})
+IntegerHelper				= (({NonzeroDigit}{DigitsAndUnderscoresEnd}?)|"0")
+IntegerLiteral				= ({IntegerHelper}[lL]?)
+
+BinaryDigitOrUnderscore		= ({BinaryDigit}|[_])
+BinaryDigitsAndUnderscores	= ({BinaryDigit}({BinaryDigitOrUnderscore}*{BinaryDigit})?)
+BinaryLiteral				= ("0"[bB]{BinaryDigitsAndUnderscores})
+
+HexDigitOrUnderscore		= ({HexDigit}|[_])
+HexDigitsAndUnderscores		= ({HexDigit}({HexDigitOrUnderscore}*{HexDigit})?)
+OctalDigitOrUnderscore		= ({OctalDigit}|[_])
+OctalDigitsAndUnderscoresEnd= ({OctalDigitOrUnderscore}*{OctalDigit})
+HexHelper					= ("0"(([xX]{HexDigitsAndUnderscores})|({OctalDigitsAndUnderscoresEnd})))
+HexLiteral					= ({HexHelper}[lL]?)
+
 FloatHelper1				= ([fFdD]?)
 FloatHelper2				= ([eE][+-]?{Digit}+{FloatHelper1})
 FloatLiteral1				= ({Digit}+"."({FloatHelper1}|{FloatHelper2}|{Digit}+({FloatHelper1}|{FloatHelper2})))
 FloatLiteral2				= ("."{Digit}+({FloatHelper1}|{FloatHelper2}))
 FloatLiteral3				= ({Digit}+{FloatHelper2})
 FloatLiteral				= ({FloatLiteral1}|{FloatLiteral2}|{FloatLiteral3}|({Digit}+[fFdD]))
+
 ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
 BooleanLiteral				= ("true"|"false")
 Separator					= ([\(\)\{\}\[\]])
 Separator2				= ([\;,.])
-NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"||"|"&&"|">>>")
+NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"|"|"||"|"&&"|">>>")
 AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
 Operator					= ({NonAssignmentOperator}|{AssignmentOperator})
-DocumentationKeyword		= ("author"|"deprecated"|"exception"|"link"|"param"|"return"|"see"|"serial"|"serialData"|"serialField"|"since"|"throws"|"version")
 JIdentifier				= ({IdentifierStart}{IdentifierPart}*)
 ErrorIdentifier			= ({NonSeparator}+)
 Annotation				= ("@"{JIdentifier}?)
@@ -1238,7 +1253,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
 	[^hwf<\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
 							  yybegin(YYINITIAL);
@@ -1444,6 +1459,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	"Character.UnicodeBlock" | 
 	"Class" |
 	"ClassLoader" |
+	"ClassValue" |
 	"Compiler" |
 	"Double" |
 	"Enum" |
@@ -1504,6 +1520,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	"UnsupportedOperationException" |
 	"AbstractMethodError" |
 	"AssertionError" |
+	"BootstrapMethodError" |
 	"ClassCircularityError" |
 	"ClassFormatError" |
 	"Error" |
@@ -1523,7 +1540,227 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 	"UnsatisfiedLinkError" |
 	"UnsupportedClassVersionError" |
 	"VerifyError" |
-	"VirtualMachineError" 			{ addToken(Token.FUNCTION); }
+	"VirtualMachineError" |
+
+	/* java.io classes*/
+    "Closeable" |
+    "DataInput" |
+    "DataOutput" |
+    "Externalizable" |
+    "FileFilter" |
+    "FilenameFilter" |
+    "Flushable" |
+    "ObjectInput" |
+    "ObjectInputValidation" |
+    "ObjectOutput" |
+    "ObjectStreamConstants" |
+    "Serializable" |
+
+    "BufferedInputStream" |
+    "BufferedOutputStream" |
+    "BufferedReader" |
+    "BufferedWriter" |
+    "ByteArrayInputStream" |
+    "ByteArrayOutputStream" |
+    "CharArrayReader" |
+    "CharArrayWriter" |
+    "Console" |
+    "DataInputStream" |
+    "DataOutputStream" |
+    "File" |
+    "FileDescriptor" |
+    "FileInputStream" |
+    "FileOutputStream" |
+    "FilePermission" |
+    "FileReader" |
+    "FileWriter" |
+    "FilterInputStream" |
+    "FilterOutputStream" |
+    "FilterReader" |
+    "FilterWriter" |
+    "InputStream" |
+    "InputStreamReader" |
+    "LineNumberInputStream" |
+    "LineNumberReader" |
+    "ObjectInputStream" |
+    "ObjectInputStream.GetField" |
+    "ObjectOutputStream" |
+    "ObjectOutputStream.PutField" |
+    "ObjectStreamClass" |
+    "ObjectStreamField" |
+    "OutputStream" |
+    "OutputStreamWriter" |
+    "PipedInputStream" |
+    "PipedOutputStream" |
+    "PipedReader" |
+    "PipedWriter" |
+    "PrintStream" |
+    "PrintWriter" |
+    "PushbackInputStream" |
+    "PushbackReader" |
+    "RandomAccessFile" |
+    "Reader" |
+    "SequenceInputStream" |
+    "SerializablePermission" |
+    "StreamTokenizer" |
+    "StringBufferInputStream" |
+    "StringReader" |
+    "StringWriter" |
+    "Writer" |
+
+    "CharConversionException" |
+    "EOFException" |
+    "FileNotFoundException" |
+    "InterruptedIOException" |
+    "InvalidClassException" |
+    "InvalidObjectException" |
+    "IOException" |
+    "NotActiveException" |
+    "NotSerializableException" |
+    "ObjectStreamException" |
+    "OptionalDataException" |
+    "StreamCorruptedException" |
+    "SyncFailedException" |
+    "UncheckedIOException" |
+    "UnsupportedEncodingException" |
+    "UTFDataFormatException" |
+    "WriteAbortedException" |
+
+    "IOError" |
+
+	/* java.util classes */
+    "Collection" |
+    "Comparator" |
+    "Deque" |
+    "Enumeration" |
+    "EventListener" |
+    "Formattable" |
+    "Iterator" |
+    "List" |
+    "ListIterator" |
+    "Map" |
+    "Map.Entry" |
+    "NavigableMap" |
+    "NavigableSet" |
+    "Observer" |
+    "PrimitiveIterator" |
+    "PrimitiveIterator.OfDouble" |
+    "PrimitiveIterator.OfInt" |
+    "PrimitiveIterator.OfLong" |
+    "Queue" |
+    "RandomAccess" |
+    "Set" |
+    "SortedMap" |
+    "SortedSet" |
+    "Spliterator" |
+    "Spliterator.OfDouble" |
+    "Spliterator.OfInt" |
+    "Spliterator.OfLong" |
+    "Spliterator.OfPrimitive" |
+
+    "AbstractCollection" |
+    "AbstractList" |
+    "AbstractMap" |
+    "AbstractMap.SimpleEntry" |
+    "AbstractMap.SimpleImmutableEntry" |
+    "AbstractQueue" |
+    "AbstractSequentialList" |
+    "AbstractSet" |
+    "ArrayDeque" |
+    "ArrayList" |
+    "Arrays" |
+    "Base64" |
+    "Base64.Decoder" |
+    "Base64.Encoder" |
+    "BitSet" |
+    "Calendar" |
+    "Calendar.Builder" |
+    "Collections" |
+    "Currency" |
+    "Date" |
+    "Dictionary" |
+    "DoubleSummaryStatistics" |
+    "EnumMap" |
+    "EnumSet" |
+    "EventListenerProxy" |
+    "EventObject" |
+    "FormattableFlags" |
+    "Formatter" |
+    "GregorianCalendar" |
+    "HashMap" |
+    "HashSet" |
+    "Hashtable" |
+    "IdentityHashMap" |
+    "IntSummaryStatistics" |
+    "LinkedHashMap" |
+    "LinkedHashSet" |
+    "LinkedList" |
+    "ListResourceBundle" |
+    "Locale" |
+    "Locale.Builder" |
+    "Locale.LanguageRange" |
+    "LongSummaryStatistics" |
+    "Objects" |
+    "Observable" |
+    "Optional" |
+    "OptionalDouble" |
+    "OptionalInt" |
+    "OptionalLong" |
+    "PriorityQueue" |
+    "Properties" |
+    "PropertyPermission" |
+    "PropertyResourceBundle" |
+    "Random" |
+    "ResourceBundle" |
+    "ResourceBundle.Control" |
+    "Scanner" |
+    "ServiceLoader" |
+    "SimpleTimeZone" |
+    "Spliterators" |
+    "Spliterators.AbstractDoubleSpliterator" |
+    "Spliterators.AbstractIntSpliterator" |
+    "Spliterators.AbstractLongSpliterator" |
+    "Spliterators.AbstractSpliterator" |
+    "SpliteratorRandom" |
+    "Stack" |
+    "StringJoiner" |
+    "StringTokenizer" |
+    "Timer" |
+    "TimerTask" |
+    "TimeZone" |
+    "TreeMap" |
+    "TreeSet" |
+    "UUID" |
+    "Vector" |
+    "WeakHashMap" |
+
+    "Formatter.BigDecimalLayoutForm" |
+    "Locale.Category" |
+    "Locale.FilteringMode" |
+
+    "ConcurrentModificationException" |
+    "DuplicateFormatFlagsException" |
+    "EmptyStackException" |
+    "FormatFlagsConversionMismatchException" |
+    "FormatterClosedException" |
+    "IllegalFormatCodePointException" |
+    "IllegalFormatConversionException" |
+    "IllegalFormatException" |
+    "IllegalFormatFlagsException" |
+    "IllegalFormatPrecisionException" |
+    "IllegalFormatWidthException" |
+    "IllformedLocaleException" |
+    "InputMismatchException" |
+    "InvalidPropertiesFormatException" |
+    "MissingFormatArgumentException" |
+    "MissingFormatWidthException" |
+    "MissingResourceException" |
+    "NoSuchElementException" |
+    "TooManyListenersException" |
+    "UnknownFormatConversionException" |
+    "UnknownFormatFlagsException" |
+
+    "ServiceConfigurationError" 		{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addEndToken(INTERNAL_IN_JAVA_EXPRESSION - jspInState); return firstToken; }
 
@@ -1557,6 +1794,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }

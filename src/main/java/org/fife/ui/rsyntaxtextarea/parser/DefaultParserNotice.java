@@ -252,10 +252,10 @@ public class DefaultParserNotice implements ParserNotice {
 
 
 	/**
-	 * Sets the tooltip text to display for this notice.
+	 * Sets the tool tip text to display for this notice.
 	 *
-	 * @param text The new tooltip text.  This can be HTML.  If this is
-	 *        <code>null</code>, then tooltips will return the same text as
+	 * @param text The new tool tip text.  This can be HTML.  If this is
+	 *        <code>null</code>, then tool tips will return the same text as
 	 *        {@link #getMessage()}.
 	 * @see #getToolTipText()
 	 */

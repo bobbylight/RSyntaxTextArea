@@ -196,7 +196,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -296,7 +296,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"goto" |
 	"if" |
 	"register" |
-	"return" |
 	"sizeof" |
 	"static" |
 	"struct" |
@@ -305,6 +304,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"union" |
 	"volatile" |
 	"while"					{ addToken(Token.RESERVED_WORD); }
+
+	"return"				{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Data types. */
 	"char" |
@@ -579,6 +580,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"*=" |
 	"/=" |
 	"%=" |
+	"&=" |
+	"|=" |
+	"^=" |
+	">=" |
+	"<=" |
+	"!=" |
 	">>=" |
 	"<<=" |
 	"^" |
