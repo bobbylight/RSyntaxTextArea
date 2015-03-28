@@ -2,6 +2,7 @@
 // Jacoco and a coveralls upload plugin needed for publishing coverage results
 ['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
+group = 'com.fifesoft'
 archivesBaseName = 'rsyntaxtextarea'
 
 dependencies {
