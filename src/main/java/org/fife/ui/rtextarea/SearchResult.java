@@ -231,7 +231,7 @@ public class SearchResult implements Comparable<SearchResult> {
 
 	/**
 	 * Returns whether anything was found in this search operation.  This is
-	 * shorthand for <code>getCount()>0</code>.
+	 * shorthand for <code>getCount()&gt;0</code>.
 	 *
 	 * @return Whether anything was found in this search operation.
 	 * @see #getCount()

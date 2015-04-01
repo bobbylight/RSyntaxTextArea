@@ -68,7 +68,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * of certain programming languages to its list of features.  Languages
  * currently supported include:
  *
- * <table>
+ * <table summary="">
  *  <tr>
  *   <td style="vertical-align: top">
  *    <ul>
@@ -1515,7 +1515,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * containing:
 	 * 
 	 * <pre>
-	 * for (int i=0; i<10; i++) {
+	 * for (int i=0; i&lt;10; i++) {
 	 * </pre>
 	 * 
 	 * the following line should be indented.

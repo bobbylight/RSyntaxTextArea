@@ -1110,8 +1110,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * <code>RSyntaxTextArea</code> and the "auto-indent" feature).
 	 *
 	 * @param str the text to use as the replacement
-	 * @param start the start position >= 0
-	 * @param end the end position >= start
+	 * @param start the start position &gt;= 0
+	 * @param end the end position &gt;= start
 	 * @exception IllegalArgumentException  if part of the range is an
 	 *  invalid position in the model
 	 * @see #insert(String, int)

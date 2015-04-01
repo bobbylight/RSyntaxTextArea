@@ -104,8 +104,8 @@ public interface Token extends TokenTypes {
 	 * it is up to the caller to ensure valid input.
 	 *
 	 * @param pos A position in the document that is represented by this token.
-	 * @return The corresponding token position >= <code>textOffset</code> and
-	 *         < <code>textOffset+textCount</code>.
+	 * @return The corresponding token position &gt;= <code>textOffset</code>
+	 *         and &lt; <code>textOffset+textCount</code>.
 	 * @see #tokenToDocument
 	 */
 	public int documentToToken(int pos);
@@ -207,7 +207,7 @@ public interface Token extends TokenTypes {
 	 * @return The position (in the document, NOT into the token list!) that
 	 *         covers the pixel location.  If <code>tokenList</code> is
 	 *         <code>null</code> or has type <code>Token.NULL</code>, then
-	 *         <code>-1</code is returned; the caller should recognize this and
+	 *         <code>-1</code> is returned; the caller should recognize this and
 	 *         return the actual end position of the (empty) line.
 	 */
 	public int getListOffset(RSyntaxTextArea textArea, TabExpander e,

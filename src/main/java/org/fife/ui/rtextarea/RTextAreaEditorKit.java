@@ -334,7 +334,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * @param in  The stream to read from
 	 * @param doc The destination for the insertion.
 	 * @param pos The location in the document to place the
-	 *   content >= 0.
+	 *   content &gt;= 0.
 	 * @exception IOException on any I/O error
 	 * @exception BadLocationException if pos represents an invalid
 	 *   location within the document.

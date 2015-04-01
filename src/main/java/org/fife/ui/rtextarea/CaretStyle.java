@@ -18,7 +18,7 @@ package org.fife.ui.rtextarea;
  *    <li>As an underline</li>
  *    <li>As a "block caret"</li>
  *    <li>As a rectangle around the current character</li>
- * </li>
+ * </ol>
  * 
  * @author Robert Futrell
  * @version 1.0

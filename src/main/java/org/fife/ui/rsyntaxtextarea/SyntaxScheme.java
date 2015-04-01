@@ -554,8 +554,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * values as follows:
 	 * <ul>
 	 *   <li>If a color is non-null, it is added as a 24-bit integer
-	 *      of the form <code>((r<<16) | (g<<8) | (b))</code>; if it is
-	 *       <code>null</code>, it is added as "<i>-,</i>".
+	 *      of the form <code>((r&lt;*lt;16) | (g&lt;*lt;8) | (b))</code>; if
+	 *      it is <code>null</code>, it is added as "<i>-,</i>".
 	 *   <li>The font and style (bold/italic) is added as an integer like so:
 	 *       "<i>family,</i> <i>style,</i> <i>size</i>".
 	 *   <li>The entire syntax highlighting scheme is thus one long string of

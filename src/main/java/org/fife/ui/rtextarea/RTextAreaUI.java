@@ -543,7 +543,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 * The default implementation is equivalent to:
 	 * <pre>
 	 * int startOffs = textArea.getLineStartOffset(line);
-	 * return yForLineContaining(startOffs);</code>
+	 * return yForLineContaining(startOffs);
 	 * </pre>
 	 *
 	 * Subclasses that can calculate this value more quickly than traditional
@@ -571,7 +571,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 * <pre>
 	 * int line = textArea.getLineOfOffset(offs);
 	 * int startOffs = textArea.getLineStartOffset(line);
-	 * return modelToView(startOffs).y;</code>
+	 * return modelToView(startOffs).y;
 	 * </pre>
 	 *
 	 * Subclasses that can calculate this value more quickly than traditional

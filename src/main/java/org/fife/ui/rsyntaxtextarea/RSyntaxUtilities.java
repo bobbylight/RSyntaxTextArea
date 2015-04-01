@@ -658,7 +658,7 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * {@link TokenOrientedView} and <code>javax.swing.text.TabExpander</code>;
 	 * otherwise, a <code>ClassCastException</code> could be thrown.
 	 *
-	 * @param pos the position to convert >= 0
+	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region in which to render
 	 * @param direction the direction from the current position that can
 	 *  be thought of as the arrow keys typically found on a keyboard.
@@ -830,9 +830,9 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * a value of -1 will be returned.
 	 *
 	 * @param c the editor
-	 * @param offs the offset in the document >= 0
-	 * @param x the X coordinate >= 0
-	 * @return the position >= 0 if the request can be computed, otherwise
+	 * @param offs the offset in the document &gt;= 0
+	 * @param x the X coordinate &gt;= 0
+	 * @return the position &gt;= 0 if the request can be computed, otherwise
 	 *  a value of -1 will be returned.
 	 * @exception BadLocationException if the offset is out of range
 	 */
@@ -864,9 +864,9 @@ public class RSyntaxUtilities implements SwingConstants {
 	 * a value of -1 will be returned.
 	 *
 	 * @param c the editor
-	 * @param offs the offset in the document >= 0
-	 * @param x the X coordinate >= 0
-	 * @return the position >= 0 if the request can be computed, otherwise
+	 * @param offs the offset in the document &gt;= 0
+	 * @param x the X coordinate &gt;= 0
+	 * @return the position &gt;= 0 if the request can be computed, otherwise
 	 *  a value of -1 will be returned.
 	 * @exception BadLocationException if the offset is out of range
 	 */

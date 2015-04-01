@@ -99,8 +99,8 @@ public class DynamicIntArray implements Serializable {
 	 * @param intArray The array of <code>int</code>s to insert.
 	 * @throws IndexOutOfBoundsException If <code>index</code> is less than
 	 *         zero or greater than <code>getSize()</code>.
-	 * @throws NullPointerException If <code>intArray<code> is
-	 *         <code>null<code>.
+	 * @throws NullPointerException If <code>intArray</code> is
+	 *         <code>null</code>.
 	 */
 	public void add(int index, int[] intArray) {
 		if (index>size) {

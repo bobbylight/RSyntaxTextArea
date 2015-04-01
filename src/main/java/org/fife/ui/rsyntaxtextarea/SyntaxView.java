@@ -315,7 +315,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * they might not be in the same order found in the model, or they just
 	 * might not allow access to some of the locations in the model.
 	 *
-	 * @param pos the position to convert >= 0
+	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region to render into
 	 * @param direction the direction from the current position that can
 	 *  be thought of as the arrow keys typically found on a keyboard.
@@ -340,7 +340,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * axis.
 	 *
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
-	 * @return   the span the view would like to be rendered into >= 0.
+	 * @return   the span the view would like to be rendered into &gt;= 0.
 	 *           Typically the view is told to render into the span
 	 *           that is returned, although there is no guarantee.  
 	 *           The parent may choose to resize or break the view.
@@ -520,7 +520,7 @@ if (host.isCodeFoldingEnabled()) {
 	 * Provides a mapping from the document model coordinate space
 	 * to the coordinate space of the view mapped to it.
 	 *
-	 * @param pos the position to convert >= 0
+	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region to render into
 	 * @return the bounding box of the given position
 	 * @exception BadLocationException  if the given position does not
@@ -566,7 +566,7 @@ if (host.isCodeFoldingEnabled()) {
 	 * too much for its consumers (implementations of
 	 * <code>javax.swing.text.Highlighter</code>).
 	 *
-	 * @param p0 the position of the first character (>=0)
+	 * @param p0 the position of the first character (&gt;=0)
 	 * @param b0 The bias of the first character position, toward the previous
 	 *        character or the next character represented by the offset, in
 	 *        case the position is a boundary of two views; <code>b0</code>
@@ -575,7 +575,7 @@ if (host.isCodeFoldingEnabled()) {
 	 *    <li> <code>Position.Bias.Forward</code>
 	 *    <li> <code>Position.Bias.Backward</code>
 	 * </ul>
-	 * @param p1 the position of the last character (>=0)
+	 * @param p1 the position of the last character (&gt;=0)
 	 * @param b1 the bias for the second character position, defined
 	 *		one of the legal values shown above
 	 * @param a the area of the view, which encompasses the requested region
@@ -642,10 +642,10 @@ if (host.isCodeFoldingEnabled()) {
 	 * This implementation does not support things like centering so it
 	 * ignores the tabOffset argument.
 	 *
-	 * @param x the current position >= 0
+	 * @param x the current position &gt;= 0
 	 * @param tabOffset the position within the text stream
-	 *   that the tab occurred at >= 0.
-	 * @return the tab stop, measured in points >= 0
+	 *   that the tab occurred at &gt;= 0.
+	 * @return the tab stop, measured in points &gt;= 0
 	 */
 	public float nextTabStop(float x, int tabOffset) {
 		if (tabSize == 0)
@@ -900,11 +900,11 @@ if (host.isCodeFoldingEnabled()) {
 	 * Provides a mapping from the view coordinate space to the logical
 	 * coordinate space of the model.
 	 *
-	 * @param fx the X coordinate >= 0
-	 * @param fy the Y coordinate >= 0
+	 * @param fx the X coordinate &gt;= 0
+	 * @param fy the Y coordinate &gt;= 0
 	 * @param a the allocated region to render into
 	 * @return the location within the model that best represents the
-	 *  given point in the view >= 0
+	 *  given point in the view &gt;= 0
 	 */
 	@Override
 	public int viewToModel(float fx, float fy, Shape a, Position.Bias[] bias) {

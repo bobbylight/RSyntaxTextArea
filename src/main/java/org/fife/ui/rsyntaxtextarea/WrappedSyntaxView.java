@@ -464,7 +464,7 @@ return p + 1;
 	 * Fetches the allocation for the given child view.<p>
 	 * Overridden to account for code folding.
 	 * 
-	 * @param index The index of the child, >= 0 && < getViewCount().
+	 * @param index The index of the child, &gt;= 0 &amp;&amp;&lt; getViewCount().
 	 * @param a The allocation to this view
 	 * @return The allocation to the child; or <code>null</code> if
 	 *         <code>a</code> is <code>null</code>; or <code>null</code> if the
@@ -491,7 +491,7 @@ return p + 1;
 	 * Fetches the allocation for the given child view to render into.<p>
 	 * Overridden to account for lines hidden by collapsed folded regions.
 	 * 
-	 * @param line The index of the child, >= 0 && < getViewCount()
+	 * @param line The index of the child, &gt;= 0 &amp;&amp;&lt; getViewCount()
 	 * @param a The allocation to this view
 	 * @return The allocation to the child
 	 */
@@ -755,7 +755,7 @@ return p + 1;
 	 * too much for its consumers (implementations of
 	 * <code>javax.swing.text.Highlighter</code>).
 	 *
-	 * @param p0 the position of the first character (>=0)
+	 * @param p0 the position of the first character (&gt;=0)
 	 * @param b0 The bias of the first character position, toward the previous
 	 *        character or the next character represented by the offset, in
 	 *        case the position is a boundary of two views; <code>b0</code>
@@ -764,7 +764,7 @@ return p + 1;
 	 *    <li> <code>Position.Bias.Forward</code>
 	 *    <li> <code>Position.Bias.Backward</code>
 	 * </ul>
-	 * @param p1 the position of the last character (>=0)
+	 * @param p1 the position of the last character (&gt;=0)
 	 * @param b1 the bias for the second character position, defined
 	 *		one of the legal values shown above
 	 * @param a the area of the view, which encompasses the requested region
@@ -831,10 +831,10 @@ return p + 1;
 	 * This implementation does not support things like centering so it
 	 * ignores the tabOffset argument.
 	 *
-	 * @param x the current position >= 0
+	 * @param x the current position &gt;= 0
 	 * @param tabOffset the position within the text stream
-	 *   that the tab occurred at >= 0.
-	 * @return the tab stop, measured in points >= 0
+	 *   that the tab occurred at &gt;= 0.
+	 * @return the tab stop, measured in points &gt;= 0
 	 */
 	public float nextTabStop(float x, int tabOffset) {
 		if (tabSize == 0)
@@ -968,8 +968,8 @@ return p + 1;
 	 * Sets the size of the view.  This should cause layout of the view along
 	 * the given axis, if it has any layout duties.
 	 *
-	 * @param width the width >= 0
-	 * @param height the height >= 0
+	 * @param width the width &gt;= 0
+	 * @param height the height &gt;= 0
 	 */
 	@Override
 	public void setSize(float width, float height) {
