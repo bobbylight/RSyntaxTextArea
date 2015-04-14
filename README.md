@@ -1,9 +1,33 @@
 [![Build Status](https://travis-ci.org/bobbylight/RSyntaxTextArea.svg?branch=master)](https://travis-ci.org/bobbylight/RSyntaxTextArea)
 [![Coverage Status](https://coveralls.io/repos/bobbylight/RSyntaxTextArea/badge.svg)](https://coveralls.io/r/bobbylight/RSyntaxTextArea)
 
-RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of the box, it supports syntax highlighting for over 30 programming languages, code folding, search and replace, and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
+RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of
+the box, it supports syntax highlighting for 40+ programming languages, code folding, search and replace,
+and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages
+[can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 
-RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt).  For more information, visit [http://fifesoft.com/rsyntaxtextarea](http://fifesoft.com/rsyntaxtextarea).
+RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt).
+For more information, visit [http://bobbylight.github.io/RSyntaxTextArea/](http://bobbylight.github.io/RSyntaxTextArea/).
+
+Available in the [Maven Central repository](http://search.maven.org/#search%7Cga%7C1%7Crsyntaxtextarea%20jar) (`com.fifesoft:rsyntaxtextarea:XXX`).
+
+# Building
+
+RSyntaxTextArea uses [Gradle](http://gradle.org/) to build.  To compile, run
+all unit tests, and create the jar, run:
+
+    ./gradlew build
+
+Note that RSTA only requires Java 5.  To that end, the boot classpath will be set to accommodate
+this if a variable `java5CompileBootClasspath` is set to the location of `rt.jar` in a Java 5 JDK.
+This can be added to `<maven-home>/gradle.properties` if desired, to avoid diffs in the project's
+`gradle.properties`.
+
+When building with Java 8 or later, the `javadoc` task currently prints many warnings about Javadoc
+"issues."  This is because
+[doclint](http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html)
+is enabled by default in that release of Java.  These warnings are harmless, and in a future
+release will be cleaned up.
 
 # Example Usage
 
