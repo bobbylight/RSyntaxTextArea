@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+
+<head>
+   <title>RSyntaxTextArea</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+<!--   <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cerulean/bootstrap.min.css" rel="stylesheet">-->
+   <link href="css/app.css" rel="stylesheet">
+   
+   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+   <!--[if lt IE 9]>
+     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+   <![endif]-->
+</head>
+
+<body>
+   
+   <a href="https://github.com/bobbylight/rsyntaxtextarea">
+      <img style="position: absolute; top: 0; right: 0; border: 0; width: 149px; height: 149px;"
+            src="images/right-chocolate@2x.png" alt="Fork me on GitHub">
+   </a>
+   
+   <div class="panel title-bar">
+      <div class='title'>RSyntaxTextArea</div>
+      <div class='short-desc'>A Syntax Highlighting Text Component</div>
+   </div>
+   
+   <div class="panel">
+      
+      <h1>Overview</h1>
+      <div class="panel-body">
+         <p>
+         RSyntaxTextArea is a syntax highlighting, code folding text component
+         for Java Swing. It extends JTextComponent so it integrates completely
+         with the standard javax.swing.text package.  It is fast and efficient,
+         and can be used in any application that needs to edit or view source
+         code.
+         </p>
+         <p>
+         RSTA supports syntax highlighting for <b>40+ programming languages</b> out of the box, as well as
+         <b>code folding</b> for many of them.  But you're not limited to well-known languages.  Highlighting
+         and folding can be <b>added for custom languages</b> and plugged in with ease.
+         </p>
+         <p>
+         It can also be extended to provide an IDE-like experience.  Parsers can be plugged in
+         to listen for code modifications and denote errors or warnings with squiggle underlines.
+         Sister libraries can be used to provide language-aware <b>code completion</b> and spell checking.
+         Focusable tool tips can display relevant documentation for methods or objects while
+         editing.
+         </p>
+         <p>
+            This library only requires Java 5 or greater, so it's ready to use in any application.
+         </p>
+         <p>
+            Jar downloads can be found on
+            <a href="http://sourceforge.net/projects/rsyntaxtextarea">SourceForge</a>,
+            or you can clone the source from
+            <a href="https://github.com/bobbylight/RSyntaxTextArea">GitHub</a>.
+            A <a href="http://forum.fifesoft.com">forum</a> is also available
+            for questions, comments and feedback.
+         </p>
+         <p>
+         It is available under a
+         <a href="https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt">
+         modified BSD license</a>.
+         </p>
+      </div>
+      
+   </div>
+   
+   <div class='panel alt-1'>
+      
+      <h1>Features</h1>
+      <div class='panel-body small-block-row-set'>
+         
+         <div class='small-block-row'>
+            <div class='small-block'>
+               <div class='feature-name'>Syntax Highlighting</div>
+               40+ languages supported out-of-the-box, with the possibility of dynamically
+               adding support for more.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Code Folding</div>
+               Language-aware code folding for many of the built-in languages  Like syntax
+               highlighting, custom code folding can be plugged in for other languages as well.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Code Completion</div>
+               Easily added with the <a href='#'>AutoComplete</a> add-on library.  Display
+               context-aware completion choices via Ctrl+Space, or even automatically.
+            </div>
+         </div>
+         
+         <div class='small-block-row'>
+            <div class='small-block'>
+               <div class='feature-name'>Parsing Support</div>
+               Parsers can be written and installed to identify and squiggle-underline
+               language-specific errors and warnings.  These notices are automatically
+               updated as the user types.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Find/Replace</div>
+               Match case, whole word, regular expressions, mark all occurrences,
+               and searching forward or backward.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>File I/O</div>
+               RSTA knows how to load and save both local and remote files (via FTP).
+               Local files can have their dirty state checked.
+            </div>
+         </div>
+         
+         <div class='small-block-row'>
+            <div class='small-block'>
+               <div class='feature-name'>Macros</div>
+               User-defined macros allow you to record and play back complex sets of
+               actions in an editor, to simplify common redundant tasks.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Code Templates</div>
+               Quickly insert code snippets by typing a short identifier and typing
+               Ctrl+Shift+Space.  A more sophisticated version of this feature is
+               available in the <a href='#'>AutoComplete</a> library.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Customizable Themes</div>
+               Fonts and colors can be imported and exported via XML, to allow
+               for easy customization.  Themes for Eclipse, IDEA, light-on-dark
+               and more are included out of the box.
+            </div>
+         </div>
+         
+         <div class='small-block-row'>
+            <div class='small-block'>
+               <div class='feature-name'>Multiple Font Support</div>
+               Many code editors only support editing with a single font, just different
+               styles of that font.  RSTA lets you use a different font for
+               every token type.  Even proportional fonts if you're into that.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Mark Occurrences</div>
+               All occurrences of the identifier, variable, or function at the
+               caret position will be highlighted to easily eyeball its scope/usage.
+            </div>
+            <div class='small-block'>
+               <div class='feature-name'>Much More</div>
+               Everything you'd expect: line numbers, bracket matching, line highlighting,
+               per-line decorator icons, unlimited undo/redo, drag and drop, clickable
+               hyperlinks, etc.
+            </div>
+         </div>
+         
+      </div>
+      
+   </div>
+   
+   <div class='panel'>
+      
+      <h1>Example Usage</h1>
+      <div class='panel-body'>
+      
+<pre>
+<span class="s6">import</span><span class="s21"> </span><span class="s20">java</span><span class="s20">.</span><span class="s20">awt</span><span class="s20">.</span><span class="s23">*</span><span class="s20">;</span>
+<span class="s6">import</span><span class="s21"> </span><span class="s20">javax</span><span class="s20">.</span><span class="s20">swing</span><span class="s20">.</span><span class="s23">*</span><span class="s20">;</span>
+
+<span class="s6">import</span><span class="s21"> </span><span class="s20">org</span><span class="s20">.</span><span class="s20">fife</span><span class="s20">.</span><span class="s20">ui</span><span class="s20">.</span><span class="s20">rtextarea</span><span class="s20">.</span><span class="s23">*</span><span class="s20">;</span>
+<span class="s6">import</span><span class="s21"> </span><span class="s20">org</span><span class="s20">.</span><span class="s20">fife</span><span class="s20">.</span><span class="s20">ui</span><span class="s20">.</span><span class="s20">rsyntaxtextarea</span><span class="s20">.</span><span class="s23">*</span><span class="s20">;</span>
+
+<span class="s3">/**</span>
+<span class="s3"> * A simple example showing how to use RSyntaxTextArea to add Java syntax</span>
+<span class="s3"> * highlighting to a Swing application.</span>
+<span class="s3"> */</span>
+<span class="s6">public</span><span class="s21"> </span><span class="s6">class</span><span class="s21"> </span><span class="s20">TextEditorDemo</span><span class="s21"> </span><span class="s6">extends</span><span class="s21"> </span><span class="s20">JFrame</span><span class="s21"> </span><span class="s22">{</span>
+
+<span class="s21">   </span><span class="s6">private</span><span class="s21"> </span><span class="s6">static</span><span class="s21"> </span><span class="s6">final</span><span class="s21"> </span><span class="s16">long</span><span class="s21"> </span><span class="s20">serialVersionUID</span><span class="s21"> </span><span class="s23">=</span><span class="s21"> </span><span class="s10">1L</span><span class="s20">;</span>
+
+<span class="s21">   </span><span class="s6">public</span><span class="s21"> </span><span class="s20">TextEditorDemo</span><span class="s22">(</span><span class="s22">)</span><span class="s21"> </span><span class="s22">{</span>
+
+<span class="s21">      </span><span class="s20">JPanel</span><span class="s21"> </span><span class="s20">cp</span><span class="s21"> </span><span class="s23">=</span><span class="s21"> </span><span class="s6">new</span><span class="s21"> </span><span class="s20">JPanel</span><span class="s22">(</span><span class="s6">new</span><span class="s21"> </span><span class="s20">BorderLayout</span><span class="s22">(</span><span class="s22">)</span><span class="s22">)</span><span class="s20">;</span>
+
+<span class="s21">      </span><span class="s20">RSyntaxTextArea</span><span class="s21"> </span><span class="s20">textArea</span><span class="s21"> </span><span class="s23">=</span><span class="s21"> </span><span class="s6">new</span><span class="s21"> </span><span class="s20">RSyntaxTextArea</span><span class="s22">(</span><span class="s10">20</span><span class="s20">,</span><span class="s21"> </span><span class="s10">60</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">textArea</span><span class="s20">.</span><span class="s20">setSyntaxEditingStyle</span><span class="s22">(</span><span class="s20">SyntaxConstants</span><span class="s20">.</span><span class="s20">SYNTAX_STYLE_JAVA</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">textArea</span><span class="s20">.</span><span class="s20">setCodeFoldingEnabled</span><span class="s22">(</span><span class="s9">true</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">RTextScrollPane</span><span class="s21"> </span><span class="s20">sp</span><span class="s21"> </span><span class="s23">=</span><span class="s21"> </span><span class="s6">new</span><span class="s21"> </span><span class="s20">RTextScrollPane</span><span class="s22">(</span><span class="s20">textArea</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">cp</span><span class="s20">.</span><span class="s20">add</span><span class="s22">(</span><span class="s20">sp</span><span class="s22">)</span><span class="s20">;</span>
+
+<span class="s21">      </span><span class="s20">setContentPane</span><span class="s22">(</span><span class="s20">cp</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">setTitle</span><span class="s22">(</span><span class="s13">"Text Editor Demo"</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">setDefaultCloseOperation</span><span class="s22">(</span><span class="s20">EXIT_ON_CLOSE</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">pack</span><span class="s22">(</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">      </span><span class="s20">setLocationRelativeTo</span><span class="s22">(</span><span class="s6">null</span><span class="s22">)</span><span class="s20">;</span>
+
+<span class="s21">   </span><span class="s22">}</span>
+
+<span class="s21">   </span><span class="s6">public</span><span class="s21"> </span><span class="s6">static</span><span class="s21"> </span><span class="s6">void</span><span class="s21"> </span><span class="s20">main</span><span class="s22">(</span><span class="s8">String</span><span class="s22">[</span><span class="s22">]</span><span class="s21"> </span><span class="s20">args</span><span class="s22">)</span><span class="s21"> </span><span class="s22">{</span>
+<span class="s21">      </span><span class="s1">// Start all Swing applications on the EDT.</span>
+<span class="s21">      </span><span class="s20">SwingUtilities</span><span class="s20">.</span><span class="s20">invokeLater</span><span class="s22">(</span><span class="s6">new</span><span class="s21"> </span><span class="s8">Runnable</span><span class="s22">(</span><span class="s22">)</span><span class="s21"> </span><span class="s22">{</span>
+<span class="s21">         </span><span class="s6">public</span><span class="s21"> </span><span class="s6">void</span><span class="s21"> </span><span class="s20">run</span><span class="s22">(</span><span class="s22">)</span><span class="s21"> </span><span class="s22">{</span>
+<span class="s21">            </span><span class="s6">new</span><span class="s21"> </span><span class="s20">TextEditorDemo</span><span class="s22">(</span><span class="s22">)</span><span class="s20">.</span><span class="s20">setVisible</span><span class="s22">(</span><span class="s9">true</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">         </span><span class="s22">}</span>
+<span class="s21">      </span><span class="s22">}</span><span class="s22">)</span><span class="s20">;</span>
+<span class="s21">   </span><span class="s22">}</span>
+
+<span class="s22">}</span></pre>
+      </div>
+      
+   </div>
+   
+   <div class='panel alt-1'>
+      
+      <h1>Screenshots</h1>
+      <div class='panel-body small-block-row-set'>
+      
+         <div class='small-block-row'>
+         
+            <div class='small-block'>
+               <a href="images/rsta1.png" class="highslide"
+                     onclick="return hs.expand(this)">
+                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
+               <div class="highslide-caption">RSyntaxTextArea in action</div>
+            </div>
+            
+            <div class='small-block'>
+               <a href="images/rsta1.png" class="highslide"
+                     onclick="return hs.expand(this)">
+                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
+               <div class="highslide-caption">RSyntaxTextArea in action</div>
+            </div>
+            
+            <div class='small-block'>
+               <a href="images/rsta1.png" class="highslide"
+                     onclick="return hs.expand(this)">
+                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
+               <div class="highslide-caption">RSyntaxTextArea in action</div>
+            </div>
+         
+         </div>
+         
+      </div>
+      
+   </div>
+   
+   <div class='panel'>
+   
+      <h1>Quick Links</h1>
+      <div class="panel-body">
+         <p>
+         <ul>
+            <li>Clone the repository on <a href="https://github.com/bobbylight/RSyntaxTextArea">GitHub</a>.</li>
+            <li>Download the latest stable release at its
+               <a href="http://sourceforge.net/projects/rsyntaxtextarea">SourceForge page</a>.</li>
+            <li>Browse the <a href="http://javadoc.fifesoft.com/rsyntaxtextarea">Javadoc</a>.</li>
+            <li>View the <a href="https://github.com/bobbylight/RSyntaxTextArea">source code</a> online.</li>
+            <li>Peruse the <a href="http://github.com/bobbylight/rsyntaxtextarea/wiki">wiki</a> for examples and
+                in-depth documentation.</li>
+            <li>Check <a href="http://fifesoft.com/forum/">the forums</a> for earlier discussions and questions.</li>
+         </ul>
+         </p>
+      </div>
+   
+   </div>
+   
+   <div class='panel footer'>
+   
+      <div class='panel-body'>
+         2015 Fifesoft | <a href='http://github.com/bobbylight/climatediff'><i class="fa fa-github"></i></a>
+      </div>
+      
+   </div>
+   
+</body>
+
+</html>

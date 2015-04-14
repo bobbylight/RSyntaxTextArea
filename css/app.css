@@ -1,0 +1,164 @@
+.title-bar {
+  background-image: -webkit-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+  background-image: -o-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#54b4eb), color-stop(60%, #2fa4e7), to(#1d9ce5));
+  background-image: linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff54b4eb', endColorstr='#ff1d9ce5', GradientType=0);
+  border-bottom: 1px solid #178acc;
+  -webkit-filter: none;
+          filter: none;
+  -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  
+  color: white;
+  text-align: center;
+}
+.title {
+   font-size: 48px;
+}
+.short-desc {
+   font-size: 24pt;
+}
+
+h1 {
+   36px;
+}
+h1, h2, h3 {
+   font-weight: 500;
+   text-align: center;
+}
+
+.panel {
+   /*text-align: center;*/
+   padding-top: 2em;
+   padding-bottom: 2em;
+}
+.panel-body {
+   width: 800px;
+   margin: 0px auto;
+}
+.panel.alt-1 {
+   background: #eeeeee;
+}
+
+div.small-block-row-set {
+   /*display: inline-table;*/
+}
+div.small-block-row {
+   display: table-row;
+}
+div.small-block {
+   display: table-cell;
+   width: 260px;
+   text-align: center;
+   padding: 0px 5px 30px 5px;
+}
+.feature-name {
+   font-weight: bold;
+}
+
+.footer {
+   background: #2fa4e7;
+   color: white;
+   text-align: center;
+   padding: 1em;
+}
+
+
+
+html {
+   height: 100%;
+}
+body {
+   height: 100%;
+   margin: 0;
+   /* Much of this is stolen from Bootstrap */
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-size: 14px;
+   line-height: 1.42857143;
+   color: #555555;
+   background-color: #ffffff;
+}
+pre {
+   margin: 20px;
+   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+   background-color:#EDF3FA;
+   border:1px solid #555555;
+   border-radius: 5px;
+   padding:2em;
+}
+   
+.fife-project-screenshot {
+   width: 200px;
+   border: 1px solid #9999ff;
+   margin: 0 20px 20px 0;
+   float: left;
+}
+div.floatingScreenshots {
+   float:right;
+   width:225px;
+   text-align:center;
+   margin-top:10px;
+   margin-bottom:10px;
+}
+
+
+/* Code example styles */
+.s1 {
+font-style: italic;
+color: #008000;
+}
+.s3 {
+font-style: italic;
+color: #a40000;
+}
+.s4 {
+font-style: italic;
+color: #ff9800;
+}
+.s5 {
+font-style: italic;
+color: #808080;
+}
+.s6 {
+font-weight: bold;
+color: #0000ff;
+}
+.s7 {
+font-weight: bold;
+color: #0000ff;
+}
+.s8 {
+color: #ad8000;
+}
+.s9 {
+color: #6400c8;
+}
+.s10 {
+color: #6400c8;
+}
+.s13 {
+color: #dc009c;
+}
+.s14 {
+color: #dc009c;
+}
+.s16 {
+color: #008080;
+}
+.s19 {
+color: #808080;
+}
+.s20 {
+color: #000000;
+}
+.s21 {
+color: #808080;
+}
+.s22 {
+color: #ff0000;
+}
+.s23 {
+color: #804040;
+}
