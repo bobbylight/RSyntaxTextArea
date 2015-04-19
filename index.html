@@ -3,9 +3,10 @@
 
 <head>
    <title>RSyntaxTextArea</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
 <!--   <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cerulean/bootstrap.min.css" rel="stylesheet">-->
+   <link rel="stylesheet" type="text/css" href="lib/fancybox/jquery.fancybox.css?v=2.1.5" media="screen" />
+   <link rel='stylesheet' type='text/css' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' />
    <link href="css/app.css" rel="stylesheet">
    
    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -78,17 +79,17 @@
          
          <div class='small-block-row'>
             <div class='small-block'>
-               <div class='feature-name'>Syntax Highlighting</div>
+               <div class='feature-name'><i class='fa fa-file-text'></i> Syntax Highlighting</div>
                40+ languages supported out-of-the-box, with the possibility of dynamically
                adding support for more.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Code Folding</div>
+               <div class='feature-name'><i class="fa fa-plus-square"></i> Code Folding</div>
                Language-aware code folding for many of the built-in languages  Like syntax
                highlighting, custom code folding can be plugged in for other languages as well.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Code Completion</div>
+               <div class='feature-name'><i class='fa fa-list-alt'></i> Code Completion</div>
                Easily added with the <a href='#'>AutoComplete</a> add-on library.  Display
                context-aware completion choices via Ctrl+Space, or even automatically.
             </div>
@@ -96,18 +97,18 @@
          
          <div class='small-block-row'>
             <div class='small-block'>
-               <div class='feature-name'>Parsing Support</div>
+               <div class='feature-name'><i class='fa fa-file-code-o'></i> Parsing Support</div>
                Parsers can be written and installed to identify and squiggle-underline
                language-specific errors and warnings.  These notices are automatically
                updated as the user types.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Find/Replace</div>
+               <div class='feature-name'><i class='fa fa-binoculars'></i> Find/Replace</div>
                Match case, whole word, regular expressions, mark all occurrences,
                and searching forward or backward.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>File I/O</div>
+               <div class='feature-name'><i class='fa fa-save'></i> File I/O</div>
                RSTA knows how to load and save both local and remote files (via FTP).
                Local files can have their dirty state checked.
             </div>
@@ -115,18 +116,18 @@
          
          <div class='small-block-row'>
             <div class='small-block'>
-               <div class='feature-name'>Macros</div>
+               <div class='feature-name'><i class='fa fa-refresh'></i> Macros</div>
                User-defined macros allow you to record and play back complex sets of
                actions in an editor, to simplify common redundant tasks.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Code Templates</div>
+               <div class='feature-name'><i class='fa fa-play-circle'></i> Code Templates</div>
                Quickly insert code snippets by typing a short identifier and typing
                Ctrl+Shift+Space.  A more sophisticated version of this feature is
                available in the <a href='#'>AutoComplete</a> library.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Customizable Themes</div>
+               <div class='feature-name'><i class='fa fa-code'></i> Customizable Themes</div>
                Fonts and colors can be imported and exported via XML, to allow
                for easy customization.  Themes for Eclipse, IDEA, light-on-dark
                and more are included out of the box.
@@ -135,18 +136,18 @@
          
          <div class='small-block-row'>
             <div class='small-block'>
-               <div class='feature-name'>Multiple Font Support</div>
+               <div class='feature-name'><i class='fa fa-font'></i> Multiple Font Support</div>
                Many code editors only support editing with a single font, just different
                styles of that font.  RSTA lets you use a different font for
                every token type.  Even proportional fonts if you're into that.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Mark Occurrences</div>
+               <div class='feature-name'><i class='fa fa-hand-o-right'></i> Mark Occurrences</div>
                All occurrences of the identifier, variable, or function at the
                caret position will be highlighted to easily eyeball its scope/usage.
             </div>
             <div class='small-block'>
-               <div class='feature-name'>Much More</div>
+               <div class='feature-name'><i class='fa fa-smile-o'></i> Much More</div>
                Everything you'd expect: line numbers, bracket matching, line highlighting,
                per-line decorator icons, unlimited undo/redo, drag and drop, clickable
                hyperlinks, etc.
@@ -217,24 +218,18 @@
          <div class='small-block-row'>
          
             <div class='small-block'>
-               <a href="images/rsta1.png" class="highslide"
-                     onclick="return hs.expand(this)">
-                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
-               <div class="highslide-caption">RSyntaxTextArea in action</div>
+               <a href="images/rsta1.png" class="fancybox" data-fancybox-group='screenshots' title='Editing Java' alt=''>
+                  <img class='preview-ss' src="images/rsta1_thumb.png" width="250" height="210" alt="Preview Image" title="Click to enlarge"/></a>
             </div>
             
             <div class='small-block'>
-               <a href="images/rsta1.png" class="highslide"
-                     onclick="return hs.expand(this)">
-                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
-               <div class="highslide-caption">RSyntaxTextArea in action</div>
+               <a href="images/rsta2.png" class="fancybox" data-fancybox-group='screenshots' title='Editing XML' alt=''>
+                  <img class='preview-ss' src="images/rsta2_thumb.png" width="250" height="210" alt="Preview Image" title="Click to enlarge"/></a>
             </div>
             
             <div class='small-block'>
-               <a href="images/rsta1.png" class="highslide"
-                     onclick="return hs.expand(this)">
-                  <img src="images/rsta1_thumb.png" width="250" height="250" alt="Preview Image" title="Click to enlarge"/></a>
-               <div class="highslide-caption">RSyntaxTextArea in action</div>
+               <a href="images/rsta3.png" class="fancybox" data-fancybox-group='screenshots' title='Java Code Completion' alt=''>
+                  <img class='preview-ss' src="images/rsta3_thumb.png" width="250" height="210" alt="Preview Image" title="Click to enlarge"/></a>
             </div>
          
          </div>
@@ -266,10 +261,24 @@
    <div class='panel footer'>
    
       <div class='panel-body'>
-         2015 Fifesoft | <a href='http://github.com/bobbylight/climatediff'><i class="fa fa-github"></i></a>
+         2015 Fifesoft &nbsp;| &nbsp;<a href='http://github.com/bobbylight/rsyntaxtextarea'><i class="fa fa-github"></i></a>
       </div>
       
    </div>
+   
+   <script src='lib/jquery-1.10.1.min.js'></script>
+   <script src='lib/fancybox/jquery.fancybox.pack.js'></script>
+   <script>
+   $(document).ready(function() {
+      $(".fancybox").fancybox({
+         helpers: {
+            overlay: { locked: false }
+         },
+         openEffect  : 'none',
+         closeEffect : 'none'
+      });
+   });
+   </script>
    
 </body>
 

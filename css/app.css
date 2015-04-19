@@ -64,7 +64,9 @@ div.small-block {
    text-align: center;
    padding: 1em;
 }
-
+.footer a {
+   color: white;
+}
 
 
 html {
@@ -89,20 +91,14 @@ pre {
    padding:2em;
 }
    
-.fife-project-screenshot {
-   width: 200px;
-   border: 1px solid #9999ff;
-   margin: 0 20px 20px 0;
-   float: left;
-}
-div.floatingScreenshots {
-   float:right;
-   width:225px;
-   text-align:center;
-   margin-top:10px;
-   margin-bottom:10px;
+img.preview-ss {
+   box-shadow: 3px 3px 5px rgba(34, 25, 25, 0.4);
 }
 
+.small-block .fa {
+   display: block;
+   font-size: xx-large;
+}
 
 /* Code example styles */
 .s1 {
