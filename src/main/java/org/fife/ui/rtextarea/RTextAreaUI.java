@@ -227,7 +227,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		map.put(TransferHandler.getCopyAction().getValue(Action.NAME),
 									TransferHandler.getCopyAction());
 		map.put(TransferHandler.getPasteAction().getValue(Action.NAME),
-									TransferHandler.getPasteAction());
+			TransferHandler.getPasteAction());
 
 		return map;
 
@@ -489,8 +489,14 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	protected void paintEditorAugmentations(Graphics g) {
 		Rectangle visibleRect = textArea.getVisibleRect();
+		boolean first = textArea.getPaintCurrentLineHighlightFirst();
+		if (first) {
+			paintCurrentLineHighlight(g, visibleRect);
+		}
 		paintLineHighlights(g);
-		paintCurrentLineHighlight(g, visibleRect);
+		if (!first) {
+			paintCurrentLineHighlight(g, visibleRect);
+		}
 		paintMarginLine(g, visibleRect);
 	}
 

@@ -53,6 +53,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	private boolean tabsEmulatedWithSpaces;		// If true, tabs will be expanded to spaces.
 
 	private boolean highlightCurrentLine;		// If true, the current line is highlighted.
+	private boolean paintCurrentLineHighlightFirst; // If true (default is false), the current line highlight will be painted before the custom line highlights.
 	private Color currentLineColor;			// The color used to highlight the current line.
 	private boolean marginLineEnabled;			// If true, paint a "margin line."
 	private Color marginLineColor;			// The color used to paint the margin line.
@@ -542,6 +543,14 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 		return highlightCurrentLine;
 	}
 
+	/**
+	 * Returns whether or not the current line highlight should be painted (overwritten) before the custom linr highlight.
+	 *
+	 * @return true if the custom line highlight should overwrite the current line highlight.
+	 */
+	public boolean getPaintCurrentLineHighlightFirst() {
+		return this.paintCurrentLineHighlightFirst;
+	}
 
 	/**
 	 * Returns the offset of the last character of the line that the caret is
@@ -660,6 +669,7 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		// Defaults for various properties.
 		setHighlightCurrentLine(true);
+		this.setPaintCurrentLineHighlightFirst(false);
 		setCurrentLineHighlightColor(getDefaultCurrentLineHighlightColor());
 		setMarginLineEnabled(false);
 		setMarginLineColor(getDefaultMarginLineColor());
@@ -1003,6 +1013,20 @@ try {
 		}
 	}
 
+	/**
+	 * Sets whether the current line highlight should be painted before the custom line highlight.
+	 * In this case if there is a custom line highlight the current line highlight will be overwritten.
+	 * This is useful when line highlights are used to show breakpoints.
+	 * For example, if there is a breakpoint at line X, the line may have a specific background,
+	 * now if the user moves the cursor at that line should we paint first the current line background
+	 * or the background of the breakpoint line? Setting true will paint current line background
+	 * and then the breakpoint line background.
+	 *
+	 * @param paintCurrentLineHighlightFirst - true to override the current line highlight by the custom line highlight.
+	 */
+	public void setPaintCurrentLineHighlightFirst(final boolean paintCurrentLineHighlightFirst) {
+		this.paintCurrentLineHighlightFirst = paintCurrentLineHighlightFirst;
+	}
 
 	/**
 	 * Sets whether or not word wrap is enabled.  This is overridden so that
