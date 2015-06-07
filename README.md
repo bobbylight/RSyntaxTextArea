@@ -81,6 +81,7 @@ RSyntaxTextArea provides syntax highlighting, code folding, and many other featu
 # Getting Help
 
 * Add an issue on GitHub
+* Peruse [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
 * Ask in the [project forum](http://fifesoft.com/forum/)
-* Check the project's [home page](http://fifesoft.com/rsyntaxtextarea)
+* Check the project's [home page](http://bobbylight.github.io/RSyntaxTextArea/http://bobbylight.github.io/RSyntaxTextArea/)
 
