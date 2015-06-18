@@ -15,16 +15,16 @@ import org.junit.Test;
 
 
 /**
- * Unit tests for the {@link HTMLTokenMaker} class.
+ * Unit tests for the {@link XMLTokenMaker} class.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public class HTMLTokenMakerTest {
+public class XMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_comment() {
+	public void testXML_comment() {
 
 		String[] commentLiterals = {
 			"<!-- Hello world -->",
@@ -32,7 +32,7 @@ public class HTMLTokenMakerTest {
 
 		for (String code : commentLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			HTMLTokenMaker tm = new HTMLTokenMaker();
+			XMLTokenMaker tm = new XMLTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
@@ -41,15 +41,16 @@ public class HTMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_comment_URL() {
+	public void testXML_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		HTMLTokenMaker tm = new HTMLTokenMaker();
+		XMLTokenMaker tm = new XMLTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
+		Assert.assertTrue("Token is not type MARKUP_COMMENT: " + token,
+				token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
 		token = token.getNextToken();
 		Assert.assertTrue(token.isHyperlink());
 		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
@@ -61,7 +62,7 @@ public class HTMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_doctype() {
+	public void testXML_doctype() {
 
 		String[] doctypes = {
 			"<!doctype html>",
@@ -71,7 +72,7 @@ public class HTMLTokenMakerTest {
 
 		for (String code : doctypes) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			HTMLTokenMaker tm = new HTMLTokenMaker();
+			XMLTokenMaker tm = new XMLTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
 		}
@@ -80,7 +81,7 @@ public class HTMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_entityReferences() {
+	public void testXML_entityReferences() {
 
 		String[] entityReferences = {
 			"&nbsp;", "&lt;", "&gt;", "&#4012",
@@ -88,7 +89,7 @@ public class HTMLTokenMakerTest {
 
 		for (String code : entityReferences) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			HTMLTokenMaker tm = new HTMLTokenMaker();
+			XMLTokenMaker tm = new XMLTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
 		}
@@ -97,11 +98,11 @@ public class HTMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_happyPath_tagWithAttributes() {
+	public void testXML_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		HTMLTokenMaker tm = new HTMLTokenMaker();
+		XMLTokenMaker tm = new XMLTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
@@ -130,49 +131,7 @@ public class HTMLTokenMakerTest {
 
 
 	@Test
-	public void testHtml_happyPath_closedTag() {
-
-		String code = "<img src='foo.png'/>";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		HTMLTokenMaker tm = new HTMLTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
-		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
-		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
-		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
-		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"));
-		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
-		
-	}
-
-
-	@Test
-	public void testHtml_happyPath_closingTag() {
-
-		String code = "</body>";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		HTMLTokenMaker tm = new HTMLTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
-		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
-		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
-
-	}
-
-
-	@Test
-	public void testHtml_processingInstructions() {
+	public void testXML_processingInstructions() {
 
 		String[] doctypes = {
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
@@ -182,47 +141,9 @@ public class HTMLTokenMakerTest {
 
 		for (String code : doctypes) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			HTMLTokenMaker tm = new HTMLTokenMaker();
+			XMLTokenMaker tm = new XMLTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
-		}
-
-	}
-
-
-	@Test
-	public void testHtml_validHtml5TagNames() {
-		
-		String[] tagNames = { 
-			"a", "abbr", "acronym", "address", "applet", "area", "article",
-			"aside", "audio", "b", "base", "basefont", "bdo", "bgsound", "big",
-			"blink", "blockquote", "body", "br", "button", "canvas", "caption",
-			"center", "cite", "code", "col", "colgroup", "command", "comment",
-			"dd", "datagrid", "datalist", "datatemplate", "del", "details",
-			"dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed",
-			"eventsource", "fieldset", "figure", "font", "footer", "form",
-			"frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6",
-			"head", "header", "hr", "html", "i", "iframe", "ilayer", "img",
-			"input", "ins", "isindex", "kbd", "keygen", "label", "layer",
-			"legend", "li", "link", "map", "mark", "marquee", "menu", "meta",
-			"meter", "multicol", "nav", "nest", "nobr", "noembed", "noframes",
-			"nolayer", "noscript", "object", "ol", "optgroup", "option",
-			"output", "p", "param", "plaintext", "pre", "progress", "q", "rule",
-			"s", "samp", "script", "section", "select", "server", "small",
-			"source", "spacer", "span", "strike", "strong", "style",
-			"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th",
-			"thead", "time", "title", "tr", "tt", "u", "ul", "var", "video"
-		};
-
-		HTMLTokenMaker tm = new HTMLTokenMaker();
-		for (String tagName : tagNames) {
-			String text = "<" + tagName;
-			Segment segment = new Segment(text.toCharArray(), 0, text.length());
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
-			token = token.getNextToken();
-			Assert.assertTrue("Not a valid HTML5 tag name token: " + token,
-					token.getType() == TokenTypes.MARKUP_TAG_NAME);
 		}
 
 	}

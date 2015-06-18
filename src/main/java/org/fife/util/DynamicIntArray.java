@@ -111,7 +111,7 @@ public class DynamicIntArray implements Serializable {
 		int moveCount = size - index;
 		if (moveCount>0)
 			System.arraycopy(data,index, data,index+addCount, moveCount);
-		System.arraycopy(data,index, intArray,0, moveCount);
+		System.arraycopy(intArray,0, data,index, addCount);
 		size += addCount;
 	}
 

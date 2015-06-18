@@ -228,7 +228,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Always returns <tt>false</tt>, as you never want "mark occurrences"
+	 * Always returns <code>false</code>, as you never want "mark occurrences"
 	 * working in XML files.
 	 *
 	 * @param type The token type.
@@ -353,7 +353,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * All internal variables are reset, the old input stream 
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
-	 * Lexical state is set to <tt>YY_INITIAL</tt>.
+	 * Lexical state is set to <code>YY_INITIAL</code>.
 	 *
 	 * @param reader   the new input stream 
 	 */
@@ -499,10 +499,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <COMMENT> {
-	[^\n\-]+						{}
-	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken; }
+	[^hwf\n\-]+						{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
+	[hwf]						{}
 	"-->"						{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); }
 	"-"							{}
+	{LineTerminator} |
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken; }
 }
 
