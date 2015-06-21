@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,13 +24,23 @@ import org.junit.Test;
 public class JavaTokenMakerTest {
 
 
+	/**
+	 * Returns a new instance of the <code>TokenMaker</code> to test.
+	 *
+	 * @return The <code>TokenMaker</code> to test.
+	 */
+	private TokenMaker createTokenMaker() {
+		return new JavaTokenMaker();
+	}
+
+
 	@Test
 	public void testAnnotations() {
 
 		String code = "@Test @Foo @Foo_Bar_Bas @Number7";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -56,7 +67,7 @@ public class JavaTokenMakerTest {
 			"0b0 0b1 0B0 0B1 0b010 0B010 0b0_10 0B0_10";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -82,7 +93,7 @@ public class JavaTokenMakerTest {
 		String code = "true false";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -114,7 +125,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : chars) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
 		}
@@ -128,7 +139,7 @@ public class JavaTokenMakerTest {
 		String code = "boolean byte char double float int long short";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -157,7 +168,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : docCommentLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 		}
@@ -175,7 +186,7 @@ public class JavaTokenMakerTest {
 		for (String code : docCommentLiterals) {
 
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
@@ -203,7 +214,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
@@ -221,7 +232,7 @@ public class JavaTokenMakerTest {
 		for (String code : eolCommentLiterals) {
 
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
@@ -258,7 +269,7 @@ public class JavaTokenMakerTest {
 			"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -289,7 +300,7 @@ public class JavaTokenMakerTest {
 				"0x1_1L 0xf_eL 0x333_33333_3333L 0X1_1L 0Xf_eL 0X333_3333_3333L 0xF_EL 0XF_EL";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -414,7 +425,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : classNames) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
@@ -432,7 +443,7 @@ public class JavaTokenMakerTest {
 				"synchronized this throw throws transient try void volatile while";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -468,7 +479,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
@@ -486,7 +497,7 @@ public class JavaTokenMakerTest {
 		for (String code : mlcLiterals) {
 
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -518,7 +529,7 @@ public class JavaTokenMakerTest {
 				"01_1L 07_3L 0333_33333_3333L 01_1L 07_3L 0333_3333_3333L 07_3L 07_3L";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -546,7 +557,7 @@ public class JavaTokenMakerTest {
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -572,7 +583,7 @@ public class JavaTokenMakerTest {
 		String code = "( ) [ ] { }";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		JavaTokenMaker tm = new JavaTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] separators = code.split(" +");
@@ -603,7 +614,7 @@ public class JavaTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			JavaTokenMaker tm = new JavaTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}

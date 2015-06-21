@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +24,16 @@ import org.junit.Test;
 public class CTokenMakerTest {
 
 
+	/**
+	 * Returns a new instance of the <code>TokenMaker</code> to test.
+	 *
+	 * @return The <code>TokenMaker</code> to test.
+	 */
+	private TokenMaker createTokenMaker() {
+		return new CTokenMaker();
+	}
+
+
 	@Test
 	public void testCharLiterals() {
 
@@ -35,7 +46,7 @@ public class CTokenMakerTest {
 
 		for (String code : chars) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid char literal: " + token, TokenTypes.LITERAL_CHAR, token.getType());
 		}
@@ -49,7 +60,7 @@ public class CTokenMakerTest {
 		String code = "char div_t double float int ldiv_t long short signed size_t unsigned void wchar_t";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -78,7 +89,7 @@ public class CTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
@@ -96,7 +107,7 @@ public class CTokenMakerTest {
 		for (String code : eolCommentLiterals) {
 
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
@@ -133,7 +144,7 @@ public class CTokenMakerTest {
 			"3.E-7f 3.E-7F 3.0E-7f 3.0E-7F .111E-7f .111E-7F";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -167,7 +178,7 @@ public class CTokenMakerTest {
 				"0x1UL 0xfeUL 0x333333333333UL 0X1UL 0XfeUL 0X33333333333UL 0xFEUL 0XFEUL";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -395,7 +406,7 @@ public class CTokenMakerTest {
 
 		for (String code : functions) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
@@ -411,7 +422,7 @@ public class CTokenMakerTest {
 				"switch typedef union volatile while";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -447,7 +458,7 @@ public class CTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
@@ -465,7 +476,7 @@ public class CTokenMakerTest {
 		for (String code : mlcLiterals) {
 
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -492,7 +503,7 @@ public class CTokenMakerTest {
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -518,7 +529,7 @@ public class CTokenMakerTest {
 		String code = "( ) [ ] { }";
 
 		Segment segment = new Segment(code.toCharArray(), 0, code.length());
-		CTokenMaker tm = new CTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] separators = code.split(" +");
@@ -549,7 +560,7 @@ public class CTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = new Segment(code.toCharArray(), 0, code.length());
-			CTokenMaker tm = new CTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}

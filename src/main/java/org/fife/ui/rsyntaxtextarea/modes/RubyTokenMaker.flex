@@ -387,7 +387,7 @@ DecimalLiteral1				= ("0d"{Digit}({DigitOrUnderscore}*{Digit})?)
 DecimalLiteral2				= ({NonzeroDigit}({DigitOrUnderscore}*{Digit})?)
 DecimalLiteral				= ({BinaryIntLiteral}|{OctalLiteral}|{DecimalLiteral1}|{DecimalLiteral2})
 HexLiteral					= ("0x"{HexDigit}([0-9a-zA-Z_]*{HexDigit})?)
-FloatLiteral				= ({NonzeroDigit}({DigitOrUnderscore}*{Digit})?[Ee]({Digit}({DigitOrUnderscore}*{Digit})?)?)
+FloatLiteral				= ({NonzeroDigit}({DigitOrUnderscore}*{Digit})?[Ee][+-]?({Digit}({DigitOrUnderscore}*{Digit})?)?)
 
 Separator					= ([\(\)\{\}])
 Operator1					= ("::"|"."|"["|"]"|"-"|"+"|"!"|"~"|"*"|"/"|"%"|"<<"|">>"|"&"|"|"|"^")
