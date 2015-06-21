@@ -339,6 +339,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 %state MLC
 %state DOCCOMMENT
+%state EOL_COMMENT
 %state MULTILINE_STRING_DOUBLE
 %state MULTILINE_STRING_SINGLE
 %state STRING_DOUBLE
@@ -353,6 +354,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"case" |
 	"catch" |
 	"class" |
+	"const" |
 	"continue" |
 	"default" |
 	"do" |
@@ -362,6 +364,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"final" |
 	"finally" |
 	"for" |
+	"goto" |
 	"if" |
 	"it" |
 	"implements" |
@@ -430,6 +433,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"Character.UnicodeBlock" | 
 	"Class" |
 	"ClassLoader" |
+	"ClassValue" |
 	"Compiler" |
 	"Double" |
 	"Enum" |
@@ -490,6 +494,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"UnsupportedOperationException" |
 	"AbstractMethodError" |
 	"AssertionError" |
+	"BootstrapMethodError" |
 	"ClassCircularityError" |
 	"ClassFormatError" |
 	"Error" |
@@ -590,6 +595,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "OptionalDataException" |
     "StreamCorruptedException" |
     "SyncFailedException" |
+    "UncheckedIOException" |
     "UnsupportedEncodingException" |
     "UTFDataFormatException" |
     "WriteAbortedException" |
@@ -611,11 +617,20 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "NavigableMap" |
     "NavigableSet" |
     "Observer" |
+    "PrimitiveIterator" |
+    "PrimitiveIterator.OfDouble" |
+    "PrimitiveIterator.OfInt" |
+    "PrimitiveIterator.OfLong" |
     "Queue" |
     "RandomAccess" |
     "Set" |
     "SortedMap" |
     "SortedSet" |
+    "Spliterator" |
+    "Spliterator.OfDouble" |
+    "Spliterator.OfInt" |
+    "Spliterator.OfLong" |
+    "Spliterator.OfPrimitive" |
 
     "AbstractCollection" |
     "AbstractList" |
@@ -628,12 +643,17 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "ArrayDeque" |
     "ArrayList" |
     "Arrays" |
+    "Base64" |
+    "Base64.Decoder" |
+    "Base64.Encoder" |
     "BitSet" |
     "Calendar" |
+    "Calendar.Builder" |
     "Collections" |
     "Currency" |
     "Date" |
     "Dictionary" |
+    "DoubleSummaryStatistics" |
     "EnumMap" |
     "EnumSet" |
     "EventListenerProxy" |
@@ -645,14 +665,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "HashSet" |
     "Hashtable" |
     "IdentityHashMap" |
+    "IntSummaryStatistics" |
     "LinkedHashMap" |
     "LinkedHashSet" |
     "LinkedList" |
     "ListResourceBundle" |
     "Locale" |
     "Locale.Builder" |
+    "Locale.LanguageRange" |
+    "LongSummaryStatistics" |
     "Objects" |
     "Observable" |
+    "Optional" |
+    "OptionalDouble" |
+    "OptionalInt" |
+    "OptionalLong" |
     "PriorityQueue" |
     "Properties" |
     "PropertyPermission" |
@@ -663,7 +690,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "Scanner" |
     "ServiceLoader" |
     "SimpleTimeZone" |
+    "Spliterators" |
+    "Spliterators.AbstractDoubleSpliterator" |
+    "Spliterators.AbstractIntSpliterator" |
+    "Spliterators.AbstractLongSpliterator" |
+    "Spliterators.AbstractSpliterator" |
+    "SpliteratorRandom" |
     "Stack" |
+    "StringJoiner" |
     "StringTokenizer" |
     "Timer" |
     "TimerTask" |
@@ -676,6 +710,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
     "Formatter.BigDecimalLayoutForm" |
     "Locale.Category" |
+    "Locale.FilteringMode" |
 
     "ConcurrentModificationException" |
     "DuplicateFormatFlagsException" |
@@ -763,8 +798,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
-	{DocCommentBegin}				{ start = zzMarkedPos-3; yybegin(DOCCOMMENT); }
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(DOCCOMMENT); }
+	{LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
 
 	/* Regular expressions. */
 	{Regex}	{
@@ -850,6 +885,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\*							{}
 	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
 
+}
+
+
+<EOL_COMMENT> {
+	[^hwf\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	\n |
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 }
 
 
