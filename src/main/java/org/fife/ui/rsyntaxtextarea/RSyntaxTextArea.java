@@ -80,6 +80,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>CSS
  *       <li>C#
  *       <li>Clojure
+ *       <li>Dart
  *       <li>Delphi
  *       <li>DTD
  *       <li>Fortran
@@ -88,6 +89,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>htaccess
  *       <li>Java
  *       <li>JavaScript
+ *       <li>.jshintrc
  *       <li>JSP
  *    </ul>
  *   </td>
@@ -101,6 +103,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>NSIS
  *       <li>Perl
  *       <li>PHP
+ *       <li>Properties files
  *       <li>Python
  *       <li>Ruby
  *       <li>SAS
@@ -108,6 +111,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *       <li>SQL
  *       <li>Tcl
  *       <li>UNIX shell scripts
+ *       <li>Visual Basic
  *       <li>Windows batch
  *       <li>XML files
  *    </ul>
@@ -132,7 +136,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 2.5.6
+ * @version 2.5.7
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {

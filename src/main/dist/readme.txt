@@ -20,14 +20,11 @@ robert -at- fifesoft dot com.
 
 * Compiling
 
-  If you wish to compile RSyntaxTextArea from source, the easiest way to do so
-  is via the included Ant build script.  The default target builds the jar.
+  RSyntaxTextArea compiles with Gradle.  To compile the source, run all unit
+  tests, and create the distribution zip file:
   
     cd RSyntaxTextArea
-    ant
-  
-  Other targets are defined to build the source zip for the project, and
-  generate its Javadoc.
+    gradlew build
   
 * Feedback
 
@@ -40,10 +37,6 @@ robert -at- fifesoft dot com.
 
     * https://github.com/bobbylight/RSyntaxTextArea
          Add a bug or enhancement request, peruse the Wiki, etc.
-
-    * http://fifesoft.com/rsyntaxtextarea
-         Project home page, which contains general information and example
-         source code.
 
 * Thanks
 
