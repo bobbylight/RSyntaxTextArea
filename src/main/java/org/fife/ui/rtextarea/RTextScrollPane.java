@@ -49,7 +49,16 @@ public class RTextScrollPane extends JScrollPane {
 	public RTextScrollPane() {
 		this(null, true);
 	}
-
+	
+	/**
+	 * Creates a scroll pane.  A default value will be used for line number
+	 * color (gray), and the current line's line number will be highlighted.
+	 *
+	 * @param textArea The text area this scroll pane will contain.
+	 */
+	public RTextScrollPane(RTextArea textArea) {
+		this(textArea, true);
+	}
 
 	/**
 	 * Creates a scroll pane.  A default value will be used for line number
@@ -67,6 +76,19 @@ public class RTextScrollPane extends JScrollPane {
 		this(comp, true);
 	}
 
+	/**
+	 * Creates a scroll pane.  A default value will be used for line number
+	 * color (gray), and the current line's line number will be highlighted.
+	 *
+	 * @param area The text area this scroll pane will contain.  If this is
+	 *        <code>null</code>, you must call
+	 *        {@link #setViewportView(Component)}, passing in an
+	 *        {@link RTextArea}.
+	 * @param lineNumbers Whether line numbers should be enabled.
+	 */
+	public RTextScrollPane(RTextArea textArea, boolean lineNumbers) {
+		this(textArea, lineNumbers, Color.GRAY);
+	}
 
 	/**
 	 * Creates a scroll pane.  A default value will be used for line number
