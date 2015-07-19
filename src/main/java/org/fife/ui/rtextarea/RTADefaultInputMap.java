@@ -56,11 +56,11 @@ public class RTADefaultInputMap extends InputMap {
 		int moveByWordMod = isOSX ? alt : defaultModifier;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   0),					isOSX ? DefaultEditorKit.beginAction : DefaultEditorKit.beginLineAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   shift),					DefaultEditorKit.selectionBeginLineAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   shift),					isOSX ? DefaultEditorKit.selectionBeginAction : DefaultEditorKit.selectionBeginLineAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   defaultModifier),			DefaultEditorKit.beginAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME,   defaultModifier|shift),	DefaultEditorKit.selectionBeginAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_END,    0),					isOSX ? DefaultEditorKit.endAction : DefaultEditorKit.endLineAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_END,    shift),					DefaultEditorKit.selectionEndLineAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_END,    shift),					isOSX ? DefaultEditorKit.selectionEndAction : DefaultEditorKit.selectionEndLineAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_END,    defaultModifier),			DefaultEditorKit.endAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_END,    defaultModifier|shift),	DefaultEditorKit.selectionEndAction);
 
@@ -127,8 +127,10 @@ public class RTADefaultInputMap extends InputMap {
 		if (isOSX) {
 			put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, defaultModifier),		DefaultEditorKit.beginLineAction);
 			put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, defaultModifier),		DefaultEditorKit.endLineAction);
+			put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, defaultModifier|shift),		DefaultEditorKit.selectionBeginLineAction);
+			put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, defaultModifier|shift),		DefaultEditorKit.selectionEndLineAction);
 		}
-		
+
 		/* NOTE:  Currently, macros aren't part of the default input map for */
 		/* RTextArea, as they display their own popup windows, etc. which    */
 		/* may or may not clash with the application in which the RTextArea  */
