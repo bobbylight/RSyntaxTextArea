@@ -128,11 +128,13 @@ public class DocumentRange implements Comparable<DocumentRange> {
 	 */
 	public void set(int start, int end) {
 		if (start<0 || end<0) {
-			throw new IllegalArgumentException ("start and end must be >= 0");
+			throw new IllegalArgumentException (
+					"start and end must be >= 0 (" + start + "-" + end + ")");
 		}
 		if (end<start) {
 			throw new IllegalArgumentException(
-					"'end' cannot be less than 'start'");
+					"'end' cannot be less than 'start' (" +
+					start + "-" + end + ")");
 		}
 		this.startOffs = start;
 		this.endOffs = end;

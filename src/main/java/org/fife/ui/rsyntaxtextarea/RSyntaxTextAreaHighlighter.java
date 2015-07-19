@@ -219,8 +219,14 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 		for (HighlightInfo info : markedOccurrences) {
 			int start = info.getStartOffset();
 			int end = info.getEndOffset() + 1; // HACK
-			DocumentRange range = new DocumentRange(start, end);
-			list.add(range);
+			if (start <= end) {
+				// Occasionally a Marked Occurrence can have a lost end offset
+				// but not start offset (replacing entire text content with
+				// new content, and a marked occurrence is on the last token
+				// in the document).
+				DocumentRange range = new DocumentRange(start, end);
+				list.add(range);
+			}
 		}
 		return list;
 	}
@@ -267,6 +273,15 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 				}
 			}
 			return color;
+		}
+
+		@Override
+		public String toString() {
+			return "[SyntaxLayeredHighlightInfoImpl: " +
+					"startOffs=" + getStartOffset() +
+					", endOffs=" + getEndOffset() +
+					", color=" + getColor() +
+					"]";
 		}
 
 	}

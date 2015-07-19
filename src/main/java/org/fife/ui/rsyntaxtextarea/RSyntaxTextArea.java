@@ -2032,6 +2032,24 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void redoLastAction() {
+		super.redoLastAction();
+		// Occasionally marked occurrences' Positions are in invalid states
+		// due to how javax.swing.text.AbstractDocument tracks the start and
+		// end offsets.  This is usually not needed, but can be when the last
+		// token in the Document is a marked occurrence, and an undo or redo
+		// occurs which clears most of the document text.  In that case it is
+		// possible for the end Position to be reset to something small, but
+		// the start offset to be its prior valid (start > end).
+		((RSyntaxTextAreaHighlighter)getHighlighter()).
+				clearMarkOccurrencesHighlights();
+	}
+
+
+	/**
 	 * Removes an "active line range" listener from this text area.
 	 *
 	 * @param l The listener to remove.
@@ -3010,6 +3028,24 @@ private boolean fractionalFontMetricsEnabled;
 				repaint(); // TODO: Repaint just the affected line.
 			}
 		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void undoLastAction() {
+		super.undoLastAction();
+		// Occasionally marked occurrences' Positions are in invalid states
+		// due to how javax.swing.text.AbstractDocument tracks the start and
+		// end offsets.  This is usually not needed, but can be when the last
+		// token in the Document is a marked occurrence, and an undo or redo
+		// occurs which clears most of the document text.  In that case it is
+		// possible for the end Position to be reset to something small, but
+		// the start offset to be its prior valid (start > end).
+		((RSyntaxTextAreaHighlighter)getHighlighter()).
+				clearMarkOccurrencesHighlights();
 	}
 
 
