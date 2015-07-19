@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
@@ -73,7 +74,7 @@ import org.fife.ui.rtextarea.RTextArea;
  *       the notices being reloaded from the Markers (removing any Markers that
  *       are now "empty").
  */
-public class ErrorStrip extends JComponent {
+public class ErrorStrip extends JPanel {
 
 	/**
 	 * The text area.
