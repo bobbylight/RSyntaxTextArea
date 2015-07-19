@@ -1,4 +1,4 @@
-['java', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+['java', 'osgi', 'distribution', 'maven', 'signing'].each { apply plugin: it }
 // Jacoco and a coveralls upload plugin needed for publishing coverage results
 ['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
@@ -54,8 +54,9 @@ ext.sharedManifest = manifest {
 	attributes('Specification-Title': 'RSyntaxTextArea',
 		'Specification-Version': version,
 		'Implementation-Title': 'org.fife.ui',
-		'Implementation-Version': version)
-
+		'Implementation-Version': version,
+		// Not sure why Require-Capability is not being added by the osgi plugin...
+		'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
 }
 jar {
 	manifest { from sharedManifest }
