@@ -225,7 +225,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		//zzStartRead = zzEndRead = s.offset;
 		zzStartRead = s.offset;
 		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
+		zzCurrentPos = zzMarkedPos  = s.offset;
 		zzLexicalState = YYINITIAL;
 		zzReader = reader;
 		zzAtBOL  = true;
@@ -247,6 +247,7 @@ Identifier				= ({IdentifierStart}{IdentifierPart}*)
 AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter	= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape					= ("\\"(([btnfr\"\\/])|{EscapedSourceCharacter}))
+Key						= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
 StringLiteral			= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
 UnclosedStringLiteral	= ([\"]([\\].|[^\\\"])*[^\"]?)
 ErrorStringLiteral		= ({UnclosedStringLiteral}[\"])
@@ -276,6 +277,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	"null"	 					{ addToken(Token.RESERVED_WORD); }
+	{Key}/:						{ addToken(Token.VARIABLE); }
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 	{Identifier}				{ addToken(Token.IDENTIFIER); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
