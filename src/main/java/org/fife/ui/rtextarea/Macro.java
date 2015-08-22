@@ -341,6 +341,7 @@ public class Macro {
 
 			// Write the name of the macro.
 			Element nameElement = doc.createElement(MACRO_NAME);
+			nameElement.appendChild(doc.createCDATASection(name));
 			rootElement.appendChild(nameElement);
 
 			// Write all actions (the meat) in the macro.
