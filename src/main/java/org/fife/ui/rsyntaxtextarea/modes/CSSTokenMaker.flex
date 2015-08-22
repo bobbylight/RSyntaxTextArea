@@ -99,6 +99,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	private int cssPrevState;
 
+	/**
+	 * Whether we are highlighting less instead of CSS.
+	 */
+	private boolean highlightingLess;
+
 
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
@@ -301,6 +306,16 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Toggles whether we're highlighting less instead of just CSS.
+	 *
+	 * @param highlightingLess Whether we're highlighting less.
+	 */
+	public void setHighlightingLess(boolean highlightingLess) {
+		this.highlightingLess = highlightingLess;
+	}
+
+
+	/**
 	 * Refills the input buffer.
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
@@ -350,7 +365,8 @@ LetterOrUnderscoreOrDash	= ({LetterOrUnderscore}|[\-])
 
 CSS_SelectorPiece			= (("*"|"."|{LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
 CSS_PseudoClass				= (":"("root"|"nth-child"|"nth-last-child"|"nth-of-type"|"nth-last-of-type"|"first-child"|"last-child"|"first-of-type"|"last-of-type"|"only-child"|"only-of-type"|"empty"|"link"|"visited"|"active"|"hover"|"focus"|"target"|"lang"|"enabled"|"disabled"|"checked"|":first-line"|":first-letter"|":before"|":after"|"not"))
-CSS_AtKeyword				= ("@"{CSS_SelectorPiece})
+CSS_AtRule					= ("@"(charset|import|namespace|media|document|page|font-face|keyframes|viewport))
+CSS_Less_Var				= ("@"({LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
 CSS_Id						= ("#"{CSS_SelectorPiece})
 CSS_Separator				= ([;\(\)\[\]])
 WhiteSpace					= ([ \t]+)
@@ -387,12 +403,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{CSS_SelectorPiece}	{ addToken(Token.DATA_TYPE); }
 	{CSS_PseudoClass}	{ addToken(Token.RESERVED_WORD); }
 	":"					{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
-	{CSS_AtKeyword}		{ addToken(Token.REGEX); }
-	{CSS_Id}			{ addToken(Token.VARIABLE); }
+	{CSS_AtRule}		{ addToken(Token.REGEX); }
+	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.REGEX); }
+	{CSS_Number}		{ addToken(highlightingLess ? Token.LITERAL_NUMBER_DECIMAL_INT : Token.IDENTIFIER); }
+	{CSS_Id}			{ addToken(highlightingLess ? Token.ANNOTATION : Token.VARIABLE); }
 	"{"					{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
 	[,]					{ addToken(Token.IDENTIFIER); }
 	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	"}"					{ addToken(highlightingLess ? Token.SEPARATOR : Token.IDENTIFIER); }
 	[+>~\^$\|=]			{ addToken(Token.OPERATOR); }
 	{CSS_Separator}		{ addToken(Token.SEPARATOR); }
 	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
@@ -404,6 +423,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS_PROPERTY> {
 	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
 	"{"					{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
 	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
 	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
@@ -423,6 +443,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 						  zzStartRead = zzCurrentPos = zzMarkedPos;
 						}
 	{CSS_Number}		{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
 	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
 	")"					{ /* End of a function */ addToken(Token.SEPARATOR); }

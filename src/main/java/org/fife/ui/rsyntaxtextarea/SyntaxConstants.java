@@ -167,6 +167,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Less.
+	 */
+	public static final String SYNTAX_STYLE_LESS		= "text/less";
+
+
+	/**
 	 * Style for highlighting Lisp.
 	 */
 	public static final String SYNTAX_STYLE_LISP		= "text/lisp";
