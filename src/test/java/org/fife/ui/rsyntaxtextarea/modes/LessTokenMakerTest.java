@@ -90,7 +90,8 @@ public class LessTokenMakerTest {
 	public void testCss_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
 	}
 
 
