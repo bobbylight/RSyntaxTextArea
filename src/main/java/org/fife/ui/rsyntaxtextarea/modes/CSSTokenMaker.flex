@@ -436,7 +436,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <CSS_VALUE> {
 	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
-	"!important"		{ addToken(Token.ANNOTATION); }
+	"!important"		{ addToken(Token.PREPROCESSOR); }
 	{CSS_Function}		{ int temp = zzMarkedPos - 2;
 						  addToken(zzStartRead, temp, Token.FUNCTION);
 						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);

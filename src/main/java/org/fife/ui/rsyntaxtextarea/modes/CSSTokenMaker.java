@@ -981,7 +981,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 43: break;
         case 40: 
-          { addToken(Token.ANNOTATION);
+          { addToken(Token.PREPROCESSOR);
           }
         case 44: break;
         case 9: 
