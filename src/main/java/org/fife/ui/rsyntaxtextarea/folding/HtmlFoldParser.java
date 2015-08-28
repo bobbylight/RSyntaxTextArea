@@ -238,11 +238,12 @@ public class HtmlFoldParser implements FoldParser {
 							Token tagStartToken = t;
 							Token tagNameToken = t.getNextToken();
 							if (isFoldableTag(tagNameToken)) {
-								getTagCloseInfo(tagNameToken, textArea, line, tci);
+								int newLine = getTagCloseInfo(tagNameToken, textArea, line, tci);
 								if (tci.line==-1) { // EOF reached before end of tag
 									return folds;
 								}
 								// We have found either ">" or "/>" with tci.
+								System.out.println(line + ", "+ tci + ", " + t);
 								Token tagCloseToken = tci.closeToken;
 								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
 									if (currentFold==null) {
@@ -255,6 +256,7 @@ public class HtmlFoldParser implements FoldParser {
 									tagNameStack.push(tagNameToken.getLexeme());
 								}
 								t = tagCloseToken; // Continue parsing after tag
+								line = newLine;
 							}
 						}
 
@@ -305,8 +307,9 @@ public class HtmlFoldParser implements FoldParser {
 	 * @param line The line we're currently on.
 	 * @param info On return, information about the closing of the tag is
 	 *        returned in this object.
+	 * @return The line number of the closing tag token.
 	 */
-	private void getTagCloseInfo(Token tagNameToken, RSyntaxTextArea textArea,
+	private int getTagCloseInfo(Token tagNameToken, RSyntaxTextArea textArea,
 			int line, TagCloseInfo info) {
 
 		info.reset();
@@ -326,6 +329,8 @@ public class HtmlFoldParser implements FoldParser {
 
 		} while (++line<textArea.getLineCount() &&
 				(t=textArea.getTokenListForLine(line))!=null);
+
+		return line;
 
 	}
 
