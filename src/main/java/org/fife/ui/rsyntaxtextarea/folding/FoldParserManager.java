@@ -81,6 +81,7 @@ public class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_HTML,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_HTML));
 		map.put(SYNTAX_STYLE_JAVA,				new CurlyFoldParser(true, true));
 		map.put(SYNTAX_STYLE_JAVASCRIPT,		new CurlyFoldParser());
+		map.put(SYNTAX_STYLE_JSHINTRC,			new JsonFoldParser());
 		map.put(SYNTAX_STYLE_JSON,				new JsonFoldParser());
 		map.put(SYNTAX_STYLE_JSP,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_JSP));
 		map.put(SYNTAX_STYLE_LATEX,				new LatexFoldParser());
