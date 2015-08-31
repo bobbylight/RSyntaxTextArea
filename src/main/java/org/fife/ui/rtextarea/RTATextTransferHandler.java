@@ -32,6 +32,7 @@ import javax.swing.text.*;
  * @author Robert Futrell
  * @version 0.1
  */
+@SuppressWarnings("deprecation")
 public class RTATextTransferHandler extends TransferHandler {
 
 	private JTextComponent exportComp;
