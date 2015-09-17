@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import org.fife.ui.rsyntaxtextarea.modes.PHPTokenRegistration;
 
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -239,13 +240,13 @@ public class ThemeTest {
 	public void testApply() {
 
 		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
-				SyntaxConstants.SYNTAX_STYLE_PHP);
+				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
 		Gutter gutter1 = sp1.getGutter();
 		initWithOddProperties(textArea1, gutter1);
 		
 		RSyntaxTextArea textArea2 = new RSyntaxTextArea(
-				SyntaxConstants.SYNTAX_STYLE_PHP);
+				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp2 = new RTextScrollPane(textArea2);
 		Gutter gutter2 = sp2.getGutter();
 
@@ -266,7 +267,7 @@ public class ThemeTest {
 		in.close();
 
 		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
-				SyntaxConstants.SYNTAX_STYLE_PHP);
+				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
 		Gutter gutter1 = sp1.getGutter();
 		initWithOddProperties(textArea1, gutter1);
@@ -281,13 +282,13 @@ public class ThemeTest {
 	public void testSave() throws Exception {
 
 		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
-				SyntaxConstants.SYNTAX_STYLE_PHP);
+				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
 		Gutter gutter1 = sp1.getGutter();
 		initWithOddProperties(textArea1, gutter1);
 
 		RSyntaxTextArea textArea2 = new RSyntaxTextArea(
-				SyntaxConstants.SYNTAX_STYLE_PHP);
+				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp2 = new RTextScrollPane(textArea2);
 		Gutter gutter2 = sp2.getGutter();
 

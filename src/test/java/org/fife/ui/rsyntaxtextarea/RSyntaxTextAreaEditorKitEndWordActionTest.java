@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.text.DefaultEditorKit;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.EndWordAction;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenRegistration;
 import org.fife.ui.rtextarea.RTextArea;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class RSyntaxTextAreaEditorKitEndWordActionTest {
 
 		EndWordAction action = new EndWordAction("endWordAction", false);
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		final String TEXT = "This is the best";

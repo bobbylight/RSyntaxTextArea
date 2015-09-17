@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Element;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenRegistration;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -42,12 +43,12 @@ public class TokenIteratorTest {
 
 		// A well-formed Java document.
 		doc = loadResource("TokenIteratorTest_JavaBasic.txt",
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		assertIteratorMatchesList(doc);
 
 		// An unterminated Javadoc comment.
 		doc = loadResource("TokenIteratorTest_UnterminatedJavadoc.txt",
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		assertIteratorMatchesList(doc);
 
 		// A single line.
@@ -68,7 +69,7 @@ public class TokenIteratorTest {
 	public void testEmptyLines() throws Exception {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 
 		// An empty document.
 		doc.remove(0, doc.getLength());

@@ -28,256 +28,261 @@ package org.fife.ui.rsyntaxtextarea;
  */
 public interface SyntaxConstants {
 
-	/**
-	 * Style meaning don't syntax highlight anything.
-	 */
-	public static final String SYNTAX_STYLE_NONE			= "text/plain";
-
-
-	/**
-	 * Style for highlighting ActionScript.
-	 */
-	public static final String SYNTAX_STYLE_ACTIONSCRIPT	= "text/actionscript";
-
-
-	/**
-	 * Style for highlighting x86 assembler.
-	 */
-	public static final String SYNTAX_STYLE_ASSEMBLER_X86	= "text/asm";
-
-
-	/**
-	 * Style for highlighting BBCode.
-	 */
-	public static final String SYNTAX_STYLE_BBCODE			= "text/bbcode";
-
-
-	/**
-	 * Style for highlighting C.
-	 */
-	public static final String SYNTAX_STYLE_C				= "text/c";
-
-
-	/**
-	 * Style for highlighting Clojure.
-	 */
-	public static final String SYNTAX_STYLE_CLOJURE			= "text/clojure";
-
-
-	/**
-	 * Style for highlighting C++.
-	 */
-	public static final String SYNTAX_STYLE_CPLUSPLUS		= "text/cpp";
-
-
-	/**
-	 * Style for highlighting C#.
-	 */
-	public static final String SYNTAX_STYLE_CSHARP			= "text/cs";
-
-
-	/**
-	 * Style for highlighting CSS.
-	 */
-	public static final String SYNTAX_STYLE_CSS			= "text/css";
-
-
-	/**
-	 * Syntax style for highlighting D.
-	 */
-	public static final String SYNTAX_STYLE_D			= "text/d";
-
-
-	/**
-	 * Style for highlighting Dart.
-	 */
-	public static final String SYNTAX_STYLE_DART		= "text/dart";
-
-
-	/**
-	 * Style for highlighting Delphi/Pascal.
-	 */
-	public static final String SYNTAX_STYLE_DELPHI			= "text/delphi";
-
-
-	/**
-	 * Style for highlighting DTD files.
-	 */
-	public static final String SYNTAX_STYLE_DTD			= "text/dtd";
-
-
-	/**
-	 * Style for highlighting Fortran.
-	 */
-	public static final String SYNTAX_STYLE_FORTRAN			= "text/fortran";
-
-
-	/**
-	 * Style for highlighting Groovy.
-	 */
-	public static final String SYNTAX_STYLE_GROOVY			= "text/groovy";
-
-
-	/**
-	 * Style for highlighting .htaccess files.
-	 */
-	public static final String SYNTAX_STYLE_HTACCESS		= "text/htaccess";
-
-
-	/**
-	 * Style for highlighting HTML.
-	 */
-	public static final String SYNTAX_STYLE_HTML			= "text/html";
-
-
-	/**
-	 * Style for highlighting Java.
-	 */
-	public static final String SYNTAX_STYLE_JAVA			= "text/java";
-
-
-	/**
-	 * Style for highlighting JavaScript.
-	 */
-	public static final String SYNTAX_STYLE_JAVASCRIPT		= "text/javascript";
-
-
-	/**
-	 * Style for highlighting .jshintrc files.
-	 */
-	public static final String SYNTAX_STYLE_JSHINTRC	= "text/jshintrc";
-
-
-	/**
-	 * Style for highlighting JSON.
-	 */
-	public static final String SYNTAX_STYLE_JSON		= "text/json";
-
-
-	/**
-	 * Style for highlighting JSP.
-	 */
-	public static final String SYNTAX_STYLE_JSP			= "text/jsp";
-
-
-	/**
-	 * Style for highlighting LaTeX.
-	 */
-	public static final String SYNTAX_STYLE_LATEX		= "text/latex";
-
-
-	/**
-	 * Style for highlighting Less.
-	 */
-	public static final String SYNTAX_STYLE_LESS		= "text/less";
-
-
-	/**
-	 * Style for highlighting Lisp.
-	 */
-	public static final String SYNTAX_STYLE_LISP		= "text/lisp";
-
-
-	/**
-	 * Style for highlighting Lua.
-	 */
-	public static final String SYNTAX_STYLE_LUA			= "text/lua";
-
-
-	/**
-	 * Style for highlighting makefiles.
-	 */
-	public static final String SYNTAX_STYLE_MAKEFILE		= "text/makefile";
-
-
-	/**
-	 * Style for highlighting MXML.
-	 */
-	public static final String SYNTAX_STYLE_MXML			= "text/mxml";
-
-
-	/**
-	 * Style for highlighting NSIS install scripts.
-	 */
-	public static final String SYNTAX_STYLE_NSIS			= "text/nsis";
-
-
-	/**
-	 * Style for highlighting Perl.
-	 */
-	public static final String SYNTAX_STYLE_PERL			= "text/perl";
-
-
-	/**
-	 * Style for highlighting PHP.
-	 */
-	public static final String SYNTAX_STYLE_PHP				= "text/php";
-
-
-	/**
-	 * Style for highlighting properties files.
-	 */
-	public static final String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";
-
-
-	/**
-	 * Style for highlighting Python.
-	 */
-	public static final String SYNTAX_STYLE_PYTHON			= "text/python";
-
-
-	/**
-	 * Style for highlighting Ruby.
-	 */
-	public static final String SYNTAX_STYLE_RUBY			= "text/ruby";
-
-
-	/**
-	 * Style for highlighting SAS keywords.
-	 */
-	public static final String SYNTAX_STYLE_SAS			= "text/sas";
-
-
-	/**
-	 * Style for highlighting Scala.
-	 */
-	public static final String SYNTAX_STYLE_SCALA		= "text/scala";
-
-
-	/**
-	 * Style for highlighting SQL.
-	 */
-	public static final String SYNTAX_STYLE_SQL			= "text/sql";
-
-
-	/**
-	 * Style for highlighting Tcl.
-	 */
-	public static final String SYNTAX_STYLE_TCL			= "text/tcl";
-
-
-	/**
-	 * Style for highlighting UNIX shell keywords.
-	 */
-	public static final String SYNTAX_STYLE_UNIX_SHELL		= "text/unix";
-
-
-	/**
-	 * Style for highlighting Visual Basic.
-	 */
-	public static final String SYNTAX_STYLE_VISUAL_BASIC	= "text/vb";
-
-
-	/**
-	 * Style for highlighting Windows batch files.
-	 */
-	public static final String SYNTAX_STYLE_WINDOWS_BATCH	= "text/bat";
-
-
-	/**
-	 * Style for highlighting XML.
-	 */
-	public static final String SYNTAX_STYLE_XML			= "text/xml";
-
+//	/**
+//	 * Style meaning don't syntax highlight anything.
+//	 */
+//	public static final String SYNTAX_STYLE_NONE			= "text/plain";
+//
+//
+//	/**
+//	 * Style for highlighting ActionScript.
+//	 */
+//	public static final String SYNTAX_STYLE_ACTIONSCRIPT	= "text/actionscript";
+//
+//
+//	/**
+//	 * Style for highlighting x86 assembler.
+//	 */
+//	public static final String SYNTAX_STYLE_ASSEMBLER_X86	= "text/asm";
+//
+//
+//	/**
+//	 * Style for highlighting BBCode.
+//	 */
+//	public static final String SYNTAX_STYLE_BBCODE			= "text/bbcode";
+//
+//
+//	/**
+//	 * Style for highlighting C.
+//	 */
+//	public static final String SYNTAX_STYLE_C				= "text/c";
+//
+//
+//	/**
+//	 * Style for highlighting Clojure.
+//	 */
+//	public static final String SYNTAX_STYLE_CLOJURE			= "text/clojure";
+//
+//
+//	/**
+//	 * Style for highlighting C++.
+//	 */
+//	public static final String SYNTAX_STYLE_CPLUSPLUS		= "text/cpp";
+//
+//
+//	/**
+//	 * Style for highlighting C#.
+//	 */
+//	public static final String SYNTAX_STYLE_CSHARP			= "text/cs";
+//
+//
+//	/**
+//	 * Style for highlighting CSS.
+//	 */
+//	public static final String SYNTAX_STYLE_CSS			= "text/css";
+//
+//
+//	/**
+//	 * Syntax style for highlighting D.
+//	 */
+//	public static final String SYNTAX_STYLE_D			= "text/d";
+//
+//
+//	/**
+//	 * Style for highlighting Dart.
+//	 */
+//	public static final String SYNTAX_STYLE_DART		= "text/dart";
+//
+//
+//	/**
+//	 * Style for highlighting Delphi/Pascal.
+//	 */
+//	public static final String SYNTAX_STYLE_DELPHI			= "text/delphi";
+//
+//
+//	/**
+//	 * Style for highlighting DTD files.
+//	 */
+//	public static final String SYNTAX_STYLE_DTD			= "text/dtd";
+//
+//
+//	/**
+//	 * Style for highlighting Fortran.
+//	 */
+//	public static final String SYNTAX_STYLE_FORTRAN			= "text/fortran";
+//
+//
+//	/**
+//	 * Style for highlighting Groovy.
+//	 */
+//	public static final String SYNTAX_STYLE_GROOVY			= "text/groovy";
+//
+//
+//	/**
+//	 * Style for highlighting .htaccess files.
+//	 */
+//	public static final String SYNTAX_STYLE_HTACCESS		= "text/htaccess";
+//
+//
+//	/**
+//	 * Style for highlighting HTML.
+//	 */
+//	public static final String SYNTAX_STYLE_HTML			= "text/html";
+//
+//
+//	/**
+//	 * Style for highlighting Java.
+//	 */
+//	public static final String SYNTAX_STYLE_JAVA			= "text/java";
+//
+//        /**
+//	 * Style for highlighting BeanShell.
+//	 */
+//	public static final String SYNTAX_STYLE_BSH			= "text/bsh";
+//
+//
+//	/**
+//	 * Style for highlighting JavaScript.
+//	 */
+//	public static final String SYNTAX_STYLE_JAVASCRIPT		= "text/javascript";
+//
+//
+//	/**
+//	 * Style for highlighting .jshintrc files.
+//	 */
+//	public static final String SYNTAX_STYLE_JSHINTRC	= "text/jshintrc";
+//
+//
+//	/**
+//	 * Style for highlighting JSON.
+//	 */
+//	public static final String SYNTAX_STYLE_JSON		= "text/json";
+//
+//
+//	/**
+//	 * Style for highlighting JSP.
+//	 */
+//	public static final String SYNTAX_STYLE_JSP			= "text/jsp";
+//
+//
+//	/**
+//	 * Style for highlighting LaTeX.
+//	 */
+//	public static final String SYNTAX_STYLE_LATEX		= "text/latex";
+//
+//
+//	/**
+//	 * Style for highlighting Less.
+//	 */
+//	public static final String SYNTAX_STYLE_LESS		= "text/less";
+//
+//
+//	/**
+//	 * Style for highlighting Lisp.
+//	 */
+//	public static final String SYNTAX_STYLE_LISP		= "text/lisp";
+//
+//
+//	/**
+//	 * Style for highlighting Lua.
+//	 */
+//	public static final String SYNTAX_STYLE_LUA			= "text/lua";
+//
+//
+//	/**
+//	 * Style for highlighting makefiles.
+//	 */
+//	public static final String SYNTAX_STYLE_MAKEFILE		= "text/makefile";
+//
+//
+//	/**
+//	 * Style for highlighting MXML.
+//	 */
+//	public static final String SYNTAX_STYLE_MXML			= "text/mxml";
+//
+//
+//	/**
+//	 * Style for highlighting NSIS install scripts.
+//	 */
+//	public static final String SYNTAX_STYLE_NSIS			= "text/nsis";
+//
+//
+//	/**
+//	 * Style for highlighting Perl.
+//	 */
+//	public static final String SYNTAX_STYLE_PERL			= "text/perl";
+//
+//
+//	/**
+//	 * Style for highlighting PHP.
+//	 */
+//	public static final String SYNTAX_STYLE_PHP				= "text/php";
+//
+//
+//	/**
+//	 * Style for highlighting properties files.
+//	 */
+//	public static final String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";
+//
+//
+//	/**
+//	 * Style for highlighting Python.
+//	 */
+//	public static final String SYNTAX_STYLE_PYTHON			= "text/python";
+//
+//
+//	/**
+//	 * Style for highlighting Ruby.
+//	 */
+//	public static final String SYNTAX_STYLE_RUBY			= "text/ruby";
+//
+//
+//	/**
+//	 * Style for highlighting SAS keywords.
+//	 */
+//	public static final String SYNTAX_STYLE_SAS			= "text/sas";
+//
+//
+//	/**
+//	 * Style for highlighting Scala.
+//	 */
+//	public static final String SYNTAX_STYLE_SCALA		= "text/scala";
+//
+//
+//	/**
+//	 * Style for highlighting SQL.
+//	 */
+//	public static final String SYNTAX_STYLE_SQL			= "text/sql";
+//
+//
+//	/**
+//	 * Style for highlighting Tcl.
+//	 */
+//	public static final String SYNTAX_STYLE_TCL			= "text/tcl";
+//
+//
+//	/**
+//	 * Style for highlighting UNIX shell keywords.
+//	 */
+//	public static final String SYNTAX_STYLE_UNIX_SHELL		= "text/unix";
+//
+//
+//	/**
+//	 * Style for highlighting Visual Basic.
+//	 */
+//	public static final String SYNTAX_STYLE_VISUAL_BASIC	= "text/vb";
+//
+//
+//	/**
+//	 * Style for highlighting Windows batch files.
+//	 */
+//	public static final String SYNTAX_STYLE_WINDOWS_BATCH	= "text/bat";
+//
+//
+//	/**
+//	 * Style for highlighting XML.
+//	 */
+//	public static final String SYNTAX_STYLE_XML			= "text/xml";
+//
 
 }

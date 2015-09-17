@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.fife.ui.SwingRunner;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenRegistration;
+import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 
 
 /**
@@ -159,9 +161,9 @@ public class RSyntaxTextAreaTest {
 	@Test
 	public void testGetSyntaxEditingStyle() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, textArea.getSyntaxEditingStyle());
+		Assert.assertEquals(PlainTextTokenRegistration.SYNTAX_STYLE, textArea.getSyntaxEditingStyle());
+		textArea.setSyntaxEditingStyle(JavaTokenRegistration.SYNTAX_STYLE);
+		Assert.assertEquals(JavaTokenRegistration.SYNTAX_STYLE, textArea.getSyntaxEditingStyle());
 	}
 
 
@@ -421,9 +423,9 @@ public class RSyntaxTextAreaTest {
 	@Test
 	public void testSetSyntaxEditingStyle() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, textArea.getSyntaxEditingStyle());
+		Assert.assertEquals(PlainTextTokenRegistration.SYNTAX_STYLE, textArea.getSyntaxEditingStyle());
+		textArea.setSyntaxEditingStyle(JavaTokenRegistration.SYNTAX_STYLE);
+		Assert.assertEquals(JavaTokenRegistration.SYNTAX_STYLE, textArea.getSyntaxEditingStyle());
 	}
 
 	@Test
