@@ -20,7 +20,6 @@ org.fife.ui.rsyntaxtextarea.modes.LatexTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.CSharpTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.UnixShellTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.DartTokenRegistration
-org.fife.ui.rsyntaxtextarea.modes.BshTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.DelphiTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.CPlusPlusTokenRegistration
 org.fife.ui.rsyntaxtextarea.modes.XMLTokenRegistration
