@@ -13,9 +13,9 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldParser;
  */
 public interface TokenMakerRegistration {
 
-    public String getLanguage();
+    String getLanguage();
 
-    public String getTokenMaker();
+    String getTokenMaker();
     
-    public FoldParser getFoldParser();
+    FoldParser getFoldParser();
 }
