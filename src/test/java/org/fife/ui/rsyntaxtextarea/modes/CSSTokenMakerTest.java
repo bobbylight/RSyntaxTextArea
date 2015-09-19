@@ -87,6 +87,13 @@ public class CSSTokenMakerTest {
 
 
 	@Test
+	public void testCss_getLineCommentStartAndEnd() {
+		TokenMaker tm = createTokenMaker();
+		Assert.assertNull(tm.getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
 	public void testCss_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));

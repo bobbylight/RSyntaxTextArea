@@ -87,15 +87,6 @@ public class LessTokenMakerTest {
 
 
 	@Test
-	public void testCss_getMarkOccurrencesOfTokenType() {
-		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
-	}
-
-
-	@Test
 	public void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
@@ -241,6 +232,24 @@ public class LessTokenMakerTest {
 
 		}
 
+	}
+
+
+	@Test
+	public void testLess_getLineCommentStartAndEnd() {
+		TokenMaker tm = createTokenMaker();
+		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
+		Assert.assertEquals("//", startAndEnd[0]);
+		Assert.assertEquals(null, startAndEnd[1]);
+	}
+
+
+	@Test
+	public void testLess_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
+		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
 	}
 
 
