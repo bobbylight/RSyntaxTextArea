@@ -243,7 +243,7 @@ public class HtmlFoldParser implements FoldParser {
 									return folds;
 								}
 								// We have found either ">" or "/>" with tci.
-								System.out.println(line + ", "+ tci + ", " + t);
+								//System.out.println(line + ", "+ tci + ", " + t);
 								Token tagCloseToken = tci.closeToken;
 								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
 									if (currentFold==null) {
