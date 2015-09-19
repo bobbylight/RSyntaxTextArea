@@ -202,4 +202,46 @@ public class LessTokenMakerTest {
 	}
 
 
+	@Test
+	public void testLess_EolComments() {
+
+		String[] eolCommentLiterals = {
+			"// Hello world",
+		};
+
+		for (String code : eolCommentLiterals) {
+			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testLess_EolComments_URL() {
+
+		String[] eolCommentLiterals = {
+			"// Hello world http://www.sas.com",
+		};
+
+		for (String code : eolCommentLiterals) {
+
+			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+
+			token = token.getNextToken();
+			Assert.assertTrue(token.isHyperlink());
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+
+		}
+
+	}
+
+
 }
