@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -49,6 +50,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
+import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
@@ -1781,7 +1783,12 @@ private boolean fractionalFontMetricsEnabled;
 			}
 		}
 		if (text==null) {
-			text = super.getToolTipText(e);
+//			text = super.getToolTipText(e);
+RSyntaxDocument doc = (RSyntaxDocument)getDocument();
+int pos = viewToModel(e.getPoint());
+javax.swing.text.Element charElem = doc.getCharacterElement(pos);
+Object s = charElem.getAttributes().getAttribute(StyleConstants.NameAttribute);
+text = "<html>" + charElem + "<br>" + (s == null ? "null" : s.toString()); 
 		}
 
 		// Do we want to use "focusable" tips?

@@ -169,6 +169,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	}
 
 
+	@Override
+	public ViewFactory getViewFactory() {
+		return new StyledViewFactory();
+	}
+
+
 	/**
 	 * Positions the caret at the beginning of the word.  This class is here
 	 * to better handle finding the "beginning of the word" for programming
@@ -1951,6 +1957,35 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected void createActions() {
 			start = new BeginWordAction("pigdog", false);
 			end = new EndWordAction("pigdog", true);
+		}
+
+	}
+
+
+	static class StyledViewFactory implements ViewFactory {
+
+		public View create(Element elem) {
+			String kind = elem.getName();
+			if (kind != null) {
+				if (kind.equals(AbstractDocument.ContentElementName)) {
+					return new LabelView(elem);
+				}
+				else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+					return new ParagraphView(elem);
+				}
+				else if (kind.equals(AbstractDocument.SectionElementName)) {
+					return new SyntaxView(elem);//BoxView(elem, View.Y_AXIS);
+				}
+				else if (kind.equals(StyleConstants.ComponentElementName)) {
+					return new ComponentView(elem);
+				}
+				else if (kind.equals(StyleConstants.IconElementName)) {
+					return new IconView(elem);
+				}
+			}
+
+			// default to text display
+			return new LabelView(elem);
 		}
 
 	}

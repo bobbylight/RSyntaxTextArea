@@ -12,9 +12,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
+
 import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.text.*;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
@@ -72,7 +74,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * The selection painter.  By default this paints selections with the
 	 * text area's selection color.
 	 */
-	private ChangeableHighlightPainter selectionPainter;
+	private HighlightPainter selectionPainter;
 
 	private boolean alwaysVisible;
 
@@ -95,7 +97,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	public ConfigurableCaret(CaretStyle style) {
 		seg = new Segment();
 		setStyle(style);
-		selectionPainter = new ChangeableHighlightPainter();
+		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(null);
 	}
 
 
