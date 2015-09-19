@@ -12,13 +12,19 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
+import javax.swing.text.PlainDocument;
 import javax.swing.text.Segment;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 import org.fife.ui.rsyntaxtextarea.modes.AbstractMarkupTokenMaker;
 import org.fife.ui.rtextarea.RDocument;
@@ -110,7 +116,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
 	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
-		putProperty(tabSizeAttribute, Integer.valueOf(5));
+		putProperty(PlainDocument.tabSizeAttribute, Integer.valueOf(5));
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
@@ -148,6 +154,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		int previousLine = line - 1;
 		int previousTokenType = (previousLine>-1 ?
 					lastTokensOnLines.get(previousLine) : Token.NULL);
+		int lastLineToRepaint = line;
 
 		// If entire lines were added...
 		if (added!=null && added.length>0) {
@@ -163,6 +170,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 				setSharedSegment(i); // Loads line i's text into s.
 
 				int tokenType = tokenMaker.getLastTokenTypeOnLine(s, previousTokenType);
+
 				lastTokensOnLines.add(i, tokenType);
 				//System.err.println("--------- lastTokensOnLines.size() == " + lastTokensOnLines.getSize());
 
@@ -171,7 +179,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			} // End of for (int i=line; i<endBefore; i++).
 
 			// Update last tokens for lines below until they stop changing.
-			updateLastTokensBelow(endBefore, numLines, previousTokenType);
+			lastLineToRepaint = updateLastTokensBelow(endBefore, numLines, previousTokenType);
 
 		} // End of if (added!=null && added.length>0).
 
@@ -179,14 +187,46 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		else {
 
 			// Update last tokens for lines below until they stop changing.
-			updateLastTokensBelow(line, numLines, previousTokenType);
+			lastLineToRepaint = updateLastTokensBelow(line, numLines, previousTokenType);
 
 		} // End of else.
 
 		// Let all listeners know about the insertion.
 		super.fireInsertUpdate(e);
 
+System.out.println("Here");
+for (int i = line; i <= lastLineToRepaint; i++) {
+	updateStylesForLine(i);
+}
+
 	}
+
+private void updateStylesForLine(int line) {
+
+	long start = System.nanoTime();
+
+	// TODO: Set up styles elsewhere
+	javax.swing.text.Style defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
+	StyleConstants.setForeground(defaultStyle, java.awt.Color.black);
+
+	Token t = getTokenListForLine(line);
+	while (t != null && t.isPaintable()) {
+
+		javax.swing.text.Style s = tokenTypeToSwingStyle.get(t.getType());
+		if (s == null) {
+			s = getStyle(StyleContext.DEFAULT_STYLE);
+		}
+		System.out.println("... ... " + s);
+		setCharacterAttributes(t.getOffset(), t.length(), s, true);
+
+		t = t.getNextToken();
+
+	}
+
+	long nanos = System.nanoTime() - start;
+	long millis = nanos / 1000000L;
+	System.out.println("Line " + line + " took " + millis + " ms");
+}
 
 
 	/**
@@ -209,6 +249,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		cachedTokenList =  null;
 		Element lineMap = getDefaultRootElement();
 		int numLines = lineMap.getElementCount();
+		int line = 0;
+		int lastLineToRepaint = 0;
 
 		DocumentEvent.ElementChange change = chng.getChange(lineMap);
 		Element[] removed = change==null ? null : change.getChildrenRemoved();
@@ -216,7 +258,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		// If entire lines were removed...
 		if (removed!=null && removed.length>0) {
 
-			int line = change.getIndex();	// First line entirely removed.
+			line = change.getIndex();	// First line entirely removed.
 			int previousLine = line - 1;	// Line before that.
 			int previousTokenType = (previousLine>-1 ?
 					lastTokensOnLines.get(previousLine) : Token.NULL);
@@ -233,14 +275,14 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			//System.err.println("--------- lastTokensOnLines.size() == " + lastTokensOnLines.getSize());
 
 			// Update last tokens for lines below until they've stopped changing.
-			updateLastTokensBelow(line, numLines, previousTokenType);
+			lastLineToRepaint = updateLastTokensBelow(line, numLines, previousTokenType);
 
 		} // End of if (removed!=null && removed.size()>0).
 
 		// Otherwise, text was removed from just one line...
 		else {
 
-			int line = lineMap.getElementIndex(chng.getOffset());
+			line = lineMap.getElementIndex(chng.getOffset());
 			if (line>=lastTokensOnLines.getSize()) {
 				return;	// If we're editing the last line in a document...
 			}
@@ -250,13 +292,17 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 					lastTokensOnLines.get(previousLine) : Token.NULL);
 			//System.err.println("previousTokenType for line : " + previousLine + " is " + previousTokenType);
 			// Update last tokens for lines below until they've stopped changing.
-			updateLastTokensBelow(line, numLines, previousTokenType);
+			lastLineToRepaint = updateLastTokensBelow(line, numLines, previousTokenType);
 
 		}
 
 		// Let all of our listeners know about the removal.
 		super.fireRemoveUpdate(chng);
 
+System.out.println("Here");
+for (int i = line; i <= lastLineToRepaint; i++) {
+	updateStylesForLine(i);
+}
 	}
 
 
@@ -429,6 +475,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 		//return tokenMaker.getTokenList(s, initialTokenType, startOffset);
 		cachedTokenList = tokenMaker.getTokenList(s, initialTokenType, startOffset);
+
 		return cachedTokenList;
 
 	}
@@ -615,7 +662,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			// end didn't.
 			if (oldTokenType==newTokenType) {
 				//System.err.println("... ... ... repainting lines " + firstLine + "-" + line);
-				fireChangedUpdate(new DefaultDocumentEvent(firstLine, line, DocumentEvent.EventType.CHANGE));
+//				fireChangedUpdate(new DefaultDocumentEvent(firstLine, line, DocumentEvent.EventType.CHANGE));
 				return line;
 			}
 
@@ -624,6 +671,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			// NOTE: "setUnsafe" is okay here as the bounds checking was
 			// already done in lastTokensOnLines.get(line) above.
 			lastTokensOnLines.setUnsafe(line, newTokenType);
+//			updateStylesForLine(line);
 			previousTokenType = newTokenType;
 			line++;
 
@@ -636,9 +684,9 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		// what the view needs.  We really should send the actual offset and
 		// length.
 		if (line>firstLine) {
-			//System.err.println("... ... ... repainting lines " + firstLine + "-" + line);
-			fireChangedUpdate(new DefaultDocumentEvent(firstLine, line,
-								DocumentEvent.EventType.CHANGE));
+//			//System.err.println("... ... ... repainting lines " + firstLine + "-" + line);
+//			fireChangedUpdate(new DefaultDocumentEvent(firstLine, line,
+//								DocumentEvent.EventType.CHANGE));
 		}
 
 		return line;
@@ -671,11 +719,71 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		lastLine = -1;
 		cachedTokenList = null;
 
-		// Let everybody know that syntax styles have (probably) changed.
-		fireChangedUpdate(new DefaultDocumentEvent(
-						0, numLines-1, DocumentEvent.EventType.CHANGE));
+//		// Let everybody know that syntax styles have (probably) changed.
+//		fireChangedUpdate(new DefaultDocumentEvent(
+//						0, numLines-1, DocumentEvent.EventType.CHANGE));
+initStyles();
 
 	}
+
+
+private void initStyles() {
+
+	System.out.println("Initializing styles...");
+	javax.swing.text.Style defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
+	SyntaxScheme scheme = new SyntaxScheme(true);
+
+	for (int i = 0; i < scheme.getStyleCount(); i++) {
+		Style style = scheme.getStyle(i);
+		if (style != null) {
+			try {
+				String styleName = getNameOfTokenType(i);
+				removeStyle(styleName);
+				javax.swing.text.Style s = addStyle(styleName, defaultStyle);
+				if (style.foreground != null) {
+					StyleConstants.setForeground(s, style.foreground);
+				}
+				if (style.background != null) {
+					StyleConstants.setBackground(s, style.background);
+				}
+				if (style.font != null) {
+					StyleConstants.setFontFamily(s, style.font.getFamily());
+//					if (i == TokenTypes.RESERVED_WORD) {
+//						StyleConstants.setFontSize(s, 24);
+//					}
+//					else {
+//						StyleConstants.setFontSize(s, 12);
+//					}
+StyleConstants.setFontSize(s, style.font.getSize());
+					StyleConstants.setBold(s, style.font.isBold());
+					StyleConstants.setItalic(s, style.font.isItalic());
+				}
+				if (style.underline) {
+					StyleConstants.setUnderline(s, true);
+				}
+				tokenTypeToSwingStyle.put(i, s);
+			} catch (IllegalAccessException iae) {
+				iae.printStackTrace();
+			}
+		}
+		else {
+			tokenTypeToSwingStyle.remove(i);
+		}
+	}
+
+	System.out.println("Done");
+}
+private Map<Integer, javax.swing.text.Style> tokenTypeToSwingStyle = new HashMap<Integer, javax.swing.text.Style>();
+
+private static final String getNameOfTokenType(int index) throws IllegalAccessException {
+	Field[] fields = TokenTypes.class.getFields();
+	for (Field field : fields) {
+		if (field.getType() == int.class && field.getInt(null) == index) {
+			return field.getName();
+		}
+	}
+	return null;
+}
 
 
 }

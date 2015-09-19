@@ -28,7 +28,9 @@ import javax.swing.UIManager;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NavigationFilter;
 import javax.swing.text.Position;
@@ -90,7 +92,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * The selection painter.  By default this paints selections with the
 	 * text area's selection color.
 	 */
-	private ChangeableHighlightPainter selectionPainter;
+	private HighlightPainter selectionPainter;
 
 	private boolean alwaysVisible;
 
@@ -119,6 +121,7 @@ public class ConfigurableCaret extends DefaultCaret {
 		seg = new Segment();
 		setStyle(style);
 		selectionPainter = new ChangeableHighlightPainter();
+		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(null);
 		pasteOnMiddleMouseClick = true;
 	}
 

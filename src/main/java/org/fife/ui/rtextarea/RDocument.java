@@ -9,8 +9,8 @@
 package org.fife.ui.rtextarea;
 
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.GapContent;
-import javax.swing.text.PlainDocument;
 
 
 /**
@@ -19,14 +19,14 @@ import javax.swing.text.PlainDocument;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RDocument extends PlainDocument {
+public class RDocument extends DefaultStyledDocument {
 
 
 	/**
 	 * Constructor.
 	 */
 	public RDocument() {
-		super(new RGapContent());
+		super();
 	}
 
 
@@ -38,7 +38,8 @@ public class RDocument extends PlainDocument {
 	 * @throws BadLocationException If the offset is invalid.
 	 */
 	public char charAt(int offset) throws BadLocationException {
-		return ((RGapContent)getContent()).charAt(offset);
+		//return ((RGapContent)getContent()).charAt(offset);
+		return getText(offset, 1).charAt(0);
 	}
 
 
