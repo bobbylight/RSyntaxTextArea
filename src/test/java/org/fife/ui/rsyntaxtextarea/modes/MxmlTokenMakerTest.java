@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class MxmlTokenMakerTest {
+public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
@@ -31,7 +31,7 @@ public class MxmlTokenMakerTest {
 		};
 
 		for (String code : commentLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
@@ -44,7 +44,7 @@ public class MxmlTokenMakerTest {
 	public void testMxml_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		MxmlTokenMaker tm = new MxmlTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -71,7 +71,7 @@ public class MxmlTokenMakerTest {
 		};
 
 		for (String code : doctypes) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
@@ -88,7 +88,7 @@ public class MxmlTokenMakerTest {
 		};
 
 		for (String code : entityReferences) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
@@ -101,7 +101,7 @@ public class MxmlTokenMakerTest {
 	public void testMxml_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		MxmlTokenMaker tm = new MxmlTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -140,7 +140,7 @@ public class MxmlTokenMakerTest {
 		};
 
 		for (String code : doctypes) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());

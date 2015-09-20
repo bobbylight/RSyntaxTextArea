@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class UnixShellTokenMakerTest {
+public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	/**
@@ -46,7 +46,7 @@ public class UnixShellTokenMakerTest {
 
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 		String identifier = "foo";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
@@ -61,13 +61,13 @@ public class UnixShellTokenMakerTest {
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
 		String identifier = "do";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
 
 		identifier = "while";
-		seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
@@ -81,7 +81,7 @@ public class UnixShellTokenMakerTest {
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
 		String identifier = "foobar";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, -42, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.IDENTIFIER, tm.lastTokenType);
@@ -95,13 +95,13 @@ public class UnixShellTokenMakerTest {
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
 		String identifier = " ";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);
 
 		identifier = "\t";
-		seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);
@@ -138,7 +138,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "foo`cat foo.txt`";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
@@ -156,7 +156,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "foo\"Hello world\"";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
@@ -174,7 +174,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "foo'Hello world'";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
@@ -192,7 +192,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "# This is a comment";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue("Unexpected token type: " + token,
 				token.is(TokenTypes.COMMENT_EOL, text));
@@ -210,7 +210,7 @@ public class UnixShellTokenMakerTest {
 
 		// Parsed as two identifiers: '\\' and '`'
 		String text = "\\`";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue("Unexpected token type: " + token,
 				token.is(TokenTypes.IDENTIFIER, "\\"));
@@ -231,7 +231,7 @@ public class UnixShellTokenMakerTest {
 
 		// Parsed as two identifiers: '\\' and '$'
 		String text = "\\$";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue("Unexpected token type: " + token,
 				token.is(TokenTypes.IDENTIFIER, "\\"));
@@ -252,7 +252,7 @@ public class UnixShellTokenMakerTest {
 
 		// Parsed as two identifiers: '\\' and '"'
 		String text = "\\\"";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue("Unexpected token type: " + token,
 				token.is(TokenTypes.IDENTIFIER, "\\"));
@@ -273,7 +273,7 @@ public class UnixShellTokenMakerTest {
 
 		// Parsed as two identifiers: '\\' and "'"
 		String text = "\\'";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue("Unexpected token type: " + token,
 				token.is(TokenTypes.IDENTIFIER, "\\"));
@@ -293,7 +293,7 @@ public class UnixShellTokenMakerTest {
 		String code = "foo foo_bar ";
 		code += ". , ;"; // "separators2"
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -320,7 +320,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "`cat foo.txt`";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, text));
 
@@ -336,7 +336,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "\"Hello world\"";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, text));
 
@@ -352,7 +352,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "'Hello world'";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.LITERAL_CHAR, text));
 
@@ -367,7 +367,7 @@ public class UnixShellTokenMakerTest {
 
 		String code = "42 722";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -393,7 +393,7 @@ public class UnixShellTokenMakerTest {
 
 		String code = "= | > < &";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -419,7 +419,7 @@ public class UnixShellTokenMakerTest {
 
 		String code = "( ) [ ]";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -446,7 +446,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = "$PATH";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.VARIABLE, text));
 
@@ -454,7 +454,7 @@ public class UnixShellTokenMakerTest {
 		Assert.assertEquals(new TokenImpl(), token);
 
 		text = "${varName}";
-		s = new Segment(text.toCharArray(), 0, text.length());
+		s = createSegment(text);
 		token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.VARIABLE, text));
 
@@ -470,13 +470,13 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " ";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isWhitespace());
 		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, text));
 
 		text = "\t";
-		s = new Segment(text.toCharArray(), 0, text.length());
+		s = createSegment(text);
 		token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isWhitespace());
 		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, text));
@@ -490,7 +490,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " # This is a comment";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
@@ -509,7 +509,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " `cat foo.txt`";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
@@ -527,7 +527,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " \"Hello world\"";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
@@ -545,7 +545,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " 'Hello world'";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
@@ -563,7 +563,7 @@ public class UnixShellTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
 		String text = " $PATH";
-		Segment s = new Segment(text.toCharArray(), 0, text.length());
+		Segment s = createSegment(text);
 		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();

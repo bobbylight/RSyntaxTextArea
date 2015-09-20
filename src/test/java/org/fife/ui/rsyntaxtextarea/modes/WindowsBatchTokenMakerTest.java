@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class WindowsBatchTokenMakerTest {
+public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	/**
@@ -44,7 +44,7 @@ public class WindowsBatchTokenMakerTest {
 
 		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
 		String identifier = "foo";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
@@ -59,13 +59,13 @@ public class WindowsBatchTokenMakerTest {
 		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
 
 		String identifier = "do";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
 
 		identifier = "echo";
-		seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
@@ -79,7 +79,7 @@ public class WindowsBatchTokenMakerTest {
 		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
 
 		String identifier = "foobar";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, -42, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(-42, tm.lastTokenType);
@@ -93,13 +93,13 @@ public class WindowsBatchTokenMakerTest {
 		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
 
 		String identifier = " ";
-		Segment seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		Segment seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);
 
 		identifier = "\t";
-		seg = new Segment(identifier.toCharArray(), 0, identifier.length());
+		seg = createSegment(identifier);
 		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
 		Assert.assertEquals(identifier, tm.lastTokenLexeme);
 		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);

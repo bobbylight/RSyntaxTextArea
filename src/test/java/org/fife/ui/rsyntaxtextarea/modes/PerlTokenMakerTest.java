@@ -1,5 +1,5 @@
 /*
- * 06/21/2015
+ * 09/20/2015
  *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
@@ -16,12 +16,12 @@ import org.junit.Test;
 
 
 /**
- * Unit tests for the {@link DTokenMaker} class.
+ * Unit tests for the {@link PerlTokenMaker} class.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public class DTokenMakerTest extends AbstractTokenMakerTest {
+public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	/**
@@ -30,22 +30,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 	 * @return The <code>TokenMaker</code> to test.
 	 */
 	private TokenMaker createTokenMaker() {
-		return new DTokenMaker();
-	}
-
-
-	@Test
-	public void testBooleanLiterals() {
-
-		String[] booleans = { "true", "false" };
-
-		for (String code : booleans) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_BOOLEAN, code));
-		}
-
+		return new PerlTokenMaker();
 	}
 
 
@@ -70,31 +55,10 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDataTypes() {
-
-		String[] dataTypes = {
-			"string", "wstring", "dstring", "size_t", "ptrdiff_t", "bool",
-			"byte", "cdouble", "cent", "cfloat", "char", "creal", "dchar",
-			"double", "float", "idouble", "ifloat", "ireal", "int", "long",
-			"real", "short", "ubyte", "ucent", "uint", "ulong", "ushort",
-			"wchar",
-		};
-
-		for (String code : dataTypes) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, code));
-		}
-
-	}
-
-
-	@Test
 	public void testEolComments() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world",
+			"# Hello world",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -102,31 +66,6 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-		}
-
-	}
-
-
-	@Test
-	public void testEolComments_URL() {
-
-		String[] eolCommentLiterals = {
-			"// Hello world http://www.sas.com",
-		};
-
-		for (String code : eolCommentLiterals) {
-
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-
-			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
-
 		}
 
 	}
@@ -173,7 +112,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 
 	}
 
-
+/* TODO: Start highlighting these!
 	@Test
 	public void testHexLiterals() {
 
@@ -206,20 +145,219 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.getType() == TokenTypes.NULL);
 
 	}
-
+*/
 
 	@Test
 	public void testStandardFunctions() {
 
 		String[] functions = {
-			// Currently none
+			"abs",
+			"accept",
+			"alarm",
+			"atan2",
+			"bind",
+			"binmode",
+			"bless",
+			"caller",
+			"chdir",
+			"chmod",
+			"chomp",
+			"chop",
+			"chown",
+			"chr",
+			"chroot",
+			"close",
+			"closedir",
+			"connect",
+			"cos",
+			"crypt",
+			"dbmclose",
+			"dbmopen",
+			"defined",
+			"delete",
+			"die",
+			"dump",
+			"each",
+			"endgrent",
+			"endhostent",
+			"endnetent",
+			"endprotoent",
+			"endpwent",
+			"endservent",
+			"eof",
+			"eval",
+			"exec",
+			"exists",
+			"exit",
+			"exp",
+			"fcntl",
+			"fileno",
+			"flock",
+			"fork",
+			"formline",
+			"getc",
+			"getgrent",
+			"getgrgid",
+			"getgrnam",
+			"gethostbyaddr",
+			"gethostbyname",
+			"gethostent",
+			"getlogin",
+			"getnetbyaddr",
+			"getnetbyname",
+			"getnetent",
+			"getpeername",
+			"getpgrp",
+			"getppid",
+			"getpriority",
+			"getprotobyname",
+			"getprotobynumber",
+			"getprotoent",
+			"getpwent",
+			"getpwnam",
+			"getpwuid",
+			"getservbyname",
+			"getservbyport",
+			"getservent",
+			"getsockname",
+			"getsockopt",
+			"glob",
+			"gmtime",
+			"goto",
+			"grep",
+			"hex",
+			"index",
+			"int",
+			"ioctl",
+			"join",
+			"keys",
+			"kill",
+			//"last",
+			"lc",
+			"lcfirst",
+			"length",
+			"link",
+			"listen",
+			"local",
+			"localtime",
+			"log",
+			"lstat",
+			"map",
+			"mkdir",
+			"msgctl",
+			"msgget",
+			"msgrcv",
+			"msgsnd",
+			"my",
+			//"next",
+			"no",
+			"oct",
+			"open",
+			"opendir",
+			"ord",
+			"our",
+			"pack",
+			"package",
+			"pipe",
+			"pop",
+			"pos",
+			"print",
+			"printf",
+			"prototype",
+			"push",
+			"quotemeta",
+			"rand",
+			"read",
+			"readdir",
+			"readline",
+			"readlink",
+			"readpipe",
+			"recv",
+			//"redo",
+			"ref",
+			"rename",
+			"require",
+			"reset",
+			"return",
+			"reverse",
+			"rewinddir",
+			"rindex",
+			"rmdir",
+			"scalar",
+			"seek",
+			"seekdir",
+			"select",
+			"semctl",
+			"semget",
+			"semop",
+			"send",
+			"sethostent",
+			"setgrent",
+			"setnetent",
+			"setpgrp",
+			"setpriority",
+			"setprotoent",
+			"setpwent",
+			"setservent",
+			"setsockopt",
+			"shift",
+			"shmctl",
+			"shmget",
+			"shmread",
+			"shmwrite",
+			"shutdown",
+			"sin",
+			"sleep",
+			"socket",
+			"socketpair",
+			"sort",
+			"splice",
+			"split",
+			"sprintf",
+			"sqrt",
+			"srand",
+			"stat",
+			"study",
+			//"sub",
+			"substr",
+			"symlink",
+			"syscall",
+			"sysopen",
+			"sysread",
+			"sysseek",
+			"system",
+			"syswrite",
+			"tell",
+			"telldir",
+			"tie",
+			"tied",
+			"time",
+			"times",
+			"truncate",
+			"uc",
+			"ucfirst",
+			"umask",
+			"undef",
+			"unlink",
+			"unpack",
+			"unshift",
+			"untie",
+			"use",
+			"utime",
+			"values",
+			"vec",
+			"wait",
+			"waitpid",
+			"wantarray",
+			"warn",
+			"write",
 		};
 
 		for (String code : functions) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Not a standard function: " + token,
+			Assert.assertEquals("Not a function: " + token,
 					TokenTypes.FUNCTION, token.getType());
 		}
 
@@ -229,173 +367,26 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testKeywords() {
 
-		String[] keywords = {
+		String code = "and cmp continue do else elsif eq esac for foreach ge " +
+				"if last le ne next not or redo sub unless until while xor";
 
-		 	"abstract",
-		    "alias",
-		    "align",
-		    "asm",
-		    "assert",
-		    "auto",
-
-		    "body",
-		    "break",
-
-		    "case",
-		    "cast",
-		    "catch",
-		    "class",
-		    "const",
-		    "continue",
-
-		    "debug",
-		    "default",
-		    "delegate",
-		    "delete",
-		    "deprecated",
-		    "do",
-
-		    "else",
-		    "enum",
-		    "export",
-		    "extern",
-
-		    "final",
-		    "finally",
-		    "for",
-		    "foreach",
-		    "foreach_reverse",
-		    "function",
-
-		    "goto",
-
-		    "if",
-		    "immutable",
-		    "import", 
-		    "in", 
-		    "inout",
-		    "interface",
-		    "invariant", 
-		    "is",
-
-		    "lazy",
-
-		    "macro",
-		    "mixin", 
-		    "module",
-
-		    "new",
-		    "nothrow",
-		    "null",
-
-		    "out",
-		    "override",
-
-		    "package",
-		    "pragma",
-		    "private",
-		    "protected",
-		    "public",
-		    "pure",
-
-		    "ref",
-
-		    "scope",
-		    "shared",
-		    "static",
-		    "struct",
-		    "super",
-		    "switch",
-		    "synchronized",
-
-		    "template",
-		    "this",
-		    "throw",
-		    "try",
-		    "typedef",
-		    "typeid",
-		    "typeof",
-
-		    "union",
-		    "unittest",
-
-		    "version",
-		    "void",
-		    "volatile",
-
-		    "while",
-		    "with",
-
-		    "__FILE__",
-		    "__MODULE__",
-		    "__LINE__",
-		    "__FUNCTION__",
-		    "__PRETTY_FUNCTION__",
-
-		    "__gshared",
-		    "__traits",
-		    "__vector",
-		    "__parameters"
-
-		};
-
-		for (String code : keywords) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, code));
-		}
-
-		Segment segment = createSegment("return");
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD_2, "return"));
 
-	}
-
-
-	@Test
-	public void testMultiLineComments() {
-
-		String[] mlcLiterals = {
-			"/* Hello world */",
-		};
-
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		String[] keywords = code.split(" +");
+		for (int i = 0; i < keywords.length; i++) {
+			Assert.assertEquals(keywords[i], token.getLexeme());
+			Assert.assertEquals("Not a keyword: " + token, TokenTypes.RESERVED_WORD, token.getType());
+			if (i < keywords.length - 1) {
+				token = token.getNextToken();
+				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
+				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+			}
+			token = token.getNextToken();
 		}
 
-	}
-
-
-	@Test
-	public void testMultiLineComments_URL() {
-
-		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
-		};
-
-		for (String code : mlcLiterals) {
-
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-
-			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
-
-			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
-
-		}
+		Assert.assertTrue(token.getType() == TokenTypes.NULL);
 
 	}
 
@@ -403,7 +394,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testOperators() {
 
-		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ | &&";
+		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == >> ~ | &&";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>=";
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
@@ -414,7 +405,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
 			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.OPERATOR, token.getType());
+			Assert.assertEquals("Not an operator: " + token, TokenTypes.OPERATOR, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
 				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());

@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JsonTokenMakerTest {
+public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
@@ -28,7 +28,7 @@ public class JsonTokenMakerTest {
 
 		String code = "true false";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -68,7 +68,7 @@ public class JsonTokenMakerTest {
 			// Upper-case exponent, negative
 			"3E-7 3.0E-7 0.111E-7 -3E-7 -3.0E-7 -0.111E-7";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -94,7 +94,7 @@ public class JsonTokenMakerTest {
 
 		String code = "1 42 0 -1 -42";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -118,7 +118,7 @@ public class JsonTokenMakerTest {
 	@Test
 	public void testNoMultiLineComments() {
 		String code = "// Hello world";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		// Only need to check the first token
@@ -129,7 +129,7 @@ public class JsonTokenMakerTest {
 	@Test
 	public void testNullLiterals() {
 		String code = "null";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "null"));
@@ -141,7 +141,7 @@ public class JsonTokenMakerTest {
 
 		String code = "[ ] { }";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -172,7 +172,7 @@ public class JsonTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			JsonTokenMaker tm = new JsonTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid string: " + token, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
@@ -190,7 +190,7 @@ public class JsonTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			JsonTokenMaker tm = new JsonTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid error-string: " + token, TokenTypes.ERROR_STRING_DOUBLE, token.getType());
