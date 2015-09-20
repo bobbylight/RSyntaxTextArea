@@ -87,15 +87,6 @@ public class LessTokenMakerTest {
 
 
 	@Test
-	public void testCss_getMarkOccurrencesOfTokenType() {
-		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
-	}
-
-
-	@Test
 	public void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
@@ -199,6 +190,66 @@ public class LessTokenMakerTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
+	}
+
+
+	@Test
+	public void testLess_EolComments() {
+
+		String[] eolCommentLiterals = {
+			"// Hello world",
+		};
+
+		for (String code : eolCommentLiterals) {
+			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testLess_EolComments_URL() {
+
+		String[] eolCommentLiterals = {
+			"// Hello world http://www.sas.com",
+		};
+
+		for (String code : eolCommentLiterals) {
+
+			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+
+			token = token.getNextToken();
+			Assert.assertTrue(token.isHyperlink());
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+
+		}
+
+	}
+
+
+	@Test
+	public void testLess_getLineCommentStartAndEnd() {
+		TokenMaker tm = createTokenMaker();
+		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
+		Assert.assertEquals("//", startAndEnd[0]);
+		Assert.assertEquals(null, startAndEnd[1]);
+	}
+
+
+	@Test
+	public void testLess_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
+		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
 	}
 
 

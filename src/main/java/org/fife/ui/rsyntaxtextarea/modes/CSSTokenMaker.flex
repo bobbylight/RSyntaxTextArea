@@ -243,7 +243,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		cssPrevState = YYINITIAL; // Shouldn't be necessary
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = CSS_STRING;
@@ -278,7 +278,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					cssPrevState = -initialTokenType&0xff;
 				}
 				else {
-					state = Token.NULL;
+					state = YYINITIAL;
 				}
 		}
 
@@ -381,6 +381,8 @@ CSS_Digits					= ([\-]?{Digit}+([0-9\.]+)?(pt|pc|in|mm|cm|em|ex|px|ms|s|%)?)
 CSS_Hex						= ("#"[0-9a-fA-F]+)
 CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 
+Less_LineCommentBegin	= "//"
+
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
 URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
@@ -395,66 +397,99 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state CSS_STRING
 %state CSS_CHAR_LITERAL
 %state CSS_C_STYLE_COMMENT
-
+%state LESS_EOL_COMMENT
 
 %%
 
 <YYINITIAL> {
-	{CSS_SelectorPiece}	{ addToken(Token.DATA_TYPE); }
-	{CSS_PseudoClass}	{ addToken(Token.RESERVED_WORD); }
-	":"					{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
-	{CSS_AtRule}		{ addToken(Token.REGEX); }
-	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.REGEX); }
-	{CSS_Number}		{ addToken(highlightingLess ? Token.LITERAL_NUMBER_DECIMAL_INT : Token.IDENTIFIER); }
-	{CSS_Id}			{ addToken(highlightingLess ? Token.ANNOTATION : Token.VARIABLE); }
-	"{"					{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
-	[,]					{ addToken(Token.IDENTIFIER); }
-	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
-	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	"}"					{ addToken(highlightingLess ? Token.SEPARATOR : Token.IDENTIFIER); }
-	[+>~\^$\|=]			{ addToken(Token.OPERATOR); }
-	{CSS_Separator}		{ addToken(Token.SEPARATOR); }
-	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
-	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("yyinitial: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	{CSS_SelectorPiece}		{ addToken(Token.DATA_TYPE); }
+	{CSS_PseudoClass}		{ addToken(Token.RESERVED_WORD); }
+	":"						{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
+	{CSS_AtRule}			{ addToken(Token.REGEX); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.REGEX); }
+	{CSS_Number}			{ addToken(highlightingLess ? Token.LITERAL_NUMBER_DECIMAL_INT : Token.IDENTIFIER); }
+	{CSS_Id}				{ addToken(highlightingLess ? Token.ANNOTATION : Token.VARIABLE); }
+	"{"						{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
+	[,]						{ addToken(Token.IDENTIFIER); }
+	\"						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	"}"						{ addToken(highlightingLess ? Token.SEPARATOR : Token.IDENTIFIER); }
+	[+>~\^$\|=]				{ addToken(Token.OPERATOR); }
+	{CSS_Separator}			{ addToken(Token.SEPARATOR); }
+	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	{Less_LineCommentBegin}	{
+								if (highlightingLess) {
+									start = zzMarkedPos-2; yybegin(LESS_EOL_COMMENT);
+								}
+								else { // Highlight the "//" as an identifier and continue on
+									int temp = zzStartRead + 2;
+									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									zzStartRead = temp;
+								}
+							}
+	.						{ /*System.out.println("yyinitial: " + yytext());*/ addToken(Token.IDENTIFIER); }
 	"\n" |
-	<<EOF>>				{ addNullToken(); return firstToken; }
+	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
 <CSS_PROPERTY> {
-	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
-	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
-	"{"					{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
-	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
-	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
-	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
-	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	{CSS_Property}			{ addToken(Token.RESERVED_WORD); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
+	"{"						{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
+	"}"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+	":"						{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
+	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	{Less_LineCommentBegin}	{
+								if (highlightingLess) {
+									cssPrevState = zzLexicalState;
+									start = zzMarkedPos-2; yybegin(LESS_EOL_COMMENT);
+								}
+								else { // Highlight the "//" as an identifier and continue on
+									int temp = zzStartRead + 2;
+									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									zzStartRead = temp;
+								}
+							}
+	.						{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
 	"\n" |
-	<<EOF>>				{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
+	<<EOF>>					{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
 }
 
 <CSS_VALUE> {
-	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
-	"!important"		{ addToken(Token.PREPROCESSOR); }
-	{CSS_Function}		{ int temp = zzMarkedPos - 2;
-						  addToken(zzStartRead, temp, Token.FUNCTION);
-						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
-						  zzStartRead = zzCurrentPos = zzMarkedPos;
-						}
-	{CSS_Number}		{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{CSS_Less_Var}		{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
-	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
-	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	")"					{ /* End of a function */ addToken(Token.SEPARATOR); }
-	[;]					{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
-	[,\.]				{ addToken(Token.IDENTIFIER); }
-	"}"					{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
-	{WhiteSpace}		{ addToken(Token.WHITESPACE); }
-	{MlcStart}			{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	{Less_LineCommentBegin}	{
+								// This must be before {CSS_Value} since "//" is a valid CSS value
+								if (highlightingLess) {
+									cssPrevState = zzLexicalState;
+									start = zzMarkedPos-2; yybegin(LESS_EOL_COMMENT);
+								}
+								else { // Highlight the "//" as an identifier and continue on
+									int temp = zzStartRead + 2;
+									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									zzStartRead = temp;
+								}
+							}
+	{CSS_Value}				{ addToken(Token.IDENTIFIER); }
+	"!important"			{ addToken(Token.PREPROCESSOR); }
+	{CSS_Function}			{ int temp = zzMarkedPos - 2;
+							  addToken(zzStartRead, temp, Token.FUNCTION);
+							  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+							  zzStartRead = zzCurrentPos = zzMarkedPos;
+							}
+	{CSS_Number}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
+	\"						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
+	\'						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
+	")"						{ /* End of a function */ addToken(Token.SEPARATOR); }
+	[;]						{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
+	[,\.]					{ addToken(Token.IDENTIFIER); }
+	"}"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
+	.						{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
 	"\n" |
-	<<EOF>>				{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
+	<<EOF>>					{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
 }
 
 <CSS_STRING> {
@@ -481,4 +516,26 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\*					{}
 	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
+}
+
+<LESS_EOL_COMMENT> {
+	[^hwf\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	\n |
+	<<EOF>>					{
+								addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+								switch (cssPrevState) {
+									case CSS_PROPERTY:
+										addEndToken(INTERNAL_CSS_PROPERTY);
+										break;
+									case CSS_VALUE:
+										addEndToken(INTERNAL_CSS_VALUE);
+										break;
+									default: // Should be YYINITIAL
+										addNullToken();
+										break;
+								}
+								return firstToken;
+							}
 }
