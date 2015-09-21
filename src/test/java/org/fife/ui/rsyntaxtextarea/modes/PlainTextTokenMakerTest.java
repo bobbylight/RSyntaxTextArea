@@ -21,7 +21,7 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
  * @author Robert Futrell
  * @version 1.0
  */
-public class PlainTextTokenMakerTest {
+public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
@@ -30,7 +30,7 @@ public class PlainTextTokenMakerTest {
 		String code =  "   foo bar\t\tbas\t  \tbaz ";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isWhitespace());
@@ -52,7 +52,7 @@ public class PlainTextTokenMakerTest {
 		String code =  "http://www.sas.com foo ftp://fifesoft.com bar https://google.com goo www.yahoo.com ber file://test.txt";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isHyperlink());
@@ -120,7 +120,7 @@ public class PlainTextTokenMakerTest {
 		String code =  "   foo bar\t\tbas\t  \tbaz ";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.isWhitespace());

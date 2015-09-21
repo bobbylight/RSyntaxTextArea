@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CSSTokenMakerTest {
+public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -50,7 +50,7 @@ public class CSSTokenMakerTest {
 		};
 
 		for (String code : commentLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -63,7 +63,7 @@ public class CSSTokenMakerTest {
 	public void testCss_comment_URL() {
 
 		String code = "/* Hello world http://www.google.com */";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
@@ -105,7 +105,7 @@ public class CSSTokenMakerTest {
 	public void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
@@ -138,7 +138,7 @@ public class CSSTokenMakerTest {
 	public void testCss_id() {
 
 		String code = "#mainContent";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
@@ -164,7 +164,7 @@ public class CSSTokenMakerTest {
 	public void testCss_propertyValue_function() {
 
 		String code = "background-image: url(\"test.png\");";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
@@ -185,7 +185,7 @@ public class CSSTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 		code = "background-image: url('test.png');";
-		segment = new Segment(code.toCharArray(), 0, code.length());
+		segment = createSegment(code);
 		tm = createTokenMaker();
 		token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 

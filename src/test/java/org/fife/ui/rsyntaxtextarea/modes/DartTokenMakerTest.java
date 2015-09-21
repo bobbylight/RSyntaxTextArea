@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DartTokenMakerTest {
+public class DartTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	/**
@@ -40,7 +40,7 @@ public class DartTokenMakerTest {
 		String[] booleans = { "true", "false" };
 
 		for (String code : booleans) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertTrue(token.is(TokenTypes.LITERAL_BOOLEAN, code));
@@ -60,7 +60,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : chars) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid char literal: " + token, TokenTypes.LITERAL_CHAR, token.getType());
@@ -77,7 +77,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : dataTypes) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, code));
@@ -94,7 +94,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : eolCommentLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
@@ -112,7 +112,7 @@ public class DartTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
@@ -149,7 +149,7 @@ public class DartTokenMakerTest {
 			// Upper-case exponent, negative
 			"3.E-7f 3.E-7F 3.0E-7f 3.0E-7F .111E-7f .111E-7F";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -177,7 +177,7 @@ public class DartTokenMakerTest {
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
 				"0x1L 0xfeL 0x333333333333L 0X1L 0XfeL 0X33333333333L 0xFEL 0XFEL";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -265,7 +265,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : functions) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Not a standard function: " + token,
@@ -325,13 +325,13 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : keywords) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, code));
 		}
 
-		Segment segment = new Segment("return".toCharArray(), 0, "return".length());
+		Segment segment = createSegment("return");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD_2, "return"));
@@ -347,7 +347,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : mlcLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -365,7 +365,7 @@ public class DartTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
@@ -392,7 +392,7 @@ public class DartTokenMakerTest {
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -418,7 +418,7 @@ public class DartTokenMakerTest {
 
 		String code = "( ) [ ] { }";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -449,7 +449,7 @@ public class DartTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());

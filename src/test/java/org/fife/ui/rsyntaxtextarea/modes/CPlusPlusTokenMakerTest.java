@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CPlusPlusTokenMakerTest {
+public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
@@ -34,7 +34,7 @@ public class CPlusPlusTokenMakerTest {
 		};
 
 		for (String code : chars) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid char literal: " + token, TokenTypes.LITERAL_CHAR, token.getType());
@@ -48,7 +48,7 @@ public class CPlusPlusTokenMakerTest {
 
 		String code = "char div_t double float int ldiv_t long short signed size_t unsigned void wchar_t";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -77,7 +77,7 @@ public class CPlusPlusTokenMakerTest {
 		};
 
 		for (String code : eolCommentLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
@@ -95,7 +95,7 @@ public class CPlusPlusTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
@@ -132,7 +132,7 @@ public class CPlusPlusTokenMakerTest {
 			// Upper-case exponent, negative
 			"3.E-7f 3.E-7F 3.0E-7f 3.0E-7F .111E-7f .111E-7F";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -166,7 +166,7 @@ public class CPlusPlusTokenMakerTest {
 				"0x1ul 0xfeul 0x333333333333ul 0X1ul 0Xfeul 0X33333333333ul 0xFEul 0XFEul " +
 				"0x1UL 0xfeUL 0x333333333333UL 0X1UL 0XfeUL 0X33333333333UL 0xFEUL 0XFEUL";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -394,7 +394,7 @@ public class CPlusPlusTokenMakerTest {
 		};
 
 		for (String code : functions) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
@@ -410,7 +410,7 @@ public class CPlusPlusTokenMakerTest {
 				"extern for goto if register sizeof static struct " +
 				"switch typedef union volatile while";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -428,7 +428,7 @@ public class CPlusPlusTokenMakerTest {
 
 		Assert.assertTrue(token.getType() == TokenTypes.NULL);
 
-		segment = new Segment("return".toCharArray(), 0, "return".length());
+		segment = createSegment("return");
 		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertEquals("return", token.getLexeme());
 		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
@@ -446,7 +446,7 @@ public class CPlusPlusTokenMakerTest {
 		};
 
 		for (String code : mlcLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -464,7 +464,7 @@ public class CPlusPlusTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
@@ -491,7 +491,7 @@ public class CPlusPlusTokenMakerTest {
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>=";
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -517,7 +517,7 @@ public class CPlusPlusTokenMakerTest {
 
 		String code = "( ) [ ] { }";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -548,7 +548,7 @@ public class CPlusPlusTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());

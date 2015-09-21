@@ -373,7 +373,7 @@ WhiteSpace					= ([ \t]+)
 MlcStart					= ("/*")
 MlcEnd						= ("*/")
 
-CSS_Property				= ([\*]?{LetterOrUnderscoreOrDash}({LetterOrUnderscoreOrDash}|{Digit})*)
+CSS_Property				= ([\*]?{LetterOrUnderscoreOrDash}({LetterOrUnderscoreOrDash}|{Digit})*(:[\w]+)?)
 CSS_ValueChar				= ({LetterOrUnderscoreOrDash}|[\\/])
 CSS_Value					= ({CSS_ValueChar}*)
 CSS_Function				= ({CSS_Value}\()
@@ -381,7 +381,11 @@ CSS_Digits					= ([\-]?{Digit}+([0-9\.]+)?(pt|pc|in|mm|cm|em|ex|px|ms|s|%)?)
 CSS_Hex						= ("#"[0-9a-fA-F]+)
 CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 
-Less_LineCommentBegin	= "//"
+// Less_Nested_Selector includes pseudo-classes for ease of highlighting, even
+// though it is not as detailed as standard CSS selector highlighting.
+Less_Nested_Selector_With_Pseudo	= ({CSS_SelectorPiece}{CSS_PseudoClass}*)
+Less_Selector_ParentRef		= ("&"{CSS_SelectorPiece})
+Less_LineCommentBegin		= "//"
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -436,6 +440,19 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <CSS_PROPERTY> {
 	{CSS_Property}			{ addToken(Token.RESERVED_WORD); }
 	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
+	{Less_Nested_Selector_With_Pseudo}	{ addToken(highlightingLess ? Token.RESERVED_WORD : Token.IDENTIFIER); }
+	{Less_Selector_ParentRef}	{
+									if (highlightingLess) {
+										// Unfortunately, as we're sharing the CSS and Less
+										// syntax highlighting, we do not color nested selectors
+										// properly.  For uniformity, color this the same as
+										// CSS_Property
+										addToken(Token.RESERVED_WORD);
+									}
+									else {
+										addToken(Token.IDENTIFIER);
+									}
+								}
 	"{"						{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
 	"}"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
 	":"						{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }

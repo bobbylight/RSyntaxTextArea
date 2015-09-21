@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JshintrcTokenMakerTest {
+public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
@@ -28,7 +28,7 @@ public class JshintrcTokenMakerTest {
 
 		String code = "true false";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -68,7 +68,7 @@ public class JshintrcTokenMakerTest {
 			// Upper-case exponent, negative
 			"3E-7 3.0E-7 0.111E-7 -3E-7 -3.0E-7 -0.111E-7";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -94,7 +94,7 @@ public class JshintrcTokenMakerTest {
 
 		String code = "1 42 0 -1 -42";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -118,7 +118,7 @@ public class JshintrcTokenMakerTest {
 	@Test
 	public void testMultiLineComments() {
 		String code = "// Hello world";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(Token.COMMENT_EOL, code));
@@ -128,7 +128,7 @@ public class JshintrcTokenMakerTest {
 	@Test
 	public void testNullLiterals() {
 		String code = "null";
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "null"));
@@ -140,7 +140,7 @@ public class JshintrcTokenMakerTest {
 
 		String code = "[ ] { }";
 
-		Segment segment = new Segment(code.toCharArray(), 0, code.length());
+		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
@@ -171,7 +171,7 @@ public class JshintrcTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			JshintrcTokenMaker tm = new JshintrcTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid string: " + token, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
@@ -189,7 +189,7 @@ public class JshintrcTokenMakerTest {
 		};
 
 		for (String code : stringLiterals) {
-			Segment segment = new Segment(code.toCharArray(), 0, code.length());
+			Segment segment = createSegment(code);
 			JshintrcTokenMaker tm = new JshintrcTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid error-string: " + token, TokenTypes.ERROR_STRING_DOUBLE, token.getType());
