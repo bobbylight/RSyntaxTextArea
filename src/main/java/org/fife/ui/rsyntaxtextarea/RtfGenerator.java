@@ -290,7 +290,11 @@ public class RtfGenerator {
 					sb.append('\\').append(ch);
 					break;
 				default:
-					sb.append(ch);
+					if (ch <= 127) {
+						sb.append(ch);
+					} else {
+						sb.append("\\u").append((int)ch);
+					}
 					break;
 			}
 		}
