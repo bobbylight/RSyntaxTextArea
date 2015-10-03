@@ -131,7 +131,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
-		return new String[] { "//", null };
+		return new String[] { "#", null };
 	}
 
 
@@ -252,8 +252,8 @@ BooleanLiteral				= ("true"|"false")
 Separator					= ([\(\)\{\}\[\]])
 Separator2				= ([\;,.])
 
-NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"|"|"&&"|">>>")
-AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
+NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"|"|"&&")
+AssignmentOperator			= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>=")
 Operator					= ({NonAssignmentOperator}|{AssignmentOperator})
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
@@ -639,6 +639,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
+	/* Operators. */
+	{Operator}					{ addToken(Token.OPERATOR); }
+
 	{BooleanLiteral}				{ addToken(Token.LITERAL_BOOLEAN); }
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
 	{Variable}						{ addToken(Token.VARIABLE); }
@@ -658,9 +661,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }
 	{Separator2}					{ addToken(Token.IDENTIFIER); }
-
-	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
