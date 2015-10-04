@@ -92,16 +92,16 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
-	public long getParseTime() {
-		return parseTime;
+	public Parser getParser() {
+		return parser;
 	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Parser getParser() {
-		return parser;
+	public long getParseTime() {
+		return parseTime;
 	}
 
 
@@ -110,21 +110,10 @@ public class DefaultParseResult implements ParseResult {
 	 * any.
 	 *
 	 * @param e The error that occurred, or <code>null</code> if no error
-	 *         occurred.
+	 *        occurred.
 	 */
 	public void setError(Exception e) {
 		this.error = e;
-	}
-
-
-	/**
-	 * Sets the amount of time it took for this parser to parse the document.
-	 *
-	 * @param time The amount of time, in milliseconds.
-	 * @see #getParseTime()
-	 */
-	public void setParseTime(long time) {
-		parseTime = time;
 	}
 
 
@@ -139,6 +128,17 @@ public class DefaultParseResult implements ParseResult {
 	public void setParsedLines(int first, int last) {
 		firstLineParsed = first;
 		lastLineParsed = last;
+	}
+
+
+	/**
+	 * Sets the amount of time it took for this parser to parse the document.
+	 *
+	 * @param time The amount of time, in milliseconds.
+	 * @see #getParseTime()
+	 */
+	public void setParseTime(long time) {
+		parseTime = time;
 	}
 
 

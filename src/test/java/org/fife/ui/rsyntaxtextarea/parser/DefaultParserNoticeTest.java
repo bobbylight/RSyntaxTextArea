@@ -7,9 +7,7 @@
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.awt.Color;
-import java.net.URL;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level;
 import org.junit.Assert;
 import org.junit.Before;
@@ -351,44 +349,6 @@ public class DefaultParserNoticeTest {
 	public void testToString() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assert.assertEquals("Line 5: Foo", notice.toString());
-	}
-
-
-	/**
-	 * A mock parser implementation for use in unit tests.
-	 * 
-	 * @author Robert Futrell
-	 * @version 1.0
-	 */
-	private static class MockParser implements Parser {
-
-		private DefaultParseResult result;
-
-
-		public MockParser() {
-			result = new DefaultParseResult(this);
-		}
-
-
-		public ExtendedHyperlinkListener getHyperlinkListener() {
-			return null;
-		}
-
-
-		public URL getImageBase() {
-			return null;
-		}
-
-
-		public boolean isEnabled() {
-			return true;
-		}
-
-
-		public ParseResult parse(RSyntaxDocument doc, String style) {
-			return result;
-		}
-
 	}
 
 }
