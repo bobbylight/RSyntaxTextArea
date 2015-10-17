@@ -119,6 +119,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting hosts files.
+	 */
+	public static final String SYNTAX_STYLE_HOSTS			= "text/hosts";
+
+
+	/**
 	 * Style for highlighting .htaccess files.
 	 */
 	public static final String SYNTAX_STYLE_HTACCESS		= "text/htaccess";
