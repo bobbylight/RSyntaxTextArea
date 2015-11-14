@@ -115,7 +115,9 @@ public class CurlyFoldParser implements FoldParser {
 		int lastSeenImportLine = -1;
 		int importGroupStartOffs = -1;
 		int importGroupEndOffs = -1;
-
+		int lastRightCurlyLine = -1;
+		Fold prevFold = null;
+		
 		try {
 
 			for (int line=0; line<lineCount; line++) {
@@ -215,11 +217,22 @@ public class CurlyFoldParser implements FoldParser {
 
 						}
 
-						if (currentFold==null) {
+						// If a new fold block starts on the same line as the
+						// previous one ends, we treat it as one big block
+						// (e.g. K&R-style "} else {")
+						if (prevFold != null && line == lastRightCurlyLine) {
+							currentFold = prevFold;
+							// Keep currentFold.endOffset where it was, so that
+							// unclosed folds at end of the file work as well
+							// as possible
+							prevFold = null;
+							lastRightCurlyLine = -1;
+						}
+						else if (currentFold==null) { // A top-level fold
 							currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 							folds.add(currentFold);
 						}
-						else {
+						else { // A nested fold
 							currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 						}
 
@@ -236,6 +249,13 @@ public class CurlyFoldParser implements FoldParser {
 								if (!currentFold.removeFromParent()) {
 									folds.remove(folds.size()-1);
 								}
+							}
+							else {
+								// Remember the end of the last completed fold,
+								// in case it needs to get merged with the next
+								// one (e.g. K&R "} else {" style)
+								lastRightCurlyLine = line;
+								prevFold = currentFold;
 							}
 							currentFold = parentFold;
 						}
