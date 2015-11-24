@@ -235,8 +235,8 @@ IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 LineTerminator				= (\n)
 WhiteSpace				= ([ \t\f])
 
-CharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})[\'])
-UnclosedCharLiteral			= ([\'][^\'\n]*)
+CharLiteral				= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})*[\'])
+UnclosedCharLiteral			= ([\']([\\].|[^\\\'])*[^\']*)
 ErrorCharLiteral			= ({UnclosedCharLiteral}[\'])
 StringLiteral				= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
 UnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
@@ -370,7 +370,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"String" |
 	"uint" |
 	"Vector" |
-	"void" |
 	"XML" |
 	"XMLNode" |
 	"XMLSocket"			{ addToken(Token.DATA_TYPE); }
