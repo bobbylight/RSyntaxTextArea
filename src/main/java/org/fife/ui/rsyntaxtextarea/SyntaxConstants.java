@@ -263,6 +263,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting TypeScript.
+	 */
+	public static final String SYNTAX_STYLE_TYPESCRIPT	= "text/typescript";
+
+
+	/**
 	 * Style for highlighting UNIX shell keywords.
 	 */
 	public static final String SYNTAX_STYLE_UNIX_SHELL		= "text/unix";

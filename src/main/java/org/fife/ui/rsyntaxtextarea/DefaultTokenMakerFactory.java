@@ -68,6 +68,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_SCALA,			pkg + "ScalaTokenMaker");
 		putMapping(SYNTAX_STYLE_SQL,			pkg + "SQLTokenMaker");
 		putMapping(SYNTAX_STYLE_TCL,			pkg + "TclTokenMaker");
+		putMapping(SYNTAX_STYLE_TYPESCRIPT,		pkg + "TypeScriptTokenMaker");
 		putMapping(SYNTAX_STYLE_UNIX_SHELL,		pkg + "UnixShellTokenMaker");
 		putMapping(SYNTAX_STYLE_VISUAL_BASIC,	pkg + "VisualBasicTokenMaker");
 		putMapping(SYNTAX_STYLE_WINDOWS_BATCH,	pkg + "WindowsBatchTokenMaker");
