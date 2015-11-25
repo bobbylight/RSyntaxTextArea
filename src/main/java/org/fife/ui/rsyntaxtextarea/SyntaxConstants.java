@@ -89,6 +89,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Syntax style for highlighting Dockerfiles.
+	 */
+	public static final String SYNTAX_STYLE_DOCKERFILE		= "text/dockerfile";
+
+
+	/**
 	 * Style for highlighting Dart.
 	 */
 	public static final String SYNTAX_STYLE_DART		= "text/dart";
