@@ -200,19 +200,20 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * Used by third party implementors e.g. SquirreL SQL. Most applications do
 	 * not need to call this method.
 	 * <p>
-	 * Note that the returned array is not a copy of the style data; editing the
-	 * array will modify the styles used by any <code>RSyntaxTextArea</code>
-	 * using this scheme.
-	 *
-	 * @return The style array.
+	 * @return Array of styles. 
 	 * @see #setStyles(Style[])
 	 */
 	@Deprecated
 	public Style[] getStyles() {
-		// TODO Check side effects. Now a copy is returned.
-		// TODO Style index != index in array
-		// FIXME javadoc  
-		return styles.values().toArray(new Style[0]);
+		// TODO Check side effects. Now a copy is returned. 
+		// TODO Not used in RSyntaxArea library. Warn method users that method changed. 
+		// FIXME javadoc 
+		Style[] copy = new Style[getStyleCount()];
+		for(Entry<Integer, Style> e : styles.entrySet()) {
+			copy[e.getKey()] =  e.getValue();
+		}
+		
+		return copy;
 	}
 
 
