@@ -385,8 +385,8 @@ public class SearchContext implements Cloneable {
 	@Override
 	public String toString() {
 		return "[SearchContext: " +
-			"searchFor='" + getSearchFor() + "'" +
-			", replaceWith='" + getReplaceWith() + "'" +
+			"searchFor=" + getSearchFor() +
+			", replaceWith=" + getReplaceWith() +
 			", matchCase=" + getMatchCase() +
 			", wholeWord=" + getWholeWord() +
 			", regex=" + isRegularExpression() +

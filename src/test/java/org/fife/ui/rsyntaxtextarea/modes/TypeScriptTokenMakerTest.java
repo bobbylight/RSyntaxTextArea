@@ -185,6 +185,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	public void testTS_DocComments_ContinuedOntoNewLine() {
+		String code = " */";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		int initialTokenType = -9;//INTERNAL_IN_JS_COMMENT_DOCUMENTATION
+		Token token = tm.getTokenList(segment, initialTokenType, 0);
+		Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+	}
+
+
+	@Test
 	public void testTS_DocComments_BlockTags() {
 
 		String[] blockTags = {
@@ -693,6 +704,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	public void testTS_MultiLineComment_continuedOntoNewLine() {
+		String code = " */";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		int initialTokenType = -8;//INTERNAL_IN_JS_MLC;
+		Token token = tm.getTokenList(segment, initialTokenType, 0);
+		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 	}
 
 

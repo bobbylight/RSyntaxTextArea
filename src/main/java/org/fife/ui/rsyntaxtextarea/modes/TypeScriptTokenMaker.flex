@@ -510,17 +510,34 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 
-	// ECMA 3+ keywords.
+	// ECMA and TypeScript keywords
 	"break" |
+	"case" |
+	"catch" |
+	"class" |
+	"const" |
 	"continue" |
+	"debugger" |
+	"default" |
 	"delete" |
+	"do" |
 	"else" |
+	"export" |
+	"extends" |
+	"finally" |
 	"for" |
 	"function" |
 	"if" |
+	"import" |
 	"in" |
+	"instanceof" |
+	"module" |
 	"new" |
+	"super" |
+	"switch" |
 	"this" |
+	"throw" |
+	"try" |
 	"typeof" |
 	"var" |
 	"void" |
@@ -535,53 +552,44 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	// e4x miscellaneous
 	{JS_E4xAttribute}			{ addToken(isE4xSupported() ? Token.MARKUP_TAG_ATTRIBUTE : Token.ERROR_IDENTIFIER); }
 	
-	// Reserved (but not yet used) ECMA keywords.
-	"abstract"					{ addToken(Token.RESERVED_WORD); }
-	"boolean"						{ addToken(Token.DATA_TYPE); }
-	"byte"						{ addToken(Token.DATA_TYPE); }
-	"case"						{ addToken(Token.RESERVED_WORD); }
-	"catch"						{ addToken(Token.RESERVED_WORD); }
-	"char"						{ addToken(Token.DATA_TYPE); }
-	"class"						{ addToken(Token.RESERVED_WORD); }
-	"const"						{ addToken(Token.RESERVED_WORD); }
-	"debugger"					{ addToken(Token.RESERVED_WORD); }
-	"default"						{ addToken(Token.RESERVED_WORD); }
-	"do"							{ addToken(Token.RESERVED_WORD); }
-	"double"						{ addToken(Token.DATA_TYPE); }
-	"enum"						{ addToken(Token.RESERVED_WORD); }
-	"export"						{ addToken(Token.RESERVED_WORD); }
-	"extends"						{ addToken(Token.RESERVED_WORD); }
-	"final"						{ addToken(Token.RESERVED_WORD); }
-	"finally"						{ addToken(Token.RESERVED_WORD); }
-	"float"						{ addToken(Token.DATA_TYPE); }
-	"goto"						{ addToken(Token.RESERVED_WORD); }
-	"implements"					{ addToken(Token.RESERVED_WORD); }
-	"import"						{ addToken(Token.RESERVED_WORD); }
-	"instanceof"					{ addToken(Token.RESERVED_WORD); }
-	"int"						{ addToken(Token.DATA_TYPE); }
-	"interface"					{ addToken(Token.RESERVED_WORD); }
-	"long"						{ addToken(Token.DATA_TYPE); }
-	"native"						{ addToken(Token.RESERVED_WORD); }
-	"package"						{ addToken(Token.RESERVED_WORD); }
-	"private"						{ addToken(Token.RESERVED_WORD); }
-	"protected"					{ addToken(Token.RESERVED_WORD); }
-	"public"						{ addToken(Token.RESERVED_WORD); }
+	// TypeScript data types
+	"any" |
+	"boolean" |
+	"number" |
+	"string" |
+	
+	// Reserved ECMA keywords that represent types (older specs, 1-3)
+	"byte" |
+	"char" |
+	"double" |
+	"float" |
+	"int" |
+	"long" |
 	"short"						{ addToken(Token.DATA_TYPE); }
-	"static"						{ addToken(Token.RESERVED_WORD); }
-	"super"						{ addToken(Token.RESERVED_WORD); }
-	"switch"						{ addToken(Token.RESERVED_WORD); }
-	"synchronized"					{ addToken(Token.RESERVED_WORD); }
-	"throw"						{ addToken(Token.RESERVED_WORD); }
-	"throws"						{ addToken(Token.RESERVED_WORD); }
-	"transient"					{ addToken(Token.RESERVED_WORD); }
-	"try"						{ addToken(Token.RESERVED_WORD); }
-	"volatile"					{ addToken(Token.RESERVED_WORD); }
+	
+	// Reserved words, mostly from older standards
+	"abstract" |
+	"enum" |
+	"final" |
+	"goto" |
+	"implements" |
+	"interface" |
+	"native" |
+	"package" |
+	"private" |
+	"protected" |
+	"public" |
+	"static" |
+	"synchronized" |
+	"throws" |
+	"transient" |
+	"volatile" |
 	"null"						{ addToken(Token.RESERVED_WORD); }
 
 	// Literals.
 	"false" |
 	"true"						{ addToken(Token.LITERAL_BOOLEAN); }
-	"NaN"						{ addToken(Token.RESERVED_WORD); }
+	"NaN" |
 	"Infinity"					{ addToken(Token.RESERVED_WORD); }
 
 	// Functions.
