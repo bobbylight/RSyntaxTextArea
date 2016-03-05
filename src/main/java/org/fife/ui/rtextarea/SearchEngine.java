@@ -956,18 +956,38 @@ public class SearchEngine {
 		int count = 0;
 		textArea.beginAtomicEdit();
 		try {
+
 			int oldOffs = textArea.getCaretPosition();
 			textArea.setCaretPosition(0);
 			SearchResult res = SearchEngine.replace(textArea, context);
+
 			while (res.wasFound()) {
+
 				lastFound = res;
 				count++;
+
+				// Protect against regexes that can match 0-length strings,
+				// such as ".*" and "(?=a).  See:
+				// https://github.com/bobbylight/RSyntaxTextArea/issues/107
+				if (res.getMatchRange().isZeroLength()) {
+					if (res.getMatchRange().getStartOffset() ==
+							textArea.getDocument().getLength()) {
+						break;
+					}
+					else { // End of a line
+						textArea.setCaretPosition(textArea.getCaretPosition() + 1);
+					}
+				}
+
 				res = SearchEngine.replace(textArea, context);
+
 			}
+
 			if (lastFound==null) { // If nothing was found, don't move the caret
 				textArea.setCaretPosition(oldOffs);
 				lastFound = new SearchResult();
 			}
+
 		} finally {
 			textArea.endAtomicEdit();
 		}

@@ -771,6 +771,54 @@ public class SearchEngineTest {
 	}
 
 
+	@Test
+	public void testSearchEngineReplaceAll_zeroLengthMatches()
+			throws BadLocationException {
+
+		textArea.setText("one two three");
+
+		SearchContext context = new SearchContext();
+		context.setSearchFor(".*");
+		context.setReplaceWith("");
+		context.setRegularExpression(true);
+		int count = replaceAllImpl(context);
+		// The goal here is simply to not go into an infinite loop
+		assertEquals(1, count);
+	}
+
+
+	@Test
+	public void testSearchEngineReplaceAll_zeroLengthMatches_emptyText()
+			throws BadLocationException {
+
+		textArea.setText("");
+
+		SearchContext context = new SearchContext();
+		context.setSearchFor(".*");
+		context.setReplaceWith("");
+		context.setRegularExpression(true);
+		int count = replaceAllImpl(context);
+		// The goal here is simply to not go into an infinite loop
+		assertEquals(1, count);
+	}
+
+
+	@Test
+	public void testSearchEngineReplaceAll_zeroLengthMatches_multiMatch()
+			throws BadLocationException {
+
+		textArea.setText("a\nba\n\na");
+
+		SearchContext context = new SearchContext();
+		context.setSearchFor("(?=a)");
+		context.setReplaceWith("CCC");
+		context.setRegularExpression(true);
+		int count = replaceAllImpl(context);
+		assertEquals(3, count);
+		assertEquals("CCCa\nbCCCa\n\nCCCa", textArea.getText());
+	}
+
+
 	/**
 	 * Tests <code>SearchEngine.replaceAll()</code>.
 	 */
