@@ -168,6 +168,12 @@ public class ThemeTest {
 				if (i == 5) {
 					style.underline = true;
 				}
+				else if (i == 6) {
+					style.font = font.deriveFont(Font.BOLD, 24f);
+				}
+				else if (i == 7) {
+					style.font = font.deriveFont(Font.ITALIC, 25f);
+				}
 			}
 		}
 		return scheme;

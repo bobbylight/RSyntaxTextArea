@@ -67,36 +67,36 @@ import org.fife.ui.rtextarea.RTextArea;
  */
 public class Theme {
 
-	private Font baseFont;
-	private Color bgColor;
-	private Color caretColor;
-	private boolean useSelctionFG;
-	private Color selectionFG;
-	private Color selectionBG;
-	private boolean selectionRoundedEdges;
-	private Color currentLineHighlight;
-	private boolean fadeCurrentLineHighlight;
-	private Color marginLineColor;
-	private Color markAllHighlightColor;
-	private Color markOccurrencesColor;
-	private boolean markOccurrencesBorder;
-	private Color matchedBracketFG;
-	private Color matchedBracketBG;
-	private boolean matchedBracketHighlightBoth;
-	private boolean matchedBracketAnimate;
-	private Color hyperlinkFG;
-	private Color[] secondaryLanguages;
+	protected Font baseFont;
+	protected Color bgColor;
+	protected Color caretColor;
+	protected boolean useSelctionFG;
+	protected Color selectionFG;
+	protected Color selectionBG;
+	protected boolean selectionRoundedEdges;
+	protected Color currentLineHighlight;
+	protected boolean fadeCurrentLineHighlight;
+	protected Color marginLineColor;
+	protected Color markAllHighlightColor;
+	protected Color markOccurrencesColor;
+	protected boolean markOccurrencesBorder;
+	protected Color matchedBracketFG;
+	protected Color matchedBracketBG;
+	protected boolean matchedBracketHighlightBoth;
+	protected boolean matchedBracketAnimate;
+	protected Color hyperlinkFG;
+	protected Color[] secondaryLanguages;
 
-	private SyntaxScheme scheme;
+	protected SyntaxScheme scheme;
 
-	private Color gutterBorderColor;
-	private Color activeLineRangeColor;
-	private boolean iconRowHeaderInheritsGutterBG;
-	private Color lineNumberColor;
-	private String lineNumberFont;
-	private int lineNumberFontSize;
-	private Color foldIndicatorFG;
-	private Color foldBG;
+	protected Color gutterBorderColor;
+	protected Color activeLineRangeColor;
+	protected boolean iconRowHeaderInheritsGutterBG;
+	protected Color lineNumberColor;
+	protected String lineNumberFont;
+	protected int lineNumberFontSize;
+	protected Color foldIndicatorFG;
+	protected Color foldBG;
 
 
 	/**
