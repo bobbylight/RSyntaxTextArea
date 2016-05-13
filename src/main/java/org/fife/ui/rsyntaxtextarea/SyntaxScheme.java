@@ -14,8 +14,15 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.swing.text.StyleContext;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -37,8 +44,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class SyntaxScheme implements Cloneable, TokenTypes {
 
-	private Style[] styles;
-
+	private Map<Integer, Style> styles = new HashMap<Integer, Style>();
+	
 	private static final String VERSION			= "*ver1";
 
 
@@ -51,7 +58,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *        will be initially <code>null</code>.
 	 */
 	public SyntaxScheme(boolean useDefaults) {
-		styles = new Style[DEFAULT_NUM_TOKEN_TYPES];
 		if (useDefaults) {
 			restoreDefaults(null);
 		}
@@ -80,7 +86,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *        (vs. all tokens using a plain font).
 	 */
 	public SyntaxScheme(Font baseFont, boolean fontStyles) {
-		styles = new Style[DEFAULT_NUM_TOKEN_TYPES];
 		restoreDefaults(baseFont, fontStyles);
 	}
 
@@ -98,9 +103,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @param font The new font of the text area.
 	 */
 	void changeBaseFont(Font old, Font font) {
-		for (int i=0; i<styles.length; i++) {
-			Style style = styles[i];
-			if (style!=null && style.font!=null) {
+		for(Style style : styles.values()) {
+			if (style.font!=null) {
 				if (style.font.getFamily().equals(old.getFamily()) &&
 						style.font.getSize()==old.getSize()) {
 					int s = style.font.getStyle(); // Keep bold or italic
@@ -126,12 +130,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			cnse.printStackTrace();
 			return null;
 		}
-		shcs.styles = new Style[styles.length];
-		for (int i=0; i<styles.length; i++) {
-			Style s = styles[i];
-			if (s!=null) {
-				shcs.styles[i] = (Style)s.clone();
-			}
+		for (Entry<Integer, Style> e : styles.entrySet()) {
+			shcs.styles.put(e.getKey(), (Style)e.getValue().clone());
 		}
 		return shcs;
 	}
@@ -154,21 +154,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			return false;
 		}
 
-		Style[] otherSchemes = ((SyntaxScheme)otherScheme).styles;
-
-		int length = styles.length;
-		for (int i=0; i<length; i++) {
-			if (styles[i]==null) {
-				if (otherSchemes[i]!=null) {
-					return false;
-				}
-			}
-			else if (!styles[i].equals(otherSchemes[i])) {
-				return false;
-			}
-		}
-		return true;
-
+		Map<Integer, Style> otherSchemes = ((SyntaxScheme)otherScheme).styles;
+		return otherSchemes.equals(styles);
 	}
 
 
@@ -194,7 +181,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @see #getStyleCount()
 	 */
 	public Style getStyle(int index) {
-		return styles[index];
+		return styles.get(index);
 	}
 
 
@@ -205,7 +192,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @see #getStyle(int)
 	 */
 	public int getStyleCount() {
-		return styles.length;
+		return Collections.max(styles.keySet()) + 1;
 	}
 
 
@@ -213,15 +200,20 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * Used by third party implementors e.g. SquirreL SQL. Most applications do
 	 * not need to call this method.
 	 * <p>
-	 * Note that the returned array is not a copy of the style data; editing the
-	 * array will modify the styles used by any <code>RSyntaxTextArea</code>
-	 * using this scheme.
-	 *
-	 * @return The style array.
+	 * @return Array of styles. 
 	 * @see #setStyles(Style[])
 	 */
+	@Deprecated
 	public Style[] getStyles() {
-		return styles;
+		// TODO Check side effects. Now a copy is returned. 
+		// TODO Not used in RSyntaxArea library. Warn method users that method changed. 
+		// FIXME javadoc 
+		Style[] copy = new Style[getStyleCount()];
+		for(Entry<Integer, Style> e : styles.entrySet()) {
+			copy[e.getKey()] =  e.getValue();
+		}
+		
+		return copy;
 	}
 
 
@@ -233,17 +225,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 */
 	@Override
 	public int hashCode() {
-		// Keep me fast.  Iterating over *all* syntax schemes contained is
-		// probably much slower than a "bad" hash code here.
-		int hashCode = 0;
-		int count = styles.length;
-		for (int i=0; i<count; i++) {
-			if (styles[i]!=null) {
-				hashCode ^= styles[i].hashCode();
-				break;
-			}
-		}
-		return hashCode;
+		return styles.hashCode();
 	}
 
 
@@ -260,6 +242,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @return The syntax scheme.
 	 * @throws IOException If an IO error occurs.
 	 */
+	@Deprecated
 	public static SyntaxScheme load(Font baseFont, InputStream in)
 									throws IOException {
 		if (baseFont==null) {
@@ -281,6 +264,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @return A color scheme.
 	 * @see #toCommaSeparatedString()
 	 */
+	@Deprecated
 	public static SyntaxScheme loadFromString(String string) {
 		return loadFromString(string, DEFAULT_NUM_TOKEN_TYPES);
 	}
@@ -304,6 +288,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @see #loadFromString(String)
 	 * @see #toCommaSeparatedString()
 	 */
+	@Deprecated
 	public static SyntaxScheme loadFromString(String string,
 			int tokenTypeCount) {
 
@@ -365,7 +350,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 							Integer.parseInt(tokens[pos+5]),	// style
 							Integer.parseInt(tokens[pos+6]));	// size
 					}
-					scheme.styles[i] = new Style(fg, bg, font, underline);
+					scheme.styles.put(i, new Style(fg, bg, font, underline));
 
 				}
 
@@ -382,12 +367,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	void refreshFontMetrics(Graphics2D g2d) {
 		// It is assumed that any rendering hints are already applied to g2d.
-		for (int i=0; i<styles.length; i++) {
-			Style s = styles[i];
-			if (s!=null) {
-				s.fontMetrics = s.font==null ? null :
-								g2d.getFontMetrics(s.font);
-			}
+		for (Style s : styles.values()) {
+		    if (s != null) {
+		    	s.fontMetrics = s.font==null ? null : g2d.getFontMetrics(s.font);
+		    }
 		}
 	}
 
@@ -447,53 +430,52 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
 			keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
 		}
-
-		styles[COMMENT_EOL]				= new Style(comment, null, commentFont);
-		styles[COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
-		styles[COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
-		styles[COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
-		styles[COMMENT_MARKUP]			= new Style(Color.gray, null, commentFont);
-		styles[RESERVED_WORD]				= new Style(keyword, null, keywordFont);
-		styles[RESERVED_WORD_2]			= new Style(keyword, null, keywordFont);
-		styles[FUNCTION]					= new Style(function);
-		styles[LITERAL_BOOLEAN]			= new Style(literalNumber);
-		styles[LITERAL_NUMBER_DECIMAL_INT]	= new Style(literalNumber);
-		styles[LITERAL_NUMBER_FLOAT]		= new Style(literalNumber);
-		styles[LITERAL_NUMBER_HEXADECIMAL]	= new Style(literalNumber);
-		styles[LITERAL_STRING_DOUBLE_QUOTE]	= new Style(literalString);
-		styles[LITERAL_CHAR]				= new Style(literalString);
-		styles[LITERAL_BACKQUOTE]			= new Style(literalString);
-		styles[DATA_TYPE]				= new Style(dataType, null, keywordFont);
-		styles[VARIABLE]					= new Style(variable);
-		styles[REGEX]						= new Style(regex);
-		styles[ANNOTATION]				= new Style(Color.gray);
-		styles[IDENTIFIER]				= new Style(null);
-		styles[WHITESPACE]				= new Style(Color.gray);
-		styles[SEPARATOR]				= new Style(Color.RED);
-		styles[OPERATOR]					= new Style(operator);
-		styles[PREPROCESSOR]				= new Style(preprocessor);
-		styles[MARKUP_TAG_DELIMITER]		= new Style(Color.RED);
-		styles[MARKUP_TAG_NAME]			= new Style(Color.BLUE);
-		styles[MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127));
-		styles[MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString);
-		styles[MARKUP_COMMENT]              = new Style(markupComment, null, commentFont);
-		styles[MARKUP_DTD]              = new Style(function);
-		styles[MARKUP_PROCESSING_INSTRUCTION] = new Style(preprocessor);
-		styles[MARKUP_CDATA]				= new Style(new Color(0xcc6600));
-		styles[MARKUP_CDATA_DELIMITER]		= new Style(new Color(0x008080));
-		styles[MARKUP_ENTITY_REFERENCE]		= new Style(dataType);
-		styles[ERROR_IDENTIFIER]			= new Style(error);
-		styles[ERROR_NUMBER_FORMAT]		= new Style(error);
-		styles[ERROR_STRING_DOUBLE]		= new Style(error);
-		styles[ERROR_CHAR]				= new Style(error);
-
-		// Issue #34: If an application modifies TokenTypes to add new built-in
-		// token types, we'll get NPEs if not all styles are initialized.
-		for (int i=0; i<styles.length; i++) {
-			if (styles[i]==null) {
-				styles[i] = new Style();
-			}
+		
+		// replace all defined styles by default one
+		List<Integer> stylesToReset = new ArrayList<Integer>(styles.keySet());
+		stylesToReset.addAll(new TokenTypesMap().values());
+		for(Integer key : stylesToReset) {
+			styles.put(key, new Style());
 		}
+
+		styles.put(COMMENT_EOL, new Style(comment, null, commentFont));
+		styles.put(COMMENT_MULTILINE, new Style(comment, null, commentFont));
+		styles.put(COMMENT_DOCUMENTATION, new Style(docComment, null, commentFont));
+		styles.put(COMMENT_KEYWORD, new Style(new Color(255,152,0), null, commentFont));
+		styles.put(COMMENT_MARKUP, new Style(Color.gray, null, commentFont));
+		styles.put(RESERVED_WORD, new Style(keyword, null, keywordFont));
+		styles.put(RESERVED_WORD_2, new Style(keyword, null, keywordFont));
+		styles.put(FUNCTION, new Style(function));
+		styles.put(LITERAL_BOOLEAN, new Style(literalNumber));
+		styles.put(LITERAL_NUMBER_DECIMAL_INT, new Style(literalNumber));
+		styles.put(LITERAL_NUMBER_FLOAT, new Style(literalNumber));
+		styles.put(LITERAL_NUMBER_HEXADECIMAL, new Style(literalNumber));
+		styles.put(LITERAL_STRING_DOUBLE_QUOTE, new Style(literalString));
+		styles.put(LITERAL_CHAR, new Style(literalString));
+		styles.put(LITERAL_BACKQUOTE, new Style(literalString));
+		styles.put(DATA_TYPE, new Style(dataType, null, keywordFont));
+		styles.put(VARIABLE, new Style(variable));
+		styles.put(REGEX, new Style(regex));
+		styles.put(ANNOTATION, new Style(Color.gray));
+		styles.put(IDENTIFIER, new Style(null));
+		styles.put(WHITESPACE, new Style(Color.gray));
+		styles.put(SEPARATOR, new Style(Color.RED));
+		styles.put(OPERATOR, new Style(operator));
+		styles.put(PREPROCESSOR, new Style(preprocessor));
+		styles.put(MARKUP_TAG_DELIMITER, new Style(Color.RED));
+		styles.put(MARKUP_TAG_NAME, new Style(Color.BLUE));
+		styles.put(MARKUP_TAG_ATTRIBUTE, new Style(new Color(63,127,127)));
+		styles.put(MARKUP_TAG_ATTRIBUTE_VALUE, new Style(literalString));
+		styles.put(MARKUP_COMMENT, new Style(markupComment, null, commentFont));
+		styles.put(MARKUP_DTD, new Style(function));
+		styles.put(MARKUP_PROCESSING_INSTRUCTION, new Style(preprocessor));
+		styles.put(MARKUP_CDATA, new Style(new Color(0xcc6600)));
+		styles.put(MARKUP_CDATA_DELIMITER, new Style(new Color(0x008080)));
+		styles.put(MARKUP_ENTITY_REFERENCE, new Style(dataType));
+		styles.put(ERROR_IDENTIFIER, new Style(error));
+		styles.put(ERROR_NUMBER_FORMAT, new Style(error));
+		styles.put(ERROR_STRING_DOUBLE, new Style(error));
+		styles.put(ERROR_CHAR, new Style(error));
 
 	}
 
@@ -506,7 +488,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @see #getStyle(int)
 	 */
 	public void setStyle(int type, Style style) {
-		styles[type] = style;
+		styles.put(type, style);
 	}
 
 
@@ -522,7 +504,13 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @see #getStyles()
 	 */
 	public void setStyles(Style[] styles) {
-		this.styles = styles;
+		for(int i = 0; i < styles.length; i++) {
+			Style s = styles[i];
+			if(s != null) {
+				this.styles.put(i, s);
+			}
+		}
+			
 	}
 
 
@@ -576,16 +564,17 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @return A string representing the rgb values of the colors.
 	 * @see #loadFromString(String)
 	 */
+	@Deprecated
 	public String toCommaSeparatedString() {
 
 		StringBuilder sb = new StringBuilder(VERSION);
 		sb.append(',');
 
-		for (int i=0; i<styles.length; i++) {
+		for (int i=0; i< getStyleCount(); i++) {
 
 			sb.append(i).append(',');
 
-			Style ss = styles[i];
+			Style ss = styles.get(i);
 			if (ss==null) { // Only true for i==0 (NULL token)
 				sb.append("-,-,f,-,,,");
 				continue;
@@ -621,11 +610,13 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 		private Font baseFont;
 		private SyntaxScheme scheme;
+		private final TokenTypesMap tokenTypes = new TokenTypesMap();
 
 		public SyntaxSchemeLoader(Font baseFont) {
 			scheme = new SyntaxScheme(baseFont);
 		}
 
+		@Deprecated
 		public static SyntaxScheme load(Font baseFont, InputStream in)
 				throws IOException {
 			SyntaxSchemeLoader parser = null;
@@ -650,67 +641,51 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			if ("style".equals(qName)) {
 
 				String type = attrs.getValue("token");
-				Field field = null;
-				try {
-					field = Token.class.getField(type);
-				} catch (RuntimeException re) {
-					throw re; // FindBugs
-				} catch (Exception e) {
-					System.err.println("Invalid token type: " + type);
+				if(tokenTypes.containsKey(type))
+				{
+					System.err.println("Token type not found: " + type);
 					return;
 				}
 
-				if (field.getType()==int.class) {
+				int index = tokenTypes.get(type);
+				scheme.setStyle(index, new Style());
 
-					int index = 0;
-					try {
-						index = field.getInt(scheme);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-						return;
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-						return;
-					}
+				String fgStr = attrs.getValue("fg");
+				if (fgStr!=null) {
+					Color fg = stringToColor(fgStr);
+					scheme.styles.get(index).foreground = fg;
+				}
 
-					String fgStr = attrs.getValue("fg");
-					if (fgStr!=null) {
-						Color fg = stringToColor(fgStr);
-						scheme.styles[index].foreground = fg;
-					}
+				String bgStr = attrs.getValue("bg");
+				if (bgStr!=null) {
+					Color bg = stringToColor(bgStr);
+					scheme.styles.get(index).background = bg;
+				}
 
-					String bgStr = attrs.getValue("bg");
-					if (bgStr!=null) {
-						Color bg = stringToColor(bgStr);
-						scheme.styles[index].background = bg;
-					}
+				boolean styleSpecified = false;
+				boolean bold = false;
+				boolean italic = false;
+				String boldStr = attrs.getValue("bold");
+				if (boldStr!=null) {
+					bold = Boolean.valueOf(boldStr).booleanValue();
+					styleSpecified = true;
+				}
+				String italicStr = attrs.getValue("italic");
+				if (italicStr!=null) {
+					italic = Boolean.valueOf(italicStr).booleanValue();
+					styleSpecified = true;
+				}
+				if (styleSpecified) {
+					int style = 0;
+					if (bold) { style |= Font.BOLD; }
+					if (italic) { style |= Font.ITALIC; }
+					scheme.styles.get(index).font = baseFont.deriveFont(style);
+				}
 
-					boolean styleSpecified = false;
-					boolean bold = false;
-					boolean italic = false;
-					String boldStr = attrs.getValue("bold");
-					if (boldStr!=null) {
-						bold = Boolean.valueOf(boldStr).booleanValue();
-						styleSpecified = true;
-					}
-					String italicStr = attrs.getValue("italic");
-					if (italicStr!=null) {
-						italic = Boolean.valueOf(italicStr).booleanValue();
-						styleSpecified = true;
-					}
-					if (styleSpecified) {
-						int style = 0;
-						if (bold) { style |= Font.BOLD; }
-						if (italic) { style |= Font.ITALIC; }
-						scheme.styles[index].font = baseFont.deriveFont(style);
-					}
-
-					String ulineStr = attrs.getValue("underline");
-					if (ulineStr!=null) {
-						boolean uline= Boolean.valueOf(ulineStr).booleanValue();
-						scheme.styles[index].underline = uline;
-					}
-
+				String ulineStr = attrs.getValue("underline");
+				if (ulineStr!=null) {
+					boolean uline= Boolean.valueOf(ulineStr).booleanValue();
+					scheme.styles.get(index).underline = uline;
 				}
 
 			}

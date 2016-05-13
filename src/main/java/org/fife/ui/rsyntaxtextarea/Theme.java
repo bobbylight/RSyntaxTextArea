@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
+import java.util.Map.Entry;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
@@ -31,6 +31,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,7 +41,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
@@ -338,11 +338,30 @@ public class Theme {
 	 */
 	public static Theme load(InputStream in, Font baseFont) throws IOException {
 
+		return load(in, baseFont, new TokenTypesMap());
+
+	}
+	
+	/**
+	 * Loads a theme.
+	 *
+	 * @param in The input stream to read from.  This will be closed when this
+	 *        method returns.
+	 * @param baseFont The default font to use for any "base font" properties
+	 *        not specified in the theme XML.  If this is <code>null</code>,
+	 *        a default monospaced font will be used.
+	 * @param tokenTypes Token names mapped to its integer values       
+	 * @return The theme.
+	 * @throws IOException If an IO error occurs.
+	 * @see #save(OutputStream)
+	 */
+	public static Theme load(InputStream in, Font baseFont, TokenTypesMap tokenTypes) throws IOException {
+
 		Theme theme = new Theme(baseFont);
 
 		BufferedInputStream bin = new BufferedInputStream(in);
 		try {
-			XmlHandler.load(theme, bin);
+			XmlHandler.load(theme, bin, tokenTypes);
 		} finally {
 			bin.close();
 		}
@@ -350,7 +369,6 @@ public class Theme {
 		return theme;
 
 	}
-
 
 	/**
 	 * Saves this theme to an output stream.
@@ -360,6 +378,18 @@ public class Theme {
 	 * @see #load(InputStream)
 	 */
 	public void save(OutputStream out) throws IOException {
+		save(out, new TokenTypesMap());
+	}
+
+	/**
+	 * Saves this theme to an output stream.
+	 *
+	 * @param out The output stream to write to.
+	 * @param tokenTypes Token names mapped to its integer values
+	 * @throws IOException If an IO error occurs.
+	 * @see #load(InputStream)
+	 */
+	public void save(OutputStream out, TokenTypesMap tokenTypes) throws IOException {
 
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		try {
@@ -460,44 +490,40 @@ public class Theme {
 			root.appendChild(elem);
 
 			elem = doc.createElement("tokenStyles");
-			Field[] fields = TokenTypes.class.getFields();
-			for (int i=0; i<fields.length; i++) {
-				Field field = fields[i];
-				int value = field.getInt(null);
-				if (value!=TokenTypes.DEFAULT_NUM_TOKEN_TYPES) {
-					Style style = scheme.getStyle(value);
-					if (style!=null) {
-						Element elem2 = doc.createElement("style");
-						elem2.setAttribute("token", field.getName());
-						Color fg = style.foreground;
-						if (fg!=null) {
-							elem2.setAttribute("fg", colorToString(fg));
-						}
-						Color bg = style.background;
-						if (bg!=null) {
-							elem2.setAttribute("bg", colorToString(bg));
-						}
-						Font font = style.font;
-						if (font!=null) {
-							if (!font.getFamily().equals(
-									baseFont.getFamily())) {
-								elem2.setAttribute("fontFamily", font.getFamily());
-							}
-							if (font.getSize()!=baseFont.getSize()) {
-								elem2.setAttribute("fontSize", Integer.toString(font.getSize()));
-							}
-							if (font.isBold()) {
-								elem2.setAttribute("bold", "true");
-							}
-							if (font.isItalic()) {
-								elem2.setAttribute("italic", "true");
-							}
-						}
-						if (style.underline) {
-							elem2.setAttribute("underline", "true");
-						}
-						elem.appendChild(elem2);
+			for(Entry<String, Integer> e : tokenTypes.entrySet()) {
+				int value = e.getValue();
+				Style style = scheme.getStyle(value);
+				if (style!=null) {
+					Element elem2 = doc.createElement("style");
+					elem2.setAttribute("token", e.getKey());
+					Color fg = style.foreground;
+					if (fg!=null) {
+						elem2.setAttribute("fg", colorToString(fg));
 					}
+					Color bg = style.background;
+					if (bg!=null) {
+						elem2.setAttribute("bg", colorToString(bg));
+					}
+					Font font = style.font;
+					if (font!=null) {
+						if (!font.getFamily().equals(
+								baseFont.getFamily())) {
+							elem2.setAttribute("fontFamily", font.getFamily());
+						}
+						if (font.getSize()!=baseFont.getSize()) {
+							elem2.setAttribute("fontSize", Integer.toString(font.getSize()));
+						}
+						if (font.isBold()) {
+							elem2.setAttribute("bold", "true");
+						}
+						if (font.isItalic()) {
+							elem2.setAttribute("italic", "true");
+						}
+					}
+					if (style.underline) {
+						elem2.setAttribute("underline", "true");
+					}
+					elem.appendChild(elem2);
 				}
 			}
 			root.appendChild(elem);
@@ -582,24 +608,25 @@ public class Theme {
 	private static class XmlHandler extends DefaultHandler {
 
 		private Theme theme;
+		private final TokenTypesMap tokenTypes;
+
+		public XmlHandler(TokenTypesMap tokenTypes) {
+			this.tokenTypes = tokenTypes;
+		}
 
 		@Override
 		public void error(SAXParseException e) throws SAXException {
 			throw e;
 		}
 
-		@Override
-		public void fatalError(SAXParseException e) throws SAXException {
-			throw e;
-		}
-
-	    public static void load(Theme theme, InputStream in) throws IOException {
+		public static void load(Theme theme, InputStream in,
+				TokenTypesMap tokenTypes) throws IOException {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setValidating(true);
 			try {
 				SAXParser parser = spf.newSAXParser();
 				XMLReader reader = parser.getXMLReader();
-				XmlHandler handler = new XmlHandler();
+				XmlHandler handler = new XmlHandler(tokenTypes);
 				handler.theme = theme;
 				reader.setEntityResolver(handler);
 				reader.setContentHandler(handler);
@@ -612,6 +639,12 @@ public class Theme {
 				se.printStackTrace();
 				throw new IOException(se.toString());
 			}
+			
+		}
+
+		@Override
+		public void fatalError(SAXParseException e) throws SAXException {
+			throw e;
 		}
 
 		private static final int parseInt(Attributes attrs, String attr,
@@ -776,84 +809,68 @@ public class Theme {
 			else if ("style".equals(qName)) {
 
 				String type = attrs.getValue("token");
-				Field field = null;
-				try {
-					field = Token.class.getField(type);
-				} catch (RuntimeException re) {
-					throw re; // FindBugs
-				} catch (Exception e) {
-					System.err.println("Invalid token type: " + type);
+				if(!tokenTypes.containsKey(type)) {
+					System.err.println("Token type not found: " + type);
 					return;
 				}
 
-				if (field.getType()==int.class) {
+				int index = tokenTypes.get(type);
+				theme.scheme.setStyle(index, new Style());
 
-					int index = 0;
-					try {
-						index = field.getInt(theme.scheme);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-						return;
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-						return;
-					}
+				String fgStr = attrs.getValue("fg");
+				Color fg = stringToColor(fgStr);
+				theme.scheme.getStyle(index).foreground = fg;
 
-					String fgStr = attrs.getValue("fg");
-					Color fg = stringToColor(fgStr);
-					theme.scheme.getStyle(index).foreground = fg;
+				String bgStr = attrs.getValue("bg");
+				Color bg = stringToColor(bgStr);
+				theme.scheme.getStyle(index).background = bg;
 
-					String bgStr = attrs.getValue("bg");
-					Color bg = stringToColor(bgStr);
-					theme.scheme.getStyle(index).background = bg;
-
-					Font font = theme.baseFont;
-					String familyName = attrs.getValue("fontFamily");
-					if (familyName!=null) {
-						font = getFont(familyName, font.getStyle(),
-								font.getSize());
-					}
-					String sizeStr = attrs.getValue("fontSize");
-					if (sizeStr!=null) {
-						try {
-							float size = Float.parseFloat(sizeStr);
-							size = Math.max(size, 1f);
-							font = font.deriveFont(size);
-						} catch (NumberFormatException nfe) {
-							nfe.printStackTrace();
-						}
-					}
-					theme.scheme.getStyle(index).font = font;
-
-					boolean styleSpecified = false;
-					boolean bold = false;
-					boolean italic = false;
-					String boldStr = attrs.getValue("bold");
-					if (boldStr!=null) {
-						bold = Boolean.valueOf(boldStr).booleanValue();
-						styleSpecified = true;
-					}
-					String italicStr = attrs.getValue("italic");
-					if (italicStr!=null) {
-						italic = Boolean.valueOf(italicStr).booleanValue();
-						styleSpecified = true;
-					}
-					if (styleSpecified) {
-						int style = 0;
-						if (bold) { style |= Font.BOLD; }
-						if (italic) { style |= Font.ITALIC; }
-						Font orig = theme.scheme.getStyle(index).font;
-						theme.scheme.getStyle(index).font =
-							orig.deriveFont(style);
-					}
-
-					String ulineStr = attrs.getValue("underline");
-					if (ulineStr!=null) {
-						boolean uline= Boolean.valueOf(ulineStr).booleanValue();
-						theme.scheme.getStyle(index).underline = uline;
-					}
-
+				Font font = theme.baseFont;
+				String familyName = attrs.getValue("fontFamily");
+				if (familyName!=null) {
+					font = getFont(familyName, font.getStyle(),
+							font.getSize());
 				}
+				String sizeStr = attrs.getValue("fontSize");
+				if (sizeStr!=null) {
+					try {
+						float size = Float.parseFloat(sizeStr);
+						size = Math.max(size, 1f);
+						font = font.deriveFont(size);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				}
+				theme.scheme.getStyle(index).font = font;
+
+				boolean styleSpecified = false;
+				boolean bold = false;
+				boolean italic = false;
+				String boldStr = attrs.getValue("bold");
+				if (boldStr!=null) {
+					bold = Boolean.valueOf(boldStr).booleanValue();
+					styleSpecified = true;
+				}
+				String italicStr = attrs.getValue("italic");
+				if (italicStr!=null) {
+					italic = Boolean.valueOf(italicStr).booleanValue();
+					styleSpecified = true;
+				}
+				if (styleSpecified) {
+					int style = 0;
+					if (bold) { style |= Font.BOLD; }
+					if (italic) { style |= Font.ITALIC; }
+					Font orig = theme.scheme.getStyle(index).font;
+					theme.scheme.getStyle(index).font =
+						orig.deriveFont(style);
+				}
+
+				String ulineStr = attrs.getValue("underline");
+				if (ulineStr!=null) {
+					boolean uline= Boolean.valueOf(ulineStr).booleanValue();
+					theme.scheme.getStyle(index).underline = uline;
+				}
+
 
 			}
 
