@@ -122,7 +122,7 @@ uploadArchives {
 	repositories {
 		mavenDeployer {
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-			if (project.hasProperty('upload') && Boolean.parseBoolean(upload)) { // gradlew -Pupload=true
+			if (project.hasProperty('upload') && Boolean.parseBoolean(upload)) { // gradlew uploadArchives -Pupload=true
 				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
 					authentication(userName: ossrhUsername, password: ossrhPassword)
 				}
