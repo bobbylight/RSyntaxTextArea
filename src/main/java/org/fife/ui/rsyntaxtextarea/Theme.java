@@ -47,16 +47,21 @@ import org.fife.ui.rtextarea.RTextArea;
 
 
 /**
- * A theme is a set of fonts and colors to use to style RSyntaxTextArea.
- * Themes are defined in XML files that are validated against
- * <code>themes.dtd</code>.  This provides applications and other consumers
- * with an easy way to style RSyntaxTextArea without having to use the API.<p>
+ * A theme is a set of fonts and colors to use to style RSyntaxTextArea and
+ * RTextScrollPane.  Themes are defined in XML files that are validated against
+ * <code>org/fife/ui/rsyntaxtextarea/themes/theme.dtd</code>.  This provides
+ * applications and other consumers with an easy way to style RSyntaxTextArea
+ * without having to use the API.<p>
  * 
- * Sample themes are included in the source tree under the <code>/themes</code>
- * folder, but are not a part of the built RSyntaxTextArea jar.  Hosting
- * applications are free to ship and use these themes as-is, modify them, or
- * create their own.<p>
+ * Sample themes are included in the source tree in the
+ * <code>org.fife.ui.rsyntaxtextarea.themes</code> package, and can be loaded
+ * via <code>getClass().getResourceAsStream(...)</code>.<p>
  *
+ * All fields are public to facilitate programmatic manipulation, but typically
+ * you won't need to reference any fields directly, rather using the
+ * <code>load()</code>, <code>save()</code>, and <code>apply()</code> methods
+ * for various tasks.<p>
+ * 
  * Note that to save a <code>Theme</code> via {@link #save(OutputStream)},
  * you must currently create a <code>Theme</code> from a text area wrapped in
  * an <code>RTextScrollPane</code>, so that the color information for the
@@ -67,36 +72,36 @@ import org.fife.ui.rtextarea.RTextArea;
  */
 public class Theme {
 
-	private Font baseFont;
-	private Color bgColor;
-	private Color caretColor;
-	private boolean useSelctionFG;
-	private Color selectionFG;
-	private Color selectionBG;
-	private boolean selectionRoundedEdges;
-	private Color currentLineHighlight;
-	private boolean fadeCurrentLineHighlight;
-	private Color marginLineColor;
-	private Color markAllHighlightColor;
-	private Color markOccurrencesColor;
-	private boolean markOccurrencesBorder;
-	private Color matchedBracketFG;
-	private Color matchedBracketBG;
-	private boolean matchedBracketHighlightBoth;
-	private boolean matchedBracketAnimate;
-	private Color hyperlinkFG;
-	private Color[] secondaryLanguages;
+	public Font baseFont;
+	public Color bgColor;
+	public Color caretColor;
+	public boolean useSelctionFG;
+	public Color selectionFG;
+	public Color selectionBG;
+	public boolean selectionRoundedEdges;
+	public Color currentLineHighlight;
+	public boolean fadeCurrentLineHighlight;
+	public Color marginLineColor;
+	public Color markAllHighlightColor;
+	public Color markOccurrencesColor;
+	public boolean markOccurrencesBorder;
+	public Color matchedBracketFG;
+	public Color matchedBracketBG;
+	public boolean matchedBracketHighlightBoth;
+	public boolean matchedBracketAnimate;
+	public Color hyperlinkFG;
+	public Color[] secondaryLanguages;
 
-	private SyntaxScheme scheme;
+	public SyntaxScheme scheme;
 
-	private Color gutterBorderColor;
-	private Color activeLineRangeColor;
-	private boolean iconRowHeaderInheritsGutterBG;
-	private Color lineNumberColor;
-	private String lineNumberFont;
-	private int lineNumberFontSize;
-	private Color foldIndicatorFG;
-	private Color foldBG;
+	public Color gutterBorderColor;
+	public Color activeLineRangeColor;
+	public boolean iconRowHeaderInheritsGutterBG;
+	public Color lineNumberColor;
+	public String lineNumberFont;
+	public int lineNumberFontSize;
+	public Color foldIndicatorFG;
+	public Color foldBG;
 
 
 	/**

@@ -21,10 +21,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -131,6 +133,11 @@ public class ErrorStrip extends JPanel {
 	private int lastLineY;
 
 	/**
+	 * Generates the tool tips for markers in this error strip.
+	 */
+	private ErrorStripMarkerToolTipProvider markerToolTipProvider;
+
+	/**
 	 * The preferred width of this component.
 	 */
 	private static final int PREFERRED_WIDTH = 14;
@@ -154,6 +161,7 @@ public class ErrorStrip extends JPanel {
 		setLevelThreshold(ParserNotice.Level.WARNING);
 		setFollowCaret(true);
 		setCaretMarkerColor(Color.BLACK);
+		setMarkerToolTipProvider(null); // Install default
 	}
 
 
@@ -487,6 +495,20 @@ public class ErrorStrip extends JPanel {
 
 
 	/**
+	 * Sets the provider of tool tips for markers in this error strip.
+	 * Applications can use this method to control the content and format of
+	 * the tool tip descriptions of line markers.
+	 *
+	 * @param provider The provider.  If this is <code>null</code>, a default
+	 *        implementation will be used.
+	 */
+	public void setMarkerToolTipProvider(ErrorStripMarkerToolTipProvider provider) {
+		markerToolTipProvider = provider != null ? provider :
+			new DefaultErrorStripMarkerToolTipProvider();
+	}
+
+
+	/**
 	 * Sets whether "mark all" highlights are shown in this error strip.
 	 *
 	 * @param show Whether to show markers for "mark all" highlights.
@@ -534,6 +556,63 @@ public class ErrorStrip extends JPanel {
 			line = Math.round((textArea.getLineCount()-1)*at);
 		}
 		return line;
+	}
+
+
+	/**
+	 * The default implementation of the provider of tool tips for markers in
+	 * an error strip.
+	 * 
+	 * @author predi
+	 */
+	private static class DefaultErrorStripMarkerToolTipProvider
+			implements ErrorStripMarkerToolTipProvider {
+
+		public String getToolTipText(List<ParserNotice> notices) {
+
+			String text = null;
+
+			if (notices.size()==1) {
+				text = notices.get(0).getMessage();
+			}
+			else { // > 1
+				StringBuilder sb = new StringBuilder("<html>");
+				sb.append(msg.getString("MultipleMarkers"));
+				sb.append("<br>");
+				for (int i=0; i<notices.size(); i++) {
+					ParserNotice pn = notices.get(i);
+					sb.append("&nbsp;&nbsp;&nbsp;- ");
+					sb.append(pn.getMessage());
+					sb.append("<br>");
+				}
+				text = sb.toString();
+			}
+
+			return text;
+
+		}
+
+	}
+
+
+	/**
+	 * Returns tool tip text for the markers in an {@link ErrorStrip} that
+	 * denote one or more parser notices.
+	 * 
+	 * @author predi
+	 */
+	public interface ErrorStripMarkerToolTipProvider {
+
+		/**
+		 * Returns the tool tip text for a marker in an <code>ErrorStrip</code>
+		 * that denotes a given list of parser notices.
+		 * 
+		 * @param notices The list of parser notices.
+		 * @return The tool tip text.  This may be HTML.  Returning
+		 *         <code>null</code> will result in no tool tip being displayed.
+		 */
+		public String getToolTipText(List<ParserNotice> notices);
+
 	}
 
 
@@ -765,27 +844,8 @@ public class ErrorStrip extends JPanel {
 
 		@Override
 		public String getToolTipText() {
-
-			String text = null;
-
-			if (notices.size()==1) {
-				text = notices.get(0).getMessage();
-			}
-			else { // > 1
-				StringBuilder sb = new StringBuilder("<html>");
-				sb.append(msg.getString("MultipleMarkers"));
-				sb.append("<br>");
-				for (int i=0; i<notices.size(); i++) {
-					ParserNotice pn = notices.get(i);
-					sb.append("&nbsp;&nbsp;&nbsp;- ");
-					sb.append(pn.getMessage());
-					sb.append("<br>");
-				}
-				text = sb.toString();
-			}
-
-			return text;
-
+			return markerToolTipProvider.getToolTipText(Collections.
+					unmodifiableList(notices));
 		}
 
 		protected void mouseClicked(MouseEvent e) {

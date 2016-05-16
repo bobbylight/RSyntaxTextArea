@@ -643,6 +643,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		assertTokenMapContains(tokens, "crontab", function);
 		assertTokenMapContains(tokens, "csh", function);
 		assertTokenMapContains(tokens, "ctags", function);
+		assertTokenMapContains(tokens, "curl", function);
 		assertTokenMapContains(tokens, "cut", function);
 		assertTokenMapContains(tokens, "cvs", function);
 		assertTokenMapContains(tokens, "date", function);

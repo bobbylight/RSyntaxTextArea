@@ -13,7 +13,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 
@@ -28,7 +30,7 @@ class LineHighlightManager {
 
 	private RTextArea textArea;
 	private List<LineHighlightInfo> lineHighlights;
-
+	private LineHighlightInfoComparator comparator;
 
 	/**
 	 * Constructor.
@@ -37,6 +39,7 @@ class LineHighlightManager {
 	 */
 	public LineHighlightManager(RTextArea textArea) {
 		this.textArea = textArea;
+		comparator = new LineHighlightInfoComparator();
 	}
 
 
@@ -58,13 +61,35 @@ class LineHighlightManager {
 		if (lineHighlights==null) {
 			lineHighlights = new ArrayList<LineHighlightInfo>(1);
 		}
-		int index = Collections.binarySearch(lineHighlights, lhi);
+		int index = Collections.binarySearch(lineHighlights, lhi, comparator);
 		if (index<0) { // Common case
 			index = -(index+1);
 		}
 		lineHighlights.add(index, lhi);
 		repaintLine(lhi);
 		return lhi;
+	}
+
+
+	/**
+	 * Returns the current line highlights' tags.
+	 *
+	 * @return The current line highlights' tags, or an empty list if there
+	 *         are none.
+	 */
+	protected List<Object> getCurrentLineHighlightTags() {
+		return lineHighlights == null ? Collections.emptyList() :
+			new ArrayList<Object>(lineHighlights);
+	}
+
+
+	/**
+	 * Returns the current number of line highlights.  Useful for testing.
+	 *
+	 * @return The current number of line highlights.
+	 */
+	protected int getLineHighlightCount() {
+		return lineHighlights == null ? 0 : lineHighlights.size();
 	}
 
 
@@ -161,7 +186,7 @@ class LineHighlightManager {
 	/**
 	 * Information about a line highlight.
 	 */
-	private static class LineHighlightInfo implements Comparable<LineHighlightInfo> {
+	private static class LineHighlightInfo {
 
 		private Position offs;
 		private Color color;
@@ -169,24 +194,6 @@ class LineHighlightManager {
 		public LineHighlightInfo(Position offs, Color c) {
 			this.offs = offs;
 			this.color = c;
-		}
-
-		public int compareTo(LineHighlightInfo o) {
-			if (o!=null) {
-				return offs.getOffset() - o.getOffset();
-			}
-			return -1;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o==this) {
-				return true;
-			}
-			if (o instanceof LineHighlightInfo) {
-				return offs.getOffset()==((LineHighlightInfo)o).getOffset();
-			}
-			return false;
 		}
 
 		public Color getColor() {
@@ -202,6 +209,27 @@ class LineHighlightManager {
 			return getOffset();
 		}
 
+	}
+
+
+	/**
+	 * Comparator used when adding new highlights.  This is done here instead
+	 * of making <code>LineHighlightInfo</code> implement
+	 * <code>Comparable</code> as correctly implementing the latter prevents
+	 * two LHI's pointing to the same line from correctly being distinguished
+	 * from one another.  See:
+	 * https://github.com/bobbylight/RSyntaxTextArea/issues/161
+	 */
+	private static class LineHighlightInfoComparator
+			implements Comparator<LineHighlightInfo> {
+
+		public int compare(LineHighlightInfo lhi1, LineHighlightInfo lhi2) {
+			if (lhi1.getOffset() < lhi2.getOffset()) {
+				return -1;
+			}
+			return lhi1.getOffset() == lhi2.getOffset() ? 0 : 1;
+		}
+		
 	}
 
 

@@ -1364,10 +1364,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * subclass, since they know how to render themselves differently when the
 	 * user toggles between insert and overwrite modes.
 	 *
-	 * @param caret The caret to use.  If this is not an instance of
-	 *        <code>ConfigurableCaret</code>, an exception is thrown.
-	 * @throws IllegalArgumentException If the specified caret is not an
-	 *         <code>ConfigurableCaret</code>.
+	 * @param caret The caret to use.
 	 * @see #setCaretStyle(int, CaretStyle)
 	 */
 	@Override

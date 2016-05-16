@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -51,6 +52,7 @@ import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
+import org.fife.ui.rsyntaxtextarea.folding.DefaultFoldManager;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
@@ -1886,7 +1888,7 @@ private boolean fractionalFontMetricsEnabled;
 		setTabLineColor(null);
 		setMarkOccurrencesColor(MarkOccurrencesSupport.DEFAULT_COLOR);
 
-		foldManager = new FoldManager(this);
+		foldManager = new DefaultFoldManager(this);
 
 		// Set auto-indent related stuff.
 		setAutoIndentEnabled(true);

@@ -7,3 +7,4 @@ rsyntaxtextarea_*.zip
 build
 .gradle
 /.settings/
+target/

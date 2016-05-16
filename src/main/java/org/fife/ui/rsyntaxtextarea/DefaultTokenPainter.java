@@ -142,9 +142,10 @@ java.awt.Rectangle r = host.getMatchRectangle();
 			if (bg!=null) {
 				paintBackground(x,y, nextX-x,fm.getHeight(),
 								g, fm.getAscent(), host, bg);
-			}
-			if (token.length()==1 && r!=null && r.x==x) {
-				((RSyntaxTextAreaUI)host.getUI()).paintMatchedBracketImpl(g, host, r);
+				if (token.length()==1 && r!=null && r.x==x) {
+					((RSyntaxTextAreaUI)host.getUI()).paintMatchedBracketImpl(
+							g, host, r);
+				}
 			}
 			g.setColor(fg);
 			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);

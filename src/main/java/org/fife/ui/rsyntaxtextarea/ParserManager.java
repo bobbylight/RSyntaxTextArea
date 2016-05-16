@@ -531,7 +531,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			return false;
 		}
 		Element elem = root.getElement(line);
-		return offs>=elem.getStartOffset() && offs<elem.getEndOffset();
+		return elem != null && offs>=elem.getStartOffset() && offs<elem.getEndOffset();
 	}
 
 

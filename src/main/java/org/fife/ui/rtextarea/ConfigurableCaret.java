@@ -76,6 +76,11 @@ public class ConfigurableCaret extends DefaultCaret {
 
 	private boolean alwaysVisible;
 
+	/**
+	 * Whether this caret will try to paste into the editor (assuming it is
+	 * editable) on middle-mouse clicks.
+	 */
+	private boolean pasteOnMiddleMouseClick;
 
 	/**
 	 * Creates the caret using {@link CaretStyle#THICK_VERTICAL_LINE_STYLE}.
@@ -96,6 +101,7 @@ public class ConfigurableCaret extends DefaultCaret {
 		seg = new Segment();
 		setStyle(style);
 		selectionPainter = new ChangeableHighlightPainter();
+		pasteOnMiddleMouseClick = true;
 	}
 
 
@@ -163,6 +169,18 @@ public class ConfigurableCaret extends DefaultCaret {
 					"c must be instance of RTextArea");
 		super.deinstall(c);
 		c.setNavigationFilter(null);
+	}
+
+
+	/**
+	 * Returns whether this caret will paste the contents of the clipboard into
+	 * the editor (assuming it is editable) on middle-mouse-button clicks.
+	 *
+	 * @return Whether a paste operation will be performed.
+	 * @see #setPasteOnMiddleMouseClick(boolean)
+	 */
+	public boolean getPasteOnMiddleMouseClick() {
+		return pasteOnMiddleMouseClick;
 	}
 
 
@@ -284,7 +302,8 @@ public class ConfigurableCaret extends DefaultCaret {
 				}
 			}
 
-			else if (SwingUtilities.isMiddleMouseButton(e)) {
+			else if (SwingUtilities.isMiddleMouseButton(e) &&
+					getPasteOnMiddleMouseClick()) {
 				if (nclicks == 1 && textArea.isEditable() && textArea.isEnabled()) {
 					// Paste the system selection, if it exists (e.g., on UNIX
 					// platforms, the user can select text, the middle-mouse click
@@ -494,6 +513,18 @@ public class ConfigurableCaret extends DefaultCaret {
 				repaint();
 			}
 		}
+	}
+
+
+	/**
+	 * Sets whether this caret will paste the contents of the clipboard into
+	 * the editor (assuming it is editable) on middle-mouse-button clicks.
+	 *
+	 * @param paste Whether a paste operation will be performed.
+	 * @see #getPasteOnMiddleMouseClick()
+	 */
+	public void setPasteOnMiddleMouseClick(boolean paste) {
+		pasteOnMiddleMouseClick = paste;
 	}
 
 
