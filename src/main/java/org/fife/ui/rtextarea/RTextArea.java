@@ -1422,6 +1422,21 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		}
 	}
 
+	/**
+	 * Sets the UndoManager used by this text area.
+	 * @param undoManager The new undo to use.
+	 */
+	public void setUndoManager( RUndoManager undoManager ) {
+		this.undoManager = undoManager;
+	}
+	
+	/**
+	 * Get the UndoManager used by this text area.
+	 * @return current UndoManager
+	 */
+	public RUndoManager getUndoManager() {
+		return undoManager;
+	}
 
 	/**
 	 * Sets the path in which to find images to associate with the editor's
