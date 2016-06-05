@@ -217,10 +217,7 @@ public class TipUtil {
 			font = new Font("SansSerif", Font.PLAIN, 12);
 		}
 		HTMLDocument doc = (HTMLDocument) textArea.getDocument();
-		doc.getStyleSheet().addRule(
-				"body { font-family: " + font.getFamily() +
-						"; font-size: " + font.getSize() + "pt" +
-						"; color: " + getHexString(fg) + "; }");
+		setFont(doc, font, fg);
 
 		// Always add link foreground rule.  Unfortunately these CSS rules
 		// stack each time the LaF is changed (how can we overwrite them
@@ -229,6 +226,23 @@ public class TipUtil {
 		doc.getStyleSheet().addRule(
 				"a { color: " + getHexString(linkFG) + "; }");
 
+	}
+
+
+	/**
+	 * Sets the default font for an HTML document (e.g., in a tool tip
+	 * displaying HTML).  This is here because when rendering HTML,
+	 * {@code setFont()} is not honored.
+	 *
+	 * @param doc The document to modify.
+	 * @param font The font to use.
+	 * @param fg The default foreground color.
+	 */
+	public static void setFont(HTMLDocument doc, Font font, Color fg) {
+		doc.getStyleSheet().addRule(
+				"body { font-family: " + font.getFamily() +
+						"; font-size: " + font.getSize() + "pt" +
+						"; color: " + getHexString(fg) + "; }");
 	}
 
 

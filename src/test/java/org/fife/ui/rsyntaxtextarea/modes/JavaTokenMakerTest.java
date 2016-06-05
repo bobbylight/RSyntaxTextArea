@@ -21,15 +21,11 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaTokenMakerTest extends AbstractTokenMakerTest {
+public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new JavaTokenMaker();
 	}
 
@@ -115,21 +111,13 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testCharLiterals() {
-
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
 			"'\\11'", "'\\22'", "'\\33'",
 			"'\\1'",
 		};
-
-		for (String code : chars) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
-		}
-
+		assertAllTokensOfType(chars, TokenTypes.LITERAL_CHAR);
 	}
 
 
@@ -161,18 +149,10 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testDocComments() {
-
 		String[] docCommentLiterals = {
 			"/** Hello world */",
 		};
-
-		for (String code : docCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-		}
-
+		assertAllTokensOfType(docCommentLiterals, TokenTypes.COMMENT_DOCUMENTATION);
 	}
 
 
@@ -207,18 +187,10 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testEolComments() {
-
 		String[] eolCommentLiterals = {
 			"// Hello world",
 		};
-
-		for (String code : eolCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-		}
-
+		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
 	}
 
 
@@ -423,13 +395,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 				"VirtualMachineError",
 		};
 
-		for (String code : classNames) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
-		}
-
+		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
 	}
 
 
@@ -477,13 +443,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 			"/* Hello world */",
 		};
 
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+		assertAllTokensOfType(mlcLiterals, TokenTypes.COMMENT_MULTILINE);
 	}
 
 
@@ -607,18 +567,10 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testStringLiterals() {
-
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};
-
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
-
+		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 	}
 
 

@@ -10,6 +10,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -39,10 +40,12 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -230,6 +233,8 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	private BracketMatchingTimer bracketRepaintTimer;
 
+	private MatchedBracketPopupTimer matchedBracketPopupTimer;
+
 	private boolean metricsNeverRefreshed;
 
 	/**
@@ -333,6 +338,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	/** Renders tokens. */
 	private TokenPainter tokenPainter;
+
+	/** Whether a popup showing matched bracket lines when they're off-screen. */
+	private boolean showMatchedBracketPopup;
 
 private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 private int maxAscent;
@@ -787,6 +795,21 @@ private boolean fractionalFontMetricsEnabled;
 					if (dotRect!=null) {
 						repaint(dotRect);
 					}
+
+					if (getShowMatchedBracketPopup()) {
+						Container parent = getParent();
+						if (parent instanceof JViewport) {
+							Rectangle visibleRect = this.getVisibleRect();
+							if (match.y + match.height < visibleRect.getY()) {
+								if (matchedBracketPopupTimer == null) {
+									matchedBracketPopupTimer =
+											new MatchedBracketPopupTimer();
+								}
+								matchedBracketPopupTimer.restart(bracketInfo.y);
+							}
+						}
+					}
+
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Shouldn't happen.
@@ -1543,6 +1566,19 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether a small popup window should display the text on the
+	 * line containing a matched bracket whenever a matched bracket is off-
+	 * screen.
+	 * 
+	 * @return Whether to show the popup.
+	 * @see #setShowMatchedBracketPopup(boolean)
+	 */
+	public boolean getShowMatchedBracketPopup() {
+		return showMatchedBracketPopup;
+	}
+
+
+	/**
 	 * Returns what type of syntax highlighting this editor is doing.
 	 *
 	 * @return The style being used, such as
@@ -1913,6 +1949,7 @@ private boolean fractionalFontMetricsEnabled;
 		secondaryLanguageBackgrounds[2] = new Color(0xffe0f0);
 
 		setRightHandSideCorrection(0);
+		setShowMatchedBracketPopup(true);
 
 	}
 
@@ -2794,6 +2831,19 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Sets whether a small popup window should display the text on the
+	 * line containing a matched bracket whenever a matched bracket is off-
+	 * screen.
+	 * 
+	 * @param show Whether to show the popup.
+	 * @see #getShowMatchedBracketPopup()
+	 */
+	public void setShowMatchedBracketPopup(boolean show) {
+		showMatchedBracketPopup = show;
+	}
+
+
+	/**
 	 * Sets what type of syntax highlighting this editor is doing.  This method
 	 * fires a property change of type {@link #SYNTAX_STYLE_PROPERTY}.
 	 *
@@ -3068,6 +3118,66 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public Token viewToToken(Point p) {
 		return modelToToken(viewToModel(p));
+	}
+
+	/**
+	 * Renders the text on the line containing the "matched bracket" after a
+	 * delay.
+	 */
+	private class MatchedBracketPopupTimer extends Timer
+			implements ActionListener, CaretListener {
+
+		private MatchedBracketPopup popup;
+		private int origDot;
+		private int matchedBracketOffs;
+
+		private MatchedBracketPopupTimer() {
+			super(350, null);
+			addActionListener(this);
+			setRepeats(false);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			if (popup != null) {
+				popup.dispose();
+			}
+
+			Window window = SwingUtilities.getWindowAncestor(RSyntaxTextArea.this);
+			popup = new MatchedBracketPopup(window, RSyntaxTextArea.this, matchedBracketOffs);
+			popup.pack();
+			popup.setVisible(true);
+
+		}
+
+		public void caretUpdate(CaretEvent e) {
+			int dot = e.getDot();
+			if (dot != origDot) {
+				stop();
+				removeCaretListener(this);
+				if (popup != null) {
+					popup.dispose();
+				}
+			}
+		}
+
+		/**
+		 * Restarts this timer, and stores a new offset to paint.
+		 * 
+		 * @param matchedBracketOffs The offset of the new matched bracket.
+		 */
+		public void restart(int matchedBracketOffs) {
+			this.origDot = getCaretPosition();
+			this.matchedBracketOffs = matchedBracketOffs;
+			this.restart();
+		}
+
+		@Override
+		public void start() {
+			super.start();
+			addCaretListener(this);
+		}
+
 	}
 
 
