@@ -253,11 +253,11 @@ public class TokenMap {
 	 */
 	private static class TokenMapToken {
 
-		char[] text;
-		int offset;
-		int length;
-		int tokenType;
-		TokenMapToken nextToken;
+		public char[] text;
+        public int offset;
+        public int length;
+        public int tokenType;
+        public TokenMapToken nextToken;
 
 		TokenMapToken(char[] text, int tokenType) {
 			this.text = text;

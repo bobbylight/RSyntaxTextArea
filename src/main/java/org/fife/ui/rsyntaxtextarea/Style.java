@@ -41,7 +41,7 @@ public class Style implements Cloneable {
 	public boolean underline;
 	public Font font;
 
-	FontMetrics fontMetrics;
+	public FontMetrics fontMetrics;
 
 
 	/**

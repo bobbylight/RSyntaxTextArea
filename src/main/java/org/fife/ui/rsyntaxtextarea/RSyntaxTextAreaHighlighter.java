@@ -260,7 +260,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	private static class SyntaxLayeredHighlightInfoImpl extends
 			LayeredHighlightInfoImpl {
 	
-		ParserNotice notice;//Color color; // Used only by Parser highlights.
+		private ParserNotice notice;//Color color; // Used only by Parser highlights.
 
 		@Override
 		public Color getColor() {

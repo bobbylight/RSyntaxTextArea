@@ -87,12 +87,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 	/**
 	 * The color used to paint fold outlines.
 	 */
-	static final Color DEFAULT_FOREGROUND = Color.gray;
+	public static final Color DEFAULT_FOREGROUND = Color.gray;
 
 	/**
 	 * The default color used to paint the "inside" of fold icons.
 	 */
-	static final Color DEFAULT_FOLD_BACKGROUND = Color.white;
+	public static final Color DEFAULT_FOLD_BACKGROUND = Color.white;
 
 	/**
 	 * Listens for events in this component.

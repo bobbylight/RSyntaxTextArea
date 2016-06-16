@@ -315,9 +315,9 @@ public class RTATextTransferHandler extends TransferHandler {
 	 */
 	static class TextTransferable implements Transferable {
 
-		Position p0;
-		Position p1;
-		JTextComponent c;
+		private Position p0;
+		private Position p1;
+		private JTextComponent c;
 
 		protected String plainData;
 
