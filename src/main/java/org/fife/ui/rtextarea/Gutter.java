@@ -117,7 +117,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Listens for events in our text area.
 	 */
-	private TextAreaListener listener;
+	private transient TextAreaListener listener;
 
 
 	/**

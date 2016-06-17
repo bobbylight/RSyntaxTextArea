@@ -55,7 +55,7 @@ class ClipboardHistoryPopup extends JWindow {
 	private RTextArea textArea;
 
 	private ChoiceList list;
-	private Listener listener;
+	private transient Listener listener;
 	private boolean prevCaretAlwaysVisible;
 
 	/**

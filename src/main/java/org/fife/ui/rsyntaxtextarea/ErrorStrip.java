@@ -86,7 +86,7 @@ public class ErrorStrip extends JPanel {
 	/**
 	 * Listens for events in this component.
 	 */
-	private Listener listener;
+	private transient Listener listener;
 
 	/**
 	 * Whether "marked occurrences" in the text area should be shown in this
@@ -135,7 +135,7 @@ public class ErrorStrip extends JPanel {
 	/**
 	 * Generates the tool tips for markers in this error strip.
 	 */
-	private ErrorStripMarkerToolTipProvider markerToolTipProvider;
+	private transient ErrorStripMarkerToolTipProvider markerToolTipProvider;
 
 	/**
 	 * The preferred width of this component.

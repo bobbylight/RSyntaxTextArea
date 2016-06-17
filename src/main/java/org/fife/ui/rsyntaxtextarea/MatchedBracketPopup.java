@@ -32,7 +32,7 @@ class MatchedBracketPopup extends JWindow {
 
 	private RSyntaxTextArea textArea;
 
-	private Listener listener;
+	private transient Listener listener;
 
 	private static final int LEFT_EMPTY_BORDER = 5;
 
