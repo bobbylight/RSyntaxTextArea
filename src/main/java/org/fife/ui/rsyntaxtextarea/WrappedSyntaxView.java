@@ -29,9 +29,9 @@ import org.fife.ui.rtextarea.Gutter;
 public class WrappedSyntaxView extends BoxView implements TabExpander,
 												RSTAView {
 
-	boolean widthChanging;
-	int tabBase;
-	int tabSize;
+	private boolean widthChanging;
+    private int tabBase;
+    private int tabSize;
     
 	/**
 	 * This is reused to keep from allocating/deallocating.
@@ -1111,7 +1111,7 @@ return p + 1;
 	 */
 	class WrappedLine extends View {
 
-		int nlines;
+		private int nlines;
 
 		WrappedLine(Element elem) {
 			super(elem);
