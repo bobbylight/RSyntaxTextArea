@@ -228,11 +228,11 @@ int currentCaretY;							// Used to know when to rehighlight current line.
 
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
-		String tabInSpaces = "";
+        StringBuilder stringBuilder = new StringBuilder();
 		for (int i=0; i<tabSize; i++)
-			tabInSpaces += " ";
+            stringBuilder.append(" ");
 		String text = getText();
-		setText(text.replaceAll(tabInSpaces, "\t"));
+		setText(text.replaceAll(stringBuilder.toString(), "\t"));
 		int newDocumentLength = getDocument().getLength();
 
 		// Place the caret back in its proper position.

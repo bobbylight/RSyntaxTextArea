@@ -225,11 +225,11 @@ public class Theme {
 
 	private static final String colorToString(Color c) {
 		int color = c.getRGB() & 0xffffff;
-		String str = Integer.toHexString(color);
-		while (str.length()<6) {
-			str = "0" + str;
+        StringBuilder stringBuilder = new StringBuilder(Integer.toHexString(color));
+		while (stringBuilder.length()<6) {
+            stringBuilder.insert(0, "0");
 		}
-		return str;
+		return stringBuilder.toString();
 	}
 
 

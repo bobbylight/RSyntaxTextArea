@@ -208,10 +208,11 @@ public class TokenImpl implements Token {
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
 					if (tabsToSpaces && tabStr==null) {
-						tabStr = "";
+                        StringBuilder stringBuilder = new StringBuilder();
 						for (int j=0; j<textArea.getTabSize(); j++) {
-							tabStr += "&nbsp;";
+                            stringBuilder.append("&nbsp;");
 						}
+                        tabStr = stringBuilder.toString();
 					}
 					sb.append(tabsToSpaces ? tabStr : "&#09;");
 					lastWasSpace = false;

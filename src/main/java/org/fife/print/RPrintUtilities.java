@@ -147,11 +147,11 @@ public abstract class RPrintUtilities {
 				int tabIndex = curLineString.indexOf('\t');
 				while (tabIndex > -1) {
 					int spacesNeeded = tabSizeInSpaces - (tabIndex % tabSizeInSpaces);
-					String replacementString = "";
+                    StringBuilder stringBuilder = new StringBuilder();
 					for (int i=0; i<spacesNeeded; i++)
-						replacementString += ' ';
+                        stringBuilder.append(" ");
 					// Note that "\t" is actually a regex for this method.
-					curLineString = curLineString.replaceFirst("\t", replacementString);
+					curLineString = curLineString.replaceFirst("\t", stringBuilder.toString());
 					tabIndex = curLineString.indexOf('\t');
 				}
 			}
@@ -268,11 +268,11 @@ public abstract class RPrintUtilities {
 				int tabIndex = curLineString.indexOf('\t');
 				while (tabIndex > -1) {
 					int spacesNeeded = tabSizeInSpaces - (tabIndex % tabSizeInSpaces);
-					String replacementString = "";
+                    StringBuilder stringBuilder = new StringBuilder();
 					for (int i=0; i<spacesNeeded; i++)
-						replacementString += ' ';
+                        stringBuilder.append(" ");
 					// Note that "\t" is actually a regex for this method.
-					curLineString = curLineString.replaceFirst("\t", replacementString);
+					curLineString = curLineString.replaceFirst("\t", stringBuilder.toString());
 					tabIndex = curLineString.indexOf('\t');
 				}
 			}
