@@ -41,7 +41,7 @@ class SizeGrip extends JPanel {
 	/**
 	 * The size grip to use if we're on OS X.
 	 */
-	private Image osxSizeGrip;
+	private transient Image osxSizeGrip;
 
 
 	public SizeGrip() {

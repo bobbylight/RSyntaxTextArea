@@ -56,8 +56,8 @@ class TipWindow extends JWindow implements ActionListener {
 	private FocusableTip ft;
 	private JEditorPane textArea;
 	private String text;
-	private TipListener tipListener;
-	private HyperlinkListener userHyperlinkListener;
+	private transient TipListener tipListener;
+	private transient HyperlinkListener userHyperlinkListener;
 
 	private static TipWindow visibleInstance;
 
