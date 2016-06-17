@@ -362,11 +362,11 @@ public class SyntaxView extends View implements TabExpander,
 				// here, we get no vertical scrollbar (as lineHeight==0).
 				lineHeight = host!=null ? host.getLineHeight() : lineHeight;
 //				return getElement().getElementCount() * lineHeight;
-int visibleLineCount = getElement().getElementCount();
-if (host.isCodeFoldingEnabled()) {
-	visibleLineCount -= host.getFoldManager().getHiddenLineCount();
-}
-return visibleLineCount * lineHeight;
+                int visibleLineCount = getElement().getElementCount();
+                if (host.isCodeFoldingEnabled()) {
+                    visibleLineCount -= host.getFoldManager().getHiddenLineCount();
+                }
+                return visibleLineCount * (float) lineHeight;
 			default:
 				throw new IllegalArgumentException("Invalid axis: " + axis);
 		}
@@ -651,7 +651,7 @@ if (host.isCodeFoldingEnabled()) {
 		if (tabSize == 0)
 			return x;
 		int ntabs = (((int)x) - tabBase) / tabSize;
-		return tabBase + ((ntabs + 1) * tabSize);
+		return tabBase + ((ntabs + 1f) * tabSize);
 	}
 
 

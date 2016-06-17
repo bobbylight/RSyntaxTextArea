@@ -422,7 +422,7 @@ public abstract class RPrintUtilities {
 						int pos = currentLineString.lastIndexOf(breakChars[i]) + 1;
 						//if (pos>-1 && pos>currentPos)
 						//	currentPos = pos;
-						if (pos>0 && pos>currentPos & pos!=currentLineString.length())
+						if (pos>0 && pos>currentPos && pos!=currentLineString.length())
 							currentPos = pos;
 					}
 
@@ -521,7 +521,7 @@ public abstract class RPrintUtilities {
 				return x;
 			int tabSizeInPixels = tabSizeInSpaces * fm.charWidth(' ');
 			int ntabs = (((int) x) - xOffset) / tabSizeInPixels;
-			return xOffset + ((ntabs + 1) * tabSizeInPixels);
+			return xOffset + ((ntabs + 1f) * tabSizeInPixels);
 		}
 
 	}
