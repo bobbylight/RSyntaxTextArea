@@ -690,12 +690,12 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					boolean italic = false;
 					String boldStr = attrs.getValue("bold");
 					if (boldStr!=null) {
-						bold = Boolean.valueOf(boldStr).booleanValue();
+						bold = Boolean.parseBoolean(boldStr);
 						styleSpecified = true;
 					}
 					String italicStr = attrs.getValue("italic");
 					if (italicStr!=null) {
-						italic = Boolean.valueOf(italicStr).booleanValue();
+						italic = Boolean.parseBoolean(italicStr);
 						styleSpecified = true;
 					}
 					if (styleSpecified) {
@@ -707,7 +707,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 					String ulineStr = attrs.getValue("underline");
 					if (ulineStr!=null) {
-						boolean uline= Boolean.valueOf(ulineStr).booleanValue();
+						boolean uline= Boolean.parseBoolean(ulineStr);
 						scheme.styles[index].underline = uline;
 					}
 

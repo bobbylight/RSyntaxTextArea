@@ -29,9 +29,9 @@ import org.fife.ui.rtextarea.Gutter;
 public class WrappedSyntaxView extends BoxView implements TabExpander,
 												RSTAView {
 
-	boolean widthChanging;
-	int tabBase;
-	int tabSize;
+	private boolean widthChanging;
+    private int tabBase;
+    private int tabSize;
     
 	/**
 	 * This is reused to keep from allocating/deallocating.
@@ -256,7 +256,7 @@ return p + 1;
 		if (host.getEOLMarkersVisible()) {
 			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
 			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", x, y-fontHeight);
+			g.drawString("\u00B6", x, (float) y-fontHeight);
 		}
 
 	}
@@ -454,7 +454,7 @@ return p + 1;
 		if (host.getEOLMarkersVisible()) {
 			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
 			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", x, y-fontHeight);
+			g.drawString("\u00B6", x, (float) y-fontHeight);
 		}
 
 	}
@@ -840,7 +840,7 @@ return p + 1;
 		if (tabSize == 0)
 			return x;
 		int ntabs = ((int) x - tabBase) / tabSize;
-		return tabBase + ((ntabs + 1) * tabSize);
+		return tabBase + ((ntabs + 1f) * tabSize);
 	}
 
 
@@ -1111,7 +1111,7 @@ return p + 1;
 	 */
 	class WrappedLine extends View {
 
-		int nlines;
+		private int nlines;
 
 		WrappedLine(Element elem) {
 			super(elem);
