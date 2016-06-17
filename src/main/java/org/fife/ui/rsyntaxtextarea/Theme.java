@@ -684,7 +684,7 @@ public class Theme {
 				String color = attrs.getValue("color");
 				theme.currentLineHighlight = stringToColor(color);
 				String fadeStr = attrs.getValue("fade");
-				boolean fade = Boolean.valueOf(fadeStr).booleanValue();
+				boolean fade = Boolean.parseBoolean(fadeStr);
 				theme.fadeCurrentLineHighlight = fade;
 			}
 
@@ -729,7 +729,7 @@ public class Theme {
 				String color = attrs.getValue("color");
 				theme.markOccurrencesColor = stringToColor(color);
 				String border = attrs.getValue("border");
-				theme.markOccurrencesBorder = Boolean.valueOf(border).booleanValue();
+				theme.markOccurrencesBorder = Boolean.parseBoolean(border);
 			}
 
 			else if ("matchedBracket".equals(qName)) {
@@ -738,9 +738,9 @@ public class Theme {
 				String bg = attrs.getValue("bg");
 				theme.matchedBracketBG = stringToColor(bg);
 				String highlightBoth = attrs.getValue("highlightBoth");
-				theme.matchedBracketHighlightBoth = Boolean.valueOf(highlightBoth).booleanValue();
+				theme.matchedBracketHighlightBoth = Boolean.parseBoolean(highlightBoth);
 				String animate = attrs.getValue("animate");
-				theme.matchedBracketAnimate = Boolean.valueOf(animate).booleanValue();
+				theme.matchedBracketAnimate = Boolean.parseBoolean(animate);
 			}
 
 			else if ("hyperlinks".equals(qName)) {
@@ -759,7 +759,7 @@ public class Theme {
 
 			else if ("selection".equals(qName)) {
 				String useStr = attrs.getValue("useFG");
-				theme.useSelctionFG = Boolean.valueOf(useStr).booleanValue();
+				theme.useSelctionFG = Boolean.parseBoolean(useStr);
 				String color = attrs.getValue("fg");
 				theme.selectionFG = stringToColor(color,
 											getDefaultSelectionFG());
@@ -768,8 +768,7 @@ public class Theme {
 				theme.selectionBG = stringToColor(color,
 											getDefaultSelectionBG());
 				String roundedStr = attrs.getValue("roundedEdges");
-				theme.selectionRoundedEdges = Boolean.valueOf(roundedStr).
-											booleanValue();
+				theme.selectionRoundedEdges = Boolean.parseBoolean(roundedStr);
 			}
 
 			// Start of the syntax scheme definition
@@ -835,12 +834,12 @@ public class Theme {
 					boolean italic = false;
 					String boldStr = attrs.getValue("bold");
 					if (boldStr!=null) {
-						bold = Boolean.valueOf(boldStr).booleanValue();
+						bold = Boolean.parseBoolean(boldStr);
 						styleSpecified = true;
 					}
 					String italicStr = attrs.getValue("italic");
 					if (italicStr!=null) {
-						italic = Boolean.valueOf(italicStr).booleanValue();
+						italic = Boolean.parseBoolean(italicStr);
 						styleSpecified = true;
 					}
 					if (styleSpecified) {
@@ -854,7 +853,7 @@ public class Theme {
 
 					String ulineStr = attrs.getValue("underline");
 					if (ulineStr!=null) {
-						boolean uline= Boolean.valueOf(ulineStr).booleanValue();
+						boolean uline= Boolean.parseBoolean(ulineStr);
 						theme.scheme.getStyle(index).underline = uline;
 					}
 
