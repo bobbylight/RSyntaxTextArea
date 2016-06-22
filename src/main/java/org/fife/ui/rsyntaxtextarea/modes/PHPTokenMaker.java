@@ -24598,13 +24598,6 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
 					int main = -(-initialTokenType & 0x0000ff00);
 					switch (main) {
-						default: // Should never happen
-						case INTERNAL_IN_PHP:
-							state = PHP;
-							languageIndex = LANG_INDEX_PHP;
-							phpInState = -initialTokenType&0xff;
-							phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
-							break;
 						case INTERNAL_IN_PHP_MLC:
 							state = PHP_MLC;
 							languageIndex = LANG_INDEX_PHP;
@@ -24638,6 +24631,13 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 							languageIndex = LANG_INDEX_CSS;
 							cssPrevState = -initialTokenType&0xff;
 							break;
+                        case INTERNAL_IN_PHP:
+                        default: // Should never happen
+                            state = PHP;
+                            languageIndex = LANG_INDEX_PHP;
+                            phpInState = -initialTokenType&0xff;
+                            phpInLangIndex = (-initialTokenType&0x00ff0000)>>16;
+                            break;
 					}
 				}
 				else {

@@ -2139,16 +2139,16 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 				if (initialTokenType<-1024) {
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
-						case INTERNAL_CSS_STRING:
-							state = CSS_STRING;
-							break;
 						case INTERNAL_CSS_CHAR:
 							state = CSS_CHAR_LITERAL;
 							break;
 						case INTERNAL_CSS_MLC:
 							state = CSS_C_STYLE_COMMENT;
 							break;
+                        case INTERNAL_CSS_STRING:
+                        default: // Should never happen
+                            state = CSS_STRING;
+                            break;
 					}
 					cssPrevState = -initialTokenType&0xff;
 					languageIndex = LANG_INDEX_CSS;

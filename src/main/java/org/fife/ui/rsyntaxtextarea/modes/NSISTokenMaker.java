@@ -2488,7 +2488,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -2502,6 +2502,9 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
 			case Token.COMMENT_MULTILINE:
 				state = MLC;
 				break;
+            default:
+                state = YYINITIAL;
+                break;
 		}
 
 		start = text.offset;

@@ -6790,11 +6790,6 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 					// INTERNAL_IN_CSSxxx - cssPrevState
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
-						case INTERNAL_IN_JAVA_DOCCOMMENT:
-							state = JAVA_DOCCOMMENT;
-							jspInState = -initialTokenType&0xff;
-							break;
 						case INTERNAL_IN_JAVA_EXPRESSION:
 							state = JAVA_EXPRESSION;
 							jspInState = -initialTokenType&0xff;
@@ -6818,6 +6813,11 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 							languageIndex = LANG_INDEX_CSS;
 							cssPrevState = -initialTokenType&0xff;
 							break;
+                        case INTERNAL_IN_JAVA_DOCCOMMENT:
+                        default: // Should never happen
+                            state = JAVA_DOCCOMMENT;
+                            jspInState = -initialTokenType&0xff;
+                            break;
 					}
 				}
 				else {
