@@ -118,18 +118,24 @@ public class IconGroup {
 	 */
 	@Override
 	public boolean equals(Object o2) {
-		if (o2!=null && o2 instanceof IconGroup) {
-			IconGroup ig2 = (IconGroup)o2;
-			if (ig2.getName().equals(getName()) &&
-					separateLargeIcons==ig2.hasSeparateLargeIcons()) {
-				if (separateLargeIcons) {
-					if (!largeIconSubDir.equals(ig2.largeIconSubDir))
-						return false;
-				}
-				return path.equals(ig2.path);
-			}
-			// If we got here, separateLargeIcons values weren't equal.
-		}
+        if (o2 == null) {
+            return false;
+        }
+        if (o2 == this) {
+            return true;
+        }
+        if (getClass() == o2.getClass()) {
+            IconGroup ig2 = (IconGroup)o2;
+            if (ig2.getName().equals(getName()) &&
+                    separateLargeIcons==ig2.hasSeparateLargeIcons()) {
+                if (separateLargeIcons) {
+                    if (!largeIconSubDir.equals(ig2.largeIconSubDir))
+                        return false;
+                }
+                return path.equals(ig2.path);
+            }
+            // If we got here, separateLargeIcons values weren't equal.
+        }
 		return false;
 	}
 

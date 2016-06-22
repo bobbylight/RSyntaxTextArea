@@ -154,7 +154,16 @@ public class Fold implements Comparable<Fold> {
 	 */
 	@Override
 	public boolean equals(Object otherFold) {
-		return otherFold instanceof Fold && compareTo((Fold)otherFold)==0;
+        if (otherFold == null) {
+            return false;
+        }
+        if (otherFold == this) {
+            return true;
+        }
+        if (getClass() == otherFold.getClass()) {
+            return compareTo((Fold)otherFold)==0;
+        }
+		return false;
 	}
 
 

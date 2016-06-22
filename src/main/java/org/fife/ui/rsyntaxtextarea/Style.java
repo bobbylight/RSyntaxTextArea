@@ -145,7 +145,13 @@ public class Style implements Cloneable {
 	 */
 	@Override
 	public boolean equals(Object o2) {
-		if (o2 instanceof Style) {
+        if (o2 == null) {
+            return false;
+        }
+        if (o2 == this) {
+            return true;
+        }
+		if (getClass() == o2.getClass()) {
 			Style ss2 = (Style)o2;
 			if (this.underline==ss2.underline &&
 				areEqual(foreground, ss2.foreground) &&

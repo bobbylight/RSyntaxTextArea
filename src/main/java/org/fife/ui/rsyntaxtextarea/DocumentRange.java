@@ -64,7 +64,10 @@ public class DocumentRange implements Comparable<DocumentRange> {
 		if (other==this) {
 			return true;
 		}
-		if (other instanceof DocumentRange) {
+        if (other == null) {
+            return false;
+        }
+		if (getClass() == other.getClass()) {
 			return this.compareTo((DocumentRange)other)==0;
 		}
 		return false;
