@@ -504,11 +504,11 @@ else {
 			// current line not being highlighted when a document is first
 			// opened.  So, we set it here just in case.
 			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
-if (host.isCodeFoldingEnabled()) {
-	FoldManager fm = host.getFoldManager();
-	int hiddenCount = fm.getHiddenLineCountAbove(line);
-	line -= hiddenCount;
-}
+            if (host != null && host.isCodeFoldingEnabled()) {
+                FoldManager fm = host.getFoldManager();
+                int hiddenCount = fm.getHiddenLineCountAbove(line);
+                line -= hiddenCount;
+            }
 			r = new Rectangle(alloc.x, alloc.y + line*lineHeight,
 									alloc.width, lineHeight);
 		}
@@ -984,11 +984,13 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 			// current line not being highlighted when a document is first
 			// opened.  So, we set it here just in case.
 			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
-			FoldManager fm = host.getFoldManager();
-			if (!fm.isLineHidden(line)) {
-				line -= fm.getHiddenLineCountAbove(line);
-				return alloc.y + line*lineHeight;
-			}
+            if (host != null) {
+                FoldManager fm = host.getFoldManager();
+                if (!fm.isLineHidden(line)) {
+                    line -= fm.getHiddenLineCountAbove(line);
+                    return alloc.y + line * lineHeight;
+                }
+            }
 		}
 
 		return -1;

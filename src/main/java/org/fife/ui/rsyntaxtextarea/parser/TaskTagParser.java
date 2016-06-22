@@ -101,14 +101,16 @@ public class TaskTagParser extends AbstractParser {
 			}
 
 			if (start>-1) {
-				text = text.substring(start);
-				// TODO: Strip off end of MLC's if they're there.
-				int len = text.length();
-				TaskNotice pn = new TaskNotice(this, text, line+1, offs, len);
-				pn.setLevel(ParserNotice.Level.INFO);
-				pn.setShowInEditor(false);
-				pn.setColor(COLOR);
-				result.addNotice(pn);
+                if (text != null) {
+                    text = text.substring(start);
+                    // TODO: Strip off end of MLC's if they're there.
+                    int len = text.length();
+                    TaskNotice pn = new TaskNotice(this, text, line + 1, offs, len);
+                    pn.setLevel(ParserNotice.Level.INFO);
+                    pn.setShowInEditor(false);
+                    pn.setColor(COLOR);
+                    result.addNotice(pn);
+                }
 			}
 
 		}
