@@ -1056,13 +1056,14 @@ return p + 1;
 			offs = v.viewToModel(x, y, alloc, bias);
 		}
 
-		// Code folding may have hidden the last line.  If so, return the last
-		// visible offset instead of the last offset.
-		if (host.isCodeFoldingEnabled() && v==getView(getViewCount()-1) &&
-				offs==v.getEndOffset()-1) {
-			offs = host.getLastVisibleOffset();
-		}
-
+        if (v != null) {
+            // Code folding may have hidden the last line.  If so, return the last
+            // visible offset instead of the last offset.
+            if (host.isCodeFoldingEnabled() && v == getView(getViewCount() - 1) &&
+                    offs == v.getEndOffset() - 1) {
+                offs = host.getLastVisibleOffset();
+            }
+        }
 		return offs;
 
 	}
@@ -1361,7 +1362,7 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 						}
 
 						// Point is in this physical line!
-						else {
+						else if (tlist != null) {
 
 							// Start at alloc.x since this chunk starts
 							// at the beginning of a physical line.

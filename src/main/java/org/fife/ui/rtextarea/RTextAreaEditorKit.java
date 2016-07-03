@@ -944,8 +944,9 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 			if (beep)
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-
-			textArea.requestFocusInWindow();
+            if (textArea != null) {
+                textArea.requestFocusInWindow();
+            }
 
 		}
 
