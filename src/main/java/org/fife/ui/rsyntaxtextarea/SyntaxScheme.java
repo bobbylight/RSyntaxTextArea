@@ -147,28 +147,29 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 */
 	@Override
 	public boolean equals(Object otherScheme) {
+        if (otherScheme == null) {
+            return false;
+        }
+        if (otherScheme == this) {
+            return true;
+        }
+        if (getClass() == otherScheme.getClass()) {
+            Style[] otherSchemes = ((SyntaxScheme)otherScheme).styles;
 
-		// No need for null check; instanceof takes care of this for us,
-		// i.e. "if (!(null instanceof Foo))" evaluates to "true".
-		if (!(otherScheme instanceof SyntaxScheme)) {
-			return false;
-		}
-
-		Style[] otherSchemes = ((SyntaxScheme)otherScheme).styles;
-
-		int length = styles.length;
-		for (int i=0; i<length; i++) {
-			if (styles[i]==null) {
-				if (otherSchemes[i]!=null) {
-					return false;
-				}
-			}
-			else if (!styles[i].equals(otherSchemes[i])) {
-				return false;
-			}
-		}
-		return true;
-
+            int length = styles.length;
+            for (int i=0; i<length; i++) {
+                if (styles[i]==null) {
+                    if (otherSchemes[i]!=null) {
+                        return false;
+                    }
+                }
+                else if (!styles[i].equals(otherSchemes[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
 	}
 
 

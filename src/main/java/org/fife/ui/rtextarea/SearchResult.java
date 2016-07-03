@@ -110,10 +110,13 @@ public class SearchResult implements Comparable<SearchResult> {
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (other==this) {
+		if (other == this) {
 			return true;
 		}
-		if (other instanceof SearchResult) {
+        if (other == null) {
+            return false;
+        }
+		if (getClass() == other.getClass()) {
 			return this.compareTo((SearchResult)other)==0;
 		}
 		return false;
