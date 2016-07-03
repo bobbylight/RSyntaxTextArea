@@ -868,7 +868,6 @@ return p + 1;
 		// Whether token styles should always be painted, even in selections
 		int selStart = host.getSelectionStart();
 		int selEnd = host.getSelectionEnd();
-		int curLine = host.getCaretLineNumber();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
@@ -1054,9 +1053,7 @@ return p + 1;
 		View v = getViewAtPoint((int) x, (int) y, alloc);
 		if (v != null) {
 			offs = v.viewToModel(x, y, alloc, bias);
-		}
-
-        if (v != null) {
+			
             // Code folding may have hidden the last line.  If so, return the last
             // visible offset instead of the last offset.
             if (host.isCodeFoldingEnabled() && v == getView(getViewCount() - 1) &&

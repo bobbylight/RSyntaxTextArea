@@ -914,7 +914,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
-			if ((textArea != null) && (textArea.isEditable())) {
+			if (textArea != null && textArea.isEditable()) {
 				try {
 					Document doc = textArea.getDocument();
 					Caret caret = textArea.getCaret();
@@ -972,7 +972,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
-			if ((textArea != null) && (textArea.isEditable())) {
+			if (textArea != null && textArea.isEditable()) {
 				try {
 					Document doc = textArea.getDocument();
 					Caret caret = textArea.getCaret();

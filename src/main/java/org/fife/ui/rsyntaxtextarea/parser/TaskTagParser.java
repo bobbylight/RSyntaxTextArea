@@ -100,17 +100,15 @@ public class TaskTagParser extends AbstractParser {
 				t = t.getNextToken();
 			}
 
-			if (start>-1) {
-                if (text != null) {
-                    text = text.substring(start);
-                    // TODO: Strip off end of MLC's if they're there.
-                    int len = text.length();
-                    TaskNotice pn = new TaskNotice(this, text, line + 1, offs, len);
-                    pn.setLevel(ParserNotice.Level.INFO);
-                    pn.setShowInEditor(false);
-                    pn.setColor(COLOR);
-                    result.addNotice(pn);
-                }
+			if (start>-1 && text != null) { // "text != null" just for Sonar
+				text = text.substring(start);
+				// TODO: Strip off end of MLC's if they're there.
+				int len = text.length();
+				TaskNotice pn = new TaskNotice(this, text, line + 1, offs, len);
+				pn.setLevel(ParserNotice.Level.INFO);
+				pn.setShowInEditor(false);
+				pn.setColor(COLOR);
+				result.addNotice(pn);
 			}
 
 		}
