@@ -914,7 +914,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
-			if ((textArea != null) && (textArea.isEditable())) {
+			if (textArea != null && textArea.isEditable()) {
 				try {
 					Document doc = textArea.getDocument();
 					Caret caret = textArea.getCaret();
@@ -944,8 +944,9 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 			if (beep)
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-
-			textArea.requestFocusInWindow();
+            if (textArea != null) {
+                textArea.requestFocusInWindow();
+            }
 
 		}
 
@@ -971,7 +972,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
 			boolean beep = true;
-			if ((textArea != null) && (textArea.isEditable())) {
+			if (textArea != null && textArea.isEditable()) {
 				try {
 					Document doc = textArea.getDocument();
 					Caret caret = textArea.getCaret();

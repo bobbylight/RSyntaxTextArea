@@ -637,8 +637,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			parent.remove(char010);
 			parent = parent.getParent();
 		}
-		KeyStroke backspace = KeyStroke.getKeyStroke("BACK_SPACE");
-		inputMap.put(backspace, DefaultEditorKit.deletePrevCharAction);
+		if (inputMap != null) { // Just for Sonar
+			KeyStroke backspace = KeyStroke.getKeyStroke("BACK_SPACE");
+			inputMap.put(backspace, DefaultEditorKit.deletePrevCharAction);
+		}
 	}
 
 

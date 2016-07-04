@@ -868,7 +868,6 @@ return p + 1;
 		// Whether token styles should always be painted, even in selections
 		int selStart = host.getSelectionStart();
 		int selEnd = host.getSelectionEnd();
-		int curLine = host.getCaretLineNumber();
 
 		int n = getViewCount();	// Number of lines.
 		int x = alloc.x + getLeftInset();
@@ -1054,15 +1053,14 @@ return p + 1;
 		View v = getViewAtPoint((int) x, (int) y, alloc);
 		if (v != null) {
 			offs = v.viewToModel(x, y, alloc, bias);
-		}
-
-		// Code folding may have hidden the last line.  If so, return the last
-		// visible offset instead of the last offset.
-		if (host.isCodeFoldingEnabled() && v==getView(getViewCount()-1) &&
-				offs==v.getEndOffset()-1) {
-			offs = host.getLastVisibleOffset();
-		}
-
+			
+            // Code folding may have hidden the last line.  If so, return the last
+            // visible offset instead of the last offset.
+            if (host.isCodeFoldingEnabled() && v == getView(getViewCount() - 1) &&
+                    offs == v.getEndOffset() - 1) {
+                offs = host.getLastVisibleOffset();
+            }
+        }
 		return offs;
 
 	}
@@ -1361,7 +1359,7 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 						}
 
 						// Point is in this physical line!
-						else {
+						else if (tlist != null) {
 
 							// Start at alloc.x since this chunk starts
 							// at the beginning of a physical line.
