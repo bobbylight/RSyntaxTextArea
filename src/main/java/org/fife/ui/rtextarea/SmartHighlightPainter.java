@@ -3,7 +3,7 @@
  *
  * SmartHighlightPainter.java - A highlight painter whose rendered highlights
  * don't "grow" when the user appends text to the end of them.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -14,6 +14,7 @@ import java.awt.Graphics;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
@@ -23,7 +24,7 @@ import javax.swing.text.View;
 /**
  * A "smart" highlight painter designed for use in RSyntaxTextArea.  Adds the
  * following features:
- * 
+ *
  * <ul>
  *    <li>Rendered highlights don't "grow" when users append text to the "end"
  *        of them.  This is implemented by assuming that the highlights
@@ -116,8 +117,8 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 			// --- determine locations ---
 			Shape shape = view.modelToView(p0, Position.Bias.Forward, p1,
 					Position.Bias.Backward, viewBounds);
-			Rectangle r = (shape instanceof Rectangle) ? (Rectangle) shape
-												: shape.getBounds();
+			Rectangle r = shape instanceof Rectangle ? (Rectangle) shape :
+														shape.getBounds();
 			g.fillRect(r.x, r.y, r.width, r.height);
 			if (paintBorder) {
 				g.setColor(borderColor);

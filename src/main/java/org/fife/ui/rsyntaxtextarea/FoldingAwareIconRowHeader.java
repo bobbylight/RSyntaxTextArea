@@ -3,7 +3,7 @@
  *
  * FoldingAwareIconRowHeader - Icon row header that paints itself correctly
  * even when code folding is enabled.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

@@ -2,7 +2,7 @@
  * 05/12/2010
  *
  * SearchEngineTest.java - Test cases for SearchEngine.java
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
  * <code>RTextArea</code>/<code>RSyntaxTextArea</code>.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */
@@ -81,19 +81,19 @@ public class SearchEngineTest {
 	}
 
 
-	private final boolean findImpl(SearchContext context) {
+	private boolean findImpl(SearchContext context) {
 		result = SearchEngine.find(textArea, context);
 		return result.wasFound();
 	}
 
 
-	private final boolean replaceImpl(SearchContext context) {
+	private boolean replaceImpl(SearchContext context) {
 		result = SearchEngine.replace(textArea, context);
 		return result.wasFound();
 	}
 
 
-	private final int replaceAllImpl(SearchContext context) {
+	private int replaceAllImpl(SearchContext context) {
 		result = SearchEngine.replaceAll(textArea, context);
 		return result.getCount();
 	}

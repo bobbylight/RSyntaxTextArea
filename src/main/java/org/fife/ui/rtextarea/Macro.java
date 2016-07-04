@@ -2,7 +2,7 @@
  * 09/16/2004
  *
  * Macro.java - A macro as recorded/played back by an RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -10,34 +10,42 @@ package org.fife.ui.rtextarea;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.fife.io.UnicodeReader;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 
 /**
  * A macro as recorded/played back by an {@link RTextArea}.<p>
- * 
+ *
  * <code>Macro</code>s are static; when a Macro is loaded, it can be run by any
  * instance of <code>RTextArea</code> in the application.  To activate and play
  * back a macro, use the following methods:
- * 
+ *
  * <ul>
  *    <li>{@link RTextArea#loadMacro(Macro)}
  *    <li>{@link RTextArea#playbackLastMacro()}
  * </ul>
  *
  * To record and save a new macro, you'd use the following methods:
- * 
+ *
  * <ul>
  *    <li>{@link RTextArea#beginRecordingMacro()} (this discards the previous
  *        "current" macro, if any)
@@ -46,7 +54,7 @@ import org.fife.io.UnicodeReader;
  *        desired)
  *    <li>{@link RTextArea#getCurrentMacro()}.{@link #saveToFile(File)}
  * </ul>
- * 
+ *
  * As <code>Macro</code>s save themselves as XML files, a common technique is
  * to save all macros in files named "<code>{@link #getName()}.xml</code>", and
  * place them all in a common directory.
@@ -81,14 +89,12 @@ public class Macro {
 	 * Loads a macro from a file on disk.
 	 *
 	 * @param file The file from which to load the macro.
-	 * @throws FileNotFoundException If the specified file does not exist, is
-	 *         a directory instead of a regular file, or otherwise cannot be
-	 *         opened.
-	 * @throws IOException If an I/O exception occurs while reading the file.
+	 * @throws IOException If the file does not exist or an I/O exception occurs
+	 *         while reading the file.
 	 * @see #saveToFile(String)
 	 * @see #saveToFile(File)
 	 */
-	public Macro(File file) throws FileNotFoundException, IOException {
+	public Macro(File file) throws IOException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -113,7 +119,7 @@ public class Macro {
 
 		// Traverse the XML tree.
 		boolean parsedOK = initializeFromXMLFile(doc.getDocumentElement());
-		if (parsedOK==false) {
+		if (!parsedOK) {
 			name = null;
 			macroRecords.clear();
 			macroRecords = null;
@@ -140,7 +146,7 @@ public class Macro {
 	 * @param records The initial records of the macro.
 	 */
 	public Macro(String name, List<MacroRecord> records) {
-		
+
 		this.name = name;
 
 		if (records!=null) {
@@ -152,7 +158,7 @@ public class Macro {
 		else {
 			macroRecords = new ArrayList<MacroRecord>(10);
 		}
-	
+
 	}
 
 
@@ -163,8 +169,9 @@ public class Macro {
 	 * @see #getMacroRecords
 	 */
 	public void addMacroRecord(MacroRecord record) {
-		if (record!=null)
+		if (record!=null) {
 			macroRecords.add(record);
+		}
 	}
 
 
@@ -246,8 +253,9 @@ public class Macro {
 
 					else if (nodeName.equals(ACTION)) {
 						NamedNodeMap attributes = node.getAttributes();
-						if (attributes==null || attributes.getLength()!=1)
+						if (attributes==null || attributes.getLength()!=1) {
 							return false;
+						}
 						Node node2 = attributes.item(0);
 						MacroRecord macroRecord = new MacroRecord();
 						if (!node2.getNodeName().equals(ID)) {
@@ -361,8 +369,9 @@ public class Macro {
 					for (int j=0; j<command.length(); j++) {
 						if (command.charAt(j)<32) {
 							command = command.substring(0,j);
-							if (j<command.length()-1)
+							if (j<command.length()-1) {
 								command += command.substring(j+1);
+							}
 						}
 					}
 					Node n = doc.createCDATASection(command);
@@ -410,14 +419,14 @@ public class Macro {
 	 */
 	static class MacroRecord {
 
-		public String id;
-		public String actionCommand;
+		String id;
+		String actionCommand;
 
-		public MacroRecord() {
+		MacroRecord() {
 			this(null, null);
 		}
 
-		public MacroRecord(String id, String actionCommand) {
+		MacroRecord(String id, String actionCommand) {
 			this.id = id;
 			this.actionCommand = actionCommand;
 		}

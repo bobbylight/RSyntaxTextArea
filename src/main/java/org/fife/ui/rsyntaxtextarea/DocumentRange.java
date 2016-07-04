@@ -2,7 +2,7 @@
  * 08/11/2009
  *
  * DocumentRange.java - A range of text in a document.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -128,7 +128,7 @@ public class DocumentRange implements Comparable<DocumentRange> {
 	 */
 	public void set(int start, int end) {
 		if (start<0 || end<0) {
-			throw new IllegalArgumentException (
+			throw new IllegalArgumentException(
 					"start and end must be >= 0 (" + start + "-" + end + ")");
 		}
 		if (end<start) {

@@ -4,7 +4,7 @@
  * SquiggleUnderlineHighlightPainter.java - Highlighter that draws a squiggle
  * underline under "highlighted" text, similar to error markers in Microsoft
  * Visual Studio or Eclipse.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -70,10 +70,12 @@ public class SquiggleUnderlineHighlightPainter
 		if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset()) {
 			// Contained in view, can just use bounds.
 			Rectangle alloc;
-			if (bounds instanceof Rectangle)
+			if (bounds instanceof Rectangle) {
 				alloc = (Rectangle)bounds;
-			else
+			}
+			else {
 				alloc = bounds.getBounds();
+			}
 			paintSquiggle(g, alloc);
 			return alloc;
 		}

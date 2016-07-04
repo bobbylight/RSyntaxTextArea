@@ -3,7 +3,7 @@
  *
  * ChangableHighlightPainter.java - A highlight painter whose color you can
  * change.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -154,9 +154,10 @@ public class ChangeableHighlightPainter
 	 * @return The alpha composite.
 	 */
 	private AlphaComposite getAlphaComposite() {
-		if (alphaComposite==null)
+		if (alphaComposite==null) {
 			alphaComposite = AlphaComposite.getInstance(
 									AlphaComposite.SRC_OVER, alpha);
+		}
 		return alphaComposite;
 	}
 
@@ -214,10 +215,12 @@ public class ChangeableHighlightPainter
 			Rectangle p0 = mapper.modelToView(c, offs0);
 			Rectangle p1 = mapper.modelToView(c, offs1);
 			Paint paint = getPaint();
-			if (paint==null)
+			if (paint==null) {
 				g2d.setColor(c.getSelectionColor());
-			else
+			}
+			else {
 				g2d.setPaint(paint);
+			}
 
 			// Entire highlight is on one line.
 			if (p0.y == p1.y) {
@@ -234,7 +237,7 @@ public class ChangeableHighlightPainter
 				int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
 				g2d.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
 				if ((p0.y + p0.height) != p1.y) {
-					g2d.fillRect(alloc.x, p0.y + p0.height, alloc.width, 
+					g2d.fillRect(alloc.x, p0.y + p0.height, alloc.width,
 			   					p1.y - (p0.y + p0.height));
 				}
 				g2d.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
@@ -245,13 +248,14 @@ public class ChangeableHighlightPainter
 			e.printStackTrace();
 		} finally {
 			// Restore state from before translucency if necessary.
-			if (getAlpha()<1.0f)
+			if (getAlpha()<1.0f) {
 				g2d.setComposite(originalComposite);
+			}
 		}
 
 	}
 
-	
+
 	/**
 	 * Paints a portion of a highlight.
 	 *
@@ -278,10 +282,12 @@ public class ChangeableHighlightPainter
 
 		// Set the color (our own if defined, otherwise text area's).
 		Paint paint = getPaint();
-		if (paint==null)
+		if (paint==null) {
 			g2d.setColor(c.getSelectionColor());
-		else
+		}
+		else {
 			g2d.setPaint(paint);
+		}
 
 		// This special case isn't needed for most standard Swing Views (which
 		// always return a width of 1 for modelToView() calls), but it is
@@ -305,16 +311,19 @@ public class ChangeableHighlightPainter
 		if (offs0==view.getStartOffset() && offs1==view.getEndOffset()) {
 
 			Rectangle alloc;
-			if (bounds instanceof Rectangle)
+			if (bounds instanceof Rectangle) {
 				alloc = (Rectangle)bounds;
-			else
+			}
+			else {
 				alloc = bounds.getBounds();
-			
+			}
+
 			g2d.fillRect(alloc.x, alloc.y, alloc.width, alloc.height);
 
 			// Restore state from before translucency if necessary.
-			if (getAlpha()<1.0f)
+			if (getAlpha()<1.0f) {
 				g2d.setComposite(originalComposite);
+			}
 
 			return alloc;
 
@@ -339,8 +348,9 @@ public class ChangeableHighlightPainter
 				}
 
 				// Restore state from before translucency if necessary.
-				if (getAlpha()<1.0f)
+				if (getAlpha()<1.0f) {
 					g2d.setComposite(originalComposite);
+				}
 
 				return r;
 
@@ -348,8 +358,9 @@ public class ChangeableHighlightPainter
 				ble.printStackTrace();
 			} finally {
 				// Restore state from before translucency if necessary.
-				if (getAlpha()<1.0f)
+				if (getAlpha()<1.0f) {
 					g2d.setComposite(originalComposite);
+				}
 			}
 
 		}

@@ -4,7 +4,7 @@
  * 01/24/2005
  *
  * XMLTokenMaker.java - Generates tokens for XML syntax highlighting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -70,10 +70,10 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
   public static final int INATTR_SINGLE = 6;
   public static final int PI = 2;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\6\1\4\1\0\1\3\23\0\1\6\1\12\1\11\1\22"+
     "\1\30\1\22\1\7\1\25\5\22\1\2\1\42\1\24\12\27\1\23"+
     "\1\10\1\5\1\44\1\21\1\43\1\22\1\16\1\26\1\14\1\15"+
@@ -81,12 +81,12 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
     "\1\40\1\35\1\26\1\31\1\36\2\26\1\37\3\26\1\33\2\26"+
     "\1\34\1\32\2\26\1\41\3\26\3\0\1\22\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -119,7 +119,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -154,7 +154,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -571,11 +571,11 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -618,7 +618,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -677,12 +677,12 @@ public final void yybegin(int newState) {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -703,8 +703,8 @@ public final void yybegin(int newState) {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -724,7 +724,7 @@ public final void yybegin(int newState) {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -771,13 +771,13 @@ public final void yybegin(int newState) {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -820,133 +820,133 @@ public final void yybegin(int newState) {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 25: 
+        case 25:
           { int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(prevState);
           }
         case 31: break;
-        case 19: 
+        case 19:
           { yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 32: break;
-        case 3: 
+        case 3:
           { addNullToken(); return firstToken;
           }
         case 33: break;
-        case 29: 
+        case 29:
           { int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; prevState = zzLexicalState; yybegin(COMMENT);
           }
         case 34: break;
-        case 11: 
+        case 11:
           { inInternalDtd = false;
           }
         case 35: break;
-        case 4: 
+        case 4:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG);
           }
         case 36: break;
-        case 24: 
+        case 24:
           { int count = yylength();
 									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 									yybegin(INTAG);
           }
         case 37: break;
-        case 9: 
+        case 9:
           { addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken;
           }
         case 38: break;
-        case 16: 
+        case 16:
           { addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */
           }
         case 39: break;
-        case 7: 
+        case 7:
           { addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken;
           }
         case 40: break;
-        case 5: 
+        case 5:
           { addToken(Token.WHITESPACE);
           }
         case 41: break;
-        case 27: 
+        case 27:
           { start = zzStartRead; prevState = zzLexicalState; yybegin(COMMENT);
           }
         case 42: break;
-        case 26: 
+        case 26:
           { int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER);
           }
         case 43: break;
-        case 6: 
+        case 6:
           { addToken(Token.MARKUP_ENTITY_REFERENCE);
           }
         case 44: break;
-        case 12: 
+        case 12:
           { if (!inInternalDtd) { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); }
           }
         case 45: break;
-        case 2: 
+        case 2:
           { addToken(Token.IDENTIFIER);
           }
         case 46: break;
-        case 10: 
+        case 10:
           { inInternalDtd = true;
           }
         case 47: break;
-        case 23: 
+        case 23:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION);
           }
         case 48: break;
-        case 21: 
+        case 21:
           { start = zzMarkedPos-2; inInternalDtd = false; yybegin(DTD);
           }
         case 49: break;
-        case 20: 
+        case 20:
           { int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 									yybegin(INTAG);
           }
         case 50: break;
-        case 22: 
+        case 22:
           { start = zzMarkedPos-2; yybegin(PI);
           }
         case 51: break;
-        case 8: 
+        case 8:
           { addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
           }
         case 52: break;
-        case 14: 
+        case 14:
           { start = zzMarkedPos-1; yybegin(INATTR_DOUBLE);
           }
         case 53: break;
-        case 28: 
+        case 28:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
           }
         case 54: break;
-        case 15: 
+        case 15:
           { yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER);
           }
         case 55: break;
-        case 17: 
+        case 17:
           { start = zzMarkedPos-1; yybegin(INATTR_SINGLE);
           }
         case 56: break;
-        case 18: 
+        case 18:
           { addToken(Token.OPERATOR);
           }
         case 57: break;
-        case 30: 
+        case 30:
           { addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(CDATA);
           }
         case 58: break;
-        case 13: 
+        case 13:
           { addToken(Token.MARKUP_TAG_ATTRIBUTE);
           }
         case 59: break;
-        case 1: 
-          { 
+        case 1:
+          {
           }
         case 60: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -985,7 +985,7 @@ public final void yybegin(int newState) {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

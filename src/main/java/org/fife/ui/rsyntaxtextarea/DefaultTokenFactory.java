@@ -2,7 +2,7 @@
  * 10/28/2004
  *
  * DefaultTokenFactory.java - Default token factory.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -42,7 +42,7 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * Constructor.
 	 */
-	public DefaultTokenFactory() {
+	DefaultTokenFactory() {
 		this(DEFAULT_START_SIZE, DEFAULT_INCREMENT);
 	}
 
@@ -54,7 +54,7 @@ class DefaultTokenFactory implements TokenFactory {
 	 * @param increment How many tokens to increment by when the stack gets
 	 *        empty.
 	 */
-	public DefaultTokenFactory(int size, int increment) {
+	DefaultTokenFactory(int size, int increment) {
 
 		this.size = size;
 		this.increment = increment;
@@ -73,7 +73,7 @@ class DefaultTokenFactory implements TokenFactory {
 	 * Adds tokens to the internal token list.  This is called whenever a
 	 * request is made and no more tokens are available.
 	 */
-	private final void augmentTokenList() {
+	private void augmentTokenList() {
 		TokenImpl[] temp = new TokenImpl[size + increment];
 		System.arraycopy(tokenList,0, temp,0, size);
 		size += increment;
@@ -95,9 +95,10 @@ class DefaultTokenFactory implements TokenFactory {
 		token.setOffset(-1);
 		token.setNextToken(null);
 		currentFreeToken++;
-		if (currentFreeToken==size)
+		if (currentFreeToken==size) {
 			augmentTokenList();
-		return token;	
+		}
+		return token;
 	}
 
 
@@ -118,9 +119,10 @@ class DefaultTokenFactory implements TokenFactory {
 		TokenImpl token = tokenList[currentFreeToken];
 		token.set(line, beg,end, startOffset, type);
 		currentFreeToken++;
-		if (currentFreeToken==size)
+		if (currentFreeToken==size) {
 			augmentTokenList();
-		return token;	
+		}
+		return token;
 	}
 
 

@@ -11,7 +11,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 
 /**
  * A mock parser implementation for use in unit tests.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */

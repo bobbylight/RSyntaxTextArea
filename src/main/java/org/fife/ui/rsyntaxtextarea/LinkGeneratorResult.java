@@ -38,7 +38,7 @@ public interface LinkGeneratorResult {
 	 *         <code>null</code> if the action's behavior occurs in this method
 	 *         directly.
 	 */
-	public HyperlinkEvent execute();
+	HyperlinkEvent execute();
 
 
 	/**
@@ -47,7 +47,7 @@ public interface LinkGeneratorResult {
 	 *
 	 * @return The offset.
 	 */
-	public int getSourceOffset();
+	int getSourceOffset();
 
 
 }

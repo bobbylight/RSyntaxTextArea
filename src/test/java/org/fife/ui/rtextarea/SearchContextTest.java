@@ -1,6 +1,6 @@
 /*
  * 01/29/2016
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

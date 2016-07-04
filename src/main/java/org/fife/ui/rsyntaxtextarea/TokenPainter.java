@@ -2,13 +2,14 @@
  * 03/16/2013
  *
  * TokenPainter - Renders tokens in an instance of RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Graphics2D;
+
 import javax.swing.text.TabExpander;
 
 
@@ -34,7 +35,7 @@ interface TokenPainter {
 	 * @param e How to expand tabs.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float paint(Token token, Graphics2D g, float x, float y,
+	float paint(Token token, Graphics2D g, float x, float y,
 						RSyntaxTextArea host, TabExpander e);
 
 
@@ -52,7 +53,7 @@ interface TokenPainter {
 	 *        paint when this token is "to the left" of the clip rectangle.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float paint(Token token, Graphics2D g, float x, float y,
+	float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart);
 
 
@@ -71,7 +72,7 @@ interface TokenPainter {
 	 * @param paintBG Whether to paint the background.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float paint(Token token, Graphics2D g, float x, float y,
+	float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean paintBG);
 
@@ -90,7 +91,7 @@ interface TokenPainter {
 	 * @param useSTC Whether to use the text area's "selected text color."
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float paintSelected(Token token, Graphics2D g, float x, float y,
+	float paintSelected(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, boolean useSTC);
 
 
@@ -111,7 +112,7 @@ interface TokenPainter {
 	 * @param useSTC Whether to use the text area's "selected text color."
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
-	public float paintSelected(Token token, Graphics2D g, float x, float y,
+	float paintSelected(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean useSTC);
 

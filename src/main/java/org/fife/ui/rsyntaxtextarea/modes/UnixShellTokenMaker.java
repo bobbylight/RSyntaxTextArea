@@ -2,7 +2,7 @@
  * 03/16/2004
  *
  * UnixShellTokenMaker.java - Scanner for UNIX shell scripts.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -565,7 +565,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							currentTokenType = Token.LITERAL_CHAR;
 							backslash = false;
 							break;
-						
+
 						case '$': // Don't need to worry about backslashes as previous char is space.
 							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
@@ -670,7 +670,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							currentTokenType = Token.VARIABLE;
 							backslash = false;
 							break;
-						
+
 						case '=': // Special case here; when you have "identifier=<value>" in shell, "identifier" is a variable.
 							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
 							addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
@@ -789,7 +789,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 					} // End of switch (c).
 
 					break;
-				
+
 				case Token.VARIABLE:
 
 					// Note that we first arrive here AFTER the '$' character.
@@ -820,13 +820,13 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 						}
 						i++;
 					}
-								
+
 					// This only happens if we never found the end of the variable in the loop above.
 					if (i==end) {
 						addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
 						currentTokenType = Token.NULL;
 					}
-								
+
 					break;
 
 				case Token.COMMENT_EOL:
@@ -837,7 +837,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 					addToken(text, currentTokenStart,i, currentTokenType, newStartOffset+currentTokenStart);
 					// We need to set token type to null so at the bottom we don't add one more token.
 					currentTokenType = Token.NULL;
-					
+
 					break;
 
 				case Token.LITERAL_CHAR:
@@ -863,11 +863,11 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 				case Token.LITERAL_BACKQUOTE:
 
 						switch (c) {
-								
+
 							case '\\':
 								backslash = !backslash;
 								break;
-								
+
 							case '`':
 								if (!backslash) {
 									addToken(text, currentTokenStart,i, Token.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
@@ -877,7 +877,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								}
 								backslash = false;
 								break;
-							
+
 							// Variable in the backquote string...
 							case '$':
 
@@ -885,12 +885,12 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 									backslash = false;
 									break;
 								}
-							
+
 								// Add the string up-to the variable.
 								addToken(text, currentTokenStart,i-1, Token.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
 								currentTokenType = Token.VARIABLE;
 								currentTokenStart = i;
-								
+
 								// First check if the variable name is enclosed in '{' and '}' characters.
 								if (i<end-1 && array[i+1]=='{') {
 									i++; // Now we're on the '{' char.
@@ -926,7 +926,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 										break;
 									}
 								} // End of if (i<end-1 && array[i+1]=='{').
-								
+
 								// If we reached the end of the variable, get out.
 								if (currentTokenType==Token.NULL || currentTokenType==Token.LITERAL_BACKQUOTE)
 									break;
@@ -950,7 +950,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 										}
 									}
 								}
-								
+
 								// This only happens if we never found the end of the variable in the loop above.
 								// We "trick" this method so that the backquote string token is at the end.
 								if (i==end) {
@@ -958,25 +958,25 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 									currentTokenStart = i;
 									currentTokenType = Token.LITERAL_BACKQUOTE;
 								}
-								
+
 								break;
-								
+
 							// Otherwise, we're still in an unclosed string...
 							default:
 								backslash = false; // Need to set backslash to false here as a character was typed.
 
 						} // End of switch (c).
-				
+
 						break;
 
 				case Token.LITERAL_STRING_DOUBLE_QUOTE:
-				
+
 						switch (c) {
-								
+
 							case '\\':
 								backslash = !backslash;
 								break;
-								
+
 							case '"':
 								if (!backslash) {
 									addToken(text, currentTokenStart,i, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
@@ -986,20 +986,20 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								}
 								backslash = false;
 								break;
-							
+
 							// Variable in the double-quoted string...
 							case '$':
-							
+
 								if (backslash==true) {
 									backslash = false;
 									break;
 								}
-							
+
 								// Add the string up-to the variable.
 								addToken(text, currentTokenStart,i-1, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
 								currentTokenType = Token.VARIABLE;
 								currentTokenStart = i;
-								
+
 								// First check if the variable name is enclosed in '{' and '}' characters.
 								if (i<end-1 && array[i+1]=='{') {
 									i++; // Now we're on the '{' char.
@@ -1035,7 +1035,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 										break;
 									}
 								} // End of if (i<end-1 && array[i+1]=='{').
-								
+
 								// If we reached the end of the variable, get out.
 								if (currentTokenType==Token.NULL || currentTokenType==Token.LITERAL_STRING_DOUBLE_QUOTE)
 									break;
@@ -1059,7 +1059,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 										}
 									}
 								}
-								
+
 								// This only happens if we never found the end of the variable in the loop above.
 								// We "trick" this method so that the double-quote string token is at the end.
 								if (i==end) {
@@ -1067,15 +1067,15 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 									currentTokenStart = i;
 									currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
 								}
-								
+
 								break;
-								
+
 							// Otherwise, we're still in an unclosed string...
 							default:
 								backslash = false; // Need to set backslash to false here as a character was typed.
 
 						} // End of switch (c).
-				
+
 						break;
 
 			} // End of switch (currentTokenType).

@@ -2,7 +2,7 @@
  * 04/23/2009
  *
  * RSyntaxTextAreaHighlighter.java - Highlighter for RSyntaxTextAreas.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -14,6 +14,7 @@ import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -164,7 +165,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 */
 	void clearParserHighlights() {
 		// Don't remove via an iterator; since our List is an ArrayList, this
-		// implies tons of System.arrayCopy()s 
+		// implies tons of System.arrayCopy()s
 		for (int i=0; i<parserHighlights.size(); i++) {
 			repaintListHighlight(parserHighlights.get(i));
 		}
@@ -180,7 +181,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	public void clearParserHighlights(Parser parser) {
 
 		Iterator<SyntaxLayeredHighlightInfoImpl> i = parserHighlights.iterator();
-		for (; i.hasNext(); ) {
+		while (i.hasNext()) {
 
 			SyntaxLayeredHighlightInfoImpl info = i.next();
 
@@ -259,7 +260,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 */
 	private static class SyntaxLayeredHighlightInfoImpl extends
 			LayeredHighlightInfoImpl {
-	
+
 		private ParserNotice notice;//Color color; // Used only by Parser highlights.
 
 		@Override
@@ -285,6 +286,6 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 		}
 
 	}
-	
-	
+
+
 }

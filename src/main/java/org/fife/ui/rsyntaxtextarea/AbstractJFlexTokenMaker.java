@@ -3,7 +3,7 @@
  *
  * AbstractJFlexTokenMaker.java - Base class for token makers generated from
  * programs such as JFlex.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

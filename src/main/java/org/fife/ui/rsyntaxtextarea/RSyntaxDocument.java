@@ -3,7 +3,7 @@
  *
  * RSyntaxDocument.java - A document capable of syntax highlighting, used by
  * RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -15,8 +15,10 @@ import java.io.ObjectInputStream;
 import java.util.Iterator;
 
 import javax.swing.Action;
-import javax.swing.event.*;
-import javax.swing.text.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.modes.AbstractMarkupTokenMaker;
 import org.fife.ui.rtextarea.RDocument;
@@ -41,7 +43,7 @@ import org.fife.util.DynamicIntArray;
  * type <code>CHANGE</code> use their offset and length values to represent the
  * first and last lines, respectively, that have had their syntax coloring
  * change.  This is really a hack to increase the speed of the painting code
- * and should really be corrected, but oh well. 
+ * and should really be corrected, but oh well.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -239,8 +241,9 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		else {
 
 			int line = lineMap.getElementIndex(chng.getOffset());
-			if (line>=lastTokensOnLines.getSize())
+			if (line>=lastTokensOnLines.getSize()) {
 				return;	// If we're editing the last line in a document...
+			}
 
 			int previousLine = line - 1;
 			int previousTokenType = (previousLine>-1 ?
@@ -408,7 +411,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			return cachedTokenList;
 		}
 		lastLine = line;
-		
+
 		Element map = getDefaultRootElement();
 		Element elem = map.getElement(line);
 		int startOffset = elem.getStartOffset();
@@ -503,14 +506,15 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *
 	 * @param line The line number you want to get.
 	 */
-	private final void setSharedSegment(int line) {
+	private void setSharedSegment(int line) {
 
 		Element map = getDefaultRootElement();
 		//int numLines = map.getElementCount();
 
 		Element element = map.getElement(line);
-		if (element==null)
+		if (element==null) {
 			throw new InternalError("Invalid line number: " + line);
+		}
 		int startOffset = element.getStartOffset();
 		//int endOffset = (line==numLines-1 ?
 		//			element.getEndOffset()-1 : element.getEndOffset() - 1);
@@ -529,7 +533,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * Sets the syntax style being used for syntax highlighting in this
 	 * document.  What styles are supported by a document is determined by its
 	 * {@link TokenMakerFactory}.  By default, all <code>RSyntaxDocument</code>s
-	 * support all languages built into <code>RSyntaxTextArea</code>. 
+	 * support all languages built into <code>RSyntaxTextArea</code>.
 	 *
 	 * @param styleKey The new style to use, such as
 	 *        {@link SyntaxConstants#SYNTAX_STYLE_JAVA}.  If this style is not
@@ -601,7 +605,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 			int oldTokenType = lastTokensOnLines.get(line);
 			int newTokenType = tokenMaker.getLastTokenTypeOnLine(s, previousTokenType);
-			//System.err.println("---------------- line " + line + "; oldTokenType==" + oldTokenType + ", newTokenType==" + newTokenType + ", s=='" + s + "'");
+			//System.err.println("---------------- line " + line + "; oldTokenType==" +
+			//		oldTokenType + ", newTokenType==" + newTokenType + ", s=='" + s + "'");
 
 			// If this line's end-token value didn't change, stop here.  Note
 			// that we're saying this line needs repainting; this is because

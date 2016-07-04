@@ -2,7 +2,7 @@
  * 08/11/2009
  *
  * TaskTagParser.java - Parser that scans code comments for task tags.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,10 +11,9 @@ package org.fife.ui.rsyntaxtextarea.parser;
 import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+
 import javax.swing.text.Element;
 
-import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Token;
@@ -30,7 +29,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 public class TaskTagParser extends AbstractParser {
 
 	private DefaultParseResult result;
-	private String DEFAULT_TASK_PATTERN	= "TODO|FIXME|HACK";
+	private static final String DEFAULT_TASK_PATTERN	= "TODO|FIXME|HACK";
 	private Pattern taskPattern;
 
 	private static final Color COLOR = new Color(48, 150, 252);
@@ -125,11 +124,11 @@ public class TaskTagParser extends AbstractParser {
 	 *
 	 * @param pattern The pattern.  A value of <code>null</code> or an
 	 *        empty string effectively disables task parsing.
-	 * @throws PatternSyntaxException If <code>pattern</code> is an invalid
-	 *         regular expression.
+	 * @throws java.util.regex.PatternSyntaxException If <code>pattern</code>
+	 *         is an invalid regular expression.
 	 * @see #getTaskPattern()
 	 */
-	public void setTaskPattern(String pattern) throws PatternSyntaxException {
+	public void setTaskPattern(String pattern) {
 		if (pattern==null || pattern.length()==0) {
 			taskPattern = null;
 		}
@@ -141,9 +140,9 @@ public class TaskTagParser extends AbstractParser {
 
 	/**
 	 * A parser notice that signifies a task.  This class is here so we can
-	 * treat tasks specially and show them in the {@link ErrorStrip} even
-	 * though they are <code>INFO</code>-level and marked as "don't show in
-	 * editor."
+	 * treat tasks specially and show them in the
+	 * {@link org.fife.ui.rsyntaxtextarea.ErrorStrip} even though they are
+	 * <code>INFO</code>-level and marked as "don't show in editor."
 	 */
 	public static class TaskNotice extends DefaultParserNotice {
 

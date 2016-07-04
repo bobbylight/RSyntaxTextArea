@@ -2,7 +2,7 @@
  * 11/07/2004
  *
  * AbstractTokenMaker.java - An abstract implementation of TokenMaker.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

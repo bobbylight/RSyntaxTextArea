@@ -2,7 +2,7 @@
  * 03/09/2013
  *
  * XmlOccurrenceMarker - Marks occurrences of the current token for XML.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -10,6 +10,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 
@@ -124,7 +125,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 				}
 
 			} while (curLine<lineCount);
-				
+
 
 		}
 
@@ -202,7 +203,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 				}
 
 			} while (curLine>=0);
-				
+
 
 		}
 
@@ -214,10 +215,10 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 	 */
 	private static class Entry {
 
-		public boolean open;
-		public Token t;
+		private boolean open;
+		private Token t;
 
-		public Entry(boolean open, Token t) {
+		Entry(boolean open, Token t) {
 			this.open = open;
 			this.t = t;
 		}

@@ -2,7 +2,7 @@
  * 02/10/2009
  *
  * RSTAView.java - An <code>RSyntaxTextArea</code> view.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -37,7 +37,7 @@ interface RSTAView {
 	 * @throws BadLocationException If <code>line</code> isn't a valid line
 	 *         number for this document.
 	 */
-	public int yForLine(Rectangle alloc, int line) throws BadLocationException;
+	int yForLine(Rectangle alloc, int line) throws BadLocationException;
 
 
 	/**
@@ -55,7 +55,7 @@ interface RSTAView {
 	 * @throws BadLocationException If <code>offs</code> isn't a valid offset
 	 *         into the document.
 	 */
-	public int yForLineContaining(Rectangle alloc, int offs)
+	int yForLineContaining(Rectangle alloc, int offs)
 											throws BadLocationException;
 
 

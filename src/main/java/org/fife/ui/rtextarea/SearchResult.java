@@ -2,7 +2,7 @@
  * 09/21/2013
  *
  * SearchResult - The result of a find, replace, or "mark all" operation.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -181,7 +181,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	/**
 	 * Sets the number of matches found or replaced.  For regular "find" and
 	 * "replace" operations, this should be zero or <code>1</code>.  For
-	 * "replace all" operations, this should be the number of replacements. 
+	 * "replace all" operations, this should be the number of replacements.
 	 * For "mark all" operations, this should be zero.
 	 *
 	 * @param count The count.
@@ -205,7 +205,7 @@ public class SearchResult implements Comparable<SearchResult> {
 
 	/**
 	 * Sets the selected range for this search operation.
-	 * 
+	 *
 	 * @param range The new selected range.
 	 * @see #getMatchRange()
 	 */

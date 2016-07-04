@@ -2,19 +2,30 @@
  * 08/29/2004
  *
  * RSyntaxTextAreaEditorKit.java - The editor kit used by RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.Segment;
+import javax.swing.text.TextAction;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
@@ -22,9 +33,9 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.IconRowHeader;
-import org.fife.ui.rtextarea.RecordableTextAction;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
+import org.fife.ui.rtextarea.RecordableTextAction;
 
 
 /**
@@ -55,6 +66,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * @author Robert Futrell
  * @version 0.5
  */
+@SuppressWarnings({ "checkstyle:constantname" })
 public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
@@ -106,7 +118,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
 		new PossiblyInsertTemplateAction(),
-		new PreviousWordAction(previousWordAction, false),  
+		new PreviousWordAction(previousWordAction, false),
 		new PreviousWordAction(selectionPreviousWordAction, true),
 		new SelectWordAction(),
 		new ToggleCommentAction(),
@@ -149,7 +161,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * view produced by this kit.
 	 *
 	 * @return the command list
-	 */ 
+	 */
 	@Override
 	public Action[] getActions() {
 		return TextAction.augmentList(super.getActions(),
@@ -294,7 +306,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 * containing its matching opening curly brace.
 	 */
 	public static class CloseCurlyBraceAction extends RecordableTextAction {
-		
+
 		private static final long serialVersionUID = 1L;
 
 		private Point bracketInfo;
@@ -416,7 +428,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// Don't automatically complete a tag if there was a selection
 			int dot = c.getDot();
 
-			if (doc.getLanguageIsMarkup() && 
+			if (doc.getLanguageIsMarkup() &&
 					doc.getCompleteMarkupCloseTags() &&
 					!selection && rsta.getCloseMarkupTags() && dot>1) {
 
@@ -494,7 +506,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 								stack.pop();
 							}
 						}
-						else if (t.length()==2 && 
+						else if (t.length()==2 &&
 								(t.charAt(0)=='<' || t.charAt(0)=='[') &&
 								t.charAt(1)=='/') {
 							String tagName = null;
@@ -731,8 +743,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					}
 				}
 			}
-			else
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
 
 		}
 
@@ -746,7 +759,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static class DecreaseIndentAction extends RecordableTextAction {
 
 		private static final long serialVersionUID = 1L;
-	
+
 		private Segment s;
 
 		public DecreaseIndentAction() {
@@ -838,7 +851,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * @param doc The document containing the specified element.
 		 * @param tabSize The size of a tab, in spaces.
 		 */
-		private final void handleDecreaseIndent(Element elem, Document doc,
+		private void handleDecreaseIndent(Element elem, Document doc,
 									int tabSize)
 									throws BadLocationException {
 			int start = elem.getStartOffset();
@@ -924,8 +937,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// The "word" is a series of symbols.
 			else {
 				while (!Character.isWhitespace(ch) &&
-						!doc.isIdentifierChar(languageIndex, ch)
-						&& ch!=Segment.DONE) {
+						!doc.isIdentifierChar(languageIndex, ch) &&
+						ch!=Segment.DONE) {
 					ch = seg.previous();
 				}
 			}
@@ -1041,7 +1054,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			return getWordStartImpl(doc, elem, offs);
 		}
 
-		private static final int getWordStartImpl(RSyntaxDocument doc,
+		private static int getWordStartImpl(RSyntaxDocument doc,
 				Element elem, int offs) throws BadLocationException {
 
 			int start = elem.getStartOffset();
@@ -1070,7 +1083,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		@Override
 		protected boolean isAcceptablePrefix(String prefix) {
-			return prefix.length() > 0 && 
+			return prefix.length() > 0 &&
 				isIdentifierChar(prefix.charAt(prefix.length()-1));
 		}
 
@@ -1081,7 +1094,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * @param ch The character.
 		 * @return Whether the character is part of an identifier.
 		 */
-		private static final boolean isIdentifierChar(char ch) {
+		private static boolean isIdentifierChar(char ch) {
 			//return doc.isIdentifierChar(languageIndex, ch);
 			return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
 		}
@@ -1209,13 +1222,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Base class for folding-related actions.
 	 */
-	static abstract class FoldRelatedAction extends RecordableTextAction {
+	abstract static class FoldRelatedAction extends RecordableTextAction {
 
-		public FoldRelatedAction(String name) {
+		FoldRelatedAction(String name) {
 			super(name);
 		}
 
-		public FoldRelatedAction(String name, Icon icon,
+		FoldRelatedAction(String name, Icon icon,
 				String desc, Integer mnemonic, KeyStroke accelerator) {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
@@ -1258,17 +1271,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * folding.
 		 */
 		public static class EndAction extends RTextAreaEditorKit.EndAction {
-		
+
 			public EndAction(String name, boolean select) {
 				super(name, select);
 			}
-		
+
 			@Override
 			protected int getVisibleEnd(RTextArea textArea) {
 				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 				return rsta.getLastVisibleOffset();
 			}
-		
+
 		}
 
 		private static final long serialVersionUID = 1L;
@@ -1396,8 +1409,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					}
 				}
 			}
-			else
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
+			}
 
 		}
 
@@ -1445,15 +1459,16 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 *         whitespace chars follow <code>pos</code> (or it is the end
 		 *         position in the string).
 		 */
-		private static final int atEndOfLine(int pos, String s, int sLen) {
+		private static int atEndOfLine(int pos, String s, int sLen) {
 			for (int i=pos; i<sLen; i++) {
-				if (!RSyntaxUtilities.isWhitespace(s.charAt(i)))
+				if (!RSyntaxUtilities.isWhitespace(s.charAt(i))) {
 					return i;
+				}
 			}
 			return -1;
 		}
 
-		private static final int getOpenBraceCount(RSyntaxDocument doc,
+		private static int getOpenBraceCount(RSyntaxDocument doc,
 				int languageIndex) {
 			int openCount = 0;
 			for (Token t : doc) {
@@ -1784,8 +1799,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			if (!textArea.isEditable() || !textArea.isEnabled())
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				return;
+			}
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 
@@ -1829,7 +1845,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
-		private final void doDefaultInsert(RTextArea textArea) {
+		private void doDefaultInsert(RTextArea textArea) {
 			// FIXME:  We need a way to get the "trigger string" (i.e.,
 			// the text that was just typed); however, the text area's
 			// template manager might be null (if templates are disabled).

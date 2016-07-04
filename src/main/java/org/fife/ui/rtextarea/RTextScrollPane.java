@@ -3,7 +3,7 @@
  *
  * RTextScrollPane.java - A JScrollPane that will only accept RTextAreas
  * so that it can display line numbers, fold indicators, and icons.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -15,6 +15,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.Stack;
+
 import javax.swing.JScrollPane;
 
 
@@ -49,7 +50,7 @@ public class RTextScrollPane extends JScrollPane {
 	public RTextScrollPane() {
 		this(null, true);
 	}
-	
+
 	/**
 	 * Creates a scroll pane.  A default value will be used for line number
 	 * color (gray), and the current line's line number will be highlighted.
@@ -283,12 +284,12 @@ public class RTextScrollPane extends JScrollPane {
 	 * Returns the first descendant of a component that is an
 	 * <code>RTextArea</code>.  This is primarily here to support
 	 * <code>javax.swing.JLayer</code>s that wrap <code>RTextArea</code>s.
-	 * 
+	 *
 	 * @param comp The component to recursively look through.
 	 * @return The first descendant text area, or <code>null</code> if none
 	 *         is found.
 	 */
-	private static final RTextArea getFirstRTextAreaDescendant(Component comp) {
+	private static RTextArea getFirstRTextAreaDescendant(Component comp) {
 		Stack<Component> stack = new Stack<Component>();
 		stack.add(comp);
 		while (!stack.isEmpty()) {

@@ -3,7 +3,7 @@
  *
  * VolatileImageBackgroundPainterStrategy.java - Renders an RTextAreaBase's
  * background as an image using VolatileImages.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -130,8 +130,9 @@ public class VolatileImageBackgroundPainterStrategy
 	@Override
 	protected void rescaleImage(int width, int height, int hint) {
 		bgImage = getRTextAreaBase().createVolatileImage(width, height);
-		if (bgImage!=null)
+		if (bgImage!=null) {
 			renderImage(width, height, hint);
+		}
 	}
 
 

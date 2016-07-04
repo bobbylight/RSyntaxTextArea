@@ -2,7 +2,7 @@
  * 10/28/2004
  *
  * TokenFactory.java - Interface for a class that generates tokens of some type.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -25,7 +25,7 @@ interface TokenFactory {
 	 *
 	 * @return A null token.
 	 */
-	public TokenImpl createToken();
+	TokenImpl createToken();
 
 
 	/**
@@ -38,7 +38,7 @@ interface TokenFactory {
 	 * @param type The type of token.
 	 * @return The token.
 	 */
-	public TokenImpl createToken(final Segment line, final int beg,
+	TokenImpl createToken(final Segment line, final int beg,
 					final int end, final int startOffset, final int type);
 
 
@@ -52,7 +52,7 @@ interface TokenFactory {
 	 * @param type The type of token.
 	 * @return The token.
 	 */
-	public TokenImpl createToken(final char[] line, final int beg,
+	TokenImpl createToken(final char[] line, final int beg,
 					final int end, final int startOffset, final int type);
 
 
@@ -61,7 +61,7 @@ interface TokenFactory {
 	 * by the <code>TokenMaker</code> every time a token list is generated for
 	 * a new line so the tokens can be reused.
 	 */
-	public void resetAllTokens();
+	void resetAllTokens();
 
 
 }

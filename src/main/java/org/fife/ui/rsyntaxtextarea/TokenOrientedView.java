@@ -3,7 +3,7 @@
  *
  * TokenOrientedView.java - An interface for the syntax-highlighting token-
  * oriented views for token-oriented methods.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -39,7 +39,7 @@ public interface TokenOrientedView {
 	 *         before this one.  If no physical line is above the one
 	 *         containing <code>offset</code>, <code>null</code> is returned.
 	 */
-	public Token getTokenListForPhysicalLineAbove(int offset);
+	Token getTokenListForPhysicalLineAbove(int offset);
 
 
 	/**
@@ -55,7 +55,7 @@ public interface TokenOrientedView {
 	 *         after this one.  If no physical line is after the one
 	 *         containing <code>offset</code>, <code>null</code> is returned.
 	 */
-	public Token getTokenListForPhysicalLineBelow(int offset);
+	Token getTokenListForPhysicalLineBelow(int offset);
 
 
 }

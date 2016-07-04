@@ -3,7 +3,7 @@
  *
  * ToolTipSupplier.java - Can provide tool tips to RTextAreas without the need
  * for subclassing.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -33,7 +33,7 @@ public interface ToolTipSupplier {
 	 * @param e The mouse event.
 	 * @return The tool tip, or <code>null</code> if none.
 	 */
-	public String getToolTipText(RTextArea textArea, MouseEvent e);
+	String getToolTipText(RTextArea textArea, MouseEvent e);
 
 
 }

@@ -2,7 +2,7 @@
  * 03/07/2004
  *
  * WindowsBatchTokenMaker.java - Scanner for Windows batch files.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

@@ -4,7 +4,7 @@
  * 07/14/2014
  *
  * NSISTokenMaker.java - Scanner for NSIS installer scripts.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -68,10 +68,10 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
   public static final int MLC = 4;
   public static final int BACKTICKS = 3;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\16\1\15\1\0\1\16\1\75\22\0\1\16\1\42\1\10"+
     "\1\11\1\13\1\41\1\44\1\51\2\31\1\17\1\33\1\52\1\34"+
     "\1\32\1\14\1\4\1\72\1\73\1\74\1\74\1\6\1\6\1\6"+
@@ -84,12 +84,12 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
     "\1\22\1\7\1\70\1\101\1\21\1\67\1\65\1\46\1\37\1\47"+
     "\1\43\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -140,7 +140,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -331,7 +331,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -2533,11 +2533,11 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(Reader reader) {
 		// 's' has been updated.
@@ -2580,7 +2580,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -2639,12 +2639,12 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -2665,8 +2665,8 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -2686,7 +2686,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -2733,13 +2733,13 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -2782,157 +2782,157 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 1: 
+        case 1:
           { addToken(Token.IDENTIFIER);
           }
         case 37: break;
-        case 34: 
+        case 34:
           { addToken(Token.LITERAL_BOOLEAN);
           }
         case 38: break;
-        case 29: 
+        case 29:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos;
           }
         case 39: break;
-        case 19: 
+        case 19:
           { /* Line ending in '\' => continue to next line. */
 							addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
 							return firstToken;
           }
         case 40: break;
-        case 27: 
+        case 27:
           { /* Skip all escaped chars. */
           }
         case 41: break;
-        case 24: 
+        case 24:
           { addToken(Token.ERROR_NUMBER_FORMAT);
           }
         case 42: break;
-        case 3: 
+        case 3:
           { start = zzMarkedPos-1; yybegin(STRING);
           }
         case 43: break;
-        case 32: 
+        case 32:
           { addToken(Token.FUNCTION);
           }
         case 44: break;
-        case 8: 
+        case 8:
           { addToken(Token.VARIABLE);
           }
         case 45: break;
-        case 16: 
+        case 16:
           { /* Line ending in '\' => continue to next line. */
 							addToken(start,zzStartRead, Token.LITERAL_CHAR);
 							return firstToken;
           }
         case 46: break;
-        case 14: 
+        case 14:
           { /* Line ending in '\' => continue to next line. */
 							addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
 							return firstToken;
           }
         case 47: break;
-        case 17: 
+        case 17:
           { addToken(start,zzStartRead-1, Token.ERROR_CHAR); return firstToken;
           }
         case 48: break;
-        case 18: 
+        case 18:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
           }
         case 49: break;
-        case 25: 
+        case 25:
           { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 50: break;
-        case 26: 
+        case 26:
           { start = zzMarkedPos-2; yybegin(MLC);
           }
         case 51: break;
-        case 7: 
+        case 7:
           { addToken(Token.WHITESPACE);
           }
         case 52: break;
-        case 30: 
+        case 30:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
           }
         case 53: break;
-        case 10: 
+        case 10:
           { start = zzMarkedPos-1; yybegin(CHAR_LITERAL);
           }
         case 54: break;
-        case 2: 
+        case 2:
           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 55: break;
-        case 28: 
+        case 28:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos;
           }
         case 56: break;
-        case 4: 
+        case 4:
           { start = zzMarkedPos-1; yybegin(EOL_COMMENT);
           }
         case 57: break;
-        case 21: 
+        case 21:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
           }
         case 58: break;
-        case 13: 
+        case 13:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 59: break;
-        case 15: 
+        case 15:
           { addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); return firstToken;
           }
         case 60: break;
-        case 31: 
+        case 31:
           { addToken(Token.RESERVED_WORD);
           }
         case 61: break;
-        case 35: 
+        case 35:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 62: break;
-        case 20: 
+        case 20:
           { addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken;
           }
         case 63: break;
-        case 23: 
+        case 23:
           { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 64: break;
-        case 9: 
+        case 9:
           { addToken(Token.SEPARATOR);
           }
         case 65: break;
-        case 6: 
+        case 6:
           { addNullToken(); return firstToken;
           }
         case 66: break;
-        case 22: 
+        case 22:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
           }
         case 67: break;
-        case 5: 
+        case 5:
           { addToken(Token.OPERATOR);
           }
         case 68: break;
-        case 36: 
+        case 36:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
           }
         case 69: break;
-        case 33: 
+        case 33:
           { addToken(Token.COMMENT_MULTILINE);
           }
         case 70: break;
-        case 11: 
+        case 11:
           { start = zzMarkedPos-1; yybegin(BACKTICKS);
           }
         case 71: break;
-        case 12: 
-          { 
+        case 12:
+          {
           }
         case 72: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -2963,7 +2963,7 @@ public class NSISTokenMaker extends AbstractJFlexCTokenMaker {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

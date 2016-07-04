@@ -125,7 +125,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		String[] charLiterals = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
-			"'\\x77'", 
+			"'\\x77'",
 			"'\\11'", "'\\22'", "'\\33'",
 			"'\\1'",
 			"'My name is Robert and I \\", // Continued onto another line
@@ -443,7 +443,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
-		// DTD containing a comment 
+		// DTD containing a comment
 		e4x = "var foo = <!doctype FOO <!-- foo -->>;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();

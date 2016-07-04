@@ -2,18 +2,17 @@
  * 12/06/2008
  *
  * RUndoManager.java - Handles undo/redo behavior for RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rtextarea;
 
 import java.util.ResourceBundle;
+
 import javax.swing.Action;
 import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
@@ -67,8 +66,9 @@ public class RUndoManager extends UndoManager {
 	 */
 	public void beginInternalAtomicEdit() {
 		if (++internalAtomicEditDepth==1) {
-			if (compoundEdit!=null)
+			if (compoundEdit!=null) {
 				compoundEdit.end();
+			}
 			compoundEdit = new RCompoundEdit();
 		}
 	}
@@ -115,7 +115,7 @@ public class RUndoManager extends UndoManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redo() {
 		super.redo();
 		updateActions();
 	}
@@ -134,7 +134,7 @@ public class RUndoManager extends UndoManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void undo() throws CannotUndoException {
+	public void undo() {
 		super.undo();
 		updateActions();
 	}
@@ -245,9 +245,10 @@ public class RUndoManager extends UndoManager {
 		}
 
 		@Override
-		public void undo() throws CannotUndoException {
-			if (compoundEdit!=null)
+		public void undo() {
+			if (compoundEdit!=null) {
 				compoundEdit.end();
+			}
 			super.undo();
 			compoundEdit = null;
 		}

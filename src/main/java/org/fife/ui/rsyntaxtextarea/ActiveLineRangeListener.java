@@ -3,7 +3,7 @@
  *
  * ActiveLineRangeListener.java - Listens for "active line range" changes
  * in an RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -18,7 +18,7 @@ import java.util.EventListener;
  * being edited, it may broadcast {@link ActiveLineRangeEvent}s whenever the
  * caret moves into a new "block" of code.  Listeners can listen for these
  * events and respond accordingly.<p>
- * 
+ *
  * See the <code>RSTALanguageSupport</code> project at
  * <a href="http://fifesoft.com">http://fifesoft.com</a> for some
  * <code>LanguageSupport</code> implementations that may broadcast these
@@ -38,7 +38,7 @@ public interface ActiveLineRangeListener extends EventListener {
 	 *        an "active line range," the "minimum" and "maximum" line values
 	 *        should both be <code>-1</code>.
 	 */
-	public void activeLineRangeChanged(ActiveLineRangeEvent e);
+	void activeLineRangeChanged(ActiveLineRangeEvent e);
 
 
 }

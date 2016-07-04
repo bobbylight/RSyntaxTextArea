@@ -2,7 +2,7 @@
  * 11/14/2003
  *
  * RTextArea.java - An extension of JTextArea that adds many features.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.InputMap;
@@ -327,16 +328,17 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			return;
 		}
 		//JOptionPane.showMessageDialog(this, "Now recording a macro");
-		if (currentMacro!=null)
+		if (currentMacro!=null) {
 			currentMacro = null; // May help gc?
+		}
 		currentMacro = new Macro();
 		recordingMacro = true;
 	}
 
 
 	/**
-	 * Tells whether an undo is possible
-	 * 
+	 * Returns whether an undo is possible.
+	 *
 	 * @see #canRedo()
 	 * @see #undoLastAction()
 	 */
@@ -346,8 +348,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Tells whether a redo is possible
-	 * 
+	 * Returns whether a redo is possible.
+	 *
 	 * @see #canUndo()
 	 * @see #redoLastAction()
 	 */
@@ -377,7 +379,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * <p>
 	 *
 	 * The default implementation does nothing.<p>
-	 * 
+	 *
 	 * If you set the popup menu via {@link #setPopupMenu(JPopupMenu)}, you
 	 * will want to override this method, especially if you removed any of the
 	 * menu items in the default popup menu.
@@ -526,7 +528,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param size The number of spaces.
 	 * @return The string of spaces.
 	 */
-	private final String createSpacer(int size) {
+	private String createSpacer(int size) {
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<size; i++) {
 			sb.append(' ');
@@ -661,8 +663,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *         requested.
 	 */
 	public static RecordableTextAction getAction(int action) {
-		if (action<MIN_ACTION_CONSTANT || action>MAX_ACTION_CONSTANT)
+		if (action<MIN_ACTION_CONSTANT || action>MAX_ACTION_CONSTANT) {
 			return null;
+		}
 		switch (action) {
 			case COPY_ACTION:
 				return copyAction;
@@ -698,7 +701,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Returns the default color used for "mark all."
+	 * Returns the default color used for "mark all" highlights.
 	 *
 	 * @return The color.
 	 * @see #getMarkAllHighlightColor()
@@ -731,7 +734,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Returns the color used in "mark all."
+	 * Returns the color used in "mark all" highlights.
 	 *
 	 * @return The color.
 	 * @see #setMarkAllHighlightColor(Color)
@@ -915,7 +918,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * Marks all ranges specified with the "mark all" highlighter.  Typically,
 	 * this method is called indirectly from {@link SearchEngine} when doing
 	 * a fine or replace operation.<p>
-	 * 
+	 *
 	 * This method fires a property change event of type
 	 * {@link #MARK_ALL_OCCURRENCES_CHANGED_PROPERTY}.
 	 *
@@ -1024,8 +1027,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		RTextAreaEditorKit kit = (RTextAreaEditorKit)getUI().getEditorKit(this);
 		setText(null);
 		Document doc = getDocument();
-		if (desc != null)
+		if (desc != null) {
 			doc.putProperty(Document.StreamDescriptionProperty, desc);
+		}
 		try {
 			// NOTE:  Resets the "line separator" property.
 			kit.read(in, doc, 0);
@@ -1066,8 +1070,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public void redoLastAction() {
 		// NOTE:  The try/catch block shouldn't be necessary...
 		try {
-			if (undoManager.canRedo())
+			if (undoManager.canRedo()) {
 				undoManager.redo();
+			}
 		} catch (CannotRedoException cre) {
 			cre.printStackTrace();
 		}
@@ -1121,8 +1126,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	@Override
 	public void replaceRange(String str, int start, int end) {
-		if (end < start)
+		if (end < start) {
 			throw new IllegalArgumentException("end before start");
+		}
 		Document doc = getDocument();
 		if (doc != null) {
 			try {
@@ -1190,10 +1196,12 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				// insert in front of them).
 				int curLineEnd = getLineEndOffset(curLine);
 				if (caretPos==caret.getMark() && caretPos!=curLineEnd) {
-					if (curLine==lastLine)
+					if (curLine==lastLine) {
 						caretPos = Math.min(caretPos+text.length(), curLineEnd);
-					else
+					}
+					else {
 						caretPos = Math.min(caretPos+text.length(), curLineEnd-1);
+					}
 					caret.moveDot(caretPos);//moveCaretPosition(caretPos);
 				}
 
@@ -1231,7 +1239,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @return A <code>String</code> just like <code>text</code>, but with
 	 *         spaces instead of tabs.
 	 */
-	private final String replaceTabsWithSpaces(String text, int docOffs, int firstTab)
+	private String replaceTabsWithSpaces(String text, int docOffs, int firstTab)
 			throws BadLocationException {
 
 		int tabSize = getTabSize();
@@ -1485,7 +1493,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	/**
 	 * Sets the popup menu used by this text area.<p>
-	 * 
+	 *
 	 * If you set the popup menu with this method, you'll want to consider also
 	 * overriding {@link #configurePopupMenu(JPopupMenu)}, especially if you
 	 * removed any of the default menu items.
@@ -1542,8 +1550,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public void setTextMode(int mode) {
 
-		if (mode!=INSERT_MODE && mode!=OVERWRITE_MODE)
+		if (mode!=INSERT_MODE && mode!=OVERWRITE_MODE) {
 			mode = INSERT_MODE;
+		}
 
 		if (textMode != mode) {
 			Caret caret = getCaret();
@@ -1608,8 +1617,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public void undoLastAction() {
 		// NOTE: that the try/catch block shouldn't be necessary...
 		try {
-			if (undoManager.canUndo())
+			if (undoManager.canUndo()) {
 				undoManager.undo();
+			}
 		}
 		catch (CannotUndoException cre) {
 			cre.printStackTrace();

@@ -2,24 +2,23 @@
  * 07/29/2009
  *
  * ToolTipInfo.java - A tool tip's text and hyperlink listener.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.net.URL;
-import javax.swing.event.HyperlinkListener;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
+import javax.swing.event.HyperlinkListener;
 
 
 /**
  * Wrapper for a tool tip and a listener for hyperlink events in the tool
- * tip (assuming the tip is HTML).  If the {@link RSyntaxTextArea} instance
- * has {@link FocusableTip}s enabled, and the user clicks on a hyperlink in
- * the tool tip, the specified {@link HyperlinkListener} will be called.
+ * tip (assuming the tip is HTML).  If the {@code RSyntaxTextArea} instance
+ * has {@link org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip}s enabled,
+ * and the user clicks on a hyperlink in the tool tip, the specified
+ * {@link HyperlinkListener} will be called.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -71,7 +70,7 @@ public class ToolTipInfo {
 	/**
 	 * Returns the base URL that any images in the HTML tool tip live in.
 	 * This allows you to reference images in a jar file in your
-	 * {@link FocusableTip}s.
+	 * {@link org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip}s.
 	 * Note that if what {@link #getToolTipText()} returns isn't HTML, this
 	 * value is effectively ignored.
 	 *

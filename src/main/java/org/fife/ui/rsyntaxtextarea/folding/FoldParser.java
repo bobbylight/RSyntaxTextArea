@@ -2,7 +2,7 @@
  * 10/08/2011
  *
  * FoldParser.java - Locates folds in an RSyntaxTextArea instance.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -35,7 +35,7 @@ public interface FoldParser {
 	 * @return The list of folds.  If this method returns <code>null</code>,
 	 *         it is treated as if no folds were found.
 	 */
-	public List<Fold> getFolds(RSyntaxTextArea textArea);
+	List<Fold> getFolds(RSyntaxTextArea textArea);
 
 
 }

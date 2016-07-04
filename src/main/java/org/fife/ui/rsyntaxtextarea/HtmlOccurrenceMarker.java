@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 
@@ -303,7 +304,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 				}
 
 			} while (curLine<lineCount);
-				
+
 
 		}
 
@@ -381,7 +382,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 				}
 
 			} while (curLine>=0);
-				
+
 
 		}
 
@@ -393,10 +394,10 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 */
 	private static class Entry {
 
-		public boolean open;
-		public Token t;
+		private boolean open;
+		private Token t;
 
-		public Entry(boolean open, Token t) {
+		Entry(boolean open, Token t) {
 			this.open = open;
 			this.t = t;
 		}

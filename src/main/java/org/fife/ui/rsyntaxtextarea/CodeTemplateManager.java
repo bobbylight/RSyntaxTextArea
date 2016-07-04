@@ -2,7 +2,7 @@
  * 02/21/2005
  *
  * CodeTemplateManager.java - manages code templates.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -18,7 +18,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;
@@ -36,8 +41,8 @@ import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
  * while <em>not</em> on the EDT could cause problems.<p>
  *
  * For more flexible boilerplate code insertion, consider using the
- * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
- * class</a> in the
+ * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+ * TemplateCompletion class</a> in the
  * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
  * add-on library</a>.
  *
@@ -179,7 +184,7 @@ public class CodeTemplateManager {
 		}
 
 		// TODO: Do a binary search
-		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext(); ) {
+		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext();) {
 			CodeTemplate template = i.next();
 			if (id.equals(template.getID())) {
 				i.remove();
@@ -217,16 +222,19 @@ public class CodeTemplateManager {
 	 */
 	public synchronized boolean saveTemplates() {
 
-		if (templates==null)
+		if (templates==null) {
 			return true;
-		if (directory==null || !directory.isDirectory())
+		}
+		if (directory==null || !directory.isDirectory()) {
 			return false;
+		}
 
 		// Blow away all old XML files to start anew, as some might be from
 		// templates we're removed from the template manager.
 		File[] oldXMLFiles = directory.listFiles(new XMLFileFilter());
-		if (oldXMLFiles==null)
+		if (oldXMLFiles==null) {
 			return false; // Either an IOException or it isn't a directory.
+		}
 		int count = oldXMLFiles.length;
 		for (int i=0; i<count; i++) {
 			/*boolean deleted = */oldXMLFiles[i].delete();
@@ -318,7 +326,7 @@ public class CodeTemplateManager {
 		// Remove any null entries (should only happen because of
 		// IOExceptions, etc. when loading from files), and sort
 		// the remaining list.
-		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext(); ) {
+		for (Iterator<CodeTemplate> i=templates.iterator(); i.hasNext();) {
 			CodeTemplate temp = i.next();
 			if (temp==null || temp.getID()==null) {
 				i.remove();
@@ -366,8 +374,9 @@ public class CodeTemplateManager {
 			while (n-- != 0) {
 				char c1 = templateArray[i++];
 				char c2 = segArray[j++];
-				if (c1 != c2)
+				if (c1 != c2) {
 					return c1 - c2;
+				}
 			}
 			return len1 - len2;
 

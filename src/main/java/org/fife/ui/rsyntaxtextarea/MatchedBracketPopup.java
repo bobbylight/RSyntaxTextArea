@@ -1,3 +1,9 @@
+/*
+ * 07/03/2016
+ *
+ * This library is distributed under a modified BSD license.  See the included
+ * RSyntaxTextArea.License.txt file for details.
+ */
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.BorderLayout;
@@ -28,6 +34,14 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil;
 
 
+/**
+ * A tool tip-like popup that shows the line of code containing the bracket
+ * matched to that at the caret position, if it is scrolled out of the user's
+ * viewport.
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ */
 class MatchedBracketPopup extends JWindow {
 
 	private RSyntaxTextArea textArea;
@@ -37,7 +51,7 @@ class MatchedBracketPopup extends JWindow {
 	private static final int LEFT_EMPTY_BORDER = 5;
 
 
-	public MatchedBracketPopup(Window parent, RSyntaxTextArea textArea, int
+	MatchedBracketPopup(Window parent, RSyntaxTextArea textArea, int
 			offsToRender) {
 
 		super(parent);
@@ -161,7 +175,7 @@ class MatchedBracketPopup extends JWindow {
 	 */
 	private class Listener extends WindowAdapter implements ComponentListener {
 
-		public Listener() {
+		Listener() {
 
 			addWindowFocusListener(this);
 

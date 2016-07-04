@@ -2,7 +2,7 @@
  * 02/10/2009
  *
  * LineHighlightManager - Manages line highlights.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -37,7 +37,7 @@ class LineHighlightManager {
 	 *
 	 * @param textArea The parent text area.
 	 */
-	public LineHighlightManager(RTextArea textArea) {
+	LineHighlightManager(RTextArea textArea) {
 		this.textArea = textArea;
 		comparator = new LineHighlightInfoComparator();
 	}
@@ -191,7 +191,7 @@ class LineHighlightManager {
 		private Position offs;
 		private Color color;
 
-		public LineHighlightInfo(Position offs, Color c) {
+		LineHighlightInfo(Position offs, Color c) {
 			this.offs = offs;
 			this.color = c;
 		}
@@ -229,7 +229,7 @@ class LineHighlightManager {
 			}
 			return lhi1.getOffset() == lhi2.getOffset() ? 0 : 1;
 		}
-		
+
 	}
 
 

@@ -2,7 +2,7 @@
  * 10/23/2011
  *
  * XmlFoldParser.java - Fold parser for XML.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -10,6 +10,7 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -126,7 +127,7 @@ public class XmlFoldParser implements FoldParser {
 		}
 
 		return folds;
-	
+
 	}
 
 
@@ -138,7 +139,7 @@ public class XmlFoldParser implements FoldParser {
 	 * @param fold The fold to remove.
 	 * @param folds The list of top-level folds.
 	 */
-	private static final void removeFold(Fold fold, List<Fold> folds) {
+	private static void removeFold(Fold fold, List<Fold> folds) {
 		if (!fold.removeFromParent()) {
 			folds.remove(folds.size()-1);
 		}

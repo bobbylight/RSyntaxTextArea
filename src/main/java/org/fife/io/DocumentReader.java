@@ -3,13 +3,14 @@
  *
  * DocumentReader.java - A reader for javax.swing.text.Document
  * objects.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.io;
 
 import java.io.Reader;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;
@@ -27,17 +28,17 @@ public class DocumentReader extends Reader {
 	 * The stream's position in the document.
 	 */
 	private long position;
-	
+
 	/**
 	 * A remembered position in the document.
 	 */
 	private long mark;
-	
+
 	/**
 	 * The document we're working on.
 	 */
 	private Document document;
-	
+
 	/**
 	 * Used for fast character access.
 	 */
@@ -115,7 +116,7 @@ public class DocumentReader extends Reader {
 	 * @return The number of characters read.
 	 */
 	@Override
-	public int read(char array[]) {
+	public int read(char[] array) {
 		return read(array, 0, array.length);
 	}
 
@@ -130,16 +131,18 @@ public class DocumentReader extends Reader {
 	 *         end of the stream (document) has been reached.
 	 */
 	@Override
-	public int read(char cbuf[], int off, int len) {
+	public int read(char[] cbuf, int off, int len) {
 		int k;
 		if(position>=document.getLength()) {
 			return -1;      // Read past end of document.
 		}
 		k = len;
-		if((position+k)>=document.getLength())
+		if((position+k)>=document.getLength()) {
 			k = document.getLength() - (int)position;
-		if(off + k >= cbuf.length)
+		}
+		if(off + k >= cbuf.length) {
 			k = cbuf.length - off;
+		}
 		try {
 			document.getText((int)position, k, segment);
 			position += k;

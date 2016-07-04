@@ -4,7 +4,7 @@
  * 11/07/2008
  *
  * PlainTextTokenMaker.flex - Scanner for plain text files.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -63,22 +63,22 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
   /** lexical states */
   public static final int YYINITIAL = 0;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\3\1\2\25\0\1\3\1\4\1\0\1\4\1\6\1\4"+
     "\7\4\1\4\1\21\1\5\12\1\1\17\1\4\1\0\1\4\1\0"+
     "\2\4\32\1\1\4\1\0\1\4\1\0\1\4\1\0\4\1\1\16"+
     "\1\13\1\1\1\7\1\14\2\1\1\15\3\1\1\11\2\1\1\12"+
     "\1\10\2\1\1\20\3\1\3\0\1\4\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -106,7 +106,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -134,7 +134,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -359,11 +359,11 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -406,7 +406,7 @@ public class PlainTextTokenMaker extends AbstractJFlexTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -465,12 +465,12 @@ public final void yybegin(int newState) {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -491,8 +491,8 @@ public final void yybegin(int newState) {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -512,7 +512,7 @@ public final void yybegin(int newState) {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -559,13 +559,13 @@ public final void yybegin(int newState) {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -608,23 +608,23 @@ public final void yybegin(int newState) {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 3: 
+        case 3:
           { addToken(Token.WHITESPACE, false);
           }
         case 5: break;
-        case 2: 
+        case 2:
           { addNullToken(); return firstToken;
           }
         case 6: break;
-        case 4: 
+        case 4:
           { addToken(Token.IDENTIFIER, true);
           }
         case 7: break;
-        case 1: 
+        case 1:
           { addToken(Token.IDENTIFIER, false);
           }
         case 8: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -635,7 +635,7 @@ public final void yybegin(int newState) {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

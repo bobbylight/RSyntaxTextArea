@@ -2,7 +2,7 @@
  * 10/30/2011
  *
  * Theme.java - A color theme for RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -31,6 +31,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.fife.io.UnicodeWriter;
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextArea;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,10 +45,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import org.fife.io.UnicodeWriter;
-import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextArea;
-
 
 /**
  * A theme is a set of fonts and colors to use to style RSyntaxTextArea and
@@ -52,7 +52,7 @@ import org.fife.ui.rtextarea.RTextArea;
  * <code>org/fife/ui/rsyntaxtextarea/themes/theme.dtd</code>.  This provides
  * applications and other consumers with an easy way to style RSyntaxTextArea
  * without having to use the API.<p>
- * 
+ *
  * Sample themes are included in the source tree in the
  * <code>org.fife.ui.rsyntaxtextarea.themes</code> package, and can be loaded
  * via <code>getClass().getResourceAsStream(...)</code>.<p>
@@ -61,7 +61,7 @@ import org.fife.ui.rtextarea.RTextArea;
  * you won't need to reference any fields directly, rather using the
  * <code>load()</code>, <code>save()</code>, and <code>apply()</code> methods
  * for various tasks.<p>
- * 
+ *
  * Note that to save a <code>Theme</code> via {@link #save(OutputStream)},
  * you must currently create a <code>Theme</code> from a text area wrapped in
  * an <code>RTextScrollPane</code>, so that the color information for the
@@ -70,6 +70,7 @@ import org.fife.ui.rtextarea.RTextArea;
  * @author Robert Futrell
  * @version 1.0
  */
+@SuppressWarnings({ "checkstyle:visibilitymodifier" })
 public class Theme {
 
 	public Font baseFont;
@@ -223,7 +224,7 @@ public class Theme {
 	}
 
 
-	private static final String colorToString(Color c) {
+	private static String colorToString(Color c) {
 		int color = c.getRGB() & 0xffffff;
         StringBuilder stringBuilder = new StringBuilder(Integer.toHexString(color));
 		while (stringBuilder.length()<6) {
@@ -240,7 +241,7 @@ public class Theme {
 	 * @return The default selection background to use.
 	 * @see #getDefaultSelectionFG()
 	 */
-	private static final Color getDefaultBG() {
+	private static Color getDefaultBG() {
 		Color c = UIManager.getColor("nimbusLightBackground");
 		if (c==null) {
 			// Don't search for "text", as Nimbus defines that as the text
@@ -263,7 +264,7 @@ public class Theme {
 	 * @return The default selection background to use.
 	 * @see #getDefaultSelectionFG()
 	 */
-	private static final Color getDefaultSelectionBG() {
+	private static Color getDefaultSelectionBG() {
 		Color c = UIManager.getColor("TextArea.selectionBackground");
 		if (c==null) {
 			c = UIManager.getColor("textHighlight");
@@ -547,7 +548,7 @@ public class Theme {
 	 * @param s The string to evaluate.
 	 * @return The color.
 	 */
-	private static final Color stringToColor(String s) {
+	private static Color stringToColor(String s) {
 		return stringToColor(s, null);
 	}
 
@@ -567,7 +568,7 @@ public class Theme {
 	 *        "<code>default</code>".
 	 * @return The color.
 	 */
-	private static final Color stringToColor(String s, Color defaultVal) {
+	private static Color stringToColor(String s, Color defaultVal) {
 		if (s==null || "default".equalsIgnoreCase(s)) {
 			return defaultVal;
 		}
@@ -619,7 +620,7 @@ public class Theme {
 			}
 		}
 
-		private static final int parseInt(Attributes attrs, String attr,
+		private static int parseInt(Attributes attrs, String attr,
 				int def) {
 			int value = def;
 			String temp = attrs.getValue(attr);
@@ -634,7 +635,7 @@ public class Theme {
 		}
 
 		@Override
-		public InputSource resolveEntity(String publicID, 
+		public InputSource resolveEntity(String publicID,
 				String systemID) throws SAXException {
 			return new InputSource(getClass().
 					getResourceAsStream("themes/theme.dtd"));
@@ -704,7 +705,7 @@ public class Theme {
 				String color = attrs.getValue("activeLineRange");
 				theme.activeLineRangeColor = stringToColor(color);
 				String inheritBGStr = attrs.getValue("inheritsGutterBG");
-				theme.iconRowHeaderInheritsGutterBG = 
+				theme.iconRowHeaderInheritsGutterBG =
 						inheritBGStr==null ? false : Boolean.valueOf(inheritBGStr);
 			}
 
@@ -844,8 +845,12 @@ public class Theme {
 					}
 					if (styleSpecified) {
 						int style = 0;
-						if (bold) { style |= Font.BOLD; }
-						if (italic) { style |= Font.ITALIC; }
+						if (bold) {
+							style |= Font.BOLD;
+						}
+						if (italic) {
+							style |= Font.ITALIC;
+						}
 						Font orig = theme.scheme.getStyle(index).font;
 						theme.scheme.getStyle(index).font =
 							orig.deriveFont(style);

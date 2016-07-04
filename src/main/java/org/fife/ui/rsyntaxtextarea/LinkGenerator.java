@@ -19,7 +19,7 @@ package org.fife.ui.rsyntaxtextarea;
  * at the mouse position should be considered a hyperlink.  If so, a result
  * object is returned, describing exactly what region of text is the link, and
  * where it goes to.<p>
- * 
+ *
  * This interface is typically used by applications providing advanced support
  * for programming languages, such as IDEs.  For example, an implementation of
  * this class could identify the token under the mouse position as a "variable,"
@@ -43,8 +43,7 @@ public interface LinkGenerator {
 	 * @return The link information, or <code>null</code> if no link is at the
 	 *         specified offset.
 	 */
-	public LinkGeneratorResult isLinkAtOffset(RSyntaxTextArea textArea,
-			int offs);
+	LinkGeneratorResult isLinkAtOffset(RSyntaxTextArea textArea, int offs);
 
 
 }

@@ -2,19 +2,37 @@
  * 12/21/2004
  *
  * ConfigurableCaret.java - The caret used by RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.datatransfer.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
-import javax.swing.plaf.*;
-import javax.swing.text.*;
+import java.awt.event.MouseEvent;
+
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
+import javax.swing.UIManager;
+import javax.swing.plaf.TextUI;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.NavigationFilter;
+import javax.swing.text.Position;
+import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
@@ -45,15 +63,15 @@ public class ConfigurableCaret extends DefaultCaret {
 	/**
 	 * Action used to select a word on a double click.
 	 */
-	static private transient Action selectWord = null;
+	private static transient Action selectWord = null;
 
 	/**
 	 * Action used to select a line on a triple click.
 	 */
-	static private transient Action selectLine = null;
+	private static transient Action selectLine = null;
 
 	/**
-	 * holds last MouseEvent which caused the word selection
+	 * holds last MouseEvent which caused the word selection.
 	 */
 	private transient MouseEvent selectedWordEvent = null;
 
@@ -109,10 +127,12 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * Adjusts the caret location based on the MouseEvent.
 	 */
 	private void adjustCaret(MouseEvent e) {
-		if ((e.getModifiers()&ActionEvent.SHIFT_MASK)!=0 && getDot()!=-1)
+		if ((e.getModifiers()&ActionEvent.SHIFT_MASK)!=0 && getDot()!=-1) {
 			moveCaret(e);
-		else
+		}
+		else {
 			positionCaret(e);
+		}
 	}
 
 
@@ -125,10 +145,12 @@ public class ConfigurableCaret extends DefaultCaret {
 		RTextArea textArea = getTextArea();
 		if ((textArea != null) && textArea.isEnabled() &&
 				textArea.isRequestFocusEnabled()) {
-			if (inWindow)
+			if (inWindow) {
 				textArea.requestFocusInWindow();
-			else 
+			}
+			else {
 				textArea.requestFocus();
+			}
 		}
 	}
 
@@ -160,13 +182,13 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @param c The text component.  If this is not an
 	 *        <code>RTextArea</code>, an <code>Exception</code>
 	 *        will be thrown.
-	 * @see Caret#deinstall
 	 */
 	@Override
 	public void deinstall(JTextComponent c) {
-		if (!(c instanceof RTextArea))
+		if (!(c instanceof RTextArea)) {
 			throw new IllegalArgumentException(
 					"c must be instance of RTextArea");
+		}
 		super.deinstall(c);
 		c.setNavigationFilter(null);
 	}
@@ -234,13 +256,13 @@ public class ConfigurableCaret extends DefaultCaret {
 	 *
 	 * @param c The text component.  If this is not an {@link RTextArea},
 	 *        an <code>Exception</code> will be thrown.
-	 * @see Caret#install
 	 */
 	@Override
 	public void install(JTextComponent c) {
-		if (!(c instanceof RTextArea))
+		if (!(c instanceof RTextArea)) {
 			throw new IllegalArgumentException(
 					"c must be instance of RTextArea");
+		}
 		super.install(c);
 		c.setNavigationFilter(new FoldAwareNavigationFilter());
 	}
@@ -251,7 +273,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * blinking, or not visible when the editor's window is not focused).
 	 * This can be used by popup windows that want the caret's location
 	 * to still be visible for contextual purposes while they are displayed.
-	 * 
+	 *
 	 * @return Whether this caret is always visible.
 	 * @see #setAlwaysVisible(boolean)
 	 */
@@ -266,7 +288,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * current line.
 	 *
 	 * @param e the mouse event
-	 * @see MouseListener#mouseClicked
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -287,8 +308,9 @@ public class ConfigurableCaret extends DefaultCaret {
 						case 1:
 							Action a = null;
 							ActionMap map = textArea.getActionMap();
-							if (map != null)
+							if (map != null) {
 								a = map.get(RTextAreaEditorKit.selectLineAction);
+							}
 							if (a == null) {
 								if (selectLine == null) {
 									selectLine = new RTextAreaEditorKit.SelectLineAction();
@@ -321,8 +343,9 @@ public class ConfigurableCaret extends DefaultCaret {
 								TransferHandler th = c.getTransferHandler();
 								if (th != null) {
 									Transferable trans = buffer.getContents(null);
-									if (trans != null)
+									if (trans != null) {
 										th.importData(c, trans);
+									}
 								}
 								adjustFocus(true);
 							}
@@ -467,12 +490,12 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
-	 * Selects word based on the MouseEvent
+	 * Selects word based on a mouse event.
 	 */
 	private void selectWord(MouseEvent e) {
-		if (selectedWordEvent != null
-				&& selectedWordEvent.getX() == e.getX()
-				&& selectedWordEvent.getY() == e.getY()) {
+		if (selectedWordEvent != null &&
+				selectedWordEvent.getX() == e.getX() &&
+				selectedWordEvent.getY() == e.getY()) {
 			// We've already the done selection for this.
 			return;
 		}
@@ -500,7 +523,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * blinking, or not visible when the editor's window is not focused).
 	 * This can be used by popup windows that want the caret's location
 	 * to still be visible for contextual purposes while they are displayed.
-	 * 
+	 *
 	 * @param alwaysVisible Whether this caret should always be visible.
 	 * @see #isAlwaysVisible()
 	 */
@@ -675,7 +698,7 @@ public class ConfigurableCaret extends DefaultCaret {
 		            			if (line<lineCount) {
 		            				dot = textArea.getLineStartOffset(line);
 		            			}
-		            			else { // No lower lines visible 
+		            			else { // No lower lines visible
 		            				UIManager.getLookAndFeel().
 		            						provideErrorFeedback(textArea);
 		            				return;

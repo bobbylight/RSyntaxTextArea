@@ -1,4 +1,4 @@
-['java', 'osgi', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+['java', 'checkstyle', 'osgi', 'distribution', 'maven', 'signing'].each { apply plugin: it }
 // Jacoco and a coveralls upload plugin needed for publishing coverage results
 ['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
@@ -11,7 +11,7 @@ dependencies {
 
 // Regenerate local gradlew
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.0'
+	gradleVersion = '2.14'
 }
 
 // Add coveralls plugin to this build's classpath
@@ -29,6 +29,11 @@ jacocoTestReport {
 		xml.enabled = true // coveralls plugin depends on xml format report
 		html.enabled = true
 	}
+}
+
+checkstyle {
+	toolVersion = '7.0'
+	configFile = 'config/checkstyle/checkstyle.xml' as File
 }
 
 compileJava {

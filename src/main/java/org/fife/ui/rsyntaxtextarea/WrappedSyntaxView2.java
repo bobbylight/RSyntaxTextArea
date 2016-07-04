@@ -49,7 +49,7 @@ public class WrappedSyntaxView2 {//extends CompositeView {
 //
 //
 //	private int getOffset(int childIndex) {
-//		return cachedOffsets[childIndex]; 
+//		return cachedOffsets[childIndex];
 //	}
 //
 //
@@ -148,7 +148,7 @@ public class WrappedSyntaxView2 {//extends CompositeView {
 //		int n = getViewCount(); // Called after super.replace() so this is accurate
 //		int[] newArray = new int[n];
 //		System.arraycopy(oldArray, 0, newArray, 0, offset);
-//		System.arraycopy(oldArray, offset, 
+//		System.arraycopy(oldArray, offset,
 //				newArray, offset + nInserted, n - nInserted - offset);
 //		return newArray;
 //	}

@@ -2,7 +2,7 @@
  * 07/28/2008
  *
  * RtfGenerator.java - Generates RTF via a simple Java API.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -256,7 +256,7 @@ public class RtfGenerator {
 
 	/**
 	 * Appends some text to a buffer, with special care taken for special
-	 * characters as defined by the RTF spec:
+	 * characters as defined by the RTF spec.
 	 *
 	 * <ul>
 	 *   <li>All tab characters are replaced with the string
@@ -267,7 +267,7 @@ public class RtfGenerator {
 	 * @param text The text to append (with tab chars substituted).
 	 * @param sb The buffer to append to.
 	 */
-	private final void escapeAndAdd(StringBuilder sb, String text) {
+	private void escapeAndAdd(StringBuilder sb, String text) {
 		int count = text.length();
 		for (int i=0; i<count; i++) {
 			char ch = text.charAt(i);
@@ -303,7 +303,7 @@ public class RtfGenerator {
 
 	/**
 	 * Returns a font point size, adjusted for the current screen resolution.<p>
-	 * 
+	 *
 	 * Java2D assumes 72 dpi.  On systems with larger dpi (Windows, GTK, etc.),
 	 * font rendering will appear too small if we simply return a Java "Font"
 	 * object's getSize() value.  We need to adjust it for the screen
@@ -422,7 +422,7 @@ public class RtfGenerator {
 	 *
 	 * @return The monospaced font family to use.
 	 */
-	private static final String getMonospacedFontFamily() {
+	private static String getMonospacedFontFamily() {
 		String family = RTextArea.getDefaultFont().getFamily();
 		if ("Monospaced".equals(family)) {
 			family = "Courier";

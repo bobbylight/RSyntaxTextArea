@@ -4,7 +4,7 @@
  * 11/18/2009
  *
  * BBCodeTokenMaker.java - Generates tokens for BBCode syntax highlighting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -64,21 +64,21 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
   public static final int INTAG = 1;
   public static final int YYINITIAL = 0;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\1\1\2\1\0\1\1\23\0\1\1\16\0\1\27\15\0"+
     "\1\30\35\0\1\3\1\0\1\4\4\0\1\5\1\13\1\26\1\12"+
     "\1\0\1\23\1\0\1\6\2\0\1\15\1\22\1\17\1\14\1\0"+
     "\1\21\1\16\1\10\1\20\1\7\1\25\2\0\1\24\1\11\uff85\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -107,7 +107,7 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -138,7 +138,7 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -413,11 +413,11 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -460,7 +460,7 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -519,12 +519,12 @@ public final void yybegin(int newState) {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -545,8 +545,8 @@ public final void yybegin(int newState) {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -566,7 +566,7 @@ public final void yybegin(int newState) {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -613,13 +613,13 @@ public final void yybegin(int newState) {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -662,47 +662,47 @@ public final void yybegin(int newState) {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 1: 
+        case 1:
           { addToken(Token.IDENTIFIER);
           }
         case 11: break;
-        case 9: 
+        case 9:
           { addToken(Token.MARKUP_TAG_DELIMITER);
           }
         case 12: break;
-        case 2: 
+        case 2:
           { addToken(Token.WHITESPACE);
           }
         case 13: break;
-        case 10: 
+        case 10:
           { addToken(Token.OPERATOR);
           }
         case 14: break;
-        case 8: 
+        case 8:
           { addToken(Token.MARKUP_TAG_NAME);
           }
         case 15: break;
-        case 4: 
+        case 4:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG);
           }
         case 16: break;
-        case 6: 
+        case 6:
           { addToken(Token.IDENTIFIER); /* Unhandled chars, not likely */
           }
         case 17: break;
-        case 5: 
+        case 5:
           { addToken(Token.MARKUP_TAG_ATTRIBUTE);
           }
         case 18: break;
-        case 3: 
+        case 3:
           { addNullToken(); return firstToken;
           }
         case 19: break;
-        case 7: 
+        case 7:
           { yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER);
           }
         case 20: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -717,7 +717,7 @@ public final void yybegin(int newState) {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

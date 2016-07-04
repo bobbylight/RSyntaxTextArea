@@ -2,7 +2,7 @@
  * 11/13/2008
  *
  * FileFileLocation.java - The location of a local file.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,8 +11,8 @@ package org.fife.ui.rsyntaxtextarea;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 
@@ -35,7 +35,7 @@ class FileFileLocation extends FileLocation {
 	 *
 	 * @param file The local file.
 	 */
-	public FileFileLocation(File file) {
+	FileFileLocation(File file) {
 		try {
 			// Useful on Windows and OS X.
 			this.file = file.getCanonicalFile();

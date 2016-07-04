@@ -3,7 +3,7 @@
  *
  * Gutter.java - Manages line numbers, icons, etc. on the left-hand side of
  * an RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -20,6 +20,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -54,7 +55,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * lines a user can cycle through via F2 and Shift+F2.  Bookmarked lines are
  * toggled via Ctrl+F2.  In order to enable bookmarking, you must first assign
  * an icon to represent a bookmarked line, then actually enable the feature:
- * 
+ *
  * <pre>
  * Gutter gutter = scrollPane.getGutter();
  * gutter.setBookmarkIcon(new ImageIcon("bookmark.png"));
@@ -844,7 +845,7 @@ public void setBorder(Border border) {
 		private Color color;
 		private Rectangle visibleRect;
 
-		public GutterBorder(int top, int left, int bottom, int right) {
+		GutterBorder(int top, int left, int bottom, int right) {
 			super(top, left, bottom, right);
 			color = new Color(221, 221, 221);
 			visibleRect = new Rectangle();
@@ -892,18 +893,17 @@ public void setBorder(Border border) {
 	/**
 	 * Listens for the text area resizing.
 	 */
-	/*
-	 * This is necessary to keep child components the same height as the text
-	 * area.  The worse case is when the user toggles word-wrap and it changes
-	 * the height of the text area. In that case, if we listen for the
-	 * "lineWrap" property change, we get notified BEFORE the text area
-	 * decides on its new size, thus we cannot resize properly.  We listen
-	 * instead for ComponentEvents so we change size after the text area has
-	 * resized.
-	 */
 	private class TextAreaListener extends ComponentAdapter
 						implements DocumentListener, PropertyChangeListener,
 						ActiveLineRangeListener {
+
+		// This is necessary to keep child components the same height as the text
+		// area.  The worse case is when the user toggles word-wrap and it changes
+		// the height of the text area. In that case, if we listen for the
+		// "lineWrap" property change, we get notified BEFORE the text area
+		// decides on its new size, thus we cannot resize properly.  We listen
+		// instead for ComponentEvents so we change size after the text area has
+		// resized.
 
 		private boolean installed;
 
