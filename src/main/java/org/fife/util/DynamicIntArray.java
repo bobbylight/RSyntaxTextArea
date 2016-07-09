@@ -3,7 +3,7 @@
  *
  * DynamicIntArray.java - Similar to an ArrayList, but holds ints instead
  * of Objects.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -52,8 +52,8 @@ public class DynamicIntArray implements Serializable {
 	 */
 	public DynamicIntArray(int initialCapacity) {
 		if (initialCapacity<0) {
-			throw new IllegalArgumentException("Illegal initialCapacity: "
-												+ initialCapacity);
+			throw new IllegalArgumentException("Illegal initialCapacity: " +
+												initialCapacity);
 		}
 		data = new int[initialCapacity];
 		size = 0;
@@ -109,8 +109,9 @@ public class DynamicIntArray implements Serializable {
 		int addCount = intArray.length;
 		ensureCapacity(size+addCount);
 		int moveCount = size - index;
-		if (moveCount>0)
+		if (moveCount>0) {
 			System.arraycopy(data,index, data,index+addCount, moveCount);
+		}
 		System.arraycopy(intArray,0, data,index, addCount);
 		size += addCount;
 	}
@@ -157,8 +158,9 @@ public class DynamicIntArray implements Serializable {
 	 */
 	public boolean contains(int integer) {
 		for (int i=0; i<size; i++) {
-			if (data[i]==integer)
+			if (data[i]==integer) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -185,15 +187,16 @@ public class DynamicIntArray implements Serializable {
 	 *
 	 * @param minCapacity The desired minimum capacity.
 	 */
-	private final void ensureCapacity(int minCapacity) {
+	private void ensureCapacity(int minCapacity) {
 		int oldCapacity = data.length;
 		if (minCapacity > oldCapacity) {
 			int[] oldData = data;
 			// Ensures we don't just keep increasing capacity by some small
 			// number like 1...
 			int newCapacity = (oldCapacity * 3)/2 + 1;
-			if (newCapacity < minCapacity)
+			if (newCapacity < minCapacity) {
 				newCapacity = minCapacity;
+			}
 			data = new int[newCapacity];
 			System.arraycopy(oldData,0, data,0, size);
 		}
@@ -328,7 +331,7 @@ public class DynamicIntArray implements Serializable {
 		size -= (toIndex - fromIndex);
 	}
 
-		
+
 	/**
 	 * Sets the <code>int</code> value at the specified position in this
 	 * array object.
@@ -374,8 +377,7 @@ public class DynamicIntArray implements Serializable {
 	 * @param index The invalid index.
 	 * @throws IndexOutOfBoundsException Always.
 	 */
-	private final void throwException(int index)
-								throws IndexOutOfBoundsException {
+	private void throwException(int index) {
 		throw new IndexOutOfBoundsException("Index " + index +
 						" not in valid range [0-" + (size-1) + "]");
 	}
@@ -393,8 +395,7 @@ public class DynamicIntArray implements Serializable {
 	 * @param index The invalid index.
 	 * @throws IndexOutOfBoundsException Always.
 	 */
-	private final void throwException2(int index)
-								throws IndexOutOfBoundsException {
+	private void throwException2(int index) {
 		throw new IndexOutOfBoundsException("Index " + index +
 								", not in range [0-" + size + "]");
 	}
@@ -412,8 +413,7 @@ public class DynamicIntArray implements Serializable {
 	 * @param index The invalid index.
 	 * @throws IndexOutOfBoundsException Always.
 	 */
-	private final void throwException3(int fromIndex, int toIndex)
-								throws IndexOutOfBoundsException {
+	private void throwException3(int fromIndex, int toIndex) {
 		throw new IndexOutOfBoundsException("Index range [" +
 						fromIndex + ", " + toIndex +
 						"] not in valid range [0-" + (size-1) + "]");

@@ -4,7 +4,7 @@
  * 01/24/2005
  *
  * HTMLTokenMaker.java - Generates tokens for HTML syntax highlighting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -86,10 +86,10 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
   public static final int JS_STRING = 15;
   public static final int INTAG_STYLE = 11;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\4\1\2\1\0\1\1\1\33\22\0\1\4\1\51\1\7"+
     "\1\34\1\36\1\50\1\5\1\107\1\104\1\103\1\37\1\42\1\45"+
     "\1\31\1\43\1\10\1\25\6\124\1\27\2\24\1\53\1\6\1\3"+
@@ -101,12 +101,12 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
     "\1\61\1\74\1\121\1\60\1\71\1\62\1\32\1\100\1\110\1\105"+
     "\1\73\1\126\1\127\1\55\1\44\1\54\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -166,7 +166,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -292,7 +292,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -2202,11 +2202,11 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -2249,7 +2249,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -2308,12 +2308,12 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -2334,8 +2334,8 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -2355,7 +2355,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -2402,13 +2402,13 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -2451,47 +2451,47 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 54: 
+        case 54:
           { addToken(Token.OPERATOR); yybegin(CSS_VALUE);
           }
         case 104: break;
-        case 73: 
+        case 73:
           { addToken(Token.ERROR_NUMBER_FORMAT);
           }
         case 105: break;
-        case 63: 
+        case 63:
           { addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken;
           }
         case 106: break;
-        case 23: 
+        case 23:
           { start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT);
           }
         case 107: break;
-        case 10: 
+        case 10:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD);
           }
         case 108: break;
-        case 49: 
+        case 49:
           { addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY);
           }
         case 109: break;
-        case 4: 
+        case 4:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG);
           }
         case 110: break;
-        case 97: 
+        case 97:
           { addToken(Token.RESERVED_WORD_2);
           }
         case 111: break;
-        case 83: 
+        case 83:
           { addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState);
           }
         case 112: break;
-        case 80: 
+        case 80:
           { start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT);
           }
         case 113: break;
-        case 39: 
+        case 39:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
 									addToken(start,zzStartRead, Token.LITERAL_CHAR);
@@ -2504,25 +2504,25 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 								return firstToken;
           }
         case 114: break;
-        case 5: 
+        case 5:
           { addToken(Token.WHITESPACE);
           }
         case 115: break;
-        case 98: 
+        case 98:
           { addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 								  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
           }
         case 116: break;
-        case 82: 
+        case 82:
           { addToken(Token.REGEX);
           }
         case 117: break;
-        case 41: 
+        case 41:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
           }
         case 118: break;
-        case 102: 
+        case 102:
           { int temp = zzStartRead;
 							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
 							  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
@@ -2531,163 +2531,163 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
           }
         case 119: break;
-        case 93: 
+        case 93:
           { addToken(Token.FUNCTION);
           }
         case 120: break;
-        case 8: 
+        case 8:
           { addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
           }
         case 121: break;
-        case 35: 
+        case 35:
           { addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken;
           }
         case 122: break;
-        case 45: 
+        case 45:
           { start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING);
           }
         case 123: break;
-        case 20: 
+        case 20:
           { yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 124: break;
-        case 25: 
+        case 25:
           { start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_STYLE);
           }
         case 125: break;
-        case 76: 
+        case 76:
           { /* Skip all escaped chars. */
           }
         case 126: break;
-        case 70: 
+        case 70:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL);
           }
         case 127: break;
-        case 28: 
+        case 28:
           { yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 128: break;
-        case 92: 
+        case 92:
           { if(JavaScriptTokenMaker.isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);}
           }
         case 129: break;
-        case 87: 
+        case 87:
           { if(JavaScriptTokenMaker.isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);}
           }
         case 130: break;
-        case 55: 
+        case 55:
           { /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER);
           }
         case 131: break;
-        case 17: 
+        case 17:
           { /* A non-recognized HTML tag name */ yypushback(yylength()); yybegin(INTAG);
           }
         case 132: break;
-        case 26: 
+        case 26:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(CSS, LANG_INDEX_CSS);
           }
         case 133: break;
-        case 64: 
+        case 64:
           { addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState);
           }
         case 134: break;
-        case 27: 
+        case 27:
           { start = zzMarkedPos-1; yybegin(INATTR_SINGLE_STYLE);
           }
         case 135: break;
-        case 7: 
+        case 7:
           { addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken;
           }
         case 136: break;
-        case 78: 
+        case 78:
           { /* Invalid latin-1 character \xXX */ validJSString = false;
           }
         case 137: break;
-        case 24: 
+        case 24:
           { yybegin(INTAG_SCRIPT); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 138: break;
-        case 36: 
+        case 36:
           { int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT);
           }
         case 139: break;
-        case 90: 
+        case 90:
           { addToken(Token.COMMENT_MULTILINE);
           }
         case 140: break;
-        case 68: 
+        case 68:
           { start = zzMarkedPos-2; yybegin(PI);
           }
         case 141: break;
-        case 99: 
+        case 99:
           { yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
           }
         case 142: break;
-        case 50: 
+        case 50:
           { /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER);
           }
         case 143: break;
-        case 9: 
+        case 9:
           { addToken(start,zzStartRead-1, Token.MARKUP_DTD); return firstToken;
           }
         case 144: break;
-        case 66: 
+        case 66:
           { int count = yylength();
 									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-1); //yypushback(count-1);
 									yybegin(INTAG_CHECK_TAG_NAME);
           }
         case 145: break;
-        case 62: 
+        case 62:
           { /* Skip escaped chars. */
           }
         case 146: break;
-        case 77: 
+        case 77:
           { /* Invalid Unicode character \\uXXXX */ validJSString = false;
           }
         case 147: break;
-        case 96: 
+        case 96:
           { addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-5,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
 								  start = zzMarkedPos; cssPrevState = zzLexicalState; yybegin(INTAG_STYLE);
           }
         case 148: break;
-        case 69: 
+        case 69:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION);
           }
         case 149: break;
-        case 79: 
+        case 79:
           { yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
           }
         case 150: break;
-        case 30: 
+        case 30:
           { addEndToken(INTERNAL_IN_JS); return firstToken;
           }
         case 151: break;
-        case 38: 
+        case 38:
           { addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken;
           }
         case 152: break;
-        case 15: 
+        case 15:
           { addToken(Token.OPERATOR);
           }
         case 153: break;
-        case 57: 
+        case 57:
           { addToken(Token.OPERATOR); yybegin(CSS_PROPERTY);
           }
         case 154: break;
-        case 88: 
+        case 88:
           { start = zzMarkedPos-4; yybegin(COMMENT);
           }
         case 155: break;
-        case 85: 
+        case 85:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT);
           }
         case 156: break;
-        case 101: 
+        case 101:
           { yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 							  int temp = zzStartRead;
 							  addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE);
@@ -2696,164 +2696,164 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
           }
         case 157: break;
-        case 81: 
+        case 81:
           { addToken(Token.VARIABLE);
           }
         case 158: break;
-        case 43: 
+        case 43:
           { /*System.out.println("CSS: " + yytext());*/ addToken(Token.IDENTIFIER);
           }
         case 159: break;
-        case 2: 
+        case 2:
           { addToken(Token.IDENTIFIER);
           }
         case 160: break;
-        case 94: 
+        case 94:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 161: break;
-        case 22: 
+        case 22:
           { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(JAVASCRIPT, LANG_INDEX_JS);
           }
         case 162: break;
-        case 95: 
+        case 95:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
           }
         case 163: break;
-        case 53: 
+        case 53:
           { addToken(Token.SEPARATOR); yybegin(CSS);
           }
         case 164: break;
-        case 31: 
+        case 31:
           { start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING);
           }
         case 165: break;
-        case 61: 
+        case 61:
           { addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState);
           }
         case 166: break;
-        case 51: 
+        case 51:
           { addEndToken(INTERNAL_CSS_PROPERTY); return firstToken;
           }
         case 167: break;
-        case 40: 
+        case 40:
           { int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT);
           }
         case 168: break;
-        case 34: 
+        case 34:
           { start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR);
           }
         case 169: break;
-        case 72: 
+        case 72:
           { start = zzMarkedPos-2; yybegin(JS_MLC);
           }
         case 170: break;
-        case 75: 
+        case 75:
           { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 171: break;
-        case 59: 
+        case 59:
           { int temp = zzMarkedPos - 2;
 						  addToken(zzStartRead, temp, Token.FUNCTION);
 						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
 						  zzStartRead = zzCurrentPos = zzMarkedPos;
           }
         case 172: break;
-        case 103: 
+        case 103:
           { addToken(Token.ANNOTATION);
           }
         case 173: break;
-        case 29: 
+        case 29:
           { addToken(Token.ERROR_IDENTIFIER);
           }
         case 174: break;
-        case 56: 
+        case 56:
           { addEndToken(INTERNAL_CSS_VALUE); return firstToken;
           }
         case 175: break;
-        case 89: 
+        case 89:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
           }
         case 176: break;
-        case 6: 
+        case 6:
           { addToken(Token.MARKUP_ENTITY_REFERENCE);
           }
         case 177: break;
-        case 91: 
+        case 91:
           { addToken(Token.LITERAL_BOOLEAN);
           }
         case 178: break;
-        case 18: 
+        case 18:
           { /* Shouldn't happen */ yypushback(1); yybegin(INTAG);
           }
         case 179: break;
-        case 3: 
+        case 3:
           { addNullToken(); return firstToken;
           }
         case 180: break;
-        case 44: 
+        case 44:
           { addEndToken(INTERNAL_CSS); return firstToken;
           }
         case 181: break;
-        case 100: 
+        case 100:
           { yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
 								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
 								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
           }
         case 182: break;
-        case 48: 
+        case 48:
           { start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL);
           }
         case 183: break;
-        case 52: 
+        case 52:
           { addToken(Token.RESERVED_WORD);
           }
         case 184: break;
-        case 12: 
+        case 12:
           { start = zzMarkedPos-1; yybegin(INATTR_DOUBLE);
           }
         case 185: break;
-        case 14: 
+        case 14:
           { yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER);
           }
         case 186: break;
-        case 46: 
+        case 46:
           { addToken(Token.DATA_TYPE);
           }
         case 187: break;
-        case 33: 
+        case 33:
           { addToken(Token.SEPARATOR);
           }
         case 188: break;
-        case 84: 
+        case 84:
           { int count = yylength();
 									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-2); //yypushback(count-2);
 									yybegin(INTAG_CHECK_TAG_NAME);
           }
         case 189: break;
-        case 60: 
+        case 60:
           { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken;
           }
         case 190: break;
-        case 58: 
+        case 58:
           { /* End of a function */ addToken(Token.SEPARATOR);
           }
         case 191: break;
-        case 19: 
+        case 19:
           { addToken(Token.MARKUP_TAG_NAME);
           }
         case 192: break;
-        case 11: 
+        case 11:
           { addToken(Token.MARKUP_TAG_ATTRIBUTE);
           }
         case 193: break;
-        case 71: 
+        case 71:
           { start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT);
           }
         case 194: break;
-        case 37: 
+        case 37:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
 									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
@@ -2866,15 +2866,15 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 								return firstToken;
           }
         case 195: break;
-        case 74: 
+        case 74:
           { addToken(Token.LITERAL_NUMBER_FLOAT);
           }
         case 196: break;
-        case 16: 
+        case 16:
           { start = zzMarkedPos-1; yybegin(INATTR_SINGLE);
           }
         case 197: break;
-        case 86: 
+        case 86:
           { boolean highlightedAsRegex = false;
 										if (firstToken==null) {
 											addToken(Token.REGEX);
@@ -2898,39 +2898,39 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 										}
           }
         case 198: break;
-        case 13: 
+        case 13:
           { addToken(Token.MARKUP_TAG_DELIMITER);
           }
         case 199: break;
-        case 65: 
+        case 65:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken;
           }
         case 200: break;
-        case 32: 
+        case 32:
           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 201: break;
-        case 67: 
+        case 67:
           { start = zzMarkedPos-2; yybegin(DTD);
           }
         case 202: break;
-        case 21: 
+        case 21:
           { start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT);
           }
         case 203: break;
-        case 42: 
+        case 42:
           { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken;
           }
         case 204: break;
-        case 47: 
+        case 47:
           { /* Unknown pseudo class */ addToken(Token.DATA_TYPE);
           }
         case 205: break;
-        case 1: 
-          { 
+        case 1:
+          {
           }
         case 206: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -3037,7 +3037,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

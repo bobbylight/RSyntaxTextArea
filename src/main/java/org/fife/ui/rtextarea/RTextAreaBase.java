@@ -2,7 +2,7 @@
  * 04/07/2005
  *
  * RTextAreaBase.java - The base class for an RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -21,6 +21,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
@@ -171,7 +172,7 @@ public abstract class RTextAreaBase extends JTextArea {
 				break;
 			}
 		}
-		if (add==true) {
+		if (add) {
 			//System.err.println("Adding mouse motion listener!");
 			addMouseMotionListener(mouseListener);
 		}
@@ -182,7 +183,7 @@ public abstract class RTextAreaBase extends JTextArea {
 				break;
 			}
 		}
-		if (add==true) {
+		if (add) {
 			//System.err.println("Adding mouse listener!");
 			addMouseListener(mouseListener);
 		}
@@ -229,17 +230,20 @@ public abstract class RTextAreaBase extends JTextArea {
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
         StringBuilder stringBuilder = new StringBuilder();
-		for (int i=0; i<tabSize; i++)
-            stringBuilder.append(" ");
+		for (int i=0; i<tabSize; i++) {
+			stringBuilder.append(" ");
+		}
 		String text = getText();
 		setText(text.replaceAll(stringBuilder.toString(), "\t"));
 		int newDocumentLength = getDocument().getLength();
 
 		// Place the caret back in its proper position.
-		if (caretPosition<newDocumentLength)
+		if (caretPosition<newDocumentLength) {
 			setCaretPosition(caretPosition);
-		else
+		}
+		else {
 			setCaretPosition(newDocumentLength-1);
+		}
 
 	}
 
@@ -261,8 +265,9 @@ public abstract class RTextAreaBase extends JTextArea {
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
 		StringBuilder tabInSpaces = new StringBuilder();
-		for (int i=0; i<tabSize; i++)
+		for (int i=0; i<tabSize; i++) {
 			tabInSpaces.append(' ');
+		}
 		String text = getText();
 		setText(text.replaceAll("\t", tabInSpaces.toString()));
 
@@ -350,8 +355,9 @@ public abstract class RTextAreaBase extends JTextArea {
 	 * @see #setBackgroundObject(Object newBackground)
 	 */
 	public final Object getBackgroundObject() {
-		if (backgroundPainter==null)
+		if (backgroundPainter==null) {
 			return null;
+		}
 		return (backgroundPainter instanceof ImageBackgroundPainterStrategy) ?
 			(Object)((ImageBackgroundPainterStrategy)backgroundPainter).
 					getMasterImage() :
@@ -811,7 +817,7 @@ try {
 		// different physical one.  So, here we force a repaint of the current
 		// line's highlight if necessary.
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED &&
-				getLineWrap()==true && getHighlightCurrentLine()) {
+				getLineWrap() && getHighlightCurrentLine()) {
 			previousCaretY = -1;  // So we are sure to repaint.
 			fireCaretUpdate(mouseListener);
 		}
@@ -934,8 +940,9 @@ try {
 	 * @see #getCurrentLineHighlightColor
 	 */
 	public void setCurrentLineHighlightColor(Color color) {
-		if (color==null)
+		if (color==null) {
 			throw new NullPointerException();
+		}
 		if (!color.equals(currentLineColor)) {
 			Color old = currentLineColor;
 			currentLineColor = color;
@@ -956,8 +963,9 @@ try {
 	public void setFadeCurrentLineHighlight(boolean fade) {
 		if (fade!=fadeCurrentLineHighlight) {
 			fadeCurrentLineHighlight = fade;
-			if (getHighlightCurrentLine())
+			if (getHighlightCurrentLine()) {
 				forceCurrentLineHighlightRepaint();
+			}
 			firePropertyChange(CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY,
 							!fade, fade);
 		}
@@ -979,8 +987,9 @@ try {
 		super.setFont(font);
 		if (font!=null) {
 			updateMarginLineX();
-			if (highlightCurrentLine)
+			if (highlightCurrentLine) {
 				possiblyUpdateCurrentLineHighlightLocation();
+			}
 		}
 	}
 
@@ -1214,6 +1223,9 @@ try {
 	}
 
 
+	/**
+	 * Listens for mouse events in this component.
+	 */
 	protected class RTAMouseListener extends CaretEvent implements
 					MouseListener, MouseMotionListener, FocusListener {
 

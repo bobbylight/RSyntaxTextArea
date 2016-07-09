@@ -271,17 +271,17 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 
 		    "if",
 		    "immutable",
-		    "import", 
-		    "in", 
+		    "import",
+		    "in",
 		    "inout",
 		    "interface",
-		    "invariant", 
+		    "invariant",
 		    "is",
 
 		    "lazy",
 
 		    "macro",
-		    "mixin", 
+		    "mixin",
 		    "module",
 
 		    "new",

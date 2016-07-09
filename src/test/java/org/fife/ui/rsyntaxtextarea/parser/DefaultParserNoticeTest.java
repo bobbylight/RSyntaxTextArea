@@ -16,7 +16,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for the {@link DefaultParserNotice} class.
- * 
+ *
  * @author Robert Futrell
  * @version 1.0
  */

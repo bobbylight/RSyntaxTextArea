@@ -3,7 +3,7 @@
  *
  * TokenMaker.java - An object that can take a chunk of text and return a
  * linked list of <code>Token</code>s representing it.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

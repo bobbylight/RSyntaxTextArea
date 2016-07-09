@@ -3,7 +3,7 @@
  *
  * SizeGrip.java - A size grip component that sits at the bottom of the window,
  * allowing the user to easily resize that window.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,7 @@ import javax.swing.event.MouseInputAdapter;
  * @author Robert Futrell
  * @version 1.0
  */
+@SuppressWarnings({ "checkstyle:magicnumber" })
 class SizeGrip extends JPanel {
 
 	/**
@@ -44,7 +46,7 @@ class SizeGrip extends JPanel {
 	private transient Image osxSizeGrip;
 
 
-	public SizeGrip() {
+	SizeGrip() {
 		MouseHandler adapter = new MouseHandler();
 		addMouseListener(adapter);
 		addMouseMotionListener(adapter);
@@ -197,13 +199,14 @@ class SizeGrip extends JPanel {
 	 * Listens for mouse events on this panel and resizes the parent window
 	 * appropriately.
 	 */
-	/*
-	 * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using
-	 * the locations relative to the corner component because the latter proved
-	 * buggy - stretch the window too wide and some kind of arithmetic error
-	 * started happening somewhere - our window would grow way too large.
-	 */
 	private class MouseHandler extends MouseInputAdapter {
+
+		/*
+		 * NOTE: We use SwingUtilities.convertPointToScreen() instead of just using
+		 * the locations relative to the corner component because the latter proved
+		 * buggy - stretch the window too wide and some kind of arithmetic error
+		 * started happening somewhere - our window would grow way too large.
+		 */
 
 		private Point origPos;
 

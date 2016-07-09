@@ -2,7 +2,7 @@
  * 08/13/2009
  *
  * TipUtil.java - Utility methods for homemade tool tips.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -15,6 +15,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
+
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.UIManager;
@@ -31,7 +32,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TipUtil {
+public final class TipUtil {
 
 
 	private TipUtil() {
@@ -45,7 +46,7 @@ public class TipUtil {
 	 * @return The string representation, in the form "<code>#rrggbb</code>",
 	 *         or <code>null</code> if <code>c</code> is <code>null</code>.
 	 */
-	private static final String getHexString(Color c) {
+	private static String getHexString(Color c) {
 
 		if (c==null) {
 			return null;
@@ -158,7 +159,7 @@ public class TipUtil {
 	 * @param c The color to check.
 	 * @return Whether it is a DerivedColor
 	 */
-	private static final boolean isDerivedColor(Color c) {
+	private static boolean isDerivedColor(Color c) {
 		return c!=null && c.getClass().getName().endsWith(".DerivedColor");
 	}
 
@@ -168,7 +169,7 @@ public class TipUtil {
 	 *
 	 * @return Whether the current LAF is Nimbus.
 	 */
-	private static final boolean isNimbusLookAndFeel() {
+	private static boolean isNimbusLookAndFeel() {
 		return UIManager.getLookAndFeel().getName().equals("Nimbus");
 	}
 

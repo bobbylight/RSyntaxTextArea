@@ -3,7 +3,7 @@
  *
  * BufferedImageBackgroundPainterStrategy.java - Renders an RTextAreaBase's
  * background as an image using a BufferedImage.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -69,8 +69,9 @@ public class BufferedImageBackgroundPainterStrategy
 	 */
 	@Override
 	protected void paintImage(Graphics g, int x, int y) {
-		if (bgImage != null)
+		if (bgImage != null) {
 			g.drawImage(bgImage, x,y, null);
+		}
 	}
 
 

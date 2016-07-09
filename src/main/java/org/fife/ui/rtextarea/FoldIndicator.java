@@ -3,7 +3,7 @@
  *
  * FoldIndicator.java - Gutter component allowing the user to expand and
  * collapse folds.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -19,6 +19,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.Icon;
 import javax.swing.JToolTip;
 import javax.swing.ToolTipManager;
@@ -154,7 +155,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				}
 			}
 		}
-	
+
 		return fold;
 
 	}
@@ -329,7 +330,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		g.fillRect(0,visibleRect.y, getWidth(),visibleRect.height);
 
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-		if (!rsta.isCodeFoldingEnabled()) { 
+		if (!rsta.isCodeFoldingEnabled()) {
 			return; // We should be hidden in this case, but still...
 		}
 
@@ -614,7 +615,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		private boolean collapsed;
 
-		public FoldIcon(boolean collapsed) {
+		FoldIcon(boolean collapsed) {
 			this.collapsed = collapsed;
 		}
 
@@ -636,7 +637,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				g.drawLine(x+4,y+2, x+4,y+6);
 			}
 		}
-		
+
 	}
 
 
@@ -646,7 +647,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private class Listener extends MouseInputAdapter
 			implements PropertyChangeListener {
 
-		public Listener(FoldIndicator fgc) {
+		Listener(FoldIndicator fgc) {
 			fgc.addMouseListener(this);
 			fgc.addMouseMotionListener(this);
 		}

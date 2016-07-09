@@ -3,7 +3,7 @@
  *
  * SyntaxView.java - The View object used by RSyntaxTextArea when word wrap is
  * disabled.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -70,7 +70,7 @@ public class SyntaxView extends View implements TabExpander,
 	private int ascent;
 	private int clipStart;
 	private int clipEnd;
-	
+
 	/**
 	 * Temporary token used when we need to "modify" tokens for rendering
 	 * purposes.  Since tokens returned from RSyntaxDocuments are treated as
@@ -95,7 +95,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * of the element this view represents, looking for the line
 	 * that is the longest.  The <em>longLine</em> variable is updated to
 	 * represent the longest line contained.  The <em>font</em> variable
-	 * is updated to indicate the font used to calculate the 
+	 * is updated to indicate the font used to calculate the
 	 * longest line.
 	 */
 	void calculateLongestLine() {
@@ -150,8 +150,9 @@ public class SyntaxView extends View implements TabExpander,
 				Rectangle dmg = area0.union(area1); // damage.
 				host.repaint(dmg.x, dmg.y, dmg.width, dmg.height);
 			}
-			else
+			else {
 				host.repaint();
+			}
 		}
 	}
 
@@ -310,7 +311,7 @@ public class SyntaxView extends View implements TabExpander,
 
 
 	/**
-	 * Provides a way to determine the next visually represented model 
+	 * Provides a way to determine the next visually represented model
 	 * location that one might place a caret.  Some views may not be visible,
 	 * they might not be in the same order found in the model, or they just
 	 * might not allow access to some of the locations in the model.
@@ -319,15 +320,15 @@ public class SyntaxView extends View implements TabExpander,
 	 * @param a the allocated region to render into
 	 * @param direction the direction from the current position that can
 	 *  be thought of as the arrow keys typically found on a keyboard.
-	 *  This may be SwingConstants.WEST, SwingConstants.EAST, 
-	 *  SwingConstants.NORTH, or SwingConstants.SOUTH.  
+	 *  This may be SwingConstants.WEST, SwingConstants.EAST,
+	 *  SwingConstants.NORTH, or SwingConstants.SOUTH.
 	 * @return the location within the model that best represents the next
 	 *  location visual position.
 	 * @exception BadLocationException
 	 * @exception IllegalArgumentException for an invalid direction
 	 */
 	@Override
-	public int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a, 
+	public int getNextVisualPositionFrom(int pos, Position.Bias b, Shape a,
 							int direction, Position.Bias[] biasRet)
 							throws BadLocationException {
 		return RSyntaxUtilities.getNextVisualPositionFrom(pos, b, a,
@@ -342,7 +343,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
 	 * @return   the span the view would like to be rendered into &gt;= 0.
 	 *           Typically the view is told to render into the span
-	 *           that is returned, although there is no guarantee.  
+	 *           that is returned, although there is no guarantee.
 	 *           The parent may choose to resize or break the view.
 	 * @exception IllegalArgumentException for an invalid axis
 	 */
@@ -379,7 +380,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *
 	 * @return The amount of space to add to the x-axis preferred span.
 	 */
-	private final int getRhsCorrection() {
+	private int getRhsCorrection() {
 		int rhsCorrection = 10;
 		if (host!=null) {
 			rhsCorrection = host.getRightHandSideCorrection();
@@ -630,7 +631,9 @@ else {
 		// this, one character too many is highlighted thanks to our
 		// modelToView() implementation returning the actual width of the
 		// character requested!
-		if (p1>p0) r0.width -= r1.width;
+		if (p1>p0) {
+			r0.width -= r1.width;
+		}
 
 		return r0;
 
@@ -648,8 +651,9 @@ else {
 	 * @return the tab stop, measured in points &gt;= 0
 	 */
 	public float nextTabStop(float x, int tabOffset) {
-		if (tabSize == 0)
+		if (tabSize == 0) {
 			return x;
+		}
 		int ntabs = (((int)x) - tabBase) / tabSize;
 		return tabBase + ((ntabs + 1f) * tabSize);
 	}
@@ -716,7 +720,7 @@ else {
 			int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
 			h.paintLayeredHighlights(g2d, startOffset, endOffset,
 								a, host, this);
-	
+
 			// Paint a line of text.
 			token = document.getTokenListForLine(line);
 			if (selStart==selEnd || startOffset>=selEnd ||
@@ -808,9 +812,9 @@ else {
 	/**
 	 * Repaint the region of change covered by the given document
 	 * event.  Damages the line that begins the range to cover
-	 * the case when the insert/remove is only on one line.  
-	 * If lines are added or removed, damages the whole 
-	 * view.  The longest line is checked to see if it has 
+	 * the case when the insert/remove is only on one line.
+	 * If lines are added or removed, damages the whole
+	 * view.  The longest line is checked to see if it has
 	 * changed.
 	 */
 	protected void updateDamage(DocumentEvent changes, Shape a, ViewFactory f) {
@@ -820,13 +824,14 @@ else {
 		DocumentEvent.ElementChange ec = changes.getChange(elem);
 		Element[] added = (ec != null) ? ec.getChildrenAdded() : null;
 		Element[] removed = (ec != null) ? ec.getChildrenRemoved() : null;
-		if (((added != null) && (added.length > 0)) || 
+		if (((added != null) && (added.length > 0)) ||
 			((removed != null) && (removed.length > 0))) {
 			// lines were added or removed...
 			if (added != null) {
 				int addedAt = ec.getIndex(); // FIXME: Is this correct?????
-				for (int i = 0; i < added.length; i++)
+				for (int i = 0; i < added.length; i++) {
 					possiblyUpdateLongLine(added[i], addedAt+i);
+				}
 			}
 			if (removed != null) {
 				for (int i = 0; i < removed.length; i++) {
@@ -866,8 +871,9 @@ else {
 				}
 				else {
 					// If long line gets updated, update the status bars too.
-					if (possiblyUpdateLongLine(e, line))
+					if (possiblyUpdateLongLine(e, line)) {
 						preferenceChanged(null, true, false);
+					}
 				}
 			}
 			else if (changes.getType() == DocumentEvent.EventType.REMOVE) {
@@ -876,7 +882,7 @@ else {
 					longLineWidth = -1; // Must do this!
 					calculateLongestLine();
 					preferenceChanged(null, true, false);
-				}			
+				}
 			}
 		}
 	}
@@ -949,13 +955,12 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 			Element line = map.getElement(lineIndex);
 
 			// If the point is to the left of the line...
-			if (x < alloc.x)
+			if (x < alloc.x) {
 				return line.getStartOffset();
-
-			// If the point is to the right of the line...
-			else if (x > alloc.x + alloc.width)
+			}
+			else if (x > alloc.x + alloc.width) {
 				return line.getEndOffset() - 1;
-
+			}
 			else {
 				// Determine the offset into the text
 				int p0 = line.getStartOffset();
@@ -969,7 +974,7 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 
 		} // End of else.
 
-	} 
+	}
 
 
 	/**

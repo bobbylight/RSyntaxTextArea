@@ -3,7 +3,7 @@
  *
  * RDocumentCharSequence.java - Iterator over a portion of an RTextArea's
  * document.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -34,7 +34,7 @@ class RDocumentCharSequence implements CharSequence {
 	 * @param doc The document.
 	 * @param start The starting offset in the document, inclusive.
 	 */
-	public RDocumentCharSequence(RDocument doc, int start) {
+	RDocumentCharSequence(RDocument doc, int start) {
 		this(doc, start, doc.getLength());
 	}
 
@@ -46,7 +46,7 @@ class RDocumentCharSequence implements CharSequence {
 	 * @param start The starting offset in the document, inclusive.
 	 * @param end the ending offset in the document, exclusive.
 	 */
-	public RDocumentCharSequence(RDocument doc, int start, int end) {
+	RDocumentCharSequence(RDocument doc, int start, int end) {
 		this.doc = doc;
 		this.start = start;
 		this.end = end;

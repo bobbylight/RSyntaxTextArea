@@ -3,7 +3,7 @@
  *
  * TokenIteratorTest.java - Unit tests for the iterator returned from an
  * RSyntaxDocument.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

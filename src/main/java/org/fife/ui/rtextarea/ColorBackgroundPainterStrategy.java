@@ -3,7 +3,7 @@
  *
  * ColorBackgroundPainterStrategy.java - Renders an RTextAreaBase's background
  * as a single color.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

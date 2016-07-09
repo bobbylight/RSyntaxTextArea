@@ -2,13 +2,14 @@
  * 11/29/2008
  *
  * CodeTemplate.java - A "template" (macro) for commonly-typed code.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea.templates;
 
 import java.io.Serializable;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -50,7 +51,7 @@ public interface CodeTemplate extends Cloneable, Comparable<CodeTemplate>,
 	 *
 	 * @return A deep copy of this template.
 	 */
-	public Object clone();
+	Object clone();
 
 
 	/**
@@ -58,7 +59,7 @@ public interface CodeTemplate extends Cloneable, Comparable<CodeTemplate>,
 	 *
 	 * @return The template's ID.
 	 */
-	public String getID();
+	String getID();
 
 
 	/**
@@ -68,7 +69,7 @@ public interface CodeTemplate extends Cloneable, Comparable<CodeTemplate>,
 	 * @param textArea The text area to operate on.
 	 * @throws BadLocationException If something bad happens.
 	 */
-	public void invoke(RSyntaxTextArea textArea) throws BadLocationException;
+	void invoke(RSyntaxTextArea textArea) throws BadLocationException;
 
 
 }

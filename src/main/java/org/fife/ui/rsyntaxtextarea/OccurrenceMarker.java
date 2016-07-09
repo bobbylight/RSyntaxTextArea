@@ -2,7 +2,7 @@
  * 03/09/2013
  *
  * OccurrenceMarker - Marks occurrences of the current token.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -33,7 +33,7 @@ public interface OccurrenceMarker {
 	 * @return The token to (possibly) mark occurrences of, or
 	 *         <code>null</code> if none.
 	 */
-	public Token getTokenToMark(RSyntaxTextArea textArea);
+	Token getTokenToMark(RSyntaxTextArea textArea);
 
 
 	/**
@@ -45,7 +45,7 @@ public interface OccurrenceMarker {
 	 * @param t The token.
 	 * @return Whether we should mark all occurrences of this token.
 	 */
-	public boolean isValidType(RSyntaxTextArea textArea, Token t);
+	boolean isValidType(RSyntaxTextArea textArea, Token t);
 
 
 	/**
@@ -56,7 +56,7 @@ public interface OccurrenceMarker {
 	 * @param h The highlighter to add the highlights to.
 	 * @param p The painter for the highlights.
 	 */
-	public void markOccurrences(RSyntaxDocument doc, Token t,
+	void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p);
 
 

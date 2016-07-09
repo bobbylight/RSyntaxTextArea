@@ -30,7 +30,7 @@ import org.fife.ui.rtextarea.RDocument;
 /**
  * The default implementation of a fold manager.  Besides keeping track of
  * folds, this class behaves as follows:
- * 
+ *
  * <ul>
  *    <li>If text containing a newline is inserted in a collapsed fold,
  *        that fold, and any ancestor folds, are expanded.  This ensures that
@@ -69,7 +69,7 @@ public class DefaultFoldManager implements FoldManager {
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
 		textArea.addPropertyChangeListener("document", l);
 		folds = new ArrayList<Fold>();
-		updateFoldParser(); 
+		updateFoldParser();
 	}
 
 
@@ -192,7 +192,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	public int getHiddenLineCountAbove(int line) {
 		return getHiddenLineCountAbove(line, false);
 	}
-	
+
 
 	public int getHiddenLineCountAbove(int line, boolean physical) {
 

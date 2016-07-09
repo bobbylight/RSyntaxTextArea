@@ -3,7 +3,7 @@
  *
  * ParseResult.java - The result of a Parser parsing some section of an
  * RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -30,7 +30,7 @@ public interface ParseResult {
 	 * @return The error, or <code>null</code> if the document was
 	 *         successfully parsed.
 	 */
-	public Exception getError();
+	Exception getError();
 
 
 	/**
@@ -40,7 +40,7 @@ public interface ParseResult {
 	 * @return The first line parsed.
 	 * @see #getLastLineParsed()
 	 */
-	public int getFirstLineParsed();
+	int getFirstLineParsed();
 
 
 	/**
@@ -51,7 +51,7 @@ public interface ParseResult {
 	 * @return The last line parsed.
 	 * @see #getFirstLineParsed()
 	 */
-	public int getLastLineParsed();
+	int getLastLineParsed();
 
 
 	/**
@@ -59,7 +59,7 @@ public interface ParseResult {
 	 *
 	 * @return A list of {@link ParserNotice}s.
 	 */
-	public List<ParserNotice> getNotices();
+	List<ParserNotice> getNotices();
 
 
 	/**
@@ -67,7 +67,7 @@ public interface ParseResult {
 	 *
 	 * @return The parser.
 	 */
-	public Parser getParser();
+	Parser getParser();
 
 
 	/**
@@ -78,7 +78,7 @@ public interface ParseResult {
 	 * @return The parse time, in milliseconds, or <code>0</code> if the
 	 *         parse time was not recorded.
 	 */
-	public long getParseTime();
+	long getParseTime();
 
 
 }

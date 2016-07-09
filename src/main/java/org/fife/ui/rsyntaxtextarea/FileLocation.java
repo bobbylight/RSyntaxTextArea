@@ -2,7 +2,7 @@
  * 11/13/2008
  *
  * FileLocation.java - Holds the location of a local or remote file.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

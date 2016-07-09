@@ -3,7 +3,7 @@
  *
  * RSyntaxTextArea.java - An extension of RTextArea that adds
  * the ability to syntax highlight certain programming languages.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -46,7 +46,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
@@ -62,10 +61,8 @@ import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
-import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.RecordableTextAction;
 
 
@@ -256,7 +253,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private boolean closeMarkupTags;
 
 	/**
-	 * Whether or not lines with nothing but whitespace are "made empty."
+	 * Whether or not lines with nothing but whitespace are "made empty".
 	 */
 	private boolean clearWhitespaceLines;
 
@@ -296,7 +293,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Handles "mark occurrences" support. */
 	private MarkOccurrencesSupport markOccurrencesSupport;
 
-	/** The color used to render "marked occurrences." */
+	/** The color used to render "marked occurrences". */
 	private Color markOccurrencesColor;
 
 	/** Whether a border should be painted around marked occurrences. */
@@ -358,7 +355,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param doc The document for the editor.
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc) {
@@ -368,7 +365,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param text The initial text to display.
 	 */
 	public RSyntaxTextArea(String text) {
@@ -378,7 +375,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param rows The number of rows to display.
 	 * @param cols The number of columns to display.
 	 * @throws IllegalArgumentException If either <code>rows</code> or
@@ -391,7 +388,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param text The initial text to display.
 	 * @param rows The number of rows to display.
 	 * @param cols The number of columns to display.
@@ -405,7 +402,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param doc The document for the editor.
 	 * @param text The initial text to display.
 	 * @param rows The number of rows to display.
@@ -515,7 +512,7 @@ private boolean fractionalFontMetricsEnabled;
 		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
 		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
 		popup.add(foldingMenu);
-		
+
 	}
 
 
@@ -533,11 +530,13 @@ private boolean fractionalFontMetricsEnabled;
 			if (ss!=null && ss.font!=null) {
 				FontMetrics fm = getFontMetrics(ss.font);
 				int height = fm.getHeight();
-				if (height>lineHeight)
+				if (height>lineHeight) {
 					lineHeight = height;
+				}
 				int ascent = fm.getMaxAscent();
-				if (ascent>maxAscent)
+				if (ascent>maxAscent) {
 					maxAscent = ascent;
+				}
 			}
 		}
 
@@ -599,7 +598,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Overridden to toggle the enabled state of various
 	 * RSyntaxTextArea-specific menu items.
-	 * 
+	 *
 	 * If you set the popup menu via {@link #setPopupMenu(JPopupMenu)}, you
 	 * will want to override this method, especially if you removed any of the
 	 * menu items in the default popup menu.
@@ -687,7 +686,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the document to use for an <code>RSyntaxTextArea</code>
+	 * Returns the document to use for an <code>RSyntaxTextArea</code>.
 	 *
 	 * @return The document.
 	 */
@@ -868,7 +867,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * on this event type.  The listener list is processed last to first.
 	 *
 	 * @param e The event to fire.
-	 * @see EventListenerList
 	 */
 	private void fireHyperlinkUpdate(HyperlinkEvent e) {
 		// Guaranteed to return a non-null array
@@ -878,7 +876,7 @@ private boolean fractionalFontMetricsEnabled;
 		for (int i = listeners.length-2; i>=0; i-=2) {
 			if (listeners[i]==HyperlinkListener.class) {
 				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
-			}          
+			}
 		}
 	}
 
@@ -935,7 +933,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Forces the given {@link Parser} to re-parse the content of this text
 	 * area.<p>
-	 * 
+	 *
 	 * This method can be useful when a <code>Parser</code> can be configured
 	 * as to what notices it returns.  For example, if a Java language parser
 	 * can be configured to set whether no serialVersionUID is a warning,
@@ -1212,7 +1210,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *        <code>Graphics2D</code>.
 	 * @return The <code>Graphics2D</code>.
 	 */
-	private final Graphics2D getGraphics2D(Graphics g) {
+	private Graphics2D getGraphics2D(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
 		if (aaHints!=null) {
 			g2d.addRenderingHints(aaHints);
@@ -1339,7 +1337,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns the color used to "mark occurrences."
+	 * Returns the color used for "mark occurrences" highlights.
 	 *
 	 * @return The mark occurrences color.
 	 * @see #setMarkOccurrencesColor(Color)
@@ -1431,7 +1429,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * "match" when a matched bracket is found.  Note that this property does
 	 * nothing if {@link #isBracketMatchingEnabled()} returns
 	 * <code>false</code>.
-	 * 
+	 *
 	 * @return Whether both brackets in a bracket pair are highlighted when
 	 *         bracket matching is enabled.
 	 * @see #setPaintMatchedBracketPair(boolean)
@@ -1501,7 +1499,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Returns the currently set parser delay.  This is the delay that must
 	 * occur between edits for any registered {@link Parser}s to run.
-	 * 
+	 *
 	 * @return The currently set parser delay, in milliseconds.
 	 * @see #setParserDelay(int)
 	 */
@@ -1543,11 +1541,11 @@ private boolean fractionalFontMetricsEnabled;
 	 * this one should be indented (based on the standard indentation rules for
 	 * the current programming language). For example, in Java, for a line
 	 * containing:
-	 * 
+	 *
 	 * <pre>
 	 * for (int i=0; i&lt;10; i++) {
 	 * </pre>
-	 * 
+	 *
 	 * the following line should be indented.
 	 *
 	 * @param line The line to check.
@@ -1569,7 +1567,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns whether a small popup window should display the text on the
 	 * line containing a matched bracket whenever a matched bracket is off-
 	 * screen.
-	 * 
+	 *
 	 * @return Whether to show the popup.
 	 * @see #setShowMatchedBracketPopup(boolean)
 	 */
@@ -1662,10 +1660,10 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Returns whether or not templates are enabled for all instances
 	 * of <code>RSyntaxTextArea</code>.<p>
-	 * 
+	 *
 	 * For more flexible boilerplate code insertion, consider using the
-	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
-	 * class</a> in the
+	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+	 * TemplateCompletion class</a> in the
 	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
 	 * add-on library</a>.
 	 *
@@ -1856,7 +1854,8 @@ private boolean fractionalFontMetricsEnabled;
 	public boolean getUnderlineForToken(Token t) {
 		return (getHyperlinksEnabled() &&
 				(t.isHyperlink() ||
-					(linkGeneratorResult!=null && linkGeneratorResult.getSourceOffset()==t.getOffset()))) ||
+					(linkGeneratorResult!=null &&
+						linkGeneratorResult.getSourceOffset()==t.getOffset()))) ||
 				syntaxScheme.getStyle(t.getType()).underline;
 	}
 
@@ -2062,7 +2061,7 @@ private boolean fractionalFontMetricsEnabled;
 		// It is assumed that any rendering hints are already applied to g2d.
 		defaultFontMetrics = g2d.getFontMetrics(getFont());
 		syntaxScheme.refreshFontMetrics(g2d);
-		if (getLineWrap()==false) {
+		if (!getLineWrap()) {
 			// HORRIBLE HACK!  The un-wrapped view needs to refresh its cached
 			// longest line information.
 			SyntaxView sv = (SyntaxView)getUI().getRootView(this).getView(0);
@@ -2179,9 +2178,10 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets the "active line range."  Note that this
 	 * <code>RSyntaxTextArea</code> itself does nothing with this information,
-	 * but if it is contained inside an {@link RTextScrollPane}, the active
-	 * line range may be displayed in the icon area of the {@link Gutter}.<p>
-	 * 
+	 * but if it is contained inside an {@link org.fife.ui.rtextarea.RTextScrollPane},
+	 * the active line range may be displayed in the icon area of the
+	 * {@link org.fife.ui.rtextarea.Gutter}.<p>
+	 *
 	 * Note that basic users of <code>RSyntaxTextArea</code> will not call this
 	 * method directly; rather, it is usually called by instances of
 	 * <code>LanguageSupport</code> in the <code>RSTALangaugeSupport</code>
@@ -2377,7 +2377,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @see #getAntiAliasingEnabled()
 	 */
-	private final void setDefaultAntiAliasingState() {
+	private void setDefaultAntiAliasingState() {
 
 		// Most accurate technique, but not available on all OSes.
 		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
@@ -2421,7 +2421,7 @@ private boolean fractionalFontMetricsEnabled;
 			temp.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
 
 			aaHints = temp;
-			
+
 		}
 
 		// We must be connected to a screen resource for our graphics
@@ -2445,10 +2445,11 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	public void setDocument(Document document) {
-		if (!(document instanceof RSyntaxDocument))
+		if (!(document instanceof RSyntaxDocument)) {
 			throw new IllegalArgumentException("Documents for " +
 					"RSyntaxTextArea must be instances of " +
 					"RSyntaxDocument!");
+		}
 		if (markOccurrencesSupport != null) {
 			markOccurrencesSupport.clear();
 		}
@@ -2735,7 +2736,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * This method fires a property change event of type
 	 * {@link #PAINT_MATCHED_BRACKET_PAIR_PROPERTY}.
-	 * 
+	 *
 	 * @param paintPair Whether both brackets in a bracket pair should be
 	 *        highlighted when bracket matching is enabled.
 	 * @see #getPaintMatchedBracketPair()
@@ -2834,7 +2835,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Sets whether a small popup window should display the text on the
 	 * line containing a matched bracket whenever a matched bracket is off-
 	 * screen.
-	 * 
+	 *
 	 * @param show Whether to show the popup.
 	 * @see #getShowMatchedBracketPopup()
 	 */
@@ -2926,7 +2927,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return <code>true</code> if the load was successful;
 	 *         <code>false</code> if either templates aren't currently
 	 *         enabled or the load failed somehow (most likely, the
-	 *         directory doesn't exist).	 
+	 *         directory doesn't exist).
 	 * @see #getTemplatesEnabled
 	 * @see #setTemplatesEnabled
 	 * @see #saveTemplates
@@ -2967,7 +2968,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * all text areas have access of the same templates.  This should not
 	 * be an issue; rather, it should be beneficial as it promotes
 	 * uniformity among all text areas in an application.<p>
-	 * 
+	 *
 	 * For more flexible boilerplate code insertion, consider using the
 	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
 	 * class</a> in the
@@ -3124,7 +3125,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Renders the text on the line containing the "matched bracket" after a
 	 * delay.
 	 */
-	private class MatchedBracketPopupTimer extends Timer
+	private final class MatchedBracketPopupTimer extends Timer
 			implements ActionListener, CaretListener {
 
 		private MatchedBracketPopup popup;
@@ -3163,7 +3164,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		/**
 		 * Restarts this timer, and stores a new offset to paint.
-		 * 
+		 *
 		 * @param matchedBracketOffs The offset of the new matched bracket.
 		 */
 		public void restart(int matchedBracketOffs) {
@@ -3188,7 +3189,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		private int pulseCount;
 
-		public BracketMatchingTimer() {
+		BracketMatchingTimer() {
 			super(20, null);
 			addActionListener(this);
 			setCoalesce(false);
@@ -3286,7 +3287,7 @@ private boolean fractionalFontMetricsEnabled;
 			return he;
 		}
 
-		private final boolean equal(LinkGeneratorResult e1,
+		private boolean equal(LinkGeneratorResult e1,
 				LinkGeneratorResult e2) {
 			return e1.getSourceOffset()==e2.getSourceOffset();
 		}

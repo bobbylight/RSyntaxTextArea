@@ -2,7 +2,7 @@
  * 02/19/2009
  *
  * GutterIconInfo.java - Information about an Icon in a Gutter.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -30,7 +30,7 @@ public interface GutterIconInfo {
 	 *
 	 * @return The icon being rendered.
 	 */
-	public Icon getIcon();
+	Icon getIcon();
 
 
 	/**
@@ -40,7 +40,7 @@ public interface GutterIconInfo {
 	 *
 	 * @return The offset being tracked.
 	 */
-	public int getMarkedOffset();
+	int getMarkedOffset();
 
 
 	/**
@@ -48,6 +48,6 @@ public interface GutterIconInfo {
 	 *
 	 * @return The tool tip to display.
 	 */
-	public String getToolTip();
+	String getToolTip();
 
 }

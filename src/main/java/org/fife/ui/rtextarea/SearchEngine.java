@@ -2,7 +2,7 @@
  * 02/19/2006
  *
  * SearchEngine.java - Handles find/replace operations in an RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -27,7 +28,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
  * A singleton class that can perform advanced find/replace operations
  * in an {@link RTextArea}.  Simply create a {@link SearchContext} and call
  * one of the following methods:
- * 
+ *
  * <ul>
  *    <li>{@link #find(JTextArea, SearchContext)}
  *    <li>{@link #replace(RTextArea, SearchContext)}
@@ -39,7 +40,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
  * @version 1.0
  * @see SearchContext
  */
-public class SearchEngine {
+public final class SearchEngine {
 
 
 	/**
@@ -300,7 +301,7 @@ public class SearchEngine {
 	 * @return The starting position of a match, or <code>-1</code> if no
 	 *         match was found.
 	 */
-	public static final int getNextMatchPos(String searchFor, String searchIn,
+	public static int getNextMatchPos(String searchFor, String searchIn,
 								boolean forward, boolean matchCase,
 								boolean wholeWord) {
 
@@ -334,7 +335,7 @@ public class SearchEngine {
 	 * @return The location of the next match, or <code>-1</code> if no
 	 *         match was found.
 	 */
-	private static final int getNextMatchPosImpl(String searchFor,
+	private static int getNextMatchPosImpl(String searchFor,
 								String searchIn, boolean goForward,
 								boolean matchCase, boolean wholeWord) {
 
@@ -343,10 +344,12 @@ public class SearchEngine {
 			int temp = goForward ? 0 : searchIn.length();
 			int tempChange = goForward ? 1 : -1;
 			while (true) {
-				if (goForward)
+				if (goForward) {
 					temp = searchIn.indexOf(searchFor, temp);
-				else
+				}
+				else {
 					temp = searchIn.lastIndexOf(searchFor, temp);
+				}
 				if (temp!=-1) {
 					if (isWholeWord(searchIn, temp, len)) {
 						return temp;
@@ -592,8 +595,9 @@ public class SearchEngine {
 				}
 
 				// Append group
-				if (m.group(refNum) != null)
+				if (m.group(refNum) != null) {
 					result.append(m.group(refNum));
+				}
 
 			}
 
@@ -614,17 +618,22 @@ public class SearchEngine {
 	 * <code>substr(searchIn, startPos, startPos+searchStringLength)</code>
 	 * are <em>not</em> letters or digits.
 	 */
-	private static final boolean isWholeWord(CharSequence searchIn,
+	private static boolean isWholeWord(CharSequence searchIn,
 											int offset, int len) {
 
 		boolean wsBefore, wsAfter;
 
 		try {
 			wsBefore = !Character.isLetterOrDigit(searchIn.charAt(offset - 1));
-		} catch (IndexOutOfBoundsException e) { wsBefore = true; }
+		} catch (IndexOutOfBoundsException e) {
+			wsBefore = true;
+		}
+
 		try {
 			wsAfter  = !Character.isLetterOrDigit(searchIn.charAt(offset + len));
-		} catch (IndexOutOfBoundsException e) { wsAfter = true; }
+		} catch (IndexOutOfBoundsException e) {
+			wsAfter = true;
+		}
 
 		return wsBefore && wsAfter;
 
@@ -641,7 +650,7 @@ public class SearchEngine {
 	 *        document (<code>false</code> means backward).
 	 * @return The new dot and mark position.
 	 */
-	private static final int makeMarkAndDotEqual(JTextArea textArea,
+	private static int makeMarkAndDotEqual(JTextArea textArea,
 										boolean forward) {
 		Caret c = textArea.getCaret();
 		int val = forward ? Math.min(c.getDot(), c.getMark()) :
@@ -664,7 +673,7 @@ public class SearchEngine {
 	 *        been checked and returns <code>true</code>.
 	 * @return The results of the operation.
 	 */
-	public static final SearchResult markAll(RTextArea textArea,
+	public static SearchResult markAll(RTextArea textArea,
 			SearchContext context) {
 		textArea.clearMarkAllHighlights();
 //		if (context.getMarkAll()) {
@@ -687,7 +696,7 @@ public class SearchEngine {
 	 *        been checked and returns <code>true</code>.
 	 * @return The results of the operation.
 	 */
-	private static final SearchResult markAllImpl(RTextArea textArea,
+	private static SearchResult markAllImpl(RTextArea textArea,
 			SearchContext context) {
 
 		String toMark = context.getSearchFor();
@@ -766,7 +775,7 @@ public class SearchEngine {
 	 * @see #find(JTextArea, SearchContext)
 	 */
 	private static SearchResult regexReplace(RTextArea textArea,
-			SearchContext context) throws PatternSyntaxException {
+			SearchContext context) {
 
 		// Be smart about what position we're "starting" at.  For example,
 		// if they are searching backwards and there is a selection such that
@@ -779,7 +788,9 @@ public class SearchEngine {
 		int start = makeMarkAndDotEqual(textArea, forward);
 
 		CharSequence findIn = getFindInCharSequence(textArea, start, forward);
-		if (findIn==null) return new SearchResult();
+		if (findIn==null) {
+			return new SearchResult();
+		}
 
 		int markAllCount = 0;
 		if (context.getMarkAll()) {
@@ -851,7 +862,7 @@ public class SearchEngine {
 	 * @see #find(JTextArea, SearchContext)
 	 */
 	public static SearchResult replace(RTextArea textArea,
-			SearchContext context) throws PatternSyntaxException {
+			SearchContext context) {
 
 		// Always clear previous "mark all" highlights
 		if (context.getMarkAll()) {
@@ -932,7 +943,7 @@ public class SearchEngine {
 	 * @see #find(JTextArea, SearchContext)
 	 */
 	public static SearchResult replaceAll(RTextArea textArea,
-			SearchContext context) throws PatternSyntaxException {
+			SearchContext context) {
 
 		// Always clear previous "mark all" highlights
 		if (context.getMarkAll()) {

@@ -2,7 +2,7 @@
  * 09/30/2012
  *
  * HtmlFoldParser.java - Fold parser for HTML 5 and PHP.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -186,7 +187,7 @@ public class HtmlFoldParser implements FoldParser {
 								// Otherwise, this MLC is continuing on to yet
 								// another line.
 							}
-	
+
 							// Continuing a JS MLC from a previous line
 							else if (inJSMLC) {
 								// Found the end of the MLC starting on a previous line...
@@ -247,11 +248,13 @@ public class HtmlFoldParser implements FoldParser {
 								Token tagCloseToken = tci.closeToken;
 								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
 									if (currentFold==null) {
-										currentFold = new Fold(FoldType.CODE, textArea, tagStartToken.getOffset());
+										currentFold = new Fold(FoldType.CODE, textArea,
+												tagStartToken.getOffset());
 										folds.add(currentFold);
 									}
 									else {
-										currentFold = currentFold.createChild(FoldType.CODE, tagStartToken.getOffset());
+										currentFold = currentFold.createChild(FoldType.CODE,
+												tagStartToken.getOffset());
 									}
 									tagNameStack.push(tagNameToken.getLexeme());
 								}
@@ -292,7 +295,7 @@ public class HtmlFoldParser implements FoldParser {
 		}
 
 		return folds;
-	
+
 	}
 
 
@@ -301,7 +304,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * "<code>&gt;</code>" or "<code>/&gt;</code>").  This should only be
 	 * called after a tag name has been parsed, to ensure  the "closing" of
 	 * other tags is not identified.
-	 * 
+	 *
 	 * @param tagNameToken The token denoting the name of the tag.
 	 * @param textArea The text area whose contents are being parsed.
 	 * @param line The line we're currently on.
@@ -344,7 +347,7 @@ public class HtmlFoldParser implements FoldParser {
 	 *        tag.
 	 * @return Whether it's the end of the current fold region.
 	 */
-	private static final boolean isEndOfLastFold(Stack<String> tagNameStack,
+	private static boolean isEndOfLastFold(Stack<String> tagNameStack,
 			Token tagNameToken) {
 		if (tagNameToken!=null && !tagNameStack.isEmpty()) {
 			return tagNameToken.getLexeme().equalsIgnoreCase(tagNameStack.peek());
@@ -359,7 +362,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * @param tagNameToken The tag's name token.  This may be <code>null</code>.
 	 * @return Whether this tag can be a foldable region.
 	 */
-	private static final boolean isFoldableTag(Token tagNameToken) {
+	private static boolean isFoldableTag(Token tagNameToken) {
 		return tagNameToken!=null &&
 				FOLDABLE_TAGS.contains(tagNameToken.getLexeme().toLowerCase());
 	}
@@ -373,7 +376,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * @param fold The fold to remove.
 	 * @param folds The list of top-level folds.
 	 */
-	private static final void removeFold(Fold fold, List<Fold> folds) {
+	private static void removeFold(Fold fold, List<Fold> folds) {
 		if (!fold.removeFromParent()) {
 			folds.remove(folds.size()-1);
 		}

@@ -2,7 +2,7 @@
  * 08/26/2004
  *
  * TokenMakerBase.java - A base class for token makers.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -24,12 +24,12 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * The first token in the returned linked list.
 	 */
 	protected TokenImpl firstToken;
-	
+
 	/**
 	 * Used in the creation of the linked list.
 	 */
 	protected TokenImpl currentToken;
-	
+
 	/**
 	 * Used in the creation of the linked list.
 	 */
@@ -156,7 +156,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * Returns the closest {@link TokenTypes "standard" token type} for a given
 	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).<p>
-	 * 
+	 *
 	 * The default implementation returns <code>type</code> always, which
 	 * denotes that a mapping from internal token types to standard token types
 	 * is not defined; subclasses can override.
@@ -218,8 +218,9 @@ public abstract class TokenMakerBase implements TokenMaker {
 		// Last parameter doesn't matter if we're not painting.
 		Token t = getTokenList(text, initialTokenType, 0);
 
-		while (t.getNextToken()!=null)
+		while (t.getNextToken()!=null) {
 			t = t.getNextToken();
+		}
 
 		return t.getType();
 

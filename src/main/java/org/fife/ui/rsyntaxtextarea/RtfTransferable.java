@@ -2,13 +2,15 @@
  * 07/28/2008
  *
  * RtfTransferable.java - Used during drag-and-drop to represent RTF text.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,7 +37,7 @@ class RtfTransferable implements Transferable {
 	/**
 	 * The "flavors" the text can be returned as.
 	 */
-	private final DataFlavor[] FLAVORS = {
+	private static final DataFlavor[] FLAVORS = {
 		new DataFlavor("text/rtf", "RTF"),
 		DataFlavor.stringFlavor,
 		DataFlavor.plainTextFlavor // deprecated
@@ -47,7 +49,7 @@ class RtfTransferable implements Transferable {
 	 *
 	 * @param data The RTF data.
 	 */
-	public RtfTransferable(byte[] data) {
+	RtfTransferable(byte[] data) {
 		this.data = data;
 	}
 

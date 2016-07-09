@@ -2,7 +2,7 @@
  * 08/29/2014
  *
  * ClipboardHistory.java - A history of text added to the clipboard.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -26,9 +26,9 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ClipboardHistory {
+public final class ClipboardHistory {
 
-	private static ClipboardHistory INSTANCE;
+	private static ClipboardHistory instance;
 
 	private List<String> history;
 	private int maxSize;
@@ -74,11 +74,11 @@ public class ClipboardHistory {
 	 *
 	 * @return The singleton instance of this class.
 	 */
-	public static final ClipboardHistory get() {
-		if (INSTANCE==null) {
-			INSTANCE = new ClipboardHistory();
+	public static ClipboardHistory get() {
+		if (instance==null) {
+			instance = new ClipboardHistory();
 		}
-		return INSTANCE;
+		return instance;
 	}
 
 

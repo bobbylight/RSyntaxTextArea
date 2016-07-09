@@ -2,7 +2,7 @@
  * 02/21/2004
  *
  * Token.java - A token used in syntax highlighting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
+
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
 import javax.swing.text.Utilities;
@@ -25,10 +26,11 @@ import javax.swing.text.Utilities;
  * immutable.  They should not be cast to <code>TokenImpl</code> and modified.
  * Modifying tokens you did not create yourself can and will result in
  * rendering issues and/or runtime exceptions. You have been warned!
- * 
+ *
  * @author Robert Futrell
  * @version 0.3
  */
+@SuppressWarnings({ "checkstyle:visibilitymodifier" })
 public class TokenImpl implements Token {
 
 	/**
@@ -39,7 +41,7 @@ public class TokenImpl implements Token {
 	public char[] text;
 	public int textOffset;
 	public int textCount;
-	
+
 	/**
 	 * The offset into the document at which this token resides.
 	 */
@@ -67,7 +69,7 @@ public class TokenImpl implements Token {
 
 
 	/**
-	 * Creates a "null token."  The token itself is not null; rather, it
+	 * Creates a "null" token.  The token itself is not null; rather, it
 	 * signifies that it is the last token in a linked list of tokens and
 	 * that it is not part of a "multi-line token."
 	 */
@@ -144,9 +146,15 @@ public class TokenImpl implements Token {
 		Style scheme = colorScheme.getStyle(getType());
 		Font font = textArea.getFontForTokenType(getType());//scheme.font;
 
-		if (font.isBold()) sb.append("<b>");
-		if (font.isItalic()) sb.append("<em>");
-		if (scheme.underline || isHyperlink()) sb.append("<u>");
+		if (font.isBold()) {
+			sb.append("<b>");
+		}
+		if (font.isItalic()) {
+			sb.append("<em>");
+		}
+		if (scheme.underline || isHyperlink()) {
+			sb.append("<u>");
+		}
 
 		boolean needsFontTag = fontFamily || !isWhitespace();
 		if (needsFontTag) {
@@ -160,7 +168,7 @@ public class TokenImpl implements Token {
 			}
 			sb.append('>');
 		}
-		
+
 		// NOTE: Don't use getLexeme().trim() because whitespace tokens will
 		// be turned into NOTHING.
 		appendHtmlLexeme(textArea, sb, tabsToSpaces);
@@ -168,9 +176,15 @@ public class TokenImpl implements Token {
 		if (needsFontTag) {
 			sb.append("</font>");
 		}
-		if (scheme.underline || isHyperlink()) sb.append("</u>");
-		if (font.isItalic()) sb.append("</em>");
-		if (font.isBold()) sb.append("</b>");
+		if (scheme.underline || isHyperlink()) {
+			sb.append("</u>");
+		}
+		if (font.isItalic()) {
+			sb.append("</em>");
+		}
+		if (font.isBold()) {
+			sb.append("</b>");
+		}
 
 		return sb;
 
@@ -187,7 +201,7 @@ public class TokenImpl implements Token {
 	 * @param tabsToSpaces Whether to convert tabs into spaces.
 	 * @return The same buffer.
 	 */
-	private final StringBuilder appendHtmlLexeme(RSyntaxTextArea textArea,
+	private StringBuilder appendHtmlLexeme(RSyntaxTextArea textArea,
 								StringBuilder sb, boolean tabsToSpaces) {
 
 		boolean lastWasSpace = false;
@@ -323,19 +337,22 @@ public class TokenImpl implements Token {
 	 * @return The HTML form of the color.  If <code>color</code> is
 	 *         <code>null</code>, <code>#000000</code> is returned.
 	 */
-	private static final String getHTMLFormatForColor(Color color) {
+	private static String getHTMLFormatForColor(Color color) {
 		if (color==null) {
 			return "black";
 		}
 		String hexRed = Integer.toHexString(color.getRed());
-		if (hexRed.length()==1)
+		if (hexRed.length()==1) {
 			hexRed = "0" + hexRed;
+		}
 		String hexGreen = Integer.toHexString(color.getGreen());
-		if (hexGreen.length()==1)
+		if (hexGreen.length()==1) {
 			hexGreen = "0" + hexGreen;
+		}
 		String hexBlue = Integer.toHexString(color.getBlue());
-		if (hexBlue.length()==1)
+		if (hexBlue.length()==1) {
 			hexBlue = "0" + hexBlue;
+		}
 		return "#" + hexRed + hexGreen + hexBlue;
 	}
 
@@ -398,8 +415,9 @@ public class TokenImpl implements Token {
 			float x0, float x) {
 
 		// If the coordinate in question is before this line's start, quit.
-		if (x0 >= x)
+		if (x0 >= x) {
 			return getOffset();
+		}
 
 		float currX = x0; // x-coordinate of current char.
 		float nextX = x0; // x-coordinate of next char.
@@ -464,10 +482,12 @@ public class TokenImpl implements Token {
 		float x = startX;
 
 		while (i<stop) {
-			if (text[i]=='\t')
+			if (text[i]=='\t') {
 				x = e.nextTabStop(x, 0);
-			else
+			}
+			else {
 				x += fm.charWidth(text[i]);
+			}
 			if (x>endBeforeX) {
 				// If not even the first character fits into the space, go
 				// ahead and say the first char does fit so we don't go into
@@ -519,8 +539,9 @@ public class TokenImpl implements Token {
 					// aren't usually any characters to compute a width
 					// for here, so we check before calling.
 					w = i - currentStart;
-					if (w > 0)
+					if (w > 0) {
 						width += fm.charsWidth(text, currentStart, w);
+					}
 					currentStart = i + 1;
 					width = e.nextTabStop(width, 0);
 				}
@@ -700,7 +721,7 @@ public class TokenImpl implements Token {
 
 	/**
 	 * Makes this token start at the specified offset into the document.<p>
-	 * 
+	 *
 	 * <b>Note:</b> You should not modify <code>Token</code> instances you
 	 * did not create yourself (e.g., came from an
 	 * <code>RSyntaxDocument</code>).  If you do, rendering issues and/or
@@ -727,7 +748,7 @@ public class TokenImpl implements Token {
 
 	/**
 	 * Moves the starting offset of this token.<p>
-	 * 
+	 *
 	 * <b>Note:</b> You should not modify <code>Token</code> instances you
 	 * did not create yourself (e.g., came from an
 	 * <code>RSyntaxDocument</code>).  If you do, rendering issues and/or

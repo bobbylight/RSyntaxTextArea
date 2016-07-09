@@ -3,7 +3,7 @@
  *
  * RSyntaxTextAreaDefaultInputMap.java - The default input map for
  * RSyntaxTextAreas.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,6 +11,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+
 import javax.swing.KeyStroke;
 
 import org.fife.ui.rtextarea.RTADefaultInputMap;
@@ -27,6 +28,7 @@ import org.fife.ui.rtextarea.RTADefaultInputMap;
  * @author Robert Futrell
  * @version 1.0
  */
+@SuppressWarnings({ "checkstyle:linelength" })
 public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
 	/**

@@ -3,7 +3,7 @@
  *
  * TokenMap.java - Similar to a Map in Java, only designed specifically for
  * org.fife.ui.rsyntaxtextarea.Tokens.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -136,7 +136,7 @@ public class TokenMap {
 		 */
 
 		// If matches are case-sensitive (C, C++, Java, etc.)...
-		if (ignoreCase==false) {
+		if (!ignoreCase) {
 
 		mainLoop:
 			while (token!=null) {
@@ -198,7 +198,7 @@ public class TokenMap {
 	 * @param length The last character in the text to hash.
 	 * @return The hash code.
 	 */
-	private final int getHashCode(char[] text, int offset, int length) {
+	private int getHashCode(char[] text, int offset, int length) {
 		return (RSyntaxUtilities.toLowerCase(text[offset]) +
 				RSyntaxUtilities.toLowerCase(text[offset+length-1])) % size;
 	}
@@ -223,10 +223,12 @@ public class TokenMap {
 	 * @param tokenType The type of token the string is.
 	 */
 	public void put(final String string, final int tokenType) {
-		if (isIgnoringCase())
+		if (isIgnoringCase()) {
 			put(string.toLowerCase().toCharArray(), tokenType);
-		else
+		}
+		else {
 			put(string.toCharArray(), tokenType);
+		}
 	}
 
 
@@ -251,15 +253,15 @@ public class TokenMap {
 	 * as the {@link Token} class, but it's basically a 1-1 correspondence
 	 * for reserved words, etc.
 	 */
-	private static class TokenMapToken {
+	private static final class TokenMapToken {
 
-		public char[] text;
-        public int offset;
-        public int length;
-        public int tokenType;
-        public TokenMapToken nextToken;
+		private char[] text;
+		private int offset;
+		private int length;
+		private int tokenType;
+		private TokenMapToken nextToken;
 
-		TokenMapToken(char[] text, int tokenType) {
+		private TokenMapToken(char[] text, int tokenType) {
 			this.text = text;
 			this.offset = 0;
 			this.length = text.length;

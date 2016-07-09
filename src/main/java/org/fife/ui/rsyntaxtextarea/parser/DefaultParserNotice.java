@@ -2,7 +2,7 @@
  * 08/11/2009
  *
  * DefaultParserNotice.java - Base implementation of a parser notice.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

@@ -2,7 +2,7 @@
  * 04/25/2007
  *
  * RTextAreaUI.java - UI used by instances of RTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -34,8 +34,8 @@ public class RTextAreaUI extends BasicTextAreaUI {
 
 	protected RTextArea textArea;				// The text area for which we are the UI.
 
-	private static final EditorKit defaultKit = new RTextAreaEditorKit();
-	private static final TransferHandler defaultTransferHandler =
+	private static final EditorKit DEFAULT_KIT = new RTextAreaEditorKit();
+	private static final TransferHandler DEFAULT_TRANSFER_HANDLER =
 										new RTATextTransferHandler();
 
 	private static final String RTEXTAREA_KEYMAP_NAME	= "RTextAreaKeymap";
@@ -151,10 +151,12 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	@Override
 	public View create(Element elem) {
-		if (textArea.getLineWrap())
+		if (textArea.getLineWrap()) {
 			return new WrappedPlainView(elem, textArea.getWrapStyleWord());
-		else
+		}
+		else {
 			return new PlainView(elem);
+		}
 	}
 
 
@@ -255,7 +257,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	@Override
 	public EditorKit getEditorKit(JTextComponent tc) {
-		return defaultKit;
+		return DEFAULT_KIT;
 	}
 
 
@@ -294,8 +296,9 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		ActionMap componentMap = new ActionMapUIResource();
 		componentMap.put("requestFocus", new FocusAction());
 
-		if (map != null)
+		if (map != null) {
 			componentMap.setParent(map);
+		}
 		return componentMap;
 
 	}
@@ -303,7 +306,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 
 	/**
 	 * Get the InputMap to use for the UI.<p>
-	 *  
+	 *
 	 * This method is not named <code>getInputMap()</code> because there is
 	 * a package-private method in <code>BasicTextAreaUI</code> with that name.
 	 * Thus, creating a new method with that name causes certain compilers to
@@ -327,10 +330,10 @@ public class RTextAreaUI extends BasicTextAreaUI {
 
 	/**
 	 * Gets the allocation to give the root View.  Due
-	 * to an unfortunate set of historical events this 
+	 * to an unfortunate set of historical events this
 	 * method is inappropriately named.  The Rectangle
-	 * returned has nothing to do with visibility.  
-	 * The component must have a non-zero positive size for 
+	 * returned has nothing to do with visibility.
+	 * The component must have a non-zero positive size for
 	 * this translation to be computed.
 	 *
 	 * @return the bounding box for the root view
@@ -363,7 +366,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		// rules and doesn't set properties needed by custom BasicTextAreaUI's.
 		correctNimbusDefaultProblems(editor);
 
-		editor.setTransferHandler(defaultTransferHandler);
+		editor.setTransferHandler(DEFAULT_TRANSFER_HANDLER);
 
 	}
 
@@ -388,7 +391,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 
 		// backward compatibility support... keymaps for the UI
 		// are now installed in the more friendly input map.
-		textArea.setKeymap(createKeymap()); 
+		textArea.setKeymap(createKeymap());
 
 		// Since BasicTextUI.getInputMap() is package-private, instead use
 		// our own version here.
@@ -484,7 +487,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	/**
 	 * Paints editor augmentations added by RTextArea:  highlighted lines,
 	 * current line highlight, and margin line.
-	 * 
+	 *
 	 * @param g The graphics context with which to paint.
 	 */
 	protected void paintEditorAugmentations(Graphics g) {

@@ -2,7 +2,7 @@
  * 03/15/2015
  *
  * JshintrcTokenMaker.java - Scanner for .jshintrc files.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

@@ -9,7 +9,7 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TokenUtils {
+public final class TokenUtils {
 
 
 	private TokenUtils() {}
@@ -142,13 +142,17 @@ public class TokenUtils {
 	}
 
 
+	/**
+	 * A sub-list of tokens.
+	 */
+	@SuppressWarnings({ "checkstyle:visibilitymodifier" })
 	public static class TokenSubList {
 
 		/**
 		 * The "sub" token list.
 		 */
 		public Token tokenList;
-		
+
 		/**
 		 * The width, in pixels, of the part of the token list "removed from
 		 * the front."  This way, you know the x-offset of the "new" token list.

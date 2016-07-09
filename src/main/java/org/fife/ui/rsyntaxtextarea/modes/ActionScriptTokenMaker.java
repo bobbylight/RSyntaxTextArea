@@ -4,7 +4,7 @@
  * 04/27/2010
  *
  * ActionScriptTokenMaker.java - Scanner for ActionScript.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -65,10 +65,10 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
   public static final int YYINITIAL = 0;
   public static final int MLC = 1;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\20\1\10\1\0\1\20\1\16\22\0\1\71\1\47\1\15"+
     "\1\17\1\1\1\47\1\51\1\7\2\54\1\22\1\42\1\41\1\30"+
     "\1\31\1\21\1\4\3\6\4\6\2\3\1\52\1\41\1\43\1\44"+
@@ -80,12 +80,12 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
     "\1\67\1\33\1\37\1\32\1\12\1\74\1\60\1\70\1\65\1\1"+
     "\1\40\1\45\1\40\1\50\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -130,7 +130,7 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -221,7 +221,7 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -1560,11 +1560,11 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -1607,7 +1607,7 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -1666,12 +1666,12 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -1692,8 +1692,8 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -1713,7 +1713,7 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -1760,13 +1760,13 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -1809,123 +1809,123 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 5: 
+        case 5:
           { addNullToken(); return firstToken;
           }
         case 30: break;
-        case 16: 
+        case 16:
           { addToken(Token.LITERAL_CHAR);
           }
         case 31: break;
-        case 21: 
+        case 21:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
           }
         case 32: break;
-        case 25: 
+        case 25:
           { addToken(Token.COMMENT_MULTILINE);
           }
         case 33: break;
-        case 20: 
+        case 20:
           { start = zzMarkedPos-2; yybegin(MLC);
           }
         case 34: break;
-        case 7: 
+        case 7:
           { addToken(Token.WHITESPACE);
           }
         case 35: break;
-        case 15: 
+        case 15:
           { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 36: break;
-        case 22: 
+        case 22:
           { addToken(Token.ERROR_STRING_DOUBLE);
           }
         case 37: break;
-        case 14: 
+        case 14:
           { addToken(Token.LITERAL_NUMBER_FLOAT);
           }
         case 38: break;
-        case 17: 
+        case 17:
           { addToken(Token.RESERVED_WORD);
           }
         case 39: break;
-        case 9: 
+        case 9:
           { addToken(Token.SEPARATOR);
           }
         case 40: break;
-        case 2: 
+        case 2:
           { addToken(Token.IDENTIFIER);
           }
         case 41: break;
-        case 12: 
+        case 12:
           { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 42: break;
-        case 19: 
+        case 19:
           { start = zzMarkedPos-2; yybegin(EOL_COMMENT);
           }
         case 43: break;
-        case 27: 
+        case 27:
           { addToken(Token.FUNCTION);
           }
         case 44: break;
-        case 4: 
+        case 4:
           { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 45: break;
-        case 6: 
+        case 6:
           { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 46: break;
-        case 23: 
+        case 23:
           { addToken(Token.DATA_TYPE);
           }
         case 47: break;
-        case 1: 
+        case 1:
           { addToken(Token.ERROR_IDENTIFIER);
           }
         case 48: break;
-        case 24: 
+        case 24:
           { addToken(Token.ERROR_CHAR);
           }
         case 49: break;
-        case 26: 
+        case 26:
           { addToken(Token.LITERAL_BOOLEAN);
           }
         case 50: break;
-        case 18: 
+        case 18:
           { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 51: break;
-        case 29: 
+        case 29:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
           }
         case 52: break;
-        case 28: 
+        case 28:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 53: break;
-        case 13: 
+        case 13:
           { addToken(Token.ERROR_NUMBER_FORMAT);
           }
         case 54: break;
-        case 3: 
+        case 3:
           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 55: break;
-        case 8: 
+        case 8:
           { addToken(Token.OPERATOR);
           }
         case 56: break;
-        case 10: 
-          { 
+        case 10:
+          {
           }
         case 57: break;
-        case 11: 
+        case 11:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
           }
         case 58: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -1944,7 +1944,7 @@ public class ActionScriptTokenMaker extends AbstractJFlexCTokenMaker {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

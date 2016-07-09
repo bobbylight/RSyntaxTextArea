@@ -2,13 +2,14 @@
  * 02/21/2004
  *
  * Token.java - A token used in syntax highlighting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Rectangle;
+
 import javax.swing.text.TabExpander;
 
 
@@ -29,7 +30,7 @@ import javax.swing.text.TabExpander;
  * should always be treated as immutable.  Modifying tokens you did not create
  * yourself can and will result in rendering issues and/or runtime exceptions.
  * You have been warned!
- * 
+ *
  * @author Robert Futrell
  * @version 0.3
  */
@@ -49,7 +50,7 @@ public interface Token extends TokenTypes {
 	 * @return The buffer appended to.
 	 * @see #getHTMLRepresentation(RSyntaxTextArea)
 	 */
-	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
+	StringBuilder appendHTMLRepresentation(StringBuilder sb,
 											RSyntaxTextArea textArea,
 											boolean fontFamily);
 
@@ -69,7 +70,7 @@ public interface Token extends TokenTypes {
 	 * @return The buffer appended to.
 	 * @see #getHTMLRepresentation(RSyntaxTextArea)
 	 */
-	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
+	StringBuilder appendHTMLRepresentation(StringBuilder sb,
 								RSyntaxTextArea textArea, boolean fontFamily,
 								boolean tabsToSpaces);
 
@@ -82,7 +83,7 @@ public interface Token extends TokenTypes {
 	 * @return The character.
 	 * @see #length()
 	 */
-	public char charAt(int index);
+	char charAt(int index);
 
 
 	/**
@@ -92,7 +93,7 @@ public interface Token extends TokenTypes {
 	 * @param pos The position in the document to check.
 	 * @return Whether the specified position is straddled by this token.
 	 */
-	public boolean containsPosition(int pos);
+	boolean containsPosition(int pos);
 
 
 	/**
@@ -108,7 +109,7 @@ public interface Token extends TokenTypes {
 	 *         and &lt; <code>textOffset+textCount</code>.
 	 * @see #tokenToDocument
 	 */
-	public int documentToToken(int pos);
+	int documentToToken(int pos);
 
 
 	/**
@@ -118,18 +119,18 @@ public interface Token extends TokenTypes {
 	 * @return Whether this token's lexeme ends with the specified characters.
 	 * @see #startsWith(char[])
 	 */
-	public boolean endsWith(char[] ch);
+	boolean endsWith(char[] ch);
 
 
 	/**
 	 * Returns the end offset of this token in the document (exclusive).  In
 	 * other words, the token ranges from
 	 * <code>[getOffset(), getEndOffset())</code>.
-	 * 
+	 *
 	 * @return The end offset of this token.
 	 * @see #getOffset()
 	 */
-	public int getEndOffset();
+	int getEndOffset();
 
 
 	/**
@@ -140,7 +141,7 @@ public interface Token extends TokenTypes {
 	 * @return The HTML representation of the token.
 	 * @see #appendHTMLRepresentation(StringBuilder, RSyntaxTextArea, boolean)
 	 */
-	public String getHTMLRepresentation(RSyntaxTextArea textArea);
+	String getHTMLRepresentation(RSyntaxTextArea textArea);
 
 
 	/**
@@ -151,7 +152,7 @@ public interface Token extends TokenTypes {
 	 *        language.
 	 * @see #setLanguageIndex(int)
 	 */
-	public int getLanguageIndex();
+	int getLanguageIndex();
 
 
 	/**
@@ -161,7 +162,7 @@ public interface Token extends TokenTypes {
 	 * @return The last non-comment, non-whitespace token, or <code>null</code>
 	 *         if there isn't one.
 	 */
-	public Token getLastNonCommentNonWhitespaceToken();
+	Token getLastNonCommentNonWhitespaceToken();
 
 
 	/**
@@ -170,7 +171,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @return The last paintable token in this token list.
 	 */
-	public Token getLastPaintableToken();
+	Token getLastPaintableToken();
 
 
 	/**
@@ -182,7 +183,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @return The text of this token.
 	 */
-	public String getLexeme();
+	String getLexeme();
 
 
 	/**
@@ -210,7 +211,7 @@ public interface Token extends TokenTypes {
 	 *         <code>-1</code> is returned; the caller should recognize this and
 	 *         return the actual end position of the (empty) line.
 	 */
-	public int getListOffset(RSyntaxTextArea textArea, TabExpander e,
+	int getListOffset(RSyntaxTextArea textArea, TabExpander e,
 			float x0, float x);
 
 
@@ -219,7 +220,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @return The next token.
 	 */
-	public Token getNextToken();
+	Token getNextToken();
 
 
 	/**
@@ -228,7 +229,7 @@ public interface Token extends TokenTypes {
 	 * @return The offset into the document.
 	 * @see #getEndOffset()
 	 */
-	public int getOffset();
+	int getOffset();
 
 
 	/**
@@ -257,7 +258,7 @@ public interface Token extends TokenTypes {
 	 * FIXME:  This method does not compute correctly!  It needs to be abstract
 	 * and implemented by subclasses.
 	 */
-	public int getOffsetBeforeX(RSyntaxTextArea textArea, TabExpander e,
+	int getOffsetBeforeX(RSyntaxTextArea textArea, TabExpander e,
 							float startX, float endBeforeX);
 
 
@@ -269,7 +270,7 @@ public interface Token extends TokenTypes {
 	 * @see #getTextOffset()
 	 * @see #length()
 	 */
-	public char[] getTextArray();
+	char[] getTextArray();
 
 
 	/**
@@ -279,7 +280,7 @@ public interface Token extends TokenTypes {
 	 * @return The offset of the lexeme in the character array.
 	 * @see #getTextArray()
 	 */
-	public int getTextOffset();
+	int getTextOffset();
 
 
 	/**
@@ -289,7 +290,7 @@ public interface Token extends TokenTypes {
 	 * @see TokenTypes
 	 * @see #setType(int)
 	 */
-	public int getType();
+	int getType();
 
 
 	/**
@@ -303,7 +304,7 @@ public interface Token extends TokenTypes {
 	 * @return The width of the token, in pixels.
 	 * @see #getWidthUpTo
 	 */
-	public float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0);
+	float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0);
 
 
 	/**
@@ -319,7 +320,7 @@ public interface Token extends TokenTypes {
 	 * @return The width of the specified number of characters in this token.
 	 * @see #getWidth
 	 */
-	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
+	float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0);
 
 
@@ -333,7 +334,7 @@ public interface Token extends TokenTypes {
 	 * @see #isSingleChar(int, char)
 	 * @see #startsWith(char[])
 	 */
-	public boolean is(char[] lexeme);
+	boolean is(char[] lexeme);
 
 
 	/**
@@ -351,7 +352,7 @@ public interface Token extends TokenTypes {
 	 * @see #isSingleChar(int, char)
 	 * @see #startsWith(char[])
 	 */
-	public boolean is(int type, char[] lexeme);
+	boolean is(int type, char[] lexeme);
 
 
 	/**
@@ -368,7 +369,7 @@ public interface Token extends TokenTypes {
 	 * @see #isSingleChar(int, char)
 	 * @see #startsWith(char[])
 	 */
-	public boolean is(int type, String lexeme);
+	boolean is(int type, String lexeme);
 
 
 	/**
@@ -378,7 +379,7 @@ public interface Token extends TokenTypes {
 	 * @see #isWhitespace()
 	 * @see #isCommentOrWhitespace()
 	 */
-	public boolean isComment();
+	boolean isComment();
 
 
 	/**
@@ -388,7 +389,7 @@ public interface Token extends TokenTypes {
 	 * @see #isComment()
 	 * @see #isWhitespace()
 	 */
-	public boolean isCommentOrWhitespace();
+	boolean isCommentOrWhitespace();
 
 
 	/**
@@ -397,7 +398,7 @@ public interface Token extends TokenTypes {
 	 * @return Whether this token is a hyperlink.
 	 * @see #setHyperlink(boolean)
 	 */
-	public boolean isHyperlink();
+	boolean isHyperlink();
 
 
 	/**
@@ -405,7 +406,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @return Whether this token is an identifier.
 	 */
-	public boolean isIdentifier();
+	boolean isIdentifier();
 
 
 	/**
@@ -415,7 +416,7 @@ public interface Token extends TokenTypes {
 	 * @return Whether this token is a left curly brace.
 	 * @see #isRightCurly()
 	 */
-	public boolean isLeftCurly();
+	boolean isLeftCurly();
 
 
 	/**
@@ -425,7 +426,7 @@ public interface Token extends TokenTypes {
 	 * @return Whether this token is a right curly brace.
 	 * @see #isLeftCurly()
 	 */
-	public boolean isRightCurly();
+	boolean isRightCurly();
 
 
 	/**
@@ -436,7 +437,7 @@ public interface Token extends TokenTypes {
 	 *
 	 * @return Whether or not this token is paintable.
 	 */
-	public boolean isPaintable();
+	boolean isPaintable();
 
 
 	/**
@@ -446,7 +447,7 @@ public interface Token extends TokenTypes {
 	 * @return Whether this token's lexeme is the single character specified.
 	 * @see #isSingleChar(int, char)
 	 */
-	public boolean isSingleChar(char ch);
+	boolean isSingleChar(char ch);
 
 
 	/**
@@ -459,7 +460,7 @@ public interface Token extends TokenTypes {
 	 *         Equaling the single character specified.
 	 * @see #isSingleChar(char)
 	 */
-	public boolean isSingleChar(int type, char ch);
+	boolean isSingleChar(int type, char ch);
 
 
 	/**
@@ -469,7 +470,7 @@ public interface Token extends TokenTypes {
 	 * @see #isComment()
 	 * @see #isCommentOrWhitespace()
 	 */
-	public boolean isWhitespace();
+	boolean isWhitespace();
 
 
 	/**
@@ -478,7 +479,7 @@ public interface Token extends TokenTypes {
 	 * @return The length of this token.
 	 * @see #getOffset()
 	 */
-	public int length();
+	int length();
 
 
 	/**
@@ -496,7 +497,7 @@ public interface Token extends TokenTypes {
 	 *        object is reused to keep from frequent memory allocations.
 	 * @return The bounding box for the specified position in the model.
 	 */
-	public Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
+	Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
 			int pos, int x0, Rectangle rect);
 
 
@@ -506,7 +507,7 @@ public interface Token extends TokenTypes {
 	 * @param hyperlink Whether this token is a hyperlink.
 	 * @see #isHyperlink()
 	 */
-	public void setHyperlink(boolean hyperlink);
+	void setHyperlink(boolean hyperlink);
 
 
 	/**
@@ -522,7 +523,7 @@ public interface Token extends TokenTypes {
 	 *        be treated as <code>0</code>.
 	 * @see #getLanguageIndex()
 	 */
-	public void setLanguageIndex(int languageIndex);
+	void setLanguageIndex(int languageIndex);
 
 
 	/**
@@ -532,7 +533,7 @@ public interface Token extends TokenTypes {
 	 * @see TokenTypes
 	 * @see #getType()
 	 */
-	public void setType(int type);
+	void setType(int type);
 
 
 	/**
@@ -543,7 +544,7 @@ public interface Token extends TokenTypes {
 	 * @see #endsWith(char[])
 	 * @see #is(int, char[])
 	 */
-	public boolean startsWith(char[] chars);
+	boolean startsWith(char[] chars);
 
 
 	/**
@@ -560,7 +561,7 @@ public interface Token extends TokenTypes {
 	 * @return The corresponding position in the document.
 	 * @see #documentToToken(int)
 	 */
-	public int tokenToDocument(int pos);
+	int tokenToDocument(int pos);
 
 
 }

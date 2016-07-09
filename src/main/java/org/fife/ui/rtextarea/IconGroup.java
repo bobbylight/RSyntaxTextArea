@@ -2,7 +2,7 @@
  * 09/05/2004
  *
  * IconGroup.java - Class encapsulating images used for RTextArea actions.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -123,8 +123,9 @@ public class IconGroup {
 			if (ig2.getName().equals(getName()) &&
 					separateLargeIcons==ig2.hasSeparateLargeIcons()) {
 				if (separateLargeIcons) {
-					if (!largeIconSubDir.equals(ig2.largeIconSubDir))
+					if (!largeIconSubDir.equals(ig2.largeIconSubDir)) {
 						return false;
+					}
 				}
 				return path.equals(ig2.path);
 			}
@@ -173,8 +174,9 @@ public class IconGroup {
 				// RText.jar, so we'd need to use the class loader).
 				URL url = getClass().getClassLoader().
 										getResource(iconFullPath);
-				if (url!=null)
+				if (url!=null) {
 					return new ImageIcon(url);
+				}
 				// If not, see if it's a plain file on disk.
 				BufferedImage image = ImageIO.read(new File(iconFullPath));
 				return image!=null ? new ImageIcon(image) : null;

@@ -4,7 +4,7 @@
  * 02/25/2005
  *
  * SASTokenMaker.java - Scanner for SAS files.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -72,14 +72,14 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
    *                  at the beginning of a line
    * l is of the form l = 2*k, k a non negative integer
    */
-  private static final int ZZ_LEXSTATE[] = { 
+  private static final int ZZ_LEXSTATE[] = {
      0,  1,  2,  2,  3,  3,  4, 4
   };
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\3\1\1\25\0\1\3\1\0\1\23\2\0\1\53\1\4"+
     "\1\24\2\22\1\6\1\5\1\0\1\5\1\0\1\7\2\2\1\52"+
     "\1\51\1\45\5\2\1\0\1\0\1\10\1\12\1\10\2\0\1\26"+
@@ -90,12 +90,12 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
     "\1\20\1\36\1\15\1\40\1\37\1\14\1\31\1\34\1\17\1\35"+
     "\1\46\1\47\1\43\1\41\1\50\1\0\1\5\1\0\1\11\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -136,7 +136,7 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -241,7 +241,7 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -922,7 +922,7 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
       from input */
   private int zzEndRead;
 
-  /** 
+  /**
    * zzAtBOL == true <=> the scanner is currently at the beginning of a line
    */
   private boolean zzAtBOL = true;
@@ -1067,11 +1067,11 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(Reader reader) {
 		// 's' has been updated.
@@ -1115,7 +1115,7 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -1174,12 +1174,12 @@ public final void yybegin(int newState) {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -1200,8 +1200,8 @@ public final void yybegin(int newState) {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -1221,7 +1221,7 @@ public final void yybegin(int newState) {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -1275,7 +1275,7 @@ public final void yybegin(int newState) {
         case '\u2029':
           zzAtBOL = true;
           break;
-        case '\r': 
+        case '\r':
           if (zzMarkedPosL < zzEndReadL)
             zzAtBOL = zzBufferL[zzMarkedPosL] != '\n';
           else if (zzAtEOF)
@@ -1285,9 +1285,9 @@ public final void yybegin(int newState) {
             zzMarkedPosL = zzMarkedPos;
             zzEndReadL = zzEndRead;
             zzBufferL = zzBuffer;
-            if (eof) 
+            if (eof)
               zzAtBOL = false;
-            else 
+            else
               zzAtBOL = zzBufferL[zzMarkedPosL] != '\n';
           }
           break;
@@ -1298,7 +1298,7 @@ public final void yybegin(int newState) {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       if (zzAtBOL)
         zzState = ZZ_LEXSTATE[zzLexicalState+1];
       else
@@ -1307,7 +1307,7 @@ public final void yybegin(int newState) {
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -1350,63 +1350,63 @@ public final void yybegin(int newState) {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 13: 
+        case 13:
           { yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
           }
         case 21: break;
-        case 2: 
+        case 2:
           { addNullToken(); return firstToken;
           }
         case 22: break;
-        case 18: 
+        case 18:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
           }
         case 23: break;
-        case 17: 
+        case 17:
           { start = zzMarkedPos-2; yybegin(MLC);
           }
         case 24: break;
-        case 3: 
+        case 3:
           { addToken(Token.WHITESPACE);
           }
         case 25: break;
-        case 8: 
+        case 8:
           { start = zzMarkedPos-1; yybegin(CHAR);
           }
         case 26: break;
-        case 5: 
+        case 5:
           { addToken(Token.RESERVED_WORD);
           }
         case 27: break;
-        case 6: 
+        case 6:
           { addToken(Token.SEPARATOR);
           }
         case 28: break;
-        case 16: 
+        case 16:
           { addToken(Token.VARIABLE);
           }
         case 29: break;
-        case 14: 
+        case 14:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
           }
         case 30: break;
-        case 1: 
+        case 1:
           { addToken(Token.IDENTIFIER);
           }
         case 31: break;
-        case 20: 
+        case 20:
           { addToken(Token.FUNCTION);
           }
         case 32: break;
-        case 19: 
+        case 19:
           { addToken(Token.DATA_TYPE);
           }
         case 33: break;
-        case 11: 
+        case 11:
           { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 34: break;
-        case 9: 
+        case 9:
           { // We must do this because of how we
 									// abuse JFlex; since we return an entire
 									// list of tokens at once instead of a
@@ -1432,27 +1432,27 @@ public final void yybegin(int newState) {
 									}
           }
         case 35: break;
-        case 7: 
+        case 7:
           { start = zzMarkedPos-1; yybegin(STRING);
           }
         case 36: break;
-        case 4: 
+        case 4:
           { addToken(Token.OPERATOR);
           }
         case 37: break;
-        case 12: 
+        case 12:
           { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 38: break;
-        case 10: 
-          { 
+        case 10:
+          {
           }
         case 39: break;
-        case 15: 
+        case 15:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
           }
         case 40: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -1475,7 +1475,7 @@ public final void yybegin(int newState) {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

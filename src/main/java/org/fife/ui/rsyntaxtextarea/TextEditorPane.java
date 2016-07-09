@@ -3,7 +3,7 @@
  *
  * TextEditorPane.java - A syntax highlighting text area that has knowledge of
  * the file it is editing on disk.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -40,7 +41,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
  * </ul>
  *
  * Loading and saving is also built into the editor.<p>
- * 
+ *
  * When saving UTF-8 files, whether or not a BOM is written is controlled by
  * the {@link UnicodeWriter} class.
  * Use {@link UnicodeWriter#setWriteUtf8BOM(boolean)} to toggle writing BOMs
@@ -198,7 +199,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @return The default encoding.
 	 */
-	private static final String getDefaultEncoding() {
+	private static String getDefaultEncoding() {
 		// NOTE:  The "file.encoding" system property is not guaranteed to be
 		// set by the spec, so we cannot rely on it.
 		String encoding = Charset.defaultCharset().name();
@@ -270,7 +271,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	/**
 	 * Returns the line separator used when writing this file (e.g.
 	 * "<code>\n</code>", "<code>\r\n</code>", or "<code>\r</code>").<p>
-	 * 
+	 *
 	 * Note that this value is an <code>Object</code> and not a
 	 * <code>String</code> as that is the way the {@link Document} interface
 	 * defines its property values.  If you always use
@@ -460,7 +461,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	/**
 	 * Reloads this file from disk.  The file must exist for this operation
 	 * to not throw an exception.<p>
-	 * 
+	 *
 	 * The file's "dirty" state will be set to <code>false</code> after this
 	 * operation.  If this is a local file, its "last modified" time is
 	 * updated to reflect that of the actual file.<p>

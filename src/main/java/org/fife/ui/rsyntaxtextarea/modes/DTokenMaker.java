@@ -4,7 +4,7 @@
  * 09/08/2014
  *
  * DTokenMaker.java - Scanner for the D programming language.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -70,10 +70,10 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
   public static final int WYSIWYG_STRING_2 = 7;
   public static final int EOL_DOCCOMMENT = 5;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\11\0\1\22\1\11\1\0\1\22\1\20\22\0\1\22\1\60\1\16"+
     "\1\21\1\1\1\60\1\62\1\10\2\65\1\31\1\32\1\53\1\43"+
     "\1\44\1\30\1\4\1\5\2\17\4\7\2\3\1\63\1\53\1\54"+
@@ -85,12 +85,12 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
     "\1\26\1\51\1\45\1\13\1\76\1\23\1\25\1\74\1\77\1\52"+
     "\1\56\1\52\1\61\uff81\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -138,7 +138,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -221,7 +221,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -1459,11 +1459,11 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(Reader reader) {
 		// 's' has been updated.
@@ -1506,7 +1506,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -1565,12 +1565,12 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -1591,8 +1591,8 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -1612,7 +1612,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -1659,13 +1659,13 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -1708,196 +1708,196 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 14: 
+        case 14:
           { yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken;
           }
         case 46: break;
-        case 2: 
+        case 2:
           { addToken(Token.IDENTIFIER);
           }
         case 47: break;
-        case 41: 
+        case 41:
           { addToken(Token.LITERAL_BOOLEAN);
           }
         case 48: break;
-        case 25: 
+        case 25:
           { addToken(Token.ERROR_CHAR);
           }
         case 49: break;
-        case 22: 
+        case 22:
           { addToken(Token.ERROR_NUMBER_FORMAT);
           }
         case 50: break;
-        case 4: 
+        case 4:
           { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 51: break;
-        case 18: 
+        case 18:
           { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 52: break;
-        case 11: 
+        case 11:
           { addToken(Token.ANNOTATION);
           }
         case 53: break;
-        case 6: 
+        case 6:
           { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 54: break;
-        case 1: 
+        case 1:
           { addToken(Token.ERROR_IDENTIFIER);
           }
         case 55: break;
-        case 20: 
+        case 20:
           { addToken(Token.LITERAL_BACKQUOTE);
           }
         case 56: break;
-        case 33: 
+        case 33:
           { nestedMlcDepth++;
           }
         case 57: break;
-        case 37: 
+        case 37:
           { start = zzMarkedPos-3; yybegin(EOL_DOCCOMMENT);
           }
         case 58: break;
-        case 43: 
+        case 43:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos;
           }
         case 59: break;
-        case 35: 
+        case 35:
           { addToken(Token.LITERAL_CHAR);
           }
         case 60: break;
-        case 24: 
+        case 24:
           { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 61: break;
-        case 28: 
+        case 28:
           { start = zzMarkedPos-2; yybegin(MLC);
           }
         case 62: break;
-        case 17: 
+        case 17:
           { addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addNullToken(); return firstToken;
           }
         case 63: break;
-        case 7: 
+        case 7:
           { addToken(Token.WHITESPACE);
           }
         case 64: break;
-        case 32: 
+        case 32:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION);
           }
         case 65: break;
-        case 39: 
+        case 39:
           { addToken(Token.DATA_TYPE);
           }
         case 66: break;
-        case 34: 
+        case 34:
           { System.out.println("... " + nestedMlcDepth);
 								if (--nestedMlcDepth==0) {
 									addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(YYINITIAL);
 								}
           }
         case 67: break;
-        case 31: 
+        case 31:
           { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
           }
         case 68: break;
-        case 21: 
+        case 21:
           { addToken(Token.LITERAL_BACKQUOTE); yybegin(YYINITIAL);
           }
         case 69: break;
-        case 3: 
+        case 3:
           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 70: break;
-        case 19: 
+        case 19:
           { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
           }
         case 71: break;
-        case 38: 
+        case 38:
           { start = zzMarkedPos-3; yybegin(DOCCOMMENT);
           }
         case 72: break;
-        case 15: 
+        case 15:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addNestedMlcEndToken(); return firstToken;
           }
         case 73: break;
-        case 30: 
+        case 30:
           { addToken(Token.RESERVED_WORD);
           }
         case 74: break;
-        case 42: 
+        case 42:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 75: break;
-        case 29: 
+        case 29:
           { start = zzMarkedPos-2; nestedMlcDepth = 1; yybegin(NESTABLE_MLC);
           }
         case 76: break;
-        case 45: 
+        case 45:
           { addToken(Token.RESERVED_WORD_2);
           }
         case 77: break;
-        case 16: 
+        case 16:
           { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 78: break;
-        case 10: 
+        case 10:
           { addToken(Token.SEPARATOR);
           }
         case 79: break;
-        case 5: 
+        case 5:
           { addNullToken(); return firstToken;
           }
         case 80: break;
-        case 13: 
+        case 13:
           { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
           }
         case 81: break;
-        case 8: 
+        case 8:
           { addToken(Token.LITERAL_BACKQUOTE); yybegin(WYSIWYG_STRING_2);
           }
         case 82: break;
-        case 9: 
+        case 9:
           { addToken(Token.OPERATOR);
           }
         case 83: break;
-        case 23: 
+        case 23:
           { addToken(Token.LITERAL_NUMBER_FLOAT);
           }
         case 84: break;
-        case 26: 
+        case 26:
           { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(WYSIWYG_STRING_1);
           }
         case 85: break;
-        case 44: 
+        case 44:
           { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
           }
         case 86: break;
-        case 40: 
+        case 40:
           { addToken(Token.COMMENT_MULTILINE);
           }
         case 87: break;
-        case 27: 
+        case 27:
           { start = zzMarkedPos-2; yybegin(EOL_COMMENT);
           }
         case 88: break;
-        case 36: 
+        case 36:
           { addToken(Token.ERROR_STRING_DOUBLE);
           }
         case 89: break;
-        case 12: 
-          { 
+        case 12:
+          {
           }
         case 90: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case WYSIWYG_STRING_1: {
               if (firstToken==null) {
-									addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); 
+									addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
 								}
 								return firstToken;
             }
@@ -1924,7 +1924,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
             case 465: break;
             case WYSIWYG_STRING_2: {
               if (firstToken==null) {
-									addToken(Token.LITERAL_BACKQUOTE); 
+									addToken(Token.LITERAL_BACKQUOTE);
 								}
 								return firstToken;
             }
@@ -1936,7 +1936,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

@@ -2,7 +2,7 @@
  * 03/16/2013
  *
  * DefaultTokenPainter - Standard implementation of a token painter.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+
 import javax.swing.text.TabExpander;
 
 
@@ -36,7 +37,7 @@ class DefaultTokenPainter implements TokenPainter {
 	private static char[] tabBuf;
 
 
-	public DefaultTokenPainter() {
+	DefaultTokenPainter() {
 		bgRect = new Rectangle2D.Float();
 	}
 
@@ -116,7 +117,7 @@ class DefaultTokenPainter implements TokenPainter {
 			switch (text[i]) {
 				case '\t':
 					nextX = e.nextTabStop(
-						x+fm.charsWidth(text, flushIndex,flushLen), 0);
+						x + fm.charsWidth(text, flushIndex,flushLen), 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,fm.getHeight(),
 									g, fm.getAscent(), host, bg);

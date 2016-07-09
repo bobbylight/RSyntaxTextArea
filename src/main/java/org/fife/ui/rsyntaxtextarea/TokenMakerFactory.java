@@ -2,7 +2,7 @@
  * 12/12/2008
  *
  * TokenMakerFactory.java - A factory for TokenMakers.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

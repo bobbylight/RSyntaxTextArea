@@ -180,7 +180,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			"local_variables", "loop", "open", "p", "print", "printf", "proc",
 			"putc", "puts", "raise", "rand", "readline", "readlines", "require",
 			"select", "sleep", "split", "sprintf", "srand", "sub", "sub!",
-			"syscall", "system", "test", "trace_var", "trap", "untrace_var", 
+			"syscall", "system", "test", "trace_var", "trap", "untrace_var",
 		};
 
 		for (String code : functions) {
@@ -358,7 +358,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 		// ("$"([!@&`\'+0-9~=/\,;.<>_*$?:\"]|"DEBUG"|"FILENAME"|"LOAD_PATH"|"stderr"|"stdin"|"stdout"|"VERBOSE"|([\-][0adFiIlpwv])))
 		String[] predefinedVars = {
 			"$!", "$@",
-			"$DEBUG", "$FILENAME", "$LOAD_PATH", "$stderr", "$stdin", "$stdout", "$VERBOSE", 
+			"$DEBUG", "$FILENAME", "$LOAD_PATH", "$stderr", "$stdin", "$stdout", "$VERBOSE",
 		};
 
 		for (String code : predefinedVars) {

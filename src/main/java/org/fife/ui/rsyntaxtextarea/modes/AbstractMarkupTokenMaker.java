@@ -3,7 +3,7 @@
  *
  * AbstractMarkupTokenMaker.java - Base class for token makers for markup
  * languages.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

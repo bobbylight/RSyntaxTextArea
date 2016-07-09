@@ -2,7 +2,7 @@
  * 02/24/2004
  *
  * RSyntaxTextAreaUI.java - UI for an RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -12,12 +12,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
+
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.InputMapUIResource;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.EditorKit;
+import javax.swing.text.Element;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.View;
 
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
@@ -34,7 +40,7 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 
 	private static final String SHARED_ACTION_MAP_NAME	= "RSyntaxTextAreaUI.actionMap";
 	private static final String SHARED_INPUT_MAP_NAME		= "RSyntaxTextAreaUI.inputMap";
-	private static final EditorKit defaultKit			= new RSyntaxTextAreaEditorKit();
+	private static final EditorKit DEFAULT_KIT			= new RSyntaxTextAreaEditorKit();
 
 
 	public static ComponentUI createUI(JComponent ta) {
@@ -62,10 +68,12 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 		if (c instanceof RSyntaxTextArea) {
 			RSyntaxTextArea area = (RSyntaxTextArea) c;
 			View v;
-			if (area.getLineWrap())
+			if (area.getLineWrap()) {
 				v = new WrappedSyntaxView(elem);
-			else
+			}
+			else {
 				v = new SyntaxView(elem);
+			}
 			return v;
 		}
 		return null;
@@ -105,12 +113,12 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 	 */
 	@Override
 	public EditorKit getEditorKit(JTextComponent tc) {
-		return defaultKit;
+		return DEFAULT_KIT;
 	}
 
 
 	/**
-	 * Get the InputMap to use for the UI.<p>  
+	 * Get the InputMap to use for the UI.<p>
 	 *
 	 * This method is not named <code>getInputMap()</code> because there is
 	 * a package-private method in <code>BasicTextAreaUI</code> with that name.
@@ -169,12 +177,13 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 		// the region that gets invalidated.
 		if (rsta.getAnimateBracketMatching()) {
 			Color bg = rsta.getMatchedBracketBGColor();
+			final int arcWH = 5;
 			if (bg!=null) {
 				g.setColor(bg);
-				g.fillRoundRect(r.x,r.y, r.width,r.height-1, 5,5);
+				g.fillRoundRect(r.x,r.y, r.width,r.height-1, arcWH, arcWH);
 			}
 			g.setColor(rsta.getMatchedBracketBorderColor());
-			g.drawRoundRect(r.x,r.y, r.width,r.height-1, 5,5);
+			g.drawRoundRect(r.x,r.y, r.width,r.height-1, arcWH, arcWH);
 		}
 		else {
 			Color bg = rsta.getMatchedBracketBGColor();

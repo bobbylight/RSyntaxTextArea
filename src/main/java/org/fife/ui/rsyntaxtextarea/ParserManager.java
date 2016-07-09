@@ -3,7 +3,7 @@
  *
  * ParserManager.java - Manages the parsing of an RSyntaxTextArea's document,
  * if necessary.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -22,6 +22,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
@@ -33,7 +34,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 
-import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
@@ -99,7 +99,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param textArea The text area whose document the parser will be
 	 *        parsing.
 	 */
-	public ParserManager(RSyntaxTextArea textArea) {
+	ParserManager(RSyntaxTextArea textArea) {
 		this(DEFAULT_DELAY_MS, textArea);
 	}
 
@@ -112,7 +112,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param textArea The text area whose document the parser will be
 	 *        parsing.
 	 */
-	public ParserManager(int delay, RSyntaxTextArea textArea) {
+	ParserManager(int delay, RSyntaxTextArea textArea) {
 		this.textArea = textArea;
 		textArea.getDocument().addDocumentListener(this);
 		textArea.addPropertyChangeListener("document", this);
@@ -125,7 +125,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 	/**
 	 * Called when the timer fires (e.g. it's time to parse the document).
-	 * 
+	 *
 	 * @param e The event.
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -144,8 +144,10 @@ class ParserManager implements DocumentListener, ActionListener,
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 
 		Element root = doc.getDefaultRootElement();
-		int firstLine = firstOffsetModded==null ? 0 : root.getElementIndex(firstOffsetModded.getOffset());
-		int lastLine = lastOffsetModded==null ? root.getElementCount()-1 : root.getElementIndex(lastOffsetModded.getOffset());
+		int firstLine = firstOffsetModded==null ? 0 :
+			root.getElementIndex(firstOffsetModded.getOffset());
+		int lastLine = lastOffsetModded==null ? root.getElementCount()-1 :
+			root.getElementIndex(lastOffsetModded.getOffset());
 		firstOffsetModded = lastOffsetModded = null;
 		if (DEBUG_PARSING) {
 			System.out.println("[DEBUG]: Minimum lines to parse: " + firstLine + "-" + lastLine);
@@ -293,7 +295,8 @@ class ParserManager implements DocumentListener, ActionListener,
 			h.clearParserHighlights(parser);
 		}
 		if (noticeHighlightPairs!=null) {
-			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+			Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator();
+			while (i.hasNext()) {
 				NoticeHighlightPair pair = i.next();
 				if (pair.notice.getParser()==parser) {
 					i.remove();
@@ -319,7 +322,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	/**
 	 * Forces the given {@link Parser} to re-parse the content of this text
 	 * area.<p>
-	 * 
+	 *
 	 * This method can be useful when a <code>Parser</code> can be configured
 	 * as to what notices it returns.  For example, if a Java language parser
 	 * can be configured to set whether no serialVersionUID is a warning,
@@ -411,7 +414,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * mouse is over an error highlight).
 	 *
 	 * @param e The mouse event.
-	 * @return The tool tip to display, and possibly a hyperlink event handler. 
+	 * @return The tool tip to display, and possibly a hyperlink event handler.
 	 */
 	public ToolTipInfo getToolTipText(MouseEvent e) {
 
@@ -475,7 +478,8 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Called when the user clicks a hyperlink in a {@link FocusableTip}.
+	 * Called when the user clicks a hyperlink in a
+	 * {@link org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip}.
 	 *
 	 * @param e The event.
 	 */
@@ -520,7 +524,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param offs The offset.
 	 * @return Whether the notice contains the offset.
 	 */
-	private final boolean noticeContainsPosition(ParserNotice notice, int offs){
+	private boolean noticeContainsPosition(ParserNotice notice, int offs){
 		if (notice.getKnowsOffsetAndLength()) {
 			return notice.containsPosition(offs);
 		}
@@ -547,7 +551,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @return Whether the parser notice actually contains the specified point
 	 *         in the view.
 	 */
-	private final boolean noticeContainsPointInView(ParserNotice notice,
+	private boolean noticeContainsPointInView(ParserNotice notice,
 			Point p) {
 
 		try {
@@ -646,7 +650,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (noticeHighlightPairs!=null) {
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 												textArea.getHighlighter();
-			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext();) {
 				NoticeHighlightPair pair = i.next();
 				if (pair.notice.getParser()==parser && pair.highlight!=null) {
 					h.removeParserHighlight(pair.highlight);
@@ -668,7 +672,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (noticeHighlightPairs!=null) {
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 												textArea.getHighlighter();
-			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext(); ) {
+			for (Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator(); i.hasNext();) {
 				NoticeHighlightPair pair = i.next();
 				boolean removed = false;
 				if (shouldRemoveNotice(pair.notice, res)) {
@@ -757,7 +761,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param res The result.
 	 * @return Whether the notice should be removed.
 	 */
-	private final boolean shouldRemoveNotice(ParserNotice notice,
+	private boolean shouldRemoveNotice(ParserNotice notice,
 											ParseResult res) {
 
 		if (DEBUG_PARSING) {
@@ -793,10 +797,10 @@ class ParserManager implements DocumentListener, ActionListener,
 	 */
 	private static class NoticeHighlightPair {
 
-		public ParserNotice notice;
-		public HighlightInfo highlight;
+		private ParserNotice notice;
+		private HighlightInfo highlight;
 
-		public NoticeHighlightPair(ParserNotice notice, HighlightInfo highlight) {
+		NoticeHighlightPair(ParserNotice notice, HighlightInfo highlight) {
 			this.notice = notice;
 			this.highlight = highlight;
 		}

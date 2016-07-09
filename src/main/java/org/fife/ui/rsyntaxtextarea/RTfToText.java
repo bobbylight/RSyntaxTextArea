@@ -2,13 +2,21 @@
  * 07/28/2008
  *
  * RtfToText.java - Returns the plain text version of RTF documents.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
 
 /**
@@ -20,7 +28,7 @@ import java.io.*;
  * @author Robert Futrell
  * @version 1.0
  */
-class RtfToText {
+final class RtfToText {
 
 	private Reader r;
 	private StringBuilder sb;

@@ -2,7 +2,7 @@
  * 07/29/2009
  *
  * TipWindow.java - The actual window component representing the tool tip.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -25,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -68,7 +69,7 @@ class TipWindow extends JWindow implements ActionListener {
 	 * @param owner The parent window.
 	 * @param msg The text of the tool tip.  This can be HTML.
 	 */
-	public TipWindow(Window owner, FocusableTip ft, String msg) {
+	TipWindow(Window owner, FocusableTip ft, String msg) {
 
 		super(owner);
 		this.ft = ft;
@@ -185,12 +186,12 @@ class TipWindow extends JWindow implements ActionListener {
 			// Ensure the text area doesn't start out too tall or wide.
 			d = textArea.getPreferredSize();
 			d.width += 25; // Just a little extra space
-			final int MAX_WINDOW_W = ft.getMaxSize() != null ?
+			final int maxWindowW = ft.getMaxSize() != null ?
 					ft.getMaxSize().width : 600;
-			final int MAX_WINDOW_H = ft.getMaxSize() != null ?
+			final int maxWindowH = ft.getMaxSize() != null ?
 					ft.getMaxSize().height : 400;
-			d.width = Math.min(d.width, MAX_WINDOW_W);
-			d.height = Math.min(d.height, MAX_WINDOW_H);
+			d.width = Math.min(d.width, maxWindowW);
+			d.height = Math.min(d.height, maxWindowH);
 
 			// Both needed for modelToView() calculation below...
 			textArea.setPreferredSize(d);
@@ -202,7 +203,7 @@ class TipWindow extends JWindow implements ActionListener {
 			if (r.y+r.height>d.height) {
 				d.height = r.y + r.height + 5;
 				if(ft.getMaxSize() != null) {
-					d.height = Math.min(d.height, MAX_WINDOW_H);
+					d.height = Math.min(d.height, maxWindowH);
 				}
 				textArea.setPreferredSize(d);
 			}
@@ -320,9 +321,9 @@ class TipWindow extends JWindow implements ActionListener {
 	/**
 	 * Listens for events in this window.
 	 */
-	private class TipListener extends MouseAdapter {
+	private final class TipListener extends MouseAdapter {
 
-		public TipListener() {
+		private TipListener() {
 		}
 
 		@Override

@@ -204,7 +204,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testHtml_validHtml5TagNames() {
 		
-		String[] tagNames = { 
+		String[] tagNames = {
 			"a", "abbr", "acronym", "address", "applet", "area", "article",
 			"aside", "audio", "b", "base", "basefont", "bdo", "bgsound", "big",
 			"blink", "blockquote", "body", "br", "button", "canvas", "caption",
@@ -300,7 +300,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] charLiterals = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
-			"'\\x77'", 
+			"'\\x77'",
 			"'\\11'", "'\\22'", "'\\33'",
 			"'\\1'",
 			"'My name is Robert and I \\", // Continued onto another line

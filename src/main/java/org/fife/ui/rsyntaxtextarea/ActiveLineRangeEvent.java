@@ -3,7 +3,7 @@
  *
  * ActiveLineRangeEvent.java - Notifies listeners of an "active line range"
  * change in an RSyntaxTextArea.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */

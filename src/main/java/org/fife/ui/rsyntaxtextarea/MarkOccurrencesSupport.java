@@ -3,7 +3,7 @@
  *
  * MarkOccurrencesSupport.java - Handles marking all occurrences of the
  * currently selected identifier in a text area.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -12,6 +12,7 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Timer;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -48,7 +49,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	/**
 	 * Constructor.  Creates a listener with a 1 second delay.
 	 */
-	public MarkOccurrencesSupport() {
+	MarkOccurrencesSupport() {
 		this(DEFAULT_DELAY_MS);
 	}
 
@@ -60,7 +61,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 *        text should be scanned for matching occurrences.  This should
 	 *        be in milliseconds.
 	 */
-	public MarkOccurrencesSupport(int delay) {
+	MarkOccurrencesSupport(int delay) {
 		this(delay, DEFAULT_COLOR);
 	}
 
@@ -74,7 +75,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @param color The color to use to mark the occurrences.  This cannot be
 	 *        <code>null</code>.
 	 */
-	public MarkOccurrencesSupport(int delay, Color color) {
+	MarkOccurrencesSupport(int delay, Color color) {
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
 		p = new SmartHighlightPainter();
@@ -86,7 +87,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * Called after the caret has been moved and a fixed time delay has
 	 * elapsed.  This locates and highlights all occurrences of the identifier
 	 * at the caret position, if any.<p>
-	 * 
+	 *
 	 * Callers should not call this method directly, but should rather prefer
 	 * {@link #doMarkOccurrences()} to mark occurrences.
 	 *

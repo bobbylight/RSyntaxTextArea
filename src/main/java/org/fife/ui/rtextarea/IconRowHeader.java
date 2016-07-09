@@ -2,7 +2,7 @@
  * 02/17/2009
  *
  * IconRowHeader.java - Renders icons in the gutter.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -30,8 +31,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.View;
-
-import org.fife.ui.rsyntaxtextarea.FoldingAwareIconRowHeader;
 
 
 /**
@@ -44,7 +43,7 @@ import org.fife.ui.rsyntaxtextarea.FoldingAwareIconRowHeader;
  * at the line to bookmark.  In order to enable bookmarking, you must first
  * assign an icon to represent a bookmarked line, then actually enable the
  * feature.  This is actually done on the parent {@link Gutter} component:<p>
- * 
+ *
  * <pre>
  * Gutter gutter = scrollPane.getGutter();
  * gutter.setBookmarkIcon(new ImageIcon("bookmark.png"));
@@ -53,7 +52,7 @@ import org.fife.ui.rsyntaxtextarea.FoldingAwareIconRowHeader;
  *
  * @author Robert Futrell
  * @version 1.0
- * @see FoldingAwareIconRowHeader
+ * @see org.fife.ui.rsyntaxtextarea.FoldingAwareIconRowHeader
  */
 public class IconRowHeader extends AbstractGutterComponent implements MouseListener {
 
@@ -644,8 +643,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			// Update topLine (we're actually using it for our "current line"
 			// variable now).
 			topLine++;
-			if (topLine>=lineCount)
+			if (topLine>=lineCount) {
 				break;
+			}
 
 		}
 
@@ -686,7 +686,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	private void removeBookmarkTrackingIcons() {
 		if (trackingIcons!=null) {
 			for (Iterator<GutterIconImpl> i=trackingIcons.iterator();
-					i.hasNext(); ) {
+					i.hasNext();) {
 				GutterIconImpl ti = i.next();
 				if (ti.getIcon()==bookmarkIcon) {
 					i.remove();
@@ -890,7 +890,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		private Position pos;
 		private String toolTip;
 
-		public GutterIconImpl(Icon icon, Position pos, String toolTip) {
+		GutterIconImpl(Icon icon, Position pos, String toolTip) {
 			this.icon = icon;
 			this.pos = pos;
 			this.toolTip = toolTip;

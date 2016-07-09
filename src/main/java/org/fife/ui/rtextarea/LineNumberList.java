@@ -2,7 +2,7 @@
  * 02/11/2009
  *
  * LineNumberList.java - Renders line numbers in an RTextScrollPane.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
+
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -336,7 +337,7 @@ public class LineNumberList extends AbstractGutterComponent
 			fm = ((RSyntaxTextArea)textArea).getFoldManager();
 			topLine += fm.getHiddenLineCountAbove(topLine, true);
 		}
-		final int RHS_BORDER_WIDTH = getRhsBorderWidth();
+		final int rhsBorderWidth = getRhsBorderWidth();
 
 /*
 		// Highlight the current line's line number, if desired.
@@ -353,7 +354,7 @@ public class LineNumberList extends AbstractGutterComponent
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
-			int rhs = getWidth() - RHS_BORDER_WIDTH;
+			int rhs = getWidth() - rhsBorderWidth;
 			int line = topLine + 1;
 			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
@@ -382,7 +383,7 @@ public class LineNumberList extends AbstractGutterComponent
 			int line = topLine + 1;
 			while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
-				g.drawString(number, RHS_BORDER_WIDTH, y);
+				g.drawString(number, rhsBorderWidth, y);
 				y += cellHeight;
 				if (fm!=null) {
 					Fold fold = fm.getFoldForLine(line-1);
@@ -462,14 +463,14 @@ public class LineNumberList extends AbstractGutterComponent
 		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
 												visibleEditorRect);
 		int y = r.y;
-		final int RHS_BORDER_WIDTH = getRhsBorderWidth();
+		final int rhsBorderWidth = getRhsBorderWidth();
 		int rhs;
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
-			rhs = width - RHS_BORDER_WIDTH;
+			rhs = width - rhsBorderWidth;
 		}
 		else { // rtl
-			rhs = RHS_BORDER_WIDTH;
+			rhs = rhsBorderWidth;
 		}
 		int visibleBottom = visibleRect.y + visibleRect.height;
 		FontMetrics metrics = g.getFontMetrics();
@@ -499,7 +500,7 @@ public class LineNumberList extends AbstractGutterComponent
 				g.drawString(number, rhs-strWidth,y+ascent);
 			}
 			else {
-				int x = RHS_BORDER_WIDTH;
+				int x = rhsBorderWidth;
 				g.drawString(number, x, y+ascent);
 			}
 
@@ -516,8 +517,9 @@ public class LineNumberList extends AbstractGutterComponent
 				}
 			}
 			topLine++;
-			if (topLine>=lineCount)
+			if (topLine>=lineCount) {
 				break;
+			}
 
 		}
 
@@ -676,7 +678,7 @@ public class LineNumberList extends AbstractGutterComponent
 			// getting the line number of the caret suffices.  This increases
 			// efficiency in the no-line-wrap case.
 
-			if (textArea.getLineWrap()==false) {
+			if (!textArea.getLineWrap()) {
 				int line = textArea.getDocument().getDefaultRootElement().
 										getElementIndex(dot);
 				if (currentLine!=line) {

@@ -2,7 +2,7 @@
  * 10/13/2013
  *
  * RTextAreaHighlighter.java - Highlighter for RTextAreas.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -14,6 +14,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.plaf.TextUI;
 import javax.swing.plaf.basic.BasicTextUI.BasicHighlighter;
 import javax.swing.text.BadLocationException;
@@ -211,13 +212,13 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	/**
 	 * Information about a highlight being painted by this highlighter.
 	 */
-	public static interface HighlightInfo extends Highlighter.Highlight {}
+	public interface HighlightInfo extends Highlighter.Highlight {}
 
 
 	/**
 	 * Information about a layered highlight being painted by this highlighter.
 	 */
-	public static interface LayeredHighlightInfo extends HighlightInfo {
+	public interface LayeredHighlightInfo extends HighlightInfo {
 
 		/**
 		 * Restricts the region based on the receivers offsets and messages
@@ -233,7 +234,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * A straightforward implementation of <code>HighlightInfo</code>.
 	 */
 	protected static class HighlightInfoImpl implements HighlightInfo {
-	
+
 		private Position p0;
 		private Position p1;
 		private Highlighter.HighlightPainter painter;
@@ -246,11 +247,11 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 		public int getStartOffset() {
 			return p0.getOffset();
 		}
-		
+
 		public int getEndOffset() {
 			return p1.getOffset();
 		}
-		
+
 		public Highlighter.HighlightPainter getPainter() {
 			return painter;
 		}
@@ -266,7 +267,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 		public void setPainter(Highlighter.HighlightPainter painter) {
 			this.painter = painter;
 		}
-		
+
 	}
 
 
@@ -274,16 +275,18 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * A straightforward implementation of <code>HighlightInfo</code> for
 	 * painting layered highlights.
 	 */
-	/*
-	 * NOTE: This implementation is a "hack" so typing at the "end" of the highlight
-	 * does not extend it to include the newly-typed chars, which is the standard
-	 * behavior of Swing Highlights.  It assumes that the "p1" Position set is
-	 * actually 1 char too short, and will render the selection as if that "extra"
-	 * char should be highlighted.
-	 */
+	@SuppressWarnings({ "checkstyle:visibilitymodifier" })
 	protected static class LayeredHighlightInfoImpl extends HighlightInfoImpl
 			implements LayeredHighlightInfo {
-	
+
+		/*
+		 * NOTE: This implementation is a "hack" so typing at the "end" of the highlight
+		 * does not extend it to include the newly-typed chars, which is the standard
+		 * behavior of Swing Highlights.  It assumes that the "p1" Position set is
+		 * actually 1 char too short, and will render the selection as if that "extra"
+		 * char should be highlighted.
+		 */
+
 		public int x;
 		public int y;
 		public int width;
@@ -310,7 +313,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 				height -= y;
 			}
 		}
-	
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -324,16 +327,16 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 			p0 = Math.max(start, p0);
 			p1 = Math.min(end, p1);
 			if (getColor()!=null &&
-					(getPainter() instanceof ChangeableHighlightPainter)) {
+					getPainter() instanceof ChangeableHighlightPainter) {
 				((ChangeableHighlightPainter)getPainter()).setPaint(getColor());
 			}
 			// Paint the appropriate region using the painter and union
 			// the effected region with our bounds.
-			union(((LayeredHighlighter.LayerPainter)getPainter()).paintLayer
-								(g, p0, p1, viewBounds, editor, view));
+			union(((LayeredHighlighter.LayerPainter)getPainter()).paintLayer(
+								g, p0, p1, viewBounds, editor, view));
 		}
-	
+
 	}
-	
-	
+
+
 }

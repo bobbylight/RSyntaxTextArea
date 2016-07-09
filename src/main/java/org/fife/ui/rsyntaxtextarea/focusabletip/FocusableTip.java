@@ -2,7 +2,7 @@
  * 07/29/2009
  *
  * FocusableTip.java - A focusable tool tip, like those in Eclipse.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -23,7 +23,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javax.swing.*;
+
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkListener;
@@ -47,8 +50,8 @@ public class FocusableTip {
 	private TextAreaListener textAreaListener;
 	private HyperlinkListener hyperlinkListener;
 	private String lastText;
-	
-	private Dimension maxSize; // null to automatic.	
+
+	private Dimension maxSize; // null to automatic.
 
 	/**
 	 * The screen bounds in which the mouse has to stay for the currently
@@ -66,9 +69,8 @@ public class FocusableTip {
 	 */
 	private static final int Y_MARGIN = 12;
 
-	private static final String MSG =
-		"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip";
-	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
+	private static final ResourceBundle MSG = ResourceBundle.getBundle(
+			"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip");
 
 
 	public FocusableTip(JTextArea textArea, HyperlinkListener listener) {
@@ -200,7 +202,7 @@ public class FocusableTip {
 	 * @return The localized text.
 	 */
 	static String getString(String key) {
-		return msg.getString(key);
+		return MSG.getString(key);
 	}
 
 
@@ -227,7 +229,7 @@ public class FocusableTip {
 
 	/**
 	 * Sets the base URL to use when loading images in this focusable tip.
-	 * 
+	 *
 	 * @param url The base URL to use.
 	 * @see #getImageBase()
 	 */
@@ -263,8 +265,8 @@ public class FocusableTip {
 			return;
 		}
 
-		if (lastText==null || text.length()!=lastText.length()
-				|| !text.equals(lastText)) {
+		if (lastText==null || text.length()!=lastText.length() ||
+				!text.equals(lastText)) {
 			possiblyDisposeOfTipWindow();
 			createAndShowTipWindow(e, text);
 		}
@@ -272,6 +274,9 @@ public class FocusableTip {
 	}
 
 
+	/**
+	 * Listens for events in a text area.
+	 */
 	private class TextAreaListener extends MouseInputAdapter implements
 			CaretListener, ComponentListener, FocusListener, KeyListener {
 

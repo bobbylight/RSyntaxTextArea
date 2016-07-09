@@ -3,7 +3,7 @@
  *
  * SyntaxScheme.java - The set of colors and tokens used by an RSyntaxTextArea
  * to color tokens.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -15,7 +15,9 @@ import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+
 import javax.swing.text.StyleContext;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -35,6 +37,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @version 1.0
  * @see Theme
  */
+@SuppressWarnings({ "checkstyle:magicnumber" })
 public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	private Style[] styles;
@@ -179,7 +182,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @param c The color.
 	 * @return The string representation of the color.
 	 */
-	private static final String getHexString(Color c) {
+	private static String getHexString(Color c) {
 		return "$" + Integer.toHexString((c.getRGB() & 0xffffff)+0x1000000).
 									substring(1);
 	}
@@ -249,7 +252,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	/**
 	 * Loads a syntax scheme from an input stream.<p>
-	 * 
+	 *
 	 * Consider using the {@link Theme} class for saving and loading RSTA
 	 * styles rather than using this API.
 	 *
@@ -273,7 +276,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * Loads a syntax highlighting color scheme from a string created from
 	 * <code>toCommaSeparatedString</code>.  This method is useful for saving
 	 * and restoring color schemes.<p>
-	 * 
+	 *
 	 * Consider using the {@link Theme} class for saving and loading RSTA
 	 * styles rather than using this API.
 	 *
@@ -290,7 +293,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * Loads a syntax highlighting color scheme from a string created from
 	 * <code>toCommaSeparatedString</code>.  This method is useful for saving
 	 * and restoring color schemes.<p>
-	 * 
+	 *
 	 * Consider using the {@link Theme} class for saving and loading RSTA
 	 * styles rather than using this API.
 	 *
@@ -337,9 +340,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 					int pos = i*7 + 1;
 					int integer = Integer.parseInt(tokens[pos]); // == i
-					if (integer!=i)
+					if (integer!=i) {
 						throw new Exception("Expected " + i + ", found " +
 											integer);
+					}
 
 					Color fg = null; String temp = tokens[pos+1];
 					if (!"-".equals(temp)) { // "-" => keep fg as null
@@ -354,8 +358,9 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					// accidentally suck in an int representing the next
 					// packed color, and any string != "true" means false.
 					temp = tokens[pos+3];
-					if (!"t".equals(temp) && !"f".equals(temp))
+					if (!"t".equals(temp) && !"f".equals(temp)) {
 						throw new Exception("Expected 't' or 'f', found " + temp);
+					}
 					boolean underline = "t".equals(temp);
 
 					Font font = null;
@@ -539,7 +544,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * @param s The string to evaluate.
 	 * @return The color.
 	 */
-	private static final Color stringToColor(String s) {
+	private static Color stringToColor(String s) {
 		// Check for decimal as well as hex, for backward
 		// compatibility (fix from GwynEvans on forums)
 		char ch = s.charAt(0);
@@ -564,7 +569,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *       <ul>
 	 *          <li><code>i</code> is the index of the syntax scheme.
 	 *          <li><i>fg</i> and <i>bg</i> are the foreground and background
-	 *              colors for the scheme, and may be null (represented by 
+	 *              colors for the scheme, and may be null (represented by
 	 *              <code>-</code>).
 	 *          <li><code>uline</code> is whether or not the font should be
 	 *              underlined, and is either <code>t</code> or <code>f</code>.
@@ -622,7 +627,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		private Font baseFont;
 		private SyntaxScheme scheme;
 
-		public SyntaxSchemeLoader(Font baseFont) {
+		SyntaxSchemeLoader(Font baseFont) {
 			scheme = new SyntaxScheme(baseFont);
 		}
 
@@ -700,8 +705,12 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					}
 					if (styleSpecified) {
 						int style = 0;
-						if (bold) { style |= Font.BOLD; }
-						if (italic) { style |= Font.ITALIC; }
+						if (bold) {
+							style |= Font.BOLD;
+						}
+						if (italic) {
+							style |= Font.ITALIC;
+						}
 						scheme.styles[index].font = baseFont.deriveFont(style);
 					}
 

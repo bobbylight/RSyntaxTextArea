@@ -2,7 +2,7 @@
  * 09/24/2004
  *
  * UnicodeWriter.java - Writes Unicode output with the proper BOM.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 
@@ -54,7 +53,7 @@ public class UnicodeWriter extends Writer {
 												(byte)0xBF
 											};
 
-	private static final byte[] UTF16LE_BOM = new byte[] { 
+	private static final byte[] UTF16LE_BOM = new byte[] {
 												(byte)0xFF,
 												(byte)0xFE
 											};
@@ -85,12 +84,9 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @param fileName The file to which to write the Unicode output.
 	 * @param encoding The encoding to use.
-	 * @throws UnsupportedEncodingException If the specified encoding is not
-	 *         supported.
 	 * @throws IOException If an IO exception occurs.
 	 */
-	public UnicodeWriter(String fileName, String encoding)
-						throws UnsupportedEncodingException, IOException {
+	public UnicodeWriter(String fileName, String encoding) throws IOException {
 		this(new FileOutputStream(fileName), encoding);
 	}
 
@@ -102,12 +98,9 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @param file The file to which to write the Unicode output.
 	 * @param encoding The encoding to use.
-	 * @throws UnsupportedEncodingException If the specified encoding is not
-	 *         supported.
 	 * @throws IOException If an IO exception occurs.
 	 */
-	public UnicodeWriter(File file, String encoding)
-						throws UnsupportedEncodingException, IOException {
+	public UnicodeWriter(File file, String encoding) throws IOException {
 		this(new FileOutputStream(file), encoding);
 	}
 
@@ -118,12 +111,9 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @param out The output stream to write.
 	 * @param encoding The encoding to use.
-	 * @throws UnsupportedEncodingException If the specified encoding is not
-	 *         supported.
 	 * @throws IOException If an IO exception occurs.
 	 */
-	public UnicodeWriter(OutputStream out, String encoding)
-						throws UnsupportedEncodingException, IOException {
+	public UnicodeWriter(OutputStream out, String encoding) throws IOException {
 		init(out, encoding);
 	}
 
@@ -184,12 +174,9 @@ public class UnicodeWriter extends Writer {
 	 *
 	 * @param out The output stream we are writing.
 	 * @param encoding The encoding in which to write.
-	 * @throws UnsupportedEncodingException If the specified encoding isn't
-	 *         supported.
 	 * @throws IOException If an I/O error occurs while writing a BOM.
 	 */
-	private void init(OutputStream out, String encoding)
-						throws UnsupportedEncodingException, IOException {
+	private void init(OutputStream out, String encoding) throws IOException {
 
 		internalOut = new OutputStreamWriter(out, encoding);
 

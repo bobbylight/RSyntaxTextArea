@@ -2,7 +2,7 @@
  * 10/08/2011
  *
  * FoldManager.java - Manages code folding in an RSyntaxTextArea instance.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Manages code folding in an instance of RSyntaxTextArea.<p>
- * 
+ *
  * By default, {@code RSyntaxTextArea} uses a {@link DefaultFoldManager}, which
  * is sufficient for almost all applications.
  *
@@ -27,7 +27,7 @@ public interface FoldManager {
 	/**
 	 * Property fired when folds have been updated.
 	 */
-	public static final String PROPERTY_FOLDS_UPDATED = "FoldsUpdated";
+	String PROPERTY_FOLDS_UPDATED = "FoldsUpdated";
 
 
 	/**
@@ -126,7 +126,7 @@ public interface FoldManager {
 	 * @see #getHiddenLineCountAbove(int, boolean)
 	 */
 	int getHiddenLineCountAbove(int line);
-	
+
 
 	/**
 	 * Returns the number of lines "hidden" by collapsed folds above the

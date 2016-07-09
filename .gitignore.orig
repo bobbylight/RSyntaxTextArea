@@ -1,0 +1,15 @@
+ant-classes
+bin
+dist
+javadoc
+rsyntaxtextarea_*.zip
+*.java~
+build
+.gradle
+/.settings/
+<<<<<<< HEAD
+target/
+=======
+.checkstyle
+
+>>>>>>> upstream/master

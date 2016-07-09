@@ -2,7 +2,7 @@
  * 08/16/2014
  *
  * ClipboardHistoryPopup.java - Shows clipboard history in a popup window.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -23,6 +23,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -72,7 +73,7 @@ class ClipboardHistoryPopup extends JWindow {
 	 * @param parent The parent window containing <code>textArea</code>.
 	 * @param textArea The text area to paste into.
 	 */
-	public ClipboardHistoryPopup(Window parent, RTextArea textArea) {
+	ClipboardHistoryPopup(Window parent, RTextArea textArea) {
 
 		super(parent);
 		this.textArea = textArea;
@@ -261,7 +262,7 @@ class ClipboardHistoryPopup extends JWindow {
 	 */
 	private class Listener extends WindowAdapter implements ComponentListener {
 
-		public Listener() {
+		Listener() {
 
 			addWindowFocusListener(this);
 			list.addMouseListener(new MouseAdapter() {
@@ -345,7 +346,7 @@ class ClipboardHistoryPopup extends JWindow {
 	/**
 	 * The list component used in this popup.
 	 */
-	private static class ChoiceList extends JList {
+	private static final class ChoiceList extends JList {
 
 		private ChoiceList() {
 			super(new DefaultListModel());
@@ -400,12 +401,12 @@ class ClipboardHistoryPopup extends JWindow {
 	 */
 	private static class LabelValuePair {
 
-		public String label;
-		public String value;
+		private String label;
+		private String value;
 
 		private static final int LABEL_MAX_LENGTH = 50;
 
-		public LabelValuePair(String value) {
+		LabelValuePair(String value) {
 			this.label = this.value = value;
 			int newline = label.indexOf('\n');
 			boolean multiLine = false;

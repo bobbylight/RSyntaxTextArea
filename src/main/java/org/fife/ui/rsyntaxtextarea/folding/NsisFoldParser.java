@@ -2,7 +2,7 @@
  * 10/07/2012
  *
  * NsisFoldParser.java - Fold parser for NSIS.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,6 +11,7 @@ package org.fife.ui.rsyntaxtextarea.folding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -37,7 +38,7 @@ public class NsisFoldParser implements FoldParser {
 	protected static final char[] C_MLC_END = "*/".toCharArray();
 
 
-	private static final boolean foundEndKeyword(char[] keyword, Token t,
+	private static boolean foundEndKeyword(char[] keyword, Token t,
 			Stack<char[]> endWordStack) {
 		return t.is(Token.RESERVED_WORD, keyword) && !endWordStack.isEmpty() &&
 			keyword==endWordStack.peek();

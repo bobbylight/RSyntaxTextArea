@@ -3,7 +3,7 @@
  *
  * BackgroundPainterStrategy.java - Renders an RTextAreaBase's background
  * using some strategy.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -38,7 +38,7 @@ public interface BackgroundPainterStrategy {
 	 * @param bounds The bounds of the object whose backgrouns we're
 	 *        painting.
 	 */
-	public void paint(Graphics g, Rectangle bounds);
+	void paint(Graphics g, Rectangle bounds);
 
 
 }

@@ -2,7 +2,7 @@
  * 02/17/2012
  *
  * SearchContext.java - Container for options of a search/replace operation.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -273,7 +273,7 @@ public class SearchContext implements Cloneable {
 
 	/**
 	 * Sets whether a regular expression search should be done.This method
-	 * fires a property change event of type {@link #PROPERTY_USE_REGEX}
+	 * fires a property change event of type {@link #PROPERTY_USE_REGEX}.
 	 *
 	 * @param regex Whether a regular expression search should be done.
 	 * @see #isRegularExpression()
@@ -325,9 +325,9 @@ public class SearchContext implements Cloneable {
 
 	/**
 	 * Sets whether the search should be forward through the text (vs.
-	 * backwards).  This method fires a property change event of type 
+	 * backwards).  This method fires a property change event of type
 	 * {@link #PROPERTY_SEARCH_FORWARD}.
-	 * 
+	 *
 	 * @param forward Whether we should search forwards.
 	 * @see #getSearchForward()
 	 */
@@ -368,7 +368,7 @@ public class SearchContext implements Cloneable {
 	 * is considered to be "whole word" if the character on either side of the
 	 * matched text is a non-word character, or if there is no character on
 	 * one side of the word, such as when it's at the beginning or end of a
-	 * line.This method fires a property change event of type 
+	 * line.This method fires a property change event of type
 	 * {@link #PROPERTY_MATCH_WHOLE_WORD}.
 	 *
 	 * @param wholeWord Whether only "whole word" matches should be returned.

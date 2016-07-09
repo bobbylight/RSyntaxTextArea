@@ -3,7 +3,7 @@
  *
  * Style.java - A set of traits for a particular token type to use while
  * painting.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -12,6 +12,7 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
+
 import javax.swing.JPanel;
 
 
@@ -30,6 +31,7 @@ import javax.swing.JPanel;
  * @author Robert Futrell
  * @version 0.6
  */
+@SuppressWarnings({ "checkstyle:visibilitymodifier" })
 public class Style implements Cloneable {
 
 	public static final Color DEFAULT_FOREGROUND	= Color.BLACK;
@@ -151,8 +153,9 @@ public class Style implements Cloneable {
 				areEqual(foreground, ss2.foreground) &&
 				areEqual(background, ss2.background) &&
 				areEqual(font, ss2.font) &&
-				areEqual(fontMetrics, ss2.fontMetrics))
-					return true;
+				areEqual(fontMetrics, ss2.fontMetrics)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -175,7 +178,7 @@ public class Style implements Cloneable {
 		}
 		if (background!=null) {
 			hashCode ^= background.hashCode();
-		} 
+		}
 		return hashCode;
 	}
 

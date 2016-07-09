@@ -8,6 +8,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+
 /**
  * Constants that define the different programming languages understood by
  * <code>RSyntaxTextArea</code>. These constants are the values you can pass to

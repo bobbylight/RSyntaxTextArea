@@ -3,7 +3,7 @@
  *
  * RecordableTextAction.java - An action that can be recorded and replayed
  * in an RTextArea macro.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,6 +11,7 @@ package org.fife.ui.rtextarea;
 
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
@@ -91,8 +92,7 @@ public abstract class RecordableTextAction extends TextAction {
 //System.err.println("... " + (mod&ActionEvent.ALT_MASK));
 //System.err.println("... " + (mod&ActionEvent.CTRL_MASK));
 //System.err.println("... " + (mod&ActionEvent.META_MASK));
-				if (!DefaultEditorKit.defaultKeyTypedAction.equals(macroID)
-					|| (
+				if (!DefaultEditorKit.defaultKeyTypedAction.equals(macroID) || (
 						(mod&ActionEvent.ALT_MASK)==0 &&
 						(mod&ActionEvent.CTRL_MASK)==0 &&
 						(mod&ActionEvent.META_MASK)==0)

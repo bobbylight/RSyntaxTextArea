@@ -2,7 +2,7 @@
  * 12/23/2012
  *
  * JsonFoldParser.java - Fold parser for JSON.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -11,6 +11,7 @@ package org.fife.ui.rsyntaxtextarea.folding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -119,24 +120,24 @@ public class JsonFoldParser implements FoldParser {
 
 	/**
 	 * Returns whether a token is the left bracket token.
-	 * 
+	 *
 	 * @param t The token.
 	 * @return Whether the token is the left bracket token.
 	 * @see #isRightBracket(Token)
 	 */
-	private static final boolean isLeftBracket(Token t) {
+	private static boolean isLeftBracket(Token t) {
 		return t.getType()==TokenTypes.SEPARATOR && t.isSingleChar('[');
 	}
 
 
 	/**
 	 * Returns whether a token is the right bracket token.
-	 * 
+	 *
 	 * @param t The token.
 	 * @return Whether the token is the right bracket token.
 	 * @see #isLeftBracket(Token)
 	 */
-	private static final boolean isRightBracket(Token t) {
+	private static boolean isRightBracket(Token t) {
 		return t.getType()==TokenTypes.SEPARATOR && t.isSingleChar(']');
 	}
 
@@ -149,7 +150,7 @@ public class JsonFoldParser implements FoldParser {
 	 * @param value The value to check for.
 	 * @return Whether the value was found on top of the stack.
 	 */
-	private static final boolean popOffTop(Stack<Object> stack, Object value) {
+	private static boolean popOffTop(Stack<Object> stack, Object value) {
 		if (stack.size()>0 && stack.peek()==value) {
 			stack.pop();
 			return true;

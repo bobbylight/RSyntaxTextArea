@@ -2,23 +2,27 @@
  * 08/16/2008
  *
  * XMLParser.java - Simple XML parser.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.io.IOException;
+
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
 
 import org.fife.io.DocumentReader;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
@@ -28,28 +32,28 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
  *
  * This class isn't actually used by RSyntaxTextArea anywhere, but you can
  * install and use it yourself.  Doing so is as simple as:
- * 
+ *
  * <pre>
  * XmlParser xmlParser = new XmlParser();
  * textArea.addParser(xmlParser);
  * </pre>
- * 
+ *
  * To support DTD validation, specify an entity resolver when creating the
  * parser, and enable validation like so:
- * 
+ *
  * <pre>
  * XmlParser xmlParser = new XmlParser(new MyEntityResolver());
  * xmlParser.setValidating(true);
  * textArea.addParser(xmlParser);
  * </pre>
- * 
+ *
  * Also note that a single instance of this class can be installed on
  * multiple instances of <code>RSyntaxTextArea</code>.<p>
  *
  * For a more complete XML parsing/validation solution, see the
  * <a href="https://github.com/bobbylight/RSTALanguageSupport">RSTALanguageSupport
  * project</a>'s <code>XmlLanguageSupport</code> class.
- * 
+ *
  * @author Robert Futrell
  * @version 1.1
  */
@@ -67,7 +71,7 @@ public class XmlParser extends AbstractParser {
 
 	/**
 	 * Constructor allowing DTD validation of documents.
-	 * 
+	 *
 	 * @param resolver An entity resolver to use if validation is enabled.
 	 * @see #setValidating(boolean)
 	 */
@@ -171,7 +175,7 @@ public class XmlParser extends AbstractParser {
 	 * Callback notified when errors are found in the XML document.  Adds a
 	 * notice to be squiggle-underlined.
 	 */
-	private class Handler extends DefaultHandler {
+	private final class Handler extends DefaultHandler {
 
 		private Document doc;
 

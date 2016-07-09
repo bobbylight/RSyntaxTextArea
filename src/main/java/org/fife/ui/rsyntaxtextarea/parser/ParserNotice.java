@@ -2,7 +2,7 @@
  * 09/23/2005
  *
  * ParserNotice.java - A notice (i.e, and error or warning) from a parser.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -22,7 +22,7 @@ import java.awt.Color;
  * {@link #getLength()} are allowed to return <code>-1</code> if that
  * particular notice isn't mapped to a specific region of code.  Applications
  * can check whether an instance of this class only has line-level information
- * with the 
+ * with the
  *
  * @author Robert Futrell
  * @version 1.0
@@ -39,7 +39,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *         <code>false</code> if {@link #getOffset()} returns
 	 *         <code>-1</code>.
 	 */
-	public boolean containsPosition(int pos);
+	boolean containsPosition(int pos);
 
 
 	/**
@@ -47,7 +47,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return The color.
 	 */
-	public Color getColor();
+	Color getColor();
 
 
 	/**
@@ -58,7 +58,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
  	 * @see #getOffset()
  	 * @see #getLine()
 	 */
-	public int getLength();
+	int getLength();
 
 
 	/**
@@ -66,7 +66,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return A value from the {@link Level} enumeration.
 	 */
-	public Level getLevel();
+	Level getLevel();
 
 
 	/**
@@ -74,7 +74,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return The line number.
 	 */
-	public int getLine();
+	int getLine();
 
 
 	/**
@@ -86,7 +86,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 * @see #getOffset()
 	 * @see #getLength()
 	 */
-	public boolean getKnowsOffsetAndLength();
+	boolean getKnowsOffsetAndLength();
 
 
 	/**
@@ -94,7 +94,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return The message from the parser.
 	 */
-	public String getMessage();
+	String getMessage();
 
 
 	/**
@@ -104,7 +104,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 * @see #getLength()
 	 * @see #getLine()
 	 */
-	public int getOffset();
+	int getOffset();
 
 
 	/**
@@ -112,7 +112,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return The parser.
 	 */
-	public Parser getParser();
+	Parser getParser();
 
 
 	/**
@@ -121,7 +121,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 *
 	 * @return Whether a squiggle underline should be drawn.
 	 */
-	public boolean getShowInEditor();
+	boolean getShowInEditor();
 
 
 	/**
@@ -130,13 +130,13 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 	 * @return The tool tip text.  If none has been explicitly set, this
 	 *         method returns the same text as {@link #getMessage()}.
 	 */
-	public String getToolTipText();
+	String getToolTipText();
 
 
 	/**
 	 * Denotes the severity of a parser notice.
 	 */
-	public static enum Level {
+	enum Level {
 
 		/**
 		 * Indicates an informational notice.
@@ -155,7 +155,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 
 		private int value;
 
-		private Level(int value) {
+		Level(int value) {
 			this.value = value;
 		}
 

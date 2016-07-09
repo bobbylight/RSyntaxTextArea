@@ -2,7 +2,7 @@
  * 10/08/2011
  *
  * CurlyFoldParser.java - Fold parser for languages with C-style syntax.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -10,11 +10,11 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
 
 
 /**
@@ -23,13 +23,13 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
  * pairs and creates code folds out of them.  It can also optionally find
  * C-style multi-line comments ("<code>/* ... *&#47;</code>") and make them
  * foldable as well.<p>
- * 
+ *
  * This parser knows nothing about language semantics; it uses
  * <code>RSyntaxTextArea</code>'s syntax highlighting tokens to identify
  * curly braces.  By default, it looks for single-char tokens of type
  * {@link Token#SEPARATOR}, with lexemes '<code>{</code>' or '<code>}</code>'.
- * If your {@link TokenMaker} uses a different token type for curly braces, you
- * should override the {@link #isLeftCurly(Token)} and
+ * If your {@link org.fife.ui.rsyntaxtextarea.TokenMaker} uses a different token
+ * type for curly braces, you should override the {@link #isLeftCurly(Token)} and
  * {@link #isRightCurly(Token)} methods with your own definitions.  In theory,
  * you could extend this fold parser to parse languages that use completely
  * different tokens than curly braces to denote foldable regions by overriding
@@ -117,7 +117,7 @@ public class CurlyFoldParser implements FoldParser {
 		int importGroupEndOffs = -1;
 		int lastRightCurlyLine = -1;
 		Fold prevFold = null;
-		
+
 		try {
 
 			for (int line=0; line<lineCount; line++) {
