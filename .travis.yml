@@ -6,9 +6,9 @@ env:
 before_install:
   - "/bin/sh -e /etc/init.d/xvfb start"
 
-# Oldest JDK supported by Travis CI
+# We build with JDK 8 but use target compatibility 1.6
 jdk:
-  - openjdk6
+  - oraclejdk8
 
 script:
   - ./gradlew assemble -x signArchives -x uploadArchives
