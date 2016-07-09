@@ -19,16 +19,11 @@ all unit tests, and create the jar, run:
 
     ./gradlew build
 
-Note that RSTA only requires Java 5.  To that end, the boot classpath will be set to accommodate
-this if a variable `java5CompileBootClasspath` is set to the location of `rt.jar` in a Java 5 JDK.
-This can be added to `<maven-home>/gradle.properties` if desired, to avoid diffs in the project's
-`gradle.properties`.
-
-When building with Java 8 or later, the `javadoc` task currently prints many warnings about Javadoc
-"issues."  This is because
-[doclint](http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html)
-is enabled by default in that release of Java.  These warnings are harmless, and in a future
-release will be cleaned up.
+RSTA requires a Java 8 JDK to compile, but builds classes with Java 6 binary compatibility if possible
+(and indeed, the artifacts in Maven Central are Java 6-compatible).
+To that end, the boot classpath will be set to accommodate this if a variable `java6CompileBootClasspath`
+is set to the location of `rt.jar` in a Java 6 JDK.  This can be added to `<maven-home>/gradle.properties`
+if desired, to avoid diffs in the project's `gradle.properties`.
 
 # Example Usage
 
