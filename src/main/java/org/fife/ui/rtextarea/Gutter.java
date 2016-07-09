@@ -553,12 +553,18 @@ public class Gutter extends JPanel {
 	 */
 	@Override
 	public void setComponentOrientation(ComponentOrientation o) {
-		// Reuse the border to preserve its color.
-		if (o.isLeftToRight()) {
-			((GutterBorder)getBorder()).setEdges(0, 0, 0, 1);
-		}
-		else {
-			((GutterBorder)getBorder()).setEdges(0, 1, 0, 0);
+
+		// Some LaFs might do fun stuff, resulting in this method being called
+		// before a border is installed.
+
+		if (getBorder() instanceof GutterBorder) {
+			// Reuse the border to preserve its color.
+			if (o.isLeftToRight()) {
+				((GutterBorder)getBorder()).setEdges(0, 0, 0, 1);
+			}
+			else {
+				((GutterBorder)getBorder()).setEdges(0, 1, 0, 0);
+			}
 		}
 		super.setComponentOrientation(o);
 	}

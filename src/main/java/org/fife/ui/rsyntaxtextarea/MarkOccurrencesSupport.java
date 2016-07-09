@@ -38,12 +38,12 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	/**
 	 * The default color used to mark occurrences.
 	 */
-	public static final Color DEFAULT_COLOR = new Color(224, 224, 224);
+	static final Color DEFAULT_COLOR = new Color(224, 224, 224);
 
 	/**
 	 * The default delay.
 	 */
-	private static final int DEFAULT_DELAY_MS = 1000;
+	static final int DEFAULT_DELAY_MS = 1000;
 
 
 	/**
@@ -249,7 +249,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @see #getDelay()
 	 */
 	public void setDelay(int delay) {
-		timer.setDelay(delay);
+		timer.setInitialDelay(delay);
 	}
 
 

@@ -296,6 +296,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** The color used to render "marked occurrences". */
 	private Color markOccurrencesColor;
 
+	/** The delay before occurrences are marked in the editor. */
+	private int markOccurrencesDelay;
+
 	/** Whether a border should be painted around marked occurrences. */
 	private boolean paintMarkOccurrencesBorder;
 
@@ -1348,6 +1351,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns the delay between when the caret is moved and when "marked
+	 * occurrences" are highlighted.
+	 *
+	 * @return The "mark occurrences" delay.
+	 * @see #setMarkOccurrencesDelay(int)
+	 */
+	public int getMarkOccurrencesDelay() {
+		return markOccurrencesDelay;
+	}
+
+
+	/**
 	 * Returns whether tokens of the specified type should have "mark
 	 * occurrences" enabled for the current programming language.
 	 *
@@ -1922,6 +1937,7 @@ private boolean fractionalFontMetricsEnabled;
 		setSelectionColor(getDefaultSelectionColor());
 		setTabLineColor(null);
 		setMarkOccurrencesColor(MarkOccurrencesSupport.DEFAULT_COLOR);
+		setMarkOccurrencesDelay(MarkOccurrencesSupport.DEFAULT_DELAY_MS);
 
 		foldManager = new DefaultFoldManager(this);
 
@@ -2677,6 +2693,27 @@ private boolean fractionalFontMetricsEnabled;
 		markOccurrencesColor = color;
 		if (markOccurrencesSupport!=null) {
 			markOccurrencesSupport.setColor(color);
+		}
+	}
+
+
+	/**
+	 * Sets the delay between when the caret is moved and when "marked
+	 * occurrences" are highlighted.
+	 *
+	 * @param delay The new delay.  This must be greater than {@code 0}.
+	 * @see #getMarkOccurrencesDelay()
+	 * @see #getMarkOccurrences()
+	 */
+	public void setMarkOccurrencesDelay(int delay) {
+		if (delay <= 0) {
+			throw new IllegalArgumentException("Delay must be > 0");
+		}
+		if (delay != this.markOccurrencesDelay) {
+			this.markOccurrencesDelay = delay;
+			if (markOccurrencesSupport != null) {
+				markOccurrencesSupport.setDelay(delay);
+			}
 		}
 	}
 
