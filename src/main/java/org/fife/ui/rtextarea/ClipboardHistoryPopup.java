@@ -211,6 +211,7 @@ class ClipboardHistoryPopup extends JWindow {
 		updateTextAreaCaret(visible);
 		if (visible) {
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					requestFocus();
 					if (list.getModel().getSize()>0) {
@@ -250,6 +251,7 @@ class ClipboardHistoryPopup extends JWindow {
 	 */
 	private class EscapeAction extends AbstractAction {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			listener.uninstallAndHide();
 		}
@@ -276,6 +278,7 @@ class ClipboardHistoryPopup extends JWindow {
 			list.getInputMap().put(
 					KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "onEnter");
 			list.getActionMap().put("onEnter", new AbstractAction() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					insertSelectedItem();
 				}
@@ -289,18 +292,22 @@ class ClipboardHistoryPopup extends JWindow {
 
 		}
 
+		@Override
 		public void componentResized(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentMoved(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentShown(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentHidden(ComponentEvent e) {
 			uninstallAndHide();
 		}
@@ -361,6 +368,7 @@ class ClipboardHistoryPopup extends JWindow {
 
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "onDown");
 			am.put("onDown", new AbstractAction() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					int index = (getSelectedIndex()+1) % getModel().getSize();
 					ensureIndexIsVisible(index);
@@ -370,6 +378,7 @@ class ClipboardHistoryPopup extends JWindow {
 
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "onUp");
 			am.put("onUp", new AbstractAction() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					int index = getSelectedIndex() - 1;
 					if (index < 0) {

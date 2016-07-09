@@ -29,6 +29,7 @@ public class SwingRunner extends BlockJUnit4ClassRunner {
 	public void run(final RunNotifier runNotifier) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
 				public void run() {
 					SwingRunner.super.run(runNotifier);
 				}

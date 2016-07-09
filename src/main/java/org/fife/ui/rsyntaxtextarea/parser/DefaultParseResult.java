@@ -60,6 +60,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Exception getError() {
 		return error;
 	}
@@ -68,6 +69,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getFirstLineParsed() {
 		return firstLineParsed;
 	}
@@ -76,6 +78,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getLastLineParsed() {
 		return lastLineParsed;
 	}
@@ -84,6 +87,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<ParserNotice> getNotices() {
 		return notices;
 	}
@@ -92,6 +96,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Parser getParser() {
 		return parser;
 	}
@@ -100,6 +105,7 @@ public class DefaultParseResult implements ParseResult {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long getParseTime() {
 		return parseTime;
 	}

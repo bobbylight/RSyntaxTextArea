@@ -197,6 +197,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		// the best way to do it.
 		if (getCaretPosition() != 0) {
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					possiblyUpdateCurrentLineHighlightLocation();
 				}
@@ -1233,14 +1234,23 @@ try {
 			super(textArea);
 		}
 
+		@Override
 		public void focusGained(FocusEvent e) {}
+		@Override
 		public void focusLost(FocusEvent e) {}
+		@Override
 		public void mouseDragged(MouseEvent e) {}
+		@Override
 		public void mouseMoved(MouseEvent e) {}
+		@Override
 		public void mouseClicked(MouseEvent e) {}
+		@Override
 		public void mousePressed(MouseEvent e) {}
+		@Override
 		public void mouseReleased(MouseEvent e) {}
+		@Override
 		public void mouseEntered(MouseEvent e) {}
+		@Override
 		public void mouseExited(MouseEvent e) {}
 
 		@Override

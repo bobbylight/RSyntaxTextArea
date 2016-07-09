@@ -33,6 +33,7 @@ public class LatexFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
 		List<Fold> folds = new ArrayList<Fold>();

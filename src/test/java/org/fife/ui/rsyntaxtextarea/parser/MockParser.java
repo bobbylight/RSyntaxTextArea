@@ -25,6 +25,7 @@ class MockParser extends AbstractParser {
 	}
 
 
+	@Override
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 		return result;
 	}

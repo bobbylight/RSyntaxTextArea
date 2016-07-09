@@ -79,6 +79,7 @@ public class ToolTipInfoTest {
 	 */
 	private static class MockHyperlinkListener implements HyperlinkListener {
 
+		@Override
 		public void hyperlinkUpdate(HyperlinkEvent e) {
 			// Do nothing
 		}

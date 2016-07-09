@@ -163,6 +163,7 @@ class MatchedBracketPopup extends JWindow {
 	 */
 	private class EscapeAction extends AbstractAction {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			listener.uninstallAndHide();
 		}
@@ -187,18 +188,22 @@ class MatchedBracketPopup extends JWindow {
 
 		}
 
+		@Override
 		public void componentResized(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentMoved(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentShown(ComponentEvent e) {
 			uninstallAndHide();
 		}
 
+		@Override
 		public void componentHidden(ComponentEvent e) {
 			uninstallAndHide();
 		}

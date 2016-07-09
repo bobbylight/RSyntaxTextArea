@@ -919,6 +919,7 @@ private boolean fractionalFontMetricsEnabled;
 			// deleted (see GitHub issue #22:
 			// https://github.com/bobbylight/RSyntaxTextArea/issues/22)
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					possiblyUpdateCurrentLineHighlightLocation();
 				}
@@ -3174,6 +3175,7 @@ private boolean fractionalFontMetricsEnabled;
 			setRepeats(false);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			if (popup != null) {
@@ -3187,6 +3189,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		}
 
+		@Override
 		public void caretUpdate(CaretEvent e) {
 			int dot = e.getDot();
 			if (dot != origDot) {
@@ -3231,6 +3234,7 @@ private boolean fractionalFontMetricsEnabled;
 			setCoalesce(false);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (isBracketMatchingEnabled()) {
 				if (match!=null) {

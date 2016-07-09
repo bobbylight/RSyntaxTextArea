@@ -567,6 +567,7 @@ public class ErrorStrip extends JPanel {
 	private static class DefaultErrorStripMarkerToolTipProvider
 			implements ErrorStripMarkerToolTipProvider {
 
+		@Override
 		public String getToolTipText(List<ParserNotice> notices) {
 
 			String text = null;
@@ -623,6 +624,7 @@ public class ErrorStrip extends JPanel {
 
 		private Rectangle visibleRect = new Rectangle();
 
+		@Override
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
 				int line = textArea.getCaretLineNumber();
@@ -658,6 +660,7 @@ public class ErrorStrip extends JPanel {
 
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 
 			String propName = e.getPropertyName();
@@ -711,10 +714,12 @@ public class ErrorStrip extends JPanel {
 			this.color = color;
 		}
 
+		@Override
 		public int compareTo(ParserNotice other) {
 			return 0; // Value doesn't matter
 		}
 
+		@Override
 		public boolean containsPosition(int pos) {
 			return pos>=range.getStartOffset() && pos<range.getEndOffset();
 		}
@@ -728,6 +733,7 @@ public class ErrorStrip extends JPanel {
 			return compareTo((ParserNotice)o)==0;
 		}
 
+		@Override
 		public Color getColor() {
 			return color;
 		}
@@ -735,18 +741,22 @@ public class ErrorStrip extends JPanel {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean getKnowsOffsetAndLength() {
 			return true;
 		}
 
+		@Override
 		public int getLength() {
 			return range.getEndOffset() - range.getStartOffset();
 		}
 
+		@Override
 		public Level getLevel() {
 			return Level.INFO; // Won't matter
 		}
 
+		@Override
 		public int getLine() {
 			try {
 				return textArea.getLineOfOffset(range.getStartOffset())+1;
@@ -755,6 +765,7 @@ public class ErrorStrip extends JPanel {
 			}
 		}
 
+		@Override
 		public String getMessage() {
 			String text = null;
 			try {
@@ -768,18 +779,22 @@ public class ErrorStrip extends JPanel {
 			return text;
 		}
 
+		@Override
 		public int getOffset() {
 			return range.getStartOffset();
 		}
 
+		@Override
 		public Parser getParser() {
 			return null;
 		}
 
+		@Override
 		public boolean getShowInEditor() {
 			return false; // Value doesn't matter
 		}
 
+		@Override
 		public String getToolTipText() {
 			return null;
 		}

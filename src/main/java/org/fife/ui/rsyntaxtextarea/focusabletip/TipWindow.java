@@ -91,6 +91,7 @@ class TipWindow extends JWindow implements ActionListener {
 		}
 		textArea.addMouseListener(tipListener);
 		textArea.addHyperlinkListener(new HyperlinkListener() {
+			@Override
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType()==HyperlinkEvent.EventType.ACTIVATED) {
 					TipWindow.this.ft.possiblyDisposeOfTipWindow();
@@ -130,6 +131,7 @@ class TipWindow extends JWindow implements ActionListener {
 	}
 
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (!getFocusableWindowState()) {

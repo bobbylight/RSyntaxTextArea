@@ -79,6 +79,7 @@ public class SearchResult implements Comparable<SearchResult> {
 	 * @return How this result object should be sorted compared to
 	 *         <code>other</code>.
 	 */
+	@Override
 	public int compareTo(SearchResult other) {
 		if (other==null) {
 			return 1;

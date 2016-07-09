@@ -73,16 +73,19 @@ public class DefaultFoldManager implements FoldManager {
 	}
 
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener l) {
 		support.addPropertyChangeListener(l);
 	}
 
 
+	@Override
 	public void clear() {
 		folds.clear();
 	}
 
 
+	@Override
 	public boolean ensureOffsetNotInClosedFold(int offs) {
 		boolean foldsOpened = false;
 		Fold fold = getDeepestFoldContaining(offs);
@@ -97,6 +100,7 @@ public class DefaultFoldManager implements FoldManager {
 	}
 
 
+	@Override
 	public Fold getDeepestFoldContaining(int offs) {
 		Fold deepestFold = null;
 		if (offs>-1) {
@@ -112,6 +116,7 @@ public class DefaultFoldManager implements FoldManager {
 	}
 
 
+	@Override
 	public Fold getDeepestOpenFoldContaining(int offs) {
 
 		Fold deepestFold = null;
@@ -134,16 +139,19 @@ public class DefaultFoldManager implements FoldManager {
 	}
 
 
+	@Override
 	public Fold getFold(int index) {
 		return folds.get(index);
 	}
 
 
+	@Override
 	public int getFoldCount() {
 		return folds.size();
 	}
 
 
+	@Override
 	public Fold getFoldForLine(int line) {
 		return getFoldForLineImpl(null, folds, line);
 	}
@@ -180,6 +188,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 }
 
 
+	@Override
 	public int getHiddenLineCount() {
 		int count = 0;
 		for (Fold fold : folds) {
@@ -189,11 +198,13 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public int getHiddenLineCountAbove(int line) {
 		return getHiddenLineCountAbove(line, false);
 	}
 
 
+	@Override
 	public int getHiddenLineCountAbove(int line, boolean physical) {
 
 		int count = 0;
@@ -254,6 +265,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public int getLastVisibleLine() {
 
 		int lastLine = textArea.getLineCount() - 1;
@@ -289,6 +301,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public int getVisibleLineAbove(int line) {
 
 		if (line<=0 || line>=textArea.getLineCount()) {
@@ -304,6 +317,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public int getVisibleLineBelow(int line) {
 
 		int lineCount = textArea.getLineCount();
@@ -346,21 +360,25 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 //	}
 
 
+	@Override
 	public boolean isCodeFoldingEnabled() {
 		return codeFoldingEnabled;
 	}
 
 
+	@Override
 	public boolean isCodeFoldingSupportedAndEnabled() {
 		return codeFoldingEnabled && foldParser!=null;
 	}
 
 
+	@Override
 	public boolean isFoldStartLine(int line) {
 		return getFoldForLine(line)!=null;
 	}
 
 
+	@Override
 	public boolean isLineHidden(int line) {
 		for (Fold fold : folds) {
 			if (fold.containsLine(line)) {
@@ -427,11 +445,13 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 		support.removePropertyChangeListener(l);
 	}
 
 
+	@Override
 	public void reparse() {
 
 		if (codeFoldingEnabled && foldParser!=null) {
@@ -459,6 +479,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public void setCodeFoldingEnabled(boolean enabled) {
 		if (enabled!=codeFoldingEnabled) {
 			codeFoldingEnabled = enabled;
@@ -467,6 +488,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 			}
 			if (enabled) {
 				rstaParser = new AbstractParser() {
+					@Override
 					public ParseResult parse(RSyntaxDocument doc, String style) {
 						reparse();
 						return new DefaultParseResult(this);
@@ -485,6 +507,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
+	@Override
 	public void setFolds(List<Fold> folds) {
 		this.folds = folds;
 	}
@@ -505,9 +528,11 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	 */
 	private class Listener implements DocumentListener, PropertyChangeListener {
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			// Adding text containing a newline to the visible line of a folded
 			// Fold causes that Fold to unfold.  Check only start offset of
@@ -526,6 +551,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 			}
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 
 			String name = e.getPropertyName();
@@ -551,6 +577,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			// Removing text from the visible line of a folded Fold causes that
 			// Fold to unfold.  We only need to check the removal offset since

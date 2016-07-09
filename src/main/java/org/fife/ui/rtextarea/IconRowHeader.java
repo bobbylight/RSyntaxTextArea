@@ -368,18 +368,22 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		if (bookmarkingEnabled && bookmarkIcon!=null) {
 			try {
@@ -394,6 +398,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
@@ -896,6 +901,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			this.toolTip = toolTip;
 		}
 
+		@Override
 		public int compareTo(GutterIconInfo other) {
 			if (other!=null) {
 				return pos.getOffset() - other.getMarkedOffset();
@@ -908,14 +914,17 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			return o==this;
 		}
 
+		@Override
 		public Icon getIcon() {
 			return icon;
 		}
 
+		@Override
 		public int getMarkedOffset() {
 			return pos.getOffset();
 		}
 
+		@Override
 		public String getToolTip() {
 			return toolTip;
 		}

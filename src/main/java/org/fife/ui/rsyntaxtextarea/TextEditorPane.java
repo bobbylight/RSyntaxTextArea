@@ -189,6 +189,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @param e The document event.
 	 */
+	@Override
 	public void changedUpdate(DocumentEvent e) {
 	}
 
@@ -338,6 +339,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @param e Information on the insertion.
 	 */
+	@Override
 	public void insertUpdate(DocumentEvent e) {
 		if (!dirty) {
 			setDirty(true);
@@ -497,6 +499,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @param e The document event.
 	 */
+	@Override
 	public void removeUpdate(DocumentEvent e) {
 		if (!dirty) {
 			setDirty(true);

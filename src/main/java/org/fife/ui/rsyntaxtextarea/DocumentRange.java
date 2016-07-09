@@ -40,6 +40,7 @@ public class DocumentRange implements Comparable<DocumentRange> {
 	 * @param other Another document range.
 	 * @return How the two should be sorted relative to each other.
 	 */
+	@Override
 	public int compareTo(DocumentRange other) {
 		if (other==null) {
 			return 1;

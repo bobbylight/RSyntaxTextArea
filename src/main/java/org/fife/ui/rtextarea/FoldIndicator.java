@@ -619,14 +619,17 @@ public class FoldIndicator extends AbstractGutterComponent {
 			this.collapsed = collapsed;
 		}
 
+		@Override
 		public int getIconHeight() {
 			return 8;
 		}
 
+		@Override
 		public int getIconWidth() {
 			return 8;
 		}
 
+		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(foldIconBackground);
 			g.fillRect(x,y, 8,8);
@@ -694,6 +697,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			// Whether folding is enabled in the editor has changed.
 			repaint();

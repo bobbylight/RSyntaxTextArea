@@ -88,6 +88,7 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public TokenImpl createToken() {
 		TokenImpl token = tokenList[currentFreeToken];
 		token.text = null;
@@ -105,6 +106,7 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public TokenImpl createToken(final Segment line, final int beg,
 					final int end, final int startOffset, final int type) {
 		return createToken(line.array, beg,end, startOffset, type);
@@ -114,6 +116,7 @@ class DefaultTokenFactory implements TokenFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public TokenImpl createToken(final char[] line, final int beg,
 					final int end, final int startOffset, final int type) {
 		TokenImpl token = tokenList[currentFreeToken];
@@ -131,6 +134,7 @@ class DefaultTokenFactory implements TokenFactory {
 	 * by the <code>TokenMaker</code> every time a token list is generated for
 	 * a new line so the tokens can be reused.
 	 */
+	@Override
 	public void resetAllTokens() {
 		currentFreeToken = 0;
 	}

@@ -56,6 +56,7 @@ class RDocumentCharSequence implements CharSequence {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public char charAt(int index) {
 		if (index<0 || index>=length()) {
 			throw new IndexOutOfBoundsException("Index " + index +
@@ -72,6 +73,7 @@ class RDocumentCharSequence implements CharSequence {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int length() {
 		return end - start;
 	}
@@ -80,6 +82,7 @@ class RDocumentCharSequence implements CharSequence {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public CharSequence subSequence(int start, int end) {
 		if (start<0) {
 			throw new IndexOutOfBoundsException("start must be >= 0 (" +

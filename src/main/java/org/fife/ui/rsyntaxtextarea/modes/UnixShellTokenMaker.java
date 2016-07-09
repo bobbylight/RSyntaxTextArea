@@ -406,6 +406,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 * @param startOffset The offset at which the line of tokens begins.
 	 * @return A linked list of tokens representing <code>text</code>.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int startTokenType, final int startOffset) {
 
 		resetTokenList();

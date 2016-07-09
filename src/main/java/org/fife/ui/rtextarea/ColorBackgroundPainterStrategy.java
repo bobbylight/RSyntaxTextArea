@@ -88,6 +88,7 @@ public class ColorBackgroundPainterStrategy
 	 * @param bounds The bounds of the object whose backgrouns we're
 	 *        painting.
 	 */
+	@Override
 	public void paint(Graphics g, Rectangle bounds) {
 		Color temp = g.getColor();
 		g.setColor(color);

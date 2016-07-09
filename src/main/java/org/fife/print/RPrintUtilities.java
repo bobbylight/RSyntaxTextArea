@@ -542,6 +542,7 @@ public abstract class RPrintUtilities {
 		RPrintTabExpander() {
 		}
 
+		@Override
 		public float nextTabStop(float x, int tabOffset) {
 			if (tabSizeInSpaces == 0) {
 				return x;

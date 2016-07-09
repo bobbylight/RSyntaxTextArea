@@ -69,6 +69,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addNullToken() {
 		if (firstToken==null) {
 			firstToken = tokenFactory.createToken();
@@ -103,6 +104,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset) {
 		addToken(array, start, end, tokenType, startOffset, false);
@@ -164,6 +166,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * @param type The token type.
 	 * @return The closest "standard" token type.
 	 */
+	@Override
 	public int getClosestStandardTokenTypeForInternalType(int type) {
 		return type;
 	}
@@ -182,6 +185,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 *        <code>TokenMaker</code> what sub-language to look at.
 	 * @return Whether curly braces denote code blocks.
 	 */
+	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
 		return false;
 	}
@@ -194,6 +198,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 *
 	 * @return The default implementation always returns <code>null</code>.
 	 */
+	@Override
 	public Action getInsertBreakAction() {
 		return null;
 	}
@@ -213,6 +218,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
 
 		// Last parameter doesn't matter if we're not painting.
@@ -230,6 +236,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return null;
 	}
@@ -246,6 +253,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
+	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER;
 	}
@@ -254,6 +262,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public OccurrenceMarker getOccurrenceMarker() {
 		if (occurrenceMarker==null) {
 			occurrenceMarker = createOccurrenceMarker();
@@ -269,6 +278,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * @param token The token the previous line ends with.
 	 * @return Whether the next line should be indented.
 	 */
+	@Override
 	public boolean getShouldIndentNextLineAfter(Token token) {
 		return false;
 	}
@@ -279,6 +289,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * in a specific language.  The default implementation returns
 	 * <code>true</code> for letters, numbers, and certain symbols.
 	 */
+	@Override
 	public boolean isIdentifierChar(int languageIndex, char ch) {
 		return Character.isLetterOrDigit(ch) || ch=='_' || ch=='$';
 	}
@@ -291,6 +302,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 *
 	 * @return <code>false</code> always.
 	 */
+	@Override
 	public boolean isMarkupLanguage() {
 		return false;
 	}

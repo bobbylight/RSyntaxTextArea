@@ -371,6 +371,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		 * @exception UnsupportedFlavorException if the requested data flavor is
 		 *              not supported.
 		 */
+		@Override
 		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 			if (isPlainFlavor(flavor)) {
 				String data = getPlainData();
@@ -398,6 +399,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		 *
 		 * @return an array of data flavors in which this data can be transferred
 		 */
+		@Override
 		public DataFlavor[] getTransferDataFlavors() {
 
 			int plainCount = (isPlainSupported()) ? plainFlavors.length: 0;
@@ -426,6 +428,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		 * @param flavor the requested flavor for the data
 		 * @return boolean indicating whether or not the data flavor is supported
 		 */
+		@Override
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
 			DataFlavor[] flavors = getTransferDataFlavors();
 			for (int i = 0; i < flavors.length; i++) {

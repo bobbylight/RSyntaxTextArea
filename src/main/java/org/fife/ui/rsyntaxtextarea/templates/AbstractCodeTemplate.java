@@ -71,6 +71,7 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	 * @throws ClassCastException If <code>o</code> is
 	 *         not an instance of <code>CodeTemplate</code>.
 	 */
+	@Override
 	public int compareTo(CodeTemplate o) {
 		if (o==null) {
 			return -1;
@@ -100,6 +101,7 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	 * @return The template's ID.
 	 * @see #setID(String)
 	 */
+	@Override
 	public String getID() {
 		return id;
 	}
