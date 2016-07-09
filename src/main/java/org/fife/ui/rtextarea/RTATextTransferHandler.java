@@ -106,7 +106,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * Import the given stream data into the text component.
 	 */
 	protected void handleReaderImport(Reader in, JTextComponent c)
-							throws BadLocationException, IOException {
+							throws IOException {
 
 		char[] buff = new char[1024];
 		int nch;
@@ -299,8 +299,6 @@ public class RTATextTransferHandler extends TransferHandler {
 				imported = true;
 			} catch (UnsupportedFlavorException ufe) {
 				ufe.printStackTrace();
-			} catch (BadLocationException ble) {
-				ble.printStackTrace();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}

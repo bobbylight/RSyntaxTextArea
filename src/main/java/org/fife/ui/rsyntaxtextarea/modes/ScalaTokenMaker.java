@@ -10,10 +10,14 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+
 import javax.swing.text.Segment;
 
-import org.fife.ui.rsyntaxtextarea.*;
+import org.fife.ui.rsyntaxtextarea.AbstractJFlexCTokenMaker;
+import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 
 
 /**
@@ -615,7 +619,7 @@ public class ScalaTokenMaker extends AbstractJFlexCTokenMaker {
 	 *
 	 * @param reader   the new input stream
 	 */
-	public final void yyreset(java.io.Reader reader) throws IOException {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
