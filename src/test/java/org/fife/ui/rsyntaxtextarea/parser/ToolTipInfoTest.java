@@ -8,6 +8,7 @@ package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -44,7 +45,7 @@ public class ToolTipInfoTest {
 
 
 	@Test
-	public void testThreeArgConstructor() throws MalformedURLException {
+	public void testThreeArgConstructor() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
 		Assert.assertEquals("text", tti.getToolTipText());
 		Assert.assertEquals(mhl, tti.getHyperlinkListener());
@@ -60,7 +61,7 @@ public class ToolTipInfoTest {
 
 
 	@Test
-	public void testGetImageBase() throws MalformedURLException {
+	public void testGetImageBase() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
 		Assert.assertEquals(imageBase, tti.getImageBase());
 	}
@@ -78,6 +79,7 @@ public class ToolTipInfoTest {
 	 */
 	private static class MockHyperlinkListener implements HyperlinkListener {
 
+		@Override
 		public void hyperlinkUpdate(HyperlinkEvent e) {
 			// Do nothing
 		}

@@ -98,6 +98,7 @@ public abstract class ImageBackgroundPainterStrategy
 	 * @param bounds The bounds in which to paint the image.  The image
 	 *        will be scaled to fit exactly in these bounds if necessary.
 	 */
+	@Override
 	public final void paint(Graphics g, Rectangle bounds) {
 		if (bounds.width!=oldWidth || bounds.height!=oldHeight) {
 			rescaleImage(bounds.width, bounds.height, getScalingHint());

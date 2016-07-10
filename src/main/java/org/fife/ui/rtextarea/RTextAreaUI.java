@@ -600,6 +600,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	class FocusAction extends AbstractAction {
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			textArea.requestFocus();
 		}

@@ -233,10 +233,12 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (mouseDragStartOffset>-1) {
 			int pos = textArea.viewToModel(new Point(0, e.getY()));
@@ -248,18 +250,22 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
 
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		if (textArea==null) {
 			return;
@@ -277,6 +283,7 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
@@ -666,6 +673,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 		private boolean installed;
 
+		@Override
 		public void caretUpdate(CaretEvent e) {
 
 			int dot = textArea.getCaretPosition();
@@ -713,6 +721,7 @@ public class LineNumberList extends AbstractGutterComponent
 			}
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 
 			String name = e.getPropertyName();

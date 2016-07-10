@@ -548,14 +548,17 @@ public class RSyntaxDocumentTest {
 			events = new ArrayList<DocumentEvent>();
 		}
 		
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			events.add(e);
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			events.add(e);
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {
 			events.add(e);
 		}

@@ -360,7 +360,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 "*current-namespace*" |
 "*in*" |
 "*out*" |
-"*print-meta*"
+"*print-meta*" |
 "->" |
 ".." |
 "agent" |

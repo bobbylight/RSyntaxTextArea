@@ -244,14 +244,17 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 			return null;
 		}
 
+		@Override
 		public int getStartOffset() {
 			return p0.getOffset();
 		}
 
+		@Override
 		public int getEndOffset() {
 			return p1.getOffset();
 		}
 
+		@Override
 		public Highlighter.HighlightPainter getPainter() {
 			return painter;
 		}
@@ -317,6 +320,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void paintLayeredHighlights(Graphics g, int p0, int p1,
 									Shape viewBounds, JTextComponent editor,
 									View view) {

@@ -45,6 +45,7 @@ public abstract class AbstractParser implements Parser {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ExtendedHyperlinkListener getHyperlinkListener() {
 		return linkListener;
 	}
@@ -56,6 +57,7 @@ public abstract class AbstractParser implements Parser {
 	 *
 	 * @return <code>null</code> always.
 	 */
+	@Override
 	public URL getImageBase() {
 		return null;
 	}
@@ -64,6 +66,7 @@ public abstract class AbstractParser implements Parser {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}

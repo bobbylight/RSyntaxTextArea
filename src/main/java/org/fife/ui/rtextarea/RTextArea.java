@@ -1011,6 +1011,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param pageFormat The size and orientation of the page being drawn.
 	 * @param pageIndex The zero based index of the page to be drawn.
 	 */
+	@Override
 	public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
 		return RPrintUtilities.printDocumentWordWrap(g, this, getFont(), pageIndex, pageFormat, getTabSize());
 	}

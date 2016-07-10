@@ -21,6 +21,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  */
 class MockExtendedHyperlinkListener implements ExtendedHyperlinkListener {
 
+	@Override
 	public void linkClicked(RSyntaxTextArea textArea, HyperlinkEvent e) {
 		// Do nothing
 	}

@@ -45,6 +45,7 @@ class DefaultTokenPainter implements TokenPainter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final float paint(Token token, Graphics2D g, float x, float y,
 						RSyntaxTextArea host, TabExpander e) {
 		return paint(token, g, x,y, host, e, 0);
@@ -54,6 +55,7 @@ class DefaultTokenPainter implements TokenPainter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart) {
 		return paintImpl(token, g, x, y, host, e, clipStart, false, false);
@@ -63,6 +65,7 @@ class DefaultTokenPainter implements TokenPainter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float paint(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean paintBG) {
@@ -173,6 +176,7 @@ java.awt.Rectangle r = host.getMatchRectangle();
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float paintSelected(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, boolean useSTC) {
 		return paintSelected(token, g, x, y, host, e, 0, useSTC);
@@ -182,6 +186,7 @@ java.awt.Rectangle r = host.getMatchRectangle();
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public float paintSelected(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean useSTC) {

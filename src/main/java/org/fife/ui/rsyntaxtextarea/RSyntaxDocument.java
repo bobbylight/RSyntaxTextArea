@@ -468,6 +468,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *
 	 * @return An iterator.
 	 */
+	@Override
 	public Iterator<Token> iterator() {
 		return new TokenIterator(this);
 	}

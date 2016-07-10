@@ -860,6 +860,7 @@ return p + 1;
 	 *   that the tab occurred at &gt;= 0.
 	 * @return the tab stop, measured in points &gt;= 0
 	 */
+	@Override
 	public float nextTabStop(float x, int tabOffset) {
 		if (tabSize == 0) {
 			return x;
@@ -1096,6 +1097,7 @@ return p + 1;
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 		return yForLineContaining(alloc,
 				getElement().getElement(line).getStartOffset());
@@ -1106,6 +1108,7 @@ return p + 1;
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int yForLineContaining(Rectangle alloc, int offs)
 								throws BadLocationException {
 		if (isAllocationValid()) {

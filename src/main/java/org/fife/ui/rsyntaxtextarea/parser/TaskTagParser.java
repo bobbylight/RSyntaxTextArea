@@ -60,6 +60,7 @@ public class TaskTagParser extends AbstractParser {
 	}
 
 
+	@Override
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 
 		Element root = doc.getDefaultRootElement();

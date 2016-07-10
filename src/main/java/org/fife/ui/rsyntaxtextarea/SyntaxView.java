@@ -414,6 +414,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *         before this one.  If <code>offset</code> is in the first line in
 	 *         the document, <code>null</code> is returned.
 	 */
+	@Override
 	public Token getTokenListForPhysicalLineAbove(int offset) {
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = document.getDefaultRootElement();
@@ -450,6 +451,7 @@ else {
 	 *         after this one.  If <code>offset</code> is in the last physical
 	 *         line in the document, <code>null</code> is returned.
 	 */
+	@Override
 	public Token getTokenListForPhysicalLineBelow(int offset) {
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = document.getDefaultRootElement();
@@ -650,6 +652,7 @@ else {
 	 *   that the tab occurred at &gt;= 0.
 	 * @return the tab stop, measured in points &gt;= 0
 	 */
+	@Override
 	public float nextTabStop(float x, int tabOffset) {
 		if (tabSize == 0) {
 			return x;
@@ -980,6 +983,7 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 
 		//Rectangle lineArea = lineToRect(alloc, lineIndex);
@@ -1006,6 +1010,7 @@ lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int yForLineContaining(Rectangle alloc, int offs)
 							throws BadLocationException {
 		Element map = getElement();

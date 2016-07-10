@@ -28,6 +28,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Token getTokenToMark(RSyntaxTextArea textArea) {
 
 		// Get the token at the caret position.
@@ -58,6 +59,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean isValidType(RSyntaxTextArea textArea, Token t) {
 		return textArea.getMarkOccurrencesOfTokenType(t.getType());
 	}
@@ -66,6 +68,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 		markOccurrencesOfToken(doc, t, h, p);

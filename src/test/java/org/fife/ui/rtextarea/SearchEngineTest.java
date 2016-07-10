@@ -8,19 +8,18 @@
  */
 package org.fife.ui.rtextarea;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javax.swing.text.BadLocationException;
-
 import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.SearchEngine;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
@@ -133,7 +132,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.find()</code> when searching backward.
 	 */
 	@Test
-	public void testSearchEngineFindBackward() throws BadLocationException {
+	public void testSearchEngineFindBackward() {
 		testSearchEngineFindBackwardImpl(true);
 		testSearchEngineFindBackwardImpl(false);
 	}
@@ -145,8 +144,7 @@ public class SearchEngineTest {
 	 * @param markAll Whether or not "mark all" should be enabled during the
 	 *        test.
 	 */
-	private void testSearchEngineFindBackwardImpl(boolean markAll)
-			throws BadLocationException {
+	private void testSearchEngineFindBackwardImpl(boolean markAll) {
 
 		textArea.setText(text);
 
@@ -300,7 +298,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.find()</code> when searching forward.
 	 */
 	@Test
-	public void testSearchEngineFindForward() throws BadLocationException {
+	public void testSearchEngineFindForward() {
 		testSearchEngineFindForwardImpl(true);
 		testSearchEngineFindForwardImpl(false);
 	}
@@ -311,8 +309,7 @@ public class SearchEngineTest {
 	 *
 	 * @param markAll Whether "mark all" should be enabled during the test.
 	 */
-	private void testSearchEngineFindForwardImpl(boolean markAll)
-			throws BadLocationException {
+	private void testSearchEngineFindForwardImpl(boolean markAll) {
 
 		textArea.setText(text);
 
@@ -610,8 +607,7 @@ public class SearchEngineTest {
 	 *
 	 * @param forward Whether to test searching forward or backward.
 	 */
-	private void testSearchEngineReplace(boolean forward)
-										throws BadLocationException {
+	private void testSearchEngineReplace(boolean forward) {
 
 		int offs = forward ? 0 : text.length();
 		SearchContext context = new SearchContext();
@@ -757,7 +753,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replace()</code> when searching backward.
 	 */
 	@Test
-	public void testSearchEngineReplaceBackward() throws BadLocationException {
+	public void testSearchEngineReplaceBackward() {
 		testSearchEngineReplace(false);
 	}
 
@@ -766,14 +762,13 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replace()</code> when searching forward.
 	 */
 	@Test
-	public void testSearchEngineReplaceForward() throws BadLocationException {
+	public void testSearchEngineReplaceForward() {
 		testSearchEngineReplace(true);
 	}
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches()
-			throws BadLocationException {
+	public void testSearchEngineReplaceAll_zeroLengthMatches() {
 
 		textArea.setText("one two three");
 
@@ -788,8 +783,7 @@ public class SearchEngineTest {
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches_emptyText()
-			throws BadLocationException {
+	public void testSearchEngineReplaceAll_zeroLengthMatches_emptyText() {
 
 		textArea.setText("");
 
@@ -804,8 +798,7 @@ public class SearchEngineTest {
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches_multiMatch()
-			throws BadLocationException {
+	public void testSearchEngineReplaceAll_zeroLengthMatches_multiMatch() {
 
 		textArea.setText("a\nba\n\na");
 
@@ -823,7 +816,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replaceAll()</code>.
 	 */
 	@Test
-	public void testSearchEngineReplaceAll() throws BadLocationException {
+	public void testSearchEngineReplaceAll() {
 
 		SearchContext context = new SearchContext();
 		context.setReplaceWith("FOOBAR");
@@ -921,7 +914,7 @@ public class SearchEngineTest {
 	 * has captured groups.
 	 */
 	@Test
-	public void testSearchEngineRegexReplaceAllWithCapturedGroups() throws BadLocationException {
+	public void testSearchEngineRegexReplaceAllWithCapturedGroups() {
 
 		SearchContext context = new SearchContext();
 		context.setRegularExpression(true);

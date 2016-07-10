@@ -75,6 +75,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 * @param e The action being performed.
 	 * @see #actionPerformedImpl
 	 */
+	@Override
 	public final void actionPerformed(ActionEvent e) {
 
 		JTextComponent textComponent = getTextComponent(e);

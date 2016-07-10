@@ -350,6 +350,7 @@ public class CodeTemplateManager {
 	@SuppressWarnings("rawtypes")
 	private static class TemplateComparator implements Comparator, Serializable{
 
+		@Override
 		public int compare(Object template, Object segment) {
 
 			// Get template start index (0) and length.
@@ -389,6 +390,7 @@ public class CodeTemplateManager {
 	 * A file filter that accepts only XML files.
 	 */
 	private static class XMLFileFilter implements FileFilter {
+		@Override
 		public boolean accept(File f) {
 			return f.getName().toLowerCase().endsWith(".xml");
 		}

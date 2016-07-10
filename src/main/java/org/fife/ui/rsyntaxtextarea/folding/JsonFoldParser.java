@@ -36,6 +36,7 @@ public class JsonFoldParser implements FoldParser {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
 		Stack<Object> blocks = new Stack<Object>();

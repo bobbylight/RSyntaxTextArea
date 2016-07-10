@@ -130,6 +130,7 @@ public class SearchContextTest {
 			called = false;
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			called = true;
 		}

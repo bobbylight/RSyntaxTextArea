@@ -131,6 +131,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 											RSyntaxTextArea textArea,
 											boolean fontFamily) {
@@ -138,6 +139,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public StringBuilder appendHTMLRepresentation(StringBuilder sb,
 								RSyntaxTextArea textArea, boolean fontFamily,
 								boolean tabsToSpaces) {
@@ -256,11 +258,13 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public char charAt(int index) {
 		return text[textOffset + index];
 	}
 
 
+	@Override
 	public boolean containsPosition(int pos) {
 		return pos>=getOffset() && pos<getOffset()+textCount;
 	}
@@ -284,11 +288,13 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public int documentToToken(int pos) {
 		return pos + (textOffset-getOffset());
 	}
 
 
+	@Override
 	public boolean endsWith(char[] ch) {
 		if (ch==null || ch.length>textCount) {
 			return false;
@@ -324,6 +330,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public int getEndOffset() {
 		return offset + textCount;
 	}
@@ -357,6 +364,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public String getHTMLRepresentation(RSyntaxTextArea textArea) {
 		StringBuilder buf = new StringBuilder();
 		appendHTMLRepresentation(buf, textArea, true);
@@ -364,11 +372,13 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public int getLanguageIndex() {
 		return languageIndex;
 	}
 
 
+	@Override
 	public Token getLastNonCommentNonWhitespaceToken() {
 
 		Token last = null;
@@ -393,6 +403,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public Token getLastPaintableToken() {
 		Token t = this;
 		while (t.isPaintable()) {
@@ -406,11 +417,13 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public String getLexeme() {
 		return text==null ? null : new String(text, textOffset, textCount);
 	}
 
 
+	@Override
 	public int getListOffset(RSyntaxTextArea textArea, TabExpander e,
 			float x0, float x) {
 
@@ -463,16 +476,19 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public Token getNextToken() {
 		return nextToken;
 	}
 
 
+	@Override
 	public int getOffset() {
 		return offset;
 	}
 
 
+	@Override
 	public int getOffsetBeforeX(RSyntaxTextArea textArea, TabExpander e,
 							float startX, float endBeforeX) {
 
@@ -504,26 +520,31 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public char[] getTextArray() {
 		return text;
 	}
 
 
+	@Override
 	public int getTextOffset() {
 		return textOffset;
 	}
 
 
+	@Override
 	public int getType() {
 		return type;
 	}
 
 
+	@Override
 	public float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0) {
 		return getWidthUpTo(textCount, textArea, e, x0);
 	}
 
 
+	@Override
 	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0) {
 		float width = x0;
@@ -562,6 +583,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public boolean is(char[] lexeme) {
 		if (textCount==lexeme.length) {
 			for (int i=0; i<textCount; i++) {
@@ -575,6 +597,7 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public boolean is(int type, char[] lexeme) {
 		if (this.getType()==type && textCount==lexeme.length) {
 			for (int i=0; i<textCount; i++) {
@@ -588,67 +611,80 @@ public class TokenImpl implements Token {
 	}
 
 
+	@Override
 	public boolean is(int type, String lexeme) {
 		return this.getType()==type && textCount==lexeme.length() &&
 				lexeme.equals(getLexeme());
 	}
 
 
+	@Override
 	public boolean isComment() {
 		return getType()>=Token.COMMENT_EOL && getType()<=Token.COMMENT_MARKUP;
 	}
 
 
+	@Override
 	public boolean isCommentOrWhitespace() {
 		return isComment() || isWhitespace();
 	}
 
 
+	@Override
 	public boolean isHyperlink() {
 		return hyperlink;
 	}
 
 
+	@Override
 	public boolean isIdentifier() {
 		return getType()==IDENTIFIER;
 	}
 
 
+	@Override
 	public boolean isLeftCurly() {
 		return getType()==SEPARATOR && isSingleChar('{');
 	}
 
 
+	@Override
 	public boolean isRightCurly() {
 		return getType()==SEPARATOR && isSingleChar('}');
 	}
 
 
+	@Override
 	public boolean isPaintable() {
 		return getType()>Token.NULL;
 	}
 
 
+	@Override
 	public boolean isSingleChar(char ch) {
 		return textCount==1 && text[textOffset]==ch;
 	}
 
 
+	@Override
 	public boolean isSingleChar(int type, char ch) {
 		return this.getType()==type && isSingleChar(ch);
 	}
 
 
+	@Override
 	public boolean isWhitespace() {
 		return getType()==WHITESPACE;
 	}
 
 
+	@Override
 	public int length() {
 		return textCount;
 	}
 
 
+	@Override
 	public Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
 			int pos, int x0, Rectangle rect) {
 
@@ -797,6 +833,7 @@ public class TokenImpl implements Token {
 	 * @param hyperlink Whether this token is a hyperlink.
 	 * @see #isHyperlink()
 	 */
+	@Override
 	public void setHyperlink(boolean hyperlink) {
 		this.hyperlink = hyperlink;
 	}
@@ -815,6 +852,7 @@ public class TokenImpl implements Token {
 	 *        be treated as <code>0</code>.
 	 * @see #getLanguageIndex()
 	 */
+	@Override
 	public void setLanguageIndex(int languageIndex) {
 		this.languageIndex = languageIndex;
 	}
@@ -846,6 +884,7 @@ public class TokenImpl implements Token {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setType(int type) {
 		this.type = type;
 	}
@@ -854,6 +893,7 @@ public class TokenImpl implements Token {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean startsWith(char[] chars) {
 		if (chars.length<=textCount){
 			for (int i=0; i<chars.length; i++) {
@@ -870,6 +910,7 @@ public class TokenImpl implements Token {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int tokenToDocument(int pos) {
 		return pos + (getOffset()-textOffset);
 	}

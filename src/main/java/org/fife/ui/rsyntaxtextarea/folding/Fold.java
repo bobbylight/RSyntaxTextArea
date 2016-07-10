@@ -85,6 +85,7 @@ public class Fold implements Comparable<Fold> {
 	 * @param otherFold Another fold to compare this one to.
 	 * @return How this fold compares to the other.
 	 */
+	@Override
 	public int compareTo(Fold otherFold) {
 		int result = -1;
 		if (otherFold!=null) {

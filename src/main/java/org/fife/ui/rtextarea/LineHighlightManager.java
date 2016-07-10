@@ -223,6 +223,7 @@ class LineHighlightManager {
 	private static class LineHighlightInfoComparator
 			implements Comparator<LineHighlightInfo> {
 
+		@Override
 		public int compare(LineHighlightInfo lhi1, LineHighlightInfo lhi2) {
 			if (lhi1.getOffset() < lhi2.getOffset()) {
 				return -1;

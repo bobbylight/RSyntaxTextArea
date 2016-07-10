@@ -94,6 +94,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 * @param e The event.
 	 * @see #doMarkOccurrences()
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		// Don't do anything if they are selecting text.
@@ -145,6 +146,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 *
 	 * @param e The event.
 	 */
+	@Override
 	public void caretUpdate(CaretEvent e) {
 		timer.restart();
 	}

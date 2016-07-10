@@ -45,7 +45,8 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 			Segment segment = createSegment(token);
 			TokenMaker tm = createTokenMaker();
 			Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Token has unexpected type: " + token, expectedType, t.getType());
+			Assert.assertEquals("Token has unexpected type: orig=" + token +
+					", actual=" + t, expectedType, t.getType());
 		}
 
 	}

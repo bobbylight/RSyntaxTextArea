@@ -52,6 +52,7 @@ class TokenIterator implements Iterator<Token> {
 	 * @return Whether there are any more paintable tokens.
 	 * @see #next()
 	 */
+	@Override
 	public boolean hasNext() {
 		return token!=null;
 	}
@@ -72,6 +73,7 @@ class TokenIterator implements Iterator<Token> {
 	 * @return The next paintable token in the document.
 	 * @see #hasNext()
 	 */
+	@Override
 	public Token next() {
 
 		Token t = token;
@@ -116,6 +118,7 @@ class TokenIterator implements Iterator<Token> {
 	 *
 	 * @throws UnsupportedOperationException always.
 	 */
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

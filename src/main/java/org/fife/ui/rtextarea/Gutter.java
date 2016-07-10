@@ -918,6 +918,7 @@ public void setBorder(Border border) {
 		 *
 		 * @param e Information about the new "active line range."
 		 */
+		@Override
 		public void activeLineRangeChanged(ActiveLineRangeEvent e) {
 			if (e.getMin()==-1) {
 				clearActiveLineRange();
@@ -927,6 +928,7 @@ public void setBorder(Border border) {
 			}
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {}
 
 		@Override
@@ -942,6 +944,7 @@ public void setBorder(Border border) {
 			}
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			handleDocumentEvent(e);
 		}
@@ -961,6 +964,7 @@ public void setBorder(Border border) {
 			installed = true;
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 
 			String name = e.getPropertyName();
@@ -1006,6 +1010,7 @@ public void setBorder(Border border) {
 
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			handleDocumentEvent(e);
 		}
