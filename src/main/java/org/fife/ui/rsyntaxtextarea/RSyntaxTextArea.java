@@ -2566,6 +2566,14 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	public void setHighlighter(Highlighter h) {
+
+		// Ugh, many RSTA methods assume a non-null highlighter.  This is kind
+		// of icky, but most applications never *don't* want a highlighter.
+		// See #189 - BasicTextUI clears highlighter by setting it to null there
+		if (h == null) {
+			h = new RSyntaxTextAreaHighlighter();
+		}
+
 		if (!(h instanceof RSyntaxTextAreaHighlighter)) {
 			throw new IllegalArgumentException("RSyntaxTextArea requires " +
 				"an RSyntaxTextAreaHighlighter for its Highlighter");
