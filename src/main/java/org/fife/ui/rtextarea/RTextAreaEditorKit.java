@@ -1874,6 +1874,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				}
 			}
 			SearchContext context = new SearchContext(selectedText);
+			if (!textArea.getMarkAllOnOccurrenceSearches()) {
+				context.setMarkAll(false);
+			}
 			if (!SearchEngine.find(textArea, context).wasFound()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
@@ -2190,6 +2193,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				}
 			}
 			SearchContext context = new SearchContext(selectedText);
+			if (!textArea.getMarkAllOnOccurrenceSearches()) {
+				context.setMarkAll(false);
+			}
 			context.setSearchForward(false);
 			if (!SearchEngine.find(textArea, context).wasFound()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);

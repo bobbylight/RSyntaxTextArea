@@ -98,6 +98,12 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public static final String MARK_ALL_COLOR_PROPERTY	= "RTA.markAllColor";
 
 	/**
+	 * The property fired when the "mark all on occurrence" property changes.
+	 */
+	public static final String MARK_ALL_ON_OCCURRENCE_SEARCHES_PROPERTY =
+			"RTA.markAllOnOccurrenceSearches";
+
+	/**
 	 * The property fired when what ranges are labeled "mark all" changes.
 	 */
 	public static final String MARK_ALL_OCCURRENCES_CHANGED_PROPERTY =
@@ -171,6 +177,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	private transient LineHighlightManager lineHighlightManager;
 
 	private SmartHighlightPainter markAllHighlightPainter;
+
+	private boolean markAllOnOccurrenceSearches;
 
 	private CaretStyle[] carets;	// Index 0=>insert caret, 1=>overwrite.
 
@@ -724,6 +732,19 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
+	 * Returns whether "mark all" should be enabled when a user does a "find
+	 * next/find previous" action via Ctrl+K or Ctrl+Shift+K (the default
+	 * shortcut keys for this action).  The default value is {@code true}.
+	 *
+	 * @return Whether "mark all" should be enabled.
+	 * @see #setMarkAllOnOccurrenceSearches(boolean)
+	 */
+	public boolean getMarkAllOnOccurrenceSearches() {
+		return markAllOnOccurrenceSearches;
+	}
+
+
+	/**
 	 * Returns the line highlight manager.
 	 *
 	 * @return The line highlight manager.  This may be <code>null</code>.
@@ -850,9 +871,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void init() {
 
@@ -883,6 +901,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		setDragEnabled(true);			// Enable drag-and-drop.
 
 		setTextMode(INSERT_MODE); // Carets array must be created first!
+		setMarkAllOnOccurrenceSearches(true);
 
 		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
 		fixCtrlH();
@@ -956,9 +975,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void paste() {
 		// Treat paste operations as atomic, otherwise the removal and
@@ -1493,6 +1509,25 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
+	 * Sets whether "mark all" should be enabled when a user does a "find
+	 * next/find previous" action via Ctrl+K or Ctrl+Shift+K (the default
+	 * shortcut keys for this action).  The default value is {@code true}.<p>
+	 * This method fires a property change event of type
+	 * {@link #MARK_ALL_ON_OCCURRENCE_SEARCHES_PROPERTY}.
+	 *
+	 * @param markAll Whether "mark all" should be enabled.
+	 * @see #getMarkAllOnOccurrenceSearches()
+	 */
+	public void setMarkAllOnOccurrenceSearches(boolean markAll) {
+		if (markAll != markAllOnOccurrenceSearches) {
+			markAllOnOccurrenceSearches = markAll;
+			firePropertyChange(MARK_ALL_ON_OCCURRENCE_SEARCHES_PROPERTY,
+					!markAll, markAll);
+		}
+	}
+
+
+	/**
 	 * Sets the popup menu used by this text area.<p>
 	 *
 	 * If you set the popup menu with this method, you'll want to consider also
@@ -1510,9 +1545,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setRoundedSelectionEdges(boolean rounded) {
 		if (getRoundedSelectionEdges()!=rounded) {

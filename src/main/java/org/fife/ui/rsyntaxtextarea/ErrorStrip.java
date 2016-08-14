@@ -867,13 +867,14 @@ public class ErrorStrip extends JPanel {
 			int offs = pn.getOffset();
 			int len = pn.getLength();
 			if (offs>-1 && len>-1) { // These values are optional
-				textArea.setSelectionStart(offs);
-				textArea.setSelectionEnd(offs+len);
+				DocumentRange range = new DocumentRange(offs, offs + len);
+				RSyntaxUtilities.selectAndPossiblyCenter(textArea, range, true);
 			}
 			else {
 				int line = pn.getLine();
 				try {
 					offs = textArea.getLineStartOffset(line);
+					textArea.getFoldManager().ensureOffsetNotInClosedFold(offs);
 					textArea.setCaretPosition(offs);
 				} catch (BadLocationException ble) { // Never happens
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
