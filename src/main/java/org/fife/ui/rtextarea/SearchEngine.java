@@ -76,7 +76,7 @@ public final class SearchEngine {
 			if (doMarkAll) {
 				// Force "mark all" event to be broadcast so listeners know to
 				// clear their mark-all markers.  The RSTA already cleared its
-				// highlights above, but cleraMarkAllHighlights() doesn't firs
+				// highlights above, but cleraMarkAllHighlights() doesn't fire
 				// an event itself for performance reasons.
 				List<DocumentRange> emptyRangeList = Collections.emptyList();
 				((RTextArea)textArea).markAll(emptyRangeList);
