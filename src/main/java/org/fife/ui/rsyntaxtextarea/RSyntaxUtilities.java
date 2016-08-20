@@ -1337,6 +1337,19 @@ return c.getLineStartOffset(line);
 
 
 	/**
+	 * Repaints the gutter in a text area's scroll pane, if necessary.
+	 *
+	 * @param textArea The text area.
+	 */
+	public static void possiblyRepaintGutter(RTextArea textArea) {
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter!=null) {
+			gutter.repaint();
+		}
+	}
+
+
+	/**
 	 * Returns whether a regular expression token can follow the specified
 	 * token in JavaScript.
 	 *

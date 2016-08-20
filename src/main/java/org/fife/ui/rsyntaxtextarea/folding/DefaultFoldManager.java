@@ -12,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -20,6 +21,7 @@ import javax.swing.text.Element;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
@@ -87,8 +89,10 @@ public class DefaultFoldManager implements FoldManager {
 
 	@Override
 	public boolean ensureOffsetNotInClosedFold(int offs) {
+
 		boolean foldsOpened = false;
 		Fold fold = getDeepestFoldContaining(offs);
+
 		while (fold!=null) {
 			if (fold.isCollapsed()) {
 				fold.setCollapsed(false);
@@ -96,7 +100,13 @@ public class DefaultFoldManager implements FoldManager {
 			}
 			fold = fold.getParent();
 		}
+
+		if (foldsOpened) { // Folds changing state mean gutter is stale
+			RSyntaxUtilities.possiblyRepaintGutter(textArea);
+		}
+
 		return foldsOpened;
+
 	}
 
 
