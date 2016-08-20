@@ -146,6 +146,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -234,6 +235,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	([\\]{AnyChar}+)			{ addToken(Token.FUNCTION); }
+	([\\]%)						{ int temp = zzStartRead;
+									addToken(temp, temp, Token.SEPARATOR);
+									addToken(temp + 1, temp + 1, Token.IDENTIFIER);
+								}
 	[\{\}]						{ addToken(Token.SEPARATOR); }
 	("\\begin{"{AnyChar}+"}")   { int temp = zzStartRead;
 							addToken(temp, temp+5, Token.RESERVED_WORD);
