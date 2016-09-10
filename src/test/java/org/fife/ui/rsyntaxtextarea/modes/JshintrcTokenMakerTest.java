@@ -116,7 +116,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments() {
+	public void testLineComments() {
 		String code = "// Hello world";
 		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();

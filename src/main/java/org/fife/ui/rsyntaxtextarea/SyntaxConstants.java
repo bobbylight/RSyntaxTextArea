@@ -155,15 +155,16 @@ public interface SyntaxConstants {
 
 
 	/**
-	 * Style for highlighting .jshintrc files.
-	 */
-	String SYNTAX_STYLE_JSHINTRC	= "text/jshintrc";
-
-
-	/**
 	 * Style for highlighting JSON.
 	 */
 	String SYNTAX_STYLE_JSON		= "text/json";
+
+
+	/**
+	 * Style for highlighting .jshintrc files (JSON with comments, so can be
+	 * used for other times when you want this behavior).
+	 */
+	String SYNTAX_STYLE_JSON_WITH_COMMENTS	= "text/jshintrc";
 
 
 	/**
