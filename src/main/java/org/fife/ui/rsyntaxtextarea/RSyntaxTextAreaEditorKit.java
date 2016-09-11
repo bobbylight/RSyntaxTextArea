@@ -1973,6 +1973,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	}
 
 
+	/**
+	 * The view factory used by this class.
+	 */
 	static class StyledViewFactory implements ViewFactory {
 
 		@Override

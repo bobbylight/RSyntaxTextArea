@@ -561,8 +561,10 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * @see #getRoundedSelectionEdges()
 	 */
 	public void setRoundedSelectionEdges(boolean rounded) {
-		((ChangeableHighlightPainter)getSelectionPainter()).
-								setRoundedEdges(rounded);
+		if (getSelectionPainter() instanceof ChangeableHighlightPainter) {
+			((ChangeableHighlightPainter)getSelectionPainter()).
+									setRoundedEdges(rounded);
+		}
 	}
 
 

@@ -1018,8 +1018,9 @@ public class SyntaxView extends BoxView implements TabExpander,
 
 	@Override
 	public float nextTabStop(float x, int tabOffset) {
-		if (tabSize == 0)
+		if (tabSize == 0) {
 			return x;
+		}
 		int ntabs = (((int)x) - tabBase) / tabSize;
 		return tabBase + ((ntabs + 1) * tabSize);
 	}

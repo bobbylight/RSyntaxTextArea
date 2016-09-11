@@ -1839,7 +1839,7 @@ RSyntaxDocument doc = (RSyntaxDocument)getDocument();
 int pos = viewToModel(e.getPoint());
 javax.swing.text.Element charElem = doc.getCharacterElement(pos);
 Object s = charElem.getAttributes().getAttribute(StyleConstants.NameAttribute);
-text = "<html>" + charElem + "<br>" + (s == null ? "null" : s.toString()); 
+text = "<html>" + charElem + "<br>" + (s == null ? "null" : s.toString());
 		}
 
 		// Do we want to use "focusable" tips?

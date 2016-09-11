@@ -460,6 +460,9 @@ for (int i = line; i <= lastLineToRepaint; i++) {
 
 		Element map = getDefaultRootElement();
 		Element elem = map.getElement(line);
+		if (elem == null) { // ???  Happens now that we use DefaultStyledDocument
+			return null;
+		}
 		int startOffset = elem.getStartOffset();
 		//int endOffset = (line==map.getElementCount()-1 ? elem.getEndOffset() - 1:
 		//									elem.getEndOffset() - 1);
@@ -683,11 +686,11 @@ for (int i = line; i <= lastLineToRepaint; i++) {
 		// repainted as the "offset and length" of the change, since this is
 		// what the view needs.  We really should send the actual offset and
 		// length.
-		if (line>firstLine) {
+//		if (line>firstLine) {
 //			//System.err.println("... ... ... repainting lines " + firstLine + "-" + line);
 //			fireChangedUpdate(new DefaultDocumentEvent(firstLine, line,
 //								DocumentEvent.EventType.CHANGE));
-		}
+//		}
 
 		return line;
 
@@ -775,7 +778,7 @@ StyleConstants.setFontSize(s, style.font.getSize());
 }
 private Map<Integer, javax.swing.text.Style> tokenTypeToSwingStyle = new HashMap<Integer, javax.swing.text.Style>();
 
-private static final String getNameOfTokenType(int index) throws IllegalAccessException {
+private static String getNameOfTokenType(int index) throws IllegalAccessException {
 	Field[] fields = TokenTypes.class.getFields();
 	for (Field field : fields) {
 		if (field.getType() == int.class && field.getInt(null) == index) {
