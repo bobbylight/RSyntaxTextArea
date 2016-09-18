@@ -34,7 +34,7 @@
    
    <!-- Syntax tokens. -->
    <tokenStyles>
-      <style token="IDENTIFIER" fg="E0E2E4"/>
+      <style token="IDENTIFIER" fg="a9b7c6"/>
       <style token="RESERVED_WORD" fg="93C763" bold="true"/>
       <style token="RESERVED_WORD_2" fg="93C763" bold="true"/>
       <style token="ANNOTATION" fg="E8E2B7"/>
