@@ -114,8 +114,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 				Token t = occurrenceMarker.getTokenToMark(textArea);
 
-				if (t!=null && occurrenceMarker.isValidType(textArea, t) &&
-						!RSyntaxUtilities.isNonWordChar(t)) {
+				if (t!=null && occurrenceMarker.isValidType(textArea, t)) {
 					clear();
 					RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 							textArea.getHighlighter();
