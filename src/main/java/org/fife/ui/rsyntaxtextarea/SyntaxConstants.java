@@ -143,6 +143,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting INI files.
+	 */
+	String SYNTAX_STYLE_INI			= "text/ini";
+
+
+	/**
 	 * Style for highlighting Java.
 	 */
 	String SYNTAX_STYLE_JAVA			= "text/java";
