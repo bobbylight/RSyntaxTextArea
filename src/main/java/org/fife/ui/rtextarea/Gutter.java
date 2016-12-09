@@ -874,12 +874,12 @@ public void setBorder(Border border) {
 	/**
 	 * The border used by the gutter.
 	 */
-	private static class GutterBorder extends EmptyBorder {
+	public static class GutterBorder extends EmptyBorder {
 
 		private Color color;
 		private Rectangle visibleRect;
 
-		GutterBorder(int top, int left, int bottom, int right) {
+		public GutterBorder(int top, int left, int bottom, int right) {
 			super(top, left, bottom, right);
 			color = new Color(221, 221, 221);
 			visibleRect = new Rectangle();
