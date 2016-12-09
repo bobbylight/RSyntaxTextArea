@@ -59,9 +59,36 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Property change event fired when the file path this text area references
+	 * is updated.
+	 *
+	 * @see #load(FileLocation, String)
+	 * @see #saveAs(FileLocation)
+	 */
 	public static final String FULL_PATH_PROPERTY	= "TextEditorPane.fileFullPath";
+
+	/**
+	 * Property change event fired when the text area's dirty flag changes.
+	 *
+	 * @see #setDirty(boolean)
+	 */
 	public static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
+
+	/**
+	 * Property change event fired when the text area should be treated as
+	 * read-only, and previously it should not, or vice-versa.
+	 *
+	 * @see #setReadOnly(boolean)
+	 */
 	public static final String READ_ONLY_PROPERTY	= "TextEditorPane.readOnly";
+
+	/**
+	 * Property change event fired when the text area's encoding changes.
+	 *
+	 * @see #setEncoding(String)
+	 */
+	public static final String ENCODING_PROPERTY = "TextEditorPane.encoding";
 
 	/**
 	 * The location of the file being edited.
@@ -604,7 +631,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	/**
 	 * Sets the encoding to use when reading or writing this file.  This
-	 * method sets the editor's dirty flag when the encoding is changed.
+	 * method sets the editor's dirty flag when the encoding is changed, and
+	 * fires a property change event of type {@link #ENCODING_PROPERTY}.
 	 *
 	 * @param encoding The new encoding.
 	 * @throws UnsupportedCharsetException If the encoding is not supported.
@@ -620,7 +648,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 			throw new UnsupportedCharsetException(encoding);
 		}
 		if (charSet==null || !charSet.equals(encoding)) {
+			String oldEncoding = charSet;
 			charSet = encoding;
+			firePropertyChange(ENCODING_PROPERTY, oldEncoding, charSet);
 			setDirty(true);
 		}
 	}
