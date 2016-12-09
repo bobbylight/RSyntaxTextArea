@@ -95,6 +95,7 @@ public class Theme {
 
 	public SyntaxScheme scheme;
 
+	public Color gutterBackgroundColor;
 	public Color gutterBorderColor;
 	public Color activeLineRangeColor;
 	public boolean iconRowHeaderInheritsGutterBG;
@@ -157,7 +158,7 @@ public class Theme {
 
 		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
 		if (gutter!=null) {
-			bgColor = gutter.getBackground();
+			gutterBackgroundColor = gutter.getBackground();
 			gutterBorderColor = gutter.getBorderColor();
 			activeLineRangeColor = gutter.getActiveLineRangeColor();
 			iconRowHeaderInheritsGutterBG = gutter.getIconRowHeaderInheritsGutterBackground();
@@ -206,7 +207,7 @@ public class Theme {
 
 		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
 		if (gutter!=null) {
-			gutter.setBackground(bgColor);
+			gutter.setBackground(gutterBackgroundColor);
 			gutter.setBorderColor(gutterBorderColor);
 			gutter.setActiveLineRangeColor(activeLineRangeColor);
 			gutter.setIconRowHeaderInheritsGutterBackground(iconRowHeaderInheritsGutterBG);
@@ -440,6 +441,10 @@ public class Theme {
 			}
 			root.appendChild(elem);
 
+			elem = doc.createElement("gutterBackground");
+			elem.setAttribute("color", colorToString(gutterBackgroundColor));
+			root.appendChild(elem);
+			
 			elem = doc.createElement("gutterBorder");
 			elem.setAttribute("color", colorToString(gutterBorderColor));
 			root.appendChild(elem);
@@ -615,7 +620,7 @@ public class Theme {
 				is.setEncoding("UTF-8");
 				reader.parse(is);
 			} catch (/*SAX|ParserConfiguration*/Exception se) {
-				se.printStackTrace();
+//				se.printStackTrace();
 				throw new IOException(se.toString());
 			}
 		}
@@ -650,6 +655,7 @@ public class Theme {
 				String color = attrs.getValue("color");
 				if (color!=null) {
 					theme.bgColor = stringToColor(color, getDefaultBG());
+					theme.gutterBackgroundColor = theme.bgColor;
 				}
 				else {
 					String img = attrs.getValue("image");
@@ -694,6 +700,13 @@ public class Theme {
 				theme.foldIndicatorFG = stringToColor(color);
 				color = attrs.getValue("iconBg");
 				theme.foldBG = stringToColor(color);
+			}
+
+			else if ("gutterBackground".equals(qName)) {
+				String color = attrs.getValue("color");
+				if (color!=null) {
+					theme.gutterBackgroundColor = stringToColor(color);
+				}
 			}
 
 			else if ("gutterBorder".equals(qName)) {
