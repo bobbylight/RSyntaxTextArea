@@ -18,6 +18,9 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -25,7 +28,6 @@ import javax.swing.text.Document;
 import org.fife.io.UnicodeReader;
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
-
 
 /**
  * An extension of {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextArea}
@@ -482,6 +484,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		this.loc = loc;
 		setDirty(false);
 		setCaretPosition(0);
+		discardAllEdits();
 		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 
 	}
@@ -748,4 +751,22 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	}
 
 
+	public static void main(String[] args) throws Exception {
+		try {
+			TextEditorPane textArea = new TextEditorPane();
+			textArea.load(FileLocation.create("d:/temp/test.txt"), "UTF-8");
+			JPanel cp = new JPanel();
+			cp.setPreferredSize(new java.awt.Dimension(300, 300));
+			cp.setLayout(new java.awt.BorderLayout());
+			cp.add(new JScrollPane(textArea));
+			JFrame frame = new JFrame();
+			frame.setContentPane(cp);
+			frame.pack();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setLocationByPlatform(true);
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

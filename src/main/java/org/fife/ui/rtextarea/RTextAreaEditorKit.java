@@ -1705,7 +1705,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 
 		private void moveLineDown(RTextArea textArea, int line, int lineCount)
 									throws BadLocationException {
-System.out.println("--- " + line + ", " + lineCount + ", " + textArea.getLineCount());
+
 			// If we'd be moving lines past the end of the document, stop.
 			// We could perhaps just decide to move the lines to the end of the
 			// file, but this just keeps things simple.
@@ -1730,13 +1730,11 @@ System.out.println("--- " + line + ", " + lineCount + ", " + textArea.getLineCou
 				doc.remove(start, end - start);
 
 				int insertLine = Math.min(line + 1, textArea.getLineCount());
-				System.out.println("insertLine == " + insertLine);
 				boolean newlineInserted = false;
 				if (insertLine == textArea.getLineCount()) {
 					textArea.append("\n");
 					newlineInserted = true;
 				}
-				System.out.println("... " + newlineInserted);
 
 				int insertOffs = textArea.getLineStartOffset(insertLine);
 				doc.insertString(insertOffs, text, null);
@@ -1776,14 +1774,11 @@ System.out.println("--- " + line + ", " + lineCount + ", " + textArea.getLineCou
 			textArea.beginAtomicEdit();
 			try {
 
-				System.out.println("*** " + start + ", " + (end - start));
 				String text = doc.getText(start, end - start);
 				if (movingLastLine) {
 					text += '\n';
 				}
-				System.out.println("*** *** '" + text + "'");
 				doc.remove(start, end - start);
-				System.out.println("*** *** *** good");
 
 				int insertOffs = textArea.getLineStartOffset(insertLine);
 				doc.insertString(insertOffs, text, null);
