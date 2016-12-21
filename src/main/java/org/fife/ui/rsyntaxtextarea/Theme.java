@@ -222,7 +222,6 @@ public class Theme {
 			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldBackground(foldBG);
-			System.out.println("Setting armed fold bg to: " + armedFoldBG + " (foldbg == " + foldBG + ")");
 			gutter.setArmedFoldBackground(armedFoldBG);
 		}
 
@@ -448,7 +447,7 @@ public class Theme {
 			elem = doc.createElement("gutterBackground");
 			elem.setAttribute("color", colorToString(gutterBackgroundColor));
 			root.appendChild(elem);
-			
+
 			elem = doc.createElement("gutterBorder");
 			elem.setAttribute("color", colorToString(gutterBorderColor));
 			root.appendChild(elem);
