@@ -533,10 +533,7 @@ public class Theme {
 		} catch (RuntimeException re) {
 			throw re; // FindBugs
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IOException("Error generating XML: " + e.getMessage());
-			// When Java 6 is minimum required version
-			//throw new IOException("Error generating XML: " + e.getMessage(), e);
+			throw new IOException("Error generating XML: " + e.getMessage(), e);
 		} finally {
 			bout.close();
 		}
@@ -624,7 +621,6 @@ public class Theme {
 				is.setEncoding("UTF-8");
 				reader.parse(is);
 			} catch (/*SAX|ParserConfiguration*/Exception se) {
-//				se.printStackTrace();
 				throw new IOException(se.toString());
 			}
 		}
