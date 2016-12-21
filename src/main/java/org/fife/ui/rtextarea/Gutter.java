@@ -266,6 +266,19 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns the background color used by the (default) fold icons when they
+	 * are armed.
+	 *
+	 * @return The background color.
+	 * @see #setArmedFoldBackground(Color)
+	 * @see #getFoldBackground()
+	 */
+	public Color getArmedFoldBackground() {
+		return foldIndicator.getFoldIconArmedBackground();
+	}
+
+
+	/**
 	 * Returns the icon to use for bookmarks.
 	 *
 	 * @return The icon to use for bookmarks.  If this is <code>null</code>,
@@ -507,6 +520,20 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Sets the background color used by the (default) fold icons when they
+	 * are armed.
+	 *
+	 * @param bg The new background color.  If this is {@code null}, then
+	 *        armed fold icons will not render with a special color.
+	 * @see #getArmedFoldBackground()
+	 * @see #setFoldBackground(Color)
+	 */
+	public void setArmedFoldBackground(Color bg) {
+		foldIndicator.setFoldIconArmedBackground(bg);
+	}
+
+
+	/**
 	 * Sets the icon to use for bookmarks.
 	 *
 	 * @param icon The new bookmark icon.  If this is <code>null</code>,
@@ -609,6 +636,7 @@ public class Gutter extends JPanel {
 	 *
 	 * @param bg The new background color.
 	 * @see #getFoldBackground()
+	 * @see #setArmedFoldBackground(Color)
 	 */
 	public void setFoldBackground(Color bg) {
 		if (bg==null) {

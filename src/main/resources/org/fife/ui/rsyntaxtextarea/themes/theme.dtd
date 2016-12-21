@@ -63,8 +63,9 @@
       fontFamily CDATA #IMPLIED
       fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator
-      fg         CDATA #REQUIRED
-      iconBg     CDATA #REQUIRED>
+      fg          CDATA #REQUIRED
+      iconBg      CDATA #REQUIRED
+      iconArmedBg CDATA #IMPLIED>
 <!ATTLIST iconRowHeader
       activeLineRange CDATA #REQUIRED
       inheritsGutterBG (true|false) "false">
