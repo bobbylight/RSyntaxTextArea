@@ -1363,8 +1363,9 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 		switch (type) {
 			case INTERNAL_IN_NESTABLE_MLC:
 				return TokenTypes.COMMENT_MULTILINE;
+            default:
+                return type;
 		}
-		return type;
 	}
 
 
@@ -1418,10 +1419,10 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 				if (initialTokenType<-1024) {
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
 						case INTERNAL_IN_NESTABLE_MLC:
-							state = NESTABLE_MLC;
-							break;
+                        default: // Should never happen
+                            state = NESTABLE_MLC;
+                            break;
 					}
 					nestedMlcDepth = -initialTokenType&0xff;
 				}

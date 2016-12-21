@@ -1273,8 +1273,9 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 			case INTERNAL_IN_JS_CHAR_INVALID:
 			case INTERNAL_IN_JS_CHAR_VALID:
 				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
+            default:
+                return type;
 		}
-		return type;
 	}
 
 
@@ -1381,8 +1382,8 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 				if (initialTokenType<-1024) { // INTERNAL_IN_E4X_COMMENT - prevState
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
 						case INTERNAL_IN_E4X_COMMENT:
+                        default: // Should never happen
 							state = E4X_COMMENT;
 							break;
 					}

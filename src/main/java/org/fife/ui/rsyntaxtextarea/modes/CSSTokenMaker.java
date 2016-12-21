@@ -637,8 +637,9 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 			case INTERNAL_CSS_MLC:
 				return TokenTypes.COMMENT_MULTILINE;
+            default:
+                return type;
 		}
-		return type;
 	}
 
 
@@ -715,16 +716,16 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 				if (initialTokenType<-1024) {
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
-						case INTERNAL_CSS_STRING:
-							state = CSS_STRING;
-							break;
 						case INTERNAL_CSS_CHAR:
 							state = CSS_CHAR_LITERAL;
 							break;
 						case INTERNAL_CSS_MLC:
 							state = CSS_C_STYLE_COMMENT;
 							break;
+                        case INTERNAL_CSS_STRING:
+                        default: // Should never happen
+                            state = CSS_STRING;
+                            break;
 					}
 					cssPrevState = -initialTokenType&0xff;
 				}

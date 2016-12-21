@@ -61,6 +61,8 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 				if (value!=-1)
 					tokenType = value;
 				break;
+            default:
+                break;
 		}
 
 		super.addToken(segment, start, end, tokenType, startOffset);

@@ -1553,8 +1553,9 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 			case INTERNAL_IN_JS_CHAR_INVALID:
 			case INTERNAL_IN_JS_CHAR_VALID:
 				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
+            default:
+                return type;
 		}
-		return type;
 	}
 
 

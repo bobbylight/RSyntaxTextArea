@@ -446,10 +446,10 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
 				if (initialTokenType<-1024) { // INTERNAL_IN_COMMENT - prevState
 					int main = -(-initialTokenType & 0xffffff00);
 					switch (main) {
-						default: // Should never happen
 						case INTERNAL_IN_COMMENT:
-							state = COMMENT;
-							break;
+                        default: // Should never happen
+                            state = COMMENT;
+                            break;
 					}
 					prevState = -initialTokenType&0xff;
 				}
