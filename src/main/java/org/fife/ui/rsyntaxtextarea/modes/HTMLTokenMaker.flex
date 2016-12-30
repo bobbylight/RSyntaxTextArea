@@ -10,6 +10,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import java.io.*;
 import javax.swing.text.Segment;
+import java.util.Stack;
 
 import org.fife.ui.rsyntaxtextarea.*;
 
@@ -165,6 +166,16 @@ import org.fife.ui.rsyntaxtextarea.*;
 	public static final int INTERNAL_CSS_VALUE				= -18;
 
 	/**
+	 * Token type specifying we're in a valid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+
+	/**
+	 * Token type specifying we're in an invalid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+
+	/**
 	 * Internal type denoting line ending in a CSS double-quote string.
 	 * The state to return to is embedded in the actual end token type.
 	 */
@@ -212,6 +223,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Language state set on CSS tokens.
 	 */
 	private static final int LANG_INDEX_CSS = 2;
+
+	private Stack<Boolean> varDepths;
 
 
 	/**
@@ -371,6 +384,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -456,6 +470,16 @@ import org.fife.ui.rsyntaxtextarea.*;
 			case INTERNAL_CSS_VALUE:
 				state = CSS_VALUE;
 				languageIndex = LANG_INDEX_CSS;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID:
+				state = JS_TEMPLATE_LITERAL;
+				validJSString = true;
+				languageIndex = LANG_INDEX_JS;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID:
+				state = JS_TEMPLATE_LITERAL;
+				validJSString = false;
+				languageIndex = LANG_INDEX_JS;
 				break;
 			default:
 				if (initialTokenType<-1024) {
@@ -573,7 +597,7 @@ LetterOrUnderscoreOrDash	= ({LetterOrUnderscore}|[\-])
 
 // JavaScript stuff.
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
+NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\'\`]|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 JS_MLCBegin				= "/*"
@@ -599,6 +623,7 @@ JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)
 JS_ErrorIdentifier			= ({NonSeparator}+)
 JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
 
+JS_TemplateLiteralExprStart	= ("${")
 
 // CSS stuff.
 CSS_SelectorPiece			= (("*"|"."|{LetterOrUnderscoreOrDash})({LetterOrUnderscoreOrDash}|"."|{Digit})*)
@@ -650,6 +675,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state CSS_STRING
 %state CSS_CHAR_LITERAL
 %state CSS_C_STYLE_COMMENT
+%state JS_TEMPLATE_LITERAL
+%state JS_TEMPLATE_LITERAL_EXPR
 
 
 %%
@@ -1015,6 +1042,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* String/Character literals. */
 	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
 	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
+	[\`]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_TEMPLATE_LITERAL); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
@@ -1113,6 +1141,77 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
 	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
+}
+
+<JS_TEMPLATE_LITERAL> {
+	[^\n\\\$\`]+				{}
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+
+	{JS_TemplateLiteralExprStart}	{
+								addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+								start = zzMarkedPos-2;
+								if (varDepths==null) {
+									varDepths = new Stack<Boolean>();
+								}
+								else {
+									varDepths.clear();
+								}
+								varDepths.push(Boolean.TRUE);
+								yybegin(JS_TEMPLATE_LITERAL_EXPR);
+							}
+	"$"						{ /* Skip valid '$' that is not part of template literal expression start */ }
+	
+	\`						{ int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+
+	/* Line ending in '\' => continue to next line, though not necessary in template strings. */
+	\\						{
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+	\n |
+	<<EOF>>					{
+								if (validJSString) {
+									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+}
+
+<JS_TEMPLATE_LITERAL_EXPR> {
+	[^\}\$\n]+			{}
+	"}"					{
+							if (!varDepths.empty()) {
+								varDepths.pop();
+								if (varDepths.empty()) {
+									addToken(start,zzStartRead, Token.VARIABLE);
+									start = zzMarkedPos;
+									yybegin(JS_TEMPLATE_LITERAL);
+								}
+							}
+						}
+	{JS_TemplateLiteralExprStart} { varDepths.push(Boolean.TRUE); }
+	"$"					{}
+	\n |
+	<<EOF>>				{
+							// TODO: This isn't right.  The expression and its depth should continue to the next line.
+							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+						}
 }
 
 <JS_MLC> {
