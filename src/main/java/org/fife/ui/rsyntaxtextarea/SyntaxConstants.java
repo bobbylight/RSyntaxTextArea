@@ -305,4 +305,10 @@ public interface SyntaxConstants {
 	String SYNTAX_STYLE_XML			= "text/xml";
 
 
+	/**
+	 * Syntax style for highlighting YAML.
+	 */
+	String SYNTAX_STYLE_YAML		= "text/yaml";
+
+
 }
