@@ -25,7 +25,7 @@ public class FortranTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return FortranTokenMaker.class.getName();
     }
- 
+
     @Override
     public FoldParser getFoldParser() {
         return null;

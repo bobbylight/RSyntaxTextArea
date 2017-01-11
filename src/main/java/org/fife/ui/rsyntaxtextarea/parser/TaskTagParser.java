@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import javax.swing.text.Element;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 

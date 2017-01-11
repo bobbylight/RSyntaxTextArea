@@ -7,7 +7,6 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import org.fife.ui.rsyntaxtextarea.TokenMakerRegistration;
 import org.fife.ui.rsyntaxtextarea.folding.FoldParser;
-import org.fife.ui.rsyntaxtextarea.folding.HtmlFoldParser;
 import org.fife.ui.rsyntaxtextarea.folding.LispFoldParser;
 
 /**
