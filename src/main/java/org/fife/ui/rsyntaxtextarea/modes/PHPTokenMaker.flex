@@ -10,6 +10,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import java.io.*;
 import javax.swing.text.Segment;
+import java.util.Stack;
 
 import org.fife.ui.rsyntaxtextarea.*;
 
@@ -130,39 +131,54 @@ import org.fife.ui.rsyntaxtextarea.*;
 	private static final int INTERNAL_IN_JS_MLC				= -11;
 
 	/**
+	 * Token type specifying we're in a JavaScript documentation comment.
+	 */
+	private static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -12;
+
+	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -12;
+	private static final int INTERNAL_IN_JS_STRING_INVALID	= -13;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -13;
+	private static final int INTERNAL_IN_JS_STRING_VALID		= -14;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -14;
+	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -15;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_VALID		= -15;
+	private static final int INTERNAL_IN_JS_CHAR_VALID		= -16;
 
 	/**
 	 * Internal type denoting a line ending in CSS.
 	 */
-	private static final int INTERNAL_CSS					= -16;
+	private static final int INTERNAL_CSS					= -17;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property.
 	 */
-	private static final int INTERNAL_CSS_PROPERTY			= -17;
+	private static final int INTERNAL_CSS_PROPERTY			= -18;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property value.
 	 */
-	private static final int INTERNAL_CSS_VALUE				= -18;
+	private static final int INTERNAL_CSS_VALUE				= -19;
+
+	/**
+	 * Token type specifying we're in a valid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+
+	/**
+	 * Token type specifying we're in an invalid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
 
 	/**
 	 * Internal type denoting line ending in a CSS double-quote string.
@@ -249,6 +265,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Language state set on PHP.
 	 */
 	private static final int LANG_INDEX_PHP = 3;
+
+	private Stack<Boolean> varDepths;
 
 
 	/**
@@ -418,6 +436,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -470,6 +489,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 				state = JS_MLC;
 				languageIndex = LANG_INDEX_JS;
 				break;
+			case INTERNAL_IN_JS_COMMENT_DOCUMENTATION:
+				state = JS_DOCCOMMENT;
+				languageIndex = LANG_INDEX_JS;
+				validJSString = false;
+				break;
 			case INTERNAL_IN_JS_STRING_INVALID:
 				state = JS_STRING;
 				languageIndex = LANG_INDEX_JS;
@@ -501,6 +525,16 @@ import org.fife.ui.rsyntaxtextarea.*;
 			case INTERNAL_CSS_VALUE:
 				state = CSS_VALUE;
 				languageIndex = LANG_INDEX_CSS;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID:
+				state = JS_TEMPLATE_LITERAL;
+				languageIndex = LANG_INDEX_JS;
+				validJSString = true;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID:
+				state = JS_TEMPLATE_LITERAL;
+				languageIndex = LANG_INDEX_JS;
+				validJSString = false;
 				break;
 			default:
 				if (initialTokenType<-1024) { // INTERNAL_IN_PHPxxx - phpInState
@@ -658,10 +692,11 @@ LetterOrUnderscoreOrDash		= ({LetterOrUnderscore}|[\-])
 
 // JavaScript stuff.
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
+NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\'\`]|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 JS_MLCBegin				= "/*"
+JS_DocCommentBegin			= "/**"
 JS_MLCEnd					= "*/"
 JS_LineCommentBegin			= "//"
 JS_IntegerHelper1			= (({NonzeroDigit}{Digit}*)|"0")
@@ -685,6 +720,18 @@ JS_ErrorIdentifier			= ({NonSeparator}+)
 JS_Regex					= ("/"([^\*\\/]|\\.)([^/\\]|\\.)*"/"[gim]*)
 JS_BooleanLiteral			= ("true"|"false")
 
+JS_BlockTag					= ("abstract"|"access"|"alias"|"augments"|"author"|"borrows"|
+								"callback"|"classdesc"|"constant"|"constructor"|"constructs"|
+								"copyright"|"default"|"deprecated"|"desc"|"enum"|"event"|
+								"example"|"exports"|"external"|"file"|"fires"|"global"|
+								"ignore"|"inner"|"instance"|"kind"|"lends"|"license"|
+								"link"|"member"|"memberof"|"method"|"mixes"|"mixin"|"module"|
+								"name"|"namespace"|"param"|"private"|"property"|"protected"|
+								"public"|"readonly"|"requires"|"return"|"returns"|"see"|"since"|
+								"static"|"summary"|"this"|"throws"|"todo"|
+								"type"|"typedef"|"variation"|"version")
+JS_InlineTag				= ("link"|"linkplain"|"linkcode"|"tutorial")
+JS_TemplateLiteralExprStart	= ("${")
 
 // PHP stuff (most PHP stuff is shared with JS for simplicity)
 PHP_Start					= ("<?""php"?)
@@ -735,6 +782,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state JS_CHAR
 %state JS_STRING
 %state JS_MLC
+%state JS_DOCCOMMENT
 %state JS_EOL_COMMENT
 %state PHP
 %state PHP_MLC
@@ -746,7 +794,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state CSS_STRING
 %state CSS_CHAR_LITERAL
 %state CSS_C_STYLE_COMMENT
-
+%state JS_TEMPLATE_LITERAL
+%state JS_TEMPLATE_LITERAL_EXPR
 
 %%
 
@@ -1117,11 +1166,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* String/Character literals. */
 	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
 	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
-
+	[\`]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_TEMPLATE_LITERAL); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
+	{JS_DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(JS_DOCCOMMENT); }
 	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
 
 	/* Attempt to identify regular expressions (not foolproof) - do after comments! */
@@ -1225,6 +1275,77 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
+<JS_TEMPLATE_LITERAL> {
+	[^\n\\\$\`]+				{}
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+
+	{JS_TemplateLiteralExprStart}	{
+								addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+								start = zzMarkedPos-2;
+								if (varDepths==null) {
+									varDepths = new Stack<Boolean>();
+								}
+								else {
+									varDepths.clear();
+								}
+								varDepths.push(Boolean.TRUE);
+								yybegin(JS_TEMPLATE_LITERAL_EXPR);
+							}
+	"$"						{ /* Skip valid '$' that is not part of template literal expression start */ }
+	
+	\`						{ int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+
+	/* Line ending in '\' => continue to next line, though not necessary in template strings. */
+	\\						{
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+	\n |
+	<<EOF>>					{
+								if (validJSString) {
+									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+}
+
+<JS_TEMPLATE_LITERAL_EXPR> {
+	[^\}\$\n]+			{}
+	"}"					{
+							if (!varDepths.empty()) {
+								varDepths.pop();
+								if (varDepths.empty()) {
+									addToken(start,zzStartRead, Token.VARIABLE);
+									start = zzMarkedPos;
+									yybegin(JS_TEMPLATE_LITERAL);
+								}
+							}
+						}
+	{JS_TemplateLiteralExprStart} { varDepths.push(Boolean.TRUE); }
+	"$"					{}
+	\n |
+	<<EOF>>				{
+							// TODO: This isn't right.  The expression and its depth should continue to the next line.
+							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+						}
+}
+
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
 	[^hwf<\n\*]+			{}
@@ -1243,6 +1364,25 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+}
+
+
+
+<JS_DOCCOMMENT> {
+	[^hwf\@\{\n\<\*]+			{}
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	[hwf]						{}
+
+	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"							{}
+	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{"							{}
+	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }
+	\<							{}
+	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
+	\*							{}
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
 }
 
 

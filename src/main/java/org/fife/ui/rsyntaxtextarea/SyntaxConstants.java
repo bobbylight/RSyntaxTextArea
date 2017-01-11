@@ -359,6 +359,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting INI files.
+	 */
+	String SYNTAX_STYLE_INI			= "text/ini";
+
+
+	/**
 	 * Style for highlighting Java.
 	 */
 	String SYNTAX_STYLE_JAVA			= "text/java";
@@ -515,5 +521,11 @@ public interface SyntaxConstants {
 	String SYNTAX_STYLE_XML			= "text/xml";
 
 >>>>>>> upstream/master
+
+	/**
+	 * Syntax style for highlighting YAML.
+	 */
+	String SYNTAX_STYLE_YAML		= "text/yaml";
+
 
 }

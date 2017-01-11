@@ -289,6 +289,7 @@ public class CodeTemplateManager {
 						new FileInputStream(files[i])));
 					Object obj = d.readObject();
 					if (!(obj instanceof CodeTemplate)) {
+						d.close();
 						throw new IOException("Not a CodeTemplate: " +
 										files[i].getAbsolutePath());
 					}

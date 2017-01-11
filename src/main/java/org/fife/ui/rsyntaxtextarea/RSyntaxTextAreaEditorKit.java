@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.text.CharacterIterator;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -233,7 +234,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				}
 				do {
 					ch = seg.previous();
-				} while (doc.isIdentifierChar(languageIndex, ch));
+				} while (doc.isIdentifierChar(languageIndex, ch) && ch != CharacterIterator.DONE);
 			}
 
 			// The "word" is whitespace
@@ -1144,7 +1145,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.next();
-				} while (doc.isIdentifierChar(languageIndex, ch));
+				} while (doc.isIdentifierChar(languageIndex, ch) &&
+						ch != CharacterIterator.DONE);
 			}
 
 			// The "word" is whitespace.
@@ -1746,7 +1748,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.next();
-				} while (doc.isIdentifierChar(languageIndex, ch));
+				} while (doc.isIdentifierChar(languageIndex, ch) &&
+						ch != CharacterIterator.DONE);
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
@@ -1920,7 +1923,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			if (doc.isIdentifierChar(languageIndex, ch)) {
 				do {
 					ch = seg.previous();
-				} while (doc.isIdentifierChar(languageIndex, ch));
+				} while (doc.isIdentifierChar(languageIndex, ch) &&
+						ch != CharacterIterator.DONE);
 			}
 
 			// Skip groups of "anything else" (operators, etc.).

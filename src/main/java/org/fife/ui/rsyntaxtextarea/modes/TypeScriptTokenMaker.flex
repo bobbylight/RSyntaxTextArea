@@ -8,6 +8,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import java.io.*;
 import javax.swing.text.Segment;
+import java.util.Stack;
 
 import org.fife.ui.rsyntaxtextarea.*;
 
@@ -111,6 +112,16 @@ import org.fife.ui.rsyntaxtextarea.*;
 	private static final int INTERNAL_E4X_MARKUP_CDATA = -22;
 
 	/**
+	 * Token type specifying we're in a valid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+
+	/**
+	 * Token type specifying we're in an invalid multi-line template literal.
+	 */
+	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+
+	/**
 	 * When in the JS_STRING state, whether the current string is valid.
 	 */
 	private boolean validJSString;
@@ -139,6 +150,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Language state set on E4X tokens.
 	 */
 	private static final int LANG_INDEX_E4X = 1;
+
+	private Stack<Boolean> varDepths;
 
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
@@ -216,7 +229,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Returns the closest {@link TokenTypes "standard" token type} for a given
+	 * Returns the closest {@link TokenTypes} "standard" token type for a given
 	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
 	 */
 	 @Override
@@ -231,6 +244,10 @@ import org.fife.ui.rsyntaxtextarea.*;
 			case INTERNAL_IN_JS_CHAR_INVALID:
 			case INTERNAL_IN_JS_CHAR_VALID:
 				return TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID:
+				return TokenTypes.LITERAL_BACKQUOTE;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID:
+				return TokenTypes.ERROR_STRING_DOUBLE;
 		}
 		return type;
 	}
@@ -257,6 +274,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -322,6 +340,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 			case INTERNAL_E4X_MARKUP_CDATA:
 				state = E4X_CDATA;
 				languageIndex = LANG_INDEX_E4X;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID:
+				state = JS_TEMPLATE_LITERAL;
+				validJSString = true;
+				break;
+			case INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID:
+				state = JS_TEMPLATE_LITERAL;
+				validJSString = false;
 				break;
 			default:
 				if (initialTokenType<-1024) { // INTERNAL_IN_E4X_COMMENT - prevState
@@ -432,7 +458,7 @@ HexDigit							= ({Digit}|[A-Fa-f])
 OctalDigit						= ([0-7])
 LetterOrDigit					= ({Letter}|{Digit})
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
+NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\'\`]|"#"|"\\")
 IdentifierStart					= ({Letter}|"_"|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
 JS_MLCBegin				= "/*"
@@ -471,6 +497,7 @@ JS_BlockTag					= ("abstract"|"access"|"alias"|"augments"|"author"|"borrows"|
 								"static"|"summary"|"this"|"throws"|"todo"|
 								"type"|"typedef"|"variation"|"version")
 JS_InlineTag				= ("link"|"linkplain"|"linkcode"|"tutorial")
+JS_TemplateLiteralExprStart	= ("${")
 
 e4x_NameStartChar		= ([\:A-Z_a-z])
 e4x_NameChar			= ({e4x_NameStartChar}|[\-\.0-9])
@@ -504,7 +531,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %state E4X_INATTR_DOUBLE
 %state E4X_INATTR_SINGLE
 %state E4X_CDATA
-
+%state JS_TEMPLATE_LITERAL
+%state JS_TEMPLATE_LITERAL_EXPR
 
 %%
 
@@ -608,6 +636,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* String/Character literals. */
 	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
 	[\"]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_STRING); }
+	[\`]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_TEMPLATE_LITERAL); }
 
 	/* Comment literals. */
 	"/**/"							{ addToken(Token.COMMENT_MULTILINE); }
@@ -725,6 +754,77 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken; }
+}
+
+<JS_TEMPLATE_LITERAL> {
+	[^\n\\\$\`]+				{}
+	\\x{HexDigit}{2}		{}
+	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
+	\\u{HexDigit}{4}		{}
+	\\u						{ /* Invalid Unicode character \\uXXXX */ validJSString = false; }
+	\\.						{ /* Skip all escaped chars. */ }
+
+	{JS_TemplateLiteralExprStart}	{
+								addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+								start = zzMarkedPos-2;
+								if (varDepths==null) {
+									varDepths = new Stack<Boolean>();
+								}
+								else {
+									varDepths.clear();
+								}
+								varDepths.push(Boolean.TRUE);
+								yybegin(JS_TEMPLATE_LITERAL_EXPR);
+							}
+	"$"						{ /* Skip valid '$' that is not part of template literal expression start */ }
+	
+	\`						{ int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+
+	/* Line ending in '\' => continue to next line, though not necessary in template strings. */
+	\\						{
+								if (validJSString) {
+									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+	\n |
+	<<EOF>>					{
+								if (validJSString) {
+									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
+								}
+								else {
+									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
+								}
+								return firstToken;
+							}
+}
+
+<JS_TEMPLATE_LITERAL_EXPR> {
+	[^\}\$\n]+			{}
+	"}"					{
+							if (!varDepths.empty()) {
+								varDepths.pop();
+								if (varDepths.empty()) {
+									addToken(start,zzStartRead, Token.VARIABLE);
+									start = zzMarkedPos;
+									yybegin(JS_TEMPLATE_LITERAL);
+								}
+							}
+						}
+	{JS_TemplateLiteralExprStart} { varDepths.push(Boolean.TRUE); }
+	"$"					{}
+	\n |
+	<<EOF>>				{
+							// TODO: This isn't right.  The expression and its depth should continue to the next line.
+							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+						}
 }
 
 <JS_MLC> {

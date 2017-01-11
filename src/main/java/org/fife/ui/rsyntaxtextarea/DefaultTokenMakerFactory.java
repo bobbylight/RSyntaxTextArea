@@ -103,6 +103,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_HOSTS,			pkg + "HostsTokenMaker");
 		putMapping(SYNTAX_STYLE_HTACCESS,		pkg + "HtaccessTokenMaker");
 		putMapping(SYNTAX_STYLE_HTML,			pkg + "HTMLTokenMaker");
+		putMapping(SYNTAX_STYLE_INI,			pkg + "IniTokenMaker");
 		putMapping(SYNTAX_STYLE_JAVA,			pkg + "JavaTokenMaker");
 		putMapping(SYNTAX_STYLE_JAVASCRIPT,		pkg + "JavaScriptTokenMaker");
 		putMapping(SYNTAX_STYLE_JSON_WITH_COMMENTS,	pkg + "JshintrcTokenMaker");
@@ -129,6 +130,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_VISUAL_BASIC,	pkg + "VisualBasicTokenMaker");
 		putMapping(SYNTAX_STYLE_WINDOWS_BATCH,	pkg + "WindowsBatchTokenMaker");
 		putMapping(SYNTAX_STYLE_XML,			pkg + "XMLTokenMaker");
+		putMapping(SYNTAX_STYLE_YAML,			pkg + "YamlTokenMaker");
 
 	}
 

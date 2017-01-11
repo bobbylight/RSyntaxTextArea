@@ -77,37 +77,38 @@ public class ThemeTest {
 	private void assertColorsMatchTheme1(RSyntaxTextArea textArea,
 			Gutter gutter) {
 
-		Assert.assertEquals(Color.orange, textArea.getBackground());
-		Assert.assertEquals(Color.orange, textArea.getCaretColor());
-		Assert.assertEquals(false,        textArea.getUseSelectedTextColor());
-		Assert.assertEquals(Color.orange, textArea.getSelectedTextColor());
-		Assert.assertEquals(Color.orange, textArea.getSelectionColor());
-		Assert.assertEquals(true,         textArea.getRoundedSelectionEdges());
-		Assert.assertEquals(Color.orange, textArea.getCurrentLineHighlightColor());
-		Assert.assertEquals(true,         textArea.getFadeCurrentLineHighlight());
-		Assert.assertEquals(Color.orange, textArea.getMarginLineColor());
-		Assert.assertEquals(Color.orange, textArea.getMarkAllHighlightColor());
-		Assert.assertEquals(Color.orange, textArea.getMarkOccurrencesColor());
-		Assert.assertEquals(true,         textArea.getPaintMarkOccurrencesBorder());
-		Assert.assertEquals(Color.orange, textArea.getMatchedBracketBGColor());
-		Assert.assertEquals(Color.orange, textArea.getMatchedBracketBorderColor());
-		Assert.assertEquals(true,         textArea.getPaintMatchedBracketPair());
-		Assert.assertEquals(true,         textArea.getAnimateBracketMatching());
-		Assert.assertEquals(Color.orange, textArea.getHyperlinkForeground());
+		Assert.assertEquals(Color.red, textArea.getBackground());
+		Assert.assertEquals(Color.red, textArea.getCaretColor());
+		Assert.assertEquals(false,     textArea.getUseSelectedTextColor());
+		Assert.assertEquals(Color.red, textArea.getSelectedTextColor());
+		Assert.assertEquals(Color.red, textArea.getSelectionColor());
+		Assert.assertEquals(true,      textArea.getRoundedSelectionEdges());
+		Assert.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assert.assertEquals(true,      textArea.getFadeCurrentLineHighlight());
+		Assert.assertEquals(Color.red, textArea.getMarginLineColor());
+		Assert.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
+		Assert.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assert.assertEquals(true,      textArea.getPaintMarkOccurrencesBorder());
+		Assert.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
+		Assert.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assert.assertEquals(true,      textArea.getPaintMatchedBracketPair());
+		Assert.assertEquals(true,      textArea.getAnimateBracketMatching());
+		Assert.assertEquals(Color.red, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
-			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.orange;
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
 			Assert.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
 		}
 
-		Assert.assertEquals(Color.orange, gutter.getBackground());
-		Assert.assertEquals(Color.orange, gutter.getBorderColor());
-		Assert.assertEquals(Color.orange, gutter.getActiveLineRangeColor());
-		Assert.assertEquals(true,         gutter.getIconRowHeaderInheritsGutterBackground());
-		Assert.assertEquals(Color.orange, gutter.getLineNumberColor());
-		//Assert.assertEquals("Arial",      gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
-		Assert.assertEquals(22,           gutter.getLineNumberFont().getSize());
-		Assert.assertEquals(Color.orange, gutter.getFoldIndicatorForeground());
-		Assert.assertEquals(Color.orange, gutter.getFoldBackground());
+		Assert.assertEquals(Color.red, gutter.getBackground());
+		Assert.assertEquals(Color.red, gutter.getBorderColor());
+		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assert.assertEquals(true,      gutter.getIconRowHeaderInheritsGutterBackground());
+		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
+		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
+		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
+		Assert.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
+		Assert.assertEquals(Color.red, gutter.getFoldBackground());
+		Assert.assertEquals(Color.red, gutter.getArmedFoldBackground());
 
 	}
 
@@ -223,6 +224,7 @@ public class ThemeTest {
 		gutter.setLineNumberFont(font);
 		gutter.setFoldIndicatorForeground(Color.orange);
 		gutter.setFoldBackground(Color.orange);
+		gutter.setArmedFoldBackground(Color.orange);
 
 	}
 
@@ -250,7 +252,7 @@ public class ThemeTest {
 		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
 		Gutter gutter1 = sp1.getGutter();
 		initWithOddProperties(textArea1, gutter1);
-		
+
 		RSyntaxTextArea textArea2 = new RSyntaxTextArea(
 				PHPTokenRegistration.SYNTAX_STYLE);
 		RTextScrollPane sp2 = new RTextScrollPane(textArea2);

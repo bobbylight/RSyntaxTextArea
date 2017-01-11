@@ -206,6 +206,18 @@ public final class RSyntaxUtilities implements SwingConstants {
 					sb.append("&gt;");
 					lastWasSpace = false;
 					break;
+				case '\'':
+					sb.append("&#39;");
+					lastWasSpace = false;
+					break;
+				case '"':
+					sb.append("&#34;");
+					lastWasSpace = false;
+					break;
+				case '/': // OWASP-recommended even though unnecessary
+					sb.append("&#47;");
+					lastWasSpace = false;
+					break;
 				default:
 					sb.append(ch);
 					lastWasSpace = false;

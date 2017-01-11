@@ -18,6 +18,9 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -25,7 +28,6 @@ import javax.swing.text.Document;
 import org.fife.io.UnicodeReader;
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
-
 
 /**
  * An extension of {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextArea}
@@ -59,9 +61,36 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Property change event fired when the file path this text area references
+	 * is updated.
+	 *
+	 * @see #load(FileLocation, String)
+	 * @see #saveAs(FileLocation)
+	 */
 	public static final String FULL_PATH_PROPERTY	= "TextEditorPane.fileFullPath";
+
+	/**
+	 * Property change event fired when the text area's dirty flag changes.
+	 *
+	 * @see #setDirty(boolean)
+	 */
 	public static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
+
+	/**
+	 * Property change event fired when the text area should be treated as
+	 * read-only, and previously it should not, or vice-versa.
+	 *
+	 * @see #setReadOnly(boolean)
+	 */
 	public static final String READ_ONLY_PROPERTY	= "TextEditorPane.readOnly";
+
+	/**
+	 * Property change event fired when the text area's encoding changes.
+	 *
+	 * @see #setEncoding(String)
+	 */
+	public static final String ENCODING_PROPERTY = "TextEditorPane.encoding";
 
 	/**
 	 * The location of the file being edited.
@@ -455,6 +484,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		this.loc = loc;
 		setDirty(false);
 		setCaretPosition(0);
+		discardAllEdits();
 		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
 
 	}
@@ -604,7 +634,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	/**
 	 * Sets the encoding to use when reading or writing this file.  This
-	 * method sets the editor's dirty flag when the encoding is changed.
+	 * method sets the editor's dirty flag when the encoding is changed, and
+	 * fires a property change event of type {@link #ENCODING_PROPERTY}.
 	 *
 	 * @param encoding The new encoding.
 	 * @throws UnsupportedCharsetException If the encoding is not supported.
@@ -620,7 +651,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 			throw new UnsupportedCharsetException(encoding);
 		}
 		if (charSet==null || !charSet.equals(encoding)) {
+			String oldEncoding = charSet;
 			charSet = encoding;
+			firePropertyChange(ENCODING_PROPERTY, oldEncoding, charSet);
 			setDirty(true);
 		}
 	}
@@ -718,4 +751,22 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	}
 
 
+	public static void main(String[] args) throws Exception {
+		try {
+			TextEditorPane textArea = new TextEditorPane();
+			textArea.load(FileLocation.create("d:/temp/test.txt"), "UTF-8");
+			JPanel cp = new JPanel();
+			cp.setPreferredSize(new java.awt.Dimension(300, 300));
+			cp.setLayout(new java.awt.BorderLayout());
+			cp.add(new JScrollPane(textArea));
+			JFrame frame = new JFrame();
+			frame.setContentPane(cp);
+			frame.pack();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setLocationByPlatform(true);
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
