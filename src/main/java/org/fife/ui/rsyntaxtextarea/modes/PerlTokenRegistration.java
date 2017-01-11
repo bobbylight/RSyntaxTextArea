@@ -27,9 +27,10 @@ public class PerlTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return PerlTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
+
 }

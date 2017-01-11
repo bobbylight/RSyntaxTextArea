@@ -26,9 +26,10 @@ public class LatexTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return LatexTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new LatexFoldParser();
     }
+
 }

@@ -26,10 +26,10 @@ public class GroovyTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return GroovyTokenMaker.class.getName();
     }
- 
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
-   
+
 }

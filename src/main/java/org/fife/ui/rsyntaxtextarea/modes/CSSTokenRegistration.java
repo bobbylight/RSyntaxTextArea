@@ -25,7 +25,6 @@ public class CSSTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return CSSTokenMaker.class.getName();
     }
-    
 
     @Override
     public FoldParser getFoldParser() {

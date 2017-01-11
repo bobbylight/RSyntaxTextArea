@@ -26,9 +26,10 @@ public class XMLTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return XMLTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new XmlFoldParser();
     }
+
 }

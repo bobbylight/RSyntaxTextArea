@@ -26,9 +26,10 @@ public class ClojureTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return ClojureTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new LispFoldParser();
     }
+
 }

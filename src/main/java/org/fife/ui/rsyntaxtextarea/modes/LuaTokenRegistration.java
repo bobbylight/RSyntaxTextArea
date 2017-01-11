@@ -25,9 +25,10 @@ public class LuaTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return LuaTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

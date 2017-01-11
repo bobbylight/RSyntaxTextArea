@@ -26,7 +26,6 @@ public class DartTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return DartTokenMaker.class.getName();
     }
-    
 
     @Override
     public FoldParser getFoldParser() {

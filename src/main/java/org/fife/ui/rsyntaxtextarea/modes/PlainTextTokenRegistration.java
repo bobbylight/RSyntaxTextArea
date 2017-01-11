@@ -25,9 +25,10 @@ public class PlainTextTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return PlainTextTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

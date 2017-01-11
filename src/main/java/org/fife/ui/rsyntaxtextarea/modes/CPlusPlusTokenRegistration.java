@@ -26,7 +26,6 @@ public class CPlusPlusTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return CPlusPlusTokenMaker.class.getName();
     }
-    
 
     @Override
     public FoldParser getFoldParser() {

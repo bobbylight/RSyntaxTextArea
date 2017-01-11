@@ -25,9 +25,10 @@ public class YamlTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return YamlTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

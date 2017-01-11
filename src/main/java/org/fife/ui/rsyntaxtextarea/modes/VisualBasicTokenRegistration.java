@@ -25,9 +25,10 @@ public class VisualBasicTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return VisualBasicTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

@@ -26,9 +26,10 @@ public class PHPTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return PHPTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP);
     }
+
 }

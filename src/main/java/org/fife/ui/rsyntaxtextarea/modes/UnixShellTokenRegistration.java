@@ -25,9 +25,10 @@ public class UnixShellTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return UnixShellTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

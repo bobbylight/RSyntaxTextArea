@@ -30,5 +30,4 @@ public class FortranTokenRegistration implements TokenMakerRegistration {
     public FoldParser getFoldParser() {
         return null;
     }
-   
 }

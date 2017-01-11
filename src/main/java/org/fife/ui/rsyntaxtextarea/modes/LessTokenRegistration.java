@@ -26,9 +26,10 @@ public class LessTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return LessTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
+
 }

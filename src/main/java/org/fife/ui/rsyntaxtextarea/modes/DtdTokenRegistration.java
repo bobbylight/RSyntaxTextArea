@@ -25,7 +25,7 @@ public class DtdTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return DtdTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;

@@ -26,9 +26,10 @@ public class SQLTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return SQLTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

@@ -27,9 +27,10 @@ public class ScalaTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return ScalaTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
+
 }

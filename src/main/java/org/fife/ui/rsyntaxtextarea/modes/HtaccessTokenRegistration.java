@@ -26,10 +26,10 @@ public class HtaccessTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return HtaccessTokenMaker.class.getName();
     }
-    
 
     @Override
     public FoldParser getFoldParser() {
         return new XmlFoldParser();
     }
+
 }

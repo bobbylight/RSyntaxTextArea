@@ -25,9 +25,10 @@ public class PropertiesFileTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return PropertiesFileTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

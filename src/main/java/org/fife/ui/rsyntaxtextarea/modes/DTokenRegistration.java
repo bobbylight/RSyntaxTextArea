@@ -26,7 +26,7 @@ public class DTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return DTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();

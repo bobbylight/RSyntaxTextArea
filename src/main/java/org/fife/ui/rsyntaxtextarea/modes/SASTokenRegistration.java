@@ -25,9 +25,10 @@ public class SASTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return SASTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

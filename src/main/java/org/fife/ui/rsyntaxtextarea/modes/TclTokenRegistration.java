@@ -25,9 +25,10 @@ public class TclTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return TclTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

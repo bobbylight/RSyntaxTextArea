@@ -25,9 +25,10 @@ public class RubyTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return RubyTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

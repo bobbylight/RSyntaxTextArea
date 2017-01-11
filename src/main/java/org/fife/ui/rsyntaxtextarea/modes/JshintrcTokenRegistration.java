@@ -26,9 +26,10 @@ public class JshintrcTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return JshintrcTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new JsonFoldParser();
     }
+
 }

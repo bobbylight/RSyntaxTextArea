@@ -25,9 +25,10 @@ public class MakefileTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return MakefileTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

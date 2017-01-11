@@ -31,5 +31,5 @@ public class JSPTokenRegistration implements TokenMakerRegistration {
     public FoldParser getFoldParser() {
         return new HtmlFoldParser(HtmlFoldParser.LANGUAGE_JSP);
     }
-    
+
 }

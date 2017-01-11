@@ -13,7 +13,7 @@ import org.fife.ui.rsyntaxtextarea.folding.JsonFoldParser;
  *
  * @author matta
  */
-public class JsonRegistration implements TokenMakerRegistration {
+public class JsonTokenRegistration implements TokenMakerRegistration {
 
     public static final String SYNTAX_STYLE	= "text/json";
 
@@ -26,9 +26,10 @@ public class JsonRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return JsonTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new JsonFoldParser();
     }
+
 }

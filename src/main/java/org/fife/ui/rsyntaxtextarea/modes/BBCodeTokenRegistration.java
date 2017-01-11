@@ -25,10 +25,10 @@ public class BBCodeTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return BBCodeTokenRegistration.class.getName();
     }
- 
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
-   
+
 }

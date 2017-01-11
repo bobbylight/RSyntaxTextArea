@@ -25,9 +25,10 @@ public class PythonTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return PythonTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

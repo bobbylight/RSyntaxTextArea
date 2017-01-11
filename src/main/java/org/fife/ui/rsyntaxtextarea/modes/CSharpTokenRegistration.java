@@ -5,7 +5,6 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.TokenMakerRegistration;
 import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser;
 import org.fife.ui.rsyntaxtextarea.folding.FoldParser;
@@ -32,5 +31,5 @@ public class CSharpTokenRegistration implements TokenMakerRegistration {
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
-    
+
 }

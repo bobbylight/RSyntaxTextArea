@@ -26,9 +26,10 @@ public class JavaScriptTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return JavaScriptTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser();
     }
+
 }

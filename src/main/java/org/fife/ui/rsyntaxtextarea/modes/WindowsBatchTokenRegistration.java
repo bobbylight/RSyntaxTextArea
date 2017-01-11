@@ -25,9 +25,10 @@ public class WindowsBatchTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return WindowsBatchTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return null;
     }
+
 }

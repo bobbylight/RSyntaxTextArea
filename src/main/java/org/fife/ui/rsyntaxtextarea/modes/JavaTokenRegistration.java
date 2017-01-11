@@ -26,9 +26,10 @@ public class JavaTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return JavaTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new CurlyFoldParser(true, true);
     }
+
 }

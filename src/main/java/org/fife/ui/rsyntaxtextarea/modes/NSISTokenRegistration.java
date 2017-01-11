@@ -26,9 +26,10 @@ public class NSISTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return NSISTokenMaker.class.getName();
     }
-    
+
     @Override
     public FoldParser getFoldParser() {
         return new NsisFoldParser();
     }
+
 }

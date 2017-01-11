@@ -26,10 +26,10 @@ public class HTMLTokenRegistration implements TokenMakerRegistration {
     public String getTokenMaker() {
         return HTMLTokenMaker.class.getName();
     }
-    
 
     @Override
     public FoldParser getFoldParser() {
         return new HtmlFoldParser(HtmlFoldParser.LANGUAGE_HTML);
     }
+
 }

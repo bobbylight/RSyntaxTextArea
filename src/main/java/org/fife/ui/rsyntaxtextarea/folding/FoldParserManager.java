@@ -3,7 +3,7 @@
  *
  * FoldParserManager.java - Used by RSTA to determine what fold parser to use
  * for each language it supports.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -26,7 +26,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerRegistration;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FoldParserManager implements SyntaxConstants {
+public final class FoldParserManager implements SyntaxConstants {
 
     /**
      * Map from syntax styles to fold parsers.
