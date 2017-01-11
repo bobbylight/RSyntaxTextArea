@@ -6,7 +6,7 @@
     <version>2.6.0</version>
     <packaging>jar</packaging>
     <name>RSyntaxTextArea</name>
-    <url>http://tros.org/torgo/</url>
+    <url>https://bobbylight.github.io/RSyntaxTextArea/</url>
     <description>A Logo interpreter written in Java.</description>
     <developers>
         <developer>
@@ -193,7 +193,7 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.5</maven.compiler.source>
-        <maven.compiler.target>1.5</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
 </project>
