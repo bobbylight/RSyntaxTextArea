@@ -1,0 +1,19 @@
+machine:
+  java:
+    version: oraclejdk8
+test:
+  override:
+    - mvn clean cobertura:cobertura
+  post:
+    - bash <(curl -s https://codecov.io/bash)
+general:
+  branches:
+    ignore:
+      - gh-pages
+#general:
+#  branches:
+#    only:
+#     - master # list of branches to build
+#     - java8
+#     - tests
+#     - /feature-.*/ # or regexes
