@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 import javax.swing.text.Element;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 
 
 /**
@@ -66,7 +66,7 @@ public class TaskTagParser extends AbstractParser {
 		int lineCount = root.getElementCount();
 
 		if (taskPattern==null ||
-				style==null || SyntaxConstants.SYNTAX_STYLE_NONE.equals(style)){
+				style==null || PlainTextTokenRegistration.SYNTAX_STYLE.equals(style)){
 			result.clearNotices();
 			result.setParsedLines(0, lineCount-1);
 			return result;

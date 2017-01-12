@@ -31,6 +31,7 @@ import javax.swing.text.TextAction;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.RTextArea;
@@ -139,7 +140,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	@Override
 	public Document createDefaultDocument() {
-		return new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
+		return new RSyntaxDocument(PlainTextTokenRegistration.SYNTAX_STYLE);
 	}
 
 

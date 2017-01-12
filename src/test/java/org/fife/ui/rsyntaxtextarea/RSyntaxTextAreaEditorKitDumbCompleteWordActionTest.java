@@ -11,6 +11,8 @@ import javax.swing.ActionMap;
 
 import org.fife.ui.SwingRunner;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DumbCompleteWordAction;
+import org.fife.ui.rsyntaxtextarea.modes.JavaScriptTokenRegistration;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenRegistration;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.junit.Assert;
@@ -60,7 +62,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   a");
@@ -82,7 +84,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 	public void testActionPerformed_dollarSignImportant() throws Exception {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+				JavaScriptTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 		DumbCompleteWordAction action = getDumbCompleteWordAction(textArea);
 
@@ -98,7 +100,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 	public void testActionPerformed_underscoresImportant() throws Exception {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+				JavaScriptTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 		DumbCompleteWordAction action = getDumbCompleteWordAction(textArea);
 
@@ -129,7 +131,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("for if  while");
@@ -169,7 +171,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("for if  while");
@@ -209,7 +211,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("for if  while");
@@ -249,7 +251,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
-				SyntaxConstants.SYNTAX_STYLE_JAVA);
+				JavaTokenRegistration.SYNTAX_STYLE);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   a");

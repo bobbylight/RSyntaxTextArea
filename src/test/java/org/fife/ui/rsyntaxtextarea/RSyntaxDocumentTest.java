@@ -12,9 +12,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.fife.ui.rsyntaxtextarea.modes.CTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.CTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.modes.HTMLTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.HTMLTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.modes.JavaScriptTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.JavaScriptTokenRegistration;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenRegistration;
+import org.fife.ui.rsyntaxtextarea.modes.PHPTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.modes.XMLTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.XMLTokenRegistration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,7 +58,7 @@ public class RSyntaxDocumentTest {
 
 	@Test
 	public void test1ArgConstructor() {
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
+		String syntaxStyle = JavaTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 	}
@@ -61,7 +67,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void test2ArgConstructor() {
 		
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
+		String syntaxStyle = JavaTokenRegistration.SYNTAX_STYLE;
 		
 		// Standard case, taking default TokenMakerFactory
 		doc = new RSyntaxDocument(null, syntaxStyle);
@@ -83,7 +89,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testFireDocumentEvent_InsertWithNoNewLines() throws Exception {
 		
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
+		String syntaxStyle = JavaTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		
 		TestDocumentListener l = new TestDocumentListener();
@@ -107,7 +113,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testFireDocumentEvent_InsertWithTwoNewLines() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -134,7 +140,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testFireDocumentEvent_InsertWithTwoNewLinesOneReplaced() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -170,7 +176,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testFireDocumentEvent_RemoveWithinOneLine() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -195,7 +201,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetClosestStandardTokenTypeForInternalType() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
+		String syntaxStyle = JavaScriptTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		JavaScriptTokenMaker tokenMaker = new JavaScriptTokenMaker();
 
@@ -212,17 +218,17 @@ public class RSyntaxDocumentTest {
 	public void testGetCompleteMarkupCloseTags() {
 
 		// Non-markup language
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertFalse(doc.getCompleteMarkupCloseTags());
 
 		// Markup language defaulting to false
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_PHP;
+		syntaxStyle = PHPTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertFalse(doc.getCompleteMarkupCloseTags());
 
 		// Markup language defaulting to true
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertTrue(doc.getCompleteMarkupCloseTags());
 
@@ -233,21 +239,21 @@ public class RSyntaxDocumentTest {
 	public void testGetCurlyBracesDenoteCodeBlocks() {
 
 		// Language that does use curly braces
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		TokenMaker tokenMaker = new CTokenMaker();
 		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
 				doc.getCurlyBracesDenoteCodeBlocks(0));
 
 		// Language that does not use curly braces
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		tokenMaker = new XMLTokenMaker();
 		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
 				doc.getCurlyBracesDenoteCodeBlocks(0));
 
 		// Language in which some sub-languages do, some don't
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_HTML;
+		syntaxStyle = HTMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		tokenMaker = new HTMLTokenMaker();
 		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
@@ -267,12 +273,12 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetLanguageIsMarkup() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertFalse(doc.getLanguageIsMarkup());
 
 		// Language that does not use curly braces
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		Assert.assertTrue(doc.getLanguageIsMarkup());
 
@@ -282,7 +288,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetLastTokenTypeOnLine() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -296,7 +302,7 @@ public class RSyntaxDocumentTest {
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testGetLastTokenTypeOnLine_InvalidIndex() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -308,7 +314,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetLineCommentStartAndEnd() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		String[] actual = doc.getLineCommentStartAndEnd(0);
 		Assert.assertEquals(2, actual.length);
@@ -316,7 +322,7 @@ public class RSyntaxDocumentTest {
 		Assert.assertNull(actual[1]);
 
 		// Language that does not use curly braces
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		actual = doc.getLineCommentStartAndEnd(0);
 		Assert.assertEquals(2, actual.length);
@@ -329,7 +335,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetMarkOccurrencesOfTokenType() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertTrue(doc.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
 		Assert.assertFalse(doc.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
@@ -340,7 +346,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetOccurrenceMarker() {
 		// Not really much we can test here
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertNotNull(doc.getOccurrenceMarker());
 	}
@@ -349,7 +355,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetShouldIndentNextLine() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -365,11 +371,11 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetSyntaxStyle() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
@@ -383,7 +389,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testGetTokenListForLine() throws Exception {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
@@ -411,12 +417,12 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testInsertBreakSpecialHandling() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertTrue(doc.insertBreakSpecialHandling(null));
 
 		// Language that does not use curly braces
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		Assert.assertFalse(doc.insertBreakSpecialHandling(null));
 
@@ -426,7 +432,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testIsIdentifierChar() {
 		
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertTrue(doc.isIdentifierChar(0, 'a'));
 		Assert.assertFalse(doc.isIdentifierChar(0, '%'));
@@ -437,7 +443,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testIterator() {
 		// Not much to test here
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertNotNull(doc.iterator());
 	}
@@ -446,11 +452,11 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testSetSyntaxStyle() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
-		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
+		syntaxStyle = XMLTokenRegistration.SYNTAX_STYLE;
 		doc.setSyntaxStyle(syntaxStyle);
 		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
@@ -464,7 +470,7 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testSetSyntaxStyle_CustomTokenMaker() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
@@ -478,22 +484,22 @@ public class RSyntaxDocumentTest {
 	@Test
 	public void testSetTokenMakerFactory() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+		String syntaxStyle = CTokenRegistration.SYNTAX_STYLE;
 		doc = new RSyntaxDocument(syntaxStyle);
 
 		// By default, we do indeed get syntax highlighting for Java
-		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+		doc.setSyntaxStyle(JavaTokenRegistration.SYNTAX_STYLE);
 		Assert.assertNotNull(doc.getLineCommentStartAndEnd(0));
 
 		// No mappings -> default to PlainTextTokenMaker
 		doc.setTokenMakerFactory(new EmptyTokenMakerFactory());
-		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+		doc.setSyntaxStyle(JavaTokenRegistration.SYNTAX_STYLE);
 		// Ghetto test to show we are not picking up a JavaTokenMaker
 		Assert.assertNull(doc.getLineCommentStartAndEnd(0));
 
 		// Verify restoring default instance
 		doc.setTokenMakerFactory(null);
-		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+		doc.setSyntaxStyle(JavaTokenRegistration.SYNTAX_STYLE);
 		Assert.assertNotNull(doc.getLineCommentStartAndEnd(0));
 
 	}

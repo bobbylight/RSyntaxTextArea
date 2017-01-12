@@ -57,6 +57,7 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip;
 import org.fife.ui.rsyntaxtextarea.folding.DefaultFoldManager;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenRegistration;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
@@ -694,7 +695,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	protected Document createDefaultModel() {
-		return new RSyntaxDocument(SYNTAX_STYLE_NONE);
+		return new RSyntaxDocument(PlainTextTokenRegistration.SYNTAX_STYLE);
 	}
 
 
@@ -1928,7 +1929,7 @@ private boolean fractionalFontMetricsEnabled;
 		}
 
 		// Set some RSyntaxTextArea default values.
-		syntaxStyleKey = SYNTAX_STYLE_NONE;
+		syntaxStyleKey = PlainTextTokenRegistration.SYNTAX_STYLE;
 		setMatchedBracketBGColor(getDefaultBracketMatchBGColor());
 		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
 		setBracketMatchingEnabled(true);
@@ -2901,7 +2902,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public void setSyntaxEditingStyle(String styleKey) {
 		if (styleKey==null) {
-			styleKey = SYNTAX_STYLE_NONE;
+			styleKey = PlainTextTokenRegistration.SYNTAX_STYLE;
 		}
 		if (!styleKey.equals(syntaxStyleKey)) {
 			String oldStyle = syntaxStyleKey;
