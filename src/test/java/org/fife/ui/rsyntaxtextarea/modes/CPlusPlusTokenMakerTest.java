@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +24,16 @@ import org.junit.Test;
 public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
+	/**
+	 * Creates an instance of the {@code TokenMaker} to test.
+	 *
+	 * @return The token maker to test.
+	 */
+	private TokenMaker createTokenMaker() {
+		return new CPlusPlusTokenMaker();
+	}
+
+
 	@Test
 	public void testCharLiterals() {
 
@@ -35,7 +46,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : chars) {
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals("Invalid char literal: " + token, TokenTypes.LITERAL_CHAR, token.getType());
 		}
@@ -49,7 +60,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "char div_t double float int ldiv_t long short signed size_t unsigned void wchar_t";
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -78,8 +89,25 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testEolComments_continuedFromPreviousLine() {
+
+		String[] eolCommentLiterals = {
+			"this is still in an EOL comment",
+		};
+
+		for (String code : eolCommentLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.COMMENT_EOL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
@@ -96,7 +124,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : eolCommentLiterals) {
 
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
@@ -133,7 +161,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 			"3.E-7f 3.E-7F 3.0E-7f 3.0E-7F .111E-7f .111E-7F";
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -167,7 +195,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 				"0x1UL 0xfeUL 0x333333333333UL 0X1UL 0XfeUL 0X33333333333UL 0xFEUL 0XFEUL";
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -395,7 +423,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : functions) {
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
@@ -411,7 +439,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 				"switch typedef union volatile while";
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -447,7 +475,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
@@ -465,7 +493,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : mlcLiterals) {
 
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -492,7 +520,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -518,7 +546,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "( ) [ ] { }";
 
 		Segment segment = createSegment(code);
-		CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] separators = code.split(" +");
@@ -549,7 +577,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
-			CPlusPlusTokenMaker tm = new CPlusPlusTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
