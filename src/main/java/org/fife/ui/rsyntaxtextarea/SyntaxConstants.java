@@ -51,7 +51,7 @@ public interface SyntaxConstants {
 	 */
 	String SYNTAX_STYLE_ASSEMBLER_AVR	= "text/asm-avr";
 
-	
+
 	/**
 	 * Style for highlighting BBCode.
 	 */
