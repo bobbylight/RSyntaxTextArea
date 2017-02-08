@@ -49,7 +49,8 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.4
+ * @author Ralph Niemitz(just fixed something)
+ * @version 0.4.1
  *
  */
 %%
@@ -262,6 +263,8 @@ Identifier				= ({Letter}({Letter}|{Digit})*)
 <YYINITIAL> "then"					{ addToken(Token.RESERVED_WORD); }
 <YYINITIAL> "until"					{ addToken(Token.RESERVED_WORD); }
 <YYINITIAL> "while"					{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "in"					{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "goto"					{ addToken(Token.RESERVED_WORD); }
 
 /* Data types. */
 <YYINITIAL> "<number>"				{ addToken(Token.DATA_TYPE); }
