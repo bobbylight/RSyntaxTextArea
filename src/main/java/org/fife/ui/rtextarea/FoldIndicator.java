@@ -70,6 +70,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private Color foldIconBackground;
 
 	/**
+	 * The color to use for armed fold icon backgrounds, if the default icons
+	 * are used.  This may be {@code null}.
+	 */
+	private Color foldIconArmedBackground;
+
+	/**
 	 * The icon used for collapsed folds.
 	 */
 	private Icon collapsedFoldIcon;
@@ -78,6 +84,18 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * The icon used for expanded folds.
 	 */
 	private Icon expandedFoldIcon;
+
+	/**
+	 * Used while painting; global flag to denote whether the mouse is over
+	 * a fold indicator.
+	 */
+	private boolean mouseOverFoldIcon;
+
+	/**
+	 * Used while painting; global flag to denote whether the
+	 * currently-being-painted fold should be rendered as armed.
+	 */
+	private boolean paintFoldArmed;
 
 	/**
 	 * Whether tool tips are displayed showing the contents of collapsed
@@ -138,6 +156,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private Fold findOpenFoldClosestTo(Point p) {
 
 		Fold fold = null;
+		mouseOverFoldIcon = false;
 
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 		if (rsta.isCodeFoldingEnabled()) { // Should always be true
@@ -147,7 +166,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 					int line = rsta.getLineOfOffset(offs);
 					FoldManager fm = rsta.getFoldManager();
 					fold = fm.getFoldForLine(line);
-					if (fold==null) {
+					if (fold != null) {
+						// The mouse is directly over the fold indicator
+						mouseOverFoldIcon = true;
+					}
+					else {
 						fold = fm.getDeepestOpenFoldContaining(offs);
 					}
 				} catch (BadLocationException ble) {
@@ -162,11 +185,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 
 	/**
+	 * Returns the color to use for the "background" of armed fold icons.  This
+	 * is ignored if custom icons are used.
+	 *
+	 * @return The background color.  If this is {@code null}, there is no
+	 *         special color for armed fold icons.
+	 * @see #setFoldIconArmedBackground(Color)
+	 * @see #getFoldIconBackground()
+	 */
+	public Color getFoldIconArmedBackground() {
+		return foldIconArmedBackground;
+	}
+
+
+	/**
 	 * Returns the color to use for the "background" of fold icons.  This
-	 * is be ignored if custom icons are used.
+	 * is ignored if custom icons are used.
 	 *
 	 * @return The background color.
 	 * @see #setFoldIconBackground(Color)
+	 * @see #getFoldIconArmedBackground()
 	 */
 	public Color getFoldIconBackground() {
 		return foldIconBackground;
@@ -379,11 +417,16 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
-				if (fold==foldWithOutlineShowing && !fold.isCollapsed()) {
-					g.setColor(getForeground());
-					int w2 = width/2;
-					g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
-					paintingOutlineLine = true;
+				if (fold==foldWithOutlineShowing) {
+					if (!fold.isCollapsed()) {
+						g.setColor(getForeground());
+						int w2 = width/2;
+						g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
+						paintingOutlineLine = true;
+					}
+					if (mouseOverFoldIcon) {
+						paintFoldArmed = true;
+					}
 				}
 				if (fold.isCollapsed()) {
 					collapsedFoldIcon.paintIcon(this, g, x, y);
@@ -404,6 +447,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				else {
 					expandedFoldIcon.paintIcon(this, g, x, y);
 				}
+				paintFoldArmed = false;
 			}
 			line++;
 			y += cellHeight;
@@ -498,11 +542,16 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
-				if (fold==foldWithOutlineShowing && !fold.isCollapsed()) {
-					g.setColor(getForeground());
-					int w2 = width/2;
-					g.drawLine(w2,y+cellHeight/2, w2,y+curLineH);
-					paintingOutlineLine = true;
+				if (fold==foldWithOutlineShowing) {
+					if (!fold.isCollapsed()) {
+						g.setColor(getForeground());
+						int w2 = width/2;
+						g.drawLine(w2,y+cellHeight/2, w2,y+curLineH);
+						paintingOutlineLine = true;
+					}
+					if (mouseOverFoldIcon) {
+						paintFoldArmed = true;
+					}
 				}
 				if (fold.isCollapsed()) {
 					collapsedFoldIcon.paintIcon(this, g, x, y);
@@ -515,6 +564,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 					y += curLineH;
 					line++;
 				}
+				paintFoldArmed = false;
 			}
 			else {
 				y += curLineH;
@@ -544,11 +594,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 
 	/**
+	 * Sets the color to use for the "background" of armed fold icons.  This
+	 * will be ignored if custom icons are used.
+	 *
+	 * @param bg The new background color.  If {@code null} is passed in,
+	 *        there will be no special color for armed fold icons.
+	 * @see #getFoldIconArmedBackground()
+	 * @see #setFoldIconBackground(Color)
+	 */
+	public void setFoldIconArmedBackground(Color bg) {
+		foldIconArmedBackground = bg;
+	}
+
+
+	/**
 	 * Sets the color to use for the "background" of fold icons.  This will
 	 * be ignored if custom icons are used.
 	 *
-	 * @param bg The new background color.
+	 * @param bg The new background color.  This should not be {@code null}.
 	 * @see #getFoldIconBackground()
+	 * @see #setFoldIconArmedBackground(Color)
 	 */
 	public void setFoldIconBackground(Color bg) {
 		foldIconBackground = bg;
@@ -631,7 +696,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(foldIconBackground);
+			Color bg = foldIconBackground;
+			if (paintFoldArmed && foldIconArmedBackground != null) {
+				bg = foldIconArmedBackground;
+			}
+			g.setColor(bg);
 			g.fillRect(x,y, 8,8);
 			g.setColor(getForeground());
 			g.drawRect(x,y, 8,8);
@@ -658,12 +727,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 
-//			// TODO: Implement code folding with word wrap enabled
-//			if (textArea.getLineWrap()) {
-//				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-//				return;
-//			}
-
 			Point p = e.getPoint();
 			int line = rowAtPoint(p);
 
@@ -683,16 +746,21 @@ public class FoldIndicator extends AbstractGutterComponent {
 		public void mouseExited(MouseEvent e) {
 			if (foldWithOutlineShowing!=null) {
 				foldWithOutlineShowing = null;
+				mouseOverFoldIcon = false;
 				repaint();
 			}
 		}
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
+			boolean oldMouseOverFoldIcon = mouseOverFoldIcon;
 			Fold newSelectedFold = findOpenFoldClosestTo(e.getPoint());
 			if (newSelectedFold!=foldWithOutlineShowing &&
 					newSelectedFold!=null && !newSelectedFold.isOnSingleLine()) {
 				foldWithOutlineShowing = newSelectedFold;
+				repaint();
+			}
+			else if (mouseOverFoldIcon != oldMouseOverFoldIcon) {
 				repaint();
 			}
 		}

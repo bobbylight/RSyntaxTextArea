@@ -1655,20 +1655,36 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				return;
 			}
+
 			try {
-				int caret = textArea.getCaretPosition();
+
+				int dot = textArea.getCaretPosition();
+				int mark = textArea.getCaret().getMark();
 				Document doc = textArea.getDocument();
 				Element root = doc.getDefaultRootElement();
-				int line = root.getElementIndex(caret);
-				if (moveAmt==-1 && line>0) {
-					moveLineUp(textArea, line);
+				int startLine = root.getElementIndex(Math.min(dot, mark));
+				int endLine = root.getElementIndex(Math.max(dot, mark));
+
+				// If we're moving more than one line, only move the last line
+				// if they've selected more than one char in it.
+				int moveCount = endLine - startLine + 1;
+				if (moveCount > 1) {
+					Element elem = root.getElement(endLine);
+					if (dot == elem.getStartOffset() || mark == elem.getStartOffset()) {
+						moveCount--;
+					}
 				}
-				else if (moveAmt==1 && line<root.getElementCount()-1) {
-					moveLineDown(textArea, line);
+
+				if (moveAmt==-1 && startLine>0) {
+					moveLineUp(textArea, startLine, moveCount);
+				}
+				else if (moveAmt==1 && endLine < root.getElementCount()-1) {
+					moveLineDown(textArea, startLine, moveCount);
 				}
 				else {
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
@@ -1687,50 +1703,96 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 			return getName();
 		}
 
-		private void moveLineDown(RTextArea textArea, int line)
+		private void moveLineDown(RTextArea textArea, int line, int lineCount)
 									throws BadLocationException {
+
+			// If we'd be moving lines past the end of the document, stop.
+			// We could perhaps just decide to move the lines to the end of the
+			// file, but this just keeps things simple.
+//			if (textArea.getLineCount() - line < lineCount) {
+//				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+//				return;
+//			}
+
 			Document doc = textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
 			Element elem = root.getElement(line);
 			int start = elem.getStartOffset();
+
+			int endLine = line + lineCount - 1;
+			elem = root.getElement(endLine);
 			int end = elem.getEndOffset();
-			int caret = textArea.getCaretPosition();
-			int caretOffset = caret - start;
-			String text = doc.getText(start, end-start);
-			doc.remove(start, end-start);
-			Element elem2 = root.getElement(line); // not "line+1" - removed.
-			//int start2 = elem2.getStartOffset();
-			int end2 = elem2.getEndOffset();
-			doc.insertString(end2, text, null);
-			elem = root.getElement(line+1);
-			textArea.setCaretPosition(elem.getStartOffset()+caretOffset);
+
+			textArea.beginAtomicEdit();
+			try {
+
+				String text = doc.getText(start, end - start);
+				doc.remove(start, end - start);
+
+				int insertLine = Math.min(line + 1, textArea.getLineCount());
+				boolean newlineInserted = false;
+				if (insertLine == textArea.getLineCount()) {
+					textArea.append("\n");
+					newlineInserted = true;
+				}
+
+				int insertOffs = textArea.getLineStartOffset(insertLine);
+				doc.insertString(insertOffs, text, null);
+				textArea.setSelectionStart(insertOffs);
+				textArea.setSelectionEnd(insertOffs + text.length() - 1);
+
+				if (newlineInserted) {
+					doc.remove(doc.getLength() - 1, 1);
+				}
+
+			} finally {
+				textArea.endAtomicEdit();
+			}
+
 		}
 
-		private void moveLineUp(RTextArea textArea, int line)
+		private void moveLineUp(RTextArea textArea, int line, int moveCount)
 									throws BadLocationException {
+
 			Document doc = textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
-			int lineCount = root.getElementCount();
 			Element elem = root.getElement(line);
 			int start = elem.getStartOffset();
-			int end = line==lineCount-1 ? elem.getEndOffset()-1 :
-									elem.getEndOffset();
-			int caret = textArea.getCaretPosition();
-			int caretOffset = caret - start;
-			String text = doc.getText(start, end-start);
-			if (line==lineCount-1) {
-				start--; // Remove previous line's ending \n
+
+			int endLine = line + moveCount - 1;
+			elem = root.getElement(endLine);
+			int end = elem.getEndOffset();
+			int lineCount = textArea.getLineCount();
+			boolean movingLastLine = false;
+			if (endLine == lineCount - 1) {
+				movingLastLine = true;
+				end--;
 			}
-			doc.remove(start, end-start);
-			Element elem2 = root.getElement(line-1);
-			int start2 = elem2.getStartOffset();
-			//int end2 = elem2.getEndOffset();
-			if (line==lineCount-1) {
-				text += '\n';
+
+			int insertLine = Math.max(line - 1, 0);
+
+			textArea.beginAtomicEdit();
+			try {
+
+				String text = doc.getText(start, end - start);
+				if (movingLastLine) {
+					text += '\n';
+				}
+				doc.remove(start, end - start);
+
+				int insertOffs = textArea.getLineStartOffset(insertLine);
+				doc.insertString(insertOffs, text, null);
+				textArea.setSelectionStart(insertOffs);
+				int selEnd = insertOffs + text.length() - 1;
+				textArea.setSelectionEnd(selEnd);
+				if (movingLastLine) { // Remove the artifically-added newline
+					doc.remove(doc.getLength() - 1, 1);
+				}
+
+			} finally {
+				textArea.endAtomicEdit();
 			}
-			doc.insertString(start2, text, null);
-			//caretOffset = Math.min(start2+caretOffset, end2-1);
-			textArea.setCaretPosition(start2+caretOffset);
+
 		}
 
 	}

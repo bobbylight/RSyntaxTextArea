@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +23,25 @@ import org.junit.Test;
  */
 public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
+	/**
+	 * The last token type on the previous line for this token maker to
+	 * start parsing a new line as JS.  This constant is only here so we can
+	 * copy and paste tests from the JavaScriptTokenMakerTest class into others,
+	 * such as HTML, PHP, and JSP token maker tests, with as little change as
+	 * possible.
+	 */
+	private static final int JS_PREV_TOKEN_TYPE = JSPTokenMaker.INTERNAL_IN_JS;
+
+
+	/**
+	 * Creates an instance of the {@code TokenMaker} to test.
+	 *
+	 * @return The token maker to test.
+	 */
+	private TokenMaker createTokenMaker() {
+		return new JSPTokenMaker();
+	}
+
 
 	@Test
 	public void testJava_Annotations() {
@@ -29,7 +49,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "@Test @Foo @Foo_Bar_Bas @Number7";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -54,7 +74,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			"0b0 0b1 0B0 0B1 0b010 0B010 0b0_10 0B0_10";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -78,7 +98,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "true false";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -108,7 +128,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : chars) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
 		}
@@ -122,7 +142,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "boolean byte char double float int long short";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -149,7 +169,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : docCommentLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 		}
@@ -167,7 +187,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : docCommentLiterals) {
 
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
@@ -195,7 +215,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
@@ -225,7 +245,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -254,7 +274,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 				"0x1_1L 0xf_eL 0x333_33333_3333L 0X1_1L 0Xf_eL 0X333_3333_3333L 0xF_EL 0XF_EL";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -377,7 +397,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : classNames) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
@@ -395,7 +415,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 				"synchronized this throw throws transient try void volatile while";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -427,7 +447,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
@@ -445,7 +465,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : mlcLiterals) {
 
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -477,7 +497,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 				"01_1L 07_3L 0333_33333_3333L 01_1L 07_3L 0333_3333_3333L 07_3L 07_3L";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -503,7 +523,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] keywords = code.split(" +");
@@ -527,7 +547,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "( ) [ ] { }";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 
 		String[] separators = code.split(" +");
@@ -556,7 +576,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
@@ -570,8 +590,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "true false";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -600,9 +620,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : chars) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
-			Token token = tm.getTokenList(segment,
-					JSPTokenMaker.INTERNAL_IN_JS, 0);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals("Invalid char token: " + token, TokenTypes.LITERAL_CHAR, token.getType());
 		}
 
@@ -615,8 +634,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "boolean byte char double float int long short";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -642,9 +661,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : eolCommentLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
-			Token token = tm.getTokenList(segment,
-					JSPTokenMaker.INTERNAL_IN_JS, 0);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
@@ -661,10 +679,9 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : eolCommentLiterals) {
 
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment,
-					JSPTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals("Unexpected token: " + token, TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
@@ -699,8 +716,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -723,9 +740,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "eval parseInt parseFloat escape unescape isNaN isFinite";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment,
-				JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] functions = code.split(" +");
 		for (int i = 0; i < functions.length; i++) {
@@ -750,9 +766,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 				"0x1L 0xfeL 0x333333333333L 0X1L 0XfeL 0X33333333333L 0xFEL 0XFEL ";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment,
-				JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] literals = code.split(" +");
 		for (int i = 0; i < literals.length; i++) {
@@ -779,8 +794,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 				"NaN Infinity";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -795,7 +810,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		}
 
 		segment = createSegment("return");
-		token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 		Assert.assertEquals("return", token.getLexeme());
 		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 		token = token.getNextToken();
@@ -812,8 +827,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : mlcLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
@@ -830,9 +845,9 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		for (String code : mlcLiterals) {
 
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
+			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 
 			token = token.getNextToken();
@@ -850,6 +865,58 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	public void testJS_Numbers() {
+
+		String[] ints = {
+			"0", "42", /*"-7",*/
+			"0l", "42l",
+			"0L", "42L",
+		};
+
+		for (String code : ints) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
+		}
+
+		String[] floats = {
+			"1e17", "3.14159", "5.7e-8", "2f", "2d",
+		};
+
+		for (String code : floats) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+		}
+
+		String[] hex = {
+			"0x1f", "0X1f", "0x1F", "0X1F",
+		};
+
+		for (String code : hex) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+		}
+
+		String[] errors = {
+			"42foo", "1e17foo", "0x1ffoo",
+		};
+
+		for (String code : errors) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testJS_Operators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ && >>>";
@@ -857,9 +924,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String code = assignmentOperators + " " + nonAssignmentOperators;
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment,
-				JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -877,13 +943,30 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	public void testJS_Regexes() {
+
+		String[] regexes = {
+			"/foobar/", "/foobar/gim", "/foo\\/bar\\/bas/g",
+		};
+
+		for (String code : regexes) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.REGEX, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testJS_Separators() {
 
 		String code = "( ) [ ] { }";
 
 		Segment segment = createSegment(code);
-		JSPTokenMaker tm = new JSPTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] separators = code.split(" +");
 		for (int i = 0; i < separators.length; i++) {
@@ -903,18 +986,134 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testJS_StringLiterals() {
+	public void testJS_Separators_renderedAsIdentifiers() {
+
+		String[] separators2 = { ";", ",", "." };
+
+		for (String code : separators2) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_StringLiterals_invalid() {
 
 		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
+			"\"\\xG7\"", // Invalid hex/octal escape
+			"\"foo\\ubar\"", "\"\\u00fg\"", // Invalid Unicode escape
+			"\"My name is \\ubar and I \\", // Continued onto another line
+			"\"This is unterminated and ", // Unterminated string
 		};
 
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
-			JSPTokenMaker tm = new JSPTokenMaker();
-			Token token = tm.getTokenList(segment,
-					JSPTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals("Invalid string token: " + token, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
+					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_StringLiterals_valid() {
+
+		String[] stringLiterals = {
+			"\"\"", "\"hi\"", "\"\\x77\"", "\"\\u00fe\"", "\"\\\"\"",
+			"\"My name is Robert and I \\", // String continued on another line
+		};
+
+		for (String code : stringLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_invalid() {
+
+		String[] templateLiterals = {
+			"`\\xG7`", // Invalid hex/octal escape
+			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
+			"`My name is \\ubar and I ", // Continued onto another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
+					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
+
+		String[] templateLiterals = {
+			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
+			"`My name is Robert and I", // String continued on another line
+			"`My name is Robert and I \\", // String continued on another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
+
+		// Strings with tokens:  template, interpolated expression, template
+		String[] templateLiterals = {
+			"`My name is ${name}`",
+			"`My name is ${'\"' + name + '\"'}`",
+			"`Embedded example: ${2 + ${!!func()}}, wow",
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_Whitespace() {
+
+		String[] whitespace = {
+			" ", "\t", "\f", "   \t   ",
+		};
+
+		for (String code : whitespace) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.WHITESPACE, token.getType());
 		}
 
 	}

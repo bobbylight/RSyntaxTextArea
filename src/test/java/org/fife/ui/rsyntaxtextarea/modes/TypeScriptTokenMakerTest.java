@@ -927,6 +927,69 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	public void testJS_TemplateLiterals_invalid() {
+
+		String[] templateLiterals = {
+			"`\\xG7`", // Invalid hex/octal escape
+			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
+			"`My name is \\ubar and I ", // Continued onto another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
+					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
+
+		String[] templateLiterals = {
+			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
+			"`My name is Robert and I", // String continued on another line
+			"`My name is Robert and I \\", // String continued on another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
+
+		// Strings with tokens:  template, interpolated expression, template
+		String[] templateLiterals = {
+			"`My name is ${name}`",
+			"`My name is ${'\"' + name + '\"'}`",
+			"`Embedded example: ${2 + ${!!func()}}, wow",
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testTS_Whitespace() {
 
 		String[] whitespace = {

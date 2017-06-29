@@ -23,6 +23,15 @@ import org.junit.Test;
  */
 public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
+	/**
+	 * The last token type on the previous line for this token maker to
+	 * start parsing a new line as JS.  This constant is only here so we can
+	 * copy and paste tests from the JavaScriptTokenMakerTest class into others,
+	 * such as HTML, PHP, and JSP token maker tests, with as little change as
+	 * possible.
+	 */
+	private static final int JS_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS;
+
 
 	/**
 	 * Returns a new instance of the <code>TokenMaker</code> to test.
@@ -136,7 +145,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
 		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
-		
+
 	}
 
 
@@ -161,7 +170,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"));
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
-		
+
 	}
 
 
@@ -203,7 +212,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testHtml_validHtml5TagNames() {
-		
+
 		String[] tagNames = {
 			"a", "abbr", "acronym", "address", "applet", "area", "article",
 			"aside", "audio", "b", "base", "basefont", "bdo", "bgsound", "big",
@@ -733,6 +742,69 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
 			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_invalid() {
+
+		String[] templateLiterals = {
+			"`\\xG7`", // Invalid hex/octal escape
+			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
+			"`My name is \\ubar and I ", // Continued onto another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
+					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
+
+		String[] templateLiterals = {
+			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
+			"`My name is Robert and I", // String continued on another line
+			"`My name is Robert and I \\", // String continued on another line
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
+
+		// Strings with tokens:  template, interpolated expression, template
+		String[] templateLiterals = {
+			"`My name is ${name}`",
+			"`My name is ${'\"' + name + '\"'}`",
+			"`Embedded example: ${2 + ${!!func()}}, wow",
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}

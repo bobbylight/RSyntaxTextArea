@@ -233,6 +233,12 @@ public class TokenImpl implements Token {
 					sb.append(tabsToSpaces ? tabStr : "&#09;");
 					lastWasSpace = false;
 					break;
+				case '&':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&amp;");
+					lastWasSpace = false;
+					break;
 				case '<':
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
@@ -243,6 +249,24 @@ public class TokenImpl implements Token {
 					sb.append(text, lastI, i-lastI);
 					lastI = i+1;
 					sb.append("&gt;");
+					lastWasSpace = false;
+					break;
+				case '\'':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&#39;");
+					lastWasSpace = false;
+					break;
+				case '"':
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&#34;");
+					lastWasSpace = false;
+					break;
+				case '/': // OWASP-recommended to escape even though unnecessary
+					sb.append(text, lastI, i-lastI);
+					lastI = i+1;
+					sb.append("&#47;");
 					lastWasSpace = false;
 					break;
 				default:

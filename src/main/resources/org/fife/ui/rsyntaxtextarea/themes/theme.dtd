@@ -1,7 +1,7 @@
 <!-- DTD for RSyntaxTextArea Theme XML. See /themes folder for examples. -->
 <!ELEMENT RSyntaxTheme (baseFont?, background, caret, selection,
       currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
-      matchedBracket, hyperlinks, secondaryLanguages, gutterBorder, lineNumbers,
+      matchedBracket, hyperlinks, secondaryLanguages, gutterBackground?, gutterBorder, lineNumbers,
       foldIndicator, iconRowHeader?, tokenStyles)>
 <!ELEMENT background EMPTY>
 <!ELEMENT baseFont EMPTY>
@@ -15,6 +15,7 @@
 <!ELEMENT hyperlinks EMPTY>
 <!ELEMENT secondaryLanguages (language+)>
 <!ELEMENT language EMPTY>
+<!ELEMENT gutterBackground EMPTY>
 <!ELEMENT gutterBorder EMPTY>
 <!ELEMENT lineNumbers EMPTY>
 <!ELEMENT foldIndicator EMPTY>
@@ -56,6 +57,8 @@
 <!ATTLIST language
       index      (1|2|3) #REQUIRED
       bg         CDATA   #REQUIRED>
+<!ATTLIST gutterBackground
+      color      CDATA #REQUIRED>
 <!ATTLIST gutterBorder
       color      CDATA #REQUIRED>
 <!ATTLIST lineNumbers
@@ -63,8 +66,9 @@
       fontFamily CDATA #IMPLIED
       fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator
-      fg         CDATA #REQUIRED
-      iconBg     CDATA #REQUIRED>
+      fg          CDATA #REQUIRED
+      iconBg      CDATA #REQUIRED
+      iconArmedBg CDATA #IMPLIED>
 <!ATTLIST iconRowHeader
       activeLineRange CDATA #REQUIRED
       inheritsGutterBG (true|false) "false">
