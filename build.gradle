@@ -20,7 +20,7 @@ dependencies {
 
 // Regenerate local gradlew
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.14'
+	gradleVersion = '4.3.1'
 }
 
 // Add coveralls plugin to this build's classpath

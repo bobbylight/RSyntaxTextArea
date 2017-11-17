@@ -1,4 +1,5 @@
-ant-classes
+.idea
+*.iml
 bin
 dist
 javadoc
