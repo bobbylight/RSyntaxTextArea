@@ -481,10 +481,7 @@ public class TokenImpl implements Token {
 					nextX = stableX + fm.charsWidth(text, start, i - start + 1);
 				}
 				if (x >= currX && x < nextX) {
-					if ((x - currX) < (nextX - x)) {
-						return last + i - token.textOffset;
-					}
-					return last + i + 1 - token.textOffset;
+                    return last + i - token.textOffset;
 				}
 			}
 
