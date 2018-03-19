@@ -124,6 +124,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 					// TODO: Do a textArea.repaint() instead of repainting each
 					// marker as it's added if count is huge
 					occurrencesChanged = true;
+				} else {
+					clear();
 				}
 
 			} finally {
