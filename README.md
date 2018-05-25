@@ -17,7 +17,7 @@ SNAPSHOT builds of the in-development, unreleased version are hosted on [Sonatyp
 RSyntaxTextArea uses [Gradle](http://gradle.org/) to build.  To compile, run
 all unit tests, and create the jar, run:
 
-    ./gradlew build
+    ./gradlew build --warning-mode=all
 
 RSTA requires a Java 8 JDK to compile, but builds classes with Java 6 binary compatibility if possible
 (and indeed, the artifacts in Maven Central are Java 6-compatible).

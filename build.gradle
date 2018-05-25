@@ -1,10 +1,12 @@
+import static org.gradle.api.JavaVersion.*
+
 ['java', 'checkstyle', 'osgi', 'distribution', 'maven', 'signing'].each { apply plugin: it }
 // Jacoco and a coveralls upload plugin needed for publishing coverage results
 ['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
 // We require building with JDK 8 or later.  We turn off doclint since our
 // generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
-assert org.gradle.api.JavaVersion.current().isJava8Compatible()
+assert current().isJava8Compatible()
 allprojects {
 	tasks.withType(Javadoc) {
 		options.addStringOption('Xdoclint:none', '-quiet')
@@ -20,7 +22,7 @@ dependencies {
 
 // Regenerate local gradlew
 task wrapper(type: Wrapper) {
-	gradleVersion = '4.3.1'
+	gradleVersion = '4.7'
 }
 
 // Add coveralls plugin to this build's classpath
@@ -29,7 +31,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 	}
 }
 
@@ -41,7 +43,7 @@ jacocoTestReport {
 }
 
 checkstyle {
-	toolVersion = '7.0'
+	toolVersion = '8.10'
 	configFile = 'config/checkstyle/checkstyle.xml' as File
 }
 
@@ -55,7 +57,7 @@ compileJava {
 	if (project.hasProperty('java6CompileBootClasspath')) {
 		if (new File(java6CompileBootClasspath).isFile()) {
 			println "Bootstrap classpath when compiling Java: ${java6CompileBootClasspath}"
-			options.bootClasspath = java6CompileBootClasspath
+			options.bootstrapClasspath = files(java6CompileBootClasspath)
 		}
 		else {
 			println "Warning: Specified java6CompileBootClasspath does not exist: ${java6CompileBootClasspath}"
@@ -105,8 +107,10 @@ srcDistZip {
 	include '.settings/**'
 }
 
-task buildSourceForgeZips << {
-	println "Building zip files for SourceForge"
+task buildSourceForgeZips {
+    doFirst {
+        println "Building zip files for SourceForge"
+    }
 }
 buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
 

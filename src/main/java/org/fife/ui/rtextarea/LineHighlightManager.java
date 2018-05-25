@@ -196,6 +196,17 @@ class LineHighlightManager {
 			this.color = c;
 		}
 
+		@Override
+		public boolean equals(Object other) {
+			if (other instanceof LineHighlightInfo) {
+				LineHighlightInfo lhi2 = (LineHighlightInfo)other;
+				return this.getOffset() == lhi2.getOffset() &&
+					this.getColor() == null ? lhi2.getColor() == null :
+							this.getColor().equals(lhi2.getColor());
+			}
+			return false;
+		}
+
 		public Color getColor() {
 			return color;
 		}

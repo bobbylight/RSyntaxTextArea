@@ -87,9 +87,8 @@
 
     <module name="TreeWalker">
 
-		<!-- Part of turning off indivial checks: -->
+		<!-- Part of turning off individual checks: -->
 		<!-- http://stackoverflow.com/questions/5761188/checkstyle-suppressioncommentfilter-not-ignoring-specified-rule/5764666#5764666 -->
-		<module name="FileContentsHolder"/>
 		<module name="SuppressWarningsHolder" />
 
         <!-- Checks for Javadoc comments.                     -->

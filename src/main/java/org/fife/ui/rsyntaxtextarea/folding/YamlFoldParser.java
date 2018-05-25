@@ -30,12 +30,12 @@ public class YamlFoldParser implements FoldParser {
      * Constructor.
      *
      */
-    public YamlFoldParser(){
+    public YamlFoldParser() {
     }
 
 	private static boolean isSpaces(Token t) {
         String lexeme = t.getLexeme();
-        return lexeme.trim().equals("");
+        return lexeme.trim().isEmpty();
     }
 
     /**
