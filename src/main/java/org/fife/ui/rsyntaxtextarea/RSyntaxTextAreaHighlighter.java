@@ -78,7 +78,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 * @throws BadLocationException
 	 * @see #clearMarkOccurrencesHighlights()
 	 */
-	Object addMarkedOccurrenceHighlight(int start, int end,
+	public Object addMarkedOccurrenceHighlight(int start, int end,
 			SmartHighlightPainter p) throws BadLocationException {
 		Document doc = textArea.getDocument();
 		TextUI mapper = textArea.getUI();
@@ -148,7 +148,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 *
 	 * @see #addMarkedOccurrenceHighlight(int, int, SmartHighlightPainter)
 	 */
-	void clearMarkOccurrencesHighlights() {
+	public void clearMarkOccurrencesHighlights() {
 		// Don't remove via an iterator; since our List is an ArrayList, this
 		// implies tons of System.arrayCopy()s
 		for (HighlightInfo info : markedOccurrences) {
