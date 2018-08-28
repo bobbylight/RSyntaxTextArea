@@ -946,11 +946,12 @@ else {
 		else {
 
 			Element map = doc.getDefaultRootElement();
+			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
 			int lineIndex = Math.abs((y - alloc.y) / lineHeight);//metrics.getHeight() );
-FoldManager fm = host.getFoldManager();
-//System.out.print("--- " + lineIndex);
-lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
-//System.out.println(" => " + lineIndex);
+			FoldManager fm = host.getFoldManager();
+			//System.out.print("--- " + lineIndex);
+			lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
+			//System.out.println(" => " + lineIndex);
 			if (lineIndex >= map.getElementCount()) {
 				return host.getLastVisibleOffset();
 			}
