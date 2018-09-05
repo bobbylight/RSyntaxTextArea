@@ -133,10 +133,17 @@ public class SearchEngineTest {
 	 */
 	@Test
 	public void testSearchEngineFindBackward() {
-		testSearchEngineFindBackwardImpl(true);
-		testSearchEngineFindBackwardImpl(false);
+		testSearchEngineFindBackwardImpl(true,false);
+		testSearchEngineFindBackwardImpl(false,false);
 	}
 
+	/**
+	 * Tests <code>SearchEngine.find()</code> when searching with wrap.
+	 */
+	@Test
+	public void testSearchEngineFindWrap() {
+		testSearchEngineWrapImpl();
+	}
 
 	/**
 	 * Tests <code>SearchEngine.find()</code> when searching backward.
@@ -144,7 +151,40 @@ public class SearchEngineTest {
 	 * @param markAll Whether or not "mark all" should be enabled during the
 	 *        test.
 	 */
-	private void testSearchEngineFindBackwardImpl(boolean markAll) {
+	private void testSearchEngineWrapImpl() {
+
+		textArea.setText(text);
+
+		int end = text.length();
+		SearchContext context = new SearchContext();
+		context.setSearchForward(false);
+		context.setMarkAll(false);
+
+		// Search for "Chuck", non matching case.
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(false);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(27);
+		boolean found = findImpl(context);
+		assertFalse(found);
+
+		// Search for "Chuck", matching case.
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(true);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(27);
+		found = findImpl(context);
+		assertTrue(found);
+
+	}
+
+	/**
+	 * Tests <code>SearchEngine.find()</code> when searching backward.
+	 *
+	 * @param markAll Whether or not "mark all" should be enabled during the
+	 *        test.
+	 */
+	private void testSearchEngineFindBackwardImpl(boolean markAll,boolean wrap) {
 
 		textArea.setText(text);
 
@@ -152,6 +192,7 @@ public class SearchEngineTest {
 		SearchContext context = new SearchContext();
 		context.setSearchForward(false);
 		context.setMarkAll(markAll);
+		context.setSearchWrap(wrap);
 
 		// Search for "chuck", ignoring case.
 		context.setSearchFor("chuck");
@@ -299,8 +340,8 @@ public class SearchEngineTest {
 	 */
 	@Test
 	public void testSearchEngineFindForward() {
-		testSearchEngineFindForwardImpl(true);
-		testSearchEngineFindForwardImpl(false);
+		testSearchEngineFindForwardImpl(true,false);
+		testSearchEngineFindForwardImpl(false,false);
 	}
 
 
@@ -309,12 +350,13 @@ public class SearchEngineTest {
 	 *
 	 * @param markAll Whether "mark all" should be enabled during the test.
 	 */
-	private void testSearchEngineFindForwardImpl(boolean markAll) {
+	private void testSearchEngineFindForwardImpl(boolean markAll,boolean wrap) {
 
 		textArea.setText(text);
 
 		SearchContext context = new SearchContext();
 		context.setMarkAll(markAll);
+		context.setSearchWrap(wrap);
 
 		// Search for "chuck", ignoring case.
 		context.setSearchFor("chuck");
@@ -466,6 +508,7 @@ public class SearchEngineTest {
 		String searchFor = "[how]{3}|";
 		SearchContext context = new SearchContext(searchFor);
 		context.setRegularExpression(true);
+		context.setSearchWrap(false);
 
 		assertTrue(findImpl(context));
 		assertResult(new SearchResult(new DocumentRange(0, 3), 1, 4));
