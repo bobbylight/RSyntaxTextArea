@@ -157,10 +157,10 @@ public class SearchEngineTest {
 
 		int end = text.length();
 		SearchContext context = new SearchContext();
-		context.setSearchForward(false);
 		context.setMarkAll(false);
 
 		// Search for "Chuck", non matching case.
+		context.setSearchForward(false);
 		context.setSearchFor("Chuck");
 		context.setSearchWrap(false);
 		context.setMatchCase(true);
@@ -173,6 +173,23 @@ public class SearchEngineTest {
 		context.setSearchWrap(true);
 		context.setMatchCase(true);
 		textArea.setCaretPosition(27);
+		found = findImpl(context);
+		assertTrue(found);
+
+		// Search for "Chuck", non matching case.
+		context.setSearchForward(true);
+		context.setSearchFor("wood");
+		context.setSearchWrap(false);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(49);
+	    found = findImpl(context);
+		assertFalse(found);
+
+		// Search for "Chuck", matching case.
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(true);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(49);
 		found = findImpl(context);
 		assertTrue(found);
 
