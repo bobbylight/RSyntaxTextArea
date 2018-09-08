@@ -8,5 +8,4 @@ rsyntaxtextarea_*.zip
 build
 .gradle
 /.settings/
-.checkstyle
 
