@@ -1,8 +1,5 @@
 .idea
 *.iml
-bin
-dist
-javadoc
 rsyntaxtextarea_*.zip
 *.java~
 build

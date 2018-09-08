@@ -1,3 +1,4 @@
+# RSyntaxTextArea
 [![Build Status](https://travis-ci.org/bobbylight/RSyntaxTextArea.svg?branch=master)](https://travis-ci.org/bobbylight/RSyntaxTextArea)
 [![Coverage Status](https://coveralls.io/repos/bobbylight/RSyntaxTextArea/badge.svg)](https://coveralls.io/r/bobbylight/RSyntaxTextArea)
 
@@ -6,7 +7,7 @@ the box, it supports syntax highlighting for 40+ programming languages, code fol
 and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages
 [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 
-RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/src/main/dist/RSyntaxTextArea.License.txt).
+RSyntaxTextArea is available under a [modified BSD license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/RSyntaxTextArea/src/main/dist/RSyntaxTextArea.License.txt).
 For more information, visit [http://bobbylight.github.io/RSyntaxTextArea/](http://bobbylight.github.io/RSyntaxTextArea/).
 
 Available in the [Maven Central repository](http://search.maven.org/#search%7Cga%7C1%7Crsyntaxtextarea%20jar) (`com.fifesoft:rsyntaxtextarea:XXX`).
@@ -78,6 +79,5 @@ RSyntaxTextArea provides syntax highlighting, code folding, and many other featu
 
 * Add an issue on GitHub
 * Peruse [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
-* Ask in the [project forum](http://fifesoft.com/forum/)
 * Check the project's [home page](http://bobbylight.github.io/RSyntaxTextArea/)
 
