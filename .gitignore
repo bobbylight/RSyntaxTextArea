@@ -5,4 +5,4 @@ rsyntaxtextarea_*.zip
 build
 .gradle
 /.settings/
-
+out/

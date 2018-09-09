@@ -1,0 +1,20 @@
+module foo {
+   
+   export class Greeter {
+      
+       constructor(public greeting: string) {
+       }
+       
+       greet(): string {
+           return "<h1>" + this.greeting + "</h1>";
+       }
+   };
+   
+   // This is a comment
+   let greeter: Greeter = new Greeter("Hello, world!");
+   document.body.innerHTML = greeter.greet();
+
+	const name: string = 'Steve';
+	console.log(`string text line 1
+	My name is ${name}, what's your's?`);
+}

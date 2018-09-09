@@ -1,0 +1,4 @@
+SELECT * 
+FROM Book
+WHERE price > 100.00
+ORDER BY title;

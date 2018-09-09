@@ -1,4 +1,3 @@
 rootProject.name = 'RSyntaxTextArea'
 
-include 'RSyntaxTextArea'
-
+include 'RSyntaxTextArea', 'RSyntaxTextAreaDemo'

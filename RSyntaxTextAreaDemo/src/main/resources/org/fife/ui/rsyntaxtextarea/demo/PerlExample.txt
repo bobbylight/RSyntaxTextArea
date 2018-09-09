@@ -1,0 +1,10 @@
+#!/usr/local/bin/perl
+use strict;
+
+print "Hello world!\n";
+
+# Simple regular expression recognition
+my $name = "Fred";
+my $text = "A complicated regex example from $name";
+$text =~ s/complicated/simple/;
+print "Text: $text\n";

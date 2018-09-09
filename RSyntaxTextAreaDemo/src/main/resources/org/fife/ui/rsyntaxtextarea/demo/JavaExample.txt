@@ -1,0 +1,32 @@
+package com.mycompany.demo;
+
+/**
+ * An example class.
+ *
+ * @author Your Name
+ * http://www.example.com
+ */
+public class ExampleCode {
+
+   private int value;
+
+   /**
+    * Creates a new <code>ExampleCode</code>.
+    *
+    * @param value A value to use in the example.
+    */
+   public ExampleCode(int value) {
+      this.value = value;
+   }
+
+   public void doWork() {
+      // Very important work gets done here.
+      System.out.println("My value is: \"" + value + "\"");
+   }
+
+   public static void main(String[] args) {
+      ExampleCode example = new ExampleCode(5);
+      example.doWork();
+   }
+
+}
