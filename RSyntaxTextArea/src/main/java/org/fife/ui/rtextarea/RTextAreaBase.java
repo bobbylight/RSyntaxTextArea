@@ -196,12 +196,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		// highlight y-offset after the text area is sized.  This seems to be
 		// the best way to do it.
 		if (getCaretPosition() != 0) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					possiblyUpdateCurrentLineHighlightLocation();
-				}
-			});
+			SwingUtilities.invokeLater(() -> possiblyUpdateCurrentLineHighlightLocation());
 		}
 	}
 

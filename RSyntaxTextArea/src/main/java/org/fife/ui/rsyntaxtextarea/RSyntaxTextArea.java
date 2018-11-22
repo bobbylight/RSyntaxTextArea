@@ -907,12 +907,7 @@ private boolean fractionalFontMetricsEnabled;
 			// causes BadLocationExceptions when an entire folded region is
 			// deleted (see GitHub issue #22:
 			// https://github.com/bobbylight/RSyntaxTextArea/issues/22)
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					possiblyUpdateCurrentLineHighlightLocation();
-				}
-			});
+			SwingUtilities.invokeLater(() -> possiblyUpdateCurrentLineHighlightLocation());
 		}
 		else {
 			possiblyUpdateCurrentLineHighlightLocation();

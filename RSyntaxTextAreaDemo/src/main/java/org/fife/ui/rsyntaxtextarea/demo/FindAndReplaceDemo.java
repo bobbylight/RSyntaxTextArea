@@ -93,18 +93,15 @@ public class FindAndReplaceDemo extends JFrame implements ActionListener {
 
    public static void main(String[] args) {
       // Start all Swing applications on the EDT.
-      SwingUtilities.invokeLater(new Runnable() {
-         @Override
-		public void run() {
-            try {
-               String laf = UIManager.getSystemLookAndFeelClassName();
-               UIManager.setLookAndFeel(laf);
-            } catch (Exception e) { /* never happens */ }
-            FindAndReplaceDemo demo = new FindAndReplaceDemo();
-            demo.setVisible(true);
-            demo.textArea.requestFocusInWindow();
-         }
-      });
+      SwingUtilities.invokeLater(() -> {
+		 try {
+			String laf = UIManager.getSystemLookAndFeelClassName();
+			UIManager.setLookAndFeel(laf);
+		 } catch (Exception e) { /* never happens */ }
+		 FindAndReplaceDemo demo = new FindAndReplaceDemo();
+		 demo.setVisible(true);
+		 demo.textArea.requestFocusInWindow();
+	  });
    }
 
 }

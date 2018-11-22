@@ -139,12 +139,7 @@ public class SyntaxSchemeDemo extends JFrame implements ActionListener {
 
    public static void main(String[] args) {
       // Start all Swing applications on the EDT.
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-		public void run() {
-            new SyntaxSchemeDemo().setVisible(true);
-         }
-      });
+      SwingUtilities.invokeLater(() -> new SyntaxSchemeDemo().setVisible(true));
    }
 
 }

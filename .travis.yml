@@ -6,7 +6,6 @@ env:
 before_install:
   - "/bin/sh -e /etc/init.d/xvfb start"
 
-# We build with JDK 8 but use target compatibility 1.6
 jdk:
   - oraclejdk8
 

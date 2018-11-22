@@ -18,13 +18,10 @@ SNAPSHOT builds of the in-development, unreleased version are hosted on [Sonatyp
 RSyntaxTextArea uses [Gradle](http://gradle.org/) to build.  To compile, run
 all unit tests, and create the jar, run:
 
-    ./gradlew build --warning-mode=all
+    ./gradlew build --warning-mode all
 
-RSTA requires a Java 8 JDK to compile, but builds classes with Java 6 binary compatibility if possible
-(and indeed, the artifacts in Maven Central are Java 6-compatible).
-To that end, the boot classpath will be set to accommodate this if a variable `java6CompileBootClasspath`
-is set to the location of `rt.jar` in a Java 6 JDK.  This can be added to `<maven-home>/gradle.properties`
-if desired, to avoid diffs in the project's `gradle.properties`.
+RSTA 3.0 and newer requires Java 8 to compile and run.  If you need
+Java 6 compatibility, you'll need to use a 2.6.x version.
 
 # Example Usage
 
@@ -57,10 +54,8 @@ public class TextEditorDemo extends JFrame {
 
    public static void main(String[] args) {
       // Start all Swing applications on the EDT.
-      SwingUtilities.invokeLater(new Runnable() {
-         public void run() {
-            new TextEditorDemo().setVisible(true);
-         }
+      SwingUtilities.invokeLater(() -> {
+        new TextEditorDemo().setVisible(true);
       });
    }
 

@@ -22,19 +22,16 @@ public class RSyntaxTextAreaDemoApp extends JFrame {
 
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(UIManager.
-											getSystemLookAndFeelClassName());
+		SwingUtilities.invokeLater(() -> {
+			try {
+				UIManager.setLookAndFeel(UIManager.
+										getSystemLookAndFeelClassName());
 //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-				} catch (Exception e) {
-					e.printStackTrace(); // Never happens
-				}
-				Toolkit.getDefaultToolkit().setDynamicLayout(true);
-				new RSyntaxTextAreaDemoApp().setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace(); // Never happens
 			}
+			Toolkit.getDefaultToolkit().setDynamicLayout(true);
+			new RSyntaxTextAreaDemoApp().setVisible(true);
 		});
 	}
 
