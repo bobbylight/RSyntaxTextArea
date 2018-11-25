@@ -247,58 +247,60 @@ Identifier				= ({Letter}({Letter}|{Digit})*)
 %%
 
 /* Keywords */
-<YYINITIAL> "break"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "do"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "elseif"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "end"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "function"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "local"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "nil"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "repeat"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "then"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "until"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"					{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "break" |
+<YYINITIAL> "do" |
+<YYINITIAL> "else" |
+<YYINITIAL> "elseif" |
+<YYINITIAL> "end" |
+<YYINITIAL> "for" |
+<YYINITIAL> "function" |
+<YYINITIAL> "goto" |
+<YYINITIAL> "if" |
+<YYINITIAL> "in" |
+<YYINITIAL> "local" |
+<YYINITIAL> "nil" |
+<YYINITIAL> "repeat" |
+<YYINITIAL> "return" |
+<YYINITIAL> "then" |
+<YYINITIAL> "until" |
+<YYINITIAL> "while" { addToken(Token.RESERVED_WORD); }
 
 /* Data types. */
-<YYINITIAL> "<number>"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "<name>"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "<string>"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "<eof>"					{ addToken(Token.DATA_TYPE); }
+<YYINITIAL> "<number>" |
+<YYINITIAL> "<name>" |
+<YYINITIAL> "<string>" |
+<YYINITIAL> "<eof>" |
 <YYINITIAL> "NULL"					{ addToken(Token.DATA_TYPE); }
 
 /* Functions. */
-<YYINITIAL> "_G"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "_VERSION"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "assert"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "collectgarbage"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "dofile"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "error"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getfenv"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getmetatable"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ipairs"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "load"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "loadfile"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "loadstring"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "module"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "next"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "pairs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "pcall"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "print"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rawequal"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rawget"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "rawset"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "require"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "select"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setfenv"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setmetatable"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tonumber"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tostring"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "type"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "unpack"				{ addToken(Token.FUNCTION); }
+<YYINITIAL> "_G" |
+<YYINITIAL> "_VERSION" |
+<YYINITIAL> "assert" |
+<YYINITIAL> "collectgarbage" |
+<YYINITIAL> "dofile" |
+<YYINITIAL> "error" |
+<YYINITIAL> "getfenv" |
+<YYINITIAL> "getmetatable" |
+<YYINITIAL> "ipairs" |
+<YYINITIAL> "load" |
+<YYINITIAL> "loadfile" |
+<YYINITIAL> "loadstring" |
+<YYINITIAL> "module" |
+<YYINITIAL> "next" |
+<YYINITIAL> "pairs" |
+<YYINITIAL> "pcall" |
+<YYINITIAL> "print" |
+<YYINITIAL> "rawequal" |
+<YYINITIAL> "rawget" |
+<YYINITIAL> "rawset" |
+<YYINITIAL> "require" |
+<YYINITIAL> "select" |
+<YYINITIAL> "setfenv" |
+<YYINITIAL> "setmetatable" |
+<YYINITIAL> "tonumber" |
+<YYINITIAL> "tostring" |
+<YYINITIAL> "type" |
+<YYINITIAL> "unpack" |
 <YYINITIAL> "xpcall"				{ addToken(Token.FUNCTION); }
 
 /* Booleans. */
