@@ -33,6 +33,7 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
@@ -159,7 +160,7 @@ public class ErrorStrip extends JPanel {
 		setShowMarkAll(true);
 		setLevelThreshold(ParserNotice.Level.WARNING);
 		setFollowCaret(true);
-		setCaretMarkerColor(Color.BLACK);
+		setCaretMarkerColor(getDefaultCaretMarkerColor());
 		setMarkerToolTipProvider(null); // Install default
 	}
 
@@ -233,6 +234,22 @@ public class ErrorStrip extends JPanel {
 
 
 	/**
+	 * Returns the default color for the caret marker.  This is a UI
+	 * resource so that it is updated if the LookAndFeel is updated,
+	 * but not if the user overrides it.
+	 *
+	 * @return The default color.
+	 */
+	private ColorUIResource getDefaultCaretMarkerColor() {
+
+		if (RSyntaxUtilities.isLightForeground(getForeground())) {
+			return new ColorUIResource(textArea.getCaretColor());
+		}
+
+		return new ColorUIResource(Color.black);
+	}
+
+	/**
 	 * Returns whether the caret's position should be drawn.
 	 *
 	 * @return Whether the caret's position should be drawn.
@@ -243,9 +260,6 @@ public class ErrorStrip extends JPanel {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Dimension getPreferredSize() {
 		int height = textArea.getPreferredScrollableViewportSize().height;
@@ -288,9 +302,6 @@ public class ErrorStrip extends JPanel {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		String text = null;
@@ -538,6 +549,15 @@ public class ErrorStrip extends JPanel {
 		}
 	}
 
+
+	public void updateUI() {
+
+		super.updateUI();
+
+		if (caretMarkerColor instanceof ColorUIResource) {
+			setCaretMarkerColor(getDefaultCaretMarkerColor());
+		}
+	}
 
 	/**
 	 * Returns the line in the text area corresponding to a y-offset in this
