@@ -9,6 +9,8 @@ package org.fife.ui.rsyntaxtextarea;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.awt.*;
+
 
 /**
  * Unit tests for the {@link RtfGenerator} class.
@@ -20,12 +22,13 @@ public class RtfGeneratorTest {
 
 	@Test
 	public void testNon7BitAscii() {
-		RtfGenerator generator = new RtfGenerator();
+		RtfGenerator generator = new RtfGenerator(Color.white);
 		generator.appendToDoc("\u6c49", null, null, null);
 		String rtf = generator.getRtf();
 		int firstNewline = rtf.indexOf('\n');
 		int secondNewline = rtf.indexOf('\n', firstNewline + 1);
-		Assert.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\u27721"));
+		// "\cb1" is the background definition, "\u27721" is the code point
+		Assert.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\cb1\\u27721"));
 	}
 
 }
