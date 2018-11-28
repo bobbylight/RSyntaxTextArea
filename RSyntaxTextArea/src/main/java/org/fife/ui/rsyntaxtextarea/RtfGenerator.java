@@ -39,10 +39,11 @@ import org.fife.ui.rtextarea.RTextArea;
  * </ul>
  *
  * @author Robert Futrell
- * @version 1.0
+ * @version 1.1
  */
 public class RtfGenerator {
 
+	private Color mainBG;
 	private List<Font> fontList;
 	private List<Color> colorList;
 	private StringBuilder document;
@@ -71,9 +72,10 @@ public class RtfGenerator {
 	/**
 	 * Constructor.
 	 */
-	public RtfGenerator() {
-		fontList = new ArrayList<Font>(1); // Usually only 1.
-		colorList = new ArrayList<Color>(1); // Usually only 1.
+	public RtfGenerator(Color mainBG) {
+		this.mainBG = mainBG;
+		fontList = new ArrayList<>(1); // Usually only 1.
+		colorList = new ArrayList<>(1); // Usually only 1.
 		document = new StringBuilder();
 		reset();
 	}
@@ -438,6 +440,9 @@ public class RtfGenerator {
 	 */
 	public String getRtf() {
 
+		// Add background to the color table before adding it to our buffer
+		int mainBGIndex = getColorIndex(colorList, mainBG);
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 
@@ -452,6 +457,11 @@ public class RtfGenerator {
 		sb.append(getColorTableRtf()).append('\n');
 
 		// Content
+		sb.append("\\cb").append(mainBGIndex + 1);
+		lastWasControlWord = true;
+		if (document.length() > 0) {
+			document.append("\\line"); // Forced line break
+		}
 		sb.append(document);
 
 		sb.append("}");

@@ -629,10 +629,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	public static class CopyAsRtfAction extends RecordableTextAction {
 
+		private Theme theme;
+
 		private static final long serialVersionUID = 1L;
 
 		public CopyAsRtfAction() {
 			super(rstaCopyAsRtfAction);
+		}
+
+		public CopyAsRtfAction(String themeName, Theme theme) {
+			super(rstaCopyAsRtfAction + "_" + themeName);
+			this.theme = theme;
 		}
 
 		public CopyAsRtfAction(String name, Icon icon, String desc,
@@ -642,7 +649,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			((RSyntaxTextArea)textArea).copyAsRtf();
+			((RSyntaxTextArea)textArea).copyAsRtf(theme);
 			textArea.requestFocusInWindow();
 		}
 

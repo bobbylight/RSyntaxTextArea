@@ -350,15 +350,11 @@ public class Theme {
 
 		Theme theme = new Theme(baseFont);
 
-		BufferedInputStream bin = new BufferedInputStream(in);
-		try {
+		try (BufferedInputStream bin = new BufferedInputStream(in)) {
 			XmlHandler.load(theme, bin);
-		} finally {
-			bin.close();
 		}
 
 		return theme;
-
 	}
 
 
@@ -371,11 +367,10 @@ public class Theme {
 	 */
 	public void save(OutputStream out) throws IOException {
 
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		try {
+		try (BufferedOutputStream bout = new BufferedOutputStream(out)) {
 
 			DocumentBuilder db = DocumentBuilderFactory.newInstance().
-					newDocumentBuilder();
+				newDocumentBuilder();
 			DOMImplementation impl = db.getDOMImplementation();
 
 			Document doc = impl.createDocument(null, "RSyntaxTheme", null);
@@ -384,7 +379,7 @@ public class Theme {
 
 			Element elem = doc.createElement("baseFont");
 			if (!baseFont.getFamily().equals(
-					RSyntaxTextArea.getDefaultFont().getFamily())) {
+				RSyntaxTextArea.getDefaultFont().getFamily())) {
 				elem.setAttribute("family", baseFont.getFamily());
 			}
 			elem.setAttribute("size", Integer.toString(baseFont.getSize()));
@@ -435,11 +430,11 @@ public class Theme {
 			root.appendChild(elem);
 
 			elem = doc.createElement("secondaryLanguages");
-			for (int i=0; i<secondaryLanguages.length; i++) {
+			for (int i = 0; i < secondaryLanguages.length; i++) {
 				Color color = secondaryLanguages[i];
 				Element elem2 = doc.createElement("language");
-				elem2.setAttribute("index", Integer.toString(i+1));
-				elem2.setAttribute("bg", color==null ? "":colorToString(color));
+				elem2.setAttribute("index", Integer.toString(i + 1));
+				elem2.setAttribute("bg", color == null ? "" : colorToString(color));
 				elem.appendChild(elem2);
 			}
 			root.appendChild(elem);
@@ -454,12 +449,12 @@ public class Theme {
 
 			elem = doc.createElement("lineNumbers");
 			elem.setAttribute("fg", colorToString(lineNumberColor));
-			if (lineNumberFont!=null) {
+			if (lineNumberFont != null) {
 				elem.setAttribute("fontFamily", lineNumberFont);
 			}
-			if (lineNumberFontSize>0) {
+			if (lineNumberFontSize > 0) {
 				elem.setAttribute("fontSize",
-						Integer.toString(lineNumberFontSize));
+					Integer.toString(lineNumberFontSize));
 			}
 			root.appendChild(elem);
 
@@ -476,29 +471,28 @@ public class Theme {
 
 			elem = doc.createElement("tokenStyles");
 			Field[] fields = TokenTypes.class.getFields();
-			for (int i=0; i<fields.length; i++) {
-				Field field = fields[i];
+			for (Field field : fields) {
 				int value = field.getInt(null);
-				if (value!=TokenTypes.DEFAULT_NUM_TOKEN_TYPES) {
+				if (value != TokenTypes.DEFAULT_NUM_TOKEN_TYPES) {
 					Style style = scheme.getStyle(value);
-					if (style!=null) {
+					if (style != null) {
 						Element elem2 = doc.createElement("style");
 						elem2.setAttribute("token", field.getName());
 						Color fg = style.foreground;
-						if (fg!=null) {
+						if (fg != null) {
 							elem2.setAttribute("fg", colorToString(fg));
 						}
 						Color bg = style.background;
-						if (bg!=null) {
+						if (bg != null) {
 							elem2.setAttribute("bg", colorToString(bg));
 						}
 						Font font = style.font;
-						if (font!=null) {
+						if (font != null) {
 							if (!font.getFamily().equals(
-									baseFont.getFamily())) {
+								baseFont.getFamily())) {
 								elem2.setAttribute("fontFamily", font.getFamily());
 							}
-							if (font.getSize()!=baseFont.getSize()) {
+							if (font.getSize() != baseFont.getSize()) {
 								elem2.setAttribute("fontSize", Integer.toString(font.getSize()));
 							}
 							if (font.isBold()) {
@@ -521,7 +515,7 @@ public class Theme {
 			// Use a writer instead of OutputStream to allow pretty printing.
 			// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337981
 			StreamResult result = new StreamResult(new PrintWriter(
-					new UnicodeWriter(bout, "UTF-8")));
+				new UnicodeWriter(bout, "UTF-8")));
 			TransformerFactory transFac = TransformerFactory.newInstance();
 			Transformer transformer = transFac.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -534,8 +528,6 @@ public class Theme {
 			throw re; // FindBugs
 		} catch (Exception e) {
 			throw new IOException("Error generating XML: " + e.getMessage(), e);
-		} finally {
-			bout.close();
 		}
 
 	}
@@ -640,8 +632,7 @@ public class Theme {
 		}
 
 		@Override
-		public InputSource resolveEntity(String publicID,
-				String systemID) throws SAXException {
+		public InputSource resolveEntity(String publicID, String systemID) {
 			return new InputSource(getClass().
 					getResourceAsStream("themes/theme.dtd"));
 		}
@@ -811,10 +802,7 @@ public class Theme {
 					int index = 0;
 					try {
 						index = field.getInt(theme.scheme);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-						return;
-					} catch (IllegalAccessException e) {
+					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
 						return;
 					}
@@ -873,7 +861,7 @@ public class Theme {
 
 					String ulineStr = attrs.getValue("underline");
 					if (ulineStr!=null) {
-						boolean uline= Boolean.parseBoolean(ulineStr);
+						boolean uline = Boolean.parseBoolean(ulineStr);
 						theme.scheme.getStyle(index).underline = uline;
 					}
 

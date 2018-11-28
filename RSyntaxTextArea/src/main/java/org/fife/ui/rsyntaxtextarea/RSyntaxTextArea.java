@@ -627,6 +627,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * Copies the currently selected text to the system clipboard, with
 	 * any necessary style information (font, foreground color and background
 	 * color).  Does nothing for <code>null</code> selections.
+	 *
+	 * @see #copyAsRtf(Theme)
 	 */
 	public void copyAsRtf() {
 
@@ -639,14 +641,13 @@ private boolean fractionalFontMetricsEnabled;
 		Clipboard cb = getToolkit().getSystemClipboard();
 
 		// Create the RTF selection.
-		RtfGenerator gen = new RtfGenerator();
+		RtfGenerator gen = new RtfGenerator(getBackground());
 		Token tokenList = getTokenListFor(selStart, selEnd);
-		for (Token t=tokenList; t!=null; t=t.getNextToken()) {
+		for (Token t = tokenList; t != null; t = t.getNextToken()) {
 			if (t.isPaintable()) {
-				if (t.length()==1 && t.charAt(0)=='\n') {
+				if (t.length() == 1 && t.charAt(0) == '\n') {
 					gen.appendNewline();
-				}
-				else {
+				} else {
 					Font font = getFontForTokenType(t.getType());
 					Color bg = getBackgroundForToken(t);
 					boolean underline = getUnderlineForToken(t);
@@ -654,8 +655,7 @@ private boolean fractionalFontMetricsEnabled;
 					// is a whitespace color.  Saves on RTF size.
 					if (t.isWhitespace()) {
 						gen.appendToDocNoFG(t.getLexeme(), font, bg, underline);
-					}
-					else {
+					} else {
 						Color fg = getForegroundForToken(t);
 						gen.appendToDoc(t.getLexeme(), font, fg, bg, underline);
 					}
@@ -673,6 +673,32 @@ private boolean fractionalFontMetricsEnabled;
 			return;
 		}
 
+	}
+
+	/**
+	 * Copies text from this text area as RTF, but using a theme other
+	 * than the one currently applied.
+	 *
+	 * @param theme The theme to use in the returned RTF.  If this is
+	 *        {@code null}, the current theme is used.
+	 * @see #copyAsRtf()
+	 */
+	public void copyAsRtf(Theme theme) {
+
+		// It's more performant to call the no-arg overload
+		if (theme == null) {
+			copyAsRtf();
+			return;
+		}
+
+		Theme origTheme = new Theme(this);
+
+		try {
+			theme.apply(this);
+			copyAsRtf();
+		} finally {
+			origTheme.apply(this);
+		}
 	}
 
 

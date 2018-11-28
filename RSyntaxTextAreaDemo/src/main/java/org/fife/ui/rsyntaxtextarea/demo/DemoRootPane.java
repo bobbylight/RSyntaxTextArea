@@ -2,6 +2,7 @@ package org.fife.ui.rsyntaxtextarea.demo;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -185,6 +186,18 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		am.put("decreaseFontSize", new RSyntaxTextAreaEditorKit.DecreaseFontSizeAction());
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "increaseFontSize");
 		am.put("increaseFontSize", new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction());
+
+		int ctrlShift = InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK;
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctrlShift), "copyAsRtf");
+		am.put("copyAsRtf", new RSyntaxTextAreaEditorKit.CopyAsRtfAction());
+
+		try {
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, ctrlShift), "copyAsRtfDark");
+			Theme monokai = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/monokai.xml"));
+			am.put("copyAsRtfDark", new RSyntaxTextAreaEditorKit.CopyAsRtfAction("monokai", monokai));
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 
 		return textArea;
 	}
