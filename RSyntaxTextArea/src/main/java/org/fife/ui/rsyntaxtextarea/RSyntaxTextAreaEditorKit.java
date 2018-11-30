@@ -76,7 +76,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaCollapseAllFoldsAction	= "RSTA.CollapseAllFoldsAction";
 	public static final String rstaCollapseAllCommentFoldsAction = "RSTA.CollapseAllCommentFoldsAction";
 	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
-	public static final String rstaCopyAsRtfAction			= "RSTA.CopyAsRtfAction";
+	public static final String rstaCopyAsStyledTextAction   = "RSTA.CopyAsStyledTextAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
@@ -101,7 +101,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new ChangeFoldStateAction(rstaCollapseFoldAction, true),
 		new ChangeFoldStateAction(rstaExpandFoldAction, false),
 		new CollapseAllFoldsAction(),
-		new CopyAsRtfAction(),
+		new CopyAsStyledTextAction(),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
 		new DeletePrevWordAction(),
@@ -625,31 +625,31 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 
 	/**
-	 * Action for copying text as RTF.
+	 * Action for copying text as styled text.
 	 */
-	public static class CopyAsRtfAction extends RecordableTextAction {
+	public static class CopyAsStyledTextAction extends RecordableTextAction {
 
 		private Theme theme;
 
 		private static final long serialVersionUID = 1L;
 
-		public CopyAsRtfAction() {
-			super(rstaCopyAsRtfAction);
+		public CopyAsStyledTextAction() {
+			super(rstaCopyAsStyledTextAction);
 		}
 
-		public CopyAsRtfAction(String themeName, Theme theme) {
-			super(rstaCopyAsRtfAction + "_" + themeName);
+		public CopyAsStyledTextAction(String themeName, Theme theme) {
+			super(rstaCopyAsStyledTextAction + "_" + themeName);
 			this.theme = theme;
 		}
 
-		public CopyAsRtfAction(String name, Icon icon, String desc,
-					Integer mnemonic, KeyStroke accelerator) {
+		public CopyAsStyledTextAction(String name, Icon icon, String desc,
+									  Integer mnemonic, KeyStroke accelerator) {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			((RSyntaxTextArea)textArea).copyAsRtf(theme);
+			((RSyntaxTextArea)textArea).copyAsStyledText(theme);
 			textArea.requestFocusInWindow();
 		}
 

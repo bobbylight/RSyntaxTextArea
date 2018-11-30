@@ -702,8 +702,8 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * </ul>
 	 * @return the location within the model that best represents the next
 	 *  location visual position
-	 * @exception BadLocationException
-	 * @exception IllegalArgumentException if <code>direction</code>
+	 * @throws  BadLocationException if {@code pos} is invalid.
+	 * @throws IllegalArgumentException if <code>direction</code>
 	 *		doesn't have one of the legal values above
 	 */
 	public static int getNextVisualPositionFrom(int pos, Position.Bias b,
@@ -830,13 +830,13 @@ public final class RSyntaxUtilities implements SwingConstants {
 		String osName = System.getProperty("os.name");
 		if (osName!=null) { // Should always be true.
 			osName = osName.toLowerCase();
-			if (osName.indexOf("windows") > -1) {
+			if (osName.contains("windows")) {
 				os = OS_WINDOWS;
 			}
-			else if (osName.indexOf("mac os x") > -1) {
+			else if (osName.contains("mac os x")) {
 				os = OS_MAC_OSX;
 			}
-			else if (osName.indexOf("linux") > -1) {
+			else if (osName.contains("linux")) {
 				os = OS_LINUX;
 			}
 			else {
@@ -1550,7 +1550,7 @@ return c.getLineStartOffset(line);
 			}
 		}
 
-		Pattern p = null;
+		Pattern p;
 		try {
 			p = Pattern.compile(sb.toString(), flags);
 		} catch (PatternSyntaxException pse) {

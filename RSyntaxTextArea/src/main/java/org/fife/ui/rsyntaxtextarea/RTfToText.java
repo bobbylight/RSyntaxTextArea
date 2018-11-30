@@ -22,7 +22,7 @@ import java.io.StringReader;
 /**
  * Gets the plain text version of RTF documents.<p>
  *
- * This is used by <code>RtfTransferable</code> to return the plain text
+ * This is used by <code>StyledTextTransferable</code> to return the plain text
  * version of the transferable when the receiver does not support RTF.
  *
  * @author Robert Futrell

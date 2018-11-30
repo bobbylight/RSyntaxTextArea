@@ -87,7 +87,7 @@ public class RtfGenerator {
 	 * @see #appendToDoc(String, Font, Color, Color)
 	 */
 	public void appendNewline() {
-		document.append("\\par");
+		document.append("\\line");
 		document.append('\n'); // Just for ease of reading RTF.
 		lastWasControlWord = false;
 	}
@@ -457,7 +457,8 @@ public class RtfGenerator {
 		sb.append(getColorTableRtf()).append('\n');
 
 		// Content
-		sb.append("\\cb").append(mainBGIndex + 1);
+		int bgIndex = mainBGIndex + 1;
+		sb.append("\\cb").append(bgIndex).append(' ');
 		lastWasControlWord = true;
 		if (document.length() > 0) {
 			document.append("\\line"); // Forced line break

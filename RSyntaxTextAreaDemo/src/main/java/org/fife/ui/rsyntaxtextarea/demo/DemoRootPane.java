@@ -9,21 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
@@ -84,6 +72,13 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 				new ThemeAction(name, themeXml));
 		bg.add(item);
 		menu.add(item);
+	}
+
+
+	private static Action createCopyAsStyledTextAction(String themeName) throws IOException {
+		String resource = "/org/fife/ui/rsyntaxtextarea/themes/" + themeName + ".xml";
+		Theme theme = Theme.load(DemoRootPane.class.getResourceAsStream(resource));
+		return new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction(themeName, theme);
 	}
 
 
@@ -188,13 +183,16 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		am.put("increaseFontSize", new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction());
 
 		int ctrlShift = InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK;
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctrlShift), "copyAsRtf");
-		am.put("copyAsRtf", new RSyntaxTextAreaEditorKit.CopyAsRtfAction());
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctrlShift), "copyAsStyledText");
+		am.put("copyAsStyledText", new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction());
 
 		try {
-			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, ctrlShift), "copyAsRtfDark");
-			Theme monokai = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/monokai.xml"));
-			am.put("copyAsRtfDark", new RSyntaxTextAreaEditorKit.CopyAsRtfAction("monokai", monokai));
+
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_M, ctrlShift), "copyAsStyledTextMonokai");
+			am.put("copyAsStyledTextMonokai", createCopyAsStyledTextAction("monokai"));
+
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, ctrlShift), "copyAsStyledTextEclipse");
+			am.put("copyAsStyledTextEclipse", createCopyAsStyledTextAction("eclipse"));
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -240,7 +238,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		BufferedReader r;
 		try {
 			r = new BufferedReader(new InputStreamReader(
-					getClass().getResourceAsStream(resource), "UTF-8"));
+					getClass().getResourceAsStream(resource), StandardCharsets.UTF_8));
 			textArea.read(r, null);
 			r.close();
 			textArea.setCaretPosition(0);

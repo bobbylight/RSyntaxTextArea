@@ -41,7 +41,7 @@
 
 	<property name="fileExtensions" value="java"/>
 
-	<!-- Part of turning off indivial checks: -->
+	<!-- Part of turning off individual checks: -->
 	<!-- http://stackoverflow.com/questions/4023185/how-to-disable-a-particular-checkstyle-rule-for-a-particular-line-of-code -->
 	<module name="SuppressWarningsFilter" />
 

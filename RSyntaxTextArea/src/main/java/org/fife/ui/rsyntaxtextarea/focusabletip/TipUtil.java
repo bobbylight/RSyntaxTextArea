@@ -23,6 +23,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.html.HTMLDocument;
 
+import org.fife.ui.rsyntaxtextarea.HtmlUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 
 
@@ -36,41 +37,6 @@ public final class TipUtil {
 
 
 	private TipUtil() {
-	}
-
-
-	/**
-	 * Returns a hex string for the specified color, suitable for HTML.
-	 *
-	 * @param c The color.
-	 * @return The string representation, in the form "<code>#rrggbb</code>",
-	 *         or <code>null</code> if <code>c</code> is <code>null</code>.
-	 */
-	private static String getHexString(Color c) {
-
-		if (c==null) {
-			return null;
-		}
-
-		StringBuilder sb = new StringBuilder("#");
-		int r = c.getRed();
-		if (r<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(r));
-		int g = c.getGreen();
-		if (g<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(g));
-		int b = c.getBlue();
-		if (b<16) {
-			sb.append('0');
-		}
-		sb.append(Integer.toHexString(b));
-
-		return sb.toString();
-
 	}
 
 
@@ -225,7 +191,7 @@ public final class TipUtil {
 		// without clearing out the important "standard" ones?).
 		Color linkFG = RSyntaxUtilities.getHyperlinkForeground();
 		doc.getStyleSheet().addRule(
-				"a { color: " + getHexString(linkFG) + "; }");
+				"a { color: " + HtmlUtil.getHexString(linkFG) + "; }");
 
 	}
 
@@ -243,7 +209,7 @@ public final class TipUtil {
 		doc.getStyleSheet().addRule(
 				"body { font-family: " + font.getFamily() +
 						"; font-size: " + font.getSize() + "pt" +
-						"; color: " + getHexString(fg) + "; }");
+						"; color: " + HtmlUtil.getHexString(fg) + "; }");
 	}
 
 

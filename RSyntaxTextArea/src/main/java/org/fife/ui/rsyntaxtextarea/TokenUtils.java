@@ -1,6 +1,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.TabExpander;
+import java.awt.*;
 
 
 /**
@@ -12,7 +13,9 @@ import javax.swing.text.TabExpander;
 public final class TokenUtils {
 
 
-	private TokenUtils() {}
+	private TokenUtils() {
+		// Do nothing (comment for Sonar)
+	}
 
 
 	/**
@@ -139,6 +142,36 @@ public final class TokenUtils {
 		return new TokenSubList(tokenList, x0);
 		//return null;
 
+	}
+
+
+	/**
+	 * Generates HTML that renders a token with the style used in an RSTA instance.
+	 * Note this HTML is not concise.  It is a straightforward implementation to be
+	 * used to generate markup used in copy/paste and dnd scenarios.
+	 *
+	 * @param textArea The text area whose styles to use.
+	 * @param token The token to get equivalent HTML for.
+	 * @return The HTML.
+	 */
+	public static String tokenToHtml(RSyntaxTextArea textArea, Token token) {
+
+		StringBuilder style = new StringBuilder();
+
+		Font font = textArea.getFontForTokenType(token.getType());
+		if (font.isBold()) {
+			style.append("font-weight: bold;\n");
+		}
+		if (font.isItalic()) {
+			style.append("font-style: italic;\n");
+		}
+
+		Color c = textArea.getForegroundForToken(token);
+		style.append("color: ").append(HtmlUtil.getHexString(c)).append(";\n");
+
+		return "<span style=\"" + style + "\">" +
+			HtmlUtil.escapeForHtml(token.getLexeme(), "\n", true) +
+			"</span>";
 	}
 
 

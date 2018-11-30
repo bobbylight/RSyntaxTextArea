@@ -31,6 +31,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -624,13 +625,41 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Copies the currently selected text to the system clipboard, with style
+	 * information from the specified theme.  Does nothing for {@code null} or
+	 * empty selections.
+	 *
+	 * @param theme The theme to use for the color and font information.
+	 *        This may be {@code null}, in which case this text area's
+	 *        current styles are used.
+	 * @see #copyAsStyledText()
+	 */
+	public void copyAsStyledText(Theme theme) {
+
+		// It's more performant to call the no-arg overload
+		if (theme == null) {
+			copyAsStyledText();
+			return;
+		}
+
+		Theme origTheme = new Theme(this);
+
+		theme.apply(this);
+		try {
+			copyAsStyledText();
+		} finally {
+			origTheme.apply(this);
+		}
+	}
+
+	/**
 	 * Copies the currently selected text to the system clipboard, with
 	 * any necessary style information (font, foreground color and background
-	 * color).  Does nothing for <code>null</code> selections.
+	 * color).  Does nothing for {@code null} or empty selections.
 	 *
-	 * @see #copyAsRtf(Theme)
+	 * @see #copyAsStyledText(Theme)
 	 */
-	public void copyAsRtf() {
+	public void copyAsStyledText() {
 
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
@@ -638,66 +667,20 @@ private boolean fractionalFontMetricsEnabled;
 			return;
 		}
 
-		Clipboard cb = getToolkit().getSystemClipboard();
+		// Get the selection as HTML
+		String html = HtmlUtil.getTextAsHtml(this, selStart, selEnd);
 
-		// Create the RTF selection.
-		RtfGenerator gen = new RtfGenerator(getBackground());
-		Token tokenList = getTokenListFor(selStart, selEnd);
-		for (Token t = tokenList; t != null; t = t.getNextToken()) {
-			if (t.isPaintable()) {
-				if (t.length() == 1 && t.charAt(0) == '\n') {
-					gen.appendNewline();
-				} else {
-					Font font = getFontForTokenType(t.getType());
-					Color bg = getBackgroundForToken(t);
-					boolean underline = getUnderlineForToken(t);
-					// Small optimization - don't print fg color if this
-					// is a whitespace color.  Saves on RTF size.
-					if (t.isWhitespace()) {
-						gen.appendToDocNoFG(t.getLexeme(), font, bg, underline);
-					} else {
-						Color fg = getForegroundForToken(t);
-						gen.appendToDoc(t.getLexeme(), font, fg, bg, underline);
-					}
-				}
-			}
-		}
+		// Get the selection as RTF
+		byte[] rtfBytes = getTextAsRtf(selStart, selEnd);
 
 		// Set the system clipboard contents to the RTF selection.
-		RtfTransferable contents = new RtfTransferable(gen.getRtf().getBytes());
-		//System.out.println("*** " + new String(gen.getRtf().getBytes()));
+		StyledTextTransferable contents = new StyledTextTransferable(html, rtfBytes);
+
+		Clipboard cb = getToolkit().getSystemClipboard();
 		try {
 			cb.setContents(contents, null);
 		} catch (IllegalStateException ise) {
 			UIManager.getLookAndFeel().provideErrorFeedback(null);
-			return;
-		}
-
-	}
-
-	/**
-	 * Copies text from this text area as RTF, but using a theme other
-	 * than the one currently applied.
-	 *
-	 * @param theme The theme to use in the returned RTF.  If this is
-	 *        {@code null}, the current theme is used.
-	 * @see #copyAsRtf()
-	 */
-	public void copyAsRtf(Theme theme) {
-
-		// It's more performant to call the no-arg overload
-		if (theme == null) {
-			copyAsRtf();
-			return;
-		}
-
-		Theme origTheme = new Theme(this);
-
-		try {
-			theme.apply(this);
-			copyAsRtf();
-		} finally {
-			origTheme.apply(this);
 		}
 	}
 
@@ -1701,6 +1684,35 @@ private boolean fractionalFontMetricsEnabled;
 		return templatesEnabled;
 	}
 
+	private byte[] getTextAsRtf(int start, int end) {
+
+		// Create the RTF selection.
+		RtfGenerator gen = new RtfGenerator(getBackground());
+		Token tokenList = getTokenListFor(start, end);
+		for (Token t = tokenList; t != null; t = t.getNextToken()) {
+			if (t.isPaintable()) {
+				if (t.length() == 1 && t.charAt(0) == '\n') {
+					gen.appendNewline();
+				} else {
+					Font font = getFontForTokenType(t.getType());
+					Color bg = getBackgroundForToken(t);
+					boolean underline = getUnderlineForToken(t);
+					// Small optimization - don't print fg color if this
+					// is a whitespace color.  Saves on RTF size.
+					if (t.isWhitespace()) {
+						gen.appendToDocNoFG(t.getLexeme(), font, bg, underline);
+					} else {
+						Color fg = getForegroundForToken(t);
+						gen.appendToDoc(t.getLexeme(), font, fg, bg, underline);
+					}
+				}
+			}
+		}
+
+		// RTF text is 7-bit ASCII so this should cover us
+		return gen.getRtf().getBytes(StandardCharsets.UTF_8);
+	}
+
 
 	/**
 	 * Returns a token list for the given range in the document.
@@ -1709,7 +1721,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param endOffs The end offset in the document.
 	 * @return The first token in the token list.
 	 */
-	private Token getTokenListFor(int startOffs, int endOffs) {
+	public Token getTokenListFor(int startOffs, int endOffs) {
 
 		TokenImpl tokenList = null;
 		TokenImpl lastToken = null;
