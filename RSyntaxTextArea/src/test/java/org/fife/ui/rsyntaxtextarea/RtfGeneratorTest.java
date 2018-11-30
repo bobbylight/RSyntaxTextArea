@@ -28,7 +28,7 @@ public class RtfGeneratorTest {
 		int firstNewline = rtf.indexOf('\n');
 		int secondNewline = rtf.indexOf('\n', firstNewline + 1);
 		// "\cb1" is the background definition, "\u27721" is the code point
-		Assert.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\cb1\\u27721"));
+		Assert.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\cb1 \\u27721"));
 	}
 
 }
