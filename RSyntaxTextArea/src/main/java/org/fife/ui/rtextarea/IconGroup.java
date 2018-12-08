@@ -118,7 +118,7 @@ public class IconGroup {
 	 */
 	@Override
 	public boolean equals(Object o2) {
-		if (o2!=null && o2 instanceof IconGroup) {
+		if (o2 instanceof IconGroup) {
 			IconGroup ig2 = (IconGroup)o2;
 			if (ig2.getName().equals(getName()) &&
 					separateLargeIcons==ig2.hasSeparateLargeIcons()) {
@@ -160,14 +160,18 @@ public class IconGroup {
 
 
 	/**
-	 * Does the dirty work of loading an image.
+	 * Does the dirty work of loading an image.<p>
+	 *
+	 * This method is protected so applications can provide other
+	 * implementations, for example, adding the ability to load SVG
+	 * icons.
 	 *
 	 * @param iconFullPath The full path to the icon, either on the local
 	 *        file system or in the Jar file, if this icon group represents
 	 *        icons in a Jar file.
 	 * @return The icon.
 	 */
-	private Icon getIconImpl(String iconFullPath) {
+	protected Icon getIconImpl(String iconFullPath) {
 		try {
 			if (jarFile==null) {
 				// First see if it's on our classpath (e.g. an icon in
@@ -187,9 +191,7 @@ public class IconGroup {
 				//System.err.println("***** " + url.toString());
 				return new ImageIcon(url);
 			}
-		} catch (AccessControlException ace) {
-			return null; // Likely in an applet or WebStart
-		} catch (IOException ioe) {
+		} catch (AccessControlException | IOException ace) {
 			return null;
 		}
 	}
@@ -235,11 +237,6 @@ public class IconGroup {
 	}
 
 
-	/**
-	 * Overridden since we also override {@link #equals(Object)}, to honor
-	 * the invariant that equal objects must have equal hashcodes.  This also
-	 * keeps FindBugs happy.
-	 */
 	@Override
 	public int hashCode() {
 		return getName().hashCode();
