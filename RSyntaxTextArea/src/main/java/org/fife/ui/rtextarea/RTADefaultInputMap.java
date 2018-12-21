@@ -51,9 +51,9 @@ public class RTADefaultInputMap extends InputMap {
 		super();
 
 		int defaultModifier = getDefaultModifier();
-		//int ctrl = InputEvent.CTRL_MASK;
-		int alt = InputEvent.ALT_MASK;
-		int shift = InputEvent.SHIFT_MASK;
+		//int ctrl = InputEvent.CTRL_DOWN_MASK;
+		int alt = InputEvent.ALT_DOWN_MASK;
+		int shift = InputEvent.SHIFT_DOWN_MASK;
 		boolean isOSX = RTextArea.isOSX();
 		int moveByWordMod = isOSX ? alt : defaultModifier;
 
@@ -154,7 +154,7 @@ public class RTADefaultInputMap extends InputMap {
 	 *
 	 * @return The default modifier key.
 	 */
-	protected static final int getDefaultModifier() {
+	protected static int getDefaultModifier() {
 		return Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	}
 

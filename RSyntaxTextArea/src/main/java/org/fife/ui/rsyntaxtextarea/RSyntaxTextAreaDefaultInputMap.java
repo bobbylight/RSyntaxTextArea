@@ -37,9 +37,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 	public RSyntaxTextAreaDefaultInputMap() {
 
 		int defaultMod = getDefaultModifier();
-		//int ctrl = InputEvent.CTRL_MASK;
-		int shift = InputEvent.SHIFT_MASK;
-		//int alt = InputEvent.ALT_MASK;
+		int shift = InputEvent.SHIFT_DOWN_MASK;
 		int defaultShift = defaultMod|shift;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),				RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);

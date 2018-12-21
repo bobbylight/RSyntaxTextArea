@@ -470,7 +470,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	private static void createPopupMenuActions() {
 
 		// Create actions for right-click popup menu.
-		// 1.5.2004/pwy: Replaced the CTRL_MASK with the cross-platform version...
 		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 

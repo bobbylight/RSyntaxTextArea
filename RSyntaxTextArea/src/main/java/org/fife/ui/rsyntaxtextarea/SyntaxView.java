@@ -981,9 +981,6 @@ else {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 
@@ -1008,9 +1005,6 @@ else {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int yForLineContaining(Rectangle alloc, int offs)
 							throws BadLocationException {

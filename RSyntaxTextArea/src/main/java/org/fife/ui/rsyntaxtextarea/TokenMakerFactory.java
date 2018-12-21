@@ -44,7 +44,7 @@ public abstract class TokenMakerFactory {
 	 */
 	public static synchronized TokenMakerFactory getDefaultInstance() {
 		if (DEFAULT_INSTANCE==null) {
-			String clazz = null;
+			String clazz;
 			try {
 				clazz= System.getProperty(PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY);
 			} catch (java.security.AccessControlException ace) {
@@ -55,7 +55,7 @@ public abstract class TokenMakerFactory {
 			}
 			try {
 				DEFAULT_INSTANCE = (TokenMakerFactory)Class.forName(clazz).
-													newInstance();
+					getDeclaredConstructor().newInstance();
 			} catch (RuntimeException re) { // FindBugs
 				throw re;
 			} catch (Exception e) {

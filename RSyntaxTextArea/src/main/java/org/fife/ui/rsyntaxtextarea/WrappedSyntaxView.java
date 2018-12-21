@@ -1094,9 +1094,6 @@ return p + 1;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 		return yForLineContaining(alloc,
@@ -1105,9 +1102,6 @@ return p + 1;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int yForLineContaining(Rectangle alloc, int offs)
 								throws BadLocationException {
