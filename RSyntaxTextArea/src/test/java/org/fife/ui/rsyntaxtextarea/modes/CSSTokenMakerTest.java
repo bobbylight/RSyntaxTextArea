@@ -206,6 +206,4 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 	}
-
-
 }

@@ -443,7 +443,10 @@ public class TokenImpl implements Token {
 
 	@Override
 	public String getLexeme() {
-		return text==null ? null : new String(text, textOffset, textCount);
+		if (text == null) {
+			return null;
+		}
+		return isPaintable() ? new String(text, textOffset, textCount) : null;
 	}
 
 
@@ -905,18 +908,12 @@ public class TokenImpl implements Token {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setType(int type) {
 		this.type = type;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean startsWith(char[] chars) {
 		if (chars.length<=textCount){
@@ -931,9 +928,6 @@ public class TokenImpl implements Token {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int tokenToDocument(int pos) {
 		return pos + (getOffset()-textOffset);
