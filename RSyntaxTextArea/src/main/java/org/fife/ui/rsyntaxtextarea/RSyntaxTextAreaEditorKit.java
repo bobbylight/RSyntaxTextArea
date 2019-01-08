@@ -2054,18 +2054,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int start = elem.getStartOffset();
 			int end = elem.getEndOffset() - 1;
 			if (add) {
-				doc.insertString(start, startEnd[0], null);
 				if (startEnd[1]!=null) {
-					doc.insertString(end+startEnd[0].length(), startEnd[1],
-									null);
+					doc.insertString(end, startEnd[1], null);
 				}
+				doc.insertString(start, startEnd[0], null);
 			}
 			else {
-				doc.remove(start, startEnd[0].length());
 				if (startEnd[1]!=null) {
 					int temp = startEnd[1].length();
-					doc.remove(end-startEnd[0].length()-temp, temp);
+					doc.remove(end-temp, temp);
 				}
+				doc.remove(start, startEnd[0].length());
 			}
 		}
 

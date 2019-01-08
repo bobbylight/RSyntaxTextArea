@@ -2,7 +2,7 @@
  * 09/03/2005
  *
  * CSSTokenMaker.java - Token maker for CSS 3 files.
- * 
+ *
  * This library is distributed under a modified BSD license.  See the included
  * RSyntaxTextArea.License.txt file for details.
  */
@@ -202,18 +202,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
+	public String[] getLineCommentStartAndEnd(int languageIndex) {
+        return new String[] { "/*", "*/" };
+	}
+
+
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.RESERVED_WORD; // Used for CSS keys
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getShouldIndentNextLineAfter(Token t) {
 		if (t!=null && t.length()==1) {

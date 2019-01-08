@@ -88,8 +88,9 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	public void testCss_getLineCommentStartAndEnd() {
-		TokenMaker tm = createTokenMaker();
-		Assert.assertNull(tm.getLineCommentStartAndEnd(0));
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("/*", startAndEnd[0]);
+		Assert.assertEquals("*/", startAndEnd[1]);
 	}
 
 
