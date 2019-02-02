@@ -29,6 +29,7 @@ RSyntaxTextArea is simply a subclass of JTextComponent, so it can be dropped int
 
 ```java
 import javax.swing.*;
+import java.awt.BorderLayout;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
