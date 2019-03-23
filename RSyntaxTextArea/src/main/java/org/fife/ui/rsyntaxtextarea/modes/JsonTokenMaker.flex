@@ -277,7 +277,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	"null"	 					{ addToken(Token.RESERVED_WORD); }
-	{Key}/:						{ addToken(Token.VARIABLE); }
+	{Key}/([ \t\f]*):			{ addToken(Token.VARIABLE); }
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
 	{Identifier}				{ addToken(Token.IDENTIFIER); }
 	{Whitespace}				{ addToken(Token.WHITESPACE); }

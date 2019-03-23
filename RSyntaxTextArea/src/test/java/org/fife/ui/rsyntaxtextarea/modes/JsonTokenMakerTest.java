@@ -44,7 +44,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -84,7 +84,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -110,7 +110,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -159,7 +159,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
