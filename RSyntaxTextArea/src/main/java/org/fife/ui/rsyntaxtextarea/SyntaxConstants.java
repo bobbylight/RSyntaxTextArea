@@ -83,6 +83,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting CSV.
+	 */
+	String SYNTAX_STYLE_CSV			= "text/csv";
+
+
+	/**
 	 * Syntax style for highlighting D.
 	 */
 	String SYNTAX_STYLE_D			= "text/d";
