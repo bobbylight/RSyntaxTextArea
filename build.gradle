@@ -1,5 +1,4 @@
 group 'com.fifesoft'
-version '3.0.0-SNAPSHOT'
 // NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
 
 allprojects {
