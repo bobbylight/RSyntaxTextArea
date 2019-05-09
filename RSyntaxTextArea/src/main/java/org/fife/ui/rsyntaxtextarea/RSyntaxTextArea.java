@@ -2647,6 +2647,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param enabled Whether hyperlinks are enabled.
 	 * @see #getHyperlinksEnabled()
+	 * @see #setLinkScanningMask(int)
 	 */
 	public void setHyperlinksEnabled(boolean enabled) {
 		if (this.hyperlinksEnabled!=enabled) {
@@ -2665,7 +2666,12 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Sets the mask for the key used to toggle whether we are scanning for
 	 * hyperlinks with mouse hovering.  The default value is
-	 * <code>CTRL_DOWN_MASK</code>.
+	 * {@code CTRL_DOWN_MASK}.<p>
+	 *
+	 * Note that this value will be ignored if
+	 * {@link #setHyperlinksEnabled(boolean)} is called and set to
+	 * {@code false}.  If you wish to disable hyperlinks, use that
+	 * method rather than changing this mask value.
 	 *
 	 * @param mask The mask to use.  This should be some bitwise combination of
 	 *        {@link InputEvent#CTRL_DOWN_MASK},
