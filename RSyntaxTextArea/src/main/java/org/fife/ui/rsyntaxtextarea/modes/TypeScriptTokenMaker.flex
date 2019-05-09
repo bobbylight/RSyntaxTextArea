@@ -478,7 +478,7 @@ JS_FloatLiteral			= ({JS_FloatLiteral1}|{JS_FloatLiteral2}|{JS_FloatLiteral3}|({
 JS_ErrorNumberFormat		= (({JS_IntegerLiteral}|{JS_HexLiteral}|{JS_FloatLiteral}){NonSeparator}+)
 JS_Separator				= ([\(\)\{\}\[\]\]])
 JS_Separator2				= ([\;,.])
-JS_NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|">>"|"!"|"&"|"=="|":"|">>"|"~"|"||"|"&&"|">>>")
+JS_NonAssignmentOperator		= ("+"|"-"|"<="|"^"|"++"|"<"|"*"|">="|"%"|"--"|">"|"/"|"!="|"?"|"<<"|">>"|"!"|"&"|"|"|"=="|":"|">>"|"~"|"||"|"&&"|"<<<"|">>>")
 JS_AssignmentOperator		= ("="|"-="|"*="|"/="|"|="|"&="|"^="|"+="|"%="|"<<="|">>="|">>>=")
 JS_Operator				= ({JS_NonAssignmentOperator}|{JS_AssignmentOperator})
 JS_Identifier				= ({IdentifierStart}{IdentifierPart}*)

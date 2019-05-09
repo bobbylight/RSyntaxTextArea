@@ -802,9 +802,9 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testTS_Operators() {
 
-		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ && >>>";
-		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
-		String code = assignmentOperators + " " + nonAssignmentOperators;
+		String nonAssignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? << >> ! & == : >> ~ || && <<< >>>";
+		String assignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
+		String code = nonAssignmentOperators + " " + assignmentOperators;
 
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
