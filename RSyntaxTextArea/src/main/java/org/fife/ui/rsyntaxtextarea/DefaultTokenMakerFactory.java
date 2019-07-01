@@ -45,6 +45,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_DOCKERFILE,		pkg + "DockerTokenMaker");
 		putMapping(SYNTAX_STYLE_DTD,			pkg + "DtdTokenMaker");
 		putMapping(SYNTAX_STYLE_FORTRAN,		pkg + "FortranTokenMaker");
+		putMapping(SYNTAX_STYLE_GO,				pkg + "GoTokenMaker");
 		putMapping(SYNTAX_STYLE_GROOVY,			pkg + "GroovyTokenMaker");
 		putMapping(SYNTAX_STYLE_HOSTS,			pkg + "HostsTokenMaker");
 		putMapping(SYNTAX_STYLE_HTACCESS,		pkg + "HtaccessTokenMaker");

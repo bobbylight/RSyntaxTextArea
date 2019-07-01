@@ -67,7 +67,7 @@ public final class FoldParserManager implements SyntaxConstants {
 	 */
 	private Map<String, FoldParser> createFoldParserMap() {
 
-		Map<String, FoldParser> map = new HashMap<String, FoldParser>();
+		Map<String, FoldParser> map = new HashMap<>();
 
 		map.put(SYNTAX_STYLE_C,					new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_CPLUSPLUS,			new CurlyFoldParser());
@@ -76,6 +76,7 @@ public final class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_CSS,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_D,					new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_DART,				new CurlyFoldParser());
+		map.put(SYNTAX_STYLE_GO,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_GROOVY,			new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_HTACCESS,			new XmlFoldParser());
 		map.put(SYNTAX_STYLE_HTML,				new HtmlFoldParser(HtmlFoldParser.LANGUAGE_HTML));

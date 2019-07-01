@@ -125,6 +125,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting go.
+	 */
+	String SYNTAX_STYLE_GO				= "text/golang";
+
+
+	/**
 	 * Style for highlighting Groovy.
 	 */
 	String SYNTAX_STYLE_GROOVY			= "text/groovy";

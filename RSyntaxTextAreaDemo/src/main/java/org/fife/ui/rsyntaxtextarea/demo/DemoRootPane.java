@@ -92,6 +92,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("C",    "CExample.txt", SYNTAX_STYLE_CPLUSPLUS, bg, menu);
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);
 		addSyntaxItem("Dockerfile", "DockerfileExample.txt", SYNTAX_STYLE_DOCKERFILE, bg, menu);
+		addSyntaxItem("Go", "GoExample.txt", SYNTAX_STYLE_GO, bg, menu);
 		addSyntaxItem("Hosts", "HostsExample.txt", SYNTAX_STYLE_HOSTS, bg, menu);
 		addSyntaxItem("HTML", "HtmlExample.txt", SYNTAX_STYLE_HTML, bg, menu);
 		addSyntaxItem("INI", "IniExample.txt", SYNTAX_STYLE_INI, bg, menu);
