@@ -16,7 +16,7 @@ robert -at- fifesoft dot com.
 * License
 
   RSyntaxTextArea is licensed under a modified BSD license.  Please see the
-  included RSyntaxTextArea.License.txt file.
+  included src/main/resources/META-INF/LICENSE file.
 
 * Compiling
 

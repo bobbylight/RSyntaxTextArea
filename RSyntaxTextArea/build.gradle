@@ -37,6 +37,7 @@ ext.sharedManifest = manifest {
 		'Specification-Version': version,
 		'Implementation-Title': 'org.fife.ui',
 		'Implementation-Version': version,
+		'Bundle-License': 'BSD-3-Clause',
 		// Not sure why Require-Capability is not being added by the osgi plugin...
 		'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
 }
@@ -142,8 +143,8 @@ uploadArchives {
 					url 'http://www.fifesoft.com/rsyntaxtextarea/'
 					licenses {
 						license {
-							name 'Modified BSD License'
-							url 'http://fifesoft.com/rsyntaxtextarea/RSyntaxTextArea.License.txt'
+							name 'BSD-3-Clause'
+							url 'https://github.com/bobbylight/RSyntaxTextArea/tree/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE'
 							distribution 'repo'
 						}
 					}
