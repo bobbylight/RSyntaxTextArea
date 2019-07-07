@@ -6,7 +6,7 @@
  * DTokenMaker.java - Scanner for the D programming language.
  *
  * This library is distributed under a modified BSD license.  See the included
- * RSyntaxTextArea.License.txt file for details.
+ * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 

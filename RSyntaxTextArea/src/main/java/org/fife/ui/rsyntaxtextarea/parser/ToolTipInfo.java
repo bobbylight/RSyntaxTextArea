@@ -4,7 +4,7 @@
  * ToolTipInfo.java - A tool tip's text and hyperlink listener.
  *
  * This library is distributed under a modified BSD license.  See the included
- * RSyntaxTextArea.License.txt file for details.
+ * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 

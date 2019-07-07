@@ -5,7 +5,7 @@
  * braces to denote code blocks, such as C, C++, Java, Perl, etc.
  *
  * This library is distributed under a modified BSD license.  See the included
- * RSyntaxTextArea.License.txt file for details.
+ * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea;
 
