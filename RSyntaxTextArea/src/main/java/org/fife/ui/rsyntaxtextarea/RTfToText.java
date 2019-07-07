@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-
+import java.nio.charset.StandardCharsets;
 
 /**
  * Gets the plain text version of RTF documents.<p>
@@ -200,7 +200,7 @@ final class RtfToText {
 	 * @throws IOException If an IO error occurs.
 	 */
 	public static String getPlainText(InputStream in) throws IOException {
-		return getPlainText(new InputStreamReader(in, "US-ASCII"));
+		return getPlainText(new InputStreamReader(in, StandardCharsets.UTF_8));
 	}
 
 
