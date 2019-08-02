@@ -154,7 +154,7 @@ final class RtfToText {
 	 */
 	private void endControlWord() {
 		String word = controlWord.toString();
-		if ("par".equals(word)) {
+		if ("par".equals(word) || "line".equals(word)) {
 			sb.append('\n');
 		}
 		else if ("tab".equals(word)) {
