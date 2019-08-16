@@ -998,14 +998,14 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				undoManager.beginInternalAtomicEdit();
 				try {
 					for (MacroRecord record : macroRecords) {
-						for (int i=0; i<actions.length; i++) {
-							if ((actions[i] instanceof RecordableTextAction) &&
+						for (Action action : actions) {
+							if ((action instanceof RecordableTextAction) &&
 								record.id.equals(
-								((RecordableTextAction)actions[i]).getMacroID())) {
-								actions[i].actionPerformed(
+									((RecordableTextAction)action).getMacroID())) {
+								action.actionPerformed(
 									new ActionEvent(this,
-												ActionEvent.ACTION_PERFORMED,
-												record.actionCommand));
+										ActionEvent.ACTION_PERFORMED,
+										record.actionCommand));
 								break;
 							}
 						}
@@ -1042,7 +1042,15 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 		RTextAreaEditorKit kit = (RTextAreaEditorKit)getUI().getEditorKit(this);
 		setText(null);
+
+		// We disassociate the document from the text area while loading a file
+		// for performance reasons.  For small files this will be negligibly
+		// slower, but for large files this is a performance boost as there will
+		// be no listeners receiving events every call to Document.insert().
+		// On my PC it was about 1 second per 5 MB.
 		Document doc = getDocument();
+		setDocument(createDefaultModel());
+
 		if (desc != null) {
 			doc.putProperty(Document.StreamDescriptionProperty, desc);
 		}
@@ -1053,6 +1061,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			throw new IOException(e.getMessage());
 		}
 
+		setDocument(doc);
 	}
 
 
