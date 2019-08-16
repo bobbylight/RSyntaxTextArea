@@ -640,7 +640,7 @@ return p + 1;
 	protected int getTabSize() {
 		Integer i = (Integer) getDocument().
 							getProperty(PlainDocument.tabSizeAttribute);
-		int size = (i != null) ? i.intValue() : 5;
+		int size = (i != null) ? i : 5;
 		return size;
 	}
 

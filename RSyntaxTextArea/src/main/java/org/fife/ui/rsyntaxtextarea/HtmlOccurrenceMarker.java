@@ -138,7 +138,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 			"u",
 			"xmp",
 		};
-		return new HashSet<String>(Arrays.asList(tags));
+		return new HashSet<>(Arrays.asList(tags));
 	}
 
 
@@ -318,7 +318,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 			// tag we found originally; if it's not on this line, keep going
 			// to the previous line.
 
-			List<Entry> openCloses = new ArrayList<Entry>();
+			List<Entry> openCloses = new ArrayList<>();
 			boolean inPossibleMatch = false;
 			t = doc.getTokenListForLine(curLine);
 			final int endBefore = tokenOffs - 2; // Stop before "</".

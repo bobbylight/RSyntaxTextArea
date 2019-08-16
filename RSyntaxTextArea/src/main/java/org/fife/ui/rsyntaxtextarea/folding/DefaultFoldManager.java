@@ -70,7 +70,7 @@ public class DefaultFoldManager implements FoldManager {
 		textArea.getDocument().addDocumentListener(l);
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
 		textArea.addPropertyChangeListener("document", l);
-		folds = new ArrayList<Fold>();
+		folds = new ArrayList<>();
 		updateFoldParser();
 	}
 

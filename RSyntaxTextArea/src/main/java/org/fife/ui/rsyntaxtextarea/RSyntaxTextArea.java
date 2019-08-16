@@ -916,7 +916,7 @@ private boolean fractionalFontMetricsEnabled;
 			// causes BadLocationExceptions when an entire folded region is
 			// deleted (see GitHub issue #22:
 			// https://github.com/bobbylight/RSyntaxTextArea/issues/22)
-			SwingUtilities.invokeLater(() -> possiblyUpdateCurrentLineHighlightLocation());
+			SwingUtilities.invokeLater(this::possiblyUpdateCurrentLineHighlightLocation);
 		}
 		else {
 			possiblyUpdateCurrentLineHighlightLocation();
@@ -2280,7 +2280,7 @@ private boolean fractionalFontMetricsEnabled;
 				// call worked.
 				if (aaHints==null) {
 					Map<RenderingHints.Key, Object> temp =
-							new HashMap<RenderingHints.Key, Object>();
+						new HashMap<>();
 					temp.put(RenderingHints.KEY_TEXT_ANTIALIASING,
 							RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 					aaHints = temp;
@@ -2422,7 +2422,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (aaHints==null) {
 
 			Map<RenderingHints.Key, Object> temp =
-					new HashMap<RenderingHints.Key, Object>();
+				new HashMap<>();
 
 			// In Java 6+, you can figure out what text AA hint Swing uses for
 			// JComponents...

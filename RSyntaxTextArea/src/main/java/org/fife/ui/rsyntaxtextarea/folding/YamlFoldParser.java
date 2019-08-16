@@ -44,8 +44,8 @@ public class YamlFoldParser implements FoldParser {
     @Override
     public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-        List<Fold> folds = new ArrayList<Fold>();
-        Stack<Integer> indentStack = new Stack<Integer>();
+        List<Fold> folds = new ArrayList<>();
+        Stack<Integer> indentStack = new Stack<>();
 
         Fold currentFold = null;
         int lineCount = textArea.getLineCount();

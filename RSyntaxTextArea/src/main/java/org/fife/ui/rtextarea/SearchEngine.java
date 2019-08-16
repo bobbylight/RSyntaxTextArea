@@ -706,7 +706,7 @@ public final class SearchEngine {
 		if (context.getMarkAll() && toMark!=null && toMark.length()>0
 				/*&& !toMark.equals(markedWord)*/) {
 
-			List<DocumentRange> highlights = new ArrayList<DocumentRange>();
+			List<DocumentRange> highlights = new ArrayList<>();
 			context = context.clone();
 			context.setSearchForward(true);
 			context.setMarkAll(false);

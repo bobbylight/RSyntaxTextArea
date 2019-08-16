@@ -115,7 +115,7 @@ public class Macro {
 			throw new IOException("Error parsing XML: " + desc);
 		}
 
-		macroRecords = new ArrayList<MacroRecord>();
+		macroRecords = new ArrayList<>();
 
 		// Traverse the XML tree.
 		boolean parsedOK = initializeFromXMLFile(doc.getDocumentElement());
@@ -150,13 +150,11 @@ public class Macro {
 		this.name = name;
 
 		if (records!=null) {
-			macroRecords = new ArrayList<MacroRecord>(records.size());
-			for (MacroRecord record : records) {
-				macroRecords.add(record);
-			}
+			macroRecords = new ArrayList<>(records.size());
+			macroRecords.addAll(records);
 		}
 		else {
-			macroRecords = new ArrayList<MacroRecord>(10);
+			macroRecords = new ArrayList<>(10);
 		}
 
 	}
@@ -203,7 +201,7 @@ public class Macro {
 	 * Used in parsing an XML document containing a macro.  This method
 	 * initializes this macro with the data contained in the passed-in node.
 	 *
-	 * @param node The root node of the parsed XML document.
+	 * @param root The root node of the parsed XML document.
 	 * @return <code>true</code> if the macro initialization went okay;
 	 *         <code>false</code> if an error occurred.
 	 */

@@ -473,7 +473,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		private String discoverTagName(RSyntaxDocument doc, int dot) {
 
-			Stack<String> stack = new Stack<String>();
+			Stack<String> stack = new Stack<>();
 
 			Element root = doc.getDefaultRootElement();
 			int curLine = root.getElementIndex(dot);

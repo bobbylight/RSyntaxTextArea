@@ -39,8 +39,8 @@ public class JsonFoldParser implements FoldParser {
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		Stack<Object> blocks = new Stack<Object>();
-		List<Fold> folds = new ArrayList<Fold>();
+		Stack<Object> blocks = new Stack<>();
+		List<Fold> folds = new ArrayList<>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();

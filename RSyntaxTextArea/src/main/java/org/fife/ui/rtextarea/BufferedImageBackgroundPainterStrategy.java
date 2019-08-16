@@ -89,7 +89,7 @@ public class BufferedImageBackgroundPainterStrategy
 		if (master!=null) {
 
 			Map<RenderingHints.Key, Object> hints =
-					new HashMap<RenderingHints.Key, Object>();
+				new HashMap<>();
 			switch (hint) {
 				default:
 				case Image.SCALE_AREA_AVERAGING:

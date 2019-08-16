@@ -59,7 +59,7 @@ class LineHighlightManager {
 		LineHighlightInfo lhi = new LineHighlightInfo(
 						textArea.getDocument().createPosition(offs), color);
 		if (lineHighlights==null) {
-			lineHighlights = new ArrayList<LineHighlightInfo>(1);
+			lineHighlights = new ArrayList<>(1);
 		}
 		int index = Collections.binarySearch(lineHighlights, lhi, comparator);
 		if (index<0) { // Common case
@@ -79,7 +79,7 @@ class LineHighlightManager {
 	 */
 	protected List<Object> getCurrentLineHighlightTags() {
 		return lineHighlights == null ? Collections.emptyList() :
-			new ArrayList<Object>(lineHighlights);
+			new ArrayList<>(lineHighlights);
 	}
 
 

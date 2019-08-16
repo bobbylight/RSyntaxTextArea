@@ -37,7 +37,7 @@ public final class ClipboardHistory {
 
 
 	private ClipboardHistory() {
-		history = new ArrayList<String>();
+		history = new ArrayList<>();
 		maxSize = DEFAULT_MAX_SIZE;
 	}
 
@@ -88,7 +88,7 @@ public final class ClipboardHistory {
 	 * @return The clipboard history.
 	 */
 	public List<String> getHistory() {
-		List<String> copy = new ArrayList<String>(this.history);
+		List<String> copy = new ArrayList<>(this.history);
 		Collections.reverse(copy);
 		return copy;
 	}

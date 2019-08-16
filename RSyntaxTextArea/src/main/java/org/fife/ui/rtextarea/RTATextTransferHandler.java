@@ -72,23 +72,23 @@ public class RTATextTransferHandler extends TransferHandler {
 		DataFlavor refFlavor = null;
 		DataFlavor stringFlavor = null;
 
-		for (int i = 0; i < flavors.length; i++) {
+		 for (DataFlavor flavor : flavors) {
 
-			String mime = flavors[i].getMimeType();
-			if (mime.startsWith("text/plain")) {
-				return flavors[i];
-			}
-			else if (refFlavor == null &&
-				mime.startsWith("application/x-java-jvm-local-objectref") &&
-				flavors[i].getRepresentationClass() == String.class) {
-				refFlavor = flavors[i];
-			}
-			else if (stringFlavor==null &&
-				flavors[i].equals(DataFlavor.stringFlavor)) {
-				stringFlavor = flavors[i];
-			}
+			 String mime = flavor.getMimeType();
+			 if (mime.startsWith("text/plain")) {
+				 return flavor;
+			 }
+			 else if (refFlavor == null &&
+				 mime.startsWith("application/x-java-jvm-local-objectref") &&
+				 flavor.getRepresentationClass() == String.class) {
+				 refFlavor = flavor;
+			 }
+			 else if (stringFlavor == null &&
+				 flavor.equals(DataFlavor.stringFlavor)) {
+				 stringFlavor = flavor;
+			 }
 
-		}
+		 }
 
 		if (refFlavor != null) {
 			return refFlavor;
@@ -297,10 +297,8 @@ public class RTATextTransferHandler extends TransferHandler {
 				Reader r = importFlavor.getReaderForText(t);
 				handleReaderImport(r, c);
 				imported = true;
-			} catch (UnsupportedFlavorException ufe) {
-				ufe.printStackTrace();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} catch (UnsupportedFlavorException | IOException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -431,8 +429,8 @@ public class RTATextTransferHandler extends TransferHandler {
 		@Override
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
 			DataFlavor[] flavors = getTransferDataFlavors();
-			for (int i = 0; i < flavors.length; i++) {
-				if (flavors[i].equals(flavor)) {
+			for (DataFlavor dataFlavor : flavors) {
+				if (dataFlavor.equals(flavor)) {
 					return true;
 				}
 			}
@@ -447,8 +445,8 @@ public class RTATextTransferHandler extends TransferHandler {
 		 */
 		protected boolean isPlainFlavor(DataFlavor flavor) {
 			DataFlavor[] flavors = plainFlavors;
-			for (int i = 0; i < flavors.length; i++) {
-				if (flavors[i].equals(flavor)) {
+			for (DataFlavor dataFlavor : flavors) {
+				if (dataFlavor.equals(flavor)) {
 					return true;
 				}
 			}
@@ -471,8 +469,8 @@ public class RTATextTransferHandler extends TransferHandler {
 		 */
 		protected boolean isStringFlavor(DataFlavor flavor) {
 			DataFlavor[] flavors = stringFlavors;
-			for (int i = 0; i < flavors.length; i++) {
-				if (flavors[i].equals(flavor)) {
+			for (DataFlavor dataFlavor : flavors) {
+				if (dataFlavor.equals(flavor)) {
 					return true;
 				}
 			}

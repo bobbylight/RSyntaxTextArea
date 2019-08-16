@@ -206,7 +206,7 @@ public class ErrorStrip extends JPanel {
 	 */
 	private Color getBrighterColor(Color c) {
 		if (brighterColors==null) {
-			brighterColors = new HashMap<Color, Color>(5); // Usually small
+			brighterColors = new HashMap<>(5); // Usually small
 		}
 		Color brighter = brighterColors.get(c);
 		if (brighter==null) {
@@ -308,7 +308,7 @@ public class ErrorStrip extends JPanel {
 		int line = yToLine(e.getY());
 		if (line>-1) {
 			text = MSG.getString("Line");
-			text = MessageFormat.format(text, Integer.valueOf(line+1));
+			text = MessageFormat.format(text, line + 1);
 		}
 		return text;
 	}
@@ -364,13 +364,13 @@ public class ErrorStrip extends JPanel {
 	private void refreshMarkers() {
 
 		removeAll(); // listener is removed in Marker.removeNotify()
-		Map<Integer, Marker> markerMap = new HashMap<Integer, Marker>();
+		Map<Integer, Marker> markerMap = new HashMap<>();
 
 		List<ParserNotice> notices = textArea.getParserNotices();
 		for (ParserNotice notice : notices) {
 			if (notice.getLevel().isEqualToOrWorseThan(levelThreshold) ||
 					(notice instanceof TaskNotice)) {
-				Integer key = Integer.valueOf(notice.getLine());
+				Integer key = notice.getLine();
 				Marker m = markerMap.get(key);
 				if (m==null) {
 					m = new Marker(notice);
@@ -418,7 +418,7 @@ public class ErrorStrip extends JPanel {
 				continue;
 			}
 			ParserNotice notice = new MarkedOccurrenceNotice(range, color);
-			Integer key = Integer.valueOf(line);
+			Integer key = line;
 			Marker m = markerMap.get(key);
 			if (m==null) {
 				m = new Marker(notice);
@@ -599,8 +599,7 @@ public class ErrorStrip extends JPanel {
 				StringBuilder sb = new StringBuilder("<html>");
 				sb.append(MSG.getString("MultipleMarkers"));
 				sb.append("<br>");
-				for (int i=0; i<notices.size(); i++) {
-					ParserNotice pn = notices.get(i);
+				for (ParserNotice pn : notices) {
 					sb.append("&nbsp;&nbsp;&nbsp;- ");
 					sb.append(pn.getMessage());
 					sb.append("<br>");
@@ -835,7 +834,7 @@ public class ErrorStrip extends JPanel {
 		private List<ParserNotice> notices;
 
 		Marker(ParserNotice notice) {
-			notices = new ArrayList<ParserNotice>(1); // Usually just 1
+			notices = new ArrayList<>(1); // Usually just 1
 			addNotice(notice);
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			setSize(getPreferredSize());
@@ -848,8 +847,8 @@ public class ErrorStrip extends JPanel {
 
 		public boolean containsMarkedOccurence() {
 			boolean result = false;
-			for (int i=0; i<notices.size(); i++) {
-				if (notices.get(i) instanceof MarkedOccurrenceNotice) {
+			for (ParserNotice notice : notices) {
+				if (notice instanceof MarkedOccurrenceNotice) {
 					result = true;
 					break;
 				}

@@ -32,7 +32,7 @@ public interface TokenMaker {
 	 * This should be put at the end of the linked list whenever the last
 	 * token on the current line is NOT a multi-line token.
 	 */
-	public void addNullToken();
+	void addNullToken();
 
 
 	/**
@@ -45,8 +45,8 @@ public interface TokenMaker {
 	 * @param startOffset The offset in the document at which this token
 	 *        occurs.
 	 */
-	public void addToken(char[] array, int start, int end, int tokenType,
-							int startOffset);
+	void addToken(char[] array, int start, int end, int tokenType,
+				  int startOffset);
 
 
 	/**
@@ -57,7 +57,7 @@ public interface TokenMaker {
 	 * @return The closest "standard" token type.  If a mapping is not defined
 	 *         for this language, then <code>type</code> is returned.
 	 */
-	public int getClosestStandardTokenTypeForInternalType(int type);
+	int getClosestStandardTokenTypeForInternalType(int type);
 
 
 	/**
@@ -70,7 +70,7 @@ public interface TokenMaker {
 	 *        <code>TokenMaker</code> what sub-language to look at.
 	 * @return Whether curly braces denote code blocks.
 	 */
-	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex);
+	boolean getCurlyBracesDenoteCodeBlocks(int languageIndex);
 
 
 	/**
@@ -89,7 +89,7 @@ public interface TokenMaker {
 	 * @return The last token on this line's type, or {@link Token#NULL}
 	 *         if the line was completed.
 	 */
-	public int getLastTokenTypeOnLine(Segment text, int initialTokenType);
+	int getLastTokenTypeOnLine(Segment text, int initialTokenType);
 
 
 	/**
@@ -106,7 +106,7 @@ public interface TokenMaker {
 	 *         <code>null</code> for the array means this language
 	 *         does not support commenting/uncommenting lines.
 	 */
-	public String[] getLineCommentStartAndEnd(int languageIndex);
+	String[] getLineCommentStartAndEnd(int languageIndex);
 
 
 	/**
@@ -115,7 +115,7 @@ public interface TokenMaker {
 	 * @return The action, or <code>null</code> if the default action should
 	 *         be used.
 	 */
-	public Action getInsertBreakAction();
+	Action getInsertBreakAction();
 
 
 	/**
@@ -126,7 +126,7 @@ public interface TokenMaker {
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
-	public boolean getMarkOccurrencesOfTokenType(int type);
+	boolean getMarkOccurrencesOfTokenType(int type);
 
 
 	/**
@@ -138,7 +138,7 @@ public interface TokenMaker {
 	 * @return The occurrence marker for this language, or <code>null</code>
 	 *         for none.
 	 */
-	public OccurrenceMarker getOccurrenceMarker();
+	OccurrenceMarker getOccurrenceMarker();
 
 
 	/**
@@ -148,7 +148,7 @@ public interface TokenMaker {
 	 * @param token The token the previous line ends with.
 	 * @return Whether the next line should be indented.
 	 */
-	public boolean getShouldIndentNextLineAfter(Token token);
+	boolean getShouldIndentNextLineAfter(Token token);
 
 
 	/**
@@ -163,8 +163,8 @@ public interface TokenMaker {
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
-	public Token getTokenList(Segment text, int initialTokenType,
-											int startOffset);
+	Token getTokenList(Segment text, int initialTokenType,
+					   int startOffset);
 
 
 	/**
@@ -176,7 +176,7 @@ public interface TokenMaker {
 	 * @param ch The character.
 	 * @return Whether the character could be part of an "identifier" token.
 	 */
-	public boolean isIdentifierChar(int languageIndex, char ch);
+	boolean isIdentifierChar(int languageIndex, char ch);
 
 
 	/**
@@ -184,7 +184,7 @@ public interface TokenMaker {
 	 *
 	 * @return Whether this language is markup.
 	 */
-	public boolean isMarkupLanguage();
+	boolean isMarkupLanguage();
 
 
 }

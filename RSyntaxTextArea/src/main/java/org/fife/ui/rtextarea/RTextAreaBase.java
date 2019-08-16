@@ -166,8 +166,8 @@ public abstract class RTextAreaBase extends JTextArea {
 	private void addCurrentLineHighlightListeners() {
 		boolean add = true;
 		MouseMotionListener[] mouseMotionListeners = getMouseMotionListeners();
-		for (int i=0; i<mouseMotionListeners.length; i++) {
-			if (mouseMotionListeners[i]==mouseListener) {
+		for (MouseMotionListener mouseMotionListener : mouseMotionListeners) {
+			if (mouseMotionListener == mouseListener) {
 				add = false;
 				break;
 			}
@@ -177,8 +177,8 @@ public abstract class RTextAreaBase extends JTextArea {
 			addMouseMotionListener(mouseListener);
 		}
 		MouseListener[] mouseListeners = getMouseListeners();
-		for (int i=0; i<mouseListeners.length; i++) {
-			if (mouseListeners[i]==mouseListener) {
+		for (MouseListener listener : mouseListeners) {
+			if (listener == mouseListener) {
 				add = false;
 				break;
 			}
@@ -196,7 +196,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		// highlight y-offset after the text area is sized.  This seems to be
 		// the best way to do it.
 		if (getCaretPosition() != 0) {
-			SwingUtilities.invokeLater(() -> possiblyUpdateCurrentLineHighlightLocation());
+			SwingUtilities.invokeLater(this::possiblyUpdateCurrentLineHighlightLocation);
 		}
 	}
 

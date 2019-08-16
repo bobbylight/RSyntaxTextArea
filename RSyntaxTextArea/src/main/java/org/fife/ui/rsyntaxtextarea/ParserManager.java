@@ -116,7 +116,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		this.textArea = textArea;
 		textArea.getDocument().addDocumentListener(this);
 		textArea.addPropertyChangeListener("document", this);
-		parsers = new ArrayList<Parser>(1); // Usually small
+		parsers = new ArrayList<>(1); // Usually small
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
 		running = true;
@@ -226,7 +226,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		}
 
 		if (noticeHighlightPairs==null) {
-			noticeHighlightPairs = new ArrayList<NoticeHighlightPair>();
+			noticeHighlightPairs = new ArrayList<>();
 		}
 
 		removeParserNotices(res);
@@ -297,13 +297,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			h.clearParserHighlights(parser);
 		}
 		if (noticeHighlightPairs!=null) {
-			Iterator<NoticeHighlightPair> i=noticeHighlightPairs.iterator();
-			while (i.hasNext()) {
-				NoticeHighlightPair pair = i.next();
-				if (pair.notice.getParser()==parser) {
-					i.remove();
-				}
-			}
+			noticeHighlightPairs.removeIf(pair -> pair.notice.getParser() == parser);
 		}
 	}
 
@@ -399,7 +393,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 *         none.
 	 */
 	public List<ParserNotice> getParserNotices() {
-		List<ParserNotice> notices = new ArrayList<ParserNotice>();
+		List<ParserNotice> notices = new ArrayList<>();
 		if (noticeHighlightPairs!=null) {
 			for (NoticeHighlightPair pair : noticeHighlightPairs) {
 				notices.add(pair.notice);

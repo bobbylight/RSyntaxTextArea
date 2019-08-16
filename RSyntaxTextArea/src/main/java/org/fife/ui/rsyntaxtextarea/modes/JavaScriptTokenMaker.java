@@ -1840,7 +1840,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
           { addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
 								start = zzMarkedPos-2;
 								if (varDepths==null) {
-									varDepths = new Stack<Boolean>();
+									varDepths = new Stack<>();
 								}
 								else {
 									varDepths.clear();

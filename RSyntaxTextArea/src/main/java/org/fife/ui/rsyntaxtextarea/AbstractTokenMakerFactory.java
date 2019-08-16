@@ -35,7 +35,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	 * Constructor.
 	 */
 	protected AbstractTokenMakerFactory() {
-		tokenMakerMap = new HashMap<String, Object>();
+		tokenMakerMap = new HashMap<>();
 		initTokenMakerMap();
 	}
 

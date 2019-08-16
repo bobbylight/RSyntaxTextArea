@@ -290,7 +290,7 @@ public class RTextScrollPane extends JScrollPane {
 	 *         is found.
 	 */
 	private static RTextArea getFirstRTextAreaDescendant(Component comp) {
-		Stack<Component> stack = new Stack<Component>();
+		Stack<Component> stack = new Stack<>();
 		stack.add(comp);
 		while (!stack.isEmpty()) {
 			Component current = stack.pop();

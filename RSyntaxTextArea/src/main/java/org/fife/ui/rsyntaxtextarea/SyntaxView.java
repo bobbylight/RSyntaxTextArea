@@ -297,7 +297,6 @@ public class SyntaxView extends View implements TabExpander,
 	/**
 	 * Calculates the width of the line represented by the given element.
 	 *
-	 * @param line The line for which to get the length.
 	 * @param lineNumber The line number of the specified line in the document.
 	 * @return The width of the line.
 	 */
@@ -397,7 +396,7 @@ public class SyntaxView extends View implements TabExpander,
 	private int getTabSize() {
 		Integer i = (Integer)getDocument().getProperty(
 									PlainDocument.tabSizeAttribute);
-		int size = (i != null) ? i.intValue() : 5;
+		int size = (i != null) ? i : 5;
 		return size;
 	}
 
@@ -837,8 +836,8 @@ else {
 				}
 			}
 			if (removed != null) {
-				for (int i = 0; i < removed.length; i++) {
-					if (removed[i] == longLine) {
+				for (Element element : removed) {
+					if (element == longLine) {
 						longLineWidth = -1; // Must do this!!
 						calculateLongestLine();
 						break;

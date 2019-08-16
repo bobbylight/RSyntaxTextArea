@@ -175,7 +175,7 @@ public abstract class RecordableTextAction extends TextAction {
 	 */
 	public int getMnemonic() {
 		Integer i = (Integer)getValue(MNEMONIC_KEY);
-		return i!=null ? i.intValue() : -1;
+		return i!=null ? i : -1;
 	}
 
 

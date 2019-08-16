@@ -1010,8 +1010,7 @@ public void setBorder(Border border) {
 
 			// If they toggle whether code folding is enabled...
 			else if (RSyntaxTextArea.CODE_FOLDING_PROPERTY.equals(name)) {
-				boolean foldingEnabled = ((Boolean)e.getNewValue()).
-															booleanValue();
+				boolean foldingEnabled = (Boolean)e.getNewValue();
 				if (lineNumberList!=null) { // Its size depends on folding
 					//lineNumberList.revalidate();
 					lineNumberList.updateCellWidths();

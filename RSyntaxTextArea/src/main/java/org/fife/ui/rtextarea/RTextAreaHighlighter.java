@@ -55,7 +55,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * Constructor.
 	 */
 	public RTextAreaHighlighter() {
-		markAllHighlights = new ArrayList<HighlightInfo>();
+		markAllHighlights = new ArrayList<>();
 	}
 
 
@@ -130,8 +130,8 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * @return The list of "mark all" highlight ranges.
 	 */
 	public List<DocumentRange> getMarkAllHighlightRanges() {
-		List<DocumentRange> list = new ArrayList<DocumentRange>(
-				markAllHighlights.size());
+		List<DocumentRange> list = new ArrayList<>(
+			markAllHighlights.size());
 		for (HighlightInfo info : markAllHighlights) {
 			int start = info.getStartOffset();
 			int end = info.getEndOffset() + 1; // HACK

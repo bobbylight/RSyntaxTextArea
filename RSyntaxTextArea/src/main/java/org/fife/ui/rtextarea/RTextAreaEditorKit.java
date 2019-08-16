@@ -1859,11 +1859,10 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 					int curLine = textArea.getCaretLineNumber();
 
 					if (forward) {
-						for (int i=0; i<bookmarks.length; i++) {
-							GutterIconInfo bookmark = bookmarks[i];
+						for (GutterIconInfo bookmark : bookmarks) {
 							int offs = bookmark.getMarkedOffset();
 							int line = textArea.getLineOfOffset(offs);
-							if (line>curLine) {
+							if (line > curLine) {
 								moveTo = bookmark;
 								break;
 							}

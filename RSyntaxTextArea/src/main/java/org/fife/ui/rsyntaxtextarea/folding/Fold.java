@@ -72,7 +72,7 @@ public class Fold implements Comparable<Fold> {
 		Fold child = new Fold(type, textArea, startOffs);
 		child.parent = this;
 		if (children==null) {
-			children = new ArrayList<Fold>();
+			children = new ArrayList<>();
 		}
 		children.add(child);
 		return child;

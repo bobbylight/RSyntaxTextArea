@@ -77,7 +77,7 @@ public class HtmlFoldParser implements FoldParser {
 	private static final char[] JSP_COMMENT_END   = "--%>".toCharArray();
 
 	static {
-		FOLDABLE_TAGS = new HashSet<String>();
+		FOLDABLE_TAGS = new HashSet<>();
 		FOLDABLE_TAGS.add("body");
 		FOLDABLE_TAGS.add("canvas");
 		FOLDABLE_TAGS.add("div");
@@ -117,8 +117,8 @@ public class HtmlFoldParser implements FoldParser {
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List<Fold> folds = new ArrayList<Fold>();
-		Stack<String> tagNameStack = new Stack<String>();
+		List<Fold> folds = new ArrayList<>();
+		Stack<String> tagNameStack = new Stack<>();
 		boolean inSublanguage = false;
 
 		Fold currentFold = null;

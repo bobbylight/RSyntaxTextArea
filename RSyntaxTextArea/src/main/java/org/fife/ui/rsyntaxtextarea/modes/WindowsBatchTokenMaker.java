@@ -635,7 +635,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 		BRACKET_VAR,
 		TILDE_VAR,
 		NORMAL_VAR,
-		DOUBLE_PERCENT_VAR; // Escaped '%' var, special highlighting rules?
+		DOUBLE_PERCENT_VAR // Escaped '%' var, special highlighting rules?
 	}
 
 

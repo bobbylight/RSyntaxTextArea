@@ -401,7 +401,7 @@ public class RtfGenerator {
 		// just search for a monospaced font on the system.
 		String monoFamilyName = getMonospacedFontFamily();
 
-		sb.append("{\\fonttbl{\\f0\\fnil\\fcharset0 " + monoFamilyName + ";}");
+		sb.append("{\\fonttbl{\\f0\\fnil\\fcharset0 ").append(monoFamilyName).append(";}");
 		for (int i=0; i<fontList.size(); i++) {
 			Font f = fontList.get(i);
 			String familyName = f.getFamily();

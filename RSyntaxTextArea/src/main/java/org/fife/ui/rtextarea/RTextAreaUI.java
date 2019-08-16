@@ -217,8 +217,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		ActionMap map = new ActionMapUIResource();
 		Action[] actions = textArea.getActions();
 		int n = actions.length;
-		for (int i = 0; i < n; i++) {
-			Action a = actions[i];
+		for (Action a : actions) {
 			map.put(a.getValue(Action.NAME), a);
 		}
 

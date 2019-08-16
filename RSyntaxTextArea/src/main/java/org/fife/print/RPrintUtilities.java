@@ -76,8 +76,8 @@ public abstract class RPrintUtilities {
 	private static int getLineBreakPoint(String line, final int maxCharsPerLine) {
 
 		int breakPoint = -1;
-		for (int i=0; i<BREAK_CHARS.length; i++) {
-			int breakCharPos = line.lastIndexOf(BREAK_CHARS[i], maxCharsPerLine-1);
+		for (char breakChar : BREAK_CHARS) {
+			int breakCharPos = line.lastIndexOf(breakChar, maxCharsPerLine - 1);
 			if (breakCharPos > breakPoint) {
 				breakPoint = breakCharPos;
 			}
@@ -440,12 +440,12 @@ public abstract class RPrintUtilities {
 					// currentPos will be the last position in the current text of a "line break character."
 					currentPos = -1;
 					String currentLineString = currentLineSeg.toString();
-					for (int i=0; i<BREAK_CHARS.length; i++) {
+					for (char breakChar : BREAK_CHARS) {
 						// "+1" below so we include the character on the line.
-						int pos = currentLineString.lastIndexOf(BREAK_CHARS[i]) + 1;
+						int pos = currentLineString.lastIndexOf(breakChar) + 1;
 						//if (pos>-1 && pos>currentPos)
 						//	currentPos = pos;
-						if (pos>0 && pos>currentPos && pos!=currentLineString.length()) {
+						if (pos > 0 && pos > currentPos && pos != currentLineString.length()) {
 							currentPos = pos;
 						}
 					}

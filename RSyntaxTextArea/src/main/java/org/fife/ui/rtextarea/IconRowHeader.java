@@ -166,7 +166,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		Position pos = textArea.getDocument().createPosition(offs);
 		GutterIconImpl ti = new GutterIconImpl(icon, pos, tip);
 		if (trackingIcons==null) {
-			trackingIcons = new ArrayList<GutterIconImpl>(1); // Usually small
+			trackingIcons = new ArrayList<>(1); // Usually small
 		}
 		int index = Collections.binarySearch(trackingIcons, ti);
 		if (index<0) {
@@ -223,7 +223,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	public GutterIconInfo[] getBookmarks() {
 
-		List<GutterIconInfo> retVal = new ArrayList<GutterIconInfo>(1);
+		List<GutterIconInfo> retVal = new ArrayList<>(1);
 
 		if (trackingIcons!=null) {
 			for (int i=0; i<trackingIcons.size(); i++) {
@@ -302,7 +302,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	public GutterIconInfo[] getTrackingIcons(int line)
 								throws BadLocationException {
 
-		List<GutterIconInfo> retVal = new ArrayList<GutterIconInfo>(1);
+		List<GutterIconInfo> retVal = new ArrayList<>(1);
 
 		if (trackingIcons!=null) {
 			int start = textArea.getLineStartOffset(line);
@@ -826,9 +826,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		}
 
 		boolean found = false;
-		for (int i=0; i<icons.length; i++) {
-			if (icons[i].getIcon()==bookmarkIcon) {
-				removeTrackingIcon(icons[i]);
+		for (GutterIconInfo icon : icons) {
+			if (icon.getIcon() == bookmarkIcon) {
+				removeTrackingIcon(icon);
 				found = true;
 				// Don't quit, in case they manipulate the document so > 1
 				// bookmark is on a single line (kind of flaky, but it

@@ -63,8 +63,8 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 * Constructor.
 	 */
 	public RSyntaxTextAreaHighlighter() {
-		markedOccurrences = new ArrayList<SyntaxLayeredHighlightInfoImpl>();
-		parserHighlights = new ArrayList<SyntaxLayeredHighlightInfoImpl>(0); // Often unused
+		markedOccurrences = new ArrayList<>();
+		parserHighlights = new ArrayList<>(0); // Often unused
 	}
 
 
@@ -166,8 +166,8 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	void clearParserHighlights() {
 		// Don't remove via an iterator; since our List is an ArrayList, this
 		// implies tons of System.arrayCopy()s
-		for (int i=0; i<parserHighlights.size(); i++) {
-			repaintListHighlight(parserHighlights.get(i));
+		for (SyntaxLayeredHighlightInfoImpl parserHighlight : parserHighlights) {
+			repaintListHighlight(parserHighlight);
 		}
 		parserHighlights.clear();
 	}
@@ -216,7 +216,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 *         contents of this list will be of type {@link DocumentRange}.
 	 */
 	public List<DocumentRange> getMarkedOccurrences() {
-		List<DocumentRange> list = new ArrayList<DocumentRange>(markedOccurrences.size());
+		List<DocumentRange> list = new ArrayList<>(markedOccurrences.size());
 		for (HighlightInfo info : markedOccurrences) {
 			int start = info.getStartOffset();
 			int end = info.getEndOffset() + 1; // HACK

@@ -410,7 +410,8 @@ public class DynamicIntArray implements Serializable {
 	 * See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5103956">
 	 * this Sun bug report</a> for more information.
 	 *
-	 * @param index The invalid index.
+	 * @param fromIndex The from-index.
+	 * @param toIndex The to-index.
 	 * @throws IndexOutOfBoundsException Always.
 	 */
 	private void throwException3(int fromIndex, int toIndex) {

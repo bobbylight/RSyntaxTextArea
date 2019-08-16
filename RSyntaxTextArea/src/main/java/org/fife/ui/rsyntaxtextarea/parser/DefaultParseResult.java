@@ -32,7 +32,7 @@ public class DefaultParseResult implements ParseResult {
 
 	public DefaultParseResult(Parser parser) {
 		this.parser = parser;
-		notices = new ArrayList<ParserNotice>();
+		notices = new ArrayList<>();
 	}
 
 

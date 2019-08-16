@@ -747,7 +747,7 @@ public final void yybegin(int newState) {
           }
         case 22: break;
         case 15:
-          { if (varDepths==null) { varDepths = new Stack<Boolean>(); } else { varDepths.clear(); } varDepths.push(Boolean.FALSE); start = zzMarkedPos-2; yybegin(VAR);
+          { if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.FALSE); start = zzMarkedPos-2; yybegin(VAR);
           }
         case 23: break;
         case 3:
@@ -801,7 +801,7 @@ public final void yybegin(int newState) {
           }
         case 33: break;
         case 14:
-          { if (varDepths==null) { varDepths = new Stack<Boolean>(); } else { varDepths.clear(); } varDepths.push(Boolean.TRUE); start = zzMarkedPos-2; yybegin(VAR);
+          { if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.TRUE); start = zzMarkedPos-2; yybegin(VAR);
           }
         case 34: break;
         case 5:

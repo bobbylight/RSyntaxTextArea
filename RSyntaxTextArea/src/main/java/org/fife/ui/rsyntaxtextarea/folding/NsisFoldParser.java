@@ -51,13 +51,13 @@ public class NsisFoldParser implements FoldParser {
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 
-		List<Fold> folds = new ArrayList<Fold>();
+		List<Fold> folds = new ArrayList<>();
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
 		boolean inMLC = false;
 		int mlcStart = 0;
-		Stack<char[]> endWordStack = new Stack<char[]>();
+		Stack<char[]> endWordStack = new Stack<>();
 
 		try {
 

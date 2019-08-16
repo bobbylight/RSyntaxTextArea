@@ -65,7 +65,7 @@ public class CodeTemplateManager {
 	public CodeTemplateManager() {
 		s = new Segment();
 		comparator = new TemplateComparator();
-		templates = new ArrayList<CodeTemplate>();
+		templates = new ArrayList<>();
 	}
 
 
@@ -207,9 +207,7 @@ public class CodeTemplateManager {
 	public synchronized void replaceTemplates(CodeTemplate[] newTemplates) {
 		templates.clear();
 		if (newTemplates!=null) {
-			for (int i=0; i<newTemplates.length; i++) {
-				templates.add(newTemplates[i]);
-			}
+			Collections.addAll(templates, newTemplates);
 		}
 		sortTemplates(); // Also recomputes maxTemplateIDLength.
 	}
@@ -236,8 +234,9 @@ public class CodeTemplateManager {
 			return false; // Either an IOException or it isn't a directory.
 		}
 		int count = oldXMLFiles.length;
-		for (int i=0; i<count; i++) {
-			/*boolean deleted = */oldXMLFiles[i].delete();
+		for (File oldXMLFile : oldXMLFiles) {
+			/*boolean deleted = */
+			oldXMLFile.delete();
 		}
 
 		// Save all current templates as XML.
@@ -280,7 +279,7 @@ public class CodeTemplateManager {
 			int oldCount = templates.size();
 
 			List<CodeTemplate> temp =
-					new ArrayList<CodeTemplate>(oldCount+newCount);
+				new ArrayList<>(oldCount + newCount);
 			temp.addAll(templates);
 
 			for (int i=0; i<newCount; i++) {

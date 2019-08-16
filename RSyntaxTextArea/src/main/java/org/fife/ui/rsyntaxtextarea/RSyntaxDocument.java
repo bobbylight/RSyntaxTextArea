@@ -110,7 +110,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
 	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
-		putProperty(tabSizeAttribute, Integer.valueOf(5));
+		putProperty(tabSizeAttribute, 5);
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
