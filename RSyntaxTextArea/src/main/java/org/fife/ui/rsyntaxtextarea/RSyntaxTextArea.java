@@ -1063,7 +1063,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The color.
 	 * @see #getDefaultBracketMatchBorderColor
 	 */
-	public static final Color getDefaultBracketMatchBGColor() {
+	public static Color getDefaultBracketMatchBGColor() {
 		return DEFAULT_BRACKET_MATCH_BG_COLOR;
 	}
 
@@ -1074,7 +1074,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The color.
 	 * @see #getDefaultBracketMatchBGColor
 	 */
-	public static final Color getDefaultBracketMatchBorderColor() {
+	public static Color getDefaultBracketMatchBorderColor() {
 		return DEFAULT_BRACKET_MATCH_BORDER_COLOR;
 	}
 
@@ -3133,7 +3133,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (whitespaceVisible!=visible) {
 			this.whitespaceVisible = visible;
 			tokenPainter = visible ? new VisibleWhitespaceTokenPainter() :
-					(TokenPainter)new DefaultTokenPainter();
+					new DefaultTokenPainter();
 			repaint();
 			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY, !visible, visible);
 		}

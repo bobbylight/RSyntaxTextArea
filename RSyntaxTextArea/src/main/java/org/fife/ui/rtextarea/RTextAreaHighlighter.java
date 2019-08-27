@@ -62,11 +62,11 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	/**
 	 * Adds a special "marked occurrence" highlight.
 	 *
-	 * @param start
-	 * @param end
-	 * @param p
+	 * @param start The start offset of the highlight.
+	 * @param end The end offset of the highlight.
+	 * @param p The highlight painter.
 	 * @return A tag to reference the highlight later.
-	 * @throws BadLocationException
+	 * @throws BadLocationException If one of the offsets specified is invalid.
 	 * @see #clearMarkAllHighlights()
 	 */
 	Object addMarkAllHighlight(int start, int end, HighlightPainter p)

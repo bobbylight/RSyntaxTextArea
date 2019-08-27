@@ -714,7 +714,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #getMarkAllHighlightColor()
 	 * @see #setMarkAllHighlightColor(Color)
 	 */
-	public static final Color getDefaultMarkAllHighlightColor() {
+	public static Color getDefaultMarkAllHighlightColor() {
 		return DEFAULT_MARK_ALL_COLOR;
 	}
 
@@ -1069,8 +1069,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * De-serializes a text area.
 	 *
 	 * @param s The stream to read from.
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @throws ClassNotFoundException If something bad happens.
+	 * @throws IOException If an IO error occurs.
 	 */
 	private void readObject(ObjectInputStream s)
 						throws ClassNotFoundException, IOException {

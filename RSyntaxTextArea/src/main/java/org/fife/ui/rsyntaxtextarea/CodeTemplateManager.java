@@ -103,7 +103,7 @@ public class CodeTemplateManager {
 			doc.getText(caretPos-charsToGet, charsToGet, s);
 			@SuppressWarnings("unchecked")
 			int index = Collections.binarySearch(templates, s, comparator);
-			return index>=0 ? (CodeTemplate)templates.get(index) : null;
+			return index>=0 ? templates.get(index) : null;
 		} catch (BadLocationException ble) {
 			ble.printStackTrace();
 			throw new InternalError("Error in CodeTemplateManager");
@@ -139,7 +139,7 @@ public class CodeTemplateManager {
 	 * @param ch The character to check.
 	 * @return Whether the character is a valid template character.
 	 */
-	public static final boolean isValidChar(char ch) {
+	public static boolean isValidChar(char ch) {
 		return RSyntaxUtilities.isLetterOrDigit(ch) || ch=='_';
 	}
 

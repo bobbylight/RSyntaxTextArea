@@ -57,7 +57,7 @@ abstract class AbstractGutterComponent extends JPanel {
 	 *        <code>getVisibleEditorRect</code> method.
 	 * @return The child view's bounds.
 	 */
-	protected static final Rectangle getChildViewBounds(View parent, int line,
+	protected static Rectangle getChildViewBounds(View parent, int line,
 										Rectangle editorRect) {
 		Shape alloc = parent.getChildAllocation(line, editorRect);
 		if (alloc==null) {

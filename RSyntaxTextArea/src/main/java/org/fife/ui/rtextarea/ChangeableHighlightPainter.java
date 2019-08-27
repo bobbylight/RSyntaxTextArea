@@ -376,8 +376,8 @@ public class ChangeableHighlightPainter
 	 * Deserializes a painter.
 	 *
 	 * @param s The stream to read from.
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @throws ClassNotFoundException If something bad happens.
+	 * @throws IOException If an IO error occurs.
 	 */
 	private void readObject(ObjectInputStream s)
 						throws ClassNotFoundException, IOException {

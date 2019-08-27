@@ -323,7 +323,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *  SwingConstants.NORTH, or SwingConstants.SOUTH.
 	 * @return the location within the model that best represents the next
 	 *  location visual position.
-	 * @exception BadLocationException
+	 * @exception BadLocationException If the offset specified is invalid.
 	 * @exception IllegalArgumentException for an invalid direction
 	 */
 	@Override

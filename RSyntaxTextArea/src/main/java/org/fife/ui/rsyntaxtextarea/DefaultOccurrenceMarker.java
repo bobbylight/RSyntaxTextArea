@@ -84,7 +84,7 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	 * @param h The highlighter to add the highlights to.
 	 * @param p The painter for the highlights.
 	 */
-	public static final void markOccurrencesOfToken(RSyntaxDocument doc,
+	public static void markOccurrencesOfToken(RSyntaxDocument doc,
 			Token t, RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 
 		char[] lexeme = t.getLexeme().toCharArray();

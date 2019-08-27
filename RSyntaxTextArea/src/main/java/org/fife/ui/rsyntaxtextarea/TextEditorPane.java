@@ -12,7 +12,6 @@ package org.fife.ui.rsyntaxtextarea;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -232,19 +231,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	private static String getDefaultEncoding() {
 		// NOTE:  The "file.encoding" system property is not guaranteed to be
 		// set by the spec, so we cannot rely on it.
-		String encoding = Charset.defaultCharset().name();
-		if (encoding==null) {
-			try {
-				File f = File.createTempFile("rsta", null);
-				FileWriter w = new FileWriter(f);
-				encoding = w.getEncoding();
-				w.close();
-				f.deleteOnExit();//delete();  Keep FindBugs happy
-			} catch (IOException ioe) {
-				encoding = "US-ASCII";
-			}
-		}
-		return encoding;
+		return Charset.defaultCharset().name();
 	}
 
 

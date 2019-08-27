@@ -355,10 +355,8 @@ public abstract class RTextAreaBase extends JTextArea {
 			return null;
 		}
 		return (backgroundPainter instanceof ImageBackgroundPainterStrategy) ?
-			(Object)((ImageBackgroundPainterStrategy)backgroundPainter).
-					getMasterImage() :
-			(Object)((ColorBackgroundPainterStrategy)backgroundPainter).
-					getColor();
+			((ImageBackgroundPainterStrategy)backgroundPainter).getMasterImage() :
+			((ColorBackgroundPainterStrategy)backgroundPainter).getColor();
 	}
 
 
@@ -423,7 +421,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The default caret color.
 	 */
-	public static final Color getDefaultCaretColor() {
+	public static Color getDefaultCaretColor() {
 		return DEFAULT_CARET_COLOR;
 	}
 
@@ -435,7 +433,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The default color for highlighting the current line.
 	 */
-	public static final Color getDefaultCurrentLineHighlightColor() {
+	public static Color getDefaultCurrentLineHighlightColor() {
 		return DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR;
 	}
 
@@ -445,7 +443,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The default font.
 	 */
-	public static final Font getDefaultFont() {
+	public static Font getDefaultFont() {
 
 		// Use StyleContext to get a composite font for better Asian language
 		// support; see Sun bug S282887.
@@ -482,7 +480,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The default foreground color.
 	 */
-	public static final Color getDefaultForeground() {
+	public static Color getDefaultForeground() {
 		return Color.BLACK;
 	}
 
@@ -494,7 +492,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 * @see #getMarginLineColor()
 	 * @see #setMarginLineColor(Color)
 	 */
-	public static final Color getDefaultMarginLineColor() {
+	public static Color getDefaultMarginLineColor() {
 		return DEFAULT_MARGIN_LINE_COLOR;
 	}
 
@@ -506,7 +504,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 * @see #getMarginLinePosition
 	 * @see #setMarginLinePosition
 	 */
-	public static final int getDefaultMarginLinePosition() {
+	public static int getDefaultMarginLinePosition() {
 		return DEFAULT_MARGIN_LINE_POSITION;
 	}
 
@@ -516,7 +514,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The default tab size.
 	 */
-	public static final int getDefaultTabSize() {
+	public static int getDefaultTabSize() {
 		return DEFAULT_TAB_SIZE;
 	}
 
@@ -1222,7 +1220,7 @@ try {
 	/**
 	 * Listens for mouse events in this component.
 	 */
-	protected class RTAMouseListener extends CaretEvent implements
+	protected static class RTAMouseListener extends CaretEvent implements
 					MouseListener, MouseMotionListener, FocusListener {
 
 		RTAMouseListener(RTextAreaBase textArea) {

@@ -120,10 +120,10 @@ class ClipboardHistoryPopup extends JWindow {
 	 * Inserts the selected item into the editor and disposes of this popup.
 	 */
 	private void insertSelectedItem() {
-		Object lvp = list.getSelectedValue();
+		LabelValuePair lvp = list.getSelectedValue();
 		if (lvp!=null) {
 			listener.uninstallAndHide();
-			String text = ((LabelValuePair)lvp).value;
+			String text = lvp.value;
 			textArea.replaceSelection(text);
 			ClipboardHistory.get().add(text); // Move this item to the top
 		}

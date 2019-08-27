@@ -50,8 +50,7 @@ public class ColorBackgroundPainterStrategy
 	 */
 	@Override
 	public boolean equals(Object o2) {
-		return o2!=null &&
-			(o2 instanceof ColorBackgroundPainterStrategy) &&
+		return (o2 instanceof ColorBackgroundPainterStrategy) &&
 			this.color.equals(
 				((ColorBackgroundPainterStrategy)o2).getColor());
 	}

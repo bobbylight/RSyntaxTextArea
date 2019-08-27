@@ -690,13 +690,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	private void removeBookmarkTrackingIcons() {
 		if (trackingIcons!=null) {
-			for (Iterator<GutterIconImpl> i=trackingIcons.iterator();
-					i.hasNext();) {
-				GutterIconImpl ti = i.next();
-				if (ti.getIcon()==bookmarkIcon) {
-					i.remove();
-				}
-			}
+			trackingIcons.removeIf(ti -> ti.getIcon() == bookmarkIcon);
 		}
 	}
 

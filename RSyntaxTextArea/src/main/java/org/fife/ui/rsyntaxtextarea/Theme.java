@@ -712,7 +712,7 @@ public class Theme {
 				theme.activeLineRangeColor = stringToColor(color);
 				String inheritBGStr = attrs.getValue("inheritsGutterBG");
 				theme.iconRowHeaderInheritsGutterBG =
-						inheritBGStr==null ? false : Boolean.valueOf(inheritBGStr);
+					Boolean.parseBoolean(inheritBGStr);
 			}
 
 			else if ("lineNumbers".equals(qName)) {
