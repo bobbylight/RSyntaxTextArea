@@ -1,3 +1,5 @@
+dist: trusty
+
 env:
   - DISPLAY=:99.0
 
