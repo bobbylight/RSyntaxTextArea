@@ -48,7 +48,6 @@ import org.fife.ui.rtextarea.Gutter;
 public class WrappedSyntaxView extends BoxView implements TabExpander,
 												RSTAView {
 
-	private boolean widthChanging;
     private int tabBase;
     private int tabSize;
 
@@ -1004,10 +1003,24 @@ return p + 1;
 			// invalidate the view itself since the childrens
 			// desired widths will be based upon this views width.
 			preferenceChanged(null, true, true);
-			widthChanging = true;
+			setWidthChangePending(true);
 		}
 		super.setSize(width, height);
-		widthChanging = false;
+		setWidthChangePending(false);
+	}
+
+
+	private void setWidthChangePending(boolean widthChangePending)
+	{
+		int n = getViewCount();
+		for (int i = 0; i < n; i++)
+		{
+			View v = getView(i);
+			if (v instanceof WrappedLine)
+			{
+				((WrappedLine) v).widthChangePending = widthChangePending;
+			}
+		}
 	}
 
 
@@ -1134,6 +1147,7 @@ return p + 1;
 	class WrappedLine extends View {
 
 		private int nlines;
+		private boolean widthChangePending;
 
 		WrappedLine(Element elem) {
 			super(elem);
@@ -1213,11 +1227,11 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 					}
 					return width;
 				case View.Y_AXIS:
-					if (nlines == 0 || widthChanging) {
+					if (nlines == 0 || widthChangePending) {
 						nlines = calculateLineCount();
+						widthChangePending = false;
 					}
-					int h = nlines * ((RSyntaxTextArea)getContainer()).getLineHeight();
-					return h;
+					return nlines * ((RSyntaxTextArea)getContainer()).getLineHeight();
 				default:
 					throw new IllegalArgumentException("Invalid axis: " + axis);
 			}
