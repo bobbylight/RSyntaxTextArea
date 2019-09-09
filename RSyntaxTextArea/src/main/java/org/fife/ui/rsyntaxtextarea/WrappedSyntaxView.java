@@ -1409,7 +1409,7 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 							// How did this work before?
 							// FIXME:  Have null tokens have their
 							// offset but a -1 length.
-							return Math.max(Math.min(n, p1-1), p0);
+							return Math.max(Math.min(n, p - 1), p0);
 
 						}  // End of else.
 
