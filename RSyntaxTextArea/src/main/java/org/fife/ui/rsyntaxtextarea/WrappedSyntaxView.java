@@ -1166,7 +1166,6 @@ return p + 1;
 				nlines += 1;
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
 						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
-				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
 
@@ -1273,7 +1272,6 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 			while (p0 < p1) {
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
 						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
-				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
 				if ((pos >= p0) && (testP<p)) {//pos < p)) {
