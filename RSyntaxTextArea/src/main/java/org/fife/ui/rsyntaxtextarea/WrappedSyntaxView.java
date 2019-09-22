@@ -1010,14 +1010,11 @@ return p + 1;
 	}
 
 
-	private void setWidthChangePending(boolean widthChangePending)
-	{
-		int n = getViewCount();
-		for (int i = 0; i < n; i++)
-		{
+	private void setWidthChangePending(boolean widthChangePending) {
+		int count = getViewCount();
+		for (int i = 0; i < count; i++) {
 			View v = getView(i);
-			if (v instanceof WrappedLine)
-			{
+			if (v instanceof WrappedLine) {
 				((WrappedLine) v).widthChangePending = widthChangePending;
 			}
 		}
