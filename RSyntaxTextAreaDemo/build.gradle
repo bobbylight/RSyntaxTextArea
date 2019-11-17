@@ -1,5 +1,5 @@
 archivesBaseName = 'rstademo'
 
 dependencies {
-    compile project(':RSyntaxTextArea')
+    implementation project(':RSyntaxTextArea')
 }

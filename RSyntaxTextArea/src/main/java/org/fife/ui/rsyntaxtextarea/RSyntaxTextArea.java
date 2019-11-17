@@ -2222,7 +2222,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * Note that basic users of <code>RSyntaxTextArea</code> will not call this
 	 * method directly; rather, it is usually called by instances of
-	 * <code>LanguageSupport</code> in the <code>RSTALangaugeSupport</code>
+	 * <code>LanguageSupport</code> in the <code>RSTALanguageSupport</code>
 	 * library.  See <a href="http://fifesoft.com">http://fifesoft.com</a>
 	 * for more information about this library.
 	 *

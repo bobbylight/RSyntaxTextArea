@@ -1,6 +1,15 @@
 group 'com.fifesoft'
 // NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.1'
+    }
+}
+
 allprojects {
 
     repositories {
@@ -11,7 +20,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '5.1.1'
+        gradleVersion = '6.0'
     }
 }
 
@@ -34,7 +43,7 @@ subprojects {
     }
 */
     dependencies {
-        testCompile 'junit:junit:4.12'
+        testImplementation 'junit:junit:4.12'
     }
 
     compileJava {

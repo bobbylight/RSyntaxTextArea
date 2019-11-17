@@ -1,6 +1,6 @@
 import static org.gradle.api.JavaVersion.*
 
-['osgi', 'distribution', 'maven', 'signing'].each { apply plugin: it }
+['biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
 // Jacoco and a coveralls upload plugin needed for publishing coverage results
 ['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
 
@@ -14,6 +14,7 @@ allprojects {
 }
 
 archivesBaseName = 'rsyntaxtextarea'
+ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
 // Add coveralls plugin to this build's classpath
 buildscript {
@@ -48,14 +49,14 @@ jar {
 // We use "distributions" to create the zip files uploaded to SourceForge
 distributions {
 	main {
-		baseName = 'rsyntaxtextarea'
+		distributionBaseName = 'rsyntaxtextarea'
 		contents {
 			from { [ 'build/libs', 'distfiles' ] }
 			rename 'RSyntaxTextArea-.*\\.jar', 'rsyntaxtextarea.jar'
 		}
 	}
 	src {
-		baseName = 'rsyntaxtextarea'
+        distributionBaseName = 'rsyntaxtextarea'
 	}
 }
 distZip.classifier = null
@@ -81,110 +82,82 @@ task buildSourceForgeZips {
 }
 buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
 
-// Stuff to generate and upload Maven artifacts
-task javadocJar (type: Jar, dependsOn: javadoc) {
-	manifest { from sharedManifest }
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+//// Stuff to generate and upload Maven artifacts
+//task javadocJar (type: Jar, dependsOn: javadoc) {
+//	manifest { from sharedManifest }
+//	classifier = 'javadoc'
+//	from javadoc.destinationDir
+//}
+//task sourceJar (type: Jar) {
+//	manifest { from sharedManifest }
+//	classifier = 'sources'
+//	from sourceSets.main.allSource
+//}
+//artifacts {
+//	archives jar, javadocJar, sourceJar
+//}
+//repositories {
+//	mavenCentral()
+//}
+publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
+            credentials { // Credentials usually kept in user's .gradle/gradle.properties
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+
+            groupId = 'com.fifesoft'
+            artifactId = 'rsyntaxtextarea'
+            version = version
+
+            from components.java
+
+            pom {
+                name = 'rsyntaxtextarea'
+                description = 'RSyntaxTextArea is the syntax highlighting text editor for Swing applications. ' +
+                        'Features include syntax highlighting for 40+ languages, code folding, code completion, ' +
+                        'regex find and replace, macros, code templates, undo/redo, line numbering and bracket ' +
+                        'matching.'
+                url = 'http://www.fifesoft.com/rsyntaxtextarea/'
+                inceptionYear = '2003'
+                packaging = 'jar'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://github.com/bobbylight/RSyntaxTextArea/tree/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Robert Futrell'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/bobbylight/RSyntaxTextArea'
+                    connection = 'scm:git:git://github.com/bobbylight/RSyntaxTextArea'
+                    developerConnection = 'scm:git:git@github.com:bobbylight/RSyntaxTextArea'
+                    if (isReleaseVersion) {
+                        tag = project.version
+                    }
+                }
+            }
+        }
+    }
 }
-task sourceJar (type: Jar) {
-	manifest { from sharedManifest }
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-artifacts {
-	archives jar, javadocJar, sourceJar
-}
+
 signing {
-	// Don't require signing for e.g. ./gradlew install
-	required { gradle.taskGraph.hasTask("uploadArchives") }
-	sign configurations.archives
+    // Don't require signing for e.g. ./gradlew install
+    required { gradle.taskGraph.hasTask('publish') && isReleaseVersion }
+    sign publishing.publications.maven
 }
-repositories {
-	mavenCentral()
-}
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-			if (project.hasProperty('upload') && Boolean.parseBoolean(upload)) { // gradlew uploadArchives -Pupload=true
-				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-			}
-			else {
-				repository(url: 'file:///' + projectDir + '/../localMavenRepo')
-			}
-			pom {
-				groupId = 'com.fifesoft'
-				name = 'rsyntaxtextarea'
-				project {
-					parent {
-						groupId 'org.sonatype.oss'
-						artifactId 'oss-parent'
-						version '7'
-						relativePath ''
-					}
-					
-					groupId 'com.fifesoft'
-					artifactId 'rsyntaxtextarea'
-					packaging 'jar'
-					
-					name 'rsyntaxtextarea'
-					description 'RSyntaxTextArea is the syntax highlighting text editor for Swing applications. ' +
-					    'Features include syntax highlighting for 40+ languages, code folding, code completion, ' +
-						'regex find and replace, macros, code templates, undo/redo, line numbering and bracket ' +
-						'matching.'
-					
-					inceptionYear '2003'
-					url 'http://www.fifesoft.com/rsyntaxtextarea/'
-					licenses {
-						license {
-							name 'BSD-3-Clause'
-							url 'https://github.com/bobbylight/RSyntaxTextArea/tree/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE'
-							distribution 'repo'
-						}
-					}
-					
-					scm {
-						url 'https://github.com/bobbylight/RSyntaxTextArea'
-						connection 'scm:git:git://github.com/bobbylight/RSyntaxTextArea'
-						developerConnection 'scm:git:git@github.com:bobbylight/RSyntaxTextArea'
-						if (!project.version.endsWith('-SNAPSHOT')) {
-							tag project.version
-						}
-					}
-					
-					developers {
-						developer {
-							name 'Robert Futrell'
-							url 'http://www.fifesoft.com'
-							organization = 'Fifesoft' /* https://issues.gradle.org/browse/GRADLE-1200 */
-							organizationUrl 'http://www.fifesoft.com/'
-							roles {
-								role 'architect'
-								role 'developer'
-							}
-							timezone '0'
-						}
-					}
-					
-					// Ugh, have to do this for the "build" section
-					// http://stackoverflow.com/questions/27975786/trouble-injecting-the-build-block-while-exporting-a-maven-pom-xml-file-from-grad
-					withXml {
-						def pluginNode = asNode().appendNode('build').appendNode('plugins').appendNode('plugin')
-						pluginNode.appendNode('artifactId', 'maven-compiler-plugin')
-						pluginNode.appendNode('version', '3.5.1')
-						def executionNode = pluginNode.appendNode('executions').appendNode('execution')
-						executionNode.appendNode('id', 'default-compile')
-						executionNode.appendNode('configuration').appendNode('source', javaVersion).
-						      parent().appendNode('target', javaVersion)
-					}
-				}
-			}
-		}
-	}
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
 }
