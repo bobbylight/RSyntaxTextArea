@@ -929,7 +929,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Forces the given {@link Parser} to re-parse the content of this text
-	 * area.<p>
+	 * area.  This should only be called on the EDT.<p>
 	 *
 	 * This method can be useful when a <code>Parser</code> can be configured
 	 * as to what notices it returns.  For example, if a Java language parser
@@ -947,7 +947,8 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Forces re-parsing with a specific parser.  Note that if this parser is
-	 * not installed on this text area, nothing will happen.
+	 * not installed on this text area, nothing will happen.  This method
+	 * should only be called on the EDT.
 	 *
 	 * @param parser The parser that should re-parse this text area's contents.
 	 *        This should be installed on this text area.
