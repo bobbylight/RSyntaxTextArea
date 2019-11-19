@@ -47,6 +47,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting x86 assembler.
+	 */
+	String SYNTAX_STYLE_ASSEMBLER_6502	= "text/asm6502";
+
+
+	/**
 	 * Style for highlighting BBCode.
 	 */
 	String SYNTAX_STYLE_BBCODE			= "text/bbcode";

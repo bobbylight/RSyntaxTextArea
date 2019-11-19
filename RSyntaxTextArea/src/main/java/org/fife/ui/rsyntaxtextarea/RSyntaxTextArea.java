@@ -77,6 +77,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *    <ul>
  *       <li>ActionScript
  *       <li>Assembler (X86)
+ *       <li>Assembler (6502)
  *       <li>BBCode
  *       <li>C
  *       <li>C++
