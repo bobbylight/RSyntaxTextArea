@@ -12,7 +12,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew assemble -x signArchives -x uploadArchives
+  - ./gradlew clean build
   - ./gradlew check
 
 # Update coverage info on coveralls.io
