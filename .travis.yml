@@ -12,8 +12,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew clean build
-  - ./gradlew check
+  - ./gradlew clean build -xsigning -xpublishing
 
 # Update coverage info on coveralls.io
 after_success:
