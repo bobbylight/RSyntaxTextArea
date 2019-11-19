@@ -106,8 +106,9 @@ publishing {
             def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
             url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
             credentials { // Credentials usually kept in user's .gradle/gradle.properties
-                username = ossrhUsername
-                password = ossrhPassword
+                // We must defensively check for these properties so Travis CI build works
+                username = project.hasProperty('ossrhUsername') ? ossrhUsername : 'unknown'
+                password = project.hasProperty('ossrhPassword') ? ossrhPassword : 'unknown'
             }
         }
     }
