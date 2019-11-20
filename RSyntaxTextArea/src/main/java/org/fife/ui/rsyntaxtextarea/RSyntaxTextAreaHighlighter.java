@@ -233,11 +233,39 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	}
 
 
+	/**
+	 * Paints the "marked occurrences" highlights, then any other standard
+	 * layered highlights (e.g. the text selection).
+	 *
+	 * @param g The graphics context.
+	 * @param lineStart The starting offset of the line.
+	 * @param lineEnd The end offset of the line.
+	 * @param viewBounds The bounds of the view.
+	 * @param editor The parent text component.
+	 * @param view The view instance being rendered.
+	 * @see #paintParserHighlights(Graphics, int, int, Shape, JTextComponent, View)
+	 */
 	@Override
 	public void paintLayeredHighlights(Graphics g, int lineStart, int lineEnd,
 						Shape viewBounds, JTextComponent editor, View view) {
 		paintListLayered(g, lineStart,lineEnd, viewBounds, editor, view, markedOccurrences);
 		super.paintLayeredHighlights(g, lineStart, lineEnd, viewBounds, editor, view);
+	}
+
+
+	/**
+	 * Paints any highlights from {@code Parser}s.
+	 *
+	 * @param g The graphics context.
+	 * @param lineStart The starting offset of the line.
+	 * @param lineEnd The end offset of the line.
+	 * @param viewBounds The bounds of the view.
+	 * @param editor The parent text component.
+	 * @param view The view instance being rendered.
+	 * @see #paintLayeredHighlights(Graphics, int, int, Shape, JTextComponent, View)
+	 */
+	public void paintParserHighlights(Graphics g, int lineStart, int lineEnd,
+									   Shape viewBounds, JTextComponent editor, View view) {
 		paintListLayered(g, lineStart,lineEnd, viewBounds, editor, view, parserHighlights);
 	}
 

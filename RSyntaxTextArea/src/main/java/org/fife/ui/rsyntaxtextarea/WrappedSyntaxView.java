@@ -217,7 +217,8 @@ return p + 1;
 
 		float x = r.x;
 
-		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
+		RSyntaxTextAreaHighlighter h =
+			(RSyntaxTextAreaHighlighter)host.getHighlighter();
 
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = getElement();
@@ -265,6 +266,10 @@ return p + 1;
 				token = new TokenImpl(tempToken);
 			}
 
+			// Paint parser (e.g. squiggle underline) highlights after
+			// text and selection
+			h.paintParserHighlights(g, p0,p, r, host, this);
+
 			p0 = (p==p0) ? p1 : p;
 			y += fontHeight;
 
@@ -302,7 +307,8 @@ return p + 1;
 		float x = r.x;
 		boolean useSTC = host.getUseSelectedTextColor();
 
-		LayeredHighlighter h = (LayeredHighlighter)host.getHighlighter();
+		RSyntaxTextAreaHighlighter h =
+			(RSyntaxTextAreaHighlighter)host.getHighlighter();
 
 		RSyntaxDocument document = (RSyntaxDocument)getDocument();
 		Element map = getElement();
@@ -462,6 +468,10 @@ return p + 1;
 				((TokenImpl)token).makeStartAt(p);
 
 			}
+
+			// Paint parser (e.g. squiggle underline) highlights after
+			// text and selection
+			h.paintParserHighlights(g, p0,p, r, host, this);
 
 			p0 = (p==p0) ? p1 : p;
 			y += fontHeight;

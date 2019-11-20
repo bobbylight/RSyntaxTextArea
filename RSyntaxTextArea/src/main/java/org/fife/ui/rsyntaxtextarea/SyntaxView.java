@@ -734,6 +734,11 @@ else {
 				drawLineWithSelection(painter,token,g2d, x,y, selStart, selEnd);
 			}
 
+			// Paint parser highlights (typically squiggle-underlines) after
+			// text and selection
+			h.paintParserHighlights(g2d, startOffset, endOffset,
+				a, host, this);
+
 			if (fold!=null && fold.isCollapsed()) {
 
 				// Visible indicator of collapsed lines
