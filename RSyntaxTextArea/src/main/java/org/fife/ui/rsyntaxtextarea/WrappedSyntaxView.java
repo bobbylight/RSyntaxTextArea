@@ -24,7 +24,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.BoxView;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import javax.swing.text.LayeredHighlighter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.Position;
 import javax.swing.text.Position.Bias;
