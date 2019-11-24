@@ -759,7 +759,7 @@ public final void yybegin(int newState) {
           }
         case 25: break;
         case 12:
-          { if (!varDepths.empty() && varDepths.peek()==Boolean.TRUE) {
+          { if (!varDepths.empty() && Boolean.TRUE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
 									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
@@ -768,7 +768,7 @@ public final void yybegin(int newState) {
           }
         case 26: break;
         case 11:
-          { if (!varDepths.empty() && varDepths.peek()==Boolean.FALSE) {
+          { if (!varDepths.empty() && Boolean.FALSE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
 									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);

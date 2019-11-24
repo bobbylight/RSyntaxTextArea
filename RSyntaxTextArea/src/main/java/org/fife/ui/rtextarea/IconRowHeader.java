@@ -18,7 +18,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -132,7 +131,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @return A tag for this icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon)
 												throws BadLocationException {
@@ -151,7 +150,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @return A tag for this icon.
 	 * @throws BadLocationException If <code>offs</code> is an invalid offset
 	 *         into the text area.
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 */
 	public GutterIconInfo addOffsetTrackingIcon(int offs, Icon icon, String tip)
 												throws BadLocationException {
@@ -664,7 +663,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @see #removeAllTrackingIcons()
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
-	public void removeTrackingIcon(Object tag) {
+	public void removeTrackingIcon(GutterIconInfo tag) {
 		if (trackingIcons!=null && trackingIcons.remove(tag)) {
 			repaint();
 		}
@@ -674,7 +673,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * Removes all tracking icons.
 	 *
-	 * @see #removeTrackingIcon(Object)
+	 * @see #removeTrackingIcon(GutterIconInfo)
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
 	public void removeAllTrackingIcons() {

@@ -310,7 +310,7 @@ Operator				= ([\:\+\?]?"=")
 <VAR> {
 	[^\}\)\$\#]+		{}
 	"}"					{
-							if (!varDepths.empty() && varDepths.peek()==Boolean.TRUE) {
+							if (!varDepths.empty() && Boolean.TRUE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
 									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
@@ -318,7 +318,7 @@ Operator				= ([\:\+\?]?"=")
 							}
 						}
 	")"					{
-							if (!varDepths.empty() && varDepths.peek()==Boolean.FALSE) {
+							if (!varDepths.empty() && Boolean.FALSE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
 									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);

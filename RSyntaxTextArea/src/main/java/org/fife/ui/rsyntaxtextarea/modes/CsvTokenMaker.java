@@ -64,18 +64,18 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
   public static final int STRING = 1;
   public static final int YYINITIAL = 0;
 
-  /** 
+  /**
    * Translates characters to character classes
    */
-  private static final String ZZ_CMAP_PACKED = 
+  private static final String ZZ_CMAP_PACKED =
     "\12\0\1\3\27\0\1\1\11\0\1\2\uffd3\0";
 
-  /** 
+  /**
    * Translates characters to character classes
    */
   private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);
 
-  /** 
+  /**
    * Translates DFA states to action switch labels.
    */
   private static final int [] ZZ_ACTION = zzUnpackAction();
@@ -104,7 +104,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
   }
 
 
-  /** 
+  /**
    * Translates a state to a row index in the transition table
    */
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
@@ -131,7 +131,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
     return j;
   }
 
-  /** 
+  /**
    * The transition table of the DFA
    */
   private static final int [] ZZ_TRANS = zzUnpackTrans();
@@ -216,9 +216,6 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
   /** the textposition at the last accepting state */
   private int zzMarkedPos;
 
-  /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
-
   /** the current text position in the buffer */
   private int zzCurrentPos;
 
@@ -228,23 +225,6 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
   /** endRead marks the last character in the buffer, that has been read
       from input */
   private int zzEndRead;
-
-  /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
-
-  /** the number of characters up to the start of the matched text */
-  private int yychar;
-
-  /**
-   * the number of characters from the last newline up to the start of the 
-   * matched text
-   */
-  private int yycolumn;
-
-  /** 
-   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-   */
-  private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
@@ -416,11 +396,11 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
@@ -434,10 +414,9 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
 		//zzStartRead = zzEndRead = s.offset;
 		zzStartRead = s.offset;
 		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
+		zzCurrentPos = zzMarkedPos = s.offset;
 		zzLexicalState = YYINITIAL;
 		zzReader = reader;
-		zzAtBOL  = true;
 		zzAtEOF  = false;
 	}
 
@@ -464,7 +443,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
     this(new java.io.InputStreamReader(in));
   }
 
-  /** 
+  /**
    * Unpacks the compressed character translation table.
    *
    * @param packed   the packed character translation table
@@ -482,7 +461,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
     return map;
   }
 
-    
+
   /**
    * Closes the input stream.
    */
@@ -522,12 +501,12 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
 
 
   /**
-   * Returns the character at position <tt>pos</tt> from the 
-   * matched text. 
-   * 
+   * Returns the character at position <tt>pos</tt> from the
+   * matched text.
+   *
    * It is equivalent to yytext().charAt(pos), but faster
    *
-   * @param pos the position of the character to fetch. 
+   * @param pos the position of the character to fetch.
    *            A value from 0 to yylength()-1.
    *
    * @return the character at position pos
@@ -548,8 +527,8 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
   /**
    * Reports an error that occured while scanning.
    *
-   * In a wellformed scanner (no or only correct usage of 
-   * yypushback(int) and a match-all fallback rule) this method 
+   * In a wellformed scanner (no or only correct usage of
+   * yypushback(int) and a match-all fallback rule) this method
    * will only be called with things that "Can't Possibly Happen".
    * If this method is called, something is seriously wrong
    * (e.g. a JFlex bug producing a faulty scanner etc.).
@@ -569,7 +548,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
     }
 
     throw new Error(message);
-  } 
+  }
 
 
   /**
@@ -616,13 +595,13 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
-  
+
       zzState = zzLexicalState;
 
 
       zzForAction: {
         while (true) {
-    
+
           if (zzCurrentPosL < zzEndReadL)
             zzInput = zzBufferL[zzCurrentPosL++];
           else if (zzAtEOF) {
@@ -665,37 +644,37 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
       zzMarkedPos = zzMarkedPosL;
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-        case 6: 
+        case 6:
           { yybegin(YYINITIAL); addEvenOrOddColumnToken(start, zzStartRead);
           }
         case 8: break;
-        case 4: 
+        case 4:
           { addNullToken(); return firstToken;
           }
         case 9: break;
-        case 7: 
+        case 7:
           { addEvenOrOddColumnToken(start, zzEndRead);
                                 addEndToken(INTERNAL_STRING | evenOdd); return firstToken;
           }
         case 10: break;
-        case 3: 
+        case 3:
           { addToken(Token.OPERATOR);
                                 evenOdd = (evenOdd + 1) & 1;
           }
         case 11: break;
-        case 1: 
+        case 1:
           { addEvenOrOddColumnToken();
           }
         case 12: break;
-        case 2: 
+        case 2:
           { start = zzMarkedPos - 1; yybegin(STRING);
           }
         case 13: break;
-        case 5: 
-          { 
+        case 5:
+          {
           }
         case 14: break;
-        default: 
+        default:
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             switch (zzLexicalState) {
@@ -711,7 +690,7 @@ public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
             default:
             return null;
             }
-          } 
+          }
           else {
             zzScanError(ZZ_NO_MATCH);
           }

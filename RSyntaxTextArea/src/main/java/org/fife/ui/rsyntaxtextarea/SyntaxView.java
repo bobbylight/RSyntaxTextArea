@@ -950,7 +950,7 @@ else {
 		else {
 
 			Element map = doc.getDefaultRootElement();
-			lineHeight = host!=null ? host.getLineHeight() : lineHeight;
+			lineHeight = host.getLineHeight();
 			int lineIndex = Math.abs((y - alloc.y) / lineHeight);//metrics.getHeight() );
 			FoldManager fm = host.getFoldManager();
 			//System.out.print("--- " + lineIndex);

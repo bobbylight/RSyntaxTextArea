@@ -1,6 +1,3 @@
-group 'com.fifesoft'
-// NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
-
 buildscript {
     repositories {
         mavenCentral()
@@ -9,6 +6,13 @@ buildscript {
         classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.1'
     }
 }
+
+plugins {
+    id 'com.github.spotbugs' version '2.0.1'
+}
+
+group 'com.fifesoft'
+// NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
 
 allprojects {
 
@@ -20,28 +24,32 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '6.0'
+        gradleVersion = '6.0.1'
     }
 }
 
 subprojects {
 
     apply plugin: 'java'
-//    apply plugin: 'checkstyle' // TODO: Figure out why checkstyle stopped finding suppressions file with gradle 5
-    //apply plugin: 'findbugs' //TODO: Have FindBugs ignore generated code
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
 
-//    checkstyle {
-//        toolVersion = '8.15'
-//    }
+    checkstyle {
+        toolVersion = '8.26'
+    }
 
-/*
-    tasks.withType(FindBugs) {
+    spotbugs {
+        // Relative to subprojects
+        includeFilter = file('../config/spotbugs-exclude.xml')
+    }
+
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
         reports {
             xml.enabled = false
             html.enabled = true
         }
     }
-*/
+
     dependencies {
         testImplementation 'junit:junit:4.12'
     }

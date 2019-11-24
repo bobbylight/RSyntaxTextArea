@@ -169,7 +169,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -203,25 +203,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
-
-	}
-
-
-	@Test
-	public void testStandardFunctions() {
-
-		String[] functions = {
-			// Currently none
-		};
-
-		for (String code : functions) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Not a standard function: " + token,
-					TokenTypes.FUNCTION, token.getType());
-		}
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -423,7 +405,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -451,7 +433,7 @@ public class DTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 

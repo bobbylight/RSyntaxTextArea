@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+    <!-- Ignore specific bugs in generated code -->
+    <Match>
+
+        <Package name="org.fife.ui.rsyntaxtextarea.modes" />
+
+        <Not>
+            <Or>
+                <Bug pattern="SF_SWITCH_FALLTHROUGH" />
+                <Bug pattern="SF_SWITCH_NO_DEFAULT" />
+                <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+                <Bug pattern="DM_DEFAULT_ENCODING" />
+            </Or>
+        </Not>
+    </Match>
+</FindBugsFilter>

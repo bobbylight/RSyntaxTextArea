@@ -23,7 +23,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  */
 public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 
-	protected final String operators = "@:*<>=?";
+	private static final String OPERATORS = "@:*<>=?";
 
 	private int currentTokenStart;
 	private int currentTokenType;
@@ -329,7 +329,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 								break;
 							}
 
-							int indexOf = operators.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c,0);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
@@ -410,7 +410,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 								break;
 							}
 
-							int indexOf = operators.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c,0);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
@@ -494,7 +494,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 								break;
 							}
 
-							int indexOf = operators.indexOf(c);
+							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 								addToken(text, i,i, Token.OPERATOR, newStartOffset+i);

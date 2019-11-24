@@ -957,7 +957,8 @@ public void setBorder(Border border) {
 		}
 
 		@Override
-		public void changedUpdate(DocumentEvent e) {}
+		public void changedUpdate(DocumentEvent e) {
+		}
 
 		@Override
 		public void componentResized(java.awt.event.ComponentEvent e) {
