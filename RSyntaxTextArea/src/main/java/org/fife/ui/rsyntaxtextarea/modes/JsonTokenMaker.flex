@@ -56,7 +56,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %public
 %class JsonTokenMaker
-%extends AbstractJFlexTokenMaker
+%extends AbstractJFlexCTokenMaker
 %unicode
 %type org.fife.ui.rsyntaxtextarea.Token
 
