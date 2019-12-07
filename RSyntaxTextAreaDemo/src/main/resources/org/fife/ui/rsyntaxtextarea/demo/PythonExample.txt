@@ -1,0 +1,30 @@
+import random
+from string import ASCII_UPPERCASE
+from abc import ABCMeta, abstractmethod
+
+
+def someFunction(argument, argument2, *args):
+    for i in range(100):
+        for j in range(10):
+            x = 0
+            while True do:
+                x += 1
+                if x > 10:
+                    break
+        else:
+            continue
+
+class Specification(metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    def regex(self):
+        """
+        Regex used to match whatever this specification cares about. Can contain other
+        useful groups, but _must_ contain a named group with the same name as the token,
+         below
+        """
+        pass
+
+    @staticmethod
+    def random(chars = 10):
+        return "".join(random.choice(ASCII_UPPERCASE) for _ in range(chars))

@@ -13,6 +13,7 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 
 
@@ -137,11 +138,11 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 	 * Resets the scanner to read from a new input stream.
 	 * Does not close the old reader.
 	 *
-	 * All internal variables are reset, the old input stream 
+	 * All internal variables are reset, the old input stream
 	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
 	 * Lexical state is set to <tt>YY_INITIAL</tt>.
 	 *
-	 * @param reader   the new input stream 
+	 * @param reader   the new input stream
 	 */
 	public final void yyreset(Reader reader) {
 		// 's' has been updated.
@@ -207,6 +208,7 @@ intpart			= ({digit}+)
 fraction			= ("."{digit}+)
 exponent			= ([eE][\+\-]?{digit}+)
 imagnumber		= (({floatnumber}|{intpart})[jJ])
+annotation      = ("@"{identifier})
 
 ErrorNumberFormat	= ({digit}{NonSeparator}+)
 NonSeparator		= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#")
@@ -402,7 +404,7 @@ LineComment		= ("#".*)
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
 
 	/* Other punctuation, we'll highlight it as "identifiers." */
-	"@"							{ addToken(Token.IDENTIFIER); }
+    {annotation}                { addToken(Token.ANNOTATION); }
 	";"							{ addToken(Token.IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
