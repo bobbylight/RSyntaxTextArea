@@ -29,7 +29,7 @@
    <!-- Gutter styling. -->
    <gutterBorder color="ff0000"/>
    <lineNumbers fg="ff0000" fontFamily="Arial" fontSize="22"/>
-   <foldIndicator fg="ff0000" iconBg="ff0000" iconArmedBg="00ff00"/>
+   <foldIndicator fg="ff0000" iconBg="ff0000"/>
    <iconRowHeader activeLineRange="ff0000" inheritsGutterBG="true"/>
    
    <!-- Syntax tokens. -->

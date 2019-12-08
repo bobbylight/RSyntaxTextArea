@@ -692,7 +692,10 @@ public class Theme {
 				color = attrs.getValue("iconBg");
 				theme.foldBG = stringToColor(color);
 				color = attrs.getValue("iconArmedBg");
-				theme.armedFoldBG = stringToColor(color);
+				// This field must have a value for downstream consumers to
+				// function properly, so default to regular BG if not armed
+				// variant isn't specified
+				theme.armedFoldBG = stringToColor(color, theme.foldBG);
 			}
 
 			else if ("gutterBackground".equals(qName)) {

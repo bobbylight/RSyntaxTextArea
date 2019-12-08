@@ -107,7 +107,51 @@ public class ThemeTest {
 		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
 		Assert.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
 		Assert.assertEquals(Color.red, gutter.getFoldBackground());
-		Assert.assertEquals(Color.red, gutter.getArmedFoldBackground());
+		Assert.assertEquals(Color.green, gutter.getArmedFoldBackground());
+
+	}
+
+
+	/**
+	 * Asserts whether a text area and gutter match the styles defined in
+	 * <code>ThemeTest_theme1.xml</code>.
+	 */
+	private void assertColorsMatchTheme1_noArmedBG(RSyntaxTextArea textArea,
+										 Gutter gutter) {
+
+		Assert.assertEquals(Color.red, textArea.getBackground());
+		Assert.assertEquals(Color.red, textArea.getCaretColor());
+		Assert.assertEquals(false,     textArea.getUseSelectedTextColor());
+		Assert.assertEquals(Color.red, textArea.getSelectedTextColor());
+		Assert.assertEquals(Color.red, textArea.getSelectionColor());
+		Assert.assertEquals(true,      textArea.getRoundedSelectionEdges());
+		Assert.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assert.assertEquals(true,      textArea.getFadeCurrentLineHighlight());
+		Assert.assertEquals(Color.red, textArea.getMarginLineColor());
+		Assert.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
+		Assert.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assert.assertEquals(true,      textArea.getPaintMarkOccurrencesBorder());
+		Assert.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
+		Assert.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assert.assertEquals(true,      textArea.getPaintMatchedBracketPair());
+		Assert.assertEquals(true,      textArea.getAnimateBracketMatching());
+		Assert.assertEquals(Color.red, textArea.getHyperlinkForeground());
+		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
+			Assert.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
+		}
+
+		Assert.assertEquals(Color.red, gutter.getBackground());
+		Assert.assertEquals(Color.red, gutter.getBorderColor());
+		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assert.assertEquals(true,      gutter.getIconRowHeaderInheritsGutterBackground());
+		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
+		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
+		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
+		Assert.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
+		Assert.assertEquals(Color.red, gutter.getFoldBackground());
+		// Armed fold BG defaults to regular fold BG
+		Assert.assertEquals(gutter.getFoldBackground(), gutter.getArmedFoldBackground());
 
 	}
 
@@ -267,7 +311,7 @@ public class ThemeTest {
 
 
 	@Test
-	public void testLoad_FromStream_NoDefaultFont() throws Exception {
+	public void testLoad_fromStream_noDefaultFont_withArmedBG() throws Exception {
 
 		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1.xml");
 		Theme theme = Theme.load(in);
@@ -281,6 +325,25 @@ public class ThemeTest {
 
 		theme.apply(textArea1);
 		assertColorsMatchTheme1(textArea1, gutter1);
+
+	}
+
+
+	@Test
+	public void testLoad_fromStream_noDefaultFont_noArmedBG() throws Exception {
+
+		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1_noArmedBG.xml");
+		Theme theme = Theme.load(in);
+		in.close();
+
+		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
+			SyntaxConstants.SYNTAX_STYLE_PHP);
+		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
+		Gutter gutter1 = sp1.getGutter();
+		initWithOddProperties(textArea1, gutter1);
+
+		theme.apply(textArea1);
+		assertColorsMatchTheme1_noArmedBG(textArea1, gutter1);
 
 	}
 
