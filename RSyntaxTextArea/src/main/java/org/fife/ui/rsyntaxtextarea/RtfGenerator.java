@@ -295,7 +295,8 @@ public class RtfGenerator {
 					if (ch <= 127) {
 						sb.append(ch);
 					} else {
-						sb.append("\\u").append((int)ch);
+						// Trailing space for delimiter
+						sb.append("\\u").append((int)ch).append(' ');
 					}
 					break;
 			}

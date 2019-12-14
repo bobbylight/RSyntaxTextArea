@@ -161,8 +161,25 @@ final class RtfToText {
 		else if ("tab".equals(word)) {
 			sb.append('\t');
 		}
+		else if (isUnicodeEscape(word)) {
+			sb.append((char)Integer.valueOf(word.substring(1)).intValue());
+		}
 		controlWord.setLength(0);
 		inControlWord = false;
+	}
+
+
+	private static boolean isUnicodeEscape(String controlWord) {
+		if (controlWord.startsWith("u") && controlWord.length() > 1) {
+			for (int i = 1; i < controlWord.length(); i++) {
+				char ch = controlWord.charAt(i);
+				if (ch < '0' || ch > '9') {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 
