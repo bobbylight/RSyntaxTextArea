@@ -10,6 +10,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -111,6 +112,7 @@ public class ConfigurableCaretTest {
 
 
 	@Test
+	@Ignore("This test doesn't work in travis-ci as the system clipboard will be blank")
 	public void testMouseClicked_pasteOnMiddleMouseDown() {
 
 		RTextArea textArea = new RTextArea();

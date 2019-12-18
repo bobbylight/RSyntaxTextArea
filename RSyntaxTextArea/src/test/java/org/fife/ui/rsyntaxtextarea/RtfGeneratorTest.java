@@ -21,8 +21,11 @@ import java.util.List;
  */
 public class RtfGeneratorTest {
 
-	private static final String SIMPLE_RTF = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033" +
-		"\\viewkind4\\uc\\pard\\f0\\fs20{\\fonttbl{\\f0\\fnil\\fcharset0 Consolas;}}\n" +
+	/**
+	 * RTF generated from the simple text below, without the header that may have
+	 * stuff that differs across OS's such as monospaced font names.
+	 */
+	private static final String SIMPLE_RTF_MINUS_HEADER =
 		"{\\colortbl ;\\red255\\green0\\blue0;\\red255\\green255\\blue255;}\n" +
 		"\\cb2 This line is the default color \\u12459 \\u12459 \n" +
 		"\\cf1 \\tab This line is red\n" +
@@ -43,7 +46,8 @@ public class RtfGeneratorTest {
 		generator.appendToDoc(SIMPLE_TEXT.get(1), null, Color.red, null);
 		generator.appendToDoc(SIMPLE_TEXT.get(2), null, null, null);
 
-		Assert.assertEquals(SIMPLE_RTF, generator.getRtf());
+		// We can't do an exact string comparison due to differing default fonts on different OS's
+		Assert.assertTrue(generator.getRtf().contains(SIMPLE_RTF_MINUS_HEADER));
 	}
 
 	@Test

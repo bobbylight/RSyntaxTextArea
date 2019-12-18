@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
+import java.util.regex.Pattern;
 
 /**
  * Unit tests for the {@link HtmlUtil} class.
@@ -74,16 +75,17 @@ public class HtmlUtilTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("package foo;\npublic class Foobar {}");
 
-		String expected = "<pre style='font-family: \"Consolas\", courier; background: #ffffff'>" +
+		// We can't do an exact string comparison due to differing default fonts on different OS's
+		String expectedRegex = "<pre style='font-family: \"\\w+\", courier; background: #ffffff'>" +
 			"<span style=\"color: #000000;\">age</span><span style=\"color: #808080;\"> </span>" +
 			"<span style=\"color: #000000;\">foo</span><span style=\"color: #000000;\">;</span><br>" +
 			"<span style=\"color: #000000;\">public</span>" +
 			"<span style=\"color: #808080;\"> </span>" +
 			"<span style=\"color: #000000;\">class</span><span style=\"color: #808080;\"> </span>" +
 			"<span style=\"color: #000000;\">Foobar</span><span style=\"color: #808080;\"> </span>" +
-			"<span style=\"color: #000000;\">{</span><span style=\"color: #000000;\">}</span></pre>";
+			"<span style=\"color: #000000;\">\\{</span><span style=\"color: #000000;\">}</span></pre>";
 
 		String actual = HtmlUtil.getTextAsHtml(textArea, 4, textArea.getDocument().getLength());
-		Assert.assertEquals(expected, actual);
+		Assert.assertTrue(actual.matches(expectedRegex));
 	}
 }
