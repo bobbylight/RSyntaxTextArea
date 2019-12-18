@@ -14,7 +14,6 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
 
 
 /**
@@ -103,6 +102,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -228,118 +228,117 @@ LineComment		= ("#".*)
 
 %%
 
-/* Keywords */
-<YYINITIAL> "and"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "as"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "assert"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "break"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "class"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "continue"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "def"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "del"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "elif"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "except"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "exec"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "finally"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "from"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "global"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "import"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "in"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "is"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lambda"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "not"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "or"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "pass"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "print"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "raise"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "try"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "yield"					{ addToken(Token.RESERVED_WORD); }
-
-/* Data types. */
-<YYINITIAL> "char"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "double"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "float"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "int"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "long"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "short"					{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "signed"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "unsigned"				{ addToken(Token.DATA_TYPE); }
-<YYINITIAL> "void"					{ addToken(Token.DATA_TYPE); }
-
-/* Standard functions */
-<YYINITIAL> "abs"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "apply"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "bool"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "buffer"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "callable"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "chr"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "classmethod"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "cmp"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "coerce"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "compile"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "complex"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "delattr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "dict"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "dir"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "divmod"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "enumerate"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "eval"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "execfile"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "file"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "filter"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "float"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "getattr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "globals"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "hasattr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "hash"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "hex"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "id"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "input"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "int"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "intern"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "isinstance"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "issubclass"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "iter"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "len"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "list"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "locals"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "long"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "map"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "max"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "min"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "object"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "oct"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "open"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "ord"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "pow"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "property"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "range"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "raw_input"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "reduce"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "reload"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "repr"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "round"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "setattr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "slice"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "staticmethod"			{ addToken(Token.FUNCTION); }
-<YYINITIAL> "str"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "sum"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "super"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "tuple"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "type"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "unichr"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "unicode"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "vars"					{ addToken(Token.FUNCTION); }
-<YYINITIAL> "xrange"				{ addToken(Token.FUNCTION); }
-<YYINITIAL> "zip"					{ addToken(Token.FUNCTION); }
-
-
 <YYINITIAL> {
+
+    /* Keywords */
+    "and" |
+    "as" |
+    "assert" |
+    "break" |
+    "class" |
+    "continue" |
+    "def" |
+    "del" |
+    "elif" |
+    "else" |
+    "except" |
+    "exec" |
+    "finally" |
+    "for" |
+    "from" |
+    "global" |
+    "if" |
+    "import" |
+    "in" |
+    "is" |
+    "lambda" |
+    "not" |
+    "or" |
+    "pass" |
+    "print" |
+    "raise" |
+    "return" |
+    "try" |
+    "while" |
+    "yield"					{ addToken(Token.RESERVED_WORD); }
+
+    /* Data types. */
+    "char" |
+    "double" |
+    "float" |
+    "int" |
+    "long" |
+    "short" |
+    "signed" |
+    "unsigned" |
+    "void"					{ addToken(Token.DATA_TYPE); }
+
+    /* Standard functions */
+	"abs" |
+	"apply" |
+	"bool" |
+	"buffer" |
+	"callable" |
+	"chr" |
+	"classmethod" |
+	"cmp" |
+	"coerce" |
+	"compile" |
+	"complex" |
+	"delattr" |
+	"dict" |
+	"dir" |
+	"divmod" |
+	"enumerate" |
+	"eval" |
+	"execfile" |
+	"file" |
+	"filter" |
+	"float" |
+	"getattr" |
+	"globals" |
+	"hasattr" |
+	"hash" |
+	"hex" |
+	"id" |
+	"input" |
+	"int" |
+	"intern" |
+	"isinstance" |
+	"issubclass" |
+	"iter" |
+	"len" |
+	"list" |
+	"locals" |
+	"long" |
+	"map" |
+	"max" |
+	"min" |
+	"object" |
+	"oct" |
+	"open" |
+	"ord" |
+	"pow" |
+	"property" |
+	"range" |
+	"raw_input" |
+	"reduce" |
+	"reload" |
+	"repr" |
+	"round" |
+	"setattr" |
+	"slice" |
+	"staticmethod" |
+	"str" |
+	"sum" |
+	"super" |
+	"tuple" |
+	"type" |
+	"unichr" |
+	"unicode" |
+	"vars" |
+	"xrange" |
+	"zip"					{ addToken(Token.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
@@ -356,46 +355,46 @@ LineComment		= ("#".*)
 	{LineComment}					{ addToken(Token.COMMENT_EOL); }
 
 	/* Separators. */
-	"("							{ addToken(Token.SEPARATOR); }
-	")"							{ addToken(Token.SEPARATOR); }
-	"["							{ addToken(Token.SEPARATOR); }
-	"]"							{ addToken(Token.SEPARATOR); }
-	"{"							{ addToken(Token.SEPARATOR); }
+	"(" |
+	")" |
+	"[" |
+	"]" |
+	"{" |
 	"}"							{ addToken(Token.SEPARATOR); }
 
 	/* Operators. */
-	"="							{ addToken(Token.OPERATOR); }
-	"+"							{ addToken(Token.OPERATOR); }
-	"-"							{ addToken(Token.OPERATOR); }
-	"*"							{ addToken(Token.OPERATOR); }
-	"/"							{ addToken(Token.OPERATOR); }
-	"%"							{ addToken(Token.OPERATOR); }
-	"**"							{ addToken(Token.OPERATOR); }
-	"~"							{ addToken(Token.OPERATOR); }
-	"<"							{ addToken(Token.OPERATOR); }
-	">"							{ addToken(Token.OPERATOR); }
-	"<<"							{ addToken(Token.OPERATOR); }
-	">>"							{ addToken(Token.OPERATOR); }
-	"=="							{ addToken(Token.OPERATOR); }
-	"+="							{ addToken(Token.OPERATOR); }
-	"-="							{ addToken(Token.OPERATOR); }
-	"*="							{ addToken(Token.OPERATOR); }
-	"/="							{ addToken(Token.OPERATOR); }
-	"%="							{ addToken(Token.OPERATOR); }
-	">>="						{ addToken(Token.OPERATOR); }
-	"<<="						{ addToken(Token.OPERATOR); }
-	"^"							{ addToken(Token.OPERATOR); }
-	"&"							{ addToken(Token.OPERATOR); }
-	"&&"							{ addToken(Token.OPERATOR); }
-	"|"							{ addToken(Token.OPERATOR); }
-	"||"							{ addToken(Token.OPERATOR); }
-	"?"							{ addToken(Token.OPERATOR); }
-	":"							{ addToken(Token.OPERATOR); }
-	","							{ addToken(Token.OPERATOR); }
-	"!"							{ addToken(Token.OPERATOR); }
-	"++"							{ addToken(Token.OPERATOR); }
-	"--"							{ addToken(Token.OPERATOR); }
-	"."							{ addToken(Token.OPERATOR); }
+	"=" |
+	"+" |
+	"-" |
+	"*" |
+	"/" |
+	"%" |
+	"**" |
+	"~" |
+	"<" |
+	">" |
+	"<<" |
+	">>" |
+	"==" |
+	"+=" |
+	"-=" |
+	"*=" |
+	"/=" |
+	"%=" |
+	">>=" |
+	"<<=" |
+	"^" |
+	"&" |
+	"&&" |
+	"|" |
+	"||" |
+	"?" |
+	":" |
+	"," |
+	"!" |
+	"++" |
+	"--" |
+	"." |
 	","							{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
