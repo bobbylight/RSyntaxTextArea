@@ -194,6 +194,15 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("#", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testHeredoc_EOF() {
 
 		// Note that the terminating "EOF" should be on another line in real

@@ -43,7 +43,7 @@ public final class TokenUtils {
 	 * @param tokenList The list to make start at the specified position.
 	 *        This parameter is modified.
 	 * @param pos The position at which the new token list is to start.  If
-	 *        this position is not in the passed-in token list,
+	 *        this position is not in the passed-in token list, the
 	 *        returned token list will either be <code>null</code> or the
 	 *        unpaintable token(s) at the end of the passed-in token list.
 	 * @param e How to expand tabs.
@@ -87,7 +87,7 @@ public final class TokenUtils {
 	 * @param tokenList The list to make start at the specified position.
 	 *        This parameter is modified.
 	 * @param pos The position at which the new token list is to start.  If
-	 *        this position is not in the passed-in token list,
+	 *        this position is not in the passed-in token list, the
 	 *        returned token list will either be <code>null</code> or the
 	 *        unpaintable token(s) at the end of the passed-in token list.
 	 * @param e How to expand tabs.
@@ -160,14 +160,14 @@ public final class TokenUtils {
 
 		Font font = textArea.getFontForTokenType(token.getType());
 		if (font.isBold()) {
-			style.append("font-weight: bold;\n");
+			style.append("font-weight: bold;");
 		}
 		if (font.isItalic()) {
-			style.append("font-style: italic;\n");
+			style.append("font-style: italic;");
 		}
 
 		Color c = textArea.getForegroundForToken(token);
-		style.append("color: ").append(HtmlUtil.getHexString(c)).append(";\n");
+		style.append("color: ").append(HtmlUtil.getHexString(c)).append(";");
 
 		return "<span style=\"" + style + "\">" +
 			HtmlUtil.escapeForHtml(token.getLexeme(), "\n", true) +

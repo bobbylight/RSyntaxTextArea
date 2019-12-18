@@ -29,4 +29,10 @@ abstract class AbstractTokenMakerTest {
 	}
 
 
+	/**
+	 * Verifies whether the line comment delimiters returned by this token maker are
+	 * correct for the primary language.
+	 * correct for the primary language.
+	 */
+	public abstract void testGetLineCommentStartAndEnd();
 }

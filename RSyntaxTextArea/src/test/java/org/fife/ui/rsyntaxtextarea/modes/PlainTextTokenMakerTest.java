@@ -25,6 +25,13 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		Assert.assertNull(new PlainTextTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
 	public void testIdentifiers() {
 
 		String code =  "   foo bar\t\tbas\t  \tbaz ";

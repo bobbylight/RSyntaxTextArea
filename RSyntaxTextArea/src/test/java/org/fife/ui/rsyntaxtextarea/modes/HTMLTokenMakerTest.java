@@ -44,6 +44,15 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("<!--", startAndEnd[0]);
+		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testHtml_comment() {
 
 		String[] commentLiterals = {

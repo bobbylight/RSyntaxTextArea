@@ -90,6 +90,13 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		Assert.assertNull(new JsonTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
 	public void testIntegerLiterals() {
 
 		String code = "1 42 0 -1 -42";

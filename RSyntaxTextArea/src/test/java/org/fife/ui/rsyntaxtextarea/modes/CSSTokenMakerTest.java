@@ -207,4 +207,13 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 	}
+
+
+	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("/*", startAndEnd[0]);
+		Assert.assertEquals("*/", startAndEnd[1]);
+	}
 }

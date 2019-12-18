@@ -24,6 +24,15 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = new MxmlTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("<!--", startAndEnd[0]);
+		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testMxml_comment() {
 
 		String[] commentLiterals = {
@@ -126,7 +135,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
 		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
-		
+
 	}
 
 

@@ -61,6 +61,15 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("//", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	@Ignore("Not yet implemented")
 	public void testJS_api_getClosestStandardTokenTypeForInternalType() {
 		// TODO

@@ -80,4 +80,11 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
+	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
 }

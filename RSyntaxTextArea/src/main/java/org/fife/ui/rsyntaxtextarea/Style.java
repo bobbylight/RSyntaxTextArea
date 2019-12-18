@@ -122,7 +122,7 @@ public class Style implements Cloneable {
 	 */
 	@Override
 	public Object clone() {
-		Style clone = null;
+		Style clone;
 		try {
 			clone = (Style)super.clone();
 		} catch (CloneNotSupportedException cnse) { // Never happens

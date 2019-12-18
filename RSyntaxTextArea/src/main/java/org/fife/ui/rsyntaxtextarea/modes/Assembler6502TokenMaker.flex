@@ -198,7 +198,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 Letter				= ([A-Za-z_])
 Digit				= ([0-9])
 IntegerNumber       = ({Digit}+)
-HexNumber           = ("$"[0-9A-Fa-f]+)
+HexNumber           = ("$"[0-9A-Fa-f]+|[0-9A-Fa-f]+"h")
 BinaryNumber        = ("%"[0-1]+)
 Number				= ({IntegerNumber} | {HexNumber} | {BinaryNumber})
 
@@ -316,8 +316,6 @@ Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"
     "@"{Letter}+ |
     ("#"([^ \t]+ | {StringLiteral} | {UnclosedStringLiteral})) { addToken(Token.PREPROCESSOR); }
 
-    "."{Identifier}  { addToken(Token.VARIABLE); }
-
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
 	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
@@ -331,13 +329,16 @@ Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"
 	/* Labels. */
 	{Label}						{ addToken(Token.PREPROCESSOR); }
 
-	^%({Letter}|{Digit})*			{ addToken(Token.FUNCTION); }
+	^%{Letter}({Letter}|{Digit})*	{ addToken(Token.FUNCTION); }
 
 	/* Comment Literals. */
 	{CommentBegin}.*				{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Operators. */
 	{Operator}					{ addToken(Token.OPERATOR); }
+
+    /* After "Operators" because of their overlap */
+    "."{Identifier}  { addToken(Token.VARIABLE); }
 
 	/* Numbers */
 	{Number}						{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }

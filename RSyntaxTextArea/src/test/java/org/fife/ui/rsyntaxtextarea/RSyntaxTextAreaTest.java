@@ -6,7 +6,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.Color;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import org.fife.ui.SwingRunner;
 import org.junit.Assert;
@@ -22,6 +23,31 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SwingRunner.class)
 public class RSyntaxTextAreaTest {
+
+
+	private static Graphics createTestGraphics() {
+		Graphics g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).getGraphics();
+		g.setClip(0, 0, 80, 80);
+		return g;
+	}
+
+
+	private static RSyntaxTextArea createTestTextArea(String syntaxStyle, String code) {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code) {
+			@Override
+			public Graphics getGraphics() {
+				Graphics g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).getGraphics();
+				g.setClip(0, 0, 80, 80);
+				return g;
+			}
+		};
+
+		textArea.setSyntaxEditingStyle(syntaxStyle);
+		textArea.setBounds(0, 0, 80, 80);
+
+		return textArea;
+	}
 
 
 	@Test
@@ -178,6 +204,47 @@ public class RSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMatchedBracketBorderColor(Color.pink);
 		Assert.assertEquals(Color.pink, textArea.getMatchedBracketBorderColor());
+	}
+
+
+	@Test
+	public void testPaintComponent_noWrappedLines_happyPath() {
+
+		String code = "/**\n" +
+			" * This is a class\n" +
+			" */\n" +
+			"public class Foo {\n" +
+			"  // A field\n" +
+			"  private int value;\n" +
+			"  public int getValue() { return value; }\n" +
+			"}\n";
+
+		// Create a text area to render and a random graphics context to render to.
+		RSyntaxTextArea textArea = createTestTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, code);
+		Graphics g = createTestGraphics();
+
+		textArea.paintComponent(g);
+	}
+
+
+	@Test
+	public void testPaintComponent_wrappedLines_happyPath() {
+
+		String code = "/**\n" +
+			" * This is a class\n" +
+			" */\n" +
+			"public class Foo {\n" +
+			"  // A field\n" +
+			"  private int value;\n" +
+			"  public int getValue() { return value; }\n" +
+			"}\n";
+
+		// Create a text area to render and a random graphics context to render to.
+		RSyntaxTextArea textArea = createTestTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, code);
+		textArea.setLineWrap(true);
+		Graphics g = createTestGraphics();
+
+		textArea.paintComponent(g);
 	}
 
 

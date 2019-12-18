@@ -90,6 +90,13 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		Assert.assertNull(new JshintrcTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
 	public void testIntegerLiterals() {
 
 		String code = "1 42 0 -1 -42";

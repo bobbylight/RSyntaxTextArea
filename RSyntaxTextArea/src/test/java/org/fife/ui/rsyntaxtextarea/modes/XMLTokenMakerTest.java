@@ -24,6 +24,15 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = new XMLTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("<!--", startAndEnd[0]);
+		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testXML_comment() {
 
 		String[] commentLiterals = {
@@ -126,7 +135,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
 		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
-		
+
 	}
 
 

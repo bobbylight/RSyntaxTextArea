@@ -44,6 +44,15 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("<!--", startAndEnd[0]);
+		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testJava_Annotations() {
 
 		String code = "@Test @Foo @Foo_Bar_Bas @Number7";

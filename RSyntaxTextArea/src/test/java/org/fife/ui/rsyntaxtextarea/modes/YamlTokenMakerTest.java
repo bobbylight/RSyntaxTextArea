@@ -40,6 +40,15 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("#", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testOperators() {
 
 		String code = "- : ? & * ! % @ `";

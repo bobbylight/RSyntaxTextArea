@@ -112,6 +112,16 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 	}
 
+
+	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("#", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
 /* TODO: Start highlighting these!
 	@Test
 	public void testHexLiterals() {

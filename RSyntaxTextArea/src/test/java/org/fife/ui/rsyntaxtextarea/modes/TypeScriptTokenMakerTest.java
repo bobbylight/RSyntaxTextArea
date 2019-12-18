@@ -50,6 +50,15 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("//", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testTS_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		Assert.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);

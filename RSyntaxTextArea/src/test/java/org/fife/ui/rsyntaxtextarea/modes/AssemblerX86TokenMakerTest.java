@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,15 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new AssemblerX86TokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals(";", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
 	}
 
 

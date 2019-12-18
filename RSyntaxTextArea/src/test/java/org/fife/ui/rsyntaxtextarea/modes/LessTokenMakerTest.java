@@ -43,6 +43,15 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("//", startAndEnd[0]);
+		Assert.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testCss_comment() {
 
 		String[] commentLiterals = {

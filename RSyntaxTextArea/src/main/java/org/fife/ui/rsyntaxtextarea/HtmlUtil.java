@@ -31,7 +31,7 @@ public final class HtmlUtil {
 		if (newlineReplacement==null) {
 			newlineReplacement = "";
 		}
-		String tabString = "    ";
+		String tabString = inPreBlock ? "    " : "&nbsp;&nbsp;&nbsp;&nbsp;";
 
 		StringBuilder sb = new StringBuilder();
 

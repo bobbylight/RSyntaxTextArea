@@ -143,4 +143,11 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 		Assert.assertTrue(token.is(Token.IDENTIFIER, "\"quoted \"\" string\""));
 	}
+
+
+	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+	}
 }

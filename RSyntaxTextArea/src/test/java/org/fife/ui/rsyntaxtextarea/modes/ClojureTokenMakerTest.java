@@ -263,6 +263,15 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals(";", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testHexLiterals() {
 		String[] hexLiterals = {
 				"0x1", "0xfe", "0x333333", "0xFE"

@@ -174,6 +174,15 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("<!--", startAndEnd[0]);
+		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testKeywords() {
 
 		String[] keywords = {

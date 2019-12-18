@@ -693,7 +693,7 @@ public class TclTokenMaker extends AbstractJFlexCTokenMaker {
 	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
-		return new String[] { "//", null };
+		return new String[] { "#", null };
 	}
 
 

@@ -96,6 +96,15 @@ public class NSISTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	public void testGetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assert.assertEquals("#", startAndEnd[0]);
+		Assert.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
 	public void testHexLiterals() {
 
 		String code = "0x1 0xf 0x333333333333 0X1 0Xf 0X33333333333 0xF 0XF " +
