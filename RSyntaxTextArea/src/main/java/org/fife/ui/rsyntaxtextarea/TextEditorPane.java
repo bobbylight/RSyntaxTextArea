@@ -17,9 +17,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -425,6 +422,26 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	/**
 	 * Loads the specified file in this editor.  This method fires a property
+	 * change event of type {@link #FULL_PATH_PROPERTY}.<p>
+	 * The file will be checked for a BOM; if one is found, the proper Unicode
+	 * flavor is used to load the file.  If not, the system default encoding
+	 * is assumed.
+	 *
+	 * @param loc The location of the file to load.  This cannot be
+	 *        <code>null</code>.
+	 * @throws IOException If an IO error occurs.
+	 * @see #load(FileLocation, String)
+	 * @see #load(FileLocation, Charset)
+	 * @see #save()
+	 * @see #saveAs(FileLocation)
+	 */
+	public void load(FileLocation loc) throws IOException {
+		load(loc, (String)null);
+	}
+
+
+	/**
+	 * Loads the specified file in this editor.  This method fires a property
 	 * change event of type {@link #FULL_PATH_PROPERTY}.
 	 *
 	 * @param loc The location of the file to load.  This cannot be
@@ -434,6 +451,29 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *        If this value is <code>null</code>, the system default encoding
 	 *        is used.
 	 * @throws IOException If an IO error occurs.
+	 * @see #load(FileLocation)
+	 * @see #load(FileLocation, String)
+	 * @see #save()
+	 * @see #saveAs(FileLocation)
+	 */
+	public void load(FileLocation loc, Charset defaultEnc) throws IOException {
+		load(loc, defaultEnc == null ? null : defaultEnc.name());
+	}
+
+
+	/**
+	 * Loads the specified file in this editor.  This method fires a property
+	 * change event of type {@link #FULL_PATH_PROPERTY}.
+	 *
+	 * @param loc The location of the file to load.  This cannot be
+	 *        <code>null</code>.
+	 * @param defaultEnc The encoding to use when loading/saving the file.
+	 *        This encoding will only be used if the file is not Unicode.
+	 *        If this value is <code>null</code>, the system default encoding
+	 *        is used.
+	 * @throws IOException If an IO error occurs.
+	 * @see #load(FileLocation)
+	 * @see #load(FileLocation, Charset)
 	 * @see #save()
 	 * @see #saveAs(FileLocation)
 	 */
@@ -726,26 +766,6 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	public void syncLastSaveOrLoadTimeToActualFile() {
 		if (loc.isLocalAndExists()) {
 			lastSaveOrLoadTime = loc.getActualLastModified();
-		}
-	}
-
-
-	public static void main(String[] args) throws Exception {
-		try {
-			TextEditorPane textArea = new TextEditorPane();
-			textArea.load(FileLocation.create("d:/temp/test.txt"), "UTF-8");
-			JPanel cp = new JPanel();
-			cp.setPreferredSize(new java.awt.Dimension(300, 300));
-			cp.setLayout(new java.awt.BorderLayout());
-			cp.add(new JScrollPane(textArea));
-			JFrame frame = new JFrame();
-			frame.setContentPane(cp);
-			frame.pack();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setLocationByPlatform(true);
-			frame.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

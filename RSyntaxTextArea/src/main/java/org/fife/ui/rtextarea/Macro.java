@@ -97,8 +97,8 @@ public class Macro {
 	public Macro(File file) throws IOException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		Document doc = null;
+		DocumentBuilder db;
+		Document doc;
 		try {
 			db = dbf.newDocumentBuilder();
 			//InputSource is = new InputSource(new FileReader(file));

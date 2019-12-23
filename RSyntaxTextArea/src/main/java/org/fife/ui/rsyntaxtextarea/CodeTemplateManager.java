@@ -101,7 +101,6 @@ public class CodeTemplateManager {
 		try {
 			Document doc = textArea.getDocument();
 			doc.getText(caretPos-charsToGet, charsToGet, s);
-			@SuppressWarnings("unchecked")
 			int index = Collections.binarySearch(templates, s, comparator);
 			return index>=0 ? templates.get(index) : null;
 		} catch (BadLocationException ble) {
@@ -116,7 +115,7 @@ public class CodeTemplateManager {
 	 *
 	 * @return The template count.
 	 */
-	public synchronized int getTemplateCount() {
+	private synchronized int getTemplateCount() {
 		return templates.size();
 	}
 
@@ -139,7 +138,7 @@ public class CodeTemplateManager {
 	 * @param ch The character to check.
 	 * @return Whether the character is a valid template character.
 	 */
-	public static boolean isValidChar(char ch) {
+	private static boolean isValidChar(char ch) {
 		return RSyntaxUtilities.isLetterOrDigit(ch) || ch=='_';
 	}
 
@@ -347,8 +346,8 @@ public class CodeTemplateManager {
 	 * parameter and a <code>Segment</code> as its second, and knows
 	 * to compare the template's ID to the segment's text.
 	 */
-	@SuppressWarnings("rawtypes")
-	private static class TemplateComparator implements Comparator, Serializable{
+	private static class TemplateComparator implements Comparator<Object>,
+			Serializable{
 
 		@Override
 		public int compare(Object template, Object segment) {

@@ -9,9 +9,11 @@ import java.awt.Point;
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
 
+import org.fife.ui.SwingRunner;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
 /**
@@ -20,6 +22,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
+@RunWith(SwingRunner.class)
 public class GutterTest {
 
 	private static final String PLAIN_TEXT = "Line 1\n"
@@ -36,7 +39,7 @@ public class GutterTest {
 
 		GutterIconInfo gii = gutter.addLineTrackingIcon(1, icon);
 		int line1Start = textArea.getText().indexOf('\n') + 1;
-		Assert.assertTrue(gii.getIcon() == icon);
+		Assert.assertEquals(icon, gii.getIcon());
 		Assert.assertEquals(line1Start, gii.getMarkedOffset());
 		Assert.assertNull(gii.getToolTip());
 
@@ -69,7 +72,7 @@ public class GutterTest {
 
 		GutterIconInfo gii = gutter.addLineTrackingIcon(1, icon, tip);
 		int line1Start = textArea.getText().indexOf('\n') + 1;
-		Assert.assertTrue(gii.getIcon() == icon);
+		Assert.assertEquals(icon, gii.getIcon());
 		Assert.assertEquals(line1Start, gii.getMarkedOffset());
 		Assert.assertEquals(tip, gii.getToolTip());
 
@@ -101,7 +104,7 @@ public class GutterTest {
 		Icon icon = new TestIcon();
 
 		GutterIconInfo gii = gutter.addOffsetTrackingIcon(17, icon);
-		Assert.assertTrue(gii.getIcon() == icon);
+		Assert.assertEquals(icon, gii.getIcon());
 		Assert.assertEquals(17, gii.getMarkedOffset());
 		Assert.assertNull(gii.getToolTip());
 
@@ -132,7 +135,7 @@ public class GutterTest {
 		String tip = "tip text";
 
 		GutterIconInfo gii = gutter.addOffsetTrackingIcon(17, icon, tip);
-		Assert.assertTrue(gii.getIcon() == icon);
+		Assert.assertEquals(icon, gii.getIcon());
 		Assert.assertEquals(17, gii.getMarkedOffset());
 		Assert.assertEquals(tip, gii.getToolTip());
 
@@ -181,7 +184,7 @@ public class GutterTest {
 
 		Icon icon = new TestIcon();
 		gutter.setBookmarkIcon(icon);
-		Assert.assertTrue(icon == gutter.getBookmarkIcon());
+		Assert.assertEquals(icon, gutter.getBookmarkIcon());
 
 	}
 
@@ -209,7 +212,7 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_SomeBookmarks_BookmarkingDisabled() throws Exception {
+	public void getBookmarks_SomeBookmarks_BookmarkingDisabled() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		Assert.assertEquals(0, gutter.getBookmarks().length); // Non-null
@@ -217,11 +220,11 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_SomeBookmarks_NoIcon() throws Exception {
+	public void getBookmarks_SomeBookmarks_NoIcon() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);
-		// Both enabled state and icon are reuqired
+		// Both enabled state and icon are required
 		Assert.assertEquals(0, gutter.getBookmarks().length); // Non-null
 	}
 
@@ -475,7 +478,7 @@ public class GutterTest {
 
 		Icon icon = new TestIcon();
 		gutter.setBookmarkIcon(icon);
-		Assert.assertTrue(icon == gutter.getBookmarkIcon());
+		Assert.assertEquals(icon, gutter.getBookmarkIcon());
 
 	}
 
@@ -500,14 +503,14 @@ public class GutterTest {
 	@Test
 	@Ignore("Not yet implemented")
 	public void testSetComponentOrientation() {
-		
+
 	}
 
 
 	@Test
 	@Ignore("Not yet implemented")
 	public void testSetFoldIcons() {
-		
+
 	}
 
 

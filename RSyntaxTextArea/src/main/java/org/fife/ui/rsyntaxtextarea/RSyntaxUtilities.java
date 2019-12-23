@@ -250,7 +250,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * @return The color to use.
 	 */
 	public static Color getFoldedLineBottomColor(RSyntaxTextArea textArea) {
-		Color color = Color.gray;
+		Color color = Color.GRAY;
 		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
 		if (gutter!=null) {
 			color = gutter.getFoldIndicatorForeground();
@@ -344,10 +344,10 @@ public final class RSyntaxUtilities implements SwingConstants {
 	}
 
 
-	private static Element getLineElem(Document d, int offs) {
-		Element map = d.getDefaultRootElement();
-		int index = map.getElementIndex(offs);
-		Element elem = map.getElement(index);
+	private static Element getLineElem(Document doc, int offs) {
+		Element root = doc.getDefaultRootElement();
+		int line = root.getElementIndex(offs);
+		Element elem = root.getElement(line);
 		if ((offs>=elem.getStartOffset()) && (offs<elem.getEndOffset())) {
 			return elem;
 		}
@@ -1421,7 +1421,7 @@ return c.getLineStartOffset(line);
 			textArea.setSelectionEnd(end);
 		}
 
-		Rectangle r = null;
+		Rectangle r;
 		try {
 			r = textArea.modelToView(start);
 			if (r==null) { // Not yet visible; i.e. JUnit tests

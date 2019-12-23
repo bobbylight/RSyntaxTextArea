@@ -5,11 +5,11 @@
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 import org.fife.ui.SwingRunner;
+import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 
 /**
@@ -19,14 +19,7 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 @RunWith(SwingRunner.class)
-public class SizeGripTest {
-
-
-	private static Graphics createTestGraphics() {
-		Graphics g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).getGraphics();
-		g.setClip(0, 0, 80, 80);
-		return g;
-	}
+public class SizeGripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test

@@ -5,7 +5,9 @@
 package org.fife.ui.rtextarea;
 
 
+
 import org.fife.ui.SwingRunner;
+import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
@@ -15,10 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
+
 
 /**
  * Unit tests for the {@link ConfigurableCaret} class.
@@ -27,7 +28,7 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 @RunWith(SwingRunner.class)
-public class ConfigurableCaretTest {
+public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test(expected = IllegalArgumentException.class)
@@ -135,8 +136,7 @@ public class ConfigurableCaretTest {
 	@Test
 	public void testMouseClicked_doubleClickSelectsWord() {
 
-		RTextArea textArea = new RTextArea("foo bar");
-		textArea.setBounds(0, 0, 80, 80);
+		RTextArea textArea = createTextArea("foo bar");
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.install(textArea);
@@ -159,8 +159,7 @@ public class ConfigurableCaretTest {
 	@Test
 	public void testMouseClicked_tripleClickSelectsLine() {
 
-		RTextArea textArea = new RTextArea("foo bar");
-		textArea.setBounds(0, 0, 80, 80);
+		RTextArea textArea = createTextArea("foo bar");
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.install(textArea);
@@ -185,18 +184,14 @@ public class ConfigurableCaretTest {
 
 	public void testPaintImpl(CaretStyle caretStyle) {
 
-		RTextArea textArea = new RTextArea();
-		textArea.setBounds(0, 0, 80, 80);
+		RTextArea textArea = createTextArea("foo bar");
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.setStyle(caretStyle);
 		caret.install(textArea);
 		caret.setVisible(true);
 
-		// Just a random Graphics object
-		Graphics g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).getGraphics();
-		g.setClip(0, 0, 80, 80);
-		caret.paint(g);
+		caret.paint(createTestGraphics());
 
 		caret.deinstall(textArea);
 	}
@@ -212,10 +207,7 @@ public class ConfigurableCaretTest {
 			"  printf('bye');\n" +
 			"}";
 
-		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
-		textArea.setCodeFoldingEnabled(true);
-		textArea.setBounds(0, 0, 80, 80);
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C, code);
 
 		// Ensure caret is at the end of the document, and try to go "backward"
 		// to offset 10
@@ -247,10 +239,7 @@ public class ConfigurableCaretTest {
 			"  printf('bye');\n" +
 			"}";
 
-		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
-		textArea.setCodeFoldingEnabled(true);
-		textArea.setBounds(0, 0, 80, 80);
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C, code);
 
 		// Ensure caret is at the beginning of the document, and try to go "forward"
 		// to offset 10

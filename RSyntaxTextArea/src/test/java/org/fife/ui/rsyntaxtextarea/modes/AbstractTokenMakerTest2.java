@@ -34,7 +34,7 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 
 
 	/**
-	 * Verifies that all tokens in an array have a specific token t ype.
+	 * Verifies that all tokens in an array have a specific token type.
 	 *
 	 * @param tokens The tokens.
 	 * @param expectedType The expected token type.
@@ -53,17 +53,30 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 
 
 	/**
-	 * Verifies that all tokens in an array have a specific token t ype.
+	 * Verifies that all tokens in an array have a specific token type.
 	 *
 	 * @param expectedType The expected token type.
 	 * @param tokens The tokens.
 	 */
 	protected void assertAllTokensOfType(int expectedType, String... tokens) {
+		assertAllTokensOfType(expectedType, TokenTypes.NULL, tokens);
+	}
+
+
+	/**
+	 * Verifies that all tokens in an array have a specific token type.
+	 *
+	 * @param expectedType The expected token type.
+	 * @param initialTokenType The initial token type.
+	 * @param tokens The tokens.
+	 */
+	protected void assertAllTokensOfType(int expectedType, int initialTokenType,
+										 String... tokens) {
 
 		for (String token : tokens) {
 			Segment segment = createSegment(token);
 			TokenMaker tm = createTokenMaker();
-			Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Token t = tm.getTokenList(segment, initialTokenType, 0);
 			Assert.assertEquals("Token has unexpected type: orig=" + token +
 				", actual=" + t, expectedType, t.getType());
 		}

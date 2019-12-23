@@ -1,7 +1,7 @@
 /*
  * 11/10/2004
  *
- * ChangableHighlightPainter.java - A highlight painter whose color you can
+ * ChangeableHighlightPainter.java - A highlight painter whose color you can
  * change.
  *
  * This library is distributed under a modified BSD license.  See the included

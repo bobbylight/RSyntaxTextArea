@@ -6,6 +6,7 @@ package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 
 import org.fife.ui.SwingRunner;
+import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,14 +24,7 @@ import java.net.URL;
  * @version 1.0
  */
 @RunWith(SwingRunner.class)
-public class FocusableTipTest {
-
-
-	private static RSyntaxTextArea createTextArea() {
-		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setBounds(0, 0, 80, 80);
-		return textArea;
-	}
+public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test

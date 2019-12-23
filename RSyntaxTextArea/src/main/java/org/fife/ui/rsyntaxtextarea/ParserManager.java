@@ -809,7 +809,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	static {
-		boolean debugParsing = false;
+		boolean debugParsing;
 		try {
 			debugParsing = Boolean.getBoolean(PROPERTY_DEBUG_PARSING);
 		} catch (AccessControlException ace) {

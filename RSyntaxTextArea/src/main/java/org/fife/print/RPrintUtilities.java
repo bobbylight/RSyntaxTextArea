@@ -173,7 +173,7 @@ public abstract class RPrintUtilities {
 			}
 
 			// If this document line is too long to fit on one printed line on the page,
-			// break it up into multpile lines.
+			// break it up into multiple lines.
 			while (curLineString.length() > maxCharsPerLine) {
 
 				numPrintedLines++;

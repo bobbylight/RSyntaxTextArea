@@ -1,7 +1,11 @@
+/*
+ * This library is distributed under a modified BSD license.  See the included
+ * LICENSE file for details.
+ */
 package org.fife.ui.rsyntaxtextarea.folding;
 
+import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +17,7 @@ import javax.swing.text.BadLocationException;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FoldTest {
+public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 	private static final String CODE_WITH_CHILDREN = "{\n" +
 		"  {\n" +
@@ -23,25 +27,6 @@ public class FoldTest {
 		"    println('bye');\n" +
 		"  }\n" +
 		"}";
-
-
-	private static RSyntaxTextArea createTextArea() {
-
-		String code = "{\n" +
-			"   println(\"Wow\");\n" +
-			"}";
-
-		return createTextArea(code);
-	}
-
-
-	private static RSyntaxTextArea createTextArea(String code) {
-
-		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
-
-		return textArea;
-	}
 
 
 	@Test

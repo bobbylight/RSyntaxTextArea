@@ -246,7 +246,7 @@ public class ErrorStrip extends JPanel {
 			return new ColorUIResource(textArea.getCaretColor());
 		}
 
-		return new ColorUIResource(Color.black);
+		return new ColorUIResource(Color.BLACK);
 	}
 
 	/**

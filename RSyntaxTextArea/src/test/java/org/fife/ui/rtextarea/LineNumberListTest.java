@@ -5,13 +5,11 @@
 package org.fife.ui.rtextarea;
 
 import org.fife.ui.SwingRunner;
+import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 
 /**
@@ -21,7 +19,7 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 @RunWith(SwingRunner.class)
-public class LineNumberListTest {
+public class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
@@ -33,17 +31,11 @@ public class LineNumberListTest {
 
 		// Set properties that complicate line number rendering so we
 		// exercise more code
-		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CSHARP);
-		textArea.setCodeFoldingEnabled(true);
-		textArea.setBounds(0, 0, 80, 80);
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_CSHARP, code);
 
 		LineNumberList list = new LineNumberList(textArea);
 
-		Graphics g = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB)
-			.getGraphics();
-		g.setClip(0, 0, 80, 80);
-		list.paintComponent(g);
+		list.paintComponent(createTestGraphics());
 	}
 
 
@@ -56,17 +48,11 @@ public class LineNumberListTest {
 
 		// Set properties that complicate line number rendering so we
 		// exercise more code
-		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_CSHARP);
-		textArea.setCodeFoldingEnabled(true);
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_CSHARP, code);
 		textArea.setLineWrap(true);
-		textArea.setBounds(0, 0, 80, 80);
 
 		LineNumberList list = new LineNumberList(textArea);
 
-		Graphics g = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB)
-			.getGraphics();
-		textArea.setBounds(0, 0, 80, 80);
-		list.paintComponent(g);
+		list.paintComponent(createTestGraphics());
 	}
 }

@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JSPTokenMakerTest extends AbstractTokenMakerTest {
+public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -33,12 +33,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	private static final int JS_PREV_TOKEN_TYPE = JSPTokenMaker.INTERNAL_IN_JS;
 
 
-	/**
-	 * Creates an instance of the {@code TokenMaker} to test.
-	 *
-	 * @return The token maker to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new JSPTokenMaker();
 	}
 
@@ -216,19 +212,9 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testJava_EolComments() {
-
-		String[] eolCommentLiterals = {
-			"// Hello world",
-		};
-
-		for (String code : eolCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-		}
-
+	public void testEolComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"// Hello world");
 	}
 
 

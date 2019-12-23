@@ -196,7 +196,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * models are not mutable, so a transfer operation of COPY only should
 	 * be advertised in that case.
 	 *
-	 * @param c  The component holding the data to be transfered.  This
+	 * @param c  The component holding the data to be transferred.  This
 	 *  argument is provided to enable sharing of TransferHandlers by
 	 *  multiple components.
 	 * @return If the text component is editable, COPY_OR_MOVE is returned,
@@ -216,10 +216,10 @@ public class RTATextTransferHandler extends TransferHandler {
 	/**
 	 * Create a Transferable to use as the source for a data transfer.
 	 *
-	 * @param comp  The component holding the data to be transfered.  This
+	 * @param comp  The component holding the data to be transferred.  This
 	 *  argument is provided to enable sharing of TransferHandlers by
 	 *  multiple components.
-	 * @return  The representation of the data to be transfered.
+	 * @return  The representation of the data to be transferred.
 	 *
 	 */
 	@Override
@@ -228,13 +228,13 @@ public class RTATextTransferHandler extends TransferHandler {
 		shouldRemove = true;
 		p0 = exportComp.getSelectionStart();
 		p1 = exportComp.getSelectionEnd();
-		return (p0 != p1) ? (new TextTransferable(exportComp, p0, p1)) : null;
+		return (p0 != p1) ? new TextTransferable(exportComp, p0, p1) : null;
 	}
 
 
 	/**
 	 * This method is called after data has been exported.  This method should
-	 * remove the data that was transfered if the action was MOVE.
+	 * remove the data that was transferred if the action was MOVE.
 	 *
 	 * @param source The component that was the source of the data.
 	 * @param data   The data that was transferred or possibly null
@@ -322,7 +322,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		if (!(c.isEditable() && c.isEnabled())) {
 			return false;
 		}
-		return (getImportFlavor(flavors, c) != null);
+		return getImportFlavor(flavors, c) != null;
 	}
 
 

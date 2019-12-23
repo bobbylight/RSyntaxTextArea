@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CSSTokenMakerTest extends AbstractTokenMakerTest {
+public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -37,7 +37,8 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 	 *
 	 * @return The <code>TokenMaker</code> to test.
 	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new CSSTokenMaker();
 	}
 
@@ -45,17 +46,9 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testCss_comment() {
 
-		String[] commentLiterals = {
-			"/* Hello world */",
-		};
-
-		for (String code : commentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
+			"/* Hello world */"
+		);
 	}
 
 

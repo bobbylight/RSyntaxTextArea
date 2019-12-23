@@ -1177,7 +1177,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				}
 
 				while (searchOffs > 0) {
-					int wordStart = 0;
+					int wordStart;
 					try {
 						wordStart = getPreviousWord(textArea, searchOffs);
 					} catch (BadLocationException ble) {

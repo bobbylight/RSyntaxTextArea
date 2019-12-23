@@ -121,7 +121,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 */
 	@Override
 	public Object clone() {
-		SyntaxScheme shcs = null;
+		SyntaxScheme shcs;
 		try {
 			shcs = (SyntaxScheme)super.clone();
 		} catch (CloneNotSupportedException cnse) { // Never happens
@@ -631,7 +631,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 		public static SyntaxScheme load(Font baseFont, InputStream in)
 				throws IOException {
-			SyntaxSchemeLoader parser = null;
+			SyntaxSchemeLoader parser;
 			try {
 				XMLReader reader = XMLReaderFactory.createXMLReader();
 				parser = new SyntaxSchemeLoader(baseFont);
@@ -653,13 +653,14 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 			if ("style".equals(qName)) {
 
 				String type = attrs.getValue("token");
-				Field field = null;
+
+				Field field;
 				try {
-					field = Token.class.getField(type);
+					field = SyntaxScheme.class.getField(type);
 				} catch (RuntimeException re) {
 					throw re; // FindBugs
 				} catch (Exception e) {
-					System.err.println("Invalid token type: " + type);
+					System.err.println("Error fetching 'getType' method for Token class");
 					return;
 				}
 

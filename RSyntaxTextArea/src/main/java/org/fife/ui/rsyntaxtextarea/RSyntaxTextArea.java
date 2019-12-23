@@ -3339,7 +3339,7 @@ private boolean fractionalFontMetricsEnabled;
 		}
 
 		private HyperlinkEvent createHyperlinkEvent() {
-			HyperlinkEvent he = null;
+			HyperlinkEvent he;
 			if (linkGeneratorResult!=null) {
 				he = linkGeneratorResult.execute();
 				linkGeneratorResult = null;

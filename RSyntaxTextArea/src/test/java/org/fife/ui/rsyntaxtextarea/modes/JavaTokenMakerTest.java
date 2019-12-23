@@ -187,10 +187,8 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	public void testEolComments() {
-		String[] eolCommentLiterals = {
-			"// Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"// Hello world");
 	}
 
 

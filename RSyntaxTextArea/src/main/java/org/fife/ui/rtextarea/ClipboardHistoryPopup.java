@@ -159,7 +159,7 @@ class ClipboardHistoryPopup extends JWindow {
 	 */
 	private void setLocation() {
 
-		Rectangle r = null;
+		Rectangle r;
 		try {
 			r = textArea.modelToView(textArea.getCaretPosition());
 		} catch (Exception e) {
