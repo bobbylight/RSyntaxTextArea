@@ -147,7 +147,8 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Scanner scanner = new Scanner(clipboardContent);
 		scanner.useDelimiter("\\Z");
 		String clipboardString = scanner.next();
-		Assert.assertTrue(clipboardString.contains(expectedPortion));
+		Assert.assertTrue("Unexpected clipboard contents: " + clipboardString,
+			clipboardString.contains(expectedPortion));
 	}
 
 
