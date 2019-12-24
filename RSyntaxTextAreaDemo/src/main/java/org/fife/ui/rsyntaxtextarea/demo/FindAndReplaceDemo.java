@@ -14,7 +14,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  * This example uses RSyntaxTextArea 3.0.5.
  */
-public class FindAndReplaceDemo extends JFrame implements ActionListener {
+public final class FindAndReplaceDemo extends JFrame implements ActionListener {
 
    private static final long serialVersionUID = 1L;
 

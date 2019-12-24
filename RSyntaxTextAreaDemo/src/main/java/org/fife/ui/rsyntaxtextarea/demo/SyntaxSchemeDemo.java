@@ -19,7 +19,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * Project Home: http://fifesoft.com/rsyntaxtextarea<br>
  * Downloads: https://sourceforge.net/projects/rsyntaxtextarea
  */
-public class SyntaxSchemeDemo extends JFrame implements ActionListener {
+public final class SyntaxSchemeDemo extends JFrame implements ActionListener {
 
    private static final long serialVersionUID = 1L;
 

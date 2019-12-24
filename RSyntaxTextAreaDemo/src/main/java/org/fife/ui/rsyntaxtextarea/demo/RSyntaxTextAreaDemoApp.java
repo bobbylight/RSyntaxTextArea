@@ -10,7 +10,7 @@ import javax.swing.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxTextAreaDemoApp extends JFrame {
+public final class RSyntaxTextAreaDemoApp extends JFrame {
 
 
 	private RSyntaxTextAreaDemoApp() {
