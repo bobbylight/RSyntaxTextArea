@@ -13,9 +13,9 @@ import javax.swing.*;
 public class RSyntaxTextAreaDemoApp extends JFrame {
 
 
-	public RSyntaxTextAreaDemoApp() {
+	private RSyntaxTextAreaDemoApp() {
 		setRootPane(new DemoRootPane());
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("RSyntaxTextArea Demo Application");
 		pack();
 	}

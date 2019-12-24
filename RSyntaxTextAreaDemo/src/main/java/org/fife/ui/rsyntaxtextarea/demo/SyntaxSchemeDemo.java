@@ -14,7 +14,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * an XML file. The latter method is preferred since it's more modular, and
  * provides a way for your users to customize RSTA in your application.<p>
  *
- * This example uses RSyntaxTextArea 3.0.0.<p>
+ * This example uses RSyntaxTextArea 3.0.5.<p>
  *
  * Project Home: http://fifesoft.com/rsyntaxtextarea<br>
  * Downloads: https://sourceforge.net/projects/rsyntaxtextarea
@@ -32,7 +32,7 @@ public class SyntaxSchemeDemo extends JFrame implements ActionListener {
 	   	 "   }\n\n" +
          "}\n";
 
-   public SyntaxSchemeDemo() {
+   private SyntaxSchemeDemo() {
 
       JPanel cp = new JPanel(new BorderLayout());
 
@@ -63,7 +63,7 @@ public class SyntaxSchemeDemo extends JFrame implements ActionListener {
 
       setContentPane(cp);
       setTitle("Syntax Scheme Demo");
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       pack();
       setLocationRelativeTo(null);
 
@@ -123,7 +123,7 @@ public class SyntaxSchemeDemo extends JFrame implements ActionListener {
     * @param textArea The text area to modify.
     * @param font The font to use.
     */
-   public static void setFont(RSyntaxTextArea textArea, Font font) {
+   private static void setFont(RSyntaxTextArea textArea, Font font) {
       if (font != null) {
          SyntaxScheme ss = textArea.getSyntaxScheme();
          ss = (SyntaxScheme) ss.clone();

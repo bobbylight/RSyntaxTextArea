@@ -12,7 +12,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * The toolbar isn't very user-friendly, but this is just to show you how to use
  * the API.<p>
  *
- * This example uses RSyntaxTextArea 3.0.0.
+ * This example uses RSyntaxTextArea 3.0.5.
  */
 public class FindAndReplaceDemo extends JFrame implements ActionListener {
 
@@ -23,7 +23,7 @@ public class FindAndReplaceDemo extends JFrame implements ActionListener {
    private JCheckBox regexCB;
    private JCheckBox matchCaseCB;
 
-   public FindAndReplaceDemo() {
+   private FindAndReplaceDemo() {
 
       JPanel cp = new JPanel(new BorderLayout());
 
@@ -41,12 +41,7 @@ public class FindAndReplaceDemo extends JFrame implements ActionListener {
       nextButton.setActionCommand("FindNext");
       nextButton.addActionListener(this);
       toolBar.add(nextButton);
-      searchField.addActionListener(new ActionListener() {
-         @Override
-		public void actionPerformed(ActionEvent e) {
-            nextButton.doClick(0);
-         }
-      });
+      searchField.addActionListener(e -> nextButton.doClick(0));
       JButton prevButton = new JButton("Find Previous");
       prevButton.setActionCommand("FindPrev");
       prevButton.addActionListener(this);
@@ -59,7 +54,7 @@ public class FindAndReplaceDemo extends JFrame implements ActionListener {
 
       setContentPane(cp);
       setTitle("Find and Replace Demo");
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       pack();
       setLocationRelativeTo(null);
 

@@ -88,6 +88,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		JMenu menu = new JMenu("Language");
 		ButtonGroup bg = new ButtonGroup();
+		addSyntaxItem("6502 Assembler", "Assembler6502.txt", SYNTAX_STYLE_ASSEMBLER_6502, bg, menu);
 		addSyntaxItem("ActionScript", "ActionScriptExample.txt", SYNTAX_STYLE_ACTIONSCRIPT, bg, menu);
 		addSyntaxItem("C",    "CExample.txt", SYNTAX_STYLE_CPLUSPLUS, bg, menu);
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);

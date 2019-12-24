@@ -6,12 +6,15 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
+import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.swing.text.Segment;
 
 
 /**
@@ -43,6 +46,38 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'foobar'");
+	}
+
+
+	@Test
+	public void testEolComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"; Hello world");
+	}
+
+
+	@Test
+	public void testEolComments_URL() {
+
+		String[] eolCommentLiterals = {
+			"; Hello world http://www.sas.com",
+		};
+
+		for (String code : eolCommentLiterals) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+
+			token = token.getNextToken();
+			Assert.assertTrue(token.isHyperlink());
+			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+
+		}
+
 	}
 
 
@@ -188,12 +223,6 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 			"SLO",
 			"SRE"
 		);
-	}
-
-
-	@Test
-	public void testComments() {
-		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "; This is a comment");
 	}
 
 

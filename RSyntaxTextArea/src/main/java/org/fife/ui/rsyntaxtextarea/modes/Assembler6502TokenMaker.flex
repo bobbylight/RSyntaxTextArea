@@ -75,6 +75,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
 	 */
 	private void addToken(int tokenType) {
 		addToken(zzStartRead, zzMarkedPos-1, tokenType);
@@ -85,6 +97,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
+	 * @see #addHyperlinkToken(int, int, int)
 	 */
 	private void addToken(int start, int end, int tokenType) {
 		int so = start + offsetShift;
@@ -195,14 +208,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
-Letter				= ([A-Za-z_])
+Letter				= ([A-Za-z])
+LetterOrUnderscore	= ({Letter}|"_")
 Digit				= ([0-9])
 IntegerNumber       = ({Digit}+)
 HexNumber           = ("$"[0-9A-Fa-f]+|[0-9A-Fa-f]+"h")
 BinaryNumber        = ("%"[0-1]+)
 Number				= ({IntegerNumber} | {HexNumber} | {BinaryNumber})
 
-Identifier			= (({Letter}|{Digit})[^ \t\f\n\,\.\+\-\*\/\%\[\]]+)
+Identifier			= (({LetterOrUnderscore}|{Digit})[^ \t\f\n\,\.\+\-\*\/\%\[\]]+)
 
 UnclosedStringLiteral	= ([\"][^\"]*)
 StringLiteral			= ({UnclosedStringLiteral}[\"])
@@ -214,11 +228,22 @@ CommentBegin			= ([;])
 LineTerminator			= (\n)
 WhiteSpace			= ([ \t\f])
 
-Label				= (({Letter}|{Digit})+[\:])
+Label				= (({LetterOrUnderscore}|{Digit})+[\:])
 
 Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"|".MOD"|"&"|
                            ".BITAND"|".BITXOR"|"<<"|".SHL"|">>"|".SHR"|"|"|".BITOR"|"="|"<>"|"<"|">"|"<="|">="|
                            "&&"|".AND"|".XOR"|"||"|".OR"|"!"|".NOT")
+
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({LetterOrUnderscore}|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
+
+%state EOL_COMMENT
 
 %%
 
@@ -313,7 +338,7 @@ Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"
     "SLO" |
     "SRE"		{ addToken(Token.FUNCTION); }
 
-    "@"{Letter}+ |
+    "@"{LetterOrUnderscore}+ |
     ("#"([^ \t]+ | {StringLiteral} | {UnclosedStringLiteral})) { addToken(Token.PREPROCESSOR); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
@@ -329,10 +354,10 @@ Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"
 	/* Labels. */
 	{Label}						{ addToken(Token.PREPROCESSOR); }
 
-	^%{Letter}({Letter}|{Digit})*	{ addToken(Token.FUNCTION); }
+	^%{LetterOrUnderscore}({LetterOrUnderscore}|{Digit})*	{ addToken(Token.FUNCTION); }
 
 	/* Comment Literals. */
-	{CommentBegin}.*				{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{CommentBegin}			    { start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
 
 	/* Operators. */
 	{Operator}					{ addToken(Token.OPERATOR); }
@@ -349,5 +374,15 @@ Operator				= ("+"|"-"|"~"|".BITNOT"|".LOBYTE"|".HIBYTE"|"^"|".BANKBYTE"|"*"|"/"
 	/* Catch any other (unhandled) characters. */
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
 	.							{ addToken(Token.IDENTIFIER); }
+
+}
+
+
+<EOL_COMMENT> {
+	[^hwf\n]+				{}
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	[hwf]					{}
+	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
 
 }
