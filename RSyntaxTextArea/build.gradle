@@ -42,6 +42,11 @@ ext.sharedManifest = manifest {
 		// Not sure why Require-Capability is not being added by the osgi plugin...
 		'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 jar {
 	manifest { from sharedManifest }
 }
@@ -82,23 +87,6 @@ task buildSourceForgeZips {
 }
 buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
 
-//// Stuff to generate and upload Maven artifacts
-//task javadocJar (type: Jar, dependsOn: javadoc) {
-//	manifest { from sharedManifest }
-//	classifier = 'javadoc'
-//	from javadoc.destinationDir
-//}
-//task sourceJar (type: Jar) {
-//	manifest { from sharedManifest }
-//	classifier = 'sources'
-//	from sourceSets.main.allSource
-//}
-//artifacts {
-//	archives jar, javadocJar, sourceJar
-//}
-//repositories {
-//	mavenCentral()
-//}
 publishing {
     repositories {
         maven {
