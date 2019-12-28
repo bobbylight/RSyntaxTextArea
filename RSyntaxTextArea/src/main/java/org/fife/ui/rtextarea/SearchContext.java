@@ -10,6 +10,7 @@ package org.fife.ui.rtextarea;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 
 
 /**
@@ -23,7 +24,7 @@ import java.beans.PropertyChangeSupport;
  * @version 2.0
  * @see SearchEngine
  */
-public class SearchContext implements Cloneable {
+public class SearchContext implements Cloneable, Serializable {
 
 	/** Fired when the "search for" property is modified. */
 	public static final String PROPERTY_SEARCH_FOR		= "Search.searchFor";
@@ -58,7 +59,9 @@ public class SearchContext implements Cloneable {
 	private boolean selectionOnly;
 	private boolean markAll;
 
-	private PropertyChangeSupport support;
+	private transient PropertyChangeSupport support;
+
+	private static final long serialVersionUID = 1L;
 
 
 	/**
