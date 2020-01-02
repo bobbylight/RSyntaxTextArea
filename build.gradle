@@ -35,7 +35,8 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
 
     checkstyle {
-        toolVersion = '8.26'
+        toolVersion = '8.28'
+        configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 
     spotbugs {

@@ -106,6 +106,7 @@
 		-->
         <module name="JavadocStyle"/>
 
+        <module name="JavadocContentLocationCheck"/>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -213,7 +214,7 @@
     </module>
 
 	<module name="SuppressionFilter">
-		<property name="file" value="${config_loc}//rstaSuppressions.xml"/>
+		<property name="file" value="${config_loc}/rstaSuppressions.xml"/>
 	</module>
 
 </module>
