@@ -456,6 +456,59 @@ public class SearchEngineTest {
 
 
 	/**
+	 * Tests <code>SearchEngine.find()</code> when searching with wrap.
+	 */
+	@Test
+	public void testSearchEngineFindWrap() {
+		testSearchEngineWrapImpl();
+	}
+
+	/**
+	 * Tests <code>SearchEngine.find()</code> when searching the entire document.
+	 *
+	 */
+	private void testSearchEngineWrapImpl() {
+		textArea.setText(text);
+
+		SearchContext context = new SearchContext();
+
+		// Search for "Chuck", non matching case.
+		context.setSearchForward(false);
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(false);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(27);
+		boolean found = findImpl(context);
+		assertFalse(found);
+
+		// Search for "Chuck", matching case.
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(true);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(27);
+		found = findImpl(context);
+		assertTrue(found);
+
+		// Search for "Chuck", non matching case.
+		context.setSearchForward(true);
+		context.setSearchFor("wood");
+		context.setSearchWrap(false);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(49);
+		found = findImpl(context);
+		assertFalse(found);
+
+		// Search for "Chuck", matching case.
+		context.setSearchFor("Chuck");
+		context.setSearchWrap(true);
+		context.setMatchCase(true);
+		textArea.setCaretPosition(49);
+		found = findImpl(context);
+		assertTrue(found);
+	}
+
+
+	/**
 	 * https://github.com/bobbylight/RSyntaxTextArea/issues/38
 	 */
 	@Test
