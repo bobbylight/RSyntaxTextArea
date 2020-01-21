@@ -94,7 +94,7 @@ public final class SearchEngine {
 						Math.min(c.getDot(), c.getMark());
 
 		String findIn = getFindInText(textArea, start, forward);
-		if (findIn==null || findIn.length()==0) {
+		if (!context.getSearchWrap() && (findIn == null || findIn.length() == 0)) {
 			return new SearchResult();
 		}
 
@@ -104,7 +104,7 @@ public final class SearchEngine {
 					getMarkedCount();
 		}
 
-		SearchResult result = SearchEngine.findImpl(findIn, context);
+		SearchResult result = SearchEngine.findImpl(findIn == null ? "" : findIn, context);
 		if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
 			// Without this, if JTextArea isn't in focus, selection
 			// won't appear selected.
@@ -114,6 +114,36 @@ public final class SearchEngine {
 			}
 			RSyntaxUtilities.selectAndPossiblyCenter(textArea,
 					result.getMatchRange(), true);
+		} else if (context.getSearchWrap() && !result.wasFound()) {
+			if (forward) {
+				start = 0;
+			} else {
+				start = textArea.getDocument().getLength() - 1;
+			}
+
+			findIn = getFindInText(textArea, start, forward);
+
+			if (findIn == null || findIn.length() == 0) {
+				return new SearchResult();
+			}
+
+			if (doMarkAll) {
+				markAllCount = markAllImpl((RTextArea) textArea, context).
+					getMarkedCount();
+			}
+
+			result = SearchEngine.findImpl(findIn, context);
+			if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
+				// Without this, if JTextArea isn't in focus, selection
+				// won't appear selected.
+				textArea.getCaret().setSelectionVisible(true);
+				if (forward) {
+					result.getMatchRange().translate(start);
+				}
+				RSyntaxUtilities.selectAndPossiblyCenter(textArea,
+					result.getMatchRange(), true
+				);
+			}
 		}
 
 		result.setMarkedCount(markAllCount);
