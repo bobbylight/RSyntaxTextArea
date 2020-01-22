@@ -480,6 +480,7 @@ public class SearchEngineTest {
 		textArea.setCaretPosition(27);
 		boolean found = findImpl(context);
 		assertFalse(found);
+		assertFalse(result.isWrapped());
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
@@ -488,6 +489,7 @@ public class SearchEngineTest {
 		textArea.setCaretPosition(27);
 		found = findImpl(context);
 		assertTrue(found);
+		assertTrue(result.isWrapped());
 
 		// Search for "Chuck", non matching case.
 		context.setSearchForward(true);
@@ -497,6 +499,7 @@ public class SearchEngineTest {
 		textArea.setCaretPosition(49);
 		found = findImpl(context);
 		assertFalse(found);
+		assertFalse(result.isWrapped());
 
 		// Search for "Chuck", matching case.
 		context.setSearchFor("Chuck");
@@ -505,6 +508,7 @@ public class SearchEngineTest {
 		textArea.setCaretPosition(49);
 		found = findImpl(context);
 		assertTrue(found);
+		assertTrue(result.isWrapped());
 	}
 
 

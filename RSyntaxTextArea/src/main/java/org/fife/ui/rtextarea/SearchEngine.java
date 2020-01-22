@@ -124,7 +124,9 @@ public final class SearchEngine {
 			findIn = getFindInText(textArea, start, forward);
 
 			if (findIn == null || findIn.length() == 0) {
-				return new SearchResult();
+				SearchResult emptyResult = new SearchResult();
+				emptyResult.setWrapped(true);
+				return emptyResult;
 			}
 
 			if (doMarkAll) {
@@ -133,6 +135,7 @@ public final class SearchEngine {
 			}
 
 			result = SearchEngine.findImpl(findIn, context);
+			result.setWrapped(true);
 			if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
 				// Without this, if JTextArea isn't in focus, selection
 				// won't appear selected.
