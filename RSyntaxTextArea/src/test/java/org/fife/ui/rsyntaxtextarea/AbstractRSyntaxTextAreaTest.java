@@ -4,8 +4,9 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.ui.rtextarea.AbstractRTextAreaTest;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 
 /**
@@ -14,7 +15,7 @@ import java.awt.image.BufferedImage;
  * @author Robert Futrell
  * @version 1.0
  */
-public abstract class AbstractRSyntaxTextAreaTest {
+public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest {
 
 	public static final String DEFAULT_SYNTAX_STYLE = SyntaxConstants.SYNTAX_STYLE_C;
 
@@ -23,13 +24,6 @@ public abstract class AbstractRSyntaxTextAreaTest {
 		"    println(\"Wow\");\n" +
 		"  }\n" +
 		"}";
-
-
-	public static Graphics2D createTestGraphics() {
-		Graphics2D g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).createGraphics();
-		g.setClip(0, 0, 80, 80);
-		return g;
-	}
 
 
 	/**

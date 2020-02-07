@@ -1923,12 +1923,12 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
 
 	/**
 	 * Internal type denoting line ending in a CSS double-quote string.

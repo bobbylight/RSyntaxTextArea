@@ -25,6 +25,14 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	/**
 	 * The last token type on the previous line for this token maker to
+	 * start parsing a new line as CSS.  This constant is only here so we can
+	 * copy and paste tests from this class into others, such as HTML, PHP, and
+	 * JSP token maker tests, with as little change as possible.
+	 */
+	private static final int CSS_PREV_TOKEN_TYPE = JSPTokenMaker.INTERNAL_CSS;
+
+	/**
+	 * The last token type on the previous line for this token maker to
 	 * start parsing a new line as JS.  This constant is only here so we can
 	 * copy and paste tests from the JavaScriptTokenMakerTest class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as
@@ -45,6 +53,157 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assert.assertEquals("<!--", startAndEnd[0]);
 		Assert.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
+	public void testCss_comment() {
+
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
+			"/* Hello world */"
+		);
+	}
+
+
+	@Test
+	public void testCss_comment_URL() {
+
+		String code = "/* Hello world http://www.google.com */";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
+
+		Assert.assertFalse(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "http://www.google.com"));
+		token = token.getNextToken();
+		Assert.assertFalse(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
+
+	}
+
+
+	@Test
+	public void testCss_getCurlyBracesDenoteCodeBlocks() {
+		TokenMaker tm = createTokenMaker();
+		Assert.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(2));
+	}
+
+
+	@Test
+	public void testCss_getLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(2);
+		Assert.assertEquals("/*", startAndEnd[0]);
+		Assert.assertEquals("*/", startAndEnd[1]);
+	}
+
+
+	@Test
+	public void testCss_happyPath_simpleSelector() {
+
+		String code = "body { padding: 0; }";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
+
+		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
+
+	}
+
+
+	@Test
+	public void testCss_id() {
+
+		String code = "#mainContent";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
+
+		Assert.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
+
+	}
+
+
+	@Test
+	public void testCss_isIdentifierChar() {
+		TokenMaker tm = createTokenMaker();
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assert.assertTrue(tm.isIdentifierChar(2, (char)ch));
+			Assert.assertTrue(tm.isIdentifierChar(2, (char)(ch+('a'-'A'))));
+		}
+		Assert.assertTrue(tm.isIdentifierChar(2, '-'));
+		Assert.assertTrue(tm.isIdentifierChar(2, '_'));
+		Assert.assertTrue(tm.isIdentifierChar(2, '.'));
+	}
+
+
+	@Test
+	public void testCss_propertyValue_function() {
+
+		String code = "background-image: url(\"test.png\");";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_CSS_PROPERTY, 0);
+
+		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+
+		code = "background-image: url('test.png');";
+		segment = createSegment(code);
+		tm = createTokenMaker();
+		token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_CSS_PROPERTY, 0);
+
+		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+
 	}
 
 
@@ -831,6 +990,24 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testJS_MultiLineComment_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			" this is continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS_MLC,
+				0);
+			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
@@ -1087,6 +1264,28 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
+
+		String[] templateLiterals = {
+			"and my name is ${name}`"
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
+				0);
 			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
 			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());

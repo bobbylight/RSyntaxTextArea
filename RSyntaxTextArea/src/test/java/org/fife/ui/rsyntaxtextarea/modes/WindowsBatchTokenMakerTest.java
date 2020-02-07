@@ -6,8 +6,8 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import javax.swing.text.Segment;
-
+import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenMap;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
@@ -20,7 +20,13 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
+public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
+
+
+	@Override
+	protected TokenMaker createTokenMaker() {
+		return new WindowsBatchTokenMaker();
+	}
 
 
 	/**
@@ -40,70 +46,229 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAddToken_identifier() {
+	public void testEolComments() {
 
-		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
-		String identifier = "foo";
-		Segment seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
+		// Comment at the start of a line
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"rem this is a comment",
+			":: this is a new style of comment");
 
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(TokenTypes.IDENTIFIER, tm.lastTokenType);
+		// Comment later in a line (different code path)
+		TokenMaker tm = createTokenMaker();
+		Token t = tm.getTokenList(createSegment("  rem comment"), TokenTypes.NULL, 0);
+		Assert.assertTrue(t.isWhitespace());
+		t = t.getNextToken();
+		Assert.assertTrue(t.isComment());
 
+		// Comment later in a line (different code path, new style)
+		t = tm.getTokenList(createSegment("  :: comment"), TokenTypes.NULL, 0);
+		Assert.assertTrue(t.isWhitespace());
+		t = t.getNextToken();
+		Assert.assertTrue(t.isComment());
 	}
 
 
 	@Test
-	public void testAddToken_keyword() {
+	public void testIdentifiers() {
 
-		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
-
-		String identifier = "do";
-		Segment seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
-
-		identifier = "echo";
-		seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.IDENTIFIER, 0);
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(TokenTypes.RESERVED_WORD, tm.lastTokenType);
-
+		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testAddToken_unknown() {
+	public void testKeywords() {
 
-		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 
-		String identifier = "foobar";
-		Segment seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, -42, 0);
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(-42, tm.lastTokenType);
+			// Batch-file specific stuff (?)
+			"goto",
+			"if",
+			"shift",
+			"start",
 
+			// General command line stuff
+			"ansi.sys",
+			"append",
+			"arp",
+			"assign",
+			"assoc",
+			"at",
+			"attrib",
+			"break",
+			"cacls",
+			"call",
+			"cd",
+			"chcp",
+			"chdir",
+			"chkdsk",
+			"chknfts",
+			"choice",
+			"cls",
+			"cmd",
+			"color",
+			"comp",
+			"compact",
+			"control",
+			"convert",
+			"copy",
+			"ctty",
+			"date",
+			"debug",
+			"defrag",
+			"del",
+			"deltree",
+			"dir",
+			"diskcomp",
+			"diskcopy",
+			"do",
+			"doskey",
+			"dosshell",
+			"drivparm",
+			"echo",
+			"edit",
+			"edlin",
+			"emm386",
+			"erase",
+			"exist",
+			"exit",
+			"expand",
+			"extract",
+			"fasthelp",
+			"fc",
+			"fdisk",
+			"find",
+			"for",
+			"format",
+			"ftp",
+			"graftabl",
+			"help",
+			"ifshlp.sys",
+			"in",
+			"ipconfig",
+			"keyb",
+			"kill",
+			"label",
+			"lh",
+			"loadfix",
+			"loadhigh",
+			"lock",
+			"md",
+			"mem",
+			"mkdir",
+			"mklink",
+			"mode",
+			"more",
+			"move",
+			"msav",
+			"msd",
+			"mscdex",
+			"nbtstat",
+			"net",
+			"netstat",
+			"nlsfunc",
+			"not",
+			"nslookup",
+			"path",
+			"pathping",
+			"pause",
+			"ping",
+			"power",
+			"print",
+			"prompt",
+			"pushd",
+			"popd",
+			"qbasic",
+			"rd",
+			"ren",
+			"rename",
+			"rmdir",
+			"route",
+			"sc",
+			"scandisk",
+			"scandreg",
+			"set",
+			"setx",
+			"setver",
+			"share",
+			"shutdown",
+			"smartdrv",
+			"sort",
+			"subset",
+			"switches",
+			"sys",
+			"time",
+			"tracert",
+			"tree",
+			"type",
+			"undelete",
+			"unformat",
+			"unlock",
+			"ver",
+			"verify",
+			"vol",
+			"xcopy"
+		);
 	}
 
 
 	@Test
-	public void testAddToken_whitespace() {
+	public void testLabels() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR, ":label");
+	}
 
-		AddTokenCatchingWindowsBatchTokenMaker tm = new AddTokenCatchingWindowsBatchTokenMaker();
 
-		String identifier = " ";
-		Segment seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);
+	@Test
+	public void testSeparators() {
+		assertAllTokensOfType(TokenTypes.SEPARATOR, "(", ")");
+	}
 
-		identifier = "\t";
-		seg = createSegment(identifier);
-		tm.addToken(seg, 0, identifier.length()-1, TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(identifier, tm.lastTokenLexeme);
-		Assert.assertEquals(TokenTypes.WHITESPACE, tm.lastTokenType);
 
+	@Test
+	public void testSeparators_afterSpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment(" ("), TokenTypes.NULL, 0);
+		Assert.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		t = t.getNextToken();
+		Assert.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, '('));
+
+		t = tm.getTokenList(createSegment(" )"), TokenTypes.NULL, 0);
+		Assert.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		t = t.getNextToken();
+		Assert.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, ')'));
+	}
+
+
+	@Test
+	public void testStrings() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"Hello world\"");
+	}
+
+
+	@Test
+	public void testStrings_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"Unclosed string");
+	}
+
+
+	@Test
+	public void testVariables() {
+		assertAllTokensOfType(TokenTypes.VARIABLE,
+			"%foo",
+			"%8",
+			"%~dp0",
+			"%%xyz",
+			"%{isthisright}");
+	}
+
+
+	@Test
+	public void testWhitespace() {
+
+		assertAllTokensOfType(TokenTypes.WHITESPACE, " ", "\t");
 	}
 
 
@@ -112,7 +277,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assert.assertEquals("rem ", startAndEnd[0]);
-		Assert.assertEquals(null, startAndEnd[1]);
+		Assert.assertNull(startAndEnd[1]);
 	}
 
 
@@ -264,31 +429,5 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 		assertTokenMapContains(tokens, "xcopy", reservedWord);
 
 	}
-
-
-	/**
-	 * Overrides the default implementation to remember the last token's lexeme
-	 * and type whenever an <code>addToken()</code> overload is called.
-	 */
-	private static class AddTokenCatchingWindowsBatchTokenMaker
-			extends WindowsBatchTokenMaker {
-
-		private String lastTokenLexeme;
-		private int lastTokenType;
-
-		/**
-		 * Overridden to cache the last token lexeme and type passed into this
-		 * method.
-		 */
-		@Override
-		public void addToken(char[] array, int start, int end, int tokenType,
-				int startOffset, boolean hyperlink) {
-			this.lastTokenLexeme = new String(array, start, end-start+1);
-			this.lastTokenType = tokenType;
-			super.addToken(array, start, end, tokenType, startOffset, hyperlink);
-		}
-
-	}
-
 
 }

@@ -24,7 +24,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
+public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -50,12 +50,8 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
-	/**
-	 * Creates an instance of the {@code TokenMaker} to test.
-	 *
-	 * @return The token maker to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new JavaScriptTokenMaker();
 	}
 
@@ -137,7 +133,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -145,20 +141,12 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testJS_CharLiterals_invalid() {
 
-		String[] charLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'\\xG7'", // Invalid hex/octal escape
 			"'foo\\ubar'", "'\\u00fg'", // Invalid Unicode escape
 			"'My name is \\ubar and I \\", // Continued onto another line
-			"'This is unterminated and ", // Unterminated string
-		};
-
-		for (String code : charLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
-		}
-
+			"'This is unterminated and " // Unterminated string
+		);
 	}
 
 
@@ -205,7 +193,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -627,7 +615,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -653,7 +641,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -710,14 +698,14 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 		segment = createSegment("return");
 		token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 		Assert.assertEquals("return", token.getLexeme());
 		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -733,6 +721,24 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_MultiLineComment_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			" this is continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JavaScriptTokenMaker.INTERNAL_IN_JS_MLC,
+				0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
@@ -843,7 +849,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -888,7 +894,7 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -1000,6 +1006,28 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
+
+		String[] templateLiterals = {
+			"and my name is ${name}`"
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JavaScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
+				0);
 			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
 			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());

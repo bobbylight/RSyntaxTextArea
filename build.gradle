@@ -24,7 +24,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '6.0.1'
+        gradleVersion = '6.1.1'
     }
 }
 
@@ -35,7 +35,7 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
 
     checkstyle {
-        toolVersion = '8.28'
+        toolVersion = '8.29'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 
@@ -52,7 +52,7 @@ subprojects {
     }
 
     dependencies {
-        testImplementation 'junit:junit:4.12'
+        testImplementation 'junit:junit:4.13'
     }
 
     compileJava {

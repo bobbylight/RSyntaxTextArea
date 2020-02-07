@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
+public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Before
@@ -36,12 +36,8 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new ActionScriptTokenMaker();
 	}
 
@@ -84,7 +80,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -92,20 +88,12 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testJS_CharLiterals_invalid() {
 
-		String[] charLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'\\xG7'", // Invalid hex/octal escape
 			"'foo\\ubar'", "'\\u00fg'", // Invalid Unicode escape
 			"'My name is \\ubar and I \\", // Continued onto another line
-			"'This is unterminated and ", // Unterminated string
-		};
-
-		for (String code : charLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
-		}
-
+			"'This is unterminated and " // Unterminated string
+		);
 	}
 
 
@@ -395,6 +383,23 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_MultiLineComment_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			" this is continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.COMMENT_MULTILINE, 0);
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 

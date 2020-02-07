@@ -139,7 +139,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JavaScript multi-line comment.
 	 */
-	private static final int INTERNAL_IN_JS_MLC				= -13;
+	static final int INTERNAL_IN_JS_MLC				= -13;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
@@ -164,12 +164,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Internal type denoting a line ending in CSS.
 	 */
-	private static final int INTERNAL_CSS					= -18;
+	static final int INTERNAL_CSS					= -18;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property.
 	 */
-	private static final int INTERNAL_CSS_PROPERTY			= -19;
+	static final int INTERNAL_CSS_PROPERTY			= -19;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property value.
@@ -179,12 +179,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
 
 	/**
 	 * Internal type denoting line ending in a CSS double-quote string.
@@ -570,6 +570,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return new TokenImpl();
 		}
 
+	}
+
+
+	/**
+	 * Overridden to accept letters, digits, underscores, and hyphens.
+	 */
+	@Override
+	public boolean isIdentifierChar(int languageIndex, char ch) {
+		return Character.isLetterOrDigit(ch) || ch=='-' || ch=='.' || ch=='_';
 	}
 
 

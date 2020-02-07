@@ -553,6 +553,24 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	public void testJS_MultiLineComment_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			" this is continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_MLC,
+				0);
+			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
@@ -809,6 +827,28 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			token = token.getNextToken();
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
+
+		String[] templateLiterals = {
+			"and my name is ${name}`"
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
+				0);
 			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
 			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());

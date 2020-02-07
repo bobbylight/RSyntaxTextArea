@@ -1118,7 +1118,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	private static final int INTERNAL_IN_JS_MLC				= -8;
+	static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Token type specifying we're in a JavaScript documentation comment.
@@ -1166,12 +1166,12 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
 
 	/**
 	 * When in the JS_STRING state, whether the current string is valid.

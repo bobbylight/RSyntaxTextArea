@@ -174,6 +174,12 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	}
 
 
+	@Override
+	protected Highlighter createHighlighter() {
+		return new RTextAreaHighlighter();
+	}
+
+
 	/**
 	 * Creates the keymap for this text area.  This takes the super class's
 	 * keymap, but sets the default keystroke to be RTextAreaEditorKit's

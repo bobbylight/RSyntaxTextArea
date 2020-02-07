@@ -1,9 +1,11 @@
+/*
+ * This library is distributed under a modified BSD license.  See the included
+ * LICENSE file for details.
+ */
 package org.fife.ui.rtextarea;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Point;
 
 import javax.swing.Icon;
@@ -35,7 +37,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 
 		GutterIconInfo gii = gutter.addLineTrackingIcon(1, icon);
 		int line1Start = textArea.getText().indexOf('\n') + 1;
@@ -55,7 +57,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 
 		gutter.addLineTrackingIcon(4, icon);
 
@@ -67,7 +69,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		String tip = "tip text";
 
 		GutterIconInfo gii = gutter.addLineTrackingIcon(1, icon, tip);
@@ -88,7 +90,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		String tip = "tip text";
 
 		gutter.addLineTrackingIcon(4, icon, tip);
@@ -101,7 +103,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 
 		GutterIconInfo gii = gutter.addOffsetTrackingIcon(17, icon);
 		Assert.assertEquals(icon, gii.getIcon());
@@ -119,7 +121,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 
 		gutter.addOffsetTrackingIcon(1024, icon);
 
@@ -131,7 +133,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		String tip = "tip text";
 
 		GutterIconInfo gii = gutter.addOffsetTrackingIcon(17, icon, tip);
@@ -150,7 +152,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		String tip = "tip text";
 
 		gutter.addOffsetTrackingIcon(1024, icon, tip);
@@ -182,7 +184,7 @@ public class GutterTest {
 		Gutter gutter = new Gutter(textArea);
 		Assert.assertNull(gutter.getBookmarkIcon());
 
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		gutter.setBookmarkIcon(icon);
 		Assert.assertEquals(icon, gutter.getBookmarkIcon());
 
@@ -204,7 +206,7 @@ public class GutterTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);
-		gutter.setBookmarkIcon(new TestIcon());
+		gutter.setBookmarkIcon(new EmptyTestIcon());
 		Assert.assertTrue(gutter.toggleBookmark(1));
 		Assert.assertTrue(gutter.toggleBookmark(2));
 		Assert.assertEquals(2, gutter.getBookmarks().length); // Non-null
@@ -423,7 +425,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		textArea.setSize(200, 200);
 
 		gutter.addLineTrackingIcon(0, icon);
@@ -440,7 +442,7 @@ public class GutterTest {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		textArea.setSize(200, 200);
 
 		GutterIconInfo info = gutter.addLineTrackingIcon(0, icon);
@@ -476,7 +478,7 @@ public class GutterTest {
 		Gutter gutter = new Gutter(textArea);
 		Assert.assertNull(gutter.getBookmarkIcon());
 
-		Icon icon = new TestIcon();
+		Icon icon = new EmptyTestIcon();
 		gutter.setBookmarkIcon(icon);
 		Assert.assertEquals(icon, gutter.getBookmarkIcon());
 
@@ -669,8 +671,8 @@ public class GutterTest {
 	public void testSetFoldIcons_Simple() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon collapsedIcon = new TestIcon();
-		Icon expandedIcon = new TestIcon();
+		Icon collapsedIcon = new EmptyTestIcon();
+		Icon expandedIcon = new EmptyTestIcon();
 		gutter.setFoldIcons(collapsedIcon, expandedIcon);
 		// Not much we can verify here
 	}
@@ -726,32 +728,10 @@ public class GutterTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);
-		gutter.setBookmarkIcon(new TestIcon());
+		gutter.setBookmarkIcon(new EmptyTestIcon());
 		Assert.assertTrue(gutter.toggleBookmark(1));
 		Assert.assertFalse(gutter.toggleBookmark(1));
 		Assert.assertTrue(gutter.toggleBookmark(1));
-	}
-
-
-	/**
-	 * A dummy icon implementation for test purposes.
-	 */
-	private static class TestIcon implements Icon {
-
-		@Override
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-		}
-
-		@Override
-		public int getIconWidth() {
-			return 0;
-		}
-
-		@Override
-		public int getIconHeight() {
-			return 0;
-		}
-
 	}
 
 

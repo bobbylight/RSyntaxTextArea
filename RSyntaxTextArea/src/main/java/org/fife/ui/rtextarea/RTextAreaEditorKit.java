@@ -1098,6 +1098,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
 			try {
 
 				// We use the elements instead of calling getLineOfOffset(),
