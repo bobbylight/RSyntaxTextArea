@@ -30,7 +30,7 @@ import org.junit.Test;
  */
 public class SearchEngineTest {
 
-	private RSyntaxTextArea textArea = new RSyntaxTextArea();
+	private final RSyntaxTextArea textArea = new RSyntaxTextArea();
 
 	private static String text;
 	private SearchResult result;
@@ -108,18 +108,16 @@ public class SearchEngineTest {
 		if (text == null || text.length() <= 0) {
 
 			StringBuilder sb = new StringBuilder();
-			InputStream in = SearchEngineTest.class.
-					getResourceAsStream("SearchEngineTest.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			try (InputStream in = SearchEngineTest.class.getResourceAsStream("SearchEngineTest.txt");
+			BufferedReader br = new BufferedReader(new InputStreamReader(in)))
+			{
+			
 			String s = null;
-			try {
+			
 				while ((s=br.readLine())!=null) {
 					sb.append(s).append("\n");
 				}
-			} finally {
-				br.close();
 			}
-
 			// Strip off last newline
 			text = sb.toString().substring(0, sb.length()-1);
 
@@ -968,5 +966,27 @@ public class SearchEngineTest {
 
 	}
 
+	@Test
+	public void test_bounds()
+	{
+	    SearchContext context = new SearchContext();
+        context.setSearchFor("A really really long string");
+        textArea.setText("Short text");
+        boolean res = findImpl(context);
+        assertFalse("Longer search can never be found from start", res);
+        context.setSearchForward(false);
+        textArea.setCaretPosition(10);
+        res = findImpl(context);
+        assertFalse("Longer search can never be found from end", res);
+        textArea.setText("A really really long string");
+        textArea.setCaretPosition(0);
+        context.setSearchForward(true);
+        res = findImpl(context);
+        assertTrue("Whole string should match", res);
+        assertTrue(textArea.getCaretPosition() == textArea.getDocument().getLength());
+        context.setSearchForward(false);
+        res = findImpl(context);
+        assertFalse("After matching whole string we should advance to the end but mark should be to start so we cannot search again", res);
+	}
 
 }

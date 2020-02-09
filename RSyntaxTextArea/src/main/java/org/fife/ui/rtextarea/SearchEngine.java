@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 
 import org.fife.ui.rsyntaxtextarea.DocumentRange;
@@ -91,9 +90,9 @@ public final class SearchEngine {
 		Caret c = textArea.getCaret();
 		boolean forward = context.getSearchForward();
 		int start = forward ? Math.max(c.getDot(), c.getMark()) :
-						Math.min(c.getDot(), c.getMark());
-
-		String findIn = getFindInText(textArea, start, forward);
+						Math.min(c.getDot(), c.getMark()) -1;
+		
+		String findIn = textArea.getText();
 		if (findIn==null || findIn.length()==0) {
 			return new SearchResult();
 		}
@@ -104,14 +103,12 @@ public final class SearchEngine {
 					getMarkedCount();
 		}
 
-		SearchResult result = SearchEngine.findImpl(findIn, context);
+		SearchResult result = SearchEngine.findImpl(findIn, start, context);
 		if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
 			// Without this, if JTextArea isn't in focus, selection
 			// won't appear selected.
 			textArea.getCaret().setSelectionVisible(true);
-			if (forward && start>-1) {
-				result.getMatchRange().translate(start);
-			}
+
 			RSyntaxUtilities.selectAndPossiblyCenter(textArea,
 					result.getMatchRange(), true);
 		}
@@ -134,7 +131,7 @@ public final class SearchEngine {
 	 * @throws PatternSyntaxException If this is a regular expression search
 	 *         but the search text is an invalid regular expression.
 	 */
-	private static SearchResult findImpl(String findIn, SearchContext context) {
+	private static SearchResult findImpl(String findIn, int idx, SearchContext context) {
 
 		String text = context.getSearchFor();
 		boolean forward = context.getSearchForward();
@@ -142,7 +139,7 @@ public final class SearchEngine {
 		// Find the next location of the text we're searching for.
 		DocumentRange range = null;
 		if (!context.isRegularExpression()) {
-			int pos = getNextMatchPos(text, findIn, forward,
+			int pos = getNextMatchPos(text, findIn, idx, forward,
 								context.getMatchCase(), context.getWholeWord());
 			findIn = null; // May help garbage collecting.
 			if (pos!=-1) {
@@ -155,17 +152,16 @@ public final class SearchEngine {
 			// x- and y-values represent the start and end indices of the
 			// match in findIn.
 			Point regExPos = null;
-			int start = 0;
+			int start = idx;
 			do {
-				regExPos = getNextMatchPosRegEx(text, findIn.substring(start),
+				regExPos = getNextMatchPosRegEx(text, findIn, start,
 					forward, context.getMatchCase(), context.getWholeWord());
 				if (regExPos!=null) {
 					if (regExPos.x!=regExPos.y) {
-						regExPos.translate(start, start);
 						range = new DocumentRange(regExPos.x, regExPos.y);
 					}
 					else {
-						start += regExPos.x + 1;
+						start = regExPos.x + 1; //Advance one char on zero match
 					}
 				}
 			} while (start<findIn.length() && regExPos!=null && range==null);//while (emptyMatchFound);
@@ -177,65 +173,6 @@ public final class SearchEngine {
 		return new SearchResult();
 
 	}
-
-
-	/**
-	 * Returns a <code>CharSequence</code> for a text area that doesn't make a
-	 * copy of its contents for iteration.  This conserves memory but is likely
-	 * just a tad slower.
-	 *
-	 * @param textArea The text area whose document is the basis for the
-	 *        <code>CharSequence</code>.
-	 * @param start The starting offset of the sequence (or ending offset if
-	 *        <code>forward</code> is <code>false</code>).
-	 * @param forward Whether we're searching forward or backward.
-	 * @return The character sequence.
-	 */
-	private static CharSequence getFindInCharSequence(RTextArea textArea,
-			int start, boolean forward) {
-		RDocument doc = (RDocument)textArea.getDocument();
-		int csStart = 0;
-		int csEnd = 0;
-		if (forward) {
-			csStart = start;
-			csEnd = doc.getLength();
-		}
-		else {
-			csStart = 0;
-			csEnd = start;
-		}
-		return new RDocumentCharSequence(doc, csStart, csEnd);
-	}
-
-
-	/**
-	 * Returns the text in which to search, as a string.  This is used
-	 * internally to grab the smallest buffer possible in which to search.
-	 */
-	private static String getFindInText(JTextArea textArea, int start,
-									boolean forward) {
-
-		// Be smart about the text we grab to search in.  We grab more than
-		// a single line because our searches can return multi-line results.
-		// We copy only the chars that will be searched through.
-		String findIn = null;
-		try {
-			if (forward) {
-				findIn = textArea.getText(start,
-							textArea.getDocument().getLength()-start);
-			}
-			else { // backward
-				findIn = textArea.getText(0, start);
-			}
-		} catch (BadLocationException ble) {
-			// Never happens; findIn will be null anyway.
-			ble.printStackTrace();
-		}
-
-		return findIn;
-
-	}
-
 
 	/**
 	 * This method is called internally by
@@ -301,18 +238,18 @@ public final class SearchEngine {
 	 * @return The starting position of a match, or <code>-1</code> if no
 	 *         match was found.
 	 */
-	public static int getNextMatchPos(String searchFor, String searchIn,
+	public static int getNextMatchPos(String searchFor, String searchIn, int index,
 								boolean forward, boolean matchCase,
 								boolean wholeWord) {
 
 		// Make our variables lower case if we're ignoring case.
 		if (!matchCase) {
 			return getNextMatchPosImpl(searchFor.toLowerCase(),
-								searchIn.toLowerCase(), forward,
+								searchIn.toLowerCase(), index, forward,
 								matchCase, wholeWord);
 		}
 
-		return getNextMatchPosImpl(searchFor, searchIn, forward,
+		return getNextMatchPosImpl(searchFor, searchIn, index, forward,
 								matchCase, wholeWord);
 
 	}
@@ -336,12 +273,12 @@ public final class SearchEngine {
 	 *         match was found.
 	 */
 	private static int getNextMatchPosImpl(String searchFor,
-								String searchIn, boolean goForward,
+								String searchIn, int index, boolean goForward,
 								boolean matchCase, boolean wholeWord) {
 
 		if (wholeWord) {
 			int len = searchFor.length();
-			int temp = goForward ? 0 : searchIn.length();
+			int temp = index;
 			int tempChange = goForward ? 1 : -1;
 			while (true) {
 				if (goForward) {
@@ -363,8 +300,8 @@ public final class SearchEngine {
 			}
 		}
 		else {
-			return goForward ? searchIn.indexOf(searchFor) :
-							searchIn.lastIndexOf(searchFor);
+			return goForward ? searchIn.indexOf(searchFor, index) :
+							searchIn.lastIndexOf(searchFor, index);
 		}
 
 	}
@@ -391,9 +328,9 @@ public final class SearchEngine {
 	 * @see #getNextMatchPos
 	 */
 	private static Point getNextMatchPosRegEx(String regEx,
-							CharSequence searchIn, boolean goForward,
+							CharSequence searchIn, int index, boolean goForward,
 							boolean matchCase, boolean wholeWord) {
-		return (Point)getNextMatchPosRegExImpl(regEx, searchIn, goForward,
+		return (Point)getNextMatchPosRegExImpl(regEx, searchIn, index, goForward,
 									matchCase, wholeWord, null);
 	}
 
@@ -429,7 +366,7 @@ public final class SearchEngine {
 	 * @see #getNextMatchPos
 	 */
 	private static Object getNextMatchPosRegExImpl(String regEx,
-							CharSequence searchIn, boolean goForward,
+							CharSequence searchIn, int index, boolean goForward,
 							boolean matchCase, boolean wholeWord,
 							String replaceStr) {
 
@@ -449,7 +386,14 @@ public final class SearchEngine {
 
 		// Make a Matcher to find the regEx instances.
 		Matcher m = pattern.matcher(searchIn);
-
+		if (goForward)
+        {
+            m.region(index, searchIn.length());
+        }
+        else
+		{
+		    m.region(0, index);
+		}
 		// Search forwards
 		if (goForward) {
 			if (m.find()) {
@@ -491,7 +435,7 @@ public final class SearchEngine {
 	 *         groups matched).
 	 * @see #getNextMatchPos
 	 */
-	private static RegExReplaceInfo getRegExReplaceInfo(CharSequence searchIn,
+	private static RegExReplaceInfo getRegExReplaceInfo(CharSequence searchIn,int index,
 										SearchContext context) {
 		// Can't pass null to getNextMatchPosRegExImpl or it'll think
 		// you're doing a "find" operation instead of "replace, and return a
@@ -504,7 +448,7 @@ public final class SearchEngine {
 		boolean goForward = context.getSearchForward();
 		boolean matchCase = context.getMatchCase();
 		boolean wholeWord = context.getWholeWord();
-		return (RegExReplaceInfo)getNextMatchPosRegExImpl(regex, searchIn,
+		return (RegExReplaceInfo)getNextMatchPosRegExImpl(regex, searchIn, index,
 						goForward, matchCase, wholeWord, replacement);
 	}
 
@@ -724,9 +668,9 @@ public final class SearchEngine {
 				findIn = findIn.toLowerCase();
 			}
 
-			SearchResult res = SearchEngine.findImpl(findIn, context);
+			SearchResult res = SearchEngine.findImpl(findIn, 0, context);
 			while (res.wasFound()) {
-				DocumentRange match = res.getMatchRange().translate(start);
+				DocumentRange match = res.getMatchRange();
 				if (match.isZeroLength()) {
 					// Searched for a regex like "foo|".  The "empty string"
 					// part of the regex matches space between chars.  We want
@@ -740,7 +684,7 @@ public final class SearchEngine {
 					highlights.add(match);
 					start = match.getEndOffset();
 				}
-				res = SearchEngine.findImpl(findIn.substring(start), context);
+				res = SearchEngine.findImpl(findIn, start, context);
 			}
 			textArea.markAll(highlights);
 			markAllCount = highlights.size();
@@ -787,10 +731,11 @@ public final class SearchEngine {
 		boolean forward = context.getSearchForward();
 		int start = makeMarkAndDotEqual(textArea, forward);
 
-		CharSequence findIn = getFindInCharSequence(textArea, start, forward);
-		if (findIn==null) {
-			return new SearchResult();
+		if (start > textArea.getText().length())
+		{
+		    return new SearchResult();
 		}
+		CharSequence findIn = new RDocumentCharSequence((RDocument)textArea.getDocument(), 0);
 
 		int markAllCount = 0;
 		if (context.getMarkAll()) {
@@ -798,7 +743,7 @@ public final class SearchEngine {
 		}
 
 		// Find the next location of the text we're searching for.
-		RegExReplaceInfo info = getRegExReplaceInfo(findIn, context);
+		RegExReplaceInfo info = getRegExReplaceInfo(findIn, start, context);
 
 		// If a match was found, do the replace and return!
 		DocumentRange range = null;
@@ -810,26 +755,19 @@ public final class SearchEngine {
 
 			int matchStart = info.getStartIndex();
 			int matchEnd = info.getEndIndex();
-			if (forward) {
-				matchStart += start;
-				matchEnd += start;
-			}
+
 			textArea.setSelectionStart(matchStart);
 			textArea.setSelectionEnd(matchEnd);
 			String replacement = info.getReplacement();
 			textArea.replaceSelection(replacement);
 
 			// If there is another match, find and select it.
-			int dot = matchStart + replacement.length();
-			findIn = getFindInCharSequence(textArea, dot, forward);
-			info = getRegExReplaceInfo(findIn, context);
+			int dot = matchStart +replacement.length();
+			info = (dot >= findIn.length() ? null :  getRegExReplaceInfo(findIn, dot, context));
 			if (info!=null) {
 				matchStart = info.getStartIndex();
 				matchEnd = info.getEndIndex();
-				if (forward) {
-					matchStart += dot;
-					matchEnd += dot;
-				}
+				
 				range = new DocumentRange(matchStart, matchEnd);
 			}
 			else {
@@ -991,7 +929,6 @@ public final class SearchEngine {
 				}
 
 				res = SearchEngine.replace(textArea, context);
-
 			}
 
 			if (lastFound==null) { // If nothing was found, don't move the caret
@@ -1005,8 +942,5 @@ public final class SearchEngine {
 
 		lastFound.setCount(count);
 		return lastFound;
-
 	}
-
-
 }
