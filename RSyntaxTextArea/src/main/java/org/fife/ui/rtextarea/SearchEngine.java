@@ -91,7 +91,7 @@ public final class SearchEngine {
 		boolean forward = context.getSearchForward();
 		int start = forward ? Math.max(c.getDot(), c.getMark()) :
 						Math.min(c.getDot(), c.getMark()) -1;
-		
+
 		String findIn = textArea.getText();
 		if (findIn==null || findIn.length()==0) {
 			return new SearchResult();
@@ -386,12 +386,10 @@ public final class SearchEngine {
 
 		// Make a Matcher to find the regEx instances.
 		Matcher m = pattern.matcher(searchIn);
-		if (goForward)
-        {
+		if (goForward){
             m.region(index, searchIn.length());
         }
-        else
-		{
+		else{
 		    m.region(0, index);
 		}
 		// Search forwards
@@ -731,8 +729,7 @@ public final class SearchEngine {
 		boolean forward = context.getSearchForward();
 		int start = makeMarkAndDotEqual(textArea, forward);
 
-		if (start > textArea.getText().length())
-		{
+		if (start > textArea.getText().length()){
 		    return new SearchResult();
 		}
 		CharSequence findIn = new RDocumentCharSequence((RDocument)textArea.getDocument(), 0);
@@ -767,7 +764,7 @@ public final class SearchEngine {
 			if (info!=null) {
 				matchStart = info.getStartIndex();
 				matchEnd = info.getEndIndex();
-				
+
 				range = new DocumentRange(matchStart, matchEnd);
 			}
 			else {
