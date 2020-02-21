@@ -111,6 +111,12 @@ public class Gutter extends JPanel {
 	private boolean iconRowHeaderInheritsGutterBackground;
 
 	/**
+	 * Optional additional spacing between the line number component and the fold
+	 * indicator component.
+	 */
+	private int spacingBetweenLineNumbersAndFoldIndicator;
+
+	/**
 	 * Shows lines that are code-foldable.
 	 */
 	private FoldIndicator foldIndicator;
@@ -406,6 +412,20 @@ public class Gutter extends JPanel {
 	 */
 	public boolean getShowCollapsedRegionToolTips() {
 		return foldIndicator.getShowCollapsedRegionToolTips();
+	}
+
+
+	/**
+	 * Returns the additional spacing between the line number list and fold indicator.  By
+	 * default this is a small amount; if you want something larger, you can increase it.
+	 * Note this value takes effect whether or not both line numbers and the fold indicator
+	 * are enabled, so use it only when both are enabled.
+	 *
+	 * @return The additional spacing.
+	 * @see #setSpacingBetweenLineNumbersAndFoldIndicator(int)
+	 */
+	public int getSpacingBetweenLineNumbersAndFoldIndicator() {
+		return spacingBetweenLineNumbersAndFoldIndicator;
 	}
 
 
@@ -779,6 +799,25 @@ public class Gutter extends JPanel {
 	public void setShowCollapsedRegionToolTips(boolean show) {
 		if (foldIndicator!=null) {
 			foldIndicator.setShowCollapsedRegionToolTips(show);
+		}
+	}
+
+
+	/**
+	 * Sets additional spacing between the line number list and fold indicator.  By
+	 * default this is a small amount; if you want something larger, you can increase it.
+	 * Note this value takes effect whether or not both line numbers and the fold indicator
+	 * are enabled, so use it only when both are enabled.
+	 *
+	 * @param spacing The additional spacing.  This should be {@code >= 0}.
+	 * @see #getSpacingBetweenLineNumbersAndFoldIndicator()
+	 */
+	public void setSpacingBetweenLineNumbersAndFoldIndicator(int spacing) {
+		if (spacing != spacingBetweenLineNumbersAndFoldIndicator) {
+			spacingBetweenLineNumbersAndFoldIndicator = spacing;
+			foldIndicator.setAdditionalLeftMargin(spacing);
+			revalidate();
+			repaint();
 		}
 	}
 

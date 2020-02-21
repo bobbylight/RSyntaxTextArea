@@ -72,6 +72,17 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	public void testGetSetAdditionalLeftMargin() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Assert.assertEquals(0, fi.getAdditionalLeftMargin());
+		fi.setAdditionalLeftMargin(5);
+		Assert.assertEquals(5, fi.getAdditionalLeftMargin());
+	}
+
+
+	@Test
 	public void testGetSetShowCollapsedRegionToolTips() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);

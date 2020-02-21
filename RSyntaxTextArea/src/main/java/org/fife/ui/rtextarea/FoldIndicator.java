@@ -104,14 +104,19 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private boolean showFoldRegionTips;
 
 	/**
+	 * Optional additional left margin.
+	 */
+	private int additionalLeftMargin;
+
+	/**
 	 * The color used to paint fold outlines.
 	 */
-	public static final Color DEFAULT_FOREGROUND = Color.gray;
+	public static final Color DEFAULT_FOREGROUND = Color.GRAY;
 
 	/**
 	 * The default color used to paint the "inside" of fold icons.
 	 */
-	public static final Color DEFAULT_FOLD_BACKGROUND = Color.white;
+	public static final Color DEFAULT_FOLD_BACKGROUND = Color.WHITE;
 
 	/**
 	 * Listens for events in this component.
@@ -150,6 +155,19 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 		}
 		return tip;
+	}
+
+
+	/**
+	 * Returns the amount of additional size to give the left margin of this
+	 * component.  This can be used to add blank space between this component
+	 * and the line number indicator in the gutter.
+	 *
+	 * @return The additional left margin.
+	 * @see #setAdditionalLeftMargin(int)
+	 */
+	public int getAdditionalLeftMargin() {
+		return additionalLeftMargin;
 	}
 
 
@@ -214,7 +232,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	@Override
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
-		return new Dimension(WIDTH, h);
+		return new Dimension(WIDTH + additionalLeftMargin, h);
 	}
 
 
@@ -404,7 +422,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		while (y<visibleRect.y+visibleRect.height) {
 			if (paintingOutlineLine) {
 				g.setColor(getForeground());
-				int w2 = width/2;
+				int w2 = width - WIDTH / 2;
 				if (line==foldWithOutlineShowing.getEndLine()) {
 					int y2 = y+cellHeight/2;
 					g.drawLine(w2,y, w2,y2);
@@ -420,7 +438,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				if (fold==foldWithOutlineShowing) {
 					if (!fold.isCollapsed()) {
 						g.setColor(getForeground());
-						int w2 = width/2;
+						int w2 = width - WIDTH / 2;
 						g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
 						paintingOutlineLine = true;
 					}
@@ -529,7 +547,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 			if (paintingOutlineLine) {
 				g.setColor(getForeground());
-				int w2 = width/2;
+				int w2 = width - WIDTH / 2;
 				if (line==foldWithOutlineShowing.getEndLine()) {
 					int y2 = y + curLineH - cellHeight/2;
 					g.drawLine(w2,y, w2,y2);
@@ -545,7 +563,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				if (fold==foldWithOutlineShowing) {
 					if (!fold.isCollapsed()) {
 						g.setColor(getForeground());
-						int w2 = width/2;
+						int w2 = width - WIDTH / 2;
 						g.drawLine(w2,y+cellHeight/2, w2,y+curLineH);
 						paintingOutlineLine = true;
 					}
@@ -590,6 +608,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		return line;
 
+	}
+
+
+	/**
+	 * Adds to  the amount of additional size to give the left margin of this
+	 * component.  This can be used to add blank space between this component
+	 * and the line number indicator in the gutter.
+	 *
+	 * @param leftMargin The additional left margin.  This should be
+	 *        {@code >= 0}.
+	 * @see #getAdditionalLeftMargin()
+	 */
+	public void setAdditionalLeftMargin(int leftMargin) {
+
+		if (leftMargin < 0) {
+			throw new IllegalArgumentException("leftMargin must be >= 0");
+		}
+
+		this.additionalLeftMargin = leftMargin;
+		revalidate();
 	}
 
 

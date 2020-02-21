@@ -279,6 +279,11 @@ public class GutterTest {
 		gutter.setFoldIndicatorForeground(color);
 		Assert.assertEquals(color, gutter.getFoldIndicatorForeground());
 
+		// Sets to default - not a public value, but also not Color.green.
+		gutter.setFoldIndicatorForeground(null);
+		Assert.assertNotNull(gutter.getFoldIndicatorForeground());
+		Assert.assertNotEquals(color, gutter.getFoldIndicatorForeground());
+
 	}
 
 
@@ -356,7 +361,19 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetShowCollapsedRegionToolTips() {
+	public void testGetSetSpacingBetweenLineNumbersAndFoldIndicator() {
+
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+		Assert.assertEquals(0, gutter.getSpacingBetweenLineNumbersAndFoldIndicator());
+
+		gutter.setSpacingBetweenLineNumbersAndFoldIndicator(5);
+		Assert.assertEquals(5, gutter.getSpacingBetweenLineNumbersAndFoldIndicator());
+	}
+
+
+	@Test
+	public void testGetSetShowCollapsedRegionToolTips() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -539,28 +556,6 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetFoldIndicatorForeground() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-
-		Color color = Color.red;
-		gutter.setFoldIndicatorForeground(color);
-		Assert.assertEquals(color, gutter.getFoldIndicatorForeground());
-
-		color = Color.green;
-		gutter.setFoldIndicatorForeground(color);
-		Assert.assertEquals(color, gutter.getFoldIndicatorForeground());
-
-		// Sets to default - not a public value, but also not Color.green.
-		gutter.setFoldIndicatorForeground(null);
-		Assert.assertNotNull(gutter.getFoldIndicatorForeground());
-		Assert.assertNotEquals(color, gutter.getFoldIndicatorForeground());
-
-	}
-
-
-	@Test
 	public void testSetIconRowHeaderInheritsGutterBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
@@ -637,19 +632,6 @@ public class GutterTest {
 
 		gutter.setLineNumbersEnabled(true);
 		Assert.assertTrue(gutter.getLineNumbersEnabled());
-
-	}
-
-
-	@Test
-	public void testSetShowCollapsedRegionToolTips() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assert.assertTrue(gutter.getShowCollapsedRegionToolTips());
-
-		gutter.setShowCollapsedRegionToolTips(true);
-		Assert.assertTrue(gutter.getShowCollapsedRegionToolTips());
 
 	}
 
