@@ -967,8 +967,7 @@ public class SearchEngineTest {
 	}
 
 	@Test
-	public void test_bounds()
-	{
+	public void test_bounds(){
 	    SearchContext context = new SearchContext();
         context.setSearchFor("A really really long string");
         textArea.setText("Short text");
@@ -988,5 +987,38 @@ public class SearchEngineTest {
         res = findImpl(context);
         assertFalse("After matching whole string we should advance to the end but mark should be to start so we cannot search again", res);
 	}
+	
+	@Test
+	public void test_empty_search_clears_highlights(){
+	    SearchContext context = new SearchContext();
+        context.setSearchFor("gh");
+        context.setMarkAll(true);
+        textArea.setText("Test highlights");
+        boolean res = findImpl(context);
+        assertTrue(res);
+        assertEquals(2, ((RTextAreaHighlighter)textArea.getHighlighter()).getMarkAllHighlightCount());
+        context.setSearchFor("");
+        textArea.setCaretPosition(0);
+        res = findImpl(context);
+        assertEquals(0,((RTextAreaHighlighter)textArea.getHighlighter()).getMarkAllHighlightCount());
+        context.setSearchFor("gh");
+        findImpl(context);
+        assertEquals(2, ((RTextAreaHighlighter)textArea.getHighlighter()).getMarkAllHighlightCount());
+        context.setSearchFor(null);
+        textArea.setCaretPosition(0);
+        res = findImpl(context);
+        assertEquals(0,((RTextAreaHighlighter)textArea.getHighlighter()).getMarkAllHighlightCount());
+	}
 
+	@Test
+	public void test_getReplacementText(){
+	    SearchContext context = new SearchContext();
+        context.setSearchFor("(\\S+)");
+        context.setReplaceWith("\\t\"$1\"\\n");
+        context.setMarkAll(true);
+        context.setRegularExpression(true);
+        textArea.setText("Test regexps");
+        replaceAllImpl(context);
+        assertEquals("\t\"Test\"\n \t\"regexps\"\n", textArea.getText());
+	}
 }

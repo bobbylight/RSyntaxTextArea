@@ -211,7 +211,7 @@ public final class SearchEngine {
 				matches.add(loc);
 			}
 			else { // Replace.
-				matches.add(new RegExReplaceInfo(m.group(0), loc.x, loc.y,
+				matches.add(new RegExReplaceInfo(loc.x, loc.y,
 								getReplacementText(m, replaceStr)));
 			}
 		}
@@ -399,7 +399,7 @@ public final class SearchEngine {
 					return new Point(m.start(), m.end());
 				}
 				// Otherwise, replace
-				return new RegExReplaceInfo(m.group(0),
+				return new RegExReplaceInfo(
 						m.start(), m.end(),
 						getReplacementText(m, replaceStr));
 			}
