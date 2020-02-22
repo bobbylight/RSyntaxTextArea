@@ -41,6 +41,9 @@ public class SearchContext implements Cloneable, Serializable {
 	/** Fired when search direction is toggled. */
 	public static final String PROPERTY_SEARCH_FORWARD = "Search.Forward";
 
+	/** Fired when search wrap is toggled. */
+	public static final String PROPERTY_SEARCH_WRAP = "Search.Wrap";
+
 	/** Fired when "search in selection" is toggled (not currently supported). */
 	public static final String PROPERTY_SELECTION_ONLY = "Search.SelectionOnly";
 
@@ -53,6 +56,7 @@ public class SearchContext implements Cloneable, Serializable {
 	private String searchFor;
 	private String replaceWith;
 	private boolean forward;
+	private boolean wrap;
 	private boolean matchCase;
 	private boolean wholeWord;
 	private boolean regex;
@@ -97,6 +101,7 @@ public class SearchContext implements Cloneable, Serializable {
 		this.matchCase = matchCase;
 		markAll = true;
 		forward = true;
+		wrap = false;
 	}
 
 
@@ -192,6 +197,17 @@ public class SearchContext implements Cloneable, Serializable {
 	 */
 	public boolean getSearchForward() {
 		return forward;
+	}
+
+
+	/**
+	 * Returns whether the search should wrap.
+	 *
+	 * @return Whether we should search wrap
+	 * @see #setSearchWrap(boolean)
+	 */
+	public boolean getSearchWrap() {
+		return wrap;
 	}
 
 
@@ -338,6 +354,22 @@ public class SearchContext implements Cloneable, Serializable {
 		if (forward!=this.forward) {
 			this.forward = forward;
 			firePropertyChange(PROPERTY_SEARCH_FORWARD, !forward, forward);
+		}
+	}
+
+
+	/**
+	 * Sets whether the search should be wrap through the text.
+	 * This method fires a property change event of type
+	 * {@link #PROPERTY_SEARCH_WRAP}.
+	 *
+	 * @param wrap Whether we should search wrap
+	 * @see #getSearchWrap()
+	 */
+	public void setSearchWrap(boolean wrap) {
+		if (wrap!=this.wrap) {
+			this.wrap = wrap;
+			firePropertyChange(PROPERTY_SEARCH_WRAP, !wrap, wrap);
 		}
 	}
 

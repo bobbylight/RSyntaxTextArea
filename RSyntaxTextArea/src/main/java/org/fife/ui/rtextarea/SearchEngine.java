@@ -104,6 +104,7 @@ public final class SearchEngine {
 		}
 
 		SearchResult result = SearchEngine.findImpl(findIn, start, context);
+
 		if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
 			// Without this, if JTextArea isn't in focus, selection
 			// won't appear selected.
@@ -111,6 +112,23 @@ public final class SearchEngine {
 
 			RSyntaxUtilities.selectAndPossiblyCenter(textArea,
 					result.getMatchRange(), true);
+		} else if (context.getSearchWrap() && !result.wasFound()) {
+			if (forward) {
+				start = 0;
+			} else {
+				start = textArea.getDocument().getLength() - 1;
+			}
+
+			result = SearchEngine.findImpl(findIn, start, context);
+			result.setWrapped(true);
+			if (result.wasFound() && !result.getMatchRange().isZeroLength()) {
+				// Without this, if JTextArea isn't in focus, selection
+				// won't appear selected.
+				textArea.getCaret().setSelectionVisible(true);
+				RSyntaxUtilities.selectAndPossiblyCenter(textArea,
+					result.getMatchRange(), true
+				);
+			}
 		}
 
 		result.setMarkedCount(markAllCount);
