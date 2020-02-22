@@ -442,10 +442,15 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Adds a hyperlink listener to this text area.
+	 * Adds a hyperlink listener to this text area.  Assuming hyperlinks are
+	 * enabled, this listener will receive events when the mouse enters,
+	 * leaves, and clicks on hyperlinks when the scanning mask modifier
+	 * button (e.g. the control key) is pressed.
 	 *
 	 * @param l The listener to add.
 	 * @see #removeHyperlinkListener(HyperlinkListener)
+	 * @see #setHyperlinksEnabled(boolean)
+	 * @see #setLinkScanningMask(int)
 	 */
 	public void addHyperlinkListener(HyperlinkListener l) {
 		listenerList.add(HyperlinkListener.class, l);
@@ -697,6 +702,43 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
+	private HyperlinkEvent createHyperlinkEvent(HyperlinkEvent.EventType type) {
+
+		// If the mouse is leaving a hyperlink, or ctrl is released,
+		// short-circuit
+		if (type == HyperlinkEvent.EventType.EXITED) {
+			return new HyperlinkEvent(this, type, null);
+		}
+
+		HyperlinkEvent he = null;
+
+		if (linkGeneratorResult!=null) {
+			he = linkGeneratorResult.execute();
+			linkGeneratorResult = null;
+		}
+		else {
+			Token t = modelToToken(hoveredOverLinkOffset);
+			if (t != null) {
+				URL url = null;
+				String desc = null;
+				try {
+					String temp = t.getLexeme();
+					// URI's need "http://" prefix for web URL's to work.
+					if (temp.startsWith("www.")) {
+						temp = "http://" + temp;
+					}
+					url = new URL(temp);
+				} catch (MalformedURLException mue) {
+					desc = mue.getMessage();
+				}
+				he = new HyperlinkEvent(this, type, url, desc);
+			}
+		}
+
+		return he;
+	}
+
+
 	/**
 	 * Returns the caret event/mouse listener for <code>RTextArea</code>s.
 	 *
@@ -867,15 +909,27 @@ private boolean fractionalFontMetricsEnabled;
 	 * Notifies all listeners that have registered interest for notification
 	 * on this event type.  The listener list is processed last to first.
 	 *
-	 * @param e The event to fire.
+	 * @param type The type of event to fire.
 	 */
-	private void fireHyperlinkUpdate(HyperlinkEvent e) {
+	private void fireHyperlinkUpdate(HyperlinkEvent.EventType type) {
+
+		HyperlinkEvent e = null;
+
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
+
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
+
 			if (listeners[i]==HyperlinkListener.class) {
+
+				if (e == null) {
+					e = createHyperlinkEvent(type);
+					if (e == null) {
+						return; // No linkable text under the caret
+					}
+				}
 				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
 			}
 		}
@@ -1255,6 +1309,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return Whether hyperlinks are enabled for this text area.
 	 * @see #setHyperlinksEnabled(boolean)
+	 * @see #addHyperlinkListener(HyperlinkListener)
 	 */
 	public boolean getHyperlinksEnabled() {
 		return hyperlinksEnabled;
@@ -2144,6 +2199,8 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param l The listener to remove.
 	 * @see #addHyperlinkListener(HyperlinkListener)
+	 * @see #setHyperlinksEnabled(boolean)
+	 * @see #setLinkScanningMask(int)
 	 */
 	public void removeHyperlinkListener(HyperlinkListener l) {
 		listenerList.remove(HyperlinkListener.class, l);
@@ -2650,6 +2707,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @param enabled Whether hyperlinks are enabled.
 	 * @see #getHyperlinksEnabled()
 	 * @see #setLinkScanningMask(int)
+	 * @see #addHyperlinkListener(HyperlinkListener)
 	 */
 	public void setHyperlinksEnabled(boolean enabled) {
 		if (this.hyperlinksEnabled!=enabled) {
@@ -3147,12 +3205,16 @@ private boolean fractionalFontMetricsEnabled;
 	 * the hyperlink modifier.
 	 */
 	private void stopScanningForLinks() {
+
 		if (isScanningForLinks) {
-			Cursor c = getCursor();
+
 			isScanningForLinks = false;
 			linkGeneratorResult = null;
 			hoveredOverLinkOffset = -1;
+
+			Cursor c = getCursor();
 			if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
+				fireHyperlinkUpdate(HyperlinkEvent.EventType.EXITED);
 				setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 				repaint(); // TODO: Repaint just the affected line.
 			}
@@ -3338,33 +3400,6 @@ private boolean fractionalFontMetricsEnabled;
 			insets = new Insets(0, 0, 0, 0);
 		}
 
-		private HyperlinkEvent createHyperlinkEvent() {
-			HyperlinkEvent he;
-			if (linkGeneratorResult!=null) {
-				he = linkGeneratorResult.execute();
-				linkGeneratorResult = null;
-			}
-			else {
-				Token t = modelToToken(hoveredOverLinkOffset);
-				URL url = null;
-				String desc = null;
-				try {
-					String temp = t.getLexeme();
-					// URI's need "http://" prefix for web URL's to work.
-					if (temp.startsWith("www.")) {
-						temp = "http://" + temp;
-					}
-					url = new URL(temp);
-				} catch (MalformedURLException mue) {
-					desc = mue.getMessage();
-				}
-				he = new HyperlinkEvent(RSyntaxTextArea.this,
-						HyperlinkEvent.EventType.ACTIVATED,
-						url, desc);
-			}
-			return he;
-		}
-
 		private boolean equal(LinkGeneratorResult e1,
 				LinkGeneratorResult e2) {
 			return e1.getSourceOffset()==e2.getSourceOffset();
@@ -3374,10 +3409,7 @@ private boolean fractionalFontMetricsEnabled;
 		public void mouseClicked(MouseEvent e) {
 			if (getHyperlinksEnabled() && isScanningForLinks &&
 					hoveredOverLinkOffset>-1) {
-				HyperlinkEvent he = createHyperlinkEvent();
-				if (he!=null) {
-					fireHyperlinkUpdate(he);
-				}
+				fireHyperlinkUpdate(HyperlinkEvent.EventType.ACTIVATED);
 				stopScanningForLinks();
 			}
 		}
@@ -3414,7 +3446,7 @@ private boolean fractionalFontMetricsEnabled;
 					// Copy token, viewToModel() unfortunately modifies Token
 					t = new TokenImpl(t);
 				}
-				Cursor c2 = null;
+				Cursor c2;
 				if (t!=null && t.isHyperlink()) {
 					if (hoveredOverLinkOffset==-1 ||
 							hoveredOverLinkOffset!=t.getOffset()) {
@@ -3450,12 +3482,20 @@ private boolean fractionalFontMetricsEnabled;
 				else {
 					c2 = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
 					hoveredOverLinkOffset = -1;
-					linkGeneratorResult = null;
+					if (linkGeneratorResult != null) {
+						linkGeneratorResult = null;
+					}
 				}
 				if (getCursor()!=c2) {
+
 					setCursor(c2);
 					// TODO: Repaint just the affected line(s).
 					repaint(); // Link either left or went into.
+
+					// Here we know for sure if they are changing to hovering over a link
+					// or leaving one
+					fireHyperlinkUpdate(c2 == Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) ?
+						HyperlinkEvent.EventType.ENTERED : HyperlinkEvent.EventType.EXITED);
 				}
 			}
 			else {
