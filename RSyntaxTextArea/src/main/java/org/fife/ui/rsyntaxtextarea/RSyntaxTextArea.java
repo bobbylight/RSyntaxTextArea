@@ -1,9 +1,4 @@
 /*
- * 01/27/2004
- *
- * RSyntaxTextArea.java - An extension of RTextArea that adds
- * the ability to syntax highlight certain programming languages.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
@@ -140,7 +135,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 3.0.0
+ * @version 3.1.0
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
@@ -1344,7 +1339,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	public int getLineHeight() {
-		//System.err.println("... getLineHeight() returning " + lineHeight);
 		return lineHeight;
 	}
 
@@ -2165,9 +2159,6 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void redoLastAction() {
 		super.redoLastAction();
@@ -3222,9 +3213,6 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void undoLastAction() {
 		super.undoLastAction();
@@ -3507,6 +3495,5 @@ private boolean fractionalFontMetricsEnabled;
 		}
 
 	}
-
 
 }
