@@ -15,6 +15,53 @@ import javax.swing.text.TabExpander;
 public class TokenUtilsTest {
 
 	@Test
+	public void testIsBlankOrAllWhiteSpace_null() {
+		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(null));
+	}
+
+	@Test
+	public void testIsBlankOrAllWhiteSpace_nullToken() {
+		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(new TokenImpl()));
+	}
+
+	@Test
+	public void testIsBlankOrAllWhiteSpace_internalNonPaintableTokenType() {
+		char[] chars = { 'a', 'b', 'c' };
+		Token t = new TokenImpl(chars, 0, 2, 0, -7, 0);
+		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+	}
+
+	@Test
+	public void testIsBlankOrAllWhiteSpace_singleWhiteSpaceToken() {
+		char[] chars = { ' ' };
+		Token t = new TokenImpl(chars, 0, 0, 0,
+				TokenTypes.WHITESPACE, 0);
+		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+	}
+
+	@Test
+	public void testIsBlankOrAllWhiteSpace_singleCommentToken() {
+		char[] chars = "// This is a comment".toCharArray();
+		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.COMMENT_EOL, 0);
+		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+	}
+
+	@Test
+	public void testIsBlankOrAllWhiteSpace_spacesFollowedByNonSpaceNonComment() {
+
+		char[] chars = "    ".toCharArray();
+		TokenImpl t = new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.WHITESPACE, 0);
+
+		chars = "if".toCharArray();
+		t.setNextToken(new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.RESERVED_WORD, 0));
+
+		Assert.assertFalse(TokenUtils.isBlankOrAllWhiteSpace(t));
+	}
+
+	@Test
 	public void getTokenSubList_happyPath() {
 
 		TabExpander e = (x, tabOffset) -> x + 5;
@@ -45,6 +92,42 @@ public class TokenUtilsTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.isRightCurly());
 		Assert.assertEquals(TokenTypes.NULL, token.getNextToken().getType());
+	}
+
+	@Test
+	public void testGetWhiteSpaceTokenLength_allSpaces() {
+
+		char[] chars = "      ".toCharArray();
+		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.WHITESPACE, 0);
+		Assert.assertEquals(6, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
+	}
+
+	@Test
+	public void testGetWhiteSpaceTokenLength_tab_toNextTabStop() {
+
+		char[] chars = "  \t".toCharArray();
+		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.WHITESPACE, 0);
+		Assert.assertEquals(4, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
+	}
+
+	@Test
+	public void testGetWhiteSpaceTokenLength_tabOnly_toNextTabStop() {
+
+		char[] chars = "\t".toCharArray();
+		Token t = new TokenImpl(chars, 0, chars.length - 1, 2,
+			TokenTypes.WHITESPACE, 0);
+		Assert.assertEquals(2, TokenUtils.getWhiteSpaceTokenLength(t, 4, 2));
+	}
+
+	@Test
+	public void testGetWhiteSpaceTokenLength_tab_onATabStop() {
+
+		char[] chars = "    \t".toCharArray();
+		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
+			TokenTypes.WHITESPACE, 0);
+		Assert.assertEquals(8, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
 	}
 
 	@Test

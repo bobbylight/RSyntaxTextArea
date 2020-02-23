@@ -146,6 +146,56 @@ public final class TokenUtils {
 
 
 	/**
+	 * Returns the length, in characters, of a whitespace token, taking tabs
+	 * into account.
+	 *
+	 * @param t The token.  This should be of type {@link TokenTypes#WHITESPACE}.
+	 * @param tabSize The tab size in the editor.
+	 * @param curOffs The offset of the token in the current line.
+	 * @return The length of the token, in characters.
+	 */
+	public static int getWhiteSpaceTokenLength(Token t, int tabSize, int curOffs) {
+
+		int length = 0;
+
+		for (int i = 0; i < t.length(); i++) {
+			char ch = t.charAt(i);
+			if (ch == '\t') {
+				int newCurOffs = (curOffs + tabSize) / tabSize * tabSize;
+				length += newCurOffs - curOffs;
+				curOffs = newCurOffs;
+			}
+			else {
+				length++;
+				curOffs++;
+			}
+		}
+
+		return length;
+	}
+
+
+	/**
+	 * Returns whether a token list is {@code null}, empty, or all
+	 * whitespace.
+	 *
+	 * @param t The token.
+	 * @return Whether the token list starting with that token is {@code null},
+	 *         empty, or all whitespace.
+	 */
+	public static boolean isBlankOrAllWhiteSpace(Token t) {
+
+		while (t != null && t.isPaintable()) {
+			if (!t.isCommentOrWhitespace()) {
+				return false;
+			}
+			t = t.getNextToken();
+		}
+		return true;
+	}
+
+
+	/**
 	 * Generates HTML that renders a token with the style used in an RSTA instance.
 	 * Note this HTML is not concise.  It is a straightforward implementation to be
 	 * used to generate markup used in copy/paste and dnd scenarios.
