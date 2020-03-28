@@ -1,6 +1,6 @@
-<!-- DTD for RSyntaxTextArea Theme XML. See /themes folder for examples. -->
+<!-- DTD for RSyntaxTextArea Theme XML. See org.fife.ui.rsyntaxtextarea.themes package for examples. -->
 <!ELEMENT RSyntaxTheme (baseFont?, background, caret, selection,
-      currentLineHighlight, marginLine, markAllHighlight, markOccurrencesHighlight,
+      currentLineHighlight, tabLine?, marginLine, markAllHighlight, markOccurrencesHighlight,
       matchedBracket, hyperlinks, secondaryLanguages, gutterBackground?, gutterBorder, lineNumbers,
       foldIndicator, iconRowHeader?, tokenStyles)>
 <!ELEMENT background EMPTY>
@@ -8,6 +8,7 @@
 <!ELEMENT caret EMPTY>
 <!ELEMENT selection EMPTY>
 <!ELEMENT currentLineHighlight EMPTY>
+<!ELEMENT tabLine EMPTY>
 <!ELEMENT marginLine EMPTY>
 <!ELEMENT markAllHighlight EMPTY>
 <!ELEMENT markOccurrencesHighlight EMPTY>
@@ -40,6 +41,8 @@
 <!ATTLIST currentLineHighlight
       color     CDATA #REQUIRED
       fade      (true|false) "false">
+<!ATTLIST tabLine
+      color     CDATA #REQUIRED>
 <!ATTLIST marginLine
       fg         CDATA #REQUIRED>
 <!ATTLIST markAllHighlight

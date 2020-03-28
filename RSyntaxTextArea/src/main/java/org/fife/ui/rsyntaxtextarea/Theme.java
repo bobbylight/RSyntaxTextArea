@@ -76,12 +76,13 @@ public class Theme {
 	public Font baseFont;
 	public Color bgColor;
 	public Color caretColor;
-	public boolean useSelctionFG;
+	public boolean useSelectionFG;
 	public Color selectionFG;
 	public Color selectionBG;
 	public boolean selectionRoundedEdges;
 	public Color currentLineHighlight;
 	public boolean fadeCurrentLineHighlight;
+	public Color tabLineColor;
 	public Color marginLineColor;
 	public Color markAllHighlightColor;
 	public Color markOccurrencesColor;
@@ -133,12 +134,13 @@ public class Theme {
 		baseFont = textArea.getFont();
 		bgColor = textArea.getBackground();
 		caretColor = textArea.getCaretColor();
-		useSelctionFG = textArea.getUseSelectedTextColor();
+		useSelectionFG = textArea.getUseSelectedTextColor();
 		selectionFG = textArea.getSelectedTextColor();
 		selectionBG = textArea.getSelectionColor();
 		selectionRoundedEdges = textArea.getRoundedSelectionEdges();
 		currentLineHighlight = textArea.getCurrentLineHighlightColor();
 		fadeCurrentLineHighlight = textArea.getFadeCurrentLineHighlight();
+		tabLineColor = textArea.getTabLineColor();
 		marginLineColor = textArea.getMarginLineColor();
 		markAllHighlightColor = textArea.getMarkAllHighlightColor();
 		markOccurrencesColor = textArea.getMarkOccurrencesColor();
@@ -184,12 +186,13 @@ public class Theme {
 		textArea.setFont(baseFont);
 		textArea.setBackground(bgColor);
 		textArea.setCaretColor(caretColor);
-		textArea.setUseSelectedTextColor(useSelctionFG);
+		textArea.setUseSelectedTextColor(useSelectionFG);
 		textArea.setSelectedTextColor(selectionFG);
 		textArea.setSelectionColor(selectionBG);
 		textArea.setRoundedSelectionEdges(selectionRoundedEdges);
 		textArea.setCurrentLineHighlightColor(currentLineHighlight);
 		textArea.setFadeCurrentLineHighlight(fadeCurrentLineHighlight);
+		textArea.setTabLineColor(tabLineColor);
 		textArea.setMarginLineColor(marginLineColor);
 		textArea.setMarkAllHighlightColor(markAllHighlightColor);
 		textArea.setMarkOccurrencesColor(markOccurrencesColor);
@@ -394,7 +397,7 @@ public class Theme {
 			root.appendChild(elem);
 
 			elem = doc.createElement("selection");
-			elem.setAttribute("useFG", Boolean.toString(useSelctionFG));
+			elem.setAttribute("useFG", Boolean.toString(useSelectionFG));
 			elem.setAttribute("fg", colorToString(selectionFG));
 			elem.setAttribute("bg", colorToString(selectionBG));
 			elem.setAttribute("roundedEdges", Boolean.toString(selectionRoundedEdges));
@@ -403,6 +406,10 @@ public class Theme {
 			elem = doc.createElement("currentLineHighlight");
 			elem.setAttribute("color", colorToString(currentLineHighlight));
 			elem.setAttribute("fade", Boolean.toString(fadeCurrentLineHighlight));
+			root.appendChild(elem);
+
+			elem = doc.createElement("tabLine");
+			elem.setAttribute("color", colorToString(tabLineColor));
 			root.appendChild(elem);
 
 			elem = doc.createElement("marginLine");
@@ -686,6 +693,11 @@ public class Theme {
 				theme.fadeCurrentLineHighlight = fade;
 			}
 
+			else if ("tabLine".equals(qName)) {
+				String color = attrs.getValue("color");
+				theme.tabLineColor = stringToColor(color);
+			}
+
 			else if ("foldIndicator".equals(qName)) {
 				String color = attrs.getValue("fg");
 				theme.foldIndicatorFG = stringToColor(color);
@@ -769,7 +781,7 @@ public class Theme {
 
 			else if ("selection".equals(qName)) {
 				String useStr = attrs.getValue("useFG");
-				theme.useSelctionFG = Boolean.parseBoolean(useStr);
+				theme.useSelectionFG = Boolean.parseBoolean(useStr);
 				String color = attrs.getValue("fg");
 				theme.selectionFG = stringToColor(color,
 											getDefaultSelectionFG());

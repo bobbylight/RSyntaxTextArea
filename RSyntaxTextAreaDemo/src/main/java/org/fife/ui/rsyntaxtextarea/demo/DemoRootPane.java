@@ -145,6 +145,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addThemeItem("Default", "default.xml", bg, menu);
 		addThemeItem("Default (System Selection)", "default-alt.xml", bg, menu);
 		addThemeItem("Dark", "dark.xml", bg, menu);
+		addThemeItem("Druid", "druid.xml", bg, menu);
 		addThemeItem("Monokai", "monokai.xml", bg, menu);
 		addThemeItem("Eclipse", "eclipse.xml", bg, menu);
 		addThemeItem("IDEA", "idea.xml", bg, menu);
