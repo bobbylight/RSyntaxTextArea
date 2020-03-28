@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.spotbugs' version '4.0.1'
+    id 'com.github.spotbugs' version '4.0.4'
 }
 
 group 'com.fifesoft'
@@ -24,7 +24,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '6.2.2'
+        gradleVersion = '6.3'
     }
 }
 

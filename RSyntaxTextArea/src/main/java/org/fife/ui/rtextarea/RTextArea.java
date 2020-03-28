@@ -8,10 +8,7 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.Color;
-import java.awt.ComponentOrientation;
-import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -470,7 +467,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	private static void createPopupMenuActions() {
 
 		// Create actions for right-click popup menu.
-		int mod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		int mod = RTextArea.getDefaultModifier();
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 		cutAction = new RTextAreaEditorKit.CutAction();
@@ -716,6 +713,27 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public static Color getDefaultMarkAllHighlightColor() {
 		return DEFAULT_MARK_ALL_COLOR;
+	}
+
+
+	/**
+	 * Returns the default modifier key for a system.  For example, on Windows
+	 * this would be the CTRL key (<code>InputEvent.CTRL_MASK</code>).
+	 *
+	 * @return The default modifier key.
+	 */
+	public static int getDefaultModifier() {
+
+		// Allow for headless environments, e.g. unit tests
+		int modifier = RTextAreaBase.isOSX() ? Event.META_MASK : Event.CTRL_MASK;
+
+		try {
+			modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		} catch (HeadlessException e) {
+			// Do nothing; take default value
+		}
+
+		return modifier;
 	}
 
 

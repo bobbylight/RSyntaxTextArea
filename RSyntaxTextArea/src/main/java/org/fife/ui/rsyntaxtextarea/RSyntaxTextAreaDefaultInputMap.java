@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.fife.ui.rtextarea.RTADefaultInputMap;
+import org.fife.ui.rtextarea.RTextArea;
 
 
 /**
@@ -36,7 +37,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 	 */
 	public RSyntaxTextAreaDefaultInputMap() {
 
-		int defaultMod = getDefaultModifier();
+		int defaultMod = RTextArea.getDefaultModifier();
 		int shift = InputEvent.SHIFT_DOWN_MASK;
 		int defaultShift = defaultMod|shift;
 
@@ -50,7 +51,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 			// It triggers both KEY_PRESSED ctrl+'/' and KEY_TYPED '/' events when the
 			// user presses ctrl+'/', but Windows and OS X do not.  If we try to "move"
 			// the KEY_TYPED event for '/' to KEY_PRESSED, it'll work for Linux boxes
-			// with QWERTY keyboard layouts, but non-QUERTY users won't be able to type
+			// with QWERTY keyboard layouts, but non-QWERTY users won't be able to type
 			// a '/' character at all then (!).  Rather than try to hack together a
 			// solution by trying to detect the IM locale and do different things for
 			// different OSes & keyboard layouts, we do the simplest thing and

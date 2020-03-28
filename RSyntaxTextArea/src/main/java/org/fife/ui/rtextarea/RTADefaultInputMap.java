@@ -8,7 +8,6 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -50,7 +49,7 @@ public class RTADefaultInputMap extends InputMap {
 
 		super();
 
-		int defaultModifier = getDefaultModifier();
+		int defaultModifier = RTextArea.getDefaultModifier();
 		//int ctrl = InputEvent.CTRL_DOWN_MASK;
 		int alt = InputEvent.ALT_DOWN_MASK;
 		int shift = InputEvent.SHIFT_DOWN_MASK;
@@ -146,18 +145,5 @@ public class RTADefaultInputMap extends InputMap {
 		*/
 
 	}
-
-
-	/**
-	 * Returns the default modifier key for a system.  For example, on Windows
-	 * this would be the CTRL key (<code>InputEvent.CTRL_MASK</code>).
-	 *
-	 * @return The default modifier key.
-	 */
-	protected static int getDefaultModifier() {
-		return Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-	}
-
-
 
 }
