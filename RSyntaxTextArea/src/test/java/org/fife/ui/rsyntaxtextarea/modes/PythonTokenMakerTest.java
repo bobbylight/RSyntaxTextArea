@@ -46,6 +46,15 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testBooleansAndNone() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			"True",
+			"False",
+			"None");
+	}
+
+
+	@Test
 	public void testFloatsAndImaginaries() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"34.",

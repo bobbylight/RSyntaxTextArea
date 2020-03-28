@@ -15,6 +15,7 @@
    <caret color="ff0000"/>
    <selection fg="ff0000" useFG="false" bg="ff0000" roundedEdges="true"/>
    <currentLineHighlight color="ff0000" fade="true"/>
+   <tabLine color="ff0000"/>
    <marginLine fg="ff0000"/>
    <markAllHighlight color="ff0000"/>
    <markOccurrencesHighlight color="ff0000" border="true"/>

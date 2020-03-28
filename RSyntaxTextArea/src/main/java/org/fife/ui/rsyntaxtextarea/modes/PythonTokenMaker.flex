@@ -340,6 +340,10 @@ LineComment		= ("#".*)
 	"xrange" |
 	"zip"					{ addToken(Token.FUNCTION); }
 
+    "True" |
+    "False" |
+    "None"                          { addToken(Token.LITERAL_BOOLEAN); }
+
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
 	{identifier}					{ addToken(Token.IDENTIFIER); }

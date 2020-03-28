@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -44,6 +45,7 @@ public class ThemeTest {
 		Assert.assertNotEquals(textArea1.getRoundedSelectionEdges(), textArea2.getRoundedSelectionEdges());
 		Assert.assertNotEquals(textArea1.getCurrentLineHighlightColor(), textArea2.getCurrentLineHighlightColor());
 		Assert.assertNotEquals(textArea1.getFadeCurrentLineHighlight(), textArea2.getFadeCurrentLineHighlight());
+		Assert.assertNotEquals(textArea1.getTabLineColor(), textArea2.getTabLineColor());
 		Assert.assertNotEquals(textArea1.getMarginLineColor(), textArea2.getMarginLineColor());
 		Assert.assertNotEquals(textArea1.getMarkAllHighlightColor(), textArea2.getMarkAllHighlightColor());
 		Assert.assertNotEquals(textArea1.getMarkOccurrencesColor(), textArea2.getMarkOccurrencesColor());
@@ -78,20 +80,21 @@ public class ThemeTest {
 
 		Assert.assertEquals(Color.red, textArea.getBackground());
 		Assert.assertEquals(Color.red, textArea.getCaretColor());
-		Assert.assertEquals(false,     textArea.getUseSelectedTextColor());
+		Assert.assertFalse(textArea.getUseSelectedTextColor());
 		Assert.assertEquals(Color.red, textArea.getSelectedTextColor());
 		Assert.assertEquals(Color.red, textArea.getSelectionColor());
-		Assert.assertEquals(true,      textArea.getRoundedSelectionEdges());
+		Assert.assertTrue(textArea.getRoundedSelectionEdges());
 		Assert.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
-		Assert.assertEquals(true,      textArea.getFadeCurrentLineHighlight());
+		Assert.assertTrue(textArea.getFadeCurrentLineHighlight());
+		Assert.assertEquals(Color.red, textArea.getTabLineColor());
 		Assert.assertEquals(Color.red, textArea.getMarginLineColor());
 		Assert.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
 		Assert.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
-		Assert.assertEquals(true,      textArea.getPaintMarkOccurrencesBorder());
+		Assert.assertTrue(textArea.getPaintMarkOccurrencesBorder());
 		Assert.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
 		Assert.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
-		Assert.assertEquals(true,      textArea.getPaintMatchedBracketPair());
-		Assert.assertEquals(true,      textArea.getAnimateBracketMatching());
+		Assert.assertTrue(textArea.getPaintMatchedBracketPair());
+		Assert.assertTrue(textArea.getAnimateBracketMatching());
 		Assert.assertEquals(Color.red, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
 			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
@@ -101,7 +104,7 @@ public class ThemeTest {
 		Assert.assertEquals(Color.red, gutter.getBackground());
 		Assert.assertEquals(Color.red, gutter.getBorderColor());
 		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
-		Assert.assertEquals(true,      gutter.getIconRowHeaderInheritsGutterBackground());
+		Assert.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
 		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
 		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
@@ -121,20 +124,21 @@ public class ThemeTest {
 
 		Assert.assertEquals(Color.red, textArea.getBackground());
 		Assert.assertEquals(Color.red, textArea.getCaretColor());
-		Assert.assertEquals(false,     textArea.getUseSelectedTextColor());
+		Assert.assertFalse(textArea.getUseSelectedTextColor());
 		Assert.assertEquals(Color.red, textArea.getSelectedTextColor());
 		Assert.assertEquals(Color.red, textArea.getSelectionColor());
-		Assert.assertEquals(true,      textArea.getRoundedSelectionEdges());
+		Assert.assertTrue(textArea.getRoundedSelectionEdges());
 		Assert.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
-		Assert.assertEquals(true,      textArea.getFadeCurrentLineHighlight());
+		Assert.assertTrue(textArea.getFadeCurrentLineHighlight());
+		Assert.assertEquals(Color.red, textArea.getTabLineColor());
 		Assert.assertEquals(Color.red, textArea.getMarginLineColor());
 		Assert.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
 		Assert.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
-		Assert.assertEquals(true,      textArea.getPaintMarkOccurrencesBorder());
+		Assert.assertTrue(textArea.getPaintMarkOccurrencesBorder());
 		Assert.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
 		Assert.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
-		Assert.assertEquals(true,      textArea.getPaintMatchedBracketPair());
-		Assert.assertEquals(true,      textArea.getAnimateBracketMatching());
+		Assert.assertTrue(textArea.getPaintMatchedBracketPair());
+		Assert.assertTrue(textArea.getAnimateBracketMatching());
 		Assert.assertEquals(Color.red, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
 			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
@@ -144,7 +148,7 @@ public class ThemeTest {
 		Assert.assertEquals(Color.red, gutter.getBackground());
 		Assert.assertEquals(Color.red, gutter.getBorderColor());
 		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
-		Assert.assertEquals(true,      gutter.getIconRowHeaderInheritsGutterBackground());
+		Assert.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
 		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
 		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
@@ -173,6 +177,7 @@ public class ThemeTest {
 		Assert.assertEquals(textArea1.getRoundedSelectionEdges(), textArea2.getRoundedSelectionEdges());
 		Assert.assertEquals(textArea1.getCurrentLineHighlightColor(), textArea2.getCurrentLineHighlightColor());
 		Assert.assertEquals(textArea1.getFadeCurrentLineHighlight(), textArea2.getFadeCurrentLineHighlight());
+		Assert.assertEquals(textArea1.getTabLineColor(), textArea2.getTabLineColor());
 		Assert.assertEquals(textArea1.getMarginLineColor(), textArea2.getMarginLineColor());
 		Assert.assertEquals(textArea1.getMarkAllHighlightColor(), textArea2.getMarkAllHighlightColor());
 		Assert.assertEquals(textArea1.getMarkOccurrencesColor(), textArea2.getMarkOccurrencesColor());
@@ -246,6 +251,7 @@ public class ThemeTest {
 		textArea.setRoundedSelectionEdges(true);
 		textArea.setCurrentLineHighlightColor(Color.orange);
 		textArea.setFadeCurrentLineHighlight(true);
+		textArea.setTabLineColor(Color.orange);
 		textArea.setMarginLineColor(Color.orange);
 		textArea.setMarkAllHighlightColor(Color.pink); // orange is the default (!)
 		textArea.setMarkOccurrencesColor(Color.orange);
@@ -368,10 +374,10 @@ public class ThemeTest {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		theme.save(baos);
-		String actual = new String(baos.toByteArray(), "UTF-8");
+		String actual = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 		baos.close();
 
-		ByteArrayInputStream bin = new ByteArrayInputStream(actual.getBytes("UTF-8"));
+		ByteArrayInputStream bin = new ByteArrayInputStream(actual.getBytes(StandardCharsets.UTF_8));
 		Theme theme2 = Theme.load(bin);
 		bin.close();
 
