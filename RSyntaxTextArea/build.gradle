@@ -51,42 +51,6 @@ jar {
 	manifest { from sharedManifest }
 }
 
-// We use "distributions" to create the zip files uploaded to SourceForge
-distributions {
-	main {
-		distributionBaseName = 'rsyntaxtextarea'
-		contents {
-			from { [ 'build/libs', 'distfiles' ] }
-			rename 'RSyntaxTextArea-.*\\.jar', 'rsyntaxtextarea.jar'
-		}
-	}
-	src {
-        distributionBaseName = 'rsyntaxtextarea'
-	}
-}
-distZip.classifier = null
-distZip.dependsOn jar
-srcDistZip.classifier = 'src'
-srcDistZip {
-	from projectDir
-	include 'src/**/*'
-	include 'build.gradle'
-	include '.classpath'
-	include '.project'
-	include 'gradle.properties'
-	include 'gradle/**/*'
-	include 'gradlew*'
-	include 'README.md'
-	include '.settings/**'
-}
-
-task buildSourceForgeZips {
-    doFirst {
-        println 'Building zip files for SourceForge'
-    }
-}
-buildSourceForgeZips.dependsOn clean, jar, distZip, srcDistZip
-
 publishing {
     repositories {
         maven {
