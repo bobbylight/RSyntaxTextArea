@@ -3,12 +3,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:5.0.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:5.0.1'
     }
 }
 
 plugins {
-    id 'com.github.spotbugs' version '4.0.4'
+    id 'com.github.spotbugs' version '4.2.3'
 }
 
 group 'com.fifesoft'
@@ -24,7 +24,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '6.3'
+        gradleVersion = '6.4.1'
     }
 }
 
@@ -35,7 +35,7 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
 
     checkstyle {
-        toolVersion = '8.30'
+        toolVersion = '8.32'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 
