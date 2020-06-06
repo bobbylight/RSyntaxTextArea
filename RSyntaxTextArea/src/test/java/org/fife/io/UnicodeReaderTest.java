@@ -54,9 +54,9 @@ public class UnicodeReaderTest {
 		File file = createTempFile(StandardCharsets.UTF_8);
 
 		try (UnicodeReader r = new UnicodeReader(file)) {
-
-			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-8", actualEncoding);
+			// Windows returns "UTF-8", Linux returns "UTF8"
+			String actualEncoding = r.getEncoding().replace("-", "");
+			Assert.assertEquals("UTF8", actualEncoding);
 		}
 	}
 
@@ -156,9 +156,9 @@ public class UnicodeReaderTest {
 		String fileFullPath = file.getAbsolutePath();
 
 		try (UnicodeReader r = new UnicodeReader(fileFullPath)) {
-
-			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-8", actualEncoding);
+			// Windows returns "UTF-8", Linux returns "UTF8"
+			String actualEncoding = r.getEncoding().replace("-", "");
+			Assert.assertEquals("UTF8", actualEncoding);
 		}
 	}
 
