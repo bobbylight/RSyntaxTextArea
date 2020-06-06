@@ -50,6 +50,18 @@ java {
 jar {
 	manifest { from sharedManifest }
 }
+test {
+    testLogging {
+        events 'failed' //, 'passed', 'skipped', 'standardOut', 'standardError'
+
+        showExceptions true
+        exceptionFormat 'full'
+        showCauses true
+        showStackTraces true
+
+        showStandardStreams = false
+    }
+}
 
 publishing {
     repositories {
