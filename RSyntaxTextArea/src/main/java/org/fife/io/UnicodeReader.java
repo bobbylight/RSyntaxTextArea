@@ -111,7 +111,6 @@ public class UnicodeReader extends Reader {
 	 *         BOM.
 	 * @throws SecurityException If a security manager exists and its
 	 *         checkRead method denies read access to the file.
-	 * @see org.fife.io.UnicodeReader(File, Charset)
 	 */
 	public UnicodeReader(File file, String defaultEncoding) throws IOException {
 		this(new FileInputStream(file), defaultEncoding);
@@ -132,7 +131,6 @@ public class UnicodeReader extends Reader {
 	 *         BOM.
 	 * @throws SecurityException If a security manager exists and its
 	 *         checkRead method denies read access to the file.
-	 * @see org.fife.io.UnicodeReader(File, String)
 	 */
 	public UnicodeReader(File file, Charset defaultCharset) throws IOException {
 		this(new FileInputStream(file), defaultCharset != null ? defaultCharset.name() : null);
@@ -163,7 +161,6 @@ public class UnicodeReader extends Reader {
 	 *        is used.
 	 * @throws IOException If an error occurs when checking for/reading the
 	 *         BOM.
-	 * @see UnicodeReader(InputStream, Charset)
 	 */
 	public UnicodeReader(InputStream in, String defaultEncoding)
 									throws IOException {
@@ -182,7 +179,6 @@ public class UnicodeReader extends Reader {
 	 *        is used.
 	 * @throws IOException If an error occurs when checking for/reading the
 	 *         BOM.
-	 * @see org.fife.io.UnicodeReader(InputStream, String)
 	 */
 	public UnicodeReader(InputStream in, Charset defaultCharset) throws IOException {
 		init(in, defaultCharset.name());
