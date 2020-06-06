@@ -326,18 +326,60 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	public void testJava_DocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT,
+			"/** Hello world */");
+	}
 
-		String[] docCommentLiterals = {
-			"/** Hello world */",
-		};
 
-		for (String code : docCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-		}
+	@Test
+	public void testJava_DocComments_keywords() {
+		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+			JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT,
 
+			// current block tags
+			"@author",
+			"@deprecated",
+			"@exception",
+			"@param",
+			"@return",
+			"@see",
+			"@serial",
+			"@serialData",
+			"@serialField",
+			"@since",
+			"@throws",
+			"@version",
+
+			// proposed doc tags
+			"@category",
+			"@example",
+			"@tutorial",
+			"@index",
+			"@exclude",
+			"@todo",
+			"@internal",
+			"@obsolete",
+			"@threadsafety",
+
+			// inline tag
+			"{@code }",
+			"{@docRoot }",
+			"{@inheritDoc }",
+			"{@link }",
+			"{@linkplain }",
+			"{@literal }",
+			"{@value }"
+		);
+	}
+
+
+	@Test
+	public void testJava_DocComments_markup() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT,
+			"<code>",
+			"</code>");
 	}
 
 
@@ -345,33 +387,29 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testJava_DocComments_URL() {
 
 		String[] docCommentLiterals = {
-			"/** Hello world http://www.sas.com */",
+			"file://test.txt",
+			"ftp://ftp.google.com",
+			"http://www.google.com",
+			"https://www.google.com",
+			"www.google.com"
 		};
 
-		for (String code : docCommentLiterals) {
+		for (String literal : docCommentLiterals) {
 
-			Segment segment = createSegment(code);
+			Segment segment = createSegment(literal);
 			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-
-			token = token.getNextToken();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT, 0);
 			Assert.assertTrue(token.isHyperlink());
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
-
-			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
-
+			Assert.assertEquals(literal, token.getLexeme());
 		}
 
 	}
 
 
 	@Test
-	public void testEolComments() {
+	public void testJava_EolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
 			"// Hello world");
 	}
@@ -1011,7 +1049,11 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
+			"/* Hello world file://test.txt */",
+			"/* Hello world ftp://ftp.google.com */",
+			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
+			"/* Hello world www.google.com */"
 		};
 
 		for (String code : mlcLiterals) {
@@ -1025,7 +1067,6 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 			Assert.assertTrue(token.isHyperlink());
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());

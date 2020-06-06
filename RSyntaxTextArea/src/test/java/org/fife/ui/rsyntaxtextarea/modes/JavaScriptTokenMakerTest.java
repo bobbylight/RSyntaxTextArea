@@ -749,7 +749,11 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
+			"/* Hello world file://test.txt */",
+			"/* Hello world ftp://ftp.google.com */",
+			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
+			"/* Hello world www.google.com */"
 		};
 
 		for (String code : mlcLiterals) {
@@ -763,7 +767,6 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 			Assert.assertTrue(token.isHyperlink());
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());

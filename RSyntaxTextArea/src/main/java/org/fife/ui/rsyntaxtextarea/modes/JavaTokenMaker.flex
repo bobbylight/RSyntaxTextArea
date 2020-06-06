@@ -756,12 +756,33 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <DOCCOMMENT> {
 
 	[^hwf\@\{\n\<\*]+			{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	{URL}						{
+                                    int temp = zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION);
+                                    start = zzMarkedPos;
+                                }
 	[hwf]						{}
 
-	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"{BlockTag}				{
+                                    int temp = zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD);
+                                    start = zzMarkedPos;
+                                }
 	"@"							{}
-	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{@"{InlineTag}[^\}]*"}"	{
+                                    int temp = zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD);
+                                    start = zzMarkedPos;
+                                }
 	"{"							{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
 	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }

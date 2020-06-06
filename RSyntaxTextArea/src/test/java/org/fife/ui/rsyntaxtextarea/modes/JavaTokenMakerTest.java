@@ -149,10 +149,59 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	public void testDocComments() {
-		String[] docCommentLiterals = {
-			"/** Hello world */",
-		};
-		assertAllTokensOfType(docCommentLiterals, TokenTypes.COMMENT_DOCUMENTATION);
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			"/** Hello world */");
+	}
+
+
+	@Test
+	public void testDocComments_keywords() {
+		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+			TokenTypes.COMMENT_DOCUMENTATION,
+
+				// current block tags
+				"@author",
+				"@deprecated",
+				"@exception",
+				"@param",
+				"@return",
+				"@see",
+				"@serial",
+				"@serialData",
+				"@serialField",
+				"@since",
+				"@throws",
+				"@version",
+
+				// proposed doc tags
+				"@category",
+				"@example",
+				"@tutorial",
+				"@index",
+				"@exclude",
+				"@todo",
+				"@internal",
+				"@obsolete",
+				"@threadsafety",
+
+				// inline tag
+				"{@code }",
+				"{@docRoot }",
+				"{@inheritDoc }",
+				"{@link }",
+				"{@linkplain }",
+				"{@literal }",
+				"{@value }"
+		);
+	}
+
+
+	@Test
+	public void testDocComments_markup() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			TokenTypes.COMMENT_DOCUMENTATION,
+			"<code>",
+			"</code>");
 	}
 
 
@@ -160,26 +209,22 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testDocComments_URL() {
 
 		String[] docCommentLiterals = {
-			"/** Hello world http://www.sas.com */",
+			"file://test.txt",
+			"ftp://ftp.google.com",
+			"http://www.google.com",
+			"https://www.google.com",
+			"www.google.com"
 		};
 
-		for (String code : docCommentLiterals) {
+		for (String literal : docCommentLiterals) {
 
-			Segment segment = createSegment(code);
+			Segment segment = createSegment(literal);
 			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-
-			token = token.getNextToken();
+			Token token = tm.getTokenList(segment, TokenTypes.COMMENT_DOCUMENTATION, 0);
 			Assert.assertTrue(token.isHyperlink());
 			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
-
-			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
-
+			Assert.assertEquals(literal, token.getLexeme());
 		}
 
 	}
@@ -300,106 +345,362 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testIntegerLiterals() {
+
+		String[] ints = {
+			"0",
+			"0l",
+			"0L",
+			"42",
+			"42l",
+			"42L",
+			"123_456",
+			"123_456l",
+			"123456L",
+		};
+
+		assertAllTokensOfType(ints, TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
+	}
+
+
+	@Test
 	public void testClassNames_java_lang() {
 
-		String[] classNames = { "Appendable",
-				"AutoCloseable",
-				"CharSequence",
-				"Cloneable",
-				"Comparable",
-				"Iterable",
-				"Readable",
-				"Runnable",
-				"Thread.UncaughtExceptionHandler",
-				"Boolean",
-				"Byte",
-				"Character",
-				"Character.Subset",
-				"Character.UnicodeBlock",
-				"Class",
-				"ClassLoader",
-				"ClassValue",
-				"Compiler",
-				"Double",
-				"Enum",
-				"Float",
-				"InheritableThreadLocal",
-				"Integer",
-				"Long",
-				"Math",
-				"Number",
-				"Object",
-				"Package",
-				"Process",
-				"ProcessBuilder",
-				"ProcessBuilder.Redirect",
-				"Runtime",
-				"RuntimePermission",
-				"SecurityManager",
-				"Short",
-				"StackTraceElement",
-				"StrictMath",
-				"String",
-				"StringBuffer",
-				"StringBuilder",
-				"System",
-				"Thread",
-				"ThreadGroup",
-				"ThreadLocal",
-				"Throwable",
-				"Void",
-				"Character.UnicodeScript",
-				"ProcessBuilder.Redirect.Type",
-				"Thread.State",
-				"ArithmeticException",
-				"ArrayIndexOutOfBoundsException",
-				"ArrayStoreException",
-				"ClassCastException",
-				"ClassNotFoundException",
-				"CloneNotSupportedException",
-				"EnumConstantNotPresentException",
-				"Exception",
-				"IllegalAccessException",
-				"IllegalArgumentException",
-				"IllegalMonitorStateException",
-				"IllegalStateException",
-				"IllegalThreadStateException",
-				"IndexOutOfBoundsException",
-				"InstantiationException",
-				"InterruptedException",
-				"NegativeArraySizeException",
-				"NoSuchFieldException",
-				"NoSuchMethodException",
-				"NullPointerException",
-				"NumberFormatException",
-				"RuntimeException",
-				"SecurityException",
-				"StringIndexOutOfBoundsException",
-				"TypeNotPresentException",
-				"UnsupportedOperationException",
-				"AbstractMethodError",
-				"AssertionError",
-				"BootstrapMethodError",
-				"ClassCircularityError",
-				"ClassFormatError",
-				"Error",
-				"ExceptionInInitializerError",
-				"IllegalAccessError",
-				"IncompatibleClassChangeError",
-				"InstantiationError",
-				"InternalError",
-				"LinkageError",
-				"NoClassDefFoundError",
-				"NoSuchFieldError",
-				"NoSuchMethodError",
-				"OutOfMemoryError",
-				"StackOverflowError",
-				"ThreadDeath",
-				"UnknownError",
-				"UnsatisfiedLinkError",
-				"UnsupportedClassVersionError",
-				"VerifyError",
-				"VirtualMachineError",
+		String[] classNames = {
+			"Appendable",
+			"AutoCloseable",
+			"CharSequence",
+			"Cloneable",
+			"Comparable",
+			"Iterable",
+			"Readable",
+			"Runnable",
+			"Thread.UncaughtExceptionHandler",
+			"Boolean",
+			"Byte",
+			"Character",
+			"Character.Subset",
+			"Character.UnicodeBlock",
+			"Class",
+			"ClassLoader",
+			"ClassValue",
+			"Compiler",
+			"Double",
+			"Enum",
+			"Float",
+			"InheritableThreadLocal",
+			"Integer",
+			"Long",
+			"Math",
+			"Number",
+			"Object",
+			"Package",
+			"Process",
+			"ProcessBuilder",
+			"ProcessBuilder.Redirect",
+			"Runtime",
+			"RuntimePermission",
+			"SecurityManager",
+			"Short",
+			"StackTraceElement",
+			"StrictMath",
+			"String",
+			"StringBuffer",
+			"StringBuilder",
+			"System",
+			"Thread",
+			"ThreadGroup",
+			"ThreadLocal",
+			"Throwable",
+			"Void",
+			"Character.UnicodeScript",
+			"ProcessBuilder.Redirect.Type",
+			"Thread.State",
+			"ArithmeticException",
+			"ArrayIndexOutOfBoundsException",
+			"ArrayStoreException",
+			"ClassCastException",
+			"ClassNotFoundException",
+			"CloneNotSupportedException",
+			"EnumConstantNotPresentException",
+			"Exception",
+			"IllegalAccessException",
+			"IllegalArgumentException",
+			"IllegalMonitorStateException",
+			"IllegalStateException",
+			"IllegalThreadStateException",
+			"IndexOutOfBoundsException",
+			"InstantiationException",
+			"InterruptedException",
+			"NegativeArraySizeException",
+			"NoSuchFieldException",
+			"NoSuchMethodException",
+			"NullPointerException",
+			"NumberFormatException",
+			"RuntimeException",
+			"SecurityException",
+			"StringIndexOutOfBoundsException",
+			"TypeNotPresentException",
+			"UnsupportedOperationException",
+			"AbstractMethodError",
+			"AssertionError",
+			"BootstrapMethodError",
+			"ClassCircularityError",
+			"ClassFormatError",
+			"Error",
+			"ExceptionInInitializerError",
+			"IllegalAccessError",
+			"IncompatibleClassChangeError",
+			"InstantiationError",
+			"InternalError",
+			"LinkageError",
+			"NoClassDefFoundError",
+			"NoSuchFieldError",
+			"NoSuchMethodError",
+			"OutOfMemoryError",
+			"StackOverflowError",
+			"ThreadDeath",
+			"UnknownError",
+			"UnsatisfiedLinkError",
+			"UnsupportedClassVersionError",
+			"VerifyError",
+			"VirtualMachineError"
+		};
+
+		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+	}
+
+
+	@Test
+	public void testClassNames_java_io() {
+
+		String[] classNames = {
+			"Closeable",
+			"DataInput",
+			"DataOutput",
+			"Externalizable",
+			"FileFilter",
+			"FilenameFilter",
+			"Flushable",
+			"ObjectInput",
+			"ObjectInputValidation",
+			"ObjectOutput",
+			"ObjectStreamConstants",
+			"Serializable",
+
+			"BufferedInputStream",
+			"BufferedOutputStream",
+			"BufferedReader",
+			"BufferedWriter",
+			"ByteArrayInputStream",
+			"ByteArrayOutputStream",
+			"CharArrayReader",
+			"CharArrayWriter",
+			"Console",
+			"DataInputStream",
+			"DataOutputStream",
+			"File",
+			"FileDescriptor",
+			"FileInputStream",
+			"FileOutputStream",
+			"FilePermission",
+			"FileReader",
+			"FileWriter",
+			"FilterInputStream",
+			"FilterOutputStream",
+			"FilterReader",
+			"FilterWriter",
+			"InputStream",
+			"InputStreamReader",
+			"LineNumberInputStream",
+			"LineNumberReader",
+			"ObjectInputStream",
+			"ObjectInputStream.GetField",
+			"ObjectOutputStream",
+			"ObjectOutputStream.PutField",
+			"ObjectStreamClass",
+			"ObjectStreamField",
+			"OutputStream",
+			"OutputStreamWriter",
+			"PipedInputStream",
+			"PipedOutputStream",
+			"PipedReader",
+			"PipedWriter",
+			"PrintStream",
+			"PrintWriter",
+			"PushbackInputStream",
+			"PushbackReader",
+			"RandomAccessFile",
+			"Reader",
+			"SequenceInputStream",
+			"SerializablePermission",
+			"StreamTokenizer",
+			"StringBufferInputStream",
+			"StringReader",
+			"StringWriter",
+			"Writer",
+
+			"CharConversionException",
+			"EOFException",
+			"FileNotFoundException",
+			"InterruptedIOException",
+			"InvalidClassException",
+			"InvalidObjectException",
+			"IOException",
+			"NotActiveException",
+			"NotSerializableException",
+			"ObjectStreamException",
+			"OptionalDataException",
+			"StreamCorruptedException",
+			"SyncFailedException",
+			"UncheckedIOException",
+			"UnsupportedEncodingException",
+			"UTFDataFormatException",
+			"WriteAbortedException",
+
+			"IOError"
+		};
+
+		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+	}
+
+
+	@Test
+	public void testClassNames_java_util() {
+
+		String[] classNames = {
+			"Collection",
+			"Comparator",
+			"Deque",
+			"Enumeration",
+			"EventListener",
+			"Formattable",
+			"Iterator",
+			"List",
+			"ListIterator",
+			"Map",
+			"Map.Entry",
+			"NavigableMap",
+			"NavigableSet",
+			"Observer",
+			"PrimitiveIterator",
+			"PrimitiveIterator.OfDouble",
+			"PrimitiveIterator.OfInt",
+			"PrimitiveIterator.OfLong",
+			"Queue",
+			"RandomAccess",
+			"Set",
+			"SortedMap",
+			"SortedSet",
+			"Spliterator",
+			"Spliterator.OfDouble",
+			"Spliterator.OfInt",
+			"Spliterator.OfLong",
+			"Spliterator.OfPrimitive",
+
+			"AbstractCollection",
+			"AbstractList",
+			"AbstractMap",
+			"AbstractMap.SimpleEntry",
+			"AbstractMap.SimpleImmutableEntry",
+			"AbstractQueue",
+			"AbstractSequentialList",
+			"AbstractSet",
+			"ArrayDeque",
+			"ArrayList",
+			"Arrays",
+			"Base64",
+			"Base64.Decoder",
+			"Base64.Encoder",
+			"BitSet",
+			"Calendar",
+			"Calendar.Builder",
+			"Collections",
+			"Currency",
+			"Date",
+			"Dictionary",
+			"DoubleSummaryStatistics",
+			"EnumMap",
+			"EnumSet",
+			"EventListenerProxy",
+			"EventObject",
+			"FormattableFlags",
+			"Formatter",
+			"GregorianCalendar",
+			"HashMap",
+			"HashSet",
+			"Hashtable",
+			"IdentityHashMap",
+			"IntSummaryStatistics",
+			"LinkedHashMap",
+			"LinkedHashSet",
+			"LinkedList",
+			"ListResourceBundle",
+			"Locale",
+			"Locale.Builder",
+			"Locale.LanguageRange",
+			"LongSummaryStatistics",
+			"Objects",
+			"Observable",
+			"Optional",
+			"OptionalDouble",
+			"OptionalInt",
+			"OptionalLong",
+			"PriorityQueue",
+			"Properties",
+			"PropertyPermission",
+			"PropertyResourceBundle",
+			"Random",
+			"ResourceBundle",
+			"ResourceBundle.Control",
+			"Scanner",
+			"ServiceLoader",
+			"SimpleTimeZone",
+			"Spliterators",
+			"Spliterators.AbstractDoubleSpliterator",
+			"Spliterators.AbstractIntSpliterator",
+			"Spliterators.AbstractLongSpliterator",
+			"Spliterators.AbstractSpliterator",
+			"SpliteratorRandom",
+			"Stack",
+			"StringJoiner",
+			"StringTokenizer",
+			"Timer",
+			"TimerTask",
+			"TimeZone",
+			"TreeMap",
+			"TreeSet",
+			"UUID",
+			"Vector",
+			"WeakHashMap",
+
+			"Formatter.BigDecimalLayoutForm",
+			"Locale.Category",
+			"Locale.FilteringMode",
+
+			"ConcurrentModificationException",
+			"DuplicateFormatFlagsException",
+			"EmptyStackException",
+			"FormatFlagsConversionMismatchException",
+			"FormatterClosedException",
+			"IllegalFormatCodePointException",
+			"IllegalFormatConversionException",
+			"IllegalFormatException",
+			"IllegalFormatFlagsException",
+			"IllegalFormatPrecisionException",
+			"IllegalFormatWidthException",
+			"IllformedLocaleException",
+			"InputMismatchException",
+			"InvalidPropertiesFormatException",
+			"MissingFormatArgumentException",
+			"MissingFormatWidthException",
+			"MissingResourceException",
+			"NoSuchElementException",
+			"TooManyListenersException",
+			"UnknownFormatConversionException",
+			"UnknownFormatFlagsException",
+
+			"ServiceConfigurationError"
 		};
 
 		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
@@ -581,4 +882,15 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 
+	@Test
+	public void testWhiteSpace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"   ",
+			"\t",
+			"\t\t",
+			"\t  \n",
+			"\f"
+		);
+	}
 }

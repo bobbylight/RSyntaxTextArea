@@ -207,7 +207,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a Java documentation comment.
 	 */
-	private static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -(4<<11);
+	static final int INTERNAL_IN_JAVA_DOCCOMMENT		= -(4<<11);
 
 	/**
 	 * Token type specifying we're in Java code.
@@ -1932,12 +1932,32 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 <JAVA_DOCCOMMENT> {
 
 	[^hwf\@\{\n\<\*]+			{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	{URL}						{
+                                    int temp=zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION);
+                                    start = zzMarkedPos;
+                                }
 	[hwf]						{}
 
-	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"{BlockTag}				{
+                                    int temp=zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD);
+                                    start = zzMarkedPos; }
 	"@"							{}
-	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{@"{InlineTag}[^\}]*"}"	{
+                                    int temp=zzStartRead;
+                                    if (start <= zzStartRead - 1) {
+                                        addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    }
+                                    addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD);
+                                    start = zzMarkedPos;
+                                }
 	"{"							{}
 	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JAVA_DOCCOMMENT - jspInState); return firstToken; }
 	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }

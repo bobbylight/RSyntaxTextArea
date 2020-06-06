@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 
 /**
@@ -110,9 +111,31 @@ public class UnicodeReader extends Reader {
 	 *         BOM.
 	 * @throws SecurityException If a security manager exists and its
 	 *         checkRead method denies read access to the file.
+	 * @see org.fife.io.UnicodeReader(File, Charset)
 	 */
 	public UnicodeReader(File file, String defaultEncoding) throws IOException {
 		this(new FileInputStream(file), defaultEncoding);
+	}
+
+
+	/**
+	 * This utility constructor is here because you will usually use a
+	 * <code>UnicodeReader</code> on files.<p>
+	 * Creates a reader using the encoding specified by the BOM in the file;
+	 * if there is no recognized BOM, then a specified default encoding is
+	 * used.
+	 *
+	 * @param file The file from which you want to read.
+	 * @param defaultCharset The encoding to use if no BOM is found.  If
+	 *        this value is <code>null</code>, a system default is used.
+	 * @throws IOException If an error occurs when checking for/reading the
+	 *         BOM.
+	 * @throws SecurityException If a security manager exists and its
+	 *         checkRead method denies read access to the file.
+	 * @see org.fife.io.UnicodeReader(File, String)
+	 */
+	public UnicodeReader(File file, Charset defaultCharset) throws IOException {
+		this(new FileInputStream(file), defaultCharset != null ? defaultCharset.name() : null);
 	}
 
 
@@ -125,7 +148,7 @@ public class UnicodeReader extends Reader {
 	 *         BOM.
 	 */
 	public UnicodeReader(InputStream in) throws IOException {
-		this(in, null);
+		this(in, (String)null);
 	}
 
 
@@ -140,10 +163,29 @@ public class UnicodeReader extends Reader {
 	 *        is used.
 	 * @throws IOException If an error occurs when checking for/reading the
 	 *         BOM.
+	 * @see UnicodeReader(InputStream, Charset)
 	 */
 	public UnicodeReader(InputStream in, String defaultEncoding)
 									throws IOException {
 		init(in, defaultEncoding);
+	}
+
+
+	/**
+	 * Creates a reader using the encoding specified by the BOM in the file;
+	 * if there is no recognized BOM, then <code>defaultEncoding</code> is
+	 * used.
+	 *
+	 * @param in The input stream from which to read.
+	 * @param defaultCharset The encoding to use if no recognized BOM is
+	 *        found.  If this value is <code>null</code>, a system default
+	 *        is used.
+	 * @throws IOException If an error occurs when checking for/reading the
+	 *         BOM.
+	 * @see org.fife.io.UnicodeReader(InputStream, String)
+	 */
+	public UnicodeReader(InputStream in, Charset defaultCharset) throws IOException {
+		init(in, defaultCharset.name());
 	}
 
 
