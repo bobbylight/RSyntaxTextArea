@@ -24425,17 +24425,17 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Internal type denoting a line ending in CSS.
 	 */
-	private static final int INTERNAL_CSS					= -17;
+	static final int INTERNAL_CSS					= -17;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property.
 	 */
-	private static final int INTERNAL_CSS_PROPERTY			= -18;
+	static final int INTERNAL_CSS_PROPERTY			= -18;
 
 	/**
 	 * Internal type denoting a line ending in a CSS property value.
 	 */
-	private static final int INTERNAL_CSS_VALUE				= -19;
+	static final int INTERNAL_CSS_VALUE				= -19;
 
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
@@ -24451,19 +24451,19 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 	 * Internal type denoting line ending in a CSS double-quote string.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_STRING				= -(1<<11);
+	static final int INTERNAL_CSS_STRING				= -(1<<11);
 
 	/**
 	 * Internal type denoting line ending in a CSS single-quote string.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_CHAR				= -(2<<11);
+	static final int INTERNAL_CSS_CHAR				= -(2<<11);
 
 	/**
 	 * Internal type denoting line ending in a CSS multi-line comment.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_MLC				= -(3<<11);
+	static final int INTERNAL_CSS_MLC				= -(3<<11);
 
 	/**
 	 * Token type specifying we're in PHP.  This particular field is public so
@@ -24515,23 +24515,23 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Language state set on HTML tokens.  Must be 0.
 	 */
-	private static final int LANG_INDEX_DEFAULT = 0;
+	static final int LANG_INDEX_DEFAULT = 0;
 
 	/**
 	 * Language state set on JavaScript tokens.
 	 */
-	private static final int LANG_INDEX_JS = 1;
+	static final int LANG_INDEX_JS = 1;
 
 	/**
 	 * Language state set on CSS tokens.
 	 */
-	private static final int LANG_INDEX_CSS = 2;
+	static final int LANG_INDEX_CSS = 2;
 
 
 	/**
 	 * Language state set on PHP.
 	 */
-	private static final int LANG_INDEX_PHP = 3;
+	static final int LANG_INDEX_PHP = 3;
 
 	private Stack<Boolean> varDepths;
 

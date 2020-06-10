@@ -174,7 +174,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Internal type denoting a line ending in a CSS property value.
 	 */
-	private static final int INTERNAL_CSS_VALUE				= -20;
+	static final int INTERNAL_CSS_VALUE				= -20;
 
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
@@ -190,19 +190,19 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Internal type denoting line ending in a CSS double-quote string.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_STRING				= -(1<<11);
+	static final int INTERNAL_CSS_STRING				= -(1<<11);
 
 	/**
 	 * Internal type denoting line ending in a CSS single-quote string.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_CHAR				= -(2<<11);
+	static final int INTERNAL_CSS_CHAR				= -(2<<11);
 
 	/**
 	 * Internal type denoting line ending in a CSS multi-line comment.
 	 * The state to return to is embedded in the actual end token type.
 	 */
-	private static final int INTERNAL_CSS_MLC				= -(3<<11);
+	static final int INTERNAL_CSS_MLC				= -(3<<11);
 
 	/**
 	 * Token type specifying we're in a Java documentation comment.
@@ -243,17 +243,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Language state set on HTML tokens.  Must be 0.
 	 */
-	private static final int LANG_INDEX_DEFAULT = 0;
+	static final int LANG_INDEX_DEFAULT = 0;
 
 	/**
 	 * Language state set on JavaScript tokens.
 	 */
-	private static final int LANG_INDEX_JS = 1;
+	static final int LANG_INDEX_JS = 1;
 
 	/**
 	 * Language state set on CSS tokens.
 	 */
-	private static final int LANG_INDEX_CSS = 2;
+	static final int LANG_INDEX_CSS = 2;
 
 	private Stack<Boolean> varDepths;
 
@@ -1431,6 +1431,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 						}
 	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	"{"					{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
 	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
 	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
 	{Whitespace}		{ addToken(Token.WHITESPACE); }
@@ -1448,7 +1449,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 						}
 	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
-	"!important"		{ addToken(Token.ANNOTATION); }
+	"!important"		{ addToken(Token.PREPROCESSOR); }
 	{CSS_Function}		{ int temp = zzMarkedPos - 2;
 						  addToken(zzStartRead, temp, Token.FUNCTION);
 						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);

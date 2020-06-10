@@ -212,17 +212,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Language state set on HTML tokens.  Must be 0.
 	 */
-	private static final int LANG_INDEX_DEFAULT = 0;
+	static final int LANG_INDEX_DEFAULT = 0;
 
 	/**
 	 * Language state set on JavaScript tokens.
 	 */
-	private static final int LANG_INDEX_JS = 1;
+	static final int LANG_INDEX_JS = 1;
 
 	/**
 	 * Language state set on CSS tokens.
 	 */
-	private static final int LANG_INDEX_CSS = 2;
+	static final int LANG_INDEX_CSS = 2;
 
 	private Stack<Boolean> varDepths;
 
@@ -297,9 +297,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OccurrenceMarker createOccurrenceMarker() {
 		return new HtmlOccurrenceMarker();
@@ -517,6 +514,22 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return new TokenImpl();
 		}
 
+	}
+
+
+	/**
+	 * Overridden to accept letters, digits, underscores, and hyphens.
+	 */
+	@Override
+	public boolean isIdentifierChar(int languageIndex, char ch) {
+	    switch (languageIndex) {
+	        case LANG_INDEX_CSS:
+            case LANG_INDEX_DEFAULT:
+		        return Character.isLetterOrDigit(ch) || ch=='-' || ch=='.' || ch=='_';
+            case LANG_INDEX_JS:
+			default:
+                return super.isIdentifierChar(languageIndex, ch);
+	    }
 	}
 
 
@@ -1285,6 +1298,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 						}
 	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
+	"{"					{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
 	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
 	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
 	{Whitespace}		{ addToken(Token.WHITESPACE); }
@@ -1302,7 +1316,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 						}
 	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
-	"!important"		{ addToken(Token.ANNOTATION); }
+	"!important"		{ addToken(Token.PREPROCESSOR); }
 	{CSS_Function}		{ int temp = zzMarkedPos - 2;
 						  addToken(zzStartRead, temp, Token.FUNCTION);
 						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
