@@ -350,7 +350,7 @@ public class HtmlFoldParser implements FoldParser {
 	 */
 	private static boolean isEndOfLastFold(Stack<String> tagNameStack,
 			Token tagNameToken) {
-		if (tagNameToken!=null && !tagNameStack.isEmpty()) {
+		if (tagNameToken!=null && tagNameToken.getLexeme() != null && !tagNameStack.isEmpty()) {
 			return tagNameToken.getLexeme().equalsIgnoreCase(tagNameStack.peek());
 		}
 		return false;
@@ -364,7 +364,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * @return Whether this tag can be a foldable region.
 	 */
 	private static boolean isFoldableTag(Token tagNameToken) {
-		return tagNameToken!=null &&
+		return tagNameToken!=null && tagNameToken.getLexeme() != null &&
 				FOLDABLE_TAGS.contains(tagNameToken.getLexeme().toLowerCase());
 	}
 
