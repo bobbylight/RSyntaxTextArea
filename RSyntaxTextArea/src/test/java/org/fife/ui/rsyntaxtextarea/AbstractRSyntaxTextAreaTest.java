@@ -5,8 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.rtextarea.AbstractRTextAreaTest;
+import org.fife.ui.rtextarea.RTextArea;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 
 /**
@@ -24,6 +26,18 @@ public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest 
 		"    println(\"Wow\");\n" +
 		"  }\n" +
 		"}";
+
+
+	/**
+	 * Returns a fake action event for test purposes.
+	 *
+	 * @param textArea The source text area.
+	 * @param command The event's command.
+	 * @return The fake action event.
+	 */
+	static ActionEvent createActionEvent(RTextArea textArea, String command) {
+		return new ActionEvent(textArea, 0, command);
+	}
 
 
 	/**

@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
  * @version 1.0
  */
 @RunWith(SwingRunner.class)
-public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
+public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	/**
@@ -34,9 +34,8 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 	 * @param textArea The source text area.
 	 * @return The fake action event.
 	 */
-	private static final ActionEvent createActionEvent(RTextArea textArea) {
-		return new ActionEvent(textArea, 0,
-				RTextAreaEditorKit.rtaDumbCompleteWordAction);
+	private static ActionEvent createActionEvent(RTextArea textArea) {
+		return createActionEvent(textArea, RTextAreaEditorKit.rtaDumbCompleteWordAction);
 	}
 
 
@@ -47,7 +46,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest {
 	 * @param textArea The text area.
 	 * @return The associated action.
 	 */
-	private static final DumbCompleteWordAction getDumbCompleteWordAction(
+	private static DumbCompleteWordAction getDumbCompleteWordAction(
 			RSyntaxTextArea textArea) {
 		ActionMap am = textArea.getActionMap();
 		return (DumbCompleteWordAction)am.get(

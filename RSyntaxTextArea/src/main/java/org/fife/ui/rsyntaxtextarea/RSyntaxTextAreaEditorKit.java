@@ -1487,7 +1487,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * if appropriate.  This method can be called by token makers who
 		 * implement a custom action for inserting newlines.
 		 *
-		 * @param textArea
+		 * @param textArea The text area to examine.
 		 * @param noSelection Whether there is no selection.
 		 */
 		protected void handleInsertBreak(RSyntaxTextArea textArea,

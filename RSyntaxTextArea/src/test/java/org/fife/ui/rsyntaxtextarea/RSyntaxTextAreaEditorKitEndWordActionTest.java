@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxTextAreaEditorKitEndWordActionTest {
+public class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	/**
@@ -30,8 +30,8 @@ public class RSyntaxTextAreaEditorKitEndWordActionTest {
 	 * @param textArea The source text area.
 	 * @return The fake action event.
 	 */
-	private static final ActionEvent createActionEvent(RTextArea textArea) {
-		return new ActionEvent(textArea, 0, DefaultEditorKit.endWordAction);
+	private static ActionEvent createActionEvent(RTextArea textArea) {
+		return createActionEvent(textArea, DefaultEditorKit.endWordAction);
 	}
 
 

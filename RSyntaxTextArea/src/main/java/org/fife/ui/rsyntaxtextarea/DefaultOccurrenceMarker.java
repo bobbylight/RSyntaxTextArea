@@ -25,9 +25,6 @@ import org.fife.ui.rtextarea.SmartHighlightPainter;
 class DefaultOccurrenceMarker implements OccurrenceMarker {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Token getTokenToMark(RSyntaxTextArea textArea) {
 
@@ -56,18 +53,12 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isValidType(RSyntaxTextArea textArea, Token t) {
 		return textArea.getMarkOccurrencesOfTokenType(t.getType());
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
