@@ -590,7 +590,7 @@ public class ErrorStrip extends JPanel {
 		@Override
 		public String getToolTipText(List<ParserNotice> notices) {
 
-			String text = null;
+			String text;
 
 			if (notices.size()==1) {
 				text = notices.get(0).getMessage();

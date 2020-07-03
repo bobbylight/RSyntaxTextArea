@@ -88,6 +88,7 @@ public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest 
 		textArea.setSyntaxEditingStyle(syntaxStyle);
 		textArea.setCodeFoldingEnabled(true);
 		textArea.getFoldManager().reparse();
+		textArea.setMarkOccurrences(true);
 		textArea.setPaintTabLines(true);
 		textArea.setBounds(0, 0, 80, 80);
 		return textArea;
