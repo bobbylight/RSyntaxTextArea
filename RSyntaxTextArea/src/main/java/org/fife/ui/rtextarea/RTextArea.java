@@ -1379,7 +1379,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public static void setActionProperties(int action, String name,
 							Integer mnemonic, KeyStroke accelerator) {
 
-		Action tempAction = null;
+		Action tempAction;
 
 		switch (action) {
 			case CUT_ACTION:

@@ -8,6 +8,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,11 +19,10 @@ import org.fife.ui.SwingRunner;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
+import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 
 
@@ -34,6 +34,47 @@ import javax.swing.event.HyperlinkListener;
  */
 @RunWith(SwingRunner.class)
 public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
+
+	private boolean origTemplatesEnabled;
+
+
+	@Before
+	public void setUp() {
+		origTemplatesEnabled = RSyntaxTextArea.getTemplatesEnabled();
+	}
+
+
+	@After
+	public void tearDown() {
+		RSyntaxTextArea.setTemplatesEnabled(origTemplatesEnabled);
+	}
+
+
+	@Test
+	public void testConstructor_rowsAndColumns() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea(25, 80);
+		Assert.assertEquals(25, textArea.getRows());
+		Assert.assertEquals(80, textArea.getColumns());
+	}
+
+
+	@Test
+	public void testConstructor_textAndRowsAndColumns() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea("foo", 25, 80);
+		Assert.assertEquals("foo", textArea.getText());
+		Assert.assertEquals(25, textArea.getRows());
+		Assert.assertEquals(80, textArea.getColumns());
+	}
+
+
+	@Test
+	public void testConstructor_documentAndTextAndRowsAndColumns() {
+		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C);
+		RSyntaxTextArea textArea = new RSyntaxTextArea(doc, "foo", 25, 80);
+		Assert.assertEquals("foo", textArea.getText());
+		Assert.assertEquals(25, textArea.getRows());
+		Assert.assertEquals(80, textArea.getColumns());
+	}
 
 
 	@Test
@@ -156,6 +197,15 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Assert.assertFalse(textArea.isCodeFoldingEnabled());
 		textArea.setCodeFoldingEnabled(true);
 		Assert.assertTrue(textArea.isCodeFoldingEnabled());
+	}
+
+
+	@Test
+	public void testConfigurePopupMenu() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		JPopupMenu menu = textArea.getPopupMenu();
+		textArea.configurePopupMenu(menu);
 	}
 
 
@@ -337,6 +387,29 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	public void testGetShouldAutoIndentNextLine_autoIndentEnabled() {
+		RSyntaxTextArea textArea = createTextArea();
+		Assert.assertTrue(textArea.getShouldIndentNextLine(0));
+	}
+
+
+	@Test
+	public void testGetShouldAutoIndentNextLine_autoIndentDisabled() {
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.setAutoIndentEnabled(false);
+		Assert.assertFalse(textArea.getShouldIndentNextLine(0));
+	}
+
+
+	@Test
+	public void testGetToolTipText() {
+		RSyntaxTextArea textArea = createTextArea();
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0, 0, 1, false);
+		Assert.assertNull(textArea.getToolTipText(e));
+	}
+
+
+	@Test
 	public void testHighlightSecondaryLanguages() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assert.assertTrue(textArea.getHighlightSecondaryLanguages());
@@ -425,6 +498,12 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	public void testModelToToken_negativeValue() {
+		RSyntaxTextArea textArea = createTextArea();
+		Assert.assertNull(textArea.modelToToken(-1));
+	}
+
+	@Test
 	public void testPaintComponent_noWrappedLines_happyPath() {
 
 		String code = "/**\n" +
@@ -487,6 +566,47 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Assert.assertFalse(textArea.getPaintTabLines());
 		textArea.setPaintTabLines(true);
 		Assert.assertTrue(textArea.getPaintTabLines());
+	}
+
+
+	@Test
+	public void testRedoLastAction() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.discardAllEdits();
+
+		Assert.assertFalse(textArea.canUndo());
+		textArea.append("foo");
+		Assert.assertTrue(textArea.canUndo());
+		Assert.assertFalse(textArea.canRedo());
+
+		textArea.undoLastAction();;
+		Assert.assertTrue(textArea.canRedo());
+
+		textArea.redoLastAction();
+		Assert.assertFalse(textArea.canRedo());
+		Assert.assertTrue(textArea.getText().endsWith("foo"));
+	}
+
+
+	@Test
+	public void testRemoveNotify() {
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.removeNotify();
+	}
+
+
+	@Test
+	public void testSaveTemplates_templatesNotEnabled() {
+		RSyntaxTextArea.setTemplatesEnabled(false);
+		RSyntaxTextArea.saveTemplates();
+	}
+
+
+	@Test
+	public void testSaveTemplates_templatesEnabled() {
+		RSyntaxTextArea.setTemplatesEnabled(true);
+		RSyntaxTextArea.saveTemplates();
 	}
 
 

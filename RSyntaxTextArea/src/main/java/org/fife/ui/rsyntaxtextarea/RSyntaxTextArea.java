@@ -1870,7 +1870,7 @@ private boolean fractionalFontMetricsEnabled;
 	@Override
 	public String getToolTipText(MouseEvent e) {
 
-		// Apple JVMS (Java 6 and prior) have their ToolTipManager events
+		// Apple JVMs (Java 6 and prior) have their ToolTipManager events
 		// repeat for some reason, so this method gets called every 1 second
 		// or so.  We short-circuit that since some ToolTipManagers may do
 		// expensive calculations (e.g. language supports).

@@ -18,7 +18,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SyntaxViewTest extends RSyntaxTextAreaTest {
+public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test

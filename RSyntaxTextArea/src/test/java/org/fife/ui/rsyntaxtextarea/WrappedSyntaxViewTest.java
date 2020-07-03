@@ -4,8 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.ui.SwingRunner;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -21,7 +23,8 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class WrappedSyntaxViewTest extends RSyntaxTextAreaTest {
+@RunWith(SwingRunner.class)
+public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	private static void testDocumentEvent_happyPath(DocumentEvent.EventType eventType) {
