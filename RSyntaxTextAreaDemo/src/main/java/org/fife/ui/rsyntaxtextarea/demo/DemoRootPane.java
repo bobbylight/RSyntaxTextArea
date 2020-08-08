@@ -21,6 +21,7 @@ import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.CTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.GoTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.Java9TokenMaker;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -46,6 +47,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		atmf.putMapping("antlr/c", CTokenMaker.class.getName(), CTokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/erlang", ErlangTokenMaker.class.getName(), ErlangTokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/go", GoTokenMaker.class.getName(), GoTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/java9", Java9TokenMaker.class.getName(), Java9TokenMaker.class.getClassLoader());
 
 		textArea = createTextArea();
 		setText("JavaExample.txt");
@@ -117,6 +119,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("HTML", "HtmlExample.txt", SYNTAX_STYLE_HTML, bg, menu);
 		addSyntaxItem("INI", "IniExample.txt", SYNTAX_STYLE_INI, bg, menu);
 		addSyntaxItem("Java", "JavaExample.txt", SYNTAX_STYLE_JAVA, bg, menu);
+		addSyntaxItem("Java (ANTLR)", "JavaExample.txt", "antlr/java9", bg, menu);
 		addSyntaxItem("JavaScript", "JavaScriptExample.txt", SYNTAX_STYLE_JAVASCRIPT, bg, menu);
 		addSyntaxItem("JSP", "JspExample.txt", SYNTAX_STYLE_JSP, bg, menu);
 		addSyntaxItem("JSON", "JsonExample.txt", SYNTAX_STYLE_JSON_WITH_COMMENTS, bg, menu);
