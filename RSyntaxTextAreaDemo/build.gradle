@@ -1,5 +1,16 @@
+plugins {
+    id("antlr")
+}
+
 archivesBaseName = 'rstademo'
 
 dependencies {
     implementation project(':RSyntaxTextArea')
+    implementation project(':RSyntaxTextAreaAntlrSupport')
+    antlr("org.antlr:antlr4:4.8-1")
+}
+
+generateGrammarSource {
+    outputDirectory = file("$outputDirectory/org/fife/ui/rsyntaxtextarea/demo/antlr")
+    arguments += ['-package', 'org.fife.ui.rsyntaxtextarea.demo.antlr']
 }

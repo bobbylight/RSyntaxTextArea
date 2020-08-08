@@ -36,6 +36,9 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 
 	DemoRootPane() {
+		// register our token maker
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
+
 		textArea = createTextArea();
 		setText("JavaExample.txt");
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);

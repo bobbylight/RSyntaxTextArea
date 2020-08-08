@@ -1,0 +1,47 @@
+// Add coveralls plugin to this build's classpath
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+    }
+}
+
+plugins {
+    id("antlr")
+}
+
+// Jacoco and a coveralls upload plugin needed for publishing coverage results
+['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
+
+archivesBaseName = 'rstaantlr'
+
+
+dependencies {
+    implementation project(':RSyntaxTextArea')
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.8-1'
+    antlr("org.antlr:antlr4:4.8-1")
+
+    testCompile project(':RSyntaxTextArea').sourceSets.test.output
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+test {
+    testLogging {
+        events 'failed' //, 'passed', 'skipped', 'standardOut', 'standardError'
+
+        showExceptions true
+        exceptionFormat 'full'
+        showCauses true
+        showStackTraces true
+
+        showStandardStreams = false
+    }
+}
