@@ -23,6 +23,7 @@ import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.GoTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.Java9TokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.JSONTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.MySqlTokenMaker;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -50,6 +51,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		atmf.putMapping("antlr/go", GoTokenMaker.class.getName(), GoTokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/java9", Java9TokenMaker.class.getName(), Java9TokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/json", JSONTokenMaker.class.getName(), JSONTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/mysql", MySqlTokenMaker.class.getName(), MySqlTokenMaker.class.getClassLoader());
 
 		textArea = createTextArea();
 		setText("JavaExample.txt");
@@ -134,6 +136,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("Python",  "PythonExample.txt", SYNTAX_STYLE_PYTHON, bg, menu);
 		addSyntaxItem("Ruby", "RubyExample.txt", SYNTAX_STYLE_RUBY, bg, menu);
 		addSyntaxItem("SQL",  "SQLExample.txt", SYNTAX_STYLE_SQL, bg, menu);
+		addSyntaxItem("SQL (ANTLR)",  "SQLExample.txt", "antlr/mysql", bg, menu);
 		addSyntaxItem("TypeScript", "TypeScriptExample.txt", SYNTAX_STYLE_TYPESCRIPT, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);
 		addSyntaxItem("YAML", "YamlExample.txt", SYNTAX_STYLE_YAML, bg, menu);
