@@ -19,6 +19,7 @@ import javax.swing.event.HyperlinkListener;
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.CTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -42,6 +43,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
 		atmf.putMapping("antlr/asm6502", AssemblerTokenMaker.class.getName(), AssemblerTokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/c", CTokenMaker.class.getName(), CTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/erlang", ErlangTokenMaker.class.getName(), ErlangTokenMaker.class.getClassLoader());
 
 		textArea = createTextArea();
 		setText("JavaExample.txt");
@@ -106,6 +108,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("C (ANTLR)", "CExample.txt", "antlr/c", bg, menu);
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);
 		addSyntaxItem("Dockerfile", "DockerfileExample.txt", SYNTAX_STYLE_DOCKERFILE, bg, menu);
+		addSyntaxItem("Erlang (ANTLR)", "Erlang.erl", "antlr/erlang", bg, menu);
 		addSyntaxItem("Go", "GoExample.txt", SYNTAX_STYLE_GO, bg, menu);
 		addSyntaxItem("Hosts", "HostsExample.txt", SYNTAX_STYLE_HOSTS, bg, menu);
 		addSyntaxItem("HTML", "HtmlExample.txt", SYNTAX_STYLE_HTML, bg, menu);
