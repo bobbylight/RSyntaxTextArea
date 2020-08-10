@@ -55,9 +55,13 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		atmf.putMapping("antlr/mysql", MySqlTokenMaker.class.getName(), MySqlTokenMaker.class.getClassLoader());
 		atmf.putMapping("antlr/python", Python3TokenMaker.class.getName(), Python3TokenMaker.class.getClassLoader());
 
+		//register our parsers
+		DelegatingParser parser=new DelegatingParser();
+
 		textArea = createTextArea();
 		setText("JavaExample.txt");
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
+		textArea.addParser(parser);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
 		gutter.setBookmarkingEnabled(true);
