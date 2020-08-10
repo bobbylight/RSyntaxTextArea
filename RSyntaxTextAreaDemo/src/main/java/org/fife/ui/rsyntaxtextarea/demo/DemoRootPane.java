@@ -23,6 +23,7 @@ import org.fife.ui.rsyntaxtextarea.demo.antlr.CAntlrParser;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.CTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangAntlrParser;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.GoAntlrParser;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.GoTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.Java9TokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.JSONTokenMaker;
@@ -65,6 +66,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		parser.addParser(SYNTAX_STYLE_CPLUSPLUS, new CAntlrParser());
 		parser.addParser("antlr/c", new CAntlrParser());
 		parser.addParser("antlr/erlang", new ErlangAntlrParser());
+		parser.addParser(SYNTAX_STYLE_GO, new GoAntlrParser());
+		parser.addParser("antlr/go", new GoAntlrParser());
 
 		textArea = createTextArea();
 		setText("JavaExample.txt");
