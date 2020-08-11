@@ -17,6 +17,7 @@ import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.*;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerAntlrParser;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.CTokenMaker;
 import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
@@ -56,7 +57,10 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		atmf.putMapping("antlr/python", Python3TokenMaker.class.getName(), Python3TokenMaker.class.getClassLoader());
 
 		//register our parsers
-		DelegatingParser parser=new DelegatingParser();
+		DelegatingParser parser = new DelegatingParser();
+		parser.addParser(SYNTAX_STYLE_ASSEMBLER_6502, new AssemblerAntlrParser());
+		parser.addParser("antlr/asm6502", new AssemblerAntlrParser());
+
 
 		textArea = createTextArea();
 		setText("JavaExample.txt");
