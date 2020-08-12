@@ -127,6 +127,14 @@ publishing {
                     }
                 }
             }
+            pom.withXml {
+                Node pomNode = asNode()
+                pomNode.dependencies.'*'.findAll() {
+                    it.artifactId.text() == 'antlr4'
+                }.each() {
+                    it.parent().remove(it)
+                }
+            }
         }
     }
 }
