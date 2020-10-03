@@ -1637,11 +1637,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			Caret c = textArea.getCaret();
 			int dot = c.getDot();
 			int mark = c.getMark();
-			int dotLine = map.getElementIndex(dot);
-			int markLine = map.getElementIndex(mark);
 
 			// If there is a selection, indent all lines in it
 			if (dot != mark) {
+
+				int dotLine = map.getElementIndex(dot);
+				int markLine = map.getElementIndex(mark);
 				int first = Math.min(dotLine, markLine);
 				int last = Math.max(dotLine, markLine);
 				Element elem; int start;
