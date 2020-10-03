@@ -72,7 +72,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testActionPerformedImpl_multiLineSelection_tabsEmulatedWithWShiteSpace() {
+	public void testActionPerformedImpl_multiLineSelection_tabsEmulatedWithWhiteSpace() {
 
 		String origContent = "int main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
@@ -106,7 +106,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
-		String expectedContent = "int \t() {\n" +
+		String expectedContent = "\tint main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
 			"}";
 		Assert.assertEquals(expectedContent, textArea.getText());

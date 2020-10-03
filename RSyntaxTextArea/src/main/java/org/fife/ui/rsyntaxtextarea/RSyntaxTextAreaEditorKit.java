@@ -1640,9 +1640,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int dotLine = map.getElementIndex(dot);
 			int markLine = map.getElementIndex(mark);
 
-			// If there is a multi-line selection, indent all lines in
-			// the selection.
-			if (dotLine!=markLine) {
+			// If there is a selection, indent all lines in it
+			if (dot != mark) {
 				int first = Math.min(dotLine, markLine);
 				int last = Math.max(dotLine, markLine);
 				Element elem; int start;
