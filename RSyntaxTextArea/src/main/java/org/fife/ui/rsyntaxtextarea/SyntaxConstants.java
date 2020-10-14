@@ -20,7 +20,7 @@ package org.fife.ui.rsyntaxtextarea;
  * overwritten) on a per-text area basis.  What languages can be rendered is
  * actually managed by the {@link TokenMakerFactory} installed on the text
  * area's {@link RSyntaxDocument}.  By default, all
- * <code>RSyntaxDocumenet</code>s have a factory installed capable of handling
+ * <code>RSyntaxDocument</code>s have a factory installed capable of handling
  * all of these languages.
  *
  * @author Robert Futrell
@@ -225,6 +225,12 @@ public interface SyntaxConstants {
 	 * Style for highlighting makefiles.
 	 */
 	String SYNTAX_STYLE_MAKEFILE		= "text/makefile";
+
+
+	/**
+	 * Style for highlighting markdown.
+	 */
+	String SYNTAX_STYLE_MARKDOWN		= "text/markdown";
 
 
 	/**

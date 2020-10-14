@@ -780,13 +780,22 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 				Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 				token = token.getNextToken();
-				Assert.assertTrue("Not a valid HTML5 tag name token: " + token,
-						token.getType() == TokenTypes.MARKUP_TAG_NAME);
+				Assert.assertEquals("Not a valid HTML5 tag name token: " + token,
+					token.getType(), TokenTypes.MARKUP_TAG_NAME);
 
 			}
 
 		}
 
+	}
+
+
+	@Test
+	public void testHtml_loneIdentifier() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"123"
+		);
 	}
 
 

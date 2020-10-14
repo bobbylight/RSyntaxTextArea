@@ -260,6 +260,18 @@ public abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
+	 * Returns whether no tokens have been identified yet.  Should only be
+	 * called by subclasses that need to identify tokens depending on whether
+	 * they are the "first" token on the line or not.
+	 *
+	 * @return Whether no tokens have been identified yet.
+	 */
+	protected boolean getNoTokensIdentifiedYet() {
+		return firstToken == null;
+	}
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

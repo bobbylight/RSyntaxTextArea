@@ -62,6 +62,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_LISP,			pkg + "LispTokenMaker");
 		putMapping(SYNTAX_STYLE_LUA,			pkg + "LuaTokenMaker");
 		putMapping(SYNTAX_STYLE_MAKEFILE,		pkg + "MakefileTokenMaker");
+		putMapping(SYNTAX_STYLE_MARKDOWN,		pkg + "MarkdownTokenMaker");
 		putMapping(SYNTAX_STYLE_MXML,			pkg + "MxmlTokenMaker");
 		putMapping(SYNTAX_STYLE_NSIS,			pkg + "NSISTokenMaker");
 		putMapping(SYNTAX_STYLE_PERL,			pkg + "PerlTokenMaker");
