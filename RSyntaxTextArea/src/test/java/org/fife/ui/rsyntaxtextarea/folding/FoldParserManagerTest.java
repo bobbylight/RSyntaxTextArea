@@ -33,6 +33,9 @@ public class FoldParserManagerTest {
 
 		FoldParserManager fpm = FoldParserManager.get();
 
+		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT));
+		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_6502));
+		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_C));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CSHARP));

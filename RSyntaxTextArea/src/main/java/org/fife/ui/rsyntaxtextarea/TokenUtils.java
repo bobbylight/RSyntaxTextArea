@@ -176,17 +176,39 @@ public final class TokenUtils {
 
 
 	/**
-	 * Returns whether a token list is {@code null}, empty, or all
-	 * whitespace.
+	 * Returns whether a token list is {@code null}, empty, all whitespace,
+	 * just comment token(s), or any combination of those.
 	 *
 	 * @param t The token.
 	 * @return Whether the token list starting with that token is {@code null},
-	 *         empty, or all whitespace.
+	 *         empty, whitespace or comment tokens.
+	 * @see #isBlankOrAllWhiteSpaceWithoutComments(Token)
 	 */
 	public static boolean isBlankOrAllWhiteSpace(Token t) {
 
 		while (t != null && t.isPaintable()) {
 			if (!t.isCommentOrWhitespace()) {
+				return false;
+			}
+			t = t.getNextToken();
+		}
+		return true;
+	}
+
+
+	/**
+	 * Returns whether a token list is {@code null}, empty, or all whitespace
+	 * token(s).
+	 *
+	 * @param t The token.
+	 * @return Whether the token list starting with that token is {@code null},
+	 *         empty, or all whitespace token(s).
+	 * @see #isBlankOrAllWhiteSpace(Token)
+	 */
+	public static boolean isBlankOrAllWhiteSpaceWithoutComments(Token t) {
+
+		while (t != null && t.isPaintable()) {
+			if (!t.isWhitespace()) {
 				return false;
 			}
 			t = t.getNextToken();
