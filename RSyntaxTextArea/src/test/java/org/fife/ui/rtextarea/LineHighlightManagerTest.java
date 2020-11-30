@@ -23,12 +23,11 @@ import org.junit.Test;
  */
 public class LineHighlightManagerTest {
 
-	private RTextArea textArea;
 	private LineHighlightManager lhm;
 
 	@Before
 	public void setUp() {
-		textArea = new RTextArea("0123456789\n0123456789\n0123456789");
+		RTextArea textArea = new RTextArea("0123456789\n0123456789\n0123456789");
 		lhm = new LineHighlightManager(textArea);
 	}
 
@@ -61,7 +60,7 @@ public class LineHighlightManagerTest {
 
 
 	@Test
-	public void testAddLineHighlight_removeOneOfTwoOnOneLine()
+	public void testAddLineHighlight_removeOneOfTwoOnOneLine_differentColors()
 			throws BadLocationException {
 
 		Object tag1 = lhm.addLineHighlight(1, Color.BLUE);
@@ -73,7 +72,24 @@ public class LineHighlightManagerTest {
 		lhm.removeLineHighlight(tag1);
 		List<Object> remainingTags = lhm.getCurrentLineHighlightTags();
 		Assert.assertEquals(1, remainingTags.size());
-		Assert.assertTrue(tag2 == remainingTags.get(0));
+		Assert.assertSame(tag2, remainingTags.get(0));
+	}
+
+
+	@Test
+	public void testAddLineHighlight_removeOneOfTwoOnOneLine_sameColors()
+		throws BadLocationException {
+
+		Object tag1 = lhm.addLineHighlight(1, Color.BLUE);
+		Object tag2 = lhm.addLineHighlight(2, Color.BLUE);
+		Assert.assertEquals(2, lhm.getLineHighlightCount());
+
+		// We're testing a bug here with LineHighlightInfo's equals() method,
+		// so we use a foolproof method of telling the two tags apart.
+		lhm.removeLineHighlight(tag2);
+		List<Object> remainingTags = lhm.getCurrentLineHighlightTags();
+		Assert.assertEquals(1, remainingTags.size());
+		Assert.assertSame(tag1, remainingTags.get(0));
 	}
 
 

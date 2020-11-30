@@ -11,10 +11,7 @@ package org.fife.ui.rtextarea;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
@@ -201,8 +198,7 @@ class LineHighlightManager {
 			if (other instanceof LineHighlightInfo) {
 				LineHighlightInfo lhi2 = (LineHighlightInfo)other;
 				return this.getOffset() == lhi2.getOffset() &&
-					this.getColor() == null ? lhi2.getColor() == null :
-							this.getColor().equals(lhi2.getColor());
+					Objects.equals(this.getColor(), lhi2.getColor());
 			}
 			return false;
 		}
