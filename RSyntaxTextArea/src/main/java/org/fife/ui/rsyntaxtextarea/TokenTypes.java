@@ -12,6 +12,15 @@ package org.fife.ui.rsyntaxtextarea;
 /**
  * All token types supported by RSyntaxTextArea.<p>
  *
+ * If you're creating your own {@code TokenMaker} for a new language, it's
+ * important to note that while most of these token types are used purely
+ * for styling information, that {@code TokenTypes.SEPARATOR} is given special
+ * treatment in this library.  Specifically, many utility methods assume that
+ * tokens such as curly braces and square brackets are identified as type
+ * {@code SEPARATOR}.  For example,
+ * {@code RSyntaxTextArea.setPaintMatchedBracketPair} makes this assumption.
+ * <p>
+ *
  * Note that all valid token types are &gt;= 0, so extensions of the TokenMaker
  * class are free to internally use all ints &lt; 0 ONLY for "end-of-line"
  * style markers; they are ignored by painting implementations.
@@ -23,7 +32,8 @@ public interface TokenTypes {
 
 	/**
 	 * Tokens of type <code>NULL</code> mark the end of lines with no
-	 * multi-line token at the end (such as a block comment in C++).
+	 * multi-line token at the end being continued to the next line,
+	 * for example, being in the middle of a block comment in Java.
 	 */
 	int NULL							= 0;
 
@@ -58,6 +68,12 @@ public interface TokenTypes {
 
 	int WHITESPACE						= 21;
 
+	/**
+	 * Separators are typically single-character tokens such as parens
+	 * brackets and braces ({@code [}, {@code ]}, <code>{</code>,
+	 * <code>}</code>, etc.).  In particular, brackets and braces
+	 * must be of this token type for bracket matching to work.
+	 */
 	int SEPARATOR						= 22;
 
 	int OPERATOR						= 23;
