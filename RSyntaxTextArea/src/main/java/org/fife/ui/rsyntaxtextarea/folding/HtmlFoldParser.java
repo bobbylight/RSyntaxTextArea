@@ -111,9 +111,6 @@ public class HtmlFoldParser implements FoldParser {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 

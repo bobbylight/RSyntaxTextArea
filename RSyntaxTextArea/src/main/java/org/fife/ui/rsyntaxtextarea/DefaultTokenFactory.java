@@ -85,9 +85,6 @@ class DefaultTokenFactory implements TokenFactory {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public TokenImpl createToken() {
 		TokenImpl token = tokenList[currentFreeToken];
@@ -103,9 +100,6 @@ class DefaultTokenFactory implements TokenFactory {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public TokenImpl createToken(final Segment line, final int beg,
 					final int end, final int startOffset, final int type) {
@@ -113,9 +107,6 @@ class DefaultTokenFactory implements TokenFactory {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public TokenImpl createToken(final char[] line, final int beg,
 					final int end, final int startOffset, final int type) {

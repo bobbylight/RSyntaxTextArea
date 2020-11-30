@@ -38,9 +38,6 @@ public class YamlFoldParser implements FoldParser {
         return lexeme.trim().isEmpty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Fold> getFolds(RSyntaxTextArea textArea) {
 

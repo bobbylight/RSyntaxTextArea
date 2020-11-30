@@ -21,9 +21,6 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 								implements SyntaxConstants {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initTokenMakerMap() {
 

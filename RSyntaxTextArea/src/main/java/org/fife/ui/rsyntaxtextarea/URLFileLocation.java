@@ -95,36 +95,24 @@ class URLFileLocation extends FileLocation {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getFileFullPath() {
 		return fileFullPath;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected InputStream getInputStream() throws IOException {
 		return url.openStream();
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OutputStream getOutputStream() throws IOException {
 		return url.openConnection().getOutputStream();

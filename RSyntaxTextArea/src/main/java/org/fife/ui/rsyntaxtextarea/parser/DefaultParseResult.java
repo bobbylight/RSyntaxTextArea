@@ -57,54 +57,36 @@ public class DefaultParseResult implements ParseResult {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Exception getError() {
 		return error;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getFirstLineParsed() {
 		return firstLineParsed;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getLastLineParsed() {
 		return lastLineParsed;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<ParserNotice> getNotices() {
 		return notices;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Parser getParser() {
 		return parser;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public long getParseTime() {
 		return parseTime;

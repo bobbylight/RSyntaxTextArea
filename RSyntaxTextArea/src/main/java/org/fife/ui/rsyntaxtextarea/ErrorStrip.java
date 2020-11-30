@@ -435,9 +435,6 @@ public class ErrorStrip extends JPanel {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void removeNotify() {
 		super.removeNotify();
@@ -757,9 +754,6 @@ public class ErrorStrip extends JPanel {
 			return color;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean getKnowsOffsetAndLength() {
 			return true;

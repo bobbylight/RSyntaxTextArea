@@ -29,9 +29,6 @@ public abstract class AbstractMarkupTokenMaker extends AbstractJFlexTokenMaker {
 	public abstract boolean getCompleteCloseTags();
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "<!--", "-->" };

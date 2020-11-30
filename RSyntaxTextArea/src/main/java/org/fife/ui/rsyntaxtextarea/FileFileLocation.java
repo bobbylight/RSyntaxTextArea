@@ -45,9 +45,6 @@ class FileFileLocation extends FileLocation {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected long getActualLastModified() {
 		return file.lastModified();
@@ -66,27 +63,18 @@ class FileFileLocation extends FileLocation {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getFileName() {
 		return file.getName();
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected InputStream getInputStream() throws IOException {
 		return new FileInputStream(file);
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OutputStream getOutputStream() throws IOException {
 		return new FileOutputStream(file);

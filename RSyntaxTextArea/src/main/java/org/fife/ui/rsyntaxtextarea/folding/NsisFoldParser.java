@@ -45,9 +45,6 @@ public class NsisFoldParser implements FoldParser {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 

@@ -42,9 +42,6 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 

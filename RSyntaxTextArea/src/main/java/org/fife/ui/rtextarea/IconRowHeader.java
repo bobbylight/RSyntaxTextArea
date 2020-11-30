@@ -239,9 +239,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	void handleDocumentEvent(DocumentEvent e) {
 		int newLineCount = textArea.getLineCount();
@@ -252,9 +249,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
@@ -358,9 +352,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	void lineHeightsChanged() {
 		repaint();
@@ -402,9 +393,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 
@@ -855,9 +843,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void updateUI() {
 		super.updateUI(); // Does nothing

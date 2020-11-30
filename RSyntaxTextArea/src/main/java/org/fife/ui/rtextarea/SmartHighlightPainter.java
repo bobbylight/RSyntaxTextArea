@@ -73,9 +73,6 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Shape paintLayer(Graphics g, int p0, int p1, Shape viewBounds,
 								JTextComponent c, View view) {
@@ -133,9 +130,6 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setPaint(Paint paint) {
 		super.setPaint(paint);

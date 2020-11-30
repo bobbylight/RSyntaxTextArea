@@ -32,9 +32,6 @@ public class XmlFoldParser implements FoldParser {
 	private static final char[] MLC_END = { '-', '-', '>' };
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 

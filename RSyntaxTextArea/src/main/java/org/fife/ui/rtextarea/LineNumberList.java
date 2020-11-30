@@ -159,9 +159,6 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Dimension getPreferredSize() {
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
@@ -186,9 +183,6 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	void handleDocumentEvent(DocumentEvent e) {
 		int newLastLine = calculateLastVisibleLineNumber();
@@ -224,9 +218,6 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	void lineHeightsChanged() {
 		updateCellHeights();

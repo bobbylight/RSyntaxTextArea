@@ -97,9 +97,6 @@ public class DefaultParserNotice implements ParserNotice {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean containsPosition(int pos) {
 		return offset<=pos && pos<(offset+length);
@@ -121,9 +118,6 @@ public class DefaultParserNotice implements ParserNotice {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Color getColor() {
 		Color c = color; // User-defined
@@ -134,81 +128,54 @@ public class DefaultParserNotice implements ParserNotice {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getKnowsOffsetAndLength() {
 		return offset>=0 && length>=0;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getLength() {
 		return length;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Level getLevel() {
 		return level;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getLine() {
 		return line;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getMessage() {
 		return message;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getOffset() {
 		return offset;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Parser getParser() {
 		return parser;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getShowInEditor() {
 		return showInEditor;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getToolTipText() {
 		return toolTipText!=null ? toolTipText : getMessage();

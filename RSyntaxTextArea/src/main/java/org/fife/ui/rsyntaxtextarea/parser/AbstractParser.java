@@ -42,9 +42,6 @@ public abstract class AbstractParser implements Parser {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ExtendedHyperlinkListener getHyperlinkListener() {
 		return linkListener;
@@ -63,9 +60,6 @@ public abstract class AbstractParser implements Parser {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isEnabled() {
 		return enabled;

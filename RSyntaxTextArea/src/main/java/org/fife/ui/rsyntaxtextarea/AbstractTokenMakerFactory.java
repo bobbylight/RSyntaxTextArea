@@ -75,9 +75,6 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 	protected abstract void initTokenMakerMap();
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Set<String> keySet() {
 		return tokenMakerMap.keySet();

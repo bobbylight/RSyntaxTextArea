@@ -111,9 +111,6 @@ public class RUndoManager extends UndoManager {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void redo() {
 		super.redo();
@@ -130,9 +127,6 @@ public class RUndoManager extends UndoManager {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void undo() {
 		super.undo();

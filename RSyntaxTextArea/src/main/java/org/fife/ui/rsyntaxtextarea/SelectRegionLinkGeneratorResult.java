@@ -49,9 +49,6 @@ public class SelectRegionLinkGeneratorResult implements LinkGeneratorResult {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getSourceOffset() {
 		return sourceOffset;

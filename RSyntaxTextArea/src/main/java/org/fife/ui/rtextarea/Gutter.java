@@ -595,9 +595,6 @@ public class Gutter extends JPanel {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setComponentOrientation(ComponentOrientation o) {
 

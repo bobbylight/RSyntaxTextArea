@@ -97,9 +97,6 @@ public class XmlParser extends AbstractParser {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ParseResult parse(RSyntaxDocument doc, String style) {
 

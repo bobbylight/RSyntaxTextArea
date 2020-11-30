@@ -48,9 +48,6 @@ import javax.swing.text.TabExpander;
 class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected float paintImpl(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,

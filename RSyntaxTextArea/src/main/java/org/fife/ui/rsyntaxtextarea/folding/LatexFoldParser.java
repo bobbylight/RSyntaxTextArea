@@ -30,9 +30,6 @@ public class LatexFoldParser implements FoldParser {
 	private static final char[] END = "\\end".toCharArray();
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Fold> getFolds(RSyntaxTextArea textArea) {
 

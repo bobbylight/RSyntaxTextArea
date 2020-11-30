@@ -82,18 +82,12 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.IDENTIFIER || type==Token.FUNCTION;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getShouldIndentNextLineAfter(Token t) {
 		if (t!=null && t.length()==1) {

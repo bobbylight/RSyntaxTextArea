@@ -66,9 +66,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addNullToken() {
 		if (firstToken==null) {
@@ -101,9 +98,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset) {
@@ -215,9 +209,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
 
@@ -233,9 +224,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return null;
@@ -271,9 +259,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public OccurrenceMarker getOccurrenceMarker() {
 		if (occurrenceMarker==null) {

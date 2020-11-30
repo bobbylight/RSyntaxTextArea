@@ -197,9 +197,6 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void deinstall(JTextComponent c) {
 		super.deinstall(c);
@@ -289,11 +286,10 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	private static class SyntaxLayeredHighlightInfoImpl extends
 			LayeredHighlightInfoImpl {
 
-		private ParserNotice notice;//Color color; // Used only by Parser highlights.
+		private ParserNotice notice;
 
 		@Override
 		public Color getColor() {
-			//return color;
 			Color color = null;
 			if (notice!=null) {
 				color = notice.getColor();

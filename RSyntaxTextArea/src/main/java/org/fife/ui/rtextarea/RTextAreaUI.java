@@ -376,9 +376,6 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void installKeyboardActions() {
 

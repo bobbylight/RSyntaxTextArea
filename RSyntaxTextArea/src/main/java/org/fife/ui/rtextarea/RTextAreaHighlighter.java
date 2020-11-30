@@ -102,9 +102,6 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void deinstall(JTextComponent c) {
 		this.textArea = null;
@@ -142,9 +139,6 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void install(JTextComponent c) {
 		super.install(c);
@@ -317,9 +311,6 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void paintLayeredHighlights(Graphics g, int p0, int p1,
 									Shape viewBounds, JTextComponent editor,
