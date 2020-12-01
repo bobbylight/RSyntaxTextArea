@@ -106,7 +106,7 @@ public abstract class RPrintUtilities {
 							PageFormat pageFormat, int tabSize) {
 
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+		g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
 
 		// Initialize our static variables (these are used by our tab expander below).
 		tabSizeInSpaces = tabSize;
@@ -231,7 +231,7 @@ public abstract class RPrintUtilities {
 								PageFormat pageFormat, int tabSize) {
 
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+		g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
 
 		// Initialize our static variables (these are used by our tab expander below).
 		tabSizeInSpaces = tabSize;

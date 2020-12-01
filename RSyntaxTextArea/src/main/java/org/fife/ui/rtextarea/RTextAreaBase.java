@@ -457,7 +457,7 @@ public abstract class RTextAreaBase extends JTextArea {
 			if (!"Menlo".equals(font.getFamily())) {
 				font = sc.getFont("Monaco", Font.PLAIN, 12);
 				if (!"Monaco".equals(font.getFamily())) { // Shouldn't happen
-					font = sc.getFont("Monospaced", Font.PLAIN, 13);
+					font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
 				}
 			}
 		}
@@ -465,7 +465,7 @@ public abstract class RTextAreaBase extends JTextArea {
 			// Consolas added in Vista, used by VS2010+.
 			font = sc.getFont("Consolas", Font.PLAIN, 13);
 			if (!"Consolas".equals(font.getFamily())) {
-				font = sc.getFont("Monospaced", Font.PLAIN, 13);
+				font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
 			}
 		}
 

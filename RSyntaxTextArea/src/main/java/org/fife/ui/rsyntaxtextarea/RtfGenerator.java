@@ -406,7 +406,7 @@ public class RtfGenerator {
 		for (int i=0; i<fontList.size(); i++) {
 			Font f = fontList.get(i);
 			String familyName = f.getFamily();
-			if (familyName.equals("Monospaced")) {
+			if (familyName.equals(Font.MONOSPACED)) {
 				familyName = monoFamilyName;
 			}
 			sb.append("{\\f").append(i+1).append("\\fnil\\fcharset0 ");
@@ -427,7 +427,7 @@ public class RtfGenerator {
 	 */
 	private static String getMonospacedFontFamily() {
 		String family = RTextArea.getDefaultFont().getFamily();
-		if ("Monospaced".equals(family)) {
+		if (Font.MONOSPACED.equals(family)) {
 			family = "Courier";
 		}
 		return family;

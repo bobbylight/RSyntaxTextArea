@@ -41,7 +41,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 		RTextArea textArea = new RTextArea("hello world");
 		int origFontSize = (int)RTextAreaEditorKit.IncreaseFontSizeAction.MAXIMUM_SIZE;
-		textArea.setFont(new Font("Monospaced", Font.PLAIN, origFontSize));
+		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, origFontSize));
 
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.IncreaseFontSizeAction().actionPerformedImpl(e, textArea);
