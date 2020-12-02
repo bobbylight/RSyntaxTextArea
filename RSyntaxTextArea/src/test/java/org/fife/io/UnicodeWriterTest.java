@@ -4,11 +4,16 @@
  */
 package org.fife.io;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Unit tests for the {@code UnicodeWriter} class.
@@ -19,6 +24,7 @@ import java.io.IOException;
 public class UnicodeWriterTest {
 
 	private static final String CONTENT = "Hello world";
+	private static boolean origWriteUtf8Bom = false;
 
 	private static File createTempFile() throws IOException {
 		File file = File.createTempFile("unitTest", ".tmp");
@@ -32,8 +38,35 @@ public class UnicodeWriterTest {
 		}
 	}
 
+	@Before
+	public void setUp() {
+		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
+	}
+
+	@After
+	public void tearDown() {
+		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
+	}
+
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf8() throws IOException {
+	public void testConstructor_stringFileNameAndCharset_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
+
+		File file = createTempFile();
+
+		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), StandardCharsets.UTF_8)) {
+			w.append(CONTENT);
+		}
+		Assert.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
+	}
+
+	@Test
+	public void testConstructor_stringFileNameAndEncoding_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
 
 		File file = createTempFile();
 
@@ -88,11 +121,65 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
+	public void testConstructor_fileAndCharset_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
+
+		File file = createTempFile();
+
+		try (UnicodeWriter w = new UnicodeWriter(file, StandardCharsets.UTF_8)) {
+			w.append(CONTENT);
+		}
+		Assert.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
+	}
+
+	@Test
+	public void testConstructor_fileAndEncoding_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
+
+		File file = createTempFile();
+
+		try (UnicodeWriter w = new UnicodeWriter(file, "UTF-8")) {
+			w.append(CONTENT);
+		}
+		Assert.assertEquals("UTF-8", getFileEncoding(file));
+	}
+
+	@Test
+	public void testConstructor_outputStreamAndCharset_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (UnicodeWriter w = new UnicodeWriter(baos, StandardCharsets.UTF_8)) {
+			w.append(CONTENT);
+		}
+	}
+
+	@Test
+	public void testConstructor_outputStreamAndEncoding_utf8WithBOM() throws IOException {
+
+		// Force BOM so UnicodeReader can pick up on it
+		UnicodeWriter.setWriteUtf8BOM(true);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		try (UnicodeWriter w = new UnicodeWriter(baos, "UTF-8")) {
+			w.append(CONTENT);
+		}
+	}
+
+	@Test
 	public void testGetEncoding() throws IOException {
 
 		File file = createTempFile();
 
-		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-32LE")) {
+		try (UnicodeWriter w = new UnicodeWriter(file, "UTF-32LE")) {
 			w.append(CONTENT);
 			Assert.assertEquals("UTF-32LE", w.getEncoding());
 		}
@@ -104,5 +191,63 @@ public class UnicodeWriterTest {
 		Assert.assertTrue(UnicodeWriter.getWriteUtf8BOM());
 		UnicodeWriter.setWriteUtf8BOM(false);
 		Assert.assertFalse(UnicodeWriter.getWriteUtf8BOM());
+	}
+
+	@Test
+	public void testWrite_charArray() throws IOException {
+
+		File file = createTempFile();
+
+		String testContent =
+			"\u0030\u0030\u0034\u0065\u0032\u0064";
+		char[] chars = testContent.toCharArray();
+
+		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
+			w.write(chars, 0, chars.length);
+		}
+
+		// Read file back and verify contents
+		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
+			String actual = r.readLine();
+			Assert.assertEquals(actual, testContent);
+		}
+	}
+
+	@Test
+	public void testWrite_singleInt() throws IOException {
+
+		File file = createTempFile();
+
+		int testChar = 'x';
+
+		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
+			w.write(testChar);
+		}
+
+		// Read file back and verify contents
+		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
+			String actual = r.readLine();
+			Assert.assertEquals(1, actual.length());
+			Assert.assertEquals(testChar, actual.charAt(0));
+		}
+	}
+
+	@Test
+	public void testWrite_string() throws IOException {
+
+		File file = createTempFile();
+
+		String testContent =
+			"\u0030\u0030\u0034\u0065\u0032\u0064";
+
+		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
+			w.write(testContent, 0, testContent.length());
+		}
+
+		// Read file back and verify contents
+		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
+			String actual = r.readLine();
+			Assert.assertEquals(actual, testContent);
+		}
 	}
 }

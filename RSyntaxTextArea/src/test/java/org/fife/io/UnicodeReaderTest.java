@@ -4,7 +4,9 @@
  */
 package org.fife.io;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
@@ -20,12 +22,16 @@ import java.nio.charset.StandardCharsets;
 public class UnicodeReaderTest {
 
 	private static final String CONTENT = "Hello world";
+	private static boolean origWriteUtf8Bom = false;
 
 	private static File createTempFile(Charset charset)	throws IOException {
 		return createTempFile(charset.name());
 	}
 
 	private static File createTempFile(String charset) throws IOException {
+
+		// Force a BOM to be written for UTF-8 files
+		UnicodeWriter.setWriteUtf8BOM(true);
 
 		File file = File.createTempFile("unitTest", ".tmp");
 		file.deleteOnExit();
@@ -46,6 +52,16 @@ public class UnicodeReaderTest {
 			fs.write(CONTENT.getBytes(StandardCharsets.UTF_8));
 		}
 		return file;
+	}
+
+	@Before
+	public void setUp() {
+		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
+	}
+
+	@After
+	public void tearDown() {
+		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
 	}
 
 	@Test

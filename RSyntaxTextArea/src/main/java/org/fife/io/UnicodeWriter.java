@@ -14,29 +14,32 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 
 /**
- * Writes Unicode text to an output stream.  If the specified encoding is a
- * Unicode, then the text is preceded by the proper Unicode BOM.  If it is any
- * other encoding, this class behaves just like <code>OutputStreamWriter</code>.
- * This class is here because Java's <code>OutputStreamWriter</code> apparently
- * doesn't believe in writing BOMs.
+ * Writes Unicode text to an output stream.  If the specified encoding is
+ * UTF-16 or UTF-32, then the text is preceded by the proper Unicode BOM.
+ * If it is any other encoding, this class behaves just like
+ * <code>OutputStreamWriter</code>.  This class is here because Java's
+ * <code>OutputStreamWriter</code> apparently doesn't believe in writing
+ * BOMs.
  * <p>
  *
  * For optimum performance, it is recommended that you wrap all instances of
  * <code>UnicodeWriter</code> with a <code>java.io.BufferedWriter</code>.
  *
  * @author Robert Futrell
- * @version 0.7
+ * @version 0.8
  */
 public class UnicodeWriter extends Writer {
 
 	/**
-	 * If this system property evaluates to "<code>false</code>", ignoring
-	 * case, files written out as UTF-8 will not have a BOM written for them.
-	 * Otherwise (even if the property is not set), UTF-8 files will have a
-	 * BOM written.
+	 * If this system property evaluates to "<code>true</code>", ignoring
+	 * case, files written out as UTF-8 will have a BOM written for them.
+	 * Otherwise (even if the property is not set), UTF-8 files will not
+	 * have a BOM written (which is typical, older builds of Windows Notepad
+	 * are the outlier here).
 	 */
 	public static final String PROPERTY_WRITE_UTF8_BOM	=
 												"UnicodeWriter.writeUtf8BOM";
@@ -82,7 +85,21 @@ public class UnicodeWriter extends Writer {
 	 * This is a utility constructor since the vast majority of the time, this
 	 * class will be used to write Unicode files.
 	 *
-	 * @param fileName The file to which to write the Unicode output.
+	 * @param fileName The file to which to write.
+	 * @param charset The character set to use.
+	 * @throws IOException If an IO exception occurs.
+	 * @see java.nio.charset.StandardCharsets
+	 */
+	public UnicodeWriter(String fileName, Charset charset) throws IOException {
+		this(new FileOutputStream(fileName), charset.name());
+	}
+
+
+	/**
+	 * This is a utility constructor since the vast majority of the time, this
+	 * class will be used to write Unicode files.
+	 *
+	 * @param fileName The file to which to write.
 	 * @param encoding The encoding to use.
 	 * @throws IOException If an IO exception occurs.
 	 */
@@ -91,12 +108,25 @@ public class UnicodeWriter extends Writer {
 	}
 
 
+	/**
+	 * This is a utility constructor since the vast majority of the time, this
+	 * class will be used to write Unicode files.
+	 *
+	 * @param file The file to which to write.
+	 * @param charset The character set to use.
+	 * @throws IOException If an IO exception occurs.
+	 * @see java.nio.charset.StandardCharsets
+	 */
+	public UnicodeWriter(File file, Charset charset) throws IOException {
+		this(new FileOutputStream(file), charset.name());
+	}
+
 
 	/**
 	 * This is a utility constructor since the vast majority of the time, this
 	 * class will be used to write Unicode files.
 	 *
-	 * @param file The file to which to write the Unicode output.
+	 * @param file The file to which to write.
 	 * @param encoding The encoding to use.
 	 * @throws IOException If an IO exception occurs.
 	 */
@@ -104,6 +134,17 @@ public class UnicodeWriter extends Writer {
 		this(new FileOutputStream(file), encoding);
 	}
 
+
+	/**
+	 * Creates a new writer.
+	 *
+	 * @param out The output stream to write.
+	 * @param charset The character set to use.
+	 * @throws IOException If an IO exception occurs.
+	 */
+	public UnicodeWriter(OutputStream out, Charset charset) throws IOException {
+		init(out, charset.name());
+	}
 
 
 	/**
@@ -159,12 +200,7 @@ public class UnicodeWriter extends Writer {
 	 * @see UnicodeWriter
 	 */
 	public static boolean getWriteUtf8BOM() {
-		String prop = System.getProperty(PROPERTY_WRITE_UTF8_BOM);
-		// We default to writing the BOM, for some reason.
-		if (prop!=null && Boolean.valueOf(prop).equals(Boolean.FALSE)) {
-			return false;
-		}
-		return true;
+		return Boolean.getBoolean(PROPERTY_WRITE_UTF8_BOM);
 	}
 
 
