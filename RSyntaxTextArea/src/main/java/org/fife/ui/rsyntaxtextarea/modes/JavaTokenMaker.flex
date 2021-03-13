@@ -224,7 +224,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 Letter							= ([A-Za-z])
 LetterOrUnderscore				= ({Letter}|"_")
-Underscores						= ([_]+)
 NonzeroDigit						= ([1-9])
 BinaryDigit						= ([0-1])
 Digit							= ("0"|{NonzeroDigit})
@@ -235,8 +234,8 @@ AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({LetterOrUnderscore}|"$")
-IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
+IdentifierStart                     = ([:jletter:])
+IdentifierPart						= ([:jletterdigit:]|("\\"{EscapedSourceCharacter}))
 
 LineTerminator				= (\n)
 WhiteSpace				= ([ \t\f])
