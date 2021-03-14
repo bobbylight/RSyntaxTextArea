@@ -16,11 +16,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
 
-import org.fife.ui.rsyntaxtextarea.ErrorStrip;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -53,6 +49,15 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 //errorStrip.setBackground(java.awt.Color.blue);
 		getContentPane().add(errorStrip, BorderLayout.LINE_END);
 		setJMenuBar(createMenuBar());
+	}
+
+
+	private void addLookAndFeelItem(UIManager.LookAndFeelInfo info, ButtonGroup bg,
+									JMenu menu) {
+		LookAndFeelAction a = new LookAndFeelAction(info);
+		JRadioButtonMenuItem item = new JRadioButtonMenuItem(a);
+		bg.add(item);
+		menu.add(item);
 	}
 
 
@@ -100,6 +105,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("JavaScript", "JavaScriptExample.txt", SYNTAX_STYLE_JAVASCRIPT, bg, menu);
 		addSyntaxItem("JSP", "JspExample.txt", SYNTAX_STYLE_JSP, bg, menu);
 		addSyntaxItem("JSON", "JsonExample.txt", SYNTAX_STYLE_JSON_WITH_COMMENTS, bg, menu);
+		addSyntaxItem("LaTeX", "LatexExample.txt", SYNTAX_STYLE_LATEX, bg, menu);
 		addSyntaxItem("Less", "LessExample.txt", SYNTAX_STYLE_LESS, bg, menu);
 		addSyntaxItem("Markdown", "MarkdownExample.txt", SYNTAX_STYLE_MARKDOWN, bg, menu);
 		addSyntaxItem("Perl", "PerlExample.txt", SYNTAX_STYLE_PERL, bg, menu);
@@ -139,6 +145,14 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new TabLinesAction());
 		menu.add(cbItem);
+		mb.add(menu);
+
+		menu = new JMenu("LookAndFeel");
+		bg = new ButtonGroup();
+		UIManager.LookAndFeelInfo[] infos = UIManager.getInstalledLookAndFeels();
+		for (UIManager.LookAndFeelInfo info : infos) {
+			addLookAndFeelItem(info, bg, menu);
+		}
 		mb.add(menu);
 
 		bg = new ButtonGroup();
@@ -200,6 +214,13 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+
+		// Since this demo allows the LookAndFeel and RSyntaxTextArea Theme to
+		// be toggled independently of one another, we set this property to
+		// true so matched bracket popups look good.  In an app where the
+		// developer ensures the RSTA Theme always matches the LookAndFeel as
+		// far as light/dark is concerned, this property can be omitted.
+		System.setProperty(MatchedBracketPopup.PROPERTY_CONSIDER_TEXTAREA_BACKGROUND, "true");
 
 		return textArea;
 	}
@@ -346,6 +367,31 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 			textArea.setCodeFoldingEnabled(!textArea.isCodeFoldingEnabled());
 		}
 
+	}
+
+	/**
+	 * Changes the look and feel of the demo application.
+	 */
+	private class LookAndFeelAction extends AbstractAction {
+
+		private UIManager.LookAndFeelInfo info;
+
+		LookAndFeelAction(UIManager.LookAndFeelInfo info) {
+			putValue(NAME, info.getName());
+			this.info = info;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				UIManager.setLookAndFeel(info.getClassName());
+				SwingUtilities.updateComponentTreeUI(DemoRootPane.this);
+			} catch (RuntimeException re) {
+				throw re; // FindBugs
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	/**

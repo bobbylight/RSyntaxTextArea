@@ -42,14 +42,36 @@ import org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil;
  * @author Robert Futrell
  * @version 1.0
  */
-class MatchedBracketPopup extends JWindow {
+public class MatchedBracketPopup extends JWindow {
+
+	/**
+	 * If this system property is defined and set to {@code true},
+	 * matched bracket popups may render with the text area's background
+	 * color if necessary to facilitate contrast between their text content
+	 * (typically code) and their backgrounds.  This is necessary for
+	 * good looking popups when a text area's background may be drastically
+	 * different than the Look and Feel's tool tip color (e.g. dark editor
+	 * embedded in a "light" themed application, or vice versa).
+	 * If this is omitted or does NOT evaluate to {@code true},
+	 * matched bracket popups will always render like "native" tool tips
+	 * according to the current Look and Feel.
+	 * Users typically don't need to set this to {@code true} unless
+	 * their application allows users to select a theme or color scheme
+	 * for {@code RSyntaxTextArea} instances separately from the Look
+	 * and Feel.  For applications that instead only have one Look and
+	 * Feel/RSTA theme combo, or allow toggling between fixed light and
+	 * dark themes, the default of {@code false} is fine.
+	 */
+	public static final String PROPERTY_CONSIDER_TEXTAREA_BACKGROUND =
+		"rsta.matchedBracket.considerTextAreaBackground";
 
 	private RSyntaxTextArea textArea;
 
 	private transient Listener listener;
 
 	private static final int LEFT_EMPTY_BORDER = 5;
-
+	private static final boolean CONSIDER_TEXTAREA_BG =
+		Boolean.getBoolean(PROPERTY_CONSIDER_TEXTAREA_BACKGROUND);
 
 	MatchedBracketPopup(Window parent, RSyntaxTextArea textArea, int
 			offsToRender) {
@@ -57,10 +79,11 @@ class MatchedBracketPopup extends JWindow {
 		super(parent);
 		this.textArea = textArea;
 		JPanel cp = new JPanel(new BorderLayout());
+		RSyntaxTextArea toolTipParam = CONSIDER_TEXTAREA_BG ? textArea : null;
 		cp.setBorder(BorderFactory.createCompoundBorder(
-				TipUtil.getToolTipBorder(),
+				TipUtil.getToolTipBorder(toolTipParam),
 				BorderFactory.createEmptyBorder(2, LEFT_EMPTY_BORDER, 5, 5)));
-		cp.setBackground(TipUtil.getToolTipBackground());
+		cp.setBackground(TipUtil.getToolTipBackground(toolTipParam));
 		setContentPane(cp);
 
 		cp.add(new JLabel(getText(offsToRender)));

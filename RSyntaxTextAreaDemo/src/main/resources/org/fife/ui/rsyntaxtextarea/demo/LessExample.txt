@@ -14,7 +14,7 @@
   	 background: lighten(red, 10%);
   }
 }
-#footer { 
+#footer {
   color: @base-color + #003300;
   border-color: desaturate(@red, 0%);
 }

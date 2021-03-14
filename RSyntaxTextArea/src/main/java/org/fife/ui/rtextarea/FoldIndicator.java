@@ -144,16 +144,8 @@ public class FoldIndicator extends AbstractGutterComponent {
 	@Override
 	public JToolTip createToolTip() {
 		JToolTip tip = super.createToolTip();
-		Color textAreaBG = textArea.getBackground();
-		if (textAreaBG!=null && !Color.white.equals(textAreaBG)) {
-			Color bg = TipUtil.getToolTipBackground();
-			// If current L&F's tool tip color is close enough to "yellow",
-			// and we're not using the default text background of white, use
-			// the editor background as the tool tip background.
-			if (bg.getRed()>=240 && bg.getGreen()>=240 && bg.getBlue()>=200) {
-				tip.setBackground(textAreaBG);
-			}
-		}
+		tip.setBackground(TipUtil.getToolTipBackground(textArea));
+		tip.setBorder(TipUtil.getToolTipBorder(textArea));
 		return tip;
 	}
 

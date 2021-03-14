@@ -25,16 +25,18 @@ import javax.swing.text.html.HTMLDocument;
 
 import org.fife.ui.rsyntaxtextarea.HtmlUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.ui.rtextarea.RTextArea;
 
 
 /**
- * Static utility methods for focusable tips.
+ * Static utility methods for focusable tips.  Many of these methods
+ * are useful when you want to make a popup {@code JWindow} look like
+ * a tool tip.
  *
  * @author Robert Futrell
  * @version 1.0
  */
 public final class TipUtil {
-
 
 	private TipUtil() {
 	}
@@ -71,8 +73,40 @@ public final class TipUtil {
 	 * Returns the default background color to use for tool tip windows.
 	 *
 	 * @return The default background color.
+	 * @see #getToolTipBackground(RTextArea)
+	 * @see #getToolTipBorder()
 	 */
 	public static Color getToolTipBackground() {
+		return getToolTipBackground(null);
+	}
+
+
+	/**
+	 * Returns the default background color to use for tool tip windows.
+	 *
+	 * @param textArea The text area that will be the parent component of
+	 *         the tool tip.  If this is non-{@code null}, its background
+	 *         color is taken into consideration when determining the color
+	 *         to return (it will match the editor's background color if
+	 *         necessary to facilitate proper contrast for tool tips rendering
+	 *         code).  If this is {@code null}, the tool tip background for
+	 *         the current Look and Feel will be returned.
+	 * @return The default background color.
+	 * @see #getToolTipBackground()
+	 * @see #getToolTipBorder(RTextArea)
+	 */
+	public static Color getToolTipBackground(RTextArea textArea) {
+
+		// If the parent component is a text area, we assume the tool tip will
+		// display text area content.  In this case, use its background to
+		// ensure contrast between foreground and background.
+		// The only exception here is if the background of the editor is white,
+		// in which case we still use the default tool tip color (e.g. yellow
+		// on Windows) since contrast there is high enough and it looks a little
+		// more "native"
+		if (textArea != null && !Color.WHITE.equals(textArea.getBackground())) {
+			return textArea.getBackground();
+		}
 
 		Color c = UIManager.getColor("ToolTip.background");
 
@@ -100,8 +134,43 @@ public final class TipUtil {
 	 * Returns the border used by tool tips in this look and feel.
 	 *
 	 * @return The border.
+	 * @see #getToolTipBorder(RTextArea)
+	 * @see #getToolTipBackground()
 	 */
 	public static Border getToolTipBorder() {
+		return getToolTipBorder(null);
+	}
+
+
+	/**
+	 * Returns the border used by tool tips in this look and feel.
+	 *
+	 * @param textArea The text area that will be the parent component of
+	 *         the tool tip.  If this is non-{@code null}, its background
+	 *         color is taken into consideration when determining the color
+	 *         to return (it will coordinate with the editor's background
+	 *         color if necessary to facilitate proper contrast for tool
+	 *         tips rendering code).  If this is {@code null}, the tool
+	 *         tip background for the current Look and Feel will be returned.
+	 * @return The border.
+	 * @see #getToolTipBorder()
+	 * @see #getToolTipBackground(RTextArea)
+	 */
+	public static Border getToolTipBorder(RTextArea textArea) {
+
+		// If the parent component is a text area, we assume the tool tip will
+		// display text area content.  In this case, use its background to
+		// ensure contrast between foreground and background.
+		// The only exception here is if the background of the editor is white,
+		// in which case we still use the default tool tip color (e.g. yellow
+		// on Windows) since contrast there is high enough and it looks a little
+		// more "native"
+		if (textArea != null && !Color.WHITE.equals(textArea.getBackground())) {
+			Color color = textArea.getBackground();
+			if (color != null) {
+				return BorderFactory.createLineBorder(color.brighter());
+			}
+		}
 
 		Border border = UIManager.getBorder("ToolTip.border");
 
@@ -123,7 +192,7 @@ public final class TipUtil {
 	 * querying them is useless.
 	 *
 	 * @param c The color to check.
-	 * @return Whether it is a DerivedColor
+	 * @return Whether it is a DerivedColor.
 	 */
 	private static boolean isDerivedColor(Color c) {
 		return c!=null && c.getClass().getName().endsWith(".DerivedColor");
