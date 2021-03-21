@@ -13,6 +13,14 @@ import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 
+/**
+ * Uses a ANTLR {@link Parser} to generate a {@link ParseResult}.
+ *
+ * @param <L> The {@link Lexer} class to use.
+ * @param <P> The {@link Parser} class to use.
+ *
+ * @author Markus Heberling
+ */
 public abstract class AntlrParserBase<L extends Lexer, P extends Parser> extends AbstractParser {
 
 	protected abstract L createLexer(CharStream input);

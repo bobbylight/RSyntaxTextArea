@@ -8,6 +8,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.fife.ui.rsyntaxtextarea.modes.antlr.AntlrTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.antlr.MultiLineTokenInfo;
 import org.fife.ui.rsyntaxtextarea.modes.antlr.TestLexer;
 import org.junit.Assert;
 import org.junit.Test;

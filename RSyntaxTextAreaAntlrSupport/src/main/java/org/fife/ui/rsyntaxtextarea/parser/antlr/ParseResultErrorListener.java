@@ -8,6 +8,10 @@ import org.antlr.v4.runtime.Token;
 import org.fife.ui.rsyntaxtextarea.parser.DefaultParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 
+/**
+ * Converts ANTLR Parser Errors into {@link org.fife.ui.rsyntaxtextarea.parser.ParserNotice}s.
+ * @author Markus Heberling
+ */
 public class ParseResultErrorListener extends BaseErrorListener {
 	private final ParseResult parseResult;
 

@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Lexer;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.modes.antlr.AntlrTokenMaker;
+import org.fife.ui.rsyntaxtextarea.modes.antlr.MultiLineTokenInfo;
 
 public class CTokenMaker extends AntlrTokenMaker {
 	public CTokenMaker() {
