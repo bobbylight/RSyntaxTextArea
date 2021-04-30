@@ -272,6 +272,7 @@ MLCEnd			= "*/"
 	"BOOLEAN" |
 	"BY" |
 	"BYTE" |
+    "CASE" |
 	"CHAR" |
 	"CHARACTER" |
 	"COLUMN" |
@@ -290,6 +291,8 @@ MLCEnd			= "*/"
 	"DISTINCTROW" |
 	"DOUBLE" |
 	"DROP" |
+    "END" |
+    "ELSE" |
 	"EXISTS" |
 	"FLOAT" |
 	"FLOAT4" |
@@ -323,7 +326,9 @@ MLCEnd			= "*/"
 	"LONGBINARY" |
 	"LONGTEXT" |
 	"MAX" |
+    "MATCHED" |
 	"MEMO" |
+    "MERGE" |
 	"MIN" |
 	"MOD" |
 	"MONEY" |
@@ -359,6 +364,7 @@ MLCEnd			= "*/"
 	"TABLE" |
 	"TABLEID" |
 	"TEXT" |
+    "THEN" |
 	"TIME" |
 	"TIMESTAMP" |
 	"TOP" |
@@ -368,12 +374,14 @@ MLCEnd			= "*/"
 	"UNIQUE" |
 	"UPDATE" |
 	"USER" |
+    "USING" |
 	"VALUE" |
 	"VALUES" |
 	"VAR" |
 	"VARBINARY" |
 	"VARCHAR" |
 	"VARP" |
+    "WHEN" |
 	"WHERE" |
 	"WITH" |
 	"YESNO"					{ addToken(Token.RESERVED_WORD); }
