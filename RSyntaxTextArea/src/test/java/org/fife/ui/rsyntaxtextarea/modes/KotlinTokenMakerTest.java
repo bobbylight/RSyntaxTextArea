@@ -1,12 +1,8 @@
 /*
- * 03/12/2015
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea.modes;
-
-import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
@@ -14,19 +10,21 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.swing.text.Segment;
+
 
 /**
- * Unit tests for the {@link JavaTokenMaker} class.
+ * Unit tests for the {@link KotlinTokenMaker} class.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
+public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
-		return new JavaTokenMaker();
+		return new KotlinTokenMaker();
 	}
 
 
@@ -157,8 +155,6 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"System.Logger",
 			"Thread.UncaughtExceptionHandler",
 
-			"Boolean",
-			"Byte",
 			"Character",
 			"Character.Subset",
 			"Character.UnicodeBlock",
@@ -166,13 +162,10 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"ClassLoader",
 			"ClassValue",
 			"Compiler",
-			"Double",
 			"Enum",
 			"Enum.EnumDesc",
-			"Float",
 			"InheritableThreadLocal",
 			"Integer",
-			"Long",
 			"Math",
 			"Module",
 			"ModuleLayer",
@@ -188,11 +181,9 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"RuntimePermission",
 			"Runtime.Version",
 			"SecurityManager",
-			"Short",
 			"StackTraceElement",
 			"StackWalker",
 			"StrictMath",
-			"String",
 			"StringBuffer",
 			"StringBuilder",
 			"System",
@@ -508,14 +499,18 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
-			"boolean",
-			"byte",
-			"char",
-			"double",
-			"float",
-			"int",
-			"long",
-			"short"
+			"Any",
+			"Boolean",
+			"Byte",
+			"Unit",
+			"String",
+			"Int",
+			"Short",
+			"Long",
+			"Double",
+			"Float",
+			"Char",
+			"Array"
 		);
 	}
 
@@ -541,39 +536,32 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
 			TokenTypes.COMMENT_DOCUMENTATION,
 
-				// current block tags
-				"@author",
-				"@deprecated",
-				"@exception",
-				"@param",
-				"@return",
-				"@see",
-				"@serial",
-				"@serialData",
-				"@serialField",
-				"@since",
-				"@throws",
-				"@version",
+			// block tags
+			"@author",
+			"@constructor",
+			"@exception",
+			"@param",
+			"@property",
+			"@receiver",
+			"@return",
+			"@sample",
+			"@see",
+			"@serial",
+			"@serialData",
+			"@serialField",
+			"@since",
+			"@suppress",
+			"@throws",
+			"@version",
 
-				// proposed doc tags
-				"@category",
-				"@example",
-				"@tutorial",
-				"@index",
-				"@exclude",
-				"@todo",
-				"@internal",
-				"@obsolete",
-				"@threadsafety",
-
-				// inline tag
-				"{@code }",
-				"{@docRoot }",
-				"{@inheritDoc }",
-				"{@link }",
-				"{@linkplain }",
-				"{@literal }",
-				"{@value }"
+			// inline tags
+			"{@code }",
+			"{@docRoot }",
+			"{@inheritDoc }",
+			"{@link }",
+			"{@linkplain }",
+			"{@literal }",
+			"{@value }"
 		);
 	}
 
@@ -770,37 +758,88 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testKeywords() {
 
-		String code = "abstract assert break case catch class const continue " +
-				"default do else enum extends final finally for goto if " +
-				"implements import instanceof interface native new null package " +
-				"private protected public static strictfp super switch " +
-				"synchronized this throw throws transient try void volatile while";
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			/* Hard keywords (sans "return", "true" and "false") */
+		"as",
+			"as?",
+			"break",
+			"class",
+			"continue",
+			"do",
+			"else",
+			"for",
+			"fun",
+			"if",
+			"in",
+			"!in",
+			"interface",
+			"is",
+			"!is",
+			"null",
+			"object",
+			"super",
+			"this",
+			"throw",
+			"try",
+			"typealias",
+			"typeof",
+			"val",
+			"var",
+			"when",
+			"while",
 
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			/* Soft keywords */
+			"by",
+			"catch",
+			"constructor",
+			"delegate",
+			"dynamic",
+			"field",
+			"file",
+			"finally",
+			"get",
+			"import",
+			"init",
+			"param",
+			"property",
+			"receiver",
+			"set",
+			"setparam",
+			"where",
 
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
+			/* Modifier keywords */
+			"actual",
+			"abstract",
+			"annotation",
+			"companion",
+			"const",
+			"crossinline",
+			"data",
+			"enum",
+			"expect",
+			"external",
+			"final",
+			"infix",
+			"inline",
+			"inner",
+			"internal",
+			"lateinit",
+			"noinline",
+			"open",
+			"operator",
+			"out",
+			"override",
+			"private",
+			"protected",
+			"public",
+			"reified",
+			"sealed",
+			"suspend",
+			"tailrec",
+			"vararg"
+		);
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
-
-		segment = createSegment("return");
-		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertEquals("return", token.getLexeme());
-		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
-		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
-
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2, "return");
 	}
 
 

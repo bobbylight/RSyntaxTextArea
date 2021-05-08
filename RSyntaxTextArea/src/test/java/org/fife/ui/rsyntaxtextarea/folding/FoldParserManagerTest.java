@@ -52,6 +52,7 @@ public class FoldParserManagerTest {
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON_WITH_COMMENTS));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSP));
+		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_KOTLIN));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LATEX));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LESS));
 		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LISP));
