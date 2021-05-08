@@ -124,34 +124,20 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "--", null };
 	}
 
 
-	/**
-	 * Returns the first token in the linked list of tokens generated
-	 * from <code>text</code>.  This method must be implemented by
-	 * subclasses so they can correctly implement syntax highlighting.
-	 *
-	 * @param text The text from which to get tokens.
-	 * @param initialTokenType The token type we should start with.
-	 * @param startOffset The offset into the document at which
-	 *        <code>text</code> starts.
-	 * @return The first <code>Token</code> in a linked list representing
-	 *         the syntax highlighted text.
-	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -166,7 +152,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -203,7 +189,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -325,6 +311,7 @@ MLCEnd			= "*/"
 	"LONG" |
 	"LONGBINARY" |
 	"LONGTEXT" |
+	"MATCHED" |
 	"MAX" |
     "MATCHED" |
 	"MEMO" |
@@ -439,6 +426,7 @@ MLCEnd			= "*/"
 	"\""							{ start = zzMarkedPos-1; yybegin(STRING); }
 	"\'"							{ start = zzMarkedPos-1; yybegin(CHAR); }
 
+    // MS-SQL square bracket identifiers
 	"["[^\]]*"]"					{ addToken(Token.PREPROCESSOR); }
 	"["[^\]]*						{ addToken(Token.ERROR_IDENTIFIER); addNullToken(); return firstToken; }
 

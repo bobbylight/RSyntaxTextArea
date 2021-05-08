@@ -1137,9 +1137,6 @@ public class SQLTokenMaker extends AbstractJFlexTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "--", null };
@@ -1164,7 +1161,7 @@ public class SQLTokenMaker extends AbstractJFlexTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -1179,7 +1176,7 @@ public class SQLTokenMaker extends AbstractJFlexTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -1216,7 +1213,7 @@ public class SQLTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
