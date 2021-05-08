@@ -29,66 +29,78 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	public void testCharLiterals() {
-		String[] chars = {
-			"'a'", "'\\b'",
-		};
-		assertAllTokensOfType(chars, TokenTypes.LITERAL_CHAR);
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'a'",
+			"'\\b'",
+			"''''"
+		);
+	}
+
+
+	@Test
+	public void testCharLiterals_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued from previous line'",
+			"continued from previous line but also still not terminated"
+		);
 	}
 
 
 	@Test
 	public void testEolComments() {
-		String[] eolCommentLiterals = {
-			"-- Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"-- Hello world"
+		);
 	}
 
 
 	@Test
 	public void testFloatingPointLiterals() {
-		String[] floats = { "3.0", "4.2", "3.0", ".111" };
-		assertAllTokensOfType(floats, TokenTypes.LITERAL_NUMBER_FLOAT);
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
+			"3.0",
+			"4.2",
+			"3.0",
+			".111"
+		);
 	}
 
 
 	@Test
 	public void testFunctions() {
 
-		String[] functions = {
-				/* SQL99 aggregate functions */
-				"AVG",
-				//"COUNT",
-				//"MIN",
-				//"MAX",
-				//"SUM",
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			/* SQL99 aggregate functions */
+			"AVG",
+			//"COUNT",
+			//"MIN",
+			//"MAX",
+			//"SUM",
 
-				/* SQL99 built-in scalar functions */
-				"CURRENT_DATE",
-				"CURRENT_TIME",
-				"CURRENT_TIMESTAMP",
-				"CURRENT_USER",
-				"SESSION_USER",
-				"SYSTEM_USER",
+			/* SQL99 built-in scalar functions */
+			"CURRENT_DATE",
+			"CURRENT_TIME",
+			"CURRENT_TIMESTAMP",
+			"CURRENT_USER",
+			"SESSION_USER",
+			"SYSTEM_USER",
 
-				/* SQL99 numeric scalar functions */
-				"BIT_LENGTH",
-				"CHAR_LENGTH",
-				"EXTRACT",
-				"OCTET_LENGTH",
-				"POSITION",
+			/* SQL99 numeric scalar functions */
+			"BIT_LENGTH",
+			"CHAR_LENGTH",
+			"EXTRACT",
+			"OCTET_LENGTH",
+			"POSITION",
 
-				/* SQL99 string functions */
-				"CONCATENATE",
-				"CONVERT",
-				"LOWER",
-				"SUBSTRING",
-				"TRANSLATE",
-				"TRIM",
-				"UPPER",
-		};
-
-		assertAllTokensOfType(functions, TokenTypes.FUNCTION);
+			/* SQL99 string functions */
+			"CONCATENATE",
+			"CONVERT",
+			"LOWER",
+			"SUBSTRING",
+			"TRANSLATE",
+			"TRIM",
+			"UPPER"
+		);
 	}
 
 
@@ -102,158 +114,231 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testIntegerLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"598"
+		);
+	}
+
+
+	@Test
 	public void testKeywords() {
-		String[] keywords = {
-				"ADD",
-				"ALL",
-				"ALTER",
-				"AND",
-				"ANY",
-				"AS",
-				"ASC",
-				"AUTOINCREMENT",
-				"AVA",
-				"BETWEEN",
-				"BINARY",
-				"BIT",
-				"BOOLEAN",
-				"BY",
-				"BYTE",
-				"CHAR",
-				"CHARACTER",
-				"COLUMN",
-				"CONSTRAINT",
-				"COUNT",
-				"COUNTER",
-				"CREATE",
-				"CURRENCY",
-				"DATABASE",
-				"DATE",
-				"DATETIME",
-				"DELETE",
-				"DESC",
-				"DISALLOW",
-				"DISTINCT",
-				"DISTINCTROW",
-				"DOUBLE",
-				"DROP",
-				"EXISTS",
-				"FLOAT",
-				"FLOAT4",
-				"FLOAT8",
-				"FOREIGN",
-				"FROM",
-				"GENERAL",
-				"GROUP",
-				"GUID",
-				"HAVING",
-				"INNER",
-				"INSERT",
-				"IGNORE",
-				"IMP",
-				"IN",
-				"INDEX",
-				"INT",
-				"INTEGER",
-				"INTEGER1",
-				"INTEGER2",
-				"INTEGER4",
-				"INTO",
-				"IS",
-				"JOIN",
-				"KEY",
-				"LEFT",
-				"LEVEL",
-				"LIKE",
-				"LOGICAL",
-				"LONG",
-				"LONGBINARY",
-				"LONGTEXT",
-				"MAX",
-				"MEMO",
-				"MIN",
-				"MOD",
-				"MONEY",
-				"NOT",
-				"NULL",
-				"NUMBER",
-				"NUMERIC",
-				"OLEOBJECT",
-				"ON",
-				"OPTION",
-				"OR",
-				"ORDER",
-				"OUTER",
-				"OWNERACCESS",
-				"PARAMETERS",
-				"PASSWORD",
-				"PERCENT",
-				"PIVOT",
-				"PRIMARY",
-				"REAL",
-				"REFERENCES",
-				"RIGHT",
-				"SELECT",
-				"SET",
-				"SHORT",
-				"SINGLE",
-				"SMALLINT",
-				"SOME",
-				"STDEV",
-				"STDEVP",
-				"STRING",
-				"SUM",
-				"TABLE",
-				"TABLEID",
-				"TEXT",
-				"TIME",
-				"TIMESTAMP",
-				"TOP",
-				"TRANSFORM",
-				"TYPE",
-				"UNION",
-				"UNIQUE",
-				"UPDATE",
-				"USER",
-				"VALUE",
-				"VALUES",
-				"VAR",
-				"VARBINARY",
-				"VARCHAR",
-				"VARP",
-				"WHERE",
-				"WITH",
-				"YESNO",
-		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			"ADD",
+			"ALL",
+			"ALTER",
+			"AND",
+			"ANY",
+			"AS",
+			"ASC",
+			"AUTOINCREMENT",
+			"AVA",
+			"BETWEEN",
+			"BINARY",
+			"BIT",
+			"BOOLEAN",
+			"BY",
+			"BYTE",
+			"CASE",
+			"CHAR",
+			"CHARACTER",
+			"COLUMN",
+			"CONSTRAINT",
+			"COUNT",
+			"COUNTER",
+			"CREATE",
+			"CURRENCY",
+			"DATABASE",
+			"DATE",
+			"DATETIME",
+			"DELETE",
+			"DESC",
+			"DISALLOW",
+			"DISTINCT",
+			"DISTINCTROW",
+			"DOUBLE",
+			"DROP",
+			"END",
+			"ELSE",
+			"EXISTS",
+			"FLOAT",
+			"FLOAT4",
+			"FLOAT8",
+			"FOREIGN",
+			"FROM",
+			"GENERAL",
+			"GROUP",
+			"GUID",
+			"HAVING",
+			"INNER",
+			"INSERT",
+			"IGNORE",
+			"IMP",
+			"IN",
+			"INDEX",
+			"INT",
+			"INTEGER",
+			"INTEGER1",
+			"INTEGER2",
+			"INTEGER4",
+			"INTO",
+			"IS",
+			"JOIN",
+			"KEY",
+			"LEFT",
+			"LEVEL",
+			"LIKE",
+			"LOGICAL",
+			"LONG",
+			"LONGBINARY",
+			"LONGTEXT",
+			"MATCHED",
+			"MAX",
+			"MEMO",
+			"MERGE",
+			"MIN",
+			"MOD",
+			"MONEY",
+			"NOT",
+			"NULL",
+			"NUMBER",
+			"NUMERIC",
+			"OLEOBJECT",
+			"ON",
+			"OPTION",
+			"OR",
+			"ORDER",
+			"OUTER",
+			"OWNERACCESS",
+			"PARAMETERS",
+			"PASSWORD",
+			"PERCENT",
+			"PIVOT",
+			"PRIMARY",
+			"REAL",
+			"REFERENCES",
+			"RIGHT",
+			"SELECT",
+			"SET",
+			"SHORT",
+			"SINGLE",
+			"SMALLINT",
+			"SOME",
+			"STDEV",
+			"STDEVP",
+			"STRING",
+			"SUM",
+			"TABLE",
+			"TABLEID",
+			"TEXT",
+			"THEN",
+			"TIME",
+			"TIMESTAMP",
+			"TOP",
+			"TRANSFORM",
+			"TYPE",
+			"UNION",
+			"UNIQUE",
+			"UPDATE",
+			"USER",
+			"USING",
+			"VALUE",
+			"VALUES",
+			"VAR",
+			"VARBINARY",
+			"VARCHAR",
+			"VARP",
+			"WHEN",
+			"WHERE",
+			"WITH",
+			"YESNO"
+		);
 	}
 
 
 	@Test
 	public void testMultiLineComments() {
 
-		String[] mlcLiterals = {
-			"/* Hello world */",
-		};
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world */"
+		);
+	}
 
-		assertAllTokensOfType(mlcLiterals, TokenTypes.COMMENT_MULTILINE);
+
+	@Test
+	public void testMultiLineComments_continuedFromPreviousLine() {
+
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, TokenTypes.COMMENT_MULTILINE,
+			" this is a continued comment */"
+		);
+	}
+
+
+	@Test
+	public void testOperators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			">=",
+			"<=",
+			"<>",
+			">",
+			"<",
+			"=",
+			"+",
+			"-",
+			"*",
+			"/"
+		);
 	}
 
 
 	@Test
 	public void testSeparators() {
-		String[] separators = { "(", ")" };
-		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")"
+		);
+	}
+
+
+	@Test
+	public void testSquareBracketIdentifiers() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"[users]",
+			"[user id]"
+		);
 	}
 
 
 	@Test
 	public void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"\\\"\""
+		);
 	}
 
 
+	@Test
+	public void testStringLiterals_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"this is continued from the previous line\"",
+			"this is continued from the previous line but also still not terminated"
+		);
+	}
+
+
+	@Test
+	public void testWhitespace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"\t",
+			"   ",
+			"\t\t",
+			"   \t\t   "
+		);
+	}
 }
