@@ -22,7 +22,6 @@ import java.util.Stack;
  * Fold is started by each line.
  * Each fold contains all following lines with indent higher than the current line.
  */
-
 public class YamlFoldParser implements FoldParser {
 
 
@@ -55,6 +54,9 @@ public class YamlFoldParser implements FoldParser {
             for (int line=0; line<lineCount; line++) {
 
                 Token t = textArea.getTokenListForLine(line);
+                if (!t.isPaintable()) {
+                	continue; // Skip empty lines
+				}
                 Token startLine = t;
                 int offset = t.getOffset();
 
@@ -76,7 +78,7 @@ public class YamlFoldParser implements FoldParser {
                         Fold parentFold = currentFold.getParent();
                         // Don't add fold markers for single-line blocks
                         if (currentFold.isOnSingleLine()) {
-                            removeFold(currentFold, folds);
+							removeFold(currentFold, folds);
                         }
                         currentFold = parentFold;
                         indentStack.pop();
