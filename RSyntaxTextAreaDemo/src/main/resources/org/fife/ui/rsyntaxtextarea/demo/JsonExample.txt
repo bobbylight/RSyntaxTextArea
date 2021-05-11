@@ -1,5 +1,5 @@
 {
-  [
+  "celebrities": [
     {
       "name": "George Clooney",
       "dob": "1961-05-06T00:00:00",
