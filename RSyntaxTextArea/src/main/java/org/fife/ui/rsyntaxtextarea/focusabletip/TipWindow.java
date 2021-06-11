@@ -43,7 +43,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.ui.rsyntaxtextarea.HtmlUtil;
 
 
 /**
@@ -76,7 +76,7 @@ class TipWindow extends JWindow implements ActionListener {
 		// Render plain text tool tips correctly.
 		if (msg!=null && msg.length()>=6 &&
 				!msg.substring(0,6).equalsIgnoreCase("<html>")) {
-			msg = "<html>" + RSyntaxUtilities.escapeForHtml(msg, "<br>", false);
+			msg = "<html>" + HtmlUtil.escapeForHtml(msg, "<br>", false);
 		}
 		this.text = msg;
 		tipListener = new TipListener();

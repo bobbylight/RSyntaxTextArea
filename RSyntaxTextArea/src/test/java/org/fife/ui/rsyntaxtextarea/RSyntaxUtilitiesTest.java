@@ -28,46 +28,6 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testEscapeForHtml_nullInput() {
-		Assert.assertNull(RSyntaxUtilities.escapeForHtml(null, "<br>", true));
-	}
-
-
-	@Test
-	public void testEscapeForHtml_nullNewlineReplacement() {
-		Assert.assertEquals("", RSyntaxUtilities.escapeForHtml("\n", null, true));
-	}
-
-
-	@Test
-	public void testEscapeForHtml_happyPath() {
-		Assert.assertEquals("hello", RSyntaxUtilities.escapeForHtml("hello", "<br>", true));
-		Assert.assertEquals("2 &lt; 4", RSyntaxUtilities.escapeForHtml("2 < 4", "<br>", true));
-	}
-
-
-	@Test
-	public void testEscapeForHtml_problemChars() {
-		Assert.assertEquals(" <br>&amp;   &lt;&gt;&#39;&#34;&#47;",
-				RSyntaxUtilities.escapeForHtml(" \n&\t<>'\"/", "<br>", true));
-	}
-
-
-	@Test
-	public void testEscapeForHtml_multipleSpaces_inPreBlock() {
-		Assert.assertEquals("   ",
-				RSyntaxUtilities.escapeForHtml("   ", "<br>", true));
-	}
-
-
-	@Test
-	public void testEscapeForHtml_multipleSpaces_notInPreBlock() {
-		Assert.assertEquals(" &nbsp;&nbsp;",
-				RSyntaxUtilities.escapeForHtml("   ", "<br>", false));
-	}
-
-
-	@Test
 	public void testGetFoldedLineBottomColor_gutterFound() {
 		RSyntaxTextArea textArea = createTextArea();
 		RTextScrollPane sp = new RTextScrollPane(textArea);
