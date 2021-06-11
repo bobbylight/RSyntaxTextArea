@@ -84,7 +84,7 @@ public class DefaultParserNoticeTest {
 
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 6);
 		notice2.setLevel(Level.INFO);
-		
+
 		Assert.assertTrue(notice.compareTo(notice2) < 0);
 		Assert.assertTrue(notice2.compareTo(notice) > 0);
 
@@ -99,7 +99,7 @@ public class DefaultParserNoticeTest {
 
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "FooBar", 5);
 		notice2.setLevel(Level.INFO);
-		
+
 		Assert.assertTrue(notice.compareTo(notice2) < 0);
 		Assert.assertTrue(notice2.compareTo(notice) > 0);
 
@@ -111,13 +111,13 @@ public class DefaultParserNoticeTest {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
-		Assert.assertTrue(notice.compareTo(notice) == 0);
+		Assert.assertEquals(0, notice.compareTo(notice));
 
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 5);
 		notice2.setLevel(Level.INFO);
-		
-		Assert.assertTrue(notice.compareTo(notice2) == 0);
-		Assert.assertTrue(notice2.compareTo(notice) == 0);
+
+		Assert.assertEquals(0, notice.compareTo(notice2));
+		Assert.assertEquals(0, notice2.compareTo(notice));
 
 	}
 

@@ -185,7 +185,7 @@ public abstract class RPrintUtilities {
 						}
 	 			}
 
-				curLineString = curLineString.substring(maxCharsPerLine, curLineString.length());
+				curLineString = curLineString.substring(maxCharsPerLine);
 
 			}
 
@@ -298,7 +298,7 @@ public abstract class RPrintUtilities {
 			}
 
 			// If this document line is too long to fit on one printed line on the page,
-			// break it up into multpile lines.
+			// break it up into multiple lines.
 			while (curLineString.length() > maxCharsPerLine) {
 
 				int breakPoint = getLineBreakPoint(curLineString, maxCharsPerLine) + 1;
@@ -312,7 +312,7 @@ public abstract class RPrintUtilities {
 						}
 	 			}
 
-				curLineString = curLineString.substring(breakPoint, curLineString.length());
+				curLineString = curLineString.substring(breakPoint);
 
 			}
 
@@ -415,7 +415,7 @@ public abstract class RPrintUtilities {
 			// Remove any spaces and/or tabs from the end of the segment (would cause problems if you left 'em).
 			currentLineSeg = removeEndingWhitespace(currentLineSeg);
 
-			// Figger out how long the line is, in pixels.
+			// Figure out how long the line is, in pixels.
 			int currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0, tabExpander, 0);
 
 //System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" + LINE_LENGTH_IN_PIXELS);
@@ -464,7 +464,7 @@ public abstract class RPrintUtilities {
 							try {
 								doc.getText(currentLineStart+startingOffset, currentPos, currentLineSeg);
 							} catch (BadLocationException ble) {
-								System.err.println(ble);
+								ble.printStackTrace();
 								return Printable.NO_SUCH_PAGE;
 							}
 							currentLineLengthInPixels = Utilities.

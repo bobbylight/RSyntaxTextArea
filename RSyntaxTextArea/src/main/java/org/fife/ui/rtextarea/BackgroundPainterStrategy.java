@@ -20,7 +20,7 @@ import java.awt.Rectangle;
  * an image, and possibly other ways (gradients, animated images, etc.).
  * When a method to change the background of an <code>RTextAreaBase</code>
  * instance is called (such as <code>setBackground</code>,
- * <code>setBackgroundImage</code> or <code>setBackgoundObject</code>),
+ * <code>setBackgroundImage</code> or <code>setBackgroundObject</code>),
  * the correct strategy is then created and used to paint its background.
  *
  * @author Robert Futrell
@@ -35,7 +35,7 @@ public interface BackgroundPainterStrategy {
 	 * Paints the background.
 	 *
 	 * @param g The graphics context.
-	 * @param bounds The bounds of the object whose backgrouns we're
+	 * @param bounds The bounds of the object whose background we're
 	 *        painting.
 	 */
 	void paint(Graphics g, Rectangle bounds);

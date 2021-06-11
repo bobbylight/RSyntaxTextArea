@@ -218,24 +218,28 @@ public class UnicodeWriter extends Writer {
 
 		// Write the proper BOM if they specified a Unicode encoding.
 		// NOTE: Creating an OutputStreamWriter with encoding "UTF-16" DOES
-		// DOES write out the BOM; "UTF-16LE", "UTF-16BE", "UTF-32", "UTF-32LE"
+		// write out the BOM; "UTF-16LE", "UTF-16BE", "UTF-32", "UTF-32LE"
 		// and "UTF-32BE" don't.
-		if ("UTF-8".equals(encoding)) {
-			if (getWriteUtf8BOM()) {
-				out.write(UTF8_BOM, 0, UTF8_BOM.length);
-			}
-		}
-		else if ("UTF-16LE".equals(encoding)) {
-			out.write(UTF16LE_BOM, 0, UTF16LE_BOM.length);
-		}
-		else if (/*"UTF-16".equals(encoding) || */"UTF-16BE".equals(encoding)) {
-			out.write(UTF16BE_BOM, 0, UTF16BE_BOM.length);
-		}
-		else if ("UTF-32LE".equals(encoding)) {
-			out.write(UTF32LE_BOM, 0, UTF32LE_BOM.length);
-		}
-		else if ("UTF-32".equals(encoding) || "UTF-32BE".equals(encoding)) {
-			out.write(UTF32BE_BOM, 0, UTF32BE_BOM.length);
+		switch (encoding) {
+			case "UTF-8":
+				if (getWriteUtf8BOM()) {
+					out.write(UTF8_BOM, 0, UTF8_BOM.length);
+				}
+				break;
+			case "UTF-16LE":
+				out.write(UTF16LE_BOM, 0, UTF16LE_BOM.length);
+				break;
+			//case "UTF-16": // Already writes the BOM, so we don't
+			case "UTF-16BE":
+				out.write(UTF16BE_BOM, 0, UTF16BE_BOM.length);
+				break;
+			case "UTF-32LE":
+				out.write(UTF32LE_BOM, 0, UTF32LE_BOM.length);
+				break;
+			case "UTF-32":
+			case "UTF-32BE":
+				out.write(UTF32BE_BOM, 0, UTF32BE_BOM.length);
+				break;
 		}
 
 	}

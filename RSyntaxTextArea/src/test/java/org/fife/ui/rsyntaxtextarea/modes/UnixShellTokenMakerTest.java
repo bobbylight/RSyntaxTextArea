@@ -114,7 +114,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assert.assertEquals("#", startAndEnd[0]);
-		Assert.assertEquals(null, startAndEnd[1]);
+		Assert.assertNull(startAndEnd[1]);
 	}
 
 
@@ -309,7 +309,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -383,7 +383,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -409,7 +409,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -435,7 +435,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

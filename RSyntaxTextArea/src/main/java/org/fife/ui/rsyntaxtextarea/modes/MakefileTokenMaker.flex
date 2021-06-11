@@ -287,8 +287,8 @@ Operator				= ([\:\+\?]?"=")
 	{BacktickLiteral}				{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 
 	/* Variables. */
-	{CurlyVarStart}					{ if (varDepths==null) { varDepths = new Stack<Boolean>(); } else { varDepths.clear(); } varDepths.push(Boolean.TRUE); start = zzMarkedPos-2; yybegin(VAR); }
-	{ParenVarStart}					{ if (varDepths==null) { varDepths = new Stack<Boolean>(); } else { varDepths.clear(); } varDepths.push(Boolean.FALSE); start = zzMarkedPos-2; yybegin(VAR); }
+	{CurlyVarStart}					{ if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.TRUE); start = zzMarkedPos-2; yybegin(VAR); }
+	{ParenVarStart}					{ if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.FALSE); start = zzMarkedPos-2; yybegin(VAR); }
 
 	/* Comment literals. */
 	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }

@@ -137,7 +137,7 @@ public class TokenIteratorTest {
 
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
-		List<Token> list = new ArrayList<Token>();
+		List<Token> list = new ArrayList<>();
 
 		for (int i=0; i<lineCount; i++) {
 			Token t = doc.getTokenListForLine(i);

@@ -508,19 +508,19 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								currentTokenType = Token.IDENTIFIER;
 								break;
 							}
-							int indexOf = OPERATORS.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS.indexOf(c,0);
+							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.SEPARATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS2.indexOf(c,0);
+							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
@@ -597,19 +597,19 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								currentTokenType = Token.IDENTIFIER;
 								break;
 							}
-							int indexOf = OPERATORS.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS.indexOf(c,0);
+							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, i,i, Token.SEPARATOR, newStartOffset+i);
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS2.indexOf(c,0);
+							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
 								currentTokenType = Token.NULL;
@@ -693,14 +693,14 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS.indexOf(c,0);
+							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 								addToken(text, i,i, Token.SEPARATOR, newStartOffset+i);
 								currentTokenType = Token.NULL;
 								break;
 							}
-							indexOf = SEPARATORS2.indexOf(c,0);
+							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
 								addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
@@ -886,7 +886,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							// Variable in the backquote string...
 							case '$':
 
-								if (backslash==true) {
+								if (backslash) {
 									backslash = false;
 									break;
 								}
@@ -995,7 +995,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							// Variable in the double-quoted string...
 							case '$':
 
-								if (backslash==true) {
+								if (backslash) {
 									backslash = false;
 									break;
 								}

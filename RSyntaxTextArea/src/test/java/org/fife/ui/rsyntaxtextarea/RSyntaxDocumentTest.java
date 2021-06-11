@@ -56,17 +56,17 @@ public class RSyntaxDocumentTest {
 		doc = new RSyntaxDocument(syntaxStyle);
 		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 	}
-	
-	
+
+
 	@Test
 	public void test2ArgConstructor() {
-		
+
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
-		
+
 		// Standard case, taking default TokenMakerFactory
 		doc = new RSyntaxDocument(null, syntaxStyle);
 		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
-		
+
 		// Taking a custom TokenMakerFactory
 		TokenMakerFactory customTmf = new AbstractTokenMakerFactory() {
 			@Override
@@ -76,19 +76,19 @@ public class RSyntaxDocumentTest {
 		};
 		doc = new RSyntaxDocument(customTmf, syntaxStyle);
 		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
-		
+
 	}
-	
-	
+
+
 	@Test
 	public void testFireDocumentEvent_InsertWithNoNewLines() throws Exception {
-		
+
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
 		doc = new RSyntaxDocument(syntaxStyle);
-		
+
 		TestDocumentListener l = new TestDocumentListener();
 		doc.addDocumentListener(l);
-		
+
 		// Two events sent - one "change" event containing line range AFTER
 		// insert to repaint, second one is actual "insert" event.
 		int offs = 0;
@@ -100,10 +100,10 @@ public class RSyntaxDocumentTest {
 		assertDocumentEvent(e, DocumentEvent.EventType.CHANGE, 0, 0);
 		e = l.events.get(1);
 		assertDocumentEvent(e, DocumentEvent.EventType.INSERT, 0, text.length());
-		
+
 	}
-	
-	
+
+
 	@Test
 	public void testFireDocumentEvent_InsertWithTwoNewLines() throws Exception {
 
@@ -113,7 +113,7 @@ public class RSyntaxDocumentTest {
 
 		TestDocumentListener l = new TestDocumentListener();
 		doc.addDocumentListener(l);
-		
+
 		// Two events sent - one "change" event containing line range AFTER
 		// insert repaint, second one is actual "insert" event.
 		int oldLen = doc.getLength();
@@ -127,10 +127,10 @@ public class RSyntaxDocumentTest {
 		e = l.events.get(1);
 		assertDocumentEvent(e, DocumentEvent.EventType.INSERT,
 				oldLen - 4, text.length());
-		
+
 	}
-	
-	
+
+
 	@Test
 	public void testFireDocumentEvent_InsertWithTwoNewLinesOneReplaced() throws Exception {
 
@@ -140,7 +140,7 @@ public class RSyntaxDocumentTest {
 
 		TestDocumentListener l = new TestDocumentListener();
 		doc.addDocumentListener(l);
-		
+
 		int oldLen = doc.getLength();
 		String text = "// Inserted line 1\nprintf(\"This is working\n\");";
 		doc.replace(oldLen - 4, 1, text, null);
@@ -165,8 +165,8 @@ public class RSyntaxDocumentTest {
 		assertDocumentEvent(e, DocumentEvent.EventType.INSERT,
 				oldLen - 4, text.length());
 	}
-	
-	
+
+
 	@Test
 	public void testFireDocumentEvent_RemoveWithinOneLine() throws Exception {
 
@@ -176,7 +176,7 @@ public class RSyntaxDocumentTest {
 
 		TestDocumentListener l = new TestDocumentListener();
 		doc.addDocumentListener(l);
-		
+
 		doc.replace(52, 3, null, null); // Replace "main" with "m"
 
 		// Two events sent - A change/remove pair.
@@ -425,7 +425,7 @@ public class RSyntaxDocumentTest {
 
 	@Test
 	public void testIsIdentifierChar() {
-		
+
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
 		Assert.assertTrue(doc.isIdentifierChar(0, 'a'));
@@ -535,13 +535,13 @@ public class RSyntaxDocumentTest {
 	 * Aggregates document events for examination.
 	 */
 	private static class TestDocumentListener implements DocumentListener {
-		
+
 		private List<DocumentEvent> events;
-		
+
 		public TestDocumentListener() {
-			events = new ArrayList<DocumentEvent>();
+			events = new ArrayList<>();
 		}
-		
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			events.add(e);
@@ -556,8 +556,8 @@ public class RSyntaxDocumentTest {
 		public void changedUpdate(DocumentEvent e) {
 			events.add(e);
 		}
-		
+
 	}
-	
-	
+
+
 }

@@ -88,7 +88,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_noCharsetArg_localNonExistantFile() throws IOException {
+	public void testLoad_noCharsetArg_localNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -108,7 +108,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_charset_localNonExistantFile() throws IOException {
+	public void testLoad_charset_localNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -128,7 +128,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_string_loadNonExistantFile() throws IOException {
+	public void testLoad_string_loadNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -214,7 +214,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testSave_loadNonExistantFile() throws IOException {
+	public void testSave_loadNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 

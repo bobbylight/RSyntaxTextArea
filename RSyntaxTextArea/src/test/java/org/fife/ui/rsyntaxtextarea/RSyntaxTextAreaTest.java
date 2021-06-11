@@ -580,7 +580,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Assert.assertTrue(textArea.canUndo());
 		Assert.assertFalse(textArea.canRedo());
 
-		textArea.undoLastAction();;
+		textArea.undoLastAction();
 		Assert.assertTrue(textArea.canRedo());
 
 		textArea.redoLastAction();
@@ -691,7 +691,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Assert.assertFalse(textArea.canUndo());
 		textArea.append("foo");
 		Assert.assertTrue(textArea.canUndo());
-		textArea.undoLastAction();;
+		textArea.undoLastAction();
 		Assert.assertFalse(textArea.canUndo());
 	}
 

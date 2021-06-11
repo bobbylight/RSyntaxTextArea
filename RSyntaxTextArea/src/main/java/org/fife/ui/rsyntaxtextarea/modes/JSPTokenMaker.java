@@ -6564,13 +6564,13 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	private static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
-	 * Token type specifying we're in a double-qouted attribute in a
+	 * Token type specifying we're in a double-quoted attribute in a
 	 * script tag.
 	 */
 	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
-	 * Token type specifying we're in a single-qouted attribute in a
+	 * Token type specifying we're in a single-quoted attribute in a
 	 * script tag.
 	 */
 	private static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
@@ -6582,13 +6582,13 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	private static final int INTERNAL_INTAG_STYLE			= -7;
 
 	/**
-	 * Token type specifying we're in a double-qouted attribute in a
+	 * Token type specifying we're in a double-quoted attribute in a
 	 * style tag.
 	 */
 	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
 
 	/**
-	 * Token type specifying we're in a single-qouted attribute in a
+	 * Token type specifying we're in a single-quoted attribute in a
 	 * style tag.
 	 */
 	private static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
@@ -7946,7 +7946,7 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
           { addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
 								start = zzMarkedPos-2;
 								if (varDepths==null) {
-									varDepths = new Stack<Boolean>();
+									varDepths = new Stack<>();
 								}
 								else {
 									varDepths.clear();

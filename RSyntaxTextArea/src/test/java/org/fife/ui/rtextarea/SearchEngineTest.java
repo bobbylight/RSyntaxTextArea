@@ -121,7 +121,7 @@ public class SearchEngineTest {
 			}
 
 			// Strip off last newline
-			text = sb.toString().substring(0, sb.length()-1);
+			text = sb.substring(0, sb.length()-1);
 
 		}
 

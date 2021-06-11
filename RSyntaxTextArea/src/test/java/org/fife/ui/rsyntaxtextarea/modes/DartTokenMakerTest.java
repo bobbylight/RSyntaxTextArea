@@ -165,7 +165,7 @@ public class DartTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -202,7 +202,7 @@ public class DartTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -417,7 +417,7 @@ public class DartTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -445,7 +445,7 @@ public class DartTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

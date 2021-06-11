@@ -7,7 +7,6 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunner;
-import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.junit.Assert;
 import org.junit.Test;

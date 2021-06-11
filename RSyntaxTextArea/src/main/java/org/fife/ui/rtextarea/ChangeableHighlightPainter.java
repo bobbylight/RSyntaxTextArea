@@ -76,7 +76,7 @@ public class ChangeableHighlightPainter
 
 
 	/**
-	 * Creates a new <code>ChangableHighlightPainter</code> that paints
+	 * Creates a new <code>ChangeableHighlightPainter</code> that paints
 	 * highlights with the text area's selection color (i.e., behaves exactly
 	 * like
 	 * <code>javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
