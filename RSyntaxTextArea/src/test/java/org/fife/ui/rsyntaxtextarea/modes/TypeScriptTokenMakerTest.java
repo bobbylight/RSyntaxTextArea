@@ -103,7 +103,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -171,7 +171,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -604,7 +604,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -630,7 +630,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -687,14 +687,14 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 		segment = createSegment("return");
 		token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
 		Assert.assertEquals("return", token.getLexeme());
 		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -834,7 +834,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -879,7 +879,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

@@ -90,6 +90,7 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 
+	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));

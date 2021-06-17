@@ -101,7 +101,7 @@ public class LispTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 		}
 
-		Assert.assertTrue(token.getType() == TokenTypes.NULL);
+		Assert.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

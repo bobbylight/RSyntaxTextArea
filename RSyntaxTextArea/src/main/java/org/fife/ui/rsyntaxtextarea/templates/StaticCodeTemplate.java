@@ -154,7 +154,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 		StringBuilder sb = new StringBuilder(text.substring(0, old));
 		sb.append(indent);
 		while ((pos=text.indexOf('\n', old))>-1) {
-			sb.append(text.substring(old, pos+1));
+			sb.append(text, old, pos+1);
 			sb.append(indent);
 			old = pos+1;
 		}

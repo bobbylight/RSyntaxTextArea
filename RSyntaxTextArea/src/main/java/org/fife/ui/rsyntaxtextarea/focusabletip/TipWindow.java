@@ -43,7 +43,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.ui.rsyntaxtextarea.HtmlUtil;
 
 
 /**
@@ -75,8 +75,8 @@ class TipWindow extends JWindow implements ActionListener {
 		this.ft = ft;
 		// Render plain text tool tips correctly.
 		if (msg!=null && msg.length()>=6 &&
-				!msg.substring(0,6).toLowerCase().equals("<html>")) {
-			msg = "<html>" + RSyntaxUtilities.escapeForHtml(msg, "<br>", false);
+				!msg.substring(0,6).equalsIgnoreCase("<html>")) {
+			msg = "<html>" + HtmlUtil.escapeForHtml(msg, "<br>", false);
 		}
 		this.text = msg;
 		tipListener = new TipListener();
@@ -333,7 +333,7 @@ class TipWindow extends JWindow implements ActionListener {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// Since we registered this listener on the child components of
-			// the JWindow, not the JWindow iteself, we have to be careful.
+			// the JWindow, not the JWindow itself, we have to be careful.
 			Component source = (Component)e.getSource();
 			Point p = e.getPoint();
 			SwingUtilities.convertPointToScreen(p, source);

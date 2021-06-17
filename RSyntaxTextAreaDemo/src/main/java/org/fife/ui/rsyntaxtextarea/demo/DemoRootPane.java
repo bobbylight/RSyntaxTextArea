@@ -157,6 +157,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("JSP", "JspExample.txt", SYNTAX_STYLE_JSP, bg, menu);
 		addSyntaxItem("JSON", "JsonExample.txt", SYNTAX_STYLE_JSON_WITH_COMMENTS, bg, menu);
 		addSyntaxItem("JSON (ANTLR)", "JsonExample.txt", "antlr/json", bg, menu);
+		addSyntaxItem("Kotlin", "KotlinExample.txt", SYNTAX_STYLE_KOTLIN, bg, menu);
 		addSyntaxItem("LaTeX", "LatexExample.txt", SYNTAX_STYLE_LATEX, bg, menu);
 		addSyntaxItem("Less", "LessExample.txt", SYNTAX_STYLE_LESS, bg, menu);
 		addSyntaxItem("Markdown", "MarkdownExample.txt", SYNTAX_STYLE_MARKDOWN, bg, menu);
@@ -302,7 +303,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 			}
 			else {
 				JOptionPane.showMessageDialog(this,
-									"URL clicked:\n" + url.toString());
+									"URL clicked:\n" + url);
 			}
 		}
 	}

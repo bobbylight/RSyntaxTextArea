@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
-import java.util.regex.Pattern;
+
 
 /**
  * Unit tests for the {@link HtmlUtil} class.
@@ -16,42 +16,66 @@ import java.util.regex.Pattern;
 public class HtmlUtilTest {
 
 	@Test
-	public void testEscapeForHtml_inPreBlock_happyPath() {
+	public void testEscapeForHtml_nullInput() {
+		Assert.assertNull(HtmlUtil.escapeForHtml(null, "<br>", true));
+	}
 
-		String code = "<foo>This &amp; that\n" +
-			"<bar attr=\"yes\">\twidget\n</bar>\n" +
-			"</foo>";
 
-		String expected = "&lt;foo&gt;This &amp;amp; that<br>" +
-			"&lt;bar attr=\"yes\"&gt;    widget<br>&lt;/bar&gt;<br>" +
-			"&lt;/foo&gt;";
+	@Test
+	public void testEscapeForHtml_nullNewlineReplacement() {
+		Assert.assertEquals("", HtmlUtil.escapeForHtml("\n", null, true));
+	}
+
+
+	@Test
+	public void testEscapeForHtml_nonNullNewlineReplacement() {
+		Assert.assertEquals("<br>", HtmlUtil.escapeForHtml("\n", "<br>", true));
+	}
+
+
+	@Test
+	public void testEscapeForHtml_happyPath() {
+		Assert.assertEquals("hello", HtmlUtil.escapeForHtml("hello", "<br>", true));
+		Assert.assertEquals("2 &lt; 4", HtmlUtil.escapeForHtml("2 < 4", "<br>", true));
+	}
+
+
+	@Test
+	public void testEscapeForHtml_problemChars() {
+		Assert.assertEquals(" <br>&amp;    &lt;&gt;&#39;&#34;&#47;",
+			HtmlUtil.escapeForHtml(" \n&\t<>'\"/", "<br>", true));
+	}
+
+
+	@Test
+	public void testEscapeForHtml_multipleSpaces_inPreBlock() {
+		Assert.assertEquals("   ",
+			HtmlUtil.escapeForHtml("   ", "<br>", true));
+	}
+
+
+	@Test
+	public void testEscapeForHtml_multipleSpaces_notInPreBlock() {
+		Assert.assertEquals(" &nbsp;&nbsp;",
+			HtmlUtil.escapeForHtml("   ", "<br>", false));
+	}
+
+	@Test
+	public void testEscapeForHtml_tab_inPreBlock() {
+
+		String code = "<foo>\twidget\t</foo>";
+
+		String expected = "&lt;foo&gt;    widget    &lt;&#47;foo&gt;";
 		Assert.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", true));
 	}
 
 	@Test
-	public void testEscapeForHtml_noPreBlock_happyPath() {
+	public void testEscapeForHtml_tab_notInPreBlock() {
 
-		String code = "<foo>This &amp; that\n" +
-			"<bar attr=\"yes\">\twidget\n</bar>\n" +
-			"</foo>";
+		String code = "<foo>\twidget\t</foo>";
 
-		String expected = "&lt;foo&gt;This&nbsp;&amp;amp;&nbsp;that<br>" +
-			"&lt;bar&nbsp;attr=\"yes\"&gt;&nbsp;&nbsp;&nbsp;&nbsp;widget<br>&lt;/bar&gt;<br>" +
-			"&lt;/foo&gt;";
+		String expected = "&lt;foo&gt;&nbsp;&nbsp;&nbsp;&nbsp;widget&nbsp;&nbsp;&nbsp;&nbsp;&lt;&#47;foo&gt;";
 		Assert.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", false));
-	}
-
-	@Test
-	public void testEscapeForHtml_noPreBlock_happyPath_noNewlineReplacement() {
-
-		String code = "<foo>This &amp; that\n" +
-			"<bar attr=\"yes\">\twidget\n</bar>\n" +
-			"</foo>";
-
-		String expected = "&lt;foo&gt;This&nbsp;&amp;amp;&nbsp;that" +
-			"&lt;bar&nbsp;attr=\"yes\"&gt;&nbsp;&nbsp;&nbsp;&nbsp;widget&lt;/bar&gt;" +
-			"&lt;/foo&gt;";
-		Assert.assertEquals(expected, HtmlUtil.escapeForHtml(code, null, false));
 	}
 
 	@Test

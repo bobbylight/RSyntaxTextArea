@@ -55,7 +55,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * The set of usable flavors are tried in the following order:
 	 * <ol>
 	 *     <li>First, an attempt is made to find a flavor matching the content
-	 *         tyep of the EditorKit for the component.
+	 *         type of the EditorKit for the component.
 	 *     <li>Second, an attempt to find a text/plain flavor is made.
 	 *     <li>Third, an attempt to find a flavor representing a String
 	 *         reference in the same VM is made.

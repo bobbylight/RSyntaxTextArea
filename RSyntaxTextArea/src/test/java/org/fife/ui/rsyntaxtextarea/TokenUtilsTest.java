@@ -199,7 +199,7 @@ public class TokenUtilsTest {
 		char[] line = "// comment".toCharArray();
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.COMMENT_EOL, 0);
 
-		String expected = "<span style=\"font-style: italic;color: #008000;\">// comment</span>";
+		String expected = "<span style=\"font-style: italic;color: #008000;\">&#47;&#47; comment</span>";
 		Assert.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
 	}
 

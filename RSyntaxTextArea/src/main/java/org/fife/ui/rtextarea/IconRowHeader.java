@@ -785,7 +785,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 
 	/**
-	 * Programatically toggles whether there is a bookmark for the specified
+	 * Programmatically toggles whether there is a bookmark for the specified
 	 * line.  If bookmarking is not enabled, this method does nothing.
 	 *
 	 * @param line The line.

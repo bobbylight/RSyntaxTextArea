@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/bobbylight/RSyntaxTextArea/badge.svg)](https://coveralls.io/r/bobbylight/RSyntaxTextArea)
 
 RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of
-the box, it supports syntax highlighting for 40+ programming languages, code folding, search and replace,
+the box, it supports syntax highlighting for 50+ programming languages, code folding, search and replace,
 and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages
 [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 
@@ -30,35 +30,34 @@ RSyntaxTextArea is simply a subclass of JTextComponent, so it can be dropped int
 ```java
 import javax.swing.*;
 import java.awt.BorderLayout;
+
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
 public class TextEditorDemo extends JFrame {
 
-   public TextEditorDemo() {
+    public TextEditorDemo() {
 
-      JPanel cp = new JPanel(new BorderLayout());
+        JPanel cp = new JPanel(new BorderLayout());
 
-      RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
-      textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-      textArea.setCodeFoldingEnabled(true);
-      RTextScrollPane sp = new RTextScrollPane(textArea);
-      cp.add(sp);
+        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        textArea.setCodeFoldingEnabled(true);
+        RTextScrollPane sp = new RTextScrollPane(textArea);
+        cp.add(sp);
 
-      setContentPane(cp);
-      setTitle("Text Editor Demo");
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
-      pack();
-      setLocationRelativeTo(null);
+        setContentPane(cp);
+        setTitle("Text Editor Demo");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
 
-   }
+    }
 
-   public static void main(String[] args) {
-      // Start all Swing applications on the EDT.
-      SwingUtilities.invokeLater(() -> {
-        new TextEditorDemo().setVisible(true);
-      });
-   }
+    public static void main(String[] args) {
+        // Start all Swing applications on the EDT.
+        SwingUtilities.invokeLater(() -> new TextEditorDemo().setVisible(true));
+    }
 
 }
 ```

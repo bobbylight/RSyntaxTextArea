@@ -94,6 +94,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  *   </td>
  *   <td style="vertical-align: top">
  *    <ul>
+ *       <li>Kotlin
  *       <li>LaTeX
  *       <li>Lisp
  *       <li>Lua

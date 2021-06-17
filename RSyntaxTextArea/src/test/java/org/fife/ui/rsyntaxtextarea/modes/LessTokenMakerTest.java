@@ -249,7 +249,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assert.assertEquals("//", startAndEnd[0]);
-		Assert.assertEquals(null, startAndEnd[1]);
+		Assert.assertNull(startAndEnd[1]);
 	}
 
 

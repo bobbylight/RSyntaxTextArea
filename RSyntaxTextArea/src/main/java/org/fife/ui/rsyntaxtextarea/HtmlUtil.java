@@ -28,10 +28,17 @@ public final class HtmlUtil {
 	public static String escapeForHtml(String s, String newlineReplacement,
 									   boolean inPreBlock) {
 
+		if (s==null) {
+			return null;
+		}
 		if (newlineReplacement==null) {
 			newlineReplacement = "";
 		}
+
+		// Always all &nbsp; instead of an initial ' ' so we always play
+		// nice when there's intermixed spaces and tabs
 		String tabString = inPreBlock ? "    " : "&nbsp;&nbsp;&nbsp;&nbsp;";
+		boolean lastWasSpace = false;
 
 		StringBuilder sb = new StringBuilder();
 
@@ -39,30 +46,49 @@ public final class HtmlUtil {
 			char ch = s.charAt(i);
 			switch (ch) {
 				case ' ':
-					if (inPreBlock) {
+					if (inPreBlock || !lastWasSpace) {
 						sb.append(' ');
 					}
 					else {
 						sb.append("&nbsp;");
 					}
+					lastWasSpace = true;
 					break;
 				case '\n':
 					sb.append(newlineReplacement);
+					lastWasSpace = false;
 					break;
 				case '&':
 					sb.append("&amp;");
+					lastWasSpace = false;
 					break;
 				case '\t':
 					sb.append(tabString);
+					lastWasSpace = true;
 					break;
 				case '<':
 					sb.append("&lt;");
+					lastWasSpace = false;
 					break;
 				case '>':
 					sb.append("&gt;");
+					lastWasSpace = false;
+					break;
+				case '\'':
+					sb.append("&#39;");
+					lastWasSpace = false;
+					break;
+				case '"':
+					sb.append("&#34;");
+					lastWasSpace = false;
+					break;
+				case '/': // OWASP-recommended even though unnecessary
+					sb.append("&#47;");
+					lastWasSpace = false;
 					break;
 				default:
 					sb.append(ch);
+					lastWasSpace = false;
 					break;
 			}
 		}

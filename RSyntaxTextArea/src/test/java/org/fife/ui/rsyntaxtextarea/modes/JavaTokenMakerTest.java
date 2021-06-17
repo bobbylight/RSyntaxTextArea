@@ -149,9 +149,14 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"Cloneable",
 			"Comparable",
 			"Iterable",
+			"ProcessHandle",
+			"ProcessHandle.Info",
 			"Readable",
 			"Runnable",
+			"StackWalker.StackFrame",
+			"System.Logger",
 			"Thread.UncaughtExceptionHandler",
+
 			"Boolean",
 			"Byte",
 			"Character",
@@ -163,22 +168,29 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"Compiler",
 			"Double",
 			"Enum",
+			"Enum.EnumDesc",
 			"Float",
 			"InheritableThreadLocal",
 			"Integer",
 			"Long",
 			"Math",
+			"Module",
+			"ModuleLayer",
+			"ModuleLayer.Controller",
 			"Number",
 			"Object",
 			"Package",
 			"Process",
 			"ProcessBuilder",
 			"ProcessBuilder.Redirect",
+			"Record",
 			"Runtime",
 			"RuntimePermission",
+			"Runtime.Version",
 			"SecurityManager",
 			"Short",
 			"StackTraceElement",
+			"StackWalker",
 			"StrictMath",
 			"String",
 			"StringBuffer",
@@ -240,7 +252,13 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"UnsatisfiedLinkError",
 			"UnsupportedClassVersionError",
 			"VerifyError",
-			"VirtualMachineError"
+			"VirtualMachineError",
+
+			"Deprecated",
+			"FunctionalInterface",
+			"Override",
+			"SafeVarargs",
+			"SuppressWarnings"
 		};
 
 		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
@@ -259,6 +277,8 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"FilenameFilter",
 			"Flushable",
 			"ObjectInput",
+			"ObjectInputFilter",
+			"ObjectInputFilter.FilterInfo",
 			"ObjectInputValidation",
 			"ObjectOutput",
 			"ObjectStreamConstants",
@@ -334,7 +354,9 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"UTFDataFormatException",
 			"WriteAbortedException",
 
-			"IOError"
+			"IOError",
+
+			"Serial"
 		};
 
 		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);

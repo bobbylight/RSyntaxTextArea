@@ -329,7 +329,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 								break;
 							}
 
-							int indexOf = OPERATORS.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;
@@ -410,7 +410,7 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 								break;
 							}
 
-							int indexOf = OPERATORS.indexOf(c,0);
+							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
 								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
 								currentTokenType = Token.NULL;

@@ -66,7 +66,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "four"));
 
-		Assert.assertTrue(!token.getNextToken().isPaintable());
+		Assert.assertFalse(token.getNextToken().isPaintable());
 	}
 
 
@@ -92,7 +92,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"four\""));
 
-		Assert.assertTrue(!token.getNextToken().isPaintable());
+		Assert.assertFalse(token.getNextToken().isPaintable());
 	}
 
 
@@ -129,7 +129,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		token = token.getNextToken();
 		Assert.assertTrue(token.is(Token.IDENTIFIER, "another"));
 
-		Assert.assertTrue(!token.getNextToken().isPaintable());
+		Assert.assertFalse(token.getNextToken().isPaintable());
 	}
 
 

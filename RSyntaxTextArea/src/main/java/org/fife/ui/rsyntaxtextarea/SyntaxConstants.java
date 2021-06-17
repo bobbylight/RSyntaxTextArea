@@ -198,6 +198,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Kotlin.
+	 */
+	String SYNTAX_STYLE_KOTLIN		= "text/kotlin";
+
+
+	/**
 	 * Style for highlighting LaTeX.
 	 */
 	String SYNTAX_STYLE_LATEX		= "text/latex";

@@ -65,7 +65,7 @@ public class MacroTest {
 
 
 	@Test
-	public void testConstructor_stringNameAndRecords_nonNullullRecords() {
+	public void testConstructor_stringNameAndRecords_nonNullRecords() {
 		Macro macro = new Macro("foo", Collections.singletonList(
 			new Macro.MacroRecord("foo", "bar")
 		));
