@@ -24,4 +24,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build --warning-mode all
+      #run: ./gradlew build --warning-mode all
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: ./gradlew build --warning-mode all
+        working-directory: ./ #optional
