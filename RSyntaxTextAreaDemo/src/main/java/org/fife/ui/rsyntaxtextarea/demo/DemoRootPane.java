@@ -17,6 +17,22 @@ import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.*;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.AssemblerTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.CAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.CTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.ErlangTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.GoAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.GoTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.Java9AntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.Java9TokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.JSONAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.JSONTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.MySqlAntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.MySqlTokenMaker;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.Python3AntlrParser;
+import org.fife.ui.rsyntaxtextarea.demo.antlr.Python3TokenMaker;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -36,9 +52,39 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 
 	DemoRootPane() {
+		// register our token maker
+		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
+		atmf.putMapping("antlr/asm6502", AssemblerTokenMaker.class.getName(), AssemblerTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/c", CTokenMaker.class.getName(), CTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/erlang", ErlangTokenMaker.class.getName(), ErlangTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/go", GoTokenMaker.class.getName(), GoTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/java9", Java9TokenMaker.class.getName(), Java9TokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/json", JSONTokenMaker.class.getName(), JSONTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/mysql", MySqlTokenMaker.class.getName(), MySqlTokenMaker.class.getClassLoader());
+		atmf.putMapping("antlr/python", Python3TokenMaker.class.getName(), Python3TokenMaker.class.getClassLoader());
+
+		//register our parsers
+		DelegatingParser parser = new DelegatingParser();
+		parser.addParser(SYNTAX_STYLE_ASSEMBLER_6502, new AssemblerAntlrParser());
+		parser.addParser("antlr/asm6502", new AssemblerAntlrParser());
+		parser.addParser(SYNTAX_STYLE_CPLUSPLUS, new CAntlrParser());
+		parser.addParser("antlr/c", new CAntlrParser());
+		parser.addParser("antlr/erlang", new ErlangAntlrParser());
+		parser.addParser(SYNTAX_STYLE_GO, new GoAntlrParser());
+		parser.addParser("antlr/go", new GoAntlrParser());
+		parser.addParser(SYNTAX_STYLE_JAVA, new Java9AntlrParser());
+		parser.addParser("antlr/java9", new Java9AntlrParser());
+		parser.addParser(SYNTAX_STYLE_JSON, new JSONAntlrParser());
+		parser.addParser("antlr/json", new JSONAntlrParser());
+		parser.addParser(SYNTAX_STYLE_SQL, new MySqlAntlrParser());
+		parser.addParser("antlr/mysql", new MySqlAntlrParser());
+		parser.addParser(SYNTAX_STYLE_PYTHON, new Python3AntlrParser());
+		parser.addParser("antlr/python", new Python3AntlrParser());
+
 		textArea = createTextArea();
 		setText("JavaExample.txt");
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
+		textArea.addParser(parser);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
 		gutter.setBookmarkingEnabled(true);
@@ -93,18 +139,24 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		JMenu menu = new JMenu("Language");
 		ButtonGroup bg = new ButtonGroup();
 		addSyntaxItem("6502 Assembler", "Assembler6502.txt", SYNTAX_STYLE_ASSEMBLER_6502, bg, menu);
+		addSyntaxItem("6502 Assembler (ANTLR)", "Assembler6502.txt", "antlr/asm6502", bg, menu);
 		addSyntaxItem("ActionScript", "ActionScriptExample.txt", SYNTAX_STYLE_ACTIONSCRIPT, bg, menu);
 		addSyntaxItem("C",    "CExample.txt", SYNTAX_STYLE_CPLUSPLUS, bg, menu);
+		addSyntaxItem("C (ANTLR)", "CExample.txt", "antlr/c", bg, menu);
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);
 		addSyntaxItem("Dockerfile", "DockerfileExample.txt", SYNTAX_STYLE_DOCKERFILE, bg, menu);
+		addSyntaxItem("Erlang (ANTLR)", "Erlang.erl", "antlr/erlang", bg, menu);
 		addSyntaxItem("Go", "GoExample.txt", SYNTAX_STYLE_GO, bg, menu);
+		addSyntaxItem("Go (ANTLR)", "GoExample.txt", "antlr/go", bg, menu);
 		addSyntaxItem("Hosts", "HostsExample.txt", SYNTAX_STYLE_HOSTS, bg, menu);
 		addSyntaxItem("HTML", "HtmlExample.txt", SYNTAX_STYLE_HTML, bg, menu);
 		addSyntaxItem("INI", "IniExample.txt", SYNTAX_STYLE_INI, bg, menu);
 		addSyntaxItem("Java", "JavaExample.txt", SYNTAX_STYLE_JAVA, bg, menu);
+		addSyntaxItem("Java (ANTLR)", "JavaExample.txt", "antlr/java9", bg, menu);
 		addSyntaxItem("JavaScript", "JavaScriptExample.txt", SYNTAX_STYLE_JAVASCRIPT, bg, menu);
 		addSyntaxItem("JSP", "JspExample.txt", SYNTAX_STYLE_JSP, bg, menu);
 		addSyntaxItem("JSON", "JsonExample.txt", SYNTAX_STYLE_JSON_WITH_COMMENTS, bg, menu);
+		addSyntaxItem("JSON (ANTLR)", "JsonExample.txt", "antlr/json", bg, menu);
 		addSyntaxItem("Kotlin", "KotlinExample.txt", SYNTAX_STYLE_KOTLIN, bg, menu);
 		addSyntaxItem("LaTeX", "LatexExample.txt", SYNTAX_STYLE_LATEX, bg, menu);
 		addSyntaxItem("Less", "LessExample.txt", SYNTAX_STYLE_LESS, bg, menu);
@@ -112,8 +164,10 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("Perl", "PerlExample.txt", SYNTAX_STYLE_PERL, bg, menu);
 		addSyntaxItem("PHP",  "PhpExample.txt", SYNTAX_STYLE_PHP, bg, menu);
 		addSyntaxItem("Python",  "PythonExample.txt", SYNTAX_STYLE_PYTHON, bg, menu);
+		addSyntaxItem("Python (ANTLR)",  "PythonExample.txt", "antlr/python", bg, menu);
 		addSyntaxItem("Ruby", "RubyExample.txt", SYNTAX_STYLE_RUBY, bg, menu);
 		addSyntaxItem("SQL",  "SQLExample.txt", SYNTAX_STYLE_SQL, bg, menu);
+		addSyntaxItem("SQL (ANTLR)",  "SQLExample.txt", "antlr/mysql", bg, menu);
 		addSyntaxItem("TypeScript", "TypeScriptExample.txt", SYNTAX_STYLE_TYPESCRIPT, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);
 		addSyntaxItem("YAML", "YamlExample.txt", SYNTAX_STYLE_YAML, bg, menu);

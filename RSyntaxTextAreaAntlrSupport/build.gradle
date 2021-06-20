@@ -1,0 +1,149 @@
+import static org.gradle.api.JavaVersion.*
+
+['biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
+// Jacoco and a coveralls upload plugin needed for publishing coverage results
+['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
+// Antlr is needed for the test grammar
+['antlr'].each { apply plugin: it }
+
+// We require building with JDK 8 or later.  We turn off doclint since our
+// generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
+assert current().isJava8Compatible()
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+archivesBaseName = 'rstaantlr'
+ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
+
+// Add coveralls plugin to this build's classpath
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+    }
+}
+
+dependencies {
+    implementation project(':RSyntaxTextArea')
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.8-1'
+    antlr("org.antlr:antlr4:4.8-1")
+
+    testCompile project(':RSyntaxTextArea').sourceSets.test.output
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+ext.sharedManifest = manifest {
+    attributes('Specification-Title': 'RSyntaxTextArea',
+            'Specification-Version': version,
+            'Implementation-Title': 'org.fife.ui',
+            'Implementation-Version': version,
+            'Bundle-License': 'BSD-3-Clause',
+            // Not sure why Require-Capability is not being added by the osgi plugin...
+            'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+jar {
+    manifest { from sharedManifest }
+}
+test {
+    testLogging {
+        events 'failed' //, 'passed', 'skipped', 'standardOut', 'standardError'
+
+        showExceptions true
+        exceptionFormat 'full'
+        showCauses true
+        showStackTraces true
+
+        showStandardStreams = false
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
+            credentials { // Credentials usually kept in user's .gradle/gradle.properties
+                // We must defensively check for these properties so Travis CI build works
+                username = project.hasProperty('ossrhUsername') ? ossrhUsername : 'unknown'
+                password = project.hasProperty('ossrhPassword') ? ossrhPassword : 'unknown'
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+
+            groupId = 'com.fifesoft'
+            artifactId = 'rsyntaxtextarea-antlr'
+            version = version
+
+            from components.java
+
+            pom {
+                name = 'rsyntaxtextarea-antlr'
+                description = 'RSyntaxTextArea is the syntax highlighting text editor for Swing applications. ' +
+                        'Features include syntax highlighting for 40+ languages, code folding, code completion, ' +
+                        'regex find and replace, macros, code templates, undo/redo, line numbering and bracket ' +
+                        'matching. This package contains bindings to the ANTLR Lexer/Parser generator.'
+                url = 'http://www.fifesoft.com/rsyntaxtextarea/'
+                inceptionYear = '2020'
+                packaging = 'jar'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://github.com/bobbylight/RSyntaxTextArea/tree/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Robert Futrell'
+                    }
+                    developer {
+                        name = 'Markus Heberling'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/bobbylight/RSyntaxTextArea'
+                    connection = 'scm:git:git://github.com/bobbylight/RSyntaxTextArea'
+                    developerConnection = 'scm:git:git@github.com:bobbylight/RSyntaxTextArea'
+                    if (isReleaseVersion) {
+                        tag = project.version
+                    }
+                }
+            }
+            pom.withXml {
+                Node pomNode = asNode()
+                pomNode.dependencies.'*'.findAll() {
+                    it.artifactId.text() == 'antlr4'
+                }.each() {
+                    it.parent().remove(it)
+                }
+            }
+        }
+    }
+}
+
+signing {
+    // Don't require signing for e.g. ./gradlew install
+    required { gradle.taskGraph.hasTask('publish') && isReleaseVersion }
+    sign publishing.publications.maven
+}
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
+}

@@ -6,4 +6,5 @@
 <suppressions>
     <suppress files=".*TokenMaker.*\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*src[\\/]test[\\/].*" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*/build/.*" checks="[a-zA-Z0-9]*"/>
 </suppressions>
