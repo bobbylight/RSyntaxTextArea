@@ -235,7 +235,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	@Ignore("Fails in the travis-ci environment for some reason")
+	@Ignore("Fails in the CI environment for some reason")
 	public void testCopyAsStyledText_zeroArg_rtf_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();

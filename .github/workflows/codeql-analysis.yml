@@ -66,8 +66,11 @@ jobs:
     #    uses a compiled language
 
     - name: Build
-      run: |
-        ./gradlew build -xsign -xpublish --warning-mode all
+      #run: ./gradlew build --warning-mode all
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: ./gradlew build jacocoTestReport -xsign -xpublish --warning-mode all
+        working-directory: ./ #optional
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

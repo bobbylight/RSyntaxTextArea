@@ -113,7 +113,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	@Ignore("This test doesn't work in travis-ci as the system clipboard will be blank")
+	@Ignore("This test doesn't work in CI as the system clipboard will be blank")
 	public void testMouseClicked_pasteOnMiddleMouseDown() {
 
 		RTextArea textArea = new RTextArea();

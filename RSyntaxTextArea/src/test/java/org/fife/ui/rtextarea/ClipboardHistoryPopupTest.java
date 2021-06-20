@@ -41,14 +41,14 @@ public class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	@Ignore("These tests run locally, but not in travis-ci environment for some reason")
+	@Ignore("These tests run locally, but not in CI environment for some reason")
 	public void testGetPreferredSize() {
 		Assert.assertNotNull(new ClipboardHistoryPopup(frame, textArea).getPreferredSize());
 	}
 
 
 	@Test
-	@Ignore("These tests run locally, but not in travis-ci environment for some reason")
+	@Ignore("These tests run locally, but not in CI environment for some reason")
 	public void testSetContents() {
 		new ClipboardHistoryPopup(frame, textArea).setContents(Arrays.asList(
 			"one", "two", "three"

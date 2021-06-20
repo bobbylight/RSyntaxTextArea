@@ -106,7 +106,7 @@ public class ThemeTest {
 		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
 		Assert.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
-		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
+		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
 		Assert.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
 		Assert.assertEquals(Color.red, gutter.getFoldBackground());
@@ -150,7 +150,7 @@ public class ThemeTest {
 		Assert.assertEquals(Color.red, gutter.getActiveLineRangeColor());
 		Assert.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assert.assertEquals(Color.red, gutter.getLineNumberColor());
-		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on travis-ci build servers
+		//Assert.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assert.assertEquals(22,        gutter.getLineNumberFont().getSize());
 		Assert.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
 		Assert.assertEquals(Color.red, gutter.getFoldBackground());

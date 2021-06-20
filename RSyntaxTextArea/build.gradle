@@ -1,8 +1,6 @@
 import static org.gradle.api.JavaVersion.*
 
-['biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
-// Jacoco and a coveralls upload plugin needed for publishing coverage results
-['jacoco', 'com.github.kt3k.coveralls'].each { apply plugin: it }
+['jacoco', 'biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
 
 // We require building with JDK 8 or later.  We turn off doclint since our
 // generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
@@ -16,22 +14,9 @@ allprojects {
 archivesBaseName = 'rsyntaxtextarea'
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
-// Add coveralls plugin to this build's classpath
-buildscript {
-	repositories {
-		mavenCentral()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-	}
-	dependencies {
-		classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
-	}
-}
-
 jacocoTestReport {
 	reports {
-		xml.enabled = true // coveralls plugin depends on xml format report
+		xml.enabled = true // codecov depends on xml format report
 		html.enabled = true
 	}
 }
@@ -73,7 +58,7 @@ publishing {
             def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
             url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
             credentials { // Credentials usually kept in user's .gradle/gradle.properties
-                // We must defensively check for these properties so Travis CI build works
+                // We must defensively check for these properties so CI builds work
                 username = project.hasProperty('ossrhUsername') ? ossrhUsername : 'unknown'
                 password = project.hasProperty('ossrhPassword') ? ossrhPassword : 'unknown'
             }
