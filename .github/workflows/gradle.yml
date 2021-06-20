@@ -27,5 +27,10 @@ jobs:
       #run: ./gradlew build --warning-mode all
       uses: GabrielBB/xvfb-action@v1
       with:
-        run: ./gradlew build --warning-mode all
+        run: ./gradlew build jacocoTestReport -xsign -xpublish --warning-mode all
         working-directory: ./ #optional
+    - name: Submit coverage data to codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./RSyntaxTextArea/build/reports/jacoco/test/jacocoTestReport.xml
+        name: codecov
