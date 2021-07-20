@@ -246,8 +246,8 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 	/**
 	 * Sets the delay between the last caret position change and when the
-	 * text is scanned for matching identifiers.  A delay is needed to prevent
-	 * repeated scanning while the user is typing.
+	 * text is scanned for matching identifiers.  A delay is recommended to
+	 * prevent repeated scanning while the user is typing.
 	 *
 	 * @param delay The new delay.
 	 * @see #getDelay()
@@ -282,6 +282,7 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 	 */
 	public void uninstall() {
 		if (textArea!=null) {
+			timer.stop();
 			clear();
 			textArea.removeCaretListener(this);
 		}

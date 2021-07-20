@@ -62,7 +62,7 @@
     <!-- Checks for Size Violations.                    -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="FileLength">
-		<property name="max" value="3500"/>
+		<property name="max" value="2000"/>
 	</module>
 
     <module name="LineLength">

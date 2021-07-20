@@ -6,4 +6,9 @@
 <suppressions>
     <suppress files=".*TokenMaker.*\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*src[\\/]test[\\/].*" checks="[a-zA-Z0-9]*"/>
+
+    <!-- These files are long due to how much functionality we have -->
+    <suppress files="RSyntaxTextArea.java" checks="FileLengthCheck"/>
+    <suppress files="RSyntaxTextAreaEditorKit.java" checks="FileLengthCheck"/>
+    <suppress files="RTextAreaEditorKit.java" checks="FileLengthCheck"/>
 </suppressions>

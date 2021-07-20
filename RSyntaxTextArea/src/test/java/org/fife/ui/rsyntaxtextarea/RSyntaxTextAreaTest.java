@@ -462,10 +462,18 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
+	@Test
+	public void testMarkOccurrencesDelay_zero() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setMarkOccurrencesDelay(0);
+		Assert.assertEquals(0, textArea.getMarkOccurrencesDelay());
+	}
+
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testMarkOccurrencesDelay_invalidValue() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setMarkOccurrencesDelay(0);
+		textArea.setMarkOccurrencesDelay(-1);
 	}
 
 

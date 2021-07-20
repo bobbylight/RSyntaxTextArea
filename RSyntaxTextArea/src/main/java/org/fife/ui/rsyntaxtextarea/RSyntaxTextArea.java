@@ -136,7 +136,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 3.1.0
+ * @version 3.1.4
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
@@ -1399,7 +1399,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Returns the delay between when the caret is moved and when "marked
 	 * occurrences" are highlighted.
 	 *
-	 * @return The "mark occurrences" delay.
+	 * @return The "mark occurrences" delay, in milliseconds.
 	 * @see #setMarkOccurrencesDelay(int)
 	 */
 	public int getMarkOccurrencesDelay() {
@@ -2027,7 +2027,6 @@ private boolean fractionalFontMetricsEnabled;
 		isScanningForLinks = false;
 		setUseFocusableTips(true);
 
-		//setAntiAliasingEnabled(true);
 		setDefaultAntiAliasingState();
 		restoreDefaultSyntaxScheme();
 
@@ -2755,7 +2754,8 @@ private boolean fractionalFontMetricsEnabled;
 	public void setMarkOccurrences(boolean markOccurrences) {
 		if (markOccurrences) {
 			if (markOccurrencesSupport==null) {
-				markOccurrencesSupport = new MarkOccurrencesSupport();
+				markOccurrencesSupport = new MarkOccurrencesSupport(markOccurrencesDelay,
+					markOccurrencesColor);
 				markOccurrencesSupport.install(this);
 				firePropertyChange(MARK_OCCURRENCES_PROPERTY, false, true);
 			}
@@ -2787,15 +2787,18 @@ private boolean fractionalFontMetricsEnabled;
 
 	/**
 	 * Sets the delay between when the caret is moved and when "marked
-	 * occurrences" are highlighted.
+	 * occurrences" are highlighted.  It is recommended to set this to
+	 * a value greater than {@code 0} to debounce the "mark occurrences"
+	 * operation, since it can be an expensive operation.
 	 *
-	 * @param delay The new delay.  This must be greater than {@code 0}.
+	 * @param delay The new delay, in milliseconds.  This must be
+	 *        greater than or equal to {@code 0}.
 	 * @see #getMarkOccurrencesDelay()
 	 * @see #getMarkOccurrences()
 	 */
 	public void setMarkOccurrencesDelay(int delay) {
-		if (delay <= 0) {
-			throw new IllegalArgumentException("Delay must be > 0");
+		if (delay < 0) {
+			throw new IllegalArgumentException("Delay must be >= 0");
 		}
 		if (delay != this.markOccurrencesDelay) {
 			this.markOccurrencesDelay = delay;
