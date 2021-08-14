@@ -2567,13 +2567,22 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets the font used by this text area.  Note that if some token styles
-	 * are using a different font, they will not be changed by calling this
-	 * method.  To set different fonts on individual token types, use the
-	 * text area's <code>SyntaxScheme</code>.
+	 * Sets the font used by this text area.<p>
+	 *
+	 * Note that if some token styles are using a different font family
+	 * (not style, e.g. bold and italics don't count), they will not be
+	 * changed by calling this method.  In particular, if you are using
+	 * multiple different fonts in your text area for different token
+	 * types, and are looking for an easy way to increase or decrease
+	 * all font sizes, use
+	 * {@link RSyntaxTextAreaEditorKit.IncreaseFontSizeAction} and
+	 * {@link RSyntaxTextAreaEditorKit.DecreaseFontSizeAction} rather
+	 * than this method.
 	 *
 	 * @param font The font.
 	 * @see SyntaxScheme#getStyle(int)
+	 * @see RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
+	 * @see RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 	 */
 	@Override
 	public void setFont(Font font) {
@@ -2598,6 +2607,9 @@ private boolean fractionalFontMetricsEnabled;
 			// Force the current line highlight to be repainted, even
 			// though the caret's location hasn't changed.
 			forceCurrentLineHighlightRepaint();
+			// Update the "matched bracket", if any
+			lastBracketMatchPos = -1;
+			doBracketMatching();
 			// Get line number border in text area to repaint again
 			// since line heights have updated.
 			firePropertyChange("font", old, font);

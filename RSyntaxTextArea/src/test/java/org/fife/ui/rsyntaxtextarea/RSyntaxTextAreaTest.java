@@ -381,6 +381,16 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	public void testGetSetFont() {
+		RSyntaxTextArea textArea = createTextArea();
+		Font origFont = textArea.getFont();
+		Font newFont = origFont.deriveFont(Font.ITALIC, 22f);
+		textArea.setFont(newFont);
+		Assert.assertEquals(newFont, textArea.getFont());
+	}
+
+
+	@Test
 	public void testGetPopupMenu() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assert.assertNotNull(textArea.getPopupMenu());
