@@ -116,7 +116,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testCss_chars() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
-			CSS_CHAR_PREV_TOKEN_TYPE,
+			CSS_PREV_TOKEN_TYPE,
 			"'Hello world'",
 			"'Hello \\'world\\''"
 		);
@@ -128,7 +128,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_CHAR_PREV_TOKEN_TYPE,
 			"world'",
-			"and \\'he\\' said so'"
+			"and \\'he\\' said so'",
+			"continuation from a prior line"
 		);
 	}
 
@@ -146,6 +147,38 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			JSPTokenMaker.LANG_INDEX_CSS);
 		Assert.assertEquals("/*", startAndEnd[0]);
 		Assert.assertEquals("*/", startAndEnd[1]);
+	}
+
+
+	@Test
+	public void testCss_happyPath_stateContinuesToNextLine_mainState() {
+		TokenMaker tm = createTokenMaker();
+		Segment segment = createSegment("");
+		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
+		Assert.assertEquals(CSS_PREV_TOKEN_TYPE, token.getType());
+	}
+
+
+	@Test
+	public void testCss_happyPath_stateContinuesToNextLine_valueState() {
+		TokenMaker tm = createTokenMaker();
+		Segment segment = createSegment("");
+		Token token = tm.getTokenList(segment, CSS_VALUE_PREV_TOKEN_TYPE, 0);
+		Assert.assertEquals(CSS_VALUE_PREV_TOKEN_TYPE, token.getType());
+	}
+
+
+	@Test
+	public void testCss_happyPath_styleEndTagSwitchesState() {
+		Segment segment = createSegment("</style>");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
+
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -230,7 +263,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testCss_multiLineComment() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
-			"/* Hello world */"
+			"/* Hello world */",
+			"/* unterminated"
 		);
 	}
 
@@ -239,7 +273,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testCss_multiLineComment_continuedFromPreviousLine() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_MLC_PREV_TOKEN_TYPE,
-			" world */"
+			" world */",
+			"still unterminated"
 		);
 	}
 
@@ -519,6 +554,15 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testCss_pseudoClass_unknown() {
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			CSS_PREV_TOKEN_TYPE,
+			":xxxyzz"
+		);
+	}
+
+
+	@Test
 	public void testCss_selectors() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			CSS_PREV_TOKEN_TYPE,
@@ -550,7 +594,8 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_PREV_TOKEN_TYPE,
 			"\"Hello world\"",
-			"\"Hello \\\"world\\\""
+			"\"Hello \\\"world\\\"",
+			"\"Unterminated string"
 		);
 	}
 
@@ -561,6 +606,345 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			CSS_STRING_PREV_TOKEN_TYPE,
 			"world\"",
 			"and \\\"he\\\" said so\""
+		);
+	}
+
+
+	@Test
+	public void testHtml_attribute_unclosedDoubleQuote() {
+
+		String code = "\"Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_attribute_unclosedSingleQuote() {
+
+		String code = "'Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_attributeScriptTag_unclosedDoubleQuote() {
+
+		String code = "\"Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_attributeScriptTag_unclosedSingleQuote() {
+
+		String code = "'Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_attributeStyleTag_unclosedDoubleQuote() {
+
+		String code = "\"Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_attributeStyleTag_unclosedSingleQuote() {
+
+		String code = "'Unterminated attribute";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_comment() {
+
+		String[] commentLiterals = {
+			"<!-- Hello world -->",
+			"<!-- unterminated",
+		};
+
+		for (String code : commentLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testHtml_comment_URL() {
+
+		String code = "<!-- Hello world http://www.google.com -->";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+		Assert.assertFalse(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		token = token.getNextToken();
+		Assert.assertFalse(token.isHyperlink());
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+
+	}
+
+
+	@Test
+	public void testHtml_doctype() {
+
+		String[] doctypes = {
+			"<!doctype html>",
+			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
+			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+			"<!doctype unclosed",
+		};
+
+		TokenMaker tm = createTokenMaker();
+		for (String code : doctypes) {
+			Segment segment = createSegment(code);
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testHtml_entityReferences() {
+
+		String[] entityReferences = {
+			"&nbsp;", "&lt;", "&gt;", "&#4012",
+		};
+
+		for (String code : entityReferences) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testHtml_happyPath_tagWithAttributes() {
+
+		String code = "<body onload=\"doSomething()\" data-extra='true'>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		token = token.getNextToken();
+		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+
+	}
+
+
+	@Test
+	public void testHtml_happyPath_closedTag() {
+
+		String code = "<img src='foo.png'/>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		token = token.getNextToken();
+		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
+
+	}
+
+
+	@Test
+	public void testHtml_happyPath_closingTag() {
+
+		String code = "</body>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		token = token.getNextToken();
+		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+
+	}
+
+
+	@Test
+	public void testHtml_inTag_unterminatedOnThisLine() {
+		Segment segment = createSegment("");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_inTagScript_unterminatedOnThisLine() {
+		Segment segment = createSegment("");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_inTagStyle_unterminatedOnThisLine() {
+		Segment segment = createSegment("");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
+		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
+	}
+
+
+	@Test
+	public void testHtml_processingInstructions() {
+
+		String[] doctypes = {
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
+			"<?xml version='1.0' encoding='UTF-8' ?>",
+			"<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>",
+			"<?xml unterminated",
+		};
+
+		for (String code : doctypes) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assert.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testHtml_validHtml5TagNames() {
+
+		String[] tagNames = {
+			"a", "abbr", "acronym", "address", "applet", "area", "article",
+			"aside", "audio", "b", "base", "basefont", "bdo", "bgsound", "big",
+			"blink", "blockquote", "body", "br", "button", "canvas", "caption",
+			"center", "cite", "code", "col", "colgroup", "command", "comment",
+			"dd", "datagrid", "datalist", "datatemplate", "del", "details",
+			"dfn", "dialog", "dir", "div", "dl", "dt", "em", "embed",
+			"eventsource", "fieldset", "figure", "font", "footer", "form",
+			"frame", "frameset", "h1", "h2", "h3", "h4", "h5", "h6",
+			"head", "header", "hr", "html", "i", "iframe", "ilayer", "img",
+			"input", "ins", "isindex", "kbd", "keygen", "label", "layer",
+			"legend", "li", "link", "map", "mark", "marquee", "menu", "meta",
+			"meter", "multicol", "nav", "nest", "nobr", "noembed", "noframes",
+			"nolayer", "noscript", "object", "ol", "optgroup", "option",
+			"output", "p", "param", "plaintext", "pre", "progress", "q", "rule",
+			"s", "samp", "script", "section", "select", "server", "small",
+			"source", "spacer", "span", "strike", "strong", "style",
+			"sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th",
+			"thead", "time", "title", "tr", "tt", "u", "ul", "var", "video"
+		};
+
+		TokenMaker tm = createTokenMaker();
+		for (String tagName : tagNames) {
+
+			for (int i = 0; i < tagName.length(); i++) {
+
+				if (i > 0) {
+					tagName = tagName.substring(0, i).toUpperCase() +
+						tagName.substring(i);
+				}
+
+				String code = "<" + tagName;
+				Segment segment = createSegment(code);
+				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+				Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+				token = token.getNextToken();
+				Assert.assertEquals("Not a valid HTML5 tag name token: " + token,
+					token.getType(), TokenTypes.MARKUP_TAG_NAME);
+
+			}
+
+		}
+
+	}
+
+
+	@Test
+	public void testHtml_loneIdentifier() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"123"
 		);
 	}
 
@@ -1220,6 +1604,23 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testJS_EolComments_terminatedEarlyByScriptTag() {
+
+		Segment segment = createSegment("// comment ended by a </script>");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+
+		Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+	}
+
+
+	@Test
 	public void testJS_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
@@ -1373,6 +1774,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Unterminated",
 		};
 
 		for (String code : mlcLiterals) {
@@ -1390,6 +1792,7 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] mlcLiterals = {
 			" this is continued from a prior line */",
+			" this is also continued, but not terminated",
 		};
 
 		for (String code : mlcLiterals) {
@@ -1400,6 +1803,23 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	public void testJS_MultiLineComment_terminatedEarlyByScriptTag() {
+
+		Segment segment = createSegment("/* comment ended by a </script>");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+
+		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -1611,6 +2031,40 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	public void testJS_StringLiterals_fromPriorLine_valid() {
+
+		String[] stringLiterals = {
+			"continued from prior line\"",
+		};
+
+		for (String code : stringLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS_STRING_VALID, 0);
+			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_StringLiterals_fromPriorLine_invalid() {
+
+		String[] stringLiterals = {
+			"continued from prior line\"",
+		};
+
+		for (String code : stringLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS_STRING_INVALID, 0);
+			Assert.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
 	public void testJS_TemplateLiterals_invalid() {
 
 		String[] templateLiterals = {
@@ -1625,6 +2079,24 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
 					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_invalid_continuedFromPriorLine() {
+
+		String[] templateLiterals = {
+			"and my name is Fred`"
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID,
+				0);
+			Assert.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
 		}
 
 	}
@@ -1677,6 +2149,24 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
 
 		String[] templateLiterals = {
+			"and my name is Fred`"
+		};
+
+		for (String code : templateLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
+				0);
+			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	public void testJS_TemplateLiterals_valid_continuedFromPriorLine_withInterpolatedExpression() {
+
+		String[] templateLiterals = {
 			"and my name is ${name}`"
 		};
 
@@ -1692,6 +2182,21 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	public void testJS_terminatedEarlyByScriptTag() {
+
+		Segment segment = createSegment("</script>");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JS, 0);
+
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		token = token.getNextToken();
+		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 

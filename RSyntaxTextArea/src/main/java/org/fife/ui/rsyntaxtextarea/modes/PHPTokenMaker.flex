@@ -67,14 +67,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
 	 * double-quote attribute.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE			= -1;
+	static final int INTERNAL_ATTR_DOUBLE			= -1;
 
 
 	/**
 	 * Type specific to PHPTokenMaker denoting a line ending with an unclosed
 	 * single-quote attribute.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE			= -2;
+	static final int INTERNAL_ATTR_SINGLE			= -2;
 
 
 	/**
@@ -82,48 +82,48 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	private static final int INTERNAL_INTAG					= -3;
+	static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to PHPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	private static final int INTERNAL_INTAG_SCRIPT			= -4;
+	static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-quoted attribute in a
 	 * script tag.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
+	static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-quoted attribute in a
 	 * script tag.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
+	static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
 
 	/**
 	 * Token type specifying that the user has
 	 * ended a line with an unclosed <code>&lt;style&gt;</code> tag.
 	 */
-	private static final int INTERNAL_INTAG_STYLE			= -7;
+	static final int INTERNAL_INTAG_STYLE			= -7;
 
 	/**
 	 * Token type specifying we're in a double-quoted attribute in a
 	 * style tag.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
+	static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
 
 	/**
 	 * Token type specifying we're in a single-quoted attribute in a
 	 * style tag.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
+	static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
 
 	/**
 	 * Token type specifying we're in JavaScript.
 	 */
-	private static final int INTERNAL_IN_JS					= -10;
+	static final int INTERNAL_IN_JS					= -10;
 
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
@@ -138,17 +138,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -13;
+	static final int INTERNAL_IN_JS_STRING_INVALID	= -13;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -14;
+	static final int INTERNAL_IN_JS_STRING_VALID		= -14;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -15;
+	static final int INTERNAL_IN_JS_CHAR_INVALID	= -15;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
@@ -202,7 +202,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Token type specifying we're in PHP.  This particular field is public so
 	 * that we can hack and key off of it for code completion.
 	 */
-	public static final int INTERNAL_IN_PHP					= -(4<<11);
+	static final int INTERNAL_IN_PHP					= -(4<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline comment.

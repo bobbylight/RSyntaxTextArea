@@ -6617,12 +6617,12 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -14;
+	static final int INTERNAL_IN_JS_STRING_INVALID	= -14;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -15;
+	static final int INTERNAL_IN_JS_STRING_VALID		= -15;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
