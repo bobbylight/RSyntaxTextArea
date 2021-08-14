@@ -29,14 +29,18 @@ public interface LinkGeneratorResult {
 
 
 	/**
-	 * Executes the action associated with this object.  If the result is a
-	 * URL to open, a standard hyperlink event can be returned.  Alternatively,
-	 * <code>null</code> can be returned and the action performed in this
-	 * method itself.
+	 * Executes the action associated with this object.  This method is called
+	 * when the user clicks on the hyperlinked range of text in the editor.<p>
+	 *
+	 * If the result is a URL to open, a standard hyperlink event can be
+	 * returned.  Alternatively, {@code null} can be returned and the action
+	 * performed in this method itself.
 	 *
 	 * @return The hyperlink event to broadcast from the text area, or
 	 *         <code>null</code> if the action's behavior occurs in this method
-	 *         directly.
+	 *         directly.  If a hyperlink event is returned, it should have type
+	 *         {@code HyperlinkEvent.EventType#ACTIVATED} to denote the fact
+	 *         that the link was clicked.
 	 */
 	HyperlinkEvent execute();
 

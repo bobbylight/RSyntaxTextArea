@@ -23,6 +23,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 
@@ -419,6 +420,42 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	@Ignore("Not possible to do the setup for this test headlessly currently")
+	public void testHyperlinkEventsAreFired_linkGenerator() {
+		// TODO: Figure out a way to do the setup necessary for
+		// link generator events to fire
+	}
+
+
+	@Test
+	public void testHyperlinkEventsAreFired_noLinkGenerator() {
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
+			"// https://www.google.com");
+		textArea.setCaretPosition(3);
+
+		HyperlinkEvent[] lastEvent =  new HyperlinkEvent[1];
+		HyperlinkListener listener = e -> lastEvent[0] = e;
+		textArea.addHyperlinkListener(listener);
+
+		// Verify "entered" events are propagated
+		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.ENTERED);
+		Assert.assertNotNull(lastEvent[0]);
+		Assert.assertEquals(HyperlinkEvent.EventType.ENTERED, lastEvent[0].getEventType());
+
+		// Verify "activated" events are propagated
+		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.ACTIVATED);
+		Assert.assertNotNull(lastEvent[0]);
+		Assert.assertEquals(HyperlinkEvent.EventType.ACTIVATED, lastEvent[0].getEventType());
+
+		// Verify "exited" events are propagated
+		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.EXITED);
+		Assert.assertNotNull(lastEvent[0]);
+		Assert.assertEquals(HyperlinkEvent.EventType.EXITED, lastEvent[0].getEventType());
+	}
+
+
+	@Test
 	public void testHyperlinkForeground() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setHyperlinkForeground(Color.pink);
@@ -510,6 +547,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		Assert.assertNull(textArea.modelToToken(-1));
 	}
+
 
 	@Test
 	public void testPaintComponent_noWrappedLines_happyPath() {

@@ -708,7 +708,7 @@ private boolean fractionalFontMetricsEnabled;
 
 		HyperlinkEvent he = null;
 
-		if (linkGeneratorResult!=null) {
+		if (linkGeneratorResult!=null && type == HyperlinkEvent.EventType.ACTIVATED) {
 			he = linkGeneratorResult.execute();
 			linkGeneratorResult = null;
 		}
@@ -907,7 +907,7 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @param type The type of event to fire.
 	 */
-	private void fireHyperlinkUpdate(HyperlinkEvent.EventType type) {
+	protected void fireHyperlinkUpdate(HyperlinkEvent.EventType type) {
 
 		HyperlinkEvent e = null;
 
@@ -3206,12 +3206,13 @@ private boolean fractionalFontMetricsEnabled;
 			isScanningForLinks = false;
 			linkGeneratorResult = null;
 			hoveredOverLinkOffset = -1;
+			fireHyperlinkUpdate(HyperlinkEvent.EventType.EXITED);
+			repaint(); // TODO: Repaint just the affected line.
 
+			// Occasionally cursor changes for other reasons outside of links
 			Cursor c = getCursor();
 			if (c!=null && c.getType()==Cursor.HAND_CURSOR) {
-				fireHyperlinkUpdate(HyperlinkEvent.EventType.EXITED);
 				setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-				repaint(); // TODO: Repaint just the affected line.
 			}
 		}
 	}
