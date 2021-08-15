@@ -592,7 +592,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	public static synchronized void endRecordingMacro() {
 		if (!isRecordingMacro()) {
-			//System.err.println("Not recording a macro!");
 			return;
 		}
 		recordingMacro = false;

@@ -55,4 +55,11 @@ public class RTextAreaEditorKitInsertBreakActionTest {
 		Assert.assertEquals(DefaultEditorKit.insertBreakAction,
 			new RTextAreaEditorKit.InsertBreakAction().getMacroID());
 	}
+
+
+	@Test
+	public void testIsEditable_happyPath() {
+		RTextAreaEditorKit.InsertBreakAction action = new RTextAreaEditorKit.InsertBreakAction();
+		Assert.assertTrue(action.isEnabled());
+	}
 }

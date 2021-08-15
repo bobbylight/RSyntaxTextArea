@@ -23,6 +23,15 @@ public class RTextAreaEditorKitRedoActionTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.RedoAction action = new RTextAreaEditorKit.RedoAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();

@@ -546,7 +546,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					int begOffs = Utilities.getRowStart(textArea, offs);
 					// TODO: line wrap doesn't currently toggle between
 					// the first non-whitespace char and the actual start
-					// of the line line the no-line-wrap version does.
+					// of the line like the no-line-wrap version does.
 					newPos = begOffs;
 				}
 

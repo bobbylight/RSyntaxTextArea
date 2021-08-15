@@ -23,6 +23,15 @@ public class RTextAreaEditorKitUndoActionTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.UndoAction action = new RTextAreaEditorKit.UndoAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();

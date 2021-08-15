@@ -24,6 +24,15 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.IncreaseFontSizeAction action = new RTextAreaEditorKit.IncreaseFontSizeAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("hello world");
@@ -33,6 +42,22 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 		new RTextAreaEditorKit.IncreaseFontSizeAction().actionPerformedImpl(e, textArea);
 
 		Assert.assertTrue(textArea.getFont().getSize() > origSize);
+	}
+
+
+	@Test
+	public void testActionPerformedImpl_closeToMaximumSize() {
+
+		RTextArea textArea = new RTextArea("Hello world");
+		textArea.setSelectionStart(2);
+		textArea.setSelectionEnd(9);
+		Font font = new Font(Font.MONOSPACED, Font.PLAIN, 2).deriveFont(39.5f);
+		textArea.setFont(font);
+
+		RTextAreaEditorKit.IncreaseFontSizeAction action = new RTextAreaEditorKit.IncreaseFontSizeAction();
+		action.actionPerformedImpl(null, textArea);
+
+		Assert.assertEquals(40, textArea.getFont().getSize());
 	}
 
 

@@ -20,6 +20,15 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.DeleteNextCharAction action = new RTextAreaEditorKit.DeleteNextCharAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl_notEditable() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");

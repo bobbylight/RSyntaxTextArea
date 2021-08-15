@@ -24,6 +24,15 @@ public class RTextAreaEditorKitSelectAllActionTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.SelectAllAction action = new RTextAreaEditorKit.SelectAllAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl_noSelection() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");

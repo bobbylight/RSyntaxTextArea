@@ -25,6 +25,15 @@ public class RTextAreaEditorKitPlaybackLastMacroActionTest extends AbstractRText
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.PlaybackLastMacroAction action = new RTextAreaEditorKit.PlaybackLastMacroAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();

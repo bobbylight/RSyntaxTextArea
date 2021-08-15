@@ -18,6 +18,38 @@ public class RTextAreaEditorKitBeginWordActionTest {
 
 
 	@Test
+	public void testActionPerformedImpl_noSelect() {
+
+		String text = "word word word";
+		RTextArea textArea = new RTextArea(text);
+		textArea.setCaretPosition(12);
+
+		RTextAreaEditorKit.BeginWordAction action = new RTextAreaEditorKit.BeginWordAction("name", false);
+
+		action.actionPerformedImpl(null, textArea);
+		Assert.assertEquals(10, textArea.getSelectionStart());
+		Assert.assertEquals(10, textArea.getSelectionEnd());
+
+	}
+
+
+	@Test
+	public void testActionPerformedImpl_select() {
+
+		String text = "word word word";
+		RTextArea textArea = new RTextArea(text);
+		textArea.setCaretPosition(12);
+
+		RTextAreaEditorKit.BeginWordAction action = new RTextAreaEditorKit.BeginWordAction("name", true);
+
+		action.actionPerformedImpl(null, textArea);
+		Assert.assertEquals(10, textArea.getSelectionStart());
+		Assert.assertEquals(12, textArea.getSelectionEnd());
+
+	}
+
+
+	@Test
 	public void testGetMacroID() {
 		Assert.assertEquals("begin", new RTextAreaEditorKit.BeginWordAction("begin", false).getMacroID());
 	}

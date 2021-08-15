@@ -18,6 +18,12 @@ public class RTextAreaEditorKitBeepActionTest {
 
 
 	@Test
+	public void testActionPerformedImpl() {
+		new RTextAreaEditorKit.BeepAction().actionPerformedImpl(null, null);
+	}
+
+
+	@Test
 	public void testGetMacroID() {
 		Assert.assertEquals(RTextAreaEditorKit.beepAction, new RTextAreaEditorKit.BeepAction().getMacroID());
 	}

@@ -89,4 +89,11 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 		new RTextAreaEditorKit.NextBookmarkAction("foo", false).actionPerformedImpl(e, textArea);
 		Assert.assertEquals(3, textArea.getCaretLineNumber());
 	}
+
+
+	@Test
+	public void testGetMacroID() {
+		RTextAreaEditorKit.NextBookmarkAction action = new RTextAreaEditorKit.NextBookmarkAction("name", true);
+		Assert.assertEquals("name", action.getMacroID());
+	}
 }

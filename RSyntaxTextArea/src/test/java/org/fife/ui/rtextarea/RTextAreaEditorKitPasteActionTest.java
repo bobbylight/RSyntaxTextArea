@@ -26,6 +26,15 @@ public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
+	public void testConstructor_multiArg() {
+		RTextAreaEditorKit.PasteAction action = new RTextAreaEditorKit.PasteAction(
+			"name", null, "Description", 0, null);
+		Assert.assertEquals("name", action.getName());
+		Assert.assertEquals("Description", action.getDescription());
+	}
+
+
+	@Test
 	public void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
