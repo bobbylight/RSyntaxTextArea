@@ -119,7 +119,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		parsers = new ArrayList<>(1); // Usually small
 		timer = new Timer(delay, this);
 		timer.setRepeats(false);
-		running = true;
+		running = false;
 	}
 
 
