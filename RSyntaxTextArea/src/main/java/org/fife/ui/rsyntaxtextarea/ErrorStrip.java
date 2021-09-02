@@ -306,7 +306,7 @@ public class ErrorStrip extends JPanel {
 	public String getToolTipText(MouseEvent e) {
 		String text = null;
 		int line = yToLine(e.getY());
-		if (line>-1) { 
+		if (line>-1) {
 			text = MSG.getString("Line");
 			text = MessageFormat.format(text, line + 1);
 		}
@@ -328,7 +328,7 @@ public class ErrorStrip extends JPanel {
 		int lineHeight = textArea.getLineHeight();
 		int linesPerVisibleRect = h / lineHeight;
 
-		return (int)(((line-1)/( Math.max(lineCount, linesPerVisibleRect) -1)) * (h-2));
+		return (int)(((line-1)/(Math.max(lineCount, linesPerVisibleRect) -1)) * (h-2));
 	}
 
 
@@ -570,11 +570,11 @@ public class ErrorStrip extends JPanel {
 	private int yToLine(int y) {
 		int line = -1;
 		int h = textArea.getVisibleRect().height;
-		
+
 		int lineHeight = textArea.getLineHeight();
 		int linesPerVisibleRect = h / lineHeight;
 		int lineCount = textArea.getLineCount();
-		
+
 		if (y<h) {
 			float at = y/(float)h;
 			line = Math.round((Math.min(lineCount, linesPerVisibleRect)-1)*at);
@@ -652,15 +652,15 @@ public class ErrorStrip extends JPanel {
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
 				textArea.computeVisibleRect(visibleRect);
-				int h = textArea.getVisibleRect().height;
-		
+				int h = visibleRect.height;
+
 				int lineHeight = textArea.getLineHeight();
 				int linesPerVisibleRect = h / lineHeight;
 				int lineCount = textArea.getLineCount();
-		
+
 				int line = textArea.getCaretLineNumber();
 				float percent = line / (float)(Math.max(linesPerVisibleRect, lineCount)-1);
-				
+
 				caretLineY = (int)(visibleRect.height*percent);
 				if (caretLineY!=lastLineY) {
 					repaint(0,lastLineY, getWidth(), 2); // Erase old position
