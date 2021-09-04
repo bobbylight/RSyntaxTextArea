@@ -17,10 +17,9 @@ package org.fife.ui.rtextarea;
  */
 class RegExReplaceInfo {
 
-	private String matchedText;
-	private int startIndex;
-	private int endIndex;
-	private String replacement;
+	private final int startIndex;
+	private final int endIndex;
+	private final String replacement;
 
 
 	/**
@@ -34,9 +33,8 @@ class RegExReplaceInfo {
 	 * @param replacement The text to replace the matched text with.  This
 	 *        string has any matched groups and character escapes replaced.
 	 */
-	RegExReplaceInfo(String matchedText, int start, int end,
+	RegExReplaceInfo(int start, int end,
 						String replacement) {
-		this.matchedText = matchedText;
 		this.startIndex = start;
 		this.endIndex = end;
 		this.replacement = replacement;
@@ -46,20 +44,10 @@ class RegExReplaceInfo {
 	 * Returns the end index of the matched text.
 	 *
 	 * @return The end index of the matched text in the document searched.
-	 * @see #getMatchedText()
 	 * @see #getEndIndex()
 	 */
 	public int getEndIndex() {
 		return endIndex;
-	}
-
-	/**
-	 * Returns the text that matched the regular expression.
-	 *
-	 * @return The matched text.
-	 */
-	public String getMatchedText() {
-		return matchedText;
 	}
 
 	/**
@@ -75,7 +63,6 @@ class RegExReplaceInfo {
 	 * Returns the start index of the matched text.
 	 *
 	 * @return The start index of the matched text in the document searched.
-	 * @see #getMatchedText()
 	 * @see #getEndIndex()
 	 */
 	public int getStartIndex() {

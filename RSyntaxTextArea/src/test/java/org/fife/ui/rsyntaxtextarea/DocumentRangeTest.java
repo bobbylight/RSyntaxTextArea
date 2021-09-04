@@ -151,15 +151,4 @@ public class DocumentRangeTest {
 		DocumentRange range = new DocumentRange(5, 8);
 		Assert.assertEquals("[DocumentRange: 5-8]", range.toString());
 	}
-
-
-	@Test
-	public void testTranslate() {
-		DocumentRange range = new DocumentRange(5, 8);
-		range.translate(6);
-		Assert.assertEquals(11, range.getStartOffset());
-		Assert.assertEquals(14, range.getEndOffset());
-	}
-
-
 }
