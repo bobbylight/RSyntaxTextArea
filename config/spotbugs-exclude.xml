@@ -12,6 +12,8 @@
                 <Bug pattern="SF_SWITCH_NO_DEFAULT" />
                 <Bug pattern="DLS_DEAD_LOCAL_STORE" />
                 <Bug pattern="DM_DEFAULT_ENCODING" />
+                <Bug pattern="EI_EXPOSE_REP" />
+                <Bug pattern="EI_EXPOSE_REP2" />
             </Or>
         </Not>
     </Match>

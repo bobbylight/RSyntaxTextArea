@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.spotbugs' version '4.7.1'
+    id 'com.github.spotbugs' version '4.7.3'
 }
 
 group 'com.fifesoft'
@@ -24,7 +24,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '7.0.2'
+        gradleVersion = '7.2'
     }
 }
 
@@ -35,7 +35,7 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
 
     checkstyle {
-        toolVersion = '8.43'
+        toolVersion = '9.0'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 

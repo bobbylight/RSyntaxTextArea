@@ -14,7 +14,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  * an XML file. The latter method is preferred since it's more modular, and
  * provides a way for your users to customize RSTA in your application.<p>
  *
- * This example uses RSyntaxTextArea 3.0.5.<p>
+ * This example uses RSyntaxTextArea 3.1.4.<p>
  *
  * Project Home: http://fifesoft.com/rsyntaxtextarea<br>
  * Downloads: https://sourceforge.net/projects/rsyntaxtextarea
