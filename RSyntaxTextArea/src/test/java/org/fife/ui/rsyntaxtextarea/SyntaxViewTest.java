@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
@@ -32,11 +32,11 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
 		Token token = view.getTokenListForPhysicalLineAbove(line2StartOffs);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "1"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "1"));
 	}
 
 
@@ -52,11 +52,11 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
 		Token token = view.getTokenListForPhysicalLineAbove(line2StartOffs);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "1"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "1"));
 	}
 
 
@@ -71,11 +71,11 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
 		Token token = view.getTokenListForPhysicalLineBelow(line2StartOffs);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "3"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "3"));
 	}
 
 
@@ -91,11 +91,11 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
 		Token token = view.getTokenListForPhysicalLineBelow(line2StartOffs);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "line"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "3"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "3"));
 	}
 
 
@@ -115,7 +115,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 			offs1, Position.Bias.Backward,
 			r);
 
-		Assert.assertNotNull(result);
+		Assertions.assertNotNull(result);
 	}
 
 
@@ -128,7 +128,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		textArea.setCaretPosition(0);
 
 		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
-		Assert.assertTrue(view.nextTabStop(0, 0) > 0);
+		Assertions.assertTrue(view.nextTabStop(0, 0) > 0);
 	}
 
 
@@ -142,7 +142,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		textArea.setTabSize(0);
 
 		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
-		Assert.assertEquals(0, view.nextTabStop(0, 0), 0.001);
+		Assertions.assertEquals(0, view.nextTabStop(0, 0), 0.001);
 	}
 
 

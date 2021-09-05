@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -21,7 +21,7 @@ public class ActiveLineRangeEventTest {
 	public void testHappyPath() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		ActiveLineRangeEvent e = new ActiveLineRangeEvent(textArea, 1, 2);
-		Assert.assertEquals(1, e.getMin());
-		Assert.assertEquals(2, e.getMax());
+		Assertions.assertEquals(1, e.getMin());
+		Assertions.assertEquals(2, e.getMax());
 	}
 }

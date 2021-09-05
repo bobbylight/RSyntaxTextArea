@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -37,12 +37,12 @@ public class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTex
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
 		a.actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getText().endsWith("\n}"));
+		Assertions.assertTrue(textArea.getText().endsWith("\n}"));
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CloseCurlyBraceAction a = new RSyntaxTextAreaEditorKit.CloseCurlyBraceAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction, a.getMacroID());
 	}
 }

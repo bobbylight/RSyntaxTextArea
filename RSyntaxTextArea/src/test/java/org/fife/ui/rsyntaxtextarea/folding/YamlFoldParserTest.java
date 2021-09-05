@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -40,23 +40,23 @@ public class YamlFoldParserTest {
 		YamlFoldParser parser = new YamlFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(2, folds.size());
+		Assertions.assertEquals(2, folds.size());
 
 		Fold firstFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, firstFold.getFoldType());
-		Assert.assertEquals(0, firstFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("Item"), firstFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
+		Assertions.assertEquals(0, firstFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("Item"), firstFold.getEndOffset());
 
-		Assert.assertEquals(1, firstFold.getChildCount());
+		Assertions.assertEquals(1, firstFold.getChildCount());
 
 		Fold childFold = firstFold.getChild(0);
-		Assert.assertEquals(FoldType.CODE, childFold.getFoldType());
-		Assert.assertEquals(code.indexOf("  extra"), childFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("Item"), childFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, childFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("  extra"), childFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("Item"), childFold.getEndOffset());
 
 		Fold secondFold = folds.get(1);
-		Assert.assertEquals(FoldType.CODE, secondFold.getFoldType());
-		Assert.assertEquals(code.indexOf("women"), secondFold.getStartOffset());
-		Assert.assertEquals(Integer.MAX_VALUE, secondFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, secondFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("women"), secondFold.getStartOffset());
+		Assertions.assertEquals(Integer.MAX_VALUE, secondFold.getEndOffset());
 	}
 }

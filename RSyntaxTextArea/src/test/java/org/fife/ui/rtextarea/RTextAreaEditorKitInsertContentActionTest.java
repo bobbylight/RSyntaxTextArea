@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitInsertContentActionTest {
 
 
@@ -33,7 +33,7 @@ public class RTextAreaEditorKitInsertContentActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "new-content");
 		new RTextAreaEditorKit.InsertContentAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("hello world", textArea.getText());
+		Assertions.assertEquals("hello world", textArea.getText());
 	}
 
 
@@ -46,13 +46,13 @@ public class RTextAreaEditorKitInsertContentActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "new-content");
 		new RTextAreaEditorKit.InsertContentAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("hellonew-content world", textArea.getText());
+		Assertions.assertEquals("hellonew-content world", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(DefaultEditorKit.insertContentAction,
+		Assertions.assertEquals(DefaultEditorKit.insertContentAction,
 			new RTextAreaEditorKit.InsertContentAction().getMacroID());
 	}
 }

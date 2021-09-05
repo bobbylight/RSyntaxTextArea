@@ -8,8 +8,8 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -52,8 +52,8 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("*", startAndEnd[0]);
-		Assert.assertNull(null, startAndEnd[1]);
+		Assertions.assertEquals("*", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 

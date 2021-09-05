@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
 
 
@@ -26,19 +26,19 @@ public class XmlParserTest {
 
 	private void assertCleanParseResult_oneLineDocument(XmlParser parser,
 			ParseResult res) {
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(0, notices.size());
+		Assertions.assertEquals(0, notices.size());
 	}
 
 
 	@Test
 	public void testZeroArgConstructor() {
 		XmlParser parser = new XmlParser();
-		Assert.assertNull(parser.getHyperlinkListener());
-		Assert.assertNull(parser.getImageBase());
+		Assertions.assertNull(parser.getHyperlinkListener());
+		Assertions.assertNull(parser.getImageBase());
 	}
 
 
@@ -46,17 +46,17 @@ public class XmlParserTest {
 	public void testOneArgConstructor() {
 		EntityResolver resolver = null;
 		XmlParser parser = new XmlParser(resolver);
-		Assert.assertNull(parser.getHyperlinkListener());
-		Assert.assertNull(parser.getImageBase());
+		Assertions.assertNull(parser.getHyperlinkListener());
+		Assertions.assertNull(parser.getImageBase());
 	}
 
 
 	@Test
 	public void testIsValidating() {
 		XmlParser parser = new XmlParser();
-		Assert.assertFalse(parser.isValidating());
+		Assertions.assertFalse(parser.isValidating());
 		parser.setValidating(true);
-		Assert.assertTrue(parser.isValidating());
+		Assertions.assertTrue(parser.isValidating());
 	}
 
 
@@ -86,13 +86,13 @@ public class XmlParserTest {
 				"<books>", null);
 
 		ParseResult res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(1, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(1, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(1, notices.size());
+		Assertions.assertEquals(1, notices.size());
 		ParserNotice notice = notices.get(0);
-		Assert.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
+		Assertions.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
 
 	}
 
@@ -110,13 +110,13 @@ public class XmlParserTest {
 				"<books>", null);
 
 		ParseResult res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(2, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(2, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(1, notices.size());
+		Assertions.assertEquals(1, notices.size());
 		ParserNotice notice = notices.get(0);
-		Assert.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
+		Assertions.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
 
 	}
 
@@ -139,9 +139,9 @@ public class XmlParserTest {
 	@Test
 	public void testSetValidating() {
 		XmlParser parser = new XmlParser();
-		Assert.assertFalse(parser.isValidating());
+		Assertions.assertFalse(parser.isValidating());
 		parser.setValidating(true);
-		Assert.assertTrue(parser.isValidating());
+		Assertions.assertTrue(parser.isValidating());
 	}
 
 

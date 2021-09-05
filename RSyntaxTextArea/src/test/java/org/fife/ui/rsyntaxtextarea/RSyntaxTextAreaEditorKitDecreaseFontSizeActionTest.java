@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitDecreaseFontSizeActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -48,12 +48,12 @@ public class RSyntaxTextAreaEditorKitDecreaseFontSizeActionTest extends Abstract
 				break;
 			}
 		}
-		Assert.assertTrue(newFontSize < origFontSize);
+		Assertions.assertTrue(newFontSize < origFontSize);
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.DecreaseFontSizeAction a = new RSyntaxTextAreaEditorKit.DecreaseFontSizeAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rtaDecreaseFontSizeAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rtaDecreaseFontSizeAction, a.getMacroID());
 	}
 }

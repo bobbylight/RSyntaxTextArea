@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.BadLocationException;
 import java.awt.event.ActionEvent;
@@ -20,14 +20,14 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitNextBookmarkActionTest {
 
 	private RTextArea textArea;
 	private Gutter gutter;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		textArea = new RTextArea("line 1\nline 2\nline 3\nline 4");
@@ -47,7 +47,7 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextBookmarkAction("foo", true).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(0, textArea.getCaretPosition()); // Caret didn't move
+		Assertions.assertEquals(0, textArea.getCaretPosition()); // Caret didn't move
 	}
 
 
@@ -60,14 +60,14 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextBookmarkAction("foo", true).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(1, textArea.getCaretLineNumber());
+		Assertions.assertEquals(1, textArea.getCaretLineNumber());
 
 		new RTextAreaEditorKit.NextBookmarkAction("foo", true).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(3, textArea.getCaretLineNumber());
+		Assertions.assertEquals(3, textArea.getCaretLineNumber());
 
 		// Loops back
 		new RTextAreaEditorKit.NextBookmarkAction("foo", true).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(1, textArea.getCaretLineNumber());
+		Assertions.assertEquals(1, textArea.getCaretLineNumber());
 	}
 
 
@@ -80,20 +80,20 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextBookmarkAction("foo", false).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(3, textArea.getCaretLineNumber());
+		Assertions.assertEquals(3, textArea.getCaretLineNumber());
 
 		new RTextAreaEditorKit.NextBookmarkAction("foo", false).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(1, textArea.getCaretLineNumber());
+		Assertions.assertEquals(1, textArea.getCaretLineNumber());
 
 		// Loops back
 		new RTextAreaEditorKit.NextBookmarkAction("foo", false).actionPerformedImpl(e, textArea);
-		Assert.assertEquals(3, textArea.getCaretLineNumber());
+		Assertions.assertEquals(3, textArea.getCaretLineNumber());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
 		RTextAreaEditorKit.NextBookmarkAction action = new RTextAreaEditorKit.NextBookmarkAction("name", true);
-		Assert.assertEquals("name", action.getMacroID());
+		Assertions.assertEquals("name", action.getMacroID());
 	}
 }

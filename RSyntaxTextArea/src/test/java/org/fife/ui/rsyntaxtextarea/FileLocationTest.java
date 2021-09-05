@@ -9,8 +9,8 @@ package org.fife.ui.rsyntaxtextarea;
 import java.io.File;
 import java.net.URL;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -26,9 +26,9 @@ public class FileLocationTest {
 	public void testCreate_StringArg_FileName() throws Exception {
 		String url = "test.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof FileFileLocation);
-		Assert.assertTrue(loc.isLocal());
-		Assert.assertFalse(loc.isRemote());
+		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertTrue(loc.isLocal());
+		Assertions.assertFalse(loc.isRemote());
 	}
 
 
@@ -37,9 +37,9 @@ public class FileLocationTest {
 		String url = File.separatorChar == '/' ?
 				"file:///test.txt" : "file:///C:/test.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof FileFileLocation);
-		Assert.assertTrue(loc.isLocal());
-		Assert.assertFalse(loc.isRemote());
+		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertTrue(loc.isLocal());
+		Assertions.assertFalse(loc.isRemote());
 	}
 
 
@@ -47,9 +47,9 @@ public class FileLocationTest {
 	public void testCreate_StringArg_FtpUrl() throws Exception {
 		String url = "ftp://ftp.microsoft.com/deskapps/readme.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof URLFileLocation);
-		Assert.assertFalse(loc.isLocal());
-		Assert.assertTrue(loc.isRemote());
+		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertFalse(loc.isLocal());
+		Assertions.assertTrue(loc.isRemote());
 	}
 
 
@@ -57,9 +57,9 @@ public class FileLocationTest {
 	public void testCreate_StringArg_HttpUrl() throws Exception {
 		String url = "http://google.com";
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof URLFileLocation);
-		Assert.assertFalse(loc.isLocal());
-		Assert.assertTrue(loc.isRemote());
+		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertFalse(loc.isLocal());
+		Assertions.assertTrue(loc.isRemote());
 	}
 
 
@@ -67,9 +67,9 @@ public class FileLocationTest {
 	public void testCreate_StringArg_HttpsUrl() throws Exception {
 		String url = "https://google.com";
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof URLFileLocation);
-		Assert.assertFalse(loc.isLocal());
-		Assert.assertTrue(loc.isRemote());
+		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertFalse(loc.isLocal());
+		Assertions.assertTrue(loc.isRemote());
 	}
 
 
@@ -78,9 +78,9 @@ public class FileLocationTest {
 		File file = new File(File.separatorChar == '/' ?
 				"test.txt" : "C:/test.txt");
 		FileLocation loc = FileLocation.create(file);
-		Assert.assertTrue(loc instanceof FileFileLocation);
-		Assert.assertTrue(loc.isLocal());
-		Assert.assertFalse(loc.isRemote());
+		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertTrue(loc.isLocal());
+		Assertions.assertFalse(loc.isRemote());
 	}
 
 
@@ -88,9 +88,9 @@ public class FileLocationTest {
 	public void testCreate_UrlArg_HttpsUrl() throws Exception {
 		URL url = new URL("https://google.com");
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof URLFileLocation);
-		Assert.assertFalse(loc.isLocal());
-		Assert.assertTrue(loc.isRemote());
+		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertFalse(loc.isLocal());
+		Assertions.assertTrue(loc.isRemote());
 	}
 
 
@@ -98,9 +98,9 @@ public class FileLocationTest {
 	public void testCreate_UrlArg_FileUrl() throws Exception {
 		URL url = new URL("file:///test.txt");
 		FileLocation loc = FileLocation.create(url);
-		Assert.assertTrue(loc instanceof FileFileLocation);
-		Assert.assertTrue(loc.isLocal());
-		Assert.assertFalse(loc.isRemote());
+		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertTrue(loc.isLocal());
+		Assertions.assertFalse(loc.isRemote());
 	}
 
 

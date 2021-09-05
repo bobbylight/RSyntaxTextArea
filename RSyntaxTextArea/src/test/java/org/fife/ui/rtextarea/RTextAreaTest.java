@@ -1,13 +1,14 @@
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 
@@ -17,19 +18,19 @@ import javax.swing.text.DefaultStyledDocument;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaTest {
 
 	private IconGroup origIconGroup;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origIconGroup = RTextArea.getIconGroup();
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		if (origIconGroup != null) {
 			RTextArea.setIconGroup(origIconGroup);
@@ -40,31 +41,31 @@ public class RTextAreaTest {
 	@Test
 	public void testCanRedo() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertFalse(textArea.canRedo());
+		Assertions.assertFalse(textArea.canRedo());
 		textArea.replaceSelection("Hi");
-		Assert.assertFalse(textArea.canRedo());
+		Assertions.assertFalse(textArea.canRedo());
 		textArea.undoLastAction();
-		Assert.assertTrue(textArea.canRedo());
+		Assertions.assertTrue(textArea.canRedo());
 		textArea.redoLastAction();
-		Assert.assertFalse(textArea.canRedo());
+		Assertions.assertFalse(textArea.canRedo());
 	}
 
 
 	@Test
 	public void testCanUndo() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 		textArea.replaceSelection("Hi");
-		Assert.assertTrue(textArea.canUndo());
+		Assertions.assertTrue(textArea.canUndo());
 		textArea.undoLastAction();
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 	}
 
 
 	@Test
 	public void testCreateDefaultModel() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertTrue(textArea.createDefaultModel() instanceof RDocument);
+		Assertions.assertTrue(textArea.createDefaultModel() instanceof RDocument);
 	}
 
 
@@ -72,16 +73,16 @@ public class RTextAreaTest {
 	public void testDiscardAllEdits() {
 		RTextArea textArea = new RTextArea();
 		textArea.replaceSelection("Hi");
-		Assert.assertTrue(textArea.canUndo());
+		Assertions.assertTrue(textArea.canUndo());
 		textArea.discardAllEdits();
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 	}
 
 
 	@Test
 	public void testGetPopupMenu() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertNotNull(textArea.getPopupMenu());
+		Assertions.assertNotNull(textArea.getPopupMenu());
 	}
 
 
@@ -94,27 +95,27 @@ public class RTextAreaTest {
 	@Test
 	public void testGetSetToolTipSupplier() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertNull(textArea.getToolTipSupplier());
+		Assertions.assertNull(textArea.getToolTipSupplier());
 		textArea.setToolTipSupplier((textArea1, e) -> null);
-		Assert.assertNotNull(textArea.getToolTipSupplier());
+		Assertions.assertNotNull(textArea.getToolTipSupplier());
 	}
 
 
 	@Test
 	public void testRecordingMacro_happyPath() {
-		Assert.assertFalse(RTextArea.isRecordingMacro());
+		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.beginRecordingMacro();
-		Assert.assertTrue(RTextArea.isRecordingMacro());
+		Assertions.assertTrue(RTextArea.isRecordingMacro());
 		RTextArea.endRecordingMacro();
-		Assert.assertFalse(RTextArea.isRecordingMacro());
+		Assertions.assertFalse(RTextArea.isRecordingMacro());
 	}
 
 
 	@Test
 	public void testRecordingMacro_endWhileNotRecording() {
-		Assert.assertFalse(RTextArea.isRecordingMacro());
+		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.endRecordingMacro();
-		Assert.assertFalse(RTextArea.isRecordingMacro());
+		Assertions.assertFalse(RTextArea.isRecordingMacro());
 	}
 
 
@@ -124,7 +125,7 @@ public class RTextAreaTest {
 		textArea.setSelectionStart(1);
 		textArea.setSelectionEnd(3);
 		textArea.replaceSelection(null);
-		Assert.assertEquals("le 1\nline 2", textArea.getText());
+		Assertions.assertEquals("le 1\nline 2", textArea.getText());
 	}
 
 
@@ -135,7 +136,7 @@ public class RTextAreaTest {
 		textArea.setTabSize(4);
 		textArea.setCaretPosition(0);
 		textArea.replaceSelection("\t");
-		Assert.assertEquals("    line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("    line 1\nline 2", textArea.getText());
 	}
 
 
@@ -146,7 +147,7 @@ public class RTextAreaTest {
 		textArea.setTabSize(4);
 		textArea.setCaretPosition(1);
 		textArea.replaceSelection("\t");
-		Assert.assertEquals("l   ine 1\nline 2", textArea.getText());
+		Assertions.assertEquals("l   ine 1\nline 2", textArea.getText());
 	}
 
 
@@ -157,7 +158,7 @@ public class RTextAreaTest {
 		textArea.setTabSize(4);
 		textArea.setCaretPosition(0);
 		textArea.replaceSelection("\t\t");
-		Assert.assertEquals("        line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("        line 1\nline 2", textArea.getText());
 	}
 
 
@@ -168,7 +169,7 @@ public class RTextAreaTest {
 		textArea.setTabSize(4);
 		textArea.setCaretPosition(0);
 		textArea.replaceSelection("\t\nadded");
-		Assert.assertEquals("    \naddedline 1\nline 2", textArea.getText());
+		Assertions.assertEquals("    \naddedline 1\nline 2", textArea.getText());
 	}
 
 
@@ -180,16 +181,16 @@ public class RTextAreaTest {
 		textArea.setTabSize(4);
 		textArea.setCaretPosition(0);
 		textArea.replaceSelection("\t");
-		Assert.assertEquals("     1\nline 2", textArea.getText());
+		Assertions.assertEquals("     1\nline 2", textArea.getText());
 	}
 
 
 	@Test
 	public void testMarkAllOnOccurrenceSearches() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertTrue(textArea.getMarkAllOnOccurrenceSearches());
+		Assertions.assertTrue(textArea.getMarkAllOnOccurrenceSearches());
 		textArea.setMarkAllOnOccurrenceSearches(false);
-		Assert.assertFalse(textArea.getMarkAllOnOccurrenceSearches());
+		Assertions.assertFalse(textArea.getMarkAllOnOccurrenceSearches());
 	}
 
 
@@ -200,10 +201,12 @@ public class RTextAreaTest {
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetDocument_errorIfIncorrectType() {
-		RTextArea textArea = new RTextArea();
-		textArea.setDocument(new DefaultStyledDocument());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			RTextArea textArea = new RTextArea();
+			textArea.setDocument(new DefaultStyledDocument());
+		});
 	}
 
 
@@ -212,15 +215,15 @@ public class RTextAreaTest {
 		RTextArea textArea = new RTextArea();
 		JPopupMenu popup = new JPopupMenu();
 		textArea.setPopupMenu(popup);
-		Assert.assertEquals(popup, textArea.getPopupMenu());
+		Assertions.assertEquals(popup, textArea.getPopupMenu());
 	}
 
 
 	@Test
 	public void setTextMode_invalidMode() {
 		RTextArea textArea = new RTextArea();
-		Assert.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
 		textArea.setTextMode(-7);
-		Assert.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
 	}
 }

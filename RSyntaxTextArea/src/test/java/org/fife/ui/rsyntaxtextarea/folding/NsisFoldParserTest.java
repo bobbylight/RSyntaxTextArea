@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -48,27 +48,27 @@ public class NsisFoldParserTest {
 		FoldParser parser = new NsisFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(3, folds.size());
+		Assertions.assertEquals(3, folds.size());
 
 		Fold firstFold = folds.get(0);
-		Assert.assertEquals(FoldType.COMMENT, firstFold.getFoldType());
-		Assert.assertEquals(code.indexOf("/*"), firstFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("*/") + 1, firstFold.getEndOffset());
+		Assertions.assertEquals(FoldType.COMMENT, firstFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("/*"), firstFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("*/") + 1, firstFold.getEndOffset());
 
-		Assert.assertEquals(0, firstFold.getChildCount());
+		Assertions.assertEquals(0, firstFold.getChildCount());
 
 		Fold secondFold = folds.get(1);
-		Assert.assertEquals(FoldType.CODE, secondFold.getFoldType());
-		Assert.assertEquals(code.indexOf("Section"), secondFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("SectionEnd"), secondFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, secondFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("Section"), secondFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("SectionEnd"), secondFold.getEndOffset());
 
-		Assert.assertEquals(0, secondFold.getChildCount());
+		Assertions.assertEquals(0, secondFold.getChildCount());
 
 		Fold thirdFold = folds.get(2);
-		Assert.assertEquals(FoldType.CODE, thirdFold.getFoldType());
-		Assert.assertEquals(code.indexOf("Function"), thirdFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("FunctionEnd"), thirdFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, thirdFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("Function"), thirdFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("FunctionEnd"), thirdFold.getEndOffset());
 
-		Assert.assertEquals(0, thirdFold.getChildCount());
+		Assertions.assertEquals(0, thirdFold.getChildCount());
 	}
 }

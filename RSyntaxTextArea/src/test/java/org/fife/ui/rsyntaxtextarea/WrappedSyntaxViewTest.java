@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -23,7 +23,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -90,7 +90,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 		Rectangle r = new Rectangle();
 		Shape childAllocation = view.getChildAllocation(0, r);
-		Assert.assertNull(childAllocation);
+		Assertions.assertNull(childAllocation);
 	}
 
 
@@ -105,7 +105,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 
-		Assert.assertTrue(view.getMaximumSpan(View.X_AXIS) > 0);
+		Assertions.assertTrue(view.getMaximumSpan(View.X_AXIS) > 0);
 	}
 
 
@@ -120,7 +120,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 
-		Assert.assertTrue(view.getMinimumSpan(View.X_AXIS) > 0);
+		Assertions.assertTrue(view.getMinimumSpan(View.X_AXIS) > 0);
 	}
 
 
@@ -135,7 +135,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 
-		Assert.assertTrue(view.getPreferredSpan(View.X_AXIS) > 0);
+		Assertions.assertTrue(view.getPreferredSpan(View.X_AXIS) > 0);
 	}
 
 
@@ -150,7 +150,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 
-		Assert.assertTrue(view.getPreferredSpan(View.Y_AXIS) > 0);
+		Assertions.assertTrue(view.getPreferredSpan(View.Y_AXIS) > 0);
 	}
 
 
@@ -164,7 +164,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
-		Assert.assertEquals(0d, view.nextTabStop(0, 0), 0.001);
+		Assertions.assertEquals(0d, view.nextTabStop(0, 0), 0.001);
 	}
 
 

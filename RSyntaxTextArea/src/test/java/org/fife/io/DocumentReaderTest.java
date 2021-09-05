@@ -6,10 +6,10 @@
  */
 package org.fife.io;
 
-import javax.swing.text.PlainDocument;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import javax.swing.text.PlainDocument;
 
 
 /**
@@ -36,13 +36,13 @@ public class DocumentReaderTest {
 		doc.insertString(0, "0123456789", null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.mark(5);
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 		r.reset();
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 
 		r.close();
 
@@ -53,7 +53,7 @@ public class DocumentReaderTest {
 	public void testMarkSupported() {
 		PlainDocument doc = new PlainDocument();
 		DocumentReader r = new DocumentReader(doc);
-		Assert.assertTrue(r.markSupported());
+		Assertions.assertTrue(r.markSupported());
 		r.close();
 	}
 
@@ -65,18 +65,18 @@ public class DocumentReaderTest {
 		doc.insertString(0, "0123456789", null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
-		Assert.assertEquals('3', r.read());
-		Assert.assertEquals('4', r.read());
-		Assert.assertEquals('5', r.read());
-		Assert.assertEquals('6', r.read());
-		Assert.assertEquals('7', r.read());
-		Assert.assertEquals('8', r.read());
-		Assert.assertEquals('9', r.read());
-		Assert.assertEquals(-1, r.read());
-		Assert.assertEquals(-1, r.read());
+		Assertions.assertEquals('0', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
+		Assertions.assertEquals('3', r.read());
+		Assertions.assertEquals('4', r.read());
+		Assertions.assertEquals('5', r.read());
+		Assertions.assertEquals('6', r.read());
+		Assertions.assertEquals('7', r.read());
+		Assertions.assertEquals('8', r.read());
+		Assertions.assertEquals('9', r.read());
+		Assertions.assertEquals(-1, r.read());
+		Assertions.assertEquals(-1, r.read());
 
 		r.close();
 
@@ -92,11 +92,11 @@ public class DocumentReaderTest {
 		DocumentReader r = new DocumentReader(doc);
 
 		char[] array = new char[10];
-		Assert.assertEquals(10, r.read(array));
-		Assert.assertEquals(content, new String(array));
+		Assertions.assertEquals(10, r.read(array));
+		Assertions.assertEquals(content, new String(array));
 
-		Assert.assertEquals(-1, r.read(array));
-		Assert.assertEquals(-1, r.read());
+		Assertions.assertEquals(-1, r.read(array));
+		Assertions.assertEquals(-1, r.read());
 
 		r.close();
 
@@ -112,20 +112,20 @@ public class DocumentReaderTest {
 		DocumentReader r = new DocumentReader(doc);
 
 		char[] array = new char[3];
-		Assert.assertEquals(3, r.read(array));
-		Assert.assertEquals("012", new String(array));
+		Assertions.assertEquals(3, r.read(array));
+		Assertions.assertEquals("012", new String(array));
 
-		Assert.assertEquals(3, r.read(array));
-		Assert.assertEquals("345", new String(array));
+		Assertions.assertEquals(3, r.read(array));
+		Assertions.assertEquals("345", new String(array));
 
-		Assert.assertEquals(3, r.read(array));
-		Assert.assertEquals("678", new String(array));
+		Assertions.assertEquals(3, r.read(array));
+		Assertions.assertEquals("678", new String(array));
 
-		Assert.assertEquals(1, r.read(array));
-		Assert.assertEquals('9', array[0]);
+		Assertions.assertEquals(1, r.read(array));
+		Assertions.assertEquals('9', array[0]);
 
-		Assert.assertEquals(-1, r.read(array));
-		Assert.assertEquals(-1, r.read());
+		Assertions.assertEquals(-1, r.read(array));
+		Assertions.assertEquals(-1, r.read());
 
 		r.close();
 
@@ -141,11 +141,11 @@ public class DocumentReaderTest {
 		DocumentReader r = new DocumentReader(doc);
 
 		char[] array = new char[10];
-		Assert.assertEquals(10, r.read(array, 0, array.length));
-		Assert.assertEquals(content, new String(array));
+		Assertions.assertEquals(10, r.read(array, 0, array.length));
+		Assertions.assertEquals(content, new String(array));
 
-		Assert.assertEquals(-1, r.read(array, 0, array.length));
-		Assert.assertEquals(-1, r.read());
+		Assertions.assertEquals(-1, r.read(array, 0, array.length));
+		Assertions.assertEquals(-1, r.read());
 
 		r.close();
 
@@ -161,20 +161,20 @@ public class DocumentReaderTest {
 		DocumentReader r = new DocumentReader(doc);
 
 		char[] array = new char[10];
-		Assert.assertEquals(3, r.read(array, 0, 3));
-		Assert.assertEquals("012", new String(array, 0, 3));
+		Assertions.assertEquals(3, r.read(array, 0, 3));
+		Assertions.assertEquals("012", new String(array, 0, 3));
 
-		Assert.assertEquals(3, r.read(array, 0, 3));
-		Assert.assertEquals("345", new String(array, 0, 3));
+		Assertions.assertEquals(3, r.read(array, 0, 3));
+		Assertions.assertEquals("345", new String(array, 0, 3));
 
-		Assert.assertEquals(3, r.read(array, 0, 3));
-		Assert.assertEquals("678", new String(array, 0, 3));
+		Assertions.assertEquals(3, r.read(array, 0, 3));
+		Assertions.assertEquals("678", new String(array, 0, 3));
 
-		Assert.assertEquals(1, r.read(array, 0, 3));
-		Assert.assertEquals('9', array[0]);
+		Assertions.assertEquals(1, r.read(array, 0, 3));
+		Assertions.assertEquals('9', array[0]);
 
-		Assert.assertEquals(-1, r.read(array, 0, 3));
-		Assert.assertEquals(-1, r.read());
+		Assertions.assertEquals(-1, r.read(array, 0, 3));
+		Assertions.assertEquals(-1, r.read());
 
 		r.close();
 
@@ -185,7 +185,7 @@ public class DocumentReaderTest {
 	public void testReady() {
 		PlainDocument doc = new PlainDocument();
 		DocumentReader r = new DocumentReader(doc);
-		Assert.assertTrue(r.ready());
+		Assertions.assertTrue(r.ready());
 		r.close();
 	}
 
@@ -198,13 +198,13 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('0', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 		r.reset();
-		Assert.assertEquals('0', r.read());
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('0', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 
 		r.close();
 
@@ -219,13 +219,13 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.mark(5);
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 		r.reset();
-		Assert.assertEquals('1', r.read());
-		Assert.assertEquals('2', r.read());
+		Assertions.assertEquals('1', r.read());
+		Assertions.assertEquals('2', r.read());
 
 		r.close();
 
@@ -240,14 +240,14 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.seek(6);
-		Assert.assertEquals('6', r.read());
-		Assert.assertEquals('7', r.read());
-		Assert.assertEquals('8', r.read());
-		Assert.assertEquals('9', r.read());
-		Assert.assertEquals(-1, r.read());
-		
+		Assertions.assertEquals('6', r.read());
+		Assertions.assertEquals('7', r.read());
+		Assertions.assertEquals('8', r.read());
+		Assertions.assertEquals('9', r.read());
+		Assertions.assertEquals(-1, r.read());
+
 		r.close();
 
 	}
@@ -261,10 +261,10 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.seek(1000);
-		Assert.assertEquals(-1, r.read());
-		
+		Assertions.assertEquals(-1, r.read());
+
 		r.close();
 
 	}
@@ -278,13 +278,13 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.skip(6);
-		Assert.assertEquals('7', r.read());
-		Assert.assertEquals('8', r.read());
-		Assert.assertEquals('9', r.read());
-		Assert.assertEquals(-1, r.read());
-		
+		Assertions.assertEquals('7', r.read());
+		Assertions.assertEquals('8', r.read());
+		Assertions.assertEquals('9', r.read());
+		Assertions.assertEquals(-1, r.read());
+
 		r.close();
 
 	}
@@ -298,10 +298,10 @@ public class DocumentReaderTest {
 		doc.insertString(0, content, null);
 		DocumentReader r = new DocumentReader(doc);
 
-		Assert.assertEquals('0', r.read());
+		Assertions.assertEquals('0', r.read());
 		r.skip(1000);
-		Assert.assertEquals(-1, r.read());
-		
+		Assertions.assertEquals(-1, r.read());
+
 		r.close();
 
 	}

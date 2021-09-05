@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -26,8 +26,8 @@ public class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
 		RTextAreaEditorKit.BeginAction action = new RTextAreaEditorKit.BeginAction("begin", true);
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(3, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(3, textArea.getSelectionEnd());
 	}
 
 
@@ -40,13 +40,13 @@ public class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
 		RTextAreaEditorKit.BeginAction action = new RTextAreaEditorKit.BeginAction("begin", false);
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(0, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(0, textArea.getSelectionEnd());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("begin", new RTextAreaEditorKit.BeginAction("begin", false).getMacroID());
+		Assertions.assertEquals("begin", new RTextAreaEditorKit.BeginAction("begin", false).getMacroID());
 	}
 }

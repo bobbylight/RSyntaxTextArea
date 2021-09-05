@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
 import org.fife.ui.rtextarea.RTextScrollPane;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
@@ -21,7 +21,7 @@ import java.beans.PropertyChangeListener;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -29,7 +29,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	public void testConstructor_oneArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		Assert.assertEquals(1250, manager.getDelay());
+		Assertions.assertEquals(1250, manager.getDelay());
 	}
 
 
@@ -37,7 +37,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	public void testConstructor_twoArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(2000, textArea);
-		Assert.assertEquals(2000, manager.getDelay());
+		Assertions.assertEquals(2000, manager.getDelay());
 	}
 
 
@@ -64,7 +64,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		textArea.forceReparsing(parser);
 
-		Assert.assertTrue(parserNoticeChangeEventFired[0]);
+		Assertions.assertTrue(parserNoticeChangeEventFired[0]);
 	}
 
 
@@ -74,7 +74,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
 
-		Assert.assertEquals(0, manager.getParserCount());
+		Assertions.assertEquals(0, manager.getParserCount());
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -84,10 +84,10 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 		};
 		manager.addParser(parser);
 
-		Assert.assertEquals(1, manager.getParserCount());
+		Assertions.assertEquals(1, manager.getParserCount());
 
-		Assert.assertTrue(manager.removeParser(parser));
-		Assert.assertEquals(0, manager.getParserCount());
+		Assertions.assertTrue(manager.removeParser(parser));
+		Assertions.assertEquals(0, manager.getParserCount());
 	}
 
 
@@ -114,7 +114,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2, 2, 1, false);
 		ToolTipInfo tipInfo = manager.getToolTipText(e);
-		Assert.assertEquals("test", tipInfo.getToolTipText());
+		Assertions.assertEquals("test", tipInfo.getToolTipText());
 	}
 
 
@@ -131,6 +131,6 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		// All we can really verify is that the original document has had the parser's
 		// listener removed (along with all others)
-		Assert.assertEquals(0, origDocument.getDocumentListeners().length);
+		Assertions.assertEquals(0, origDocument.getDocumentListeners().length);
 	}
 }

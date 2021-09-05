@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -46,8 +46,8 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("//", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -62,7 +62,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
 	}
@@ -76,14 +76,14 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "http://www.google.com"));
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "http://www.google.com"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
 
 	}
 
@@ -91,7 +91,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
@@ -103,27 +103,27 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
 
 	}
 
@@ -136,7 +136,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.ANNOTATION, "#mainContent"));
+		Assertions.assertTrue(token.is(TokenTypes.ANNOTATION, "#mainContent"));
 
 	}
 
@@ -145,12 +145,12 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 	public void testCss_isIdentifierChar() {
 		TokenMaker tm = createTokenMaker();
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
-			Assert.assertTrue(tm.isIdentifierChar(0, (char)ch));
-			Assert.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
 		}
-		Assert.assertTrue(tm.isIdentifierChar(0, '-'));
-		Assert.assertTrue(tm.isIdentifierChar(0, '_'));
-		Assert.assertTrue(tm.isIdentifierChar(0, '.'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
 	}
 
 
@@ -162,42 +162,42 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 		code = "background-image: url('test.png');";
 		segment = createSegment(code);
 		tm = createTokenMaker();
 		token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 	}
 
@@ -213,7 +213,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -232,12 +232,12 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 		}
 
@@ -248,17 +248,17 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 	public void testLess_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assert.assertEquals("//", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
 	@Test
 	public void testLess_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
 	}
 
 
@@ -270,7 +270,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "&.extraClass";
 		Segment s = createSegment(code);
 		Token t = tm.getTokenList(s, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
-		Assert.assertTrue(t.is(TokenTypes.RESERVED_WORD, code));
+		Assertions.assertTrue(t.is(TokenTypes.RESERVED_WORD, code));
 
 	}
 

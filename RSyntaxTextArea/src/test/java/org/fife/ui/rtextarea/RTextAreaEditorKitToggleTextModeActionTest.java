@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitToggleTextModeActionTest {
 
 
@@ -26,22 +26,22 @@ public class RTextAreaEditorKitToggleTextModeActionTest {
 	public void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
-		Assert.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
 
 		// Toggle to overwrite
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.ToggleTextModeAction().actionPerformedImpl(e, textArea);
-		Assert.assertEquals(RTextArea.OVERWRITE_MODE, textArea.getTextMode());
+		Assertions.assertEquals(RTextArea.OVERWRITE_MODE, textArea.getTextMode());
 
 		// And back to insert
 		new RTextAreaEditorKit.ToggleTextModeAction().actionPerformedImpl(e, textArea);
-		Assert.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaToggleTextModeAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaToggleTextModeAction,
 			new RTextAreaEditorKit.ToggleTextModeAction().getMacroID());
 	}
 }

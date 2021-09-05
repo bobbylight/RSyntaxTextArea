@@ -8,12 +8,12 @@ package org.fife.ui.rtextarea;
 
 import java.awt.Color;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 
 /**
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -37,7 +37,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		// text area's background since we cannot control the default
 		// LaF's tool tip background color, which is used in the
 		// calculation
-		Assert.assertNotNull(fi.createToolTip());
+		Assertions.assertNotNull(fi.createToolTip());
 	}
 
 
@@ -46,9 +46,9 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.setFoldIconBackground(Color.RED);
-		Assert.assertEquals(Color.RED, fi.getFoldIconBackground());
+		Assertions.assertEquals(Color.RED, fi.getFoldIconBackground());
 		fi.setFoldIconBackground(Color.GREEN);
-		Assert.assertEquals(Color.GREEN, fi.getFoldIconBackground());
+		Assertions.assertEquals(Color.GREEN, fi.getFoldIconBackground());
 	}
 
 
@@ -57,9 +57,9 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.setFoldIconArmedBackground(Color.RED);
-		Assert.assertEquals(Color.RED, fi.getFoldIconArmedBackground());
+		Assertions.assertEquals(Color.RED, fi.getFoldIconArmedBackground());
 		fi.setFoldIconArmedBackground(Color.GREEN);
-		Assert.assertEquals(Color.GREEN, fi.getFoldIconArmedBackground());
+		Assertions.assertEquals(Color.GREEN, fi.getFoldIconArmedBackground());
 	}
 
 
@@ -67,7 +67,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetPreferredSize() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		Assert.assertEquals(textArea.getHeight(), fi.getPreferredSize().height);
+		Assertions.assertEquals(textArea.getHeight(), fi.getPreferredSize().height);
 	}
 
 
@@ -76,9 +76,9 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		Assert.assertEquals(0, fi.getAdditionalLeftMargin());
+		Assertions.assertEquals(0, fi.getAdditionalLeftMargin());
 		fi.setAdditionalLeftMargin(5);
-		Assert.assertEquals(5, fi.getAdditionalLeftMargin());
+		Assertions.assertEquals(5, fi.getAdditionalLeftMargin());
 	}
 
 
@@ -86,9 +86,9 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetSetShowCollapsedRegionToolTips() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		Assert.assertTrue(fi.getShowCollapsedRegionToolTips());
+		Assertions.assertTrue(fi.getShowCollapsedRegionToolTips());
 		fi.setShowCollapsedRegionToolTips(false);
-		Assert.assertFalse(fi.getShowCollapsedRegionToolTips());
+		Assertions.assertFalse(fi.getShowCollapsedRegionToolTips());
 	}
 
 

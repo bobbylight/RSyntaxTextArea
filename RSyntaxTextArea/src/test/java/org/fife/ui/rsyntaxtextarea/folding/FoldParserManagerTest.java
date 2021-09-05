@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@code FoldParserManager} class.
@@ -22,10 +22,10 @@ public class FoldParserManagerTest {
 
 		FoldParserManager fpm = FoldParserManager.get();
 
-		Assert.assertNull(fpm.getFoldParser("text/foo"));
+		Assertions.assertNull(fpm.getFoldParser("text/foo"));
 		fpm.addFoldParserMapping("text/foo", new CurlyFoldParser());
 
-		Assert.assertNotNull(fpm.getFoldParser("text/foo"));
+		Assertions.assertNotNull(fpm.getFoldParser("text/foo"));
 	}
 
 	@Test
@@ -33,37 +33,37 @@ public class FoldParserManagerTest {
 
 		FoldParserManager fpm = FoldParserManager.get();
 
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_6502));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_C));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CSHARP));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CLOJURE));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CSS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_D));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_DART));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_GO));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_GROOVY));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_HTACCESS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_HTML));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JAVA));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON_WITH_COMMENTS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSP));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_KOTLIN));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LATEX));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LESS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LISP));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_MXML));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_NSIS));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PERL));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PHP));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PYTHON));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_SCALA));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_TYPESCRIPT));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_XML));
-		Assert.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_YAML));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_6502));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_C));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CSHARP));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CLOJURE));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_CSS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_D));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_DART));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_GO));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_GROOVY));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_HTACCESS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_HTML));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JAVA));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSON_WITH_COMMENTS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_JSP));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_KOTLIN));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LATEX));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LESS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_LISP));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_MXML));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_NSIS));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PERL));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PHP));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PYTHON));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_SCALA));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_TYPESCRIPT));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_XML));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_YAML));
 	}
 }

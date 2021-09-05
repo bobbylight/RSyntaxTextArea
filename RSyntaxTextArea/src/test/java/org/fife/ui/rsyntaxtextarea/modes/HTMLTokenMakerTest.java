@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -96,8 +96,8 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("<!--", startAndEnd[0]);
-		Assert.assertEquals("-->", startAndEnd[1]);
+		Assertions.assertEquals("<!--", startAndEnd[0]);
+		Assertions.assertEquals("-->", startAndEnd[1]);
 	}
 
 
@@ -142,7 +142,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
 			HTMLTokenMaker.LANG_INDEX_CSS));
 	}
 
@@ -151,8 +151,8 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testCss_getLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
 			HTMLTokenMaker.LANG_INDEX_CSS);
-		Assert.assertEquals("/*", startAndEnd[0]);
-		Assert.assertEquals("*/", startAndEnd[1]);
+		Assertions.assertEquals("/*", startAndEnd[0]);
+		Assertions.assertEquals("*/", startAndEnd[1]);
 	}
 
 
@@ -161,7 +161,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Segment segment = createSegment("");
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
-		Assert.assertEquals(CSS_PREV_TOKEN_TYPE, token.getType());
+		Assertions.assertEquals(CSS_PREV_TOKEN_TYPE, token.getType());
 	}
 
 
@@ -170,7 +170,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Segment segment = createSegment("");
 		Token token = tm.getTokenList(segment, CSS_VALUE_PREV_TOKEN_TYPE, 0);
-		Assert.assertEquals(CSS_VALUE_PREV_TOKEN_TYPE, token.getType());
+		Assertions.assertEquals(CSS_VALUE_PREV_TOKEN_TYPE, token.getType());
 	}
 
 
@@ -180,11 +180,11 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -196,27 +196,27 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
 
 	}
 
@@ -229,7 +229,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
 
 	}
 
@@ -240,12 +240,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		int langIndex = HTMLTokenMaker.LANG_INDEX_CSS;
 
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
-			Assert.assertTrue(tm.isIdentifierChar(langIndex, (char)ch));
-			Assert.assertTrue(tm.isIdentifierChar(langIndex, (char)(ch+('a'-'A'))));
+			Assertions.assertTrue(tm.isIdentifierChar(langIndex, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(langIndex, (char)(ch+('a'-'A'))));
 		}
-		Assert.assertTrue(tm.isIdentifierChar(langIndex, '-'));
-		Assert.assertTrue(tm.isIdentifierChar(langIndex, '_'));
-		Assert.assertTrue(tm.isIdentifierChar(langIndex, '.'));
+		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '.'));
 	}
 
 
@@ -305,15 +305,15 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-			Assert.assertFalse(token.isHyperlink());
-			Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
+			Assertions.assertFalse(token.isHyperlink());
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
+			Assertions.assertTrue(token.isHyperlink());
 
 			token = token.getNextToken();
-			Assert.assertFalse(token.isHyperlink());
-			Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
+			Assertions.assertFalse(token.isHyperlink());
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
 		}
 	}
 
@@ -487,42 +487,42 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 		code = "background-image: url('test.png');";
 		segment = createSegment(code);
 		tm = createTokenMaker();
 		token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 	}
 
@@ -627,9 +627,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE, token.getType());
 	}
 
 
@@ -641,9 +641,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE, token.getType());
 	}
 
 
@@ -655,9 +655,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT, token.getType());
 	}
 
 
@@ -669,9 +669,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT, token.getType());
 	}
 
 
@@ -683,9 +683,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE, token.getType());
 	}
 
 
@@ -697,9 +697,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE, token.getType());
 	}
 
 
@@ -715,7 +715,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
 
 	}
@@ -729,14 +729,14 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
 
 	}
 
@@ -755,7 +755,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : doctypes) {
 			Segment segment = createSegment(code);
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
 		}
 
 	}
@@ -772,7 +772,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
 		}
 
 	}
@@ -786,27 +786,27 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""), "Unexpected token: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 
 	}
 
@@ -819,19 +819,19 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"), "Unexpected token: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
 
 	}
 
@@ -844,11 +844,11 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 
 	}
 
@@ -858,7 +858,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG, token.getType());
 	}
 
 
@@ -867,7 +867,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
 	}
 
 
@@ -876,7 +876,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assert.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
+		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
 	}
 
 
@@ -894,7 +894,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
 		}
 
 	}
@@ -937,10 +937,9 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 				String code = "<" + tagName;
 				Segment segment = createSegment(code);
 				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-				Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+				Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 				token = token.getNextToken();
-				Assert.assertEquals("Not a valid HTML5 tag name token: " + token,
-					token.getType(), TokenTypes.MARKUP_TAG_NAME);
+				Assertions.assertEquals(token.getType(), TokenTypes.MARKUP_TAG_NAME);
 
 			}
 
@@ -969,12 +968,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -996,7 +995,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
 		}
 
 	}
@@ -1018,7 +1017,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
 		}
 
 	}
@@ -1035,12 +1034,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.DATA_TYPE, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.DATA_TYPE, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -1059,7 +1058,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -1072,13 +1071,13 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
 
-		Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+		Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -1098,19 +1097,19 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals("nope - " + token, TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
 			if (token != null && token.isPaintable() && token.length() > 0) {
-				Assert.assertFalse(token.isHyperlink());
-				Assert.assertTrue(token.is(TokenTypes.COMMENT_EOL, " extra"));
+				Assertions.assertFalse(token.isHyperlink());
+				Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, " extra"));
 			}
 
 		}
@@ -1145,12 +1144,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -1169,12 +1168,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] functions = code.split(" +");
 		for (int i = 0; i < functions.length; i++) {
-			Assert.assertEquals(functions[i], token.getLexeme());
-			Assert.assertEquals("Not a function token: " + token, TokenTypes.FUNCTION, token.getType());
+			Assertions.assertEquals(functions[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType(), "Not a function token: " + token);
 			if (i < functions.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -1195,12 +1194,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] literals = code.split(" +");
 		for (int i = 0; i < literals.length; i++) {
-			Assert.assertEquals(literals[i], token.getLexeme());
-			Assert.assertEquals("Not a hex number: " + token, TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+			Assertions.assertEquals(literals[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType(), "Not a hex number: " + token);
 			if (i < literals.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -1224,20 +1223,20 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals("Not a keyword token: " + token, TokenTypes.RESERVED_WORD, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType(), "Not a keyword token: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
 		segment = createSegment("return");
 		token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-		Assert.assertEquals("return", token.getLexeme());
-		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
+		Assertions.assertEquals("return", token.getLexeme());
+		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 
 	}
 
@@ -1254,7 +1253,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
 	}
@@ -1273,7 +1272,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_MLC,
 				0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
 	}
@@ -1286,13 +1285,13 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
 
-		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -1309,16 +1308,16 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals("nope - " + token, TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(" */", token.getLexeme());
 
 		}
 
@@ -1338,7 +1337,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
 		}
 
 		String[] floats = {
@@ -1349,7 +1348,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
 		}
 
 		String[] hex = {
@@ -1360,7 +1359,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
 		}
 
 		String[] errors = {
@@ -1371,7 +1370,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
 		}
 
 	}
@@ -1390,12 +1389,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals("Not an operator: " + token, TokenTypes.OPERATOR, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.OPERATOR, token.getType(), "Not an operator: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
@@ -1414,7 +1413,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.REGEX, token.getType());
+			Assertions.assertEquals(TokenTypes.REGEX, token.getType());
 		}
 
 	}
@@ -1431,14 +1430,14 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String[] separators = code.split(" +");
 		for (int i = 0; i < separators.length; i++) {
-			Assert.assertEquals(separators[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.SEPARATOR, token.getType());
+			Assertions.assertEquals(separators[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 			// Just one extra test here
-			Assert.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
+			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
 			if (i < separators.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
@@ -1455,7 +1454,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		}
 
 	}
@@ -1475,8 +1474,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
-					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
 	}
@@ -1494,7 +1492,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
 	}
@@ -1511,7 +1509,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_STRING_VALID, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
 	}
@@ -1528,7 +1526,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_STRING_INVALID, 0);
-			Assert.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
 		}
 
 	}
@@ -1547,8 +1545,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
-					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
 	}
@@ -1566,7 +1563,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID,
 				0);
-			Assert.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
 		}
 
 	}
@@ -1585,7 +1582,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -1605,11 +1602,11 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			Assertions.assertEquals(TokenTypes.VARIABLE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -1627,7 +1624,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
 				0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -1645,11 +1642,11 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
 				0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			Assertions.assertEquals(TokenTypes.VARIABLE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -1662,11 +1659,11 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
 
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -1681,7 +1678,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assert.assertEquals(TokenTypes.WHITESPACE, token.getType());
+			Assertions.assertEquals(TokenTypes.WHITESPACE, token.getType());
 		}
 
 	}

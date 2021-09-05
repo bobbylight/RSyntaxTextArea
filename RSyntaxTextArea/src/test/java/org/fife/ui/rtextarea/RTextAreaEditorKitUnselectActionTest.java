@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitUnselectActionTest {
 
 
@@ -32,14 +32,14 @@ public class RTextAreaEditorKitUnselectActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.UnselectAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(3, textArea.getCaretPosition());
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(3, textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaUnselectAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaUnselectAction,
 			new RTextAreaEditorKit.UnselectAction().getMacroID());
 	}
 }

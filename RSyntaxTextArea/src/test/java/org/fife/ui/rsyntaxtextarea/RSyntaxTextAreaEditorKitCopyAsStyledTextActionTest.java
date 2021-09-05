@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -45,12 +45,12 @@ public class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends Abstract
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.stringFlavor);
-		Assert.assertEquals("com", clipboardContent);
+		Assertions.assertEquals("com", clipboardContent);
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CopyAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
 	}
 }

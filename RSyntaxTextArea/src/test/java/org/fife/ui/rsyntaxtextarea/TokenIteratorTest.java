@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Element;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -119,10 +119,10 @@ public class TokenIteratorTest {
 		//System.out.println("---");
 		for (Token t : doc) {
 			//System.out.println(t);
-			assertEquals(expected.get(index), t);
+			Assertions.assertEquals(expected.get(index), t);
 			index++;
 		}
-		assertEquals(expected.size(), index);
+		Assertions.assertEquals(expected.size(), index);
 
 	}
 

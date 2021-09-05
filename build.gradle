@@ -34,6 +34,10 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
 
+    test {
+        useJUnitPlatform()
+    }
+
     checkstyle {
         toolVersion = '9.0'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
@@ -66,7 +70,8 @@ subprojects {
     }
 
     dependencies {
-        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     }
 
     compileJava {

@@ -6,11 +6,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.RecordableTextAction;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -41,12 +41,12 @@ public class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends Abstr
 		a.actionPerformedImpl(e, textArea);
 
 		int expectedOffset = origContent.lastIndexOf('}') + 1;
-		Assert.assertEquals(expectedOffset, textArea.getCaretPosition());
+		Assertions.assertEquals(expectedOffset, textArea.getCaretPosition());
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.GoToMatchingBracketAction a = new RSyntaxTextAreaEditorKit.GoToMatchingBracketAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction, a.getMacroID());
 	}
 }

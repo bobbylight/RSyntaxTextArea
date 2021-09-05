@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 
@@ -20,34 +20,34 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
 	public void testGetSetAlpha() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
-		Assert.assertEquals(1f, painter.getAlpha(), 0.00001);
+		Assertions.assertEquals(1f, painter.getAlpha(), 0.00001);
 		painter.setAlpha(0.5f);
-		Assert.assertEquals(0.5f, painter.getAlpha(), 0.00001);
+		Assertions.assertEquals(0.5f, painter.getAlpha(), 0.00001);
 	}
 
 
 	@Test
 	public void testGetSetPaint() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
-		Assert.assertNull(painter.getPaint());
+		Assertions.assertNull(painter.getPaint());
 		painter.setPaint(Color.RED);
-		Assert.assertEquals(Color.RED, painter.getPaint());
+		Assertions.assertEquals(Color.RED, painter.getPaint());
 	}
 
 
 	@Test
 	public void testGetSetRoundedEdges() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
-		Assert.assertFalse(painter.getRoundedEdges());
+		Assertions.assertFalse(painter.getRoundedEdges());
 		painter.setRoundedEdges(true);
-		Assert.assertTrue(painter.getRoundedEdges());
+		Assertions.assertTrue(painter.getRoundedEdges());
 	}
 
 

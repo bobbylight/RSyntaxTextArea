@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -37,7 +37,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testGetMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
 				TokenTypes.IDENTIFIER));
 	}
 
@@ -53,7 +53,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
 
 	}
@@ -67,15 +67,15 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue("Token is not type MARKUP_COMMENT: " + token,
-				token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "),
+			"Token is not type MARKUP_COMMENT: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
 
 	}
 
@@ -83,7 +83,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 

@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitLineMoveActionTest {
 
 
@@ -32,7 +32,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.LineMoveAction("foo", 1).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2", textArea.getText());
 	}
 
 
@@ -45,7 +45,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.LineMoveAction("foo", 1).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 2\nline 1", textArea.getText());
+		Assertions.assertEquals("line 2\nline 1", textArea.getText());
 	}
 
 
@@ -58,7 +58,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.LineMoveAction("foo", 1).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2", textArea.getText());
 	}
 
 
@@ -71,7 +71,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.LineMoveAction("foo", -1).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 2\nline 1", textArea.getText());
+		Assertions.assertEquals("line 2\nline 1", textArea.getText());
 	}
 
 
@@ -84,13 +84,13 @@ public class RTextAreaEditorKitLineMoveActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.LineMoveAction("foo", -1).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.LineMoveAction("foo", 1).getMacroID());
 	}
 }

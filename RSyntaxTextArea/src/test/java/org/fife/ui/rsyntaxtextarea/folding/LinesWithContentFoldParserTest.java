@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -40,17 +40,17 @@ public class LinesWithContentFoldParserTest {
 		LinesWithContentFoldParser parser = new LinesWithContentFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(2, folds.size());
+		Assertions.assertEquals(2, folds.size());
 
 		Fold firstFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, firstFold.getFoldType());
-		Assert.assertEquals(0, firstFold.getStartOffset());
+		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
+		Assertions.assertEquals(0, firstFold.getStartOffset());
 		// End of fold is the end of hte last line containing content
-		Assert.assertEquals(code.indexOf("\n\n"), firstFold.getEndOffset());
+		Assertions.assertEquals(code.indexOf("\n\n"), firstFold.getEndOffset());
 
 		Fold secondFold = folds.get(1);
-		Assert.assertEquals(FoldType.CODE, secondFold.getFoldType());
-		Assert.assertEquals(code.lastIndexOf("\n\n") + 2, secondFold.getStartOffset());
-		Assert.assertEquals(Integer.MAX_VALUE, secondFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, secondFold.getFoldType());
+		Assertions.assertEquals(code.lastIndexOf("\n\n") + 2, secondFold.getStartOffset());
+		Assertions.assertEquals(Integer.MAX_VALUE, secondFold.getEndOffset());
 	}
 }

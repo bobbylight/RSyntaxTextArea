@@ -4,14 +4,14 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -23,14 +23,14 @@ import java.util.Arrays;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 	private JFrame frame;
 	private RSyntaxTextArea textArea;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		frame = new JFrame();
@@ -41,14 +41,14 @@ public class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	@Ignore("These tests run locally, but not in CI environment for some reason")
+	@Disabled("These tests run locally, but not in CI environment for some reason")
 	public void testGetPreferredSize() {
-		Assert.assertNotNull(new ClipboardHistoryPopup(frame, textArea).getPreferredSize());
+		Assertions.assertNotNull(new ClipboardHistoryPopup(frame, textArea).getPreferredSize());
 	}
 
 
 	@Test
-	@Ignore("These tests run locally, but not in CI environment for some reason")
+	@Disabled("These tests run locally, but not in CI environment for some reason")
 	public void testSetContents() {
 		new ClipboardHistoryPopup(frame, textArea).setContents(Arrays.asList(
 			"one", "two", "three"

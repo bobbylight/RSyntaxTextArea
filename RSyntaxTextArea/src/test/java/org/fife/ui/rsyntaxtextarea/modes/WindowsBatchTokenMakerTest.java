@@ -10,8 +10,8 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenMap;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -40,8 +40,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 	private void assertTokenMapContains(TokenMap tm, String token,
 			int tokenType) {
 		int actualType = tm.get(token.toCharArray(), 0, token.length() - 1);
-		Assert.assertEquals("Token mapped to unexpected type: " + token,
-				tokenType, actualType);
+		Assertions.assertEquals(tokenType, actualType);
 	}
 
 
@@ -56,15 +55,15 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 		// Comment later in a line (different code path)
 		TokenMaker tm = createTokenMaker();
 		Token t = tm.getTokenList(createSegment("  rem comment"), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isWhitespace());
+		Assertions.assertTrue(t.isWhitespace());
 		t = t.getNextToken();
-		Assert.assertTrue(t.isComment());
+		Assertions.assertTrue(t.isComment());
 
 		// Comment later in a line (different code path, new style)
 		t = tm.getTokenList(createSegment("  :: comment"), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isWhitespace());
+		Assertions.assertTrue(t.isWhitespace());
 		t = t.getNextToken();
-		Assert.assertTrue(t.isComment());
+		Assertions.assertTrue(t.isComment());
 	}
 
 
@@ -229,14 +228,14 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token t = tm.getTokenList(createSegment(" ("), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, '('));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, '('));
 
 		t = tm.getTokenList(createSegment(" )"), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, ')'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, ')'));
 	}
 
 
@@ -276,8 +275,8 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testGetLineCommentStartAndEnd() {
 		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assert.assertEquals("rem ", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("rem ", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -289,7 +288,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (int i=0; i<TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			boolean expected = i == TokenTypes.IDENTIFIER ||
 					i == TokenTypes.VARIABLE;
-			Assert.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
 
 	}

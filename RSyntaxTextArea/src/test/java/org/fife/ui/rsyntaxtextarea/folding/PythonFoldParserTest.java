@@ -7,8 +7,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -58,31 +58,31 @@ public class PythonFoldParserTest {
 		PythonFoldParser parser = new PythonFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(2, folds.size());
+		Assertions.assertEquals(2, folds.size());
 
 		// First top-level fold is def main()
 		Fold topLevelFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
-		Assert.assertEquals(code.indexOf("def main"), topLevelFold.getStartOffset());
-		Assert.assertEquals(2, topLevelFold.getChildCount());
+		Assertions.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("def main"), topLevelFold.getStartOffset());
+		Assertions.assertEquals(2, topLevelFold.getChildCount());
 
 		// First sub-fold is getopt.getopt() call
 		Fold childFold = topLevelFold.getChild(0);
-		Assert.assertEquals(code.indexOf("opts, args"), childFold.getStartOffset());
-		Assert.assertEquals(code.indexOf(" [\"help"), childFold.getEndOffset());
+		Assertions.assertEquals(code.indexOf("opts, args"), childFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf(" [\"help"), childFold.getEndOffset());
 
 		// Second sub-fold is the if-statement related to "help"
 		childFold = topLevelFold.getChild(1);
 		int startOffs = childFold.getStartOffset();
-		Assert.assertEquals(code.indexOf("if o in "), startOffs);
-		Assert.assertEquals(code.indexOf(" usage()", startOffs),
+		Assertions.assertEquals(code.indexOf("if o in "), startOffs);
+		Assertions.assertEquals(code.indexOf(" usage()", startOffs),
 			childFold.getEndOffset());
 
 		// Second top-level fold is def Greg2JD
 		topLevelFold = folds.get(1);
-		Assert.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
-		Assert.assertEquals(code.indexOf("def Greg2JD"), topLevelFold.getStartOffset());
-		Assert.assertEquals(1, topLevelFold.getChildCount());
+		Assertions.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("def Greg2JD"), topLevelFold.getStartOffset());
+		Assertions.assertEquals(1, topLevelFold.getChildCount());
 
 	}
 }

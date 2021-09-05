@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -42,13 +42,13 @@ public class LatexFoldParserTest {
 		FoldParser parser = new LatexFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(1, folds.size());
+		Assertions.assertEquals(1, folds.size());
 
 		Fold firstFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, firstFold.getFoldType());
-		Assert.assertEquals(code.indexOf("\\begin"), firstFold.getStartOffset());
-		Assert.assertEquals(code.lastIndexOf("\\end"), firstFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("\\begin"), firstFold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf("\\end"), firstFold.getEndOffset());
 
-		Assert.assertEquals(0, firstFold.getChildCount());
+		Assertions.assertEquals(0, firstFold.getChildCount());
 	}
 }

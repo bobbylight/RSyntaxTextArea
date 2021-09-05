@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitSelectWordActionTest {
 
 
@@ -32,15 +32,15 @@ public class RTextAreaEditorKitSelectWordActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.SelectWordAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(7, textArea.getSelectionStart());
-		Assert.assertEquals(11, textArea.getSelectionEnd());
-		Assert.assertEquals(11, textArea.getCaretPosition());
+		Assertions.assertEquals(7, textArea.getSelectionStart());
+		Assertions.assertEquals(11, textArea.getSelectionEnd());
+		Assertions.assertEquals(11, textArea.getCaretPosition());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(DefaultEditorKit.selectWordAction,
+		Assertions.assertEquals(DefaultEditorKit.selectWordAction,
 			new RTextAreaEditorKit.SelectWordAction().getMacroID());
 	}
 }

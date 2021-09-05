@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,6 +25,6 @@ public class RTextAreaEditorKitBeepActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.beepAction, new RTextAreaEditorKit.BeepAction().getMacroID());
+		Assertions.assertEquals(RTextAreaEditorKit.beepAction, new RTextAreaEditorKit.BeepAction().getMacroID());
 	}
 }

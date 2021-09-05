@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -50,7 +50,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Invalid char literal: " + token, TokenTypes.LITERAL_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType(), "Invalid char literal: " + token);
 		}
 
 	}
@@ -67,7 +67,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -77,7 +77,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 	public void testGetLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assert.assertArrayEquals(new String[] { "#", null }, startAndEnd);
+		Assertions.assertArrayEquals(new String[] { "#", null }, startAndEnd);
 	}
 
 
@@ -107,8 +107,8 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Not a keyword: " + token,
-					TokenTypes.RESERVED_WORD, token.getType());
+			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType(),
+				"Not a keyword: " + token);
 		}
 
 	}
@@ -125,17 +125,17 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals("Not an operator: " + token, TokenTypes.OPERATOR, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.OPERATOR, token.getType(), "Not an operator: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -143,9 +143,9 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void getTestMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.OPERATOR));
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.OPERATOR));
 	}
 
 
@@ -160,19 +160,19 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] separators = code.split(" +");
 		for (int i = 0; i < separators.length; i++) {
-			Assert.assertEquals(separators[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.SEPARATOR, token.getType());
+			Assertions.assertEquals(separators[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 			// Just one extra test here
-			Assert.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
+			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
 			if (i < separators.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -190,7 +190,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
 	}

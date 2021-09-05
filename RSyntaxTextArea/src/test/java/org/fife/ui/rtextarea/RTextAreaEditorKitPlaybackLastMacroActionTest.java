@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import java.util.Collections;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitPlaybackLastMacroActionTest extends AbstractRTextAreaTest {
 
 
@@ -28,8 +28,8 @@ public class RTextAreaEditorKitPlaybackLastMacroActionTest extends AbstractRText
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.PlaybackLastMacroAction action = new RTextAreaEditorKit.PlaybackLastMacroAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -46,18 +46,18 @@ public class RTextAreaEditorKitPlaybackLastMacroActionTest extends AbstractRText
 		ActionEvent e = new ActionEvent(textArea, 0, "foo");
 		new RTextAreaEditorKit.PlaybackLastMacroAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("x", textArea.getText());
+		Assertions.assertEquals("x", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaPlaybackLastMacroAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaPlaybackLastMacroAction,
 			new RTextAreaEditorKit.PlaybackLastMacroAction().getMacroID());
 	}
 
 	@Test
 	public void testIsRecordable() {
-		Assert.assertFalse(new RTextAreaEditorKit.PlaybackLastMacroAction().isRecordable());
+		Assertions.assertFalse(new RTextAreaEditorKit.PlaybackLastMacroAction().isRecordable());
 	}
 }

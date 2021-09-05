@@ -9,8 +9,8 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.Segment;
 
@@ -40,7 +40,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		Segment segment = createSegment(",");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertEquals(TokenTypes.OPERATOR, token.getType());
+		Assertions.assertEquals(TokenTypes.OPERATOR, token.getType());
 	}
 
 
@@ -52,21 +52,21 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "one"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "one"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "two"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "two"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "three"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "three"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "four"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "four"));
 
-		Assert.assertFalse(token.getNextToken().isPaintable());
+		Assertions.assertFalse(token.getNextToken().isPaintable());
 	}
 
 
@@ -78,21 +78,21 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"one\""));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"one\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"two\""));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"two\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"three,threeagain\""));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"three,threeagain\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"four\""));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"four\""));
 
-		Assert.assertFalse(token.getNextToken().isPaintable());
+		Assertions.assertFalse(token.getNextToken().isPaintable());
 	}
 
 
@@ -104,14 +104,14 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(Token.IDENTIFIER, "one"));
+		Assertions.assertTrue(token.is(Token.IDENTIFIER, "one"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(Token.DATA_TYPE, "\"unfinished-two"));
+		Assertions.assertTrue(token.is(Token.DATA_TYPE, "\"unfinished-two"));
 
 		token = token.getNextToken();
-		Assert.assertEquals(token.getType(), CsvTokenMaker.INTERNAL_STRING | 1);
+		Assertions.assertEquals(token.getType(), CsvTokenMaker.INTERNAL_STRING | 1);
 	}
 
 
@@ -123,13 +123,13 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CsvTokenMaker.INTERNAL_STRING | 1, 0);
 
-		Assert.assertTrue(token.is(Token.DATA_TYPE, "continued-quoted-region\""));
+		Assertions.assertTrue(token.is(Token.DATA_TYPE, "continued-quoted-region\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(Token.IDENTIFIER, "another"));
+		Assertions.assertTrue(token.is(Token.IDENTIFIER, "another"));
 
-		Assert.assertFalse(token.getNextToken().isPaintable());
+		Assertions.assertFalse(token.getNextToken().isPaintable());
 	}
 
 
@@ -141,13 +141,13 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(Token.IDENTIFIER, "\"quoted \"\" string\""));
+		Assertions.assertTrue(token.is(Token.IDENTIFIER, "\"quoted \"\" string\""));
 	}
 
 
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 }

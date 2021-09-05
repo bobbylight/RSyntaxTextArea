@@ -9,8 +9,8 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.Segment;
 
@@ -37,11 +37,11 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isIdentifier());
+		Assertions.assertTrue(t.isIdentifier());
 		t = t.getNextToken();
-		Assert.assertTrue(t.isWhitespace());
+		Assertions.assertTrue(t.isWhitespace());
 		t = t.getNextToken();
-		Assert.assertTrue(t.isIdentifier());
+		Assertions.assertTrue(t.isIdentifier());
 	}
 
 
@@ -52,19 +52,19 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(t.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '['));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '['));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.MARKUP_TAG_NAME, "b"));
+		Assertions.assertTrue(t.is(TokenTypes.MARKUP_TAG_NAME, "b"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isWhitespace());
+		Assertions.assertTrue(t.isWhitespace());
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "foo"));
+		Assertions.assertTrue(t.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "foo"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '='));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "bar"));
+		Assertions.assertTrue(t.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "bar"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, ']'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, ']'));
 
 	}
 
@@ -93,6 +93,6 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 }

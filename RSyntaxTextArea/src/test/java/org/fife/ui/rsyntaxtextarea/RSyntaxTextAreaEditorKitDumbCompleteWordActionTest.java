@@ -9,13 +9,13 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.event.ActionEvent;
 import javax.swing.ActionMap;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DumbCompleteWordAction;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 
 /**
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -64,15 +64,15 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 		textArea.setText("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   a");
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   amazing", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   amazing", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aardvark", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aardvark", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   arthur", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   arthur", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aaron", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aaron", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aaron", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aaron", textArea.getText());
 
 	}
 
@@ -88,7 +88,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 		textArea.setText("$routeProvider routeSkip $ro");
 		action.actionPerformed(createActionEvent(textArea));
 		String actual = textArea.getText();
-		Assert.assertEquals("$routeProvider routeSkip $routeProvider", actual);
+		Assertions.assertEquals("$routeProvider routeSkip $routeProvider", actual);
 
 	}
 
@@ -105,20 +105,20 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 		action.actionPerformed(createActionEvent(textArea));
 		String actual = textArea.getText();
-		Assert.assertEquals("__foo\n__bar   __bas\n__bas", actual);
+		Assertions.assertEquals("__foo\n__bar   __bas\n__bas", actual);
 
 		action.actionPerformed(createActionEvent(textArea));
 		actual = textArea.getText();
-		Assert.assertEquals("__foo\n__bar   __bas\n__bar", actual);
+		Assertions.assertEquals("__foo\n__bar   __bas\n__bar", actual);
 
 		action.actionPerformed(createActionEvent(textArea));
 		actual = textArea.getText();
-		Assert.assertEquals("__foo\n__bar   __bas\n__foo", actual);
+		Assertions.assertEquals("__foo\n__bar   __bas\n__foo", actual);
 
 		// No change when run again
 		action.actionPerformed(createActionEvent(textArea));
 		actual = textArea.getText();
-		Assert.assertEquals("__foo\n__bar   __bas\n__foo", actual);
+		Assertions.assertEquals("__foo\n__bar   __bas\n__foo", actual);
 
 	}
 
@@ -132,33 +132,33 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("for if  while");
-		Assert.assertEquals(0, action.getWordStart(textArea, 0));
-		Assert.assertEquals(0, action.getWordStart(textArea, 1));
-		Assert.assertEquals(0, action.getWordStart(textArea, 2));
-		Assert.assertEquals(3, action.getWordStart(textArea, 3));
-		Assert.assertEquals(4, action.getWordStart(textArea, 4));
-		Assert.assertEquals(4, action.getWordStart(textArea, 5));
-		Assert.assertEquals(6, action.getWordStart(textArea, 6));
-		Assert.assertEquals(7, action.getWordStart(textArea, 7));
-		Assert.assertEquals(8, action.getWordStart(textArea, 8));
-		Assert.assertEquals(8, action.getWordStart(textArea, 9));
-		Assert.assertEquals(8, action.getWordStart(textArea, 10));
-		Assert.assertEquals(8, action.getWordStart(textArea, 11));
-		Assert.assertEquals(8, action.getWordStart(textArea, 12));
-		Assert.assertEquals(8, action.getWordStart(textArea, 13));
+		Assertions.assertEquals(0, action.getWordStart(textArea, 0));
+		Assertions.assertEquals(0, action.getWordStart(textArea, 1));
+		Assertions.assertEquals(0, action.getWordStart(textArea, 2));
+		Assertions.assertEquals(3, action.getWordStart(textArea, 3));
+		Assertions.assertEquals(4, action.getWordStart(textArea, 4));
+		Assertions.assertEquals(4, action.getWordStart(textArea, 5));
+		Assertions.assertEquals(6, action.getWordStart(textArea, 6));
+		Assertions.assertEquals(7, action.getWordStart(textArea, 7));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 8));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 9));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 10));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 11));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 12));
+		Assertions.assertEquals(8, action.getWordStart(textArea, 13));
 
 		textArea.setText("  for  ");
-		Assert.assertEquals(0, action.getWordStart(textArea, 0));
-		Assert.assertEquals(1, action.getWordStart(textArea, 1));
-		Assert.assertEquals(2, action.getWordStart(textArea, 2));
-		Assert.assertEquals(2, action.getWordStart(textArea, 3));
-		Assert.assertEquals(2, action.getWordStart(textArea, 4));
-		Assert.assertEquals(5, action.getWordStart(textArea, 5));
-		Assert.assertEquals(6, action.getWordStart(textArea, 6));
-		Assert.assertEquals(7, action.getWordStart(textArea, 7));
+		Assertions.assertEquals(0, action.getWordStart(textArea, 0));
+		Assertions.assertEquals(1, action.getWordStart(textArea, 1));
+		Assertions.assertEquals(2, action.getWordStart(textArea, 2));
+		Assertions.assertEquals(2, action.getWordStart(textArea, 3));
+		Assertions.assertEquals(2, action.getWordStart(textArea, 4));
+		Assertions.assertEquals(5, action.getWordStart(textArea, 5));
+		Assertions.assertEquals(6, action.getWordStart(textArea, 6));
+		Assertions.assertEquals(7, action.getWordStart(textArea, 7));
 
 		doc.replace(0, doc.getLength(), "", null);
-		Assert.assertEquals(0, action.getWordStart(textArea, 0));
+		Assertions.assertEquals(0, action.getWordStart(textArea, 0));
 
 	}
 
@@ -172,33 +172,33 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("for if  while");
-		Assert.assertEquals(3, action.getWordEnd(textArea, 0));
-		Assert.assertEquals(3, action.getWordEnd(textArea, 1));
-		Assert.assertEquals(3, action.getWordEnd(textArea, 2));
-		Assert.assertEquals(3, action.getWordEnd(textArea, 3));
-		Assert.assertEquals(6, action.getWordEnd(textArea, 4));
-		Assert.assertEquals(6, action.getWordEnd(textArea, 5));
-		Assert.assertEquals(6, action.getWordEnd(textArea, 6));
-		Assert.assertEquals(7, action.getWordEnd(textArea, 7));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 8));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 9));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 10));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 11));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 12));
-		Assert.assertEquals(13, action.getWordEnd(textArea, 13));
+		Assertions.assertEquals(3, action.getWordEnd(textArea, 0));
+		Assertions.assertEquals(3, action.getWordEnd(textArea, 1));
+		Assertions.assertEquals(3, action.getWordEnd(textArea, 2));
+		Assertions.assertEquals(3, action.getWordEnd(textArea, 3));
+		Assertions.assertEquals(6, action.getWordEnd(textArea, 4));
+		Assertions.assertEquals(6, action.getWordEnd(textArea, 5));
+		Assertions.assertEquals(6, action.getWordEnd(textArea, 6));
+		Assertions.assertEquals(7, action.getWordEnd(textArea, 7));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 8));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 9));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 10));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 11));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 12));
+		Assertions.assertEquals(13, action.getWordEnd(textArea, 13));
 
 		textArea.setText("  for  ");
-		Assert.assertEquals(0, action.getWordEnd(textArea, 0));
-		Assert.assertEquals(1, action.getWordEnd(textArea, 1));
-		Assert.assertEquals(5, action.getWordEnd(textArea, 2));
-		Assert.assertEquals(5, action.getWordEnd(textArea, 3));
-		Assert.assertEquals(5, action.getWordEnd(textArea, 4));
-		Assert.assertEquals(5, action.getWordEnd(textArea, 5));
-		Assert.assertEquals(6, action.getWordEnd(textArea, 6));
-		Assert.assertEquals(7, action.getWordEnd(textArea, 7));
+		Assertions.assertEquals(0, action.getWordEnd(textArea, 0));
+		Assertions.assertEquals(1, action.getWordEnd(textArea, 1));
+		Assertions.assertEquals(5, action.getWordEnd(textArea, 2));
+		Assertions.assertEquals(5, action.getWordEnd(textArea, 3));
+		Assertions.assertEquals(5, action.getWordEnd(textArea, 4));
+		Assertions.assertEquals(5, action.getWordEnd(textArea, 5));
+		Assertions.assertEquals(6, action.getWordEnd(textArea, 6));
+		Assertions.assertEquals(7, action.getWordEnd(textArea, 7));
 
 		doc.replace(0, doc.getLength(), "", null);
-		Assert.assertEquals(0, action.getWordEnd(textArea, 0));
+		Assertions.assertEquals(0, action.getWordEnd(textArea, 0));
 
 	}
 
@@ -213,32 +213,32 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 		textArea.setText("for if  while");
 		// Offset 0 throws an exception
-		//Assert.assertEquals(0, action.getPreviousWord(textArea, 0));
-		Assert.assertEquals(0, action.getPreviousWord(textArea, 1));
-		Assert.assertEquals(0, action.getPreviousWord(textArea, 2));
-		Assert.assertEquals(0, action.getPreviousWord(textArea, 3));
-		Assert.assertEquals(0, action.getPreviousWord(textArea, 4));
-		Assert.assertEquals(4, action.getPreviousWord(textArea, 5));
-		Assert.assertEquals(4, action.getPreviousWord(textArea, 6));
+		//Assertions.assertEquals(0, action.getPreviousWord(textArea, 0));
+		Assertions.assertEquals(0, action.getPreviousWord(textArea, 1));
+		Assertions.assertEquals(0, action.getPreviousWord(textArea, 2));
+		Assertions.assertEquals(0, action.getPreviousWord(textArea, 3));
+		Assertions.assertEquals(0, action.getPreviousWord(textArea, 4));
+		Assertions.assertEquals(4, action.getPreviousWord(textArea, 5));
+		Assertions.assertEquals(4, action.getPreviousWord(textArea, 6));
 		// Spaces - find word before spaces
-		Assert.assertEquals(4, action.getPreviousWord(textArea, 7));
-		Assert.assertEquals(4, action.getPreviousWord(textArea, 8));
-		Assert.assertEquals(8, action.getPreviousWord(textArea, 9));
-		Assert.assertEquals(8, action.getPreviousWord(textArea, 10));
-		Assert.assertEquals(8, action.getPreviousWord(textArea, 11));
-		Assert.assertEquals(8, action.getPreviousWord(textArea, 12));
-		Assert.assertEquals(8, action.getPreviousWord(textArea, 13));
+		Assertions.assertEquals(4, action.getPreviousWord(textArea, 7));
+		Assertions.assertEquals(4, action.getPreviousWord(textArea, 8));
+		Assertions.assertEquals(8, action.getPreviousWord(textArea, 9));
+		Assertions.assertEquals(8, action.getPreviousWord(textArea, 10));
+		Assertions.assertEquals(8, action.getPreviousWord(textArea, 11));
+		Assertions.assertEquals(8, action.getPreviousWord(textArea, 12));
+		Assertions.assertEquals(8, action.getPreviousWord(textArea, 13));
 
 		textArea.setText("  for  ");
 		// Offset 0 throws an exception
-		//Assert.assertEquals(0, action.getPreviousWord(textArea, 0));
-		//Assert.assertEquals(0, action.getPreviousWord(textArea, 1));
-		//Assert.assertEquals(2, action.getPreviousWord(textArea, 2));
-		Assert.assertEquals(2, action.getPreviousWord(textArea, 3));
-		Assert.assertEquals(2, action.getPreviousWord(textArea, 4));
-		Assert.assertEquals(2, action.getPreviousWord(textArea, 5));
-		Assert.assertEquals(2, action.getPreviousWord(textArea, 6));
-		Assert.assertEquals(2, action.getPreviousWord(textArea, 7));
+		//Assertions.assertEquals(0, action.getPreviousWord(textArea, 0));
+		//Assertions.assertEquals(0, action.getPreviousWord(textArea, 1));
+		//Assertions.assertEquals(2, action.getPreviousWord(textArea, 2));
+		Assertions.assertEquals(2, action.getPreviousWord(textArea, 3));
+		Assertions.assertEquals(2, action.getPreviousWord(textArea, 4));
+		Assertions.assertEquals(2, action.getPreviousWord(textArea, 5));
+		Assertions.assertEquals(2, action.getPreviousWord(textArea, 6));
+		Assertions.assertEquals(2, action.getPreviousWord(textArea, 7));
 
 	}
 
@@ -252,10 +252,10 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   a");
-		Assert.assertEquals(textArea.getDocument().getLength()-1, action.getPreviousWord(textArea, textArea.getDocument().getLength()));
-		Assert.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\n".length(), action.getPreviousWord(textArea, textArea.getDocument().getLength()-2));
-		Assert.assertEquals("aaron arthur ".length(), action.getPreviousWord(textArea, 22));
-		Assert.assertEquals("aaron ".length(), action.getPreviousWord(textArea, 8));
+		Assertions.assertEquals(textArea.getDocument().getLength()-1, action.getPreviousWord(textArea, textArea.getDocument().getLength()));
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\n".length(), action.getPreviousWord(textArea, textArea.getDocument().getLength()-2));
+		Assertions.assertEquals("aaron arthur ".length(), action.getPreviousWord(textArea, 22));
+		Assertions.assertEquals("aaron ".length(), action.getPreviousWord(textArea, 8));
 
 	}
 

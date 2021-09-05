@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -45,7 +45,7 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -55,8 +55,8 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("#", startAndEnd[0]);
-		Assert.assertNull(null, startAndEnd[1]);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 
@@ -68,14 +68,14 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "dialog.title"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "dialog.title"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "Options"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "Options"));
 
 	}
 

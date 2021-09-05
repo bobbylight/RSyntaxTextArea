@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
@@ -17,46 +17,46 @@ public class HtmlUtilTest {
 
 	@Test
 	public void testEscapeForHtml_nullInput() {
-		Assert.assertNull(HtmlUtil.escapeForHtml(null, "<br>", true));
+		Assertions.assertNull(HtmlUtil.escapeForHtml(null, "<br>", true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_nullNewlineReplacement() {
-		Assert.assertEquals("", HtmlUtil.escapeForHtml("\n", null, true));
+		Assertions.assertEquals("", HtmlUtil.escapeForHtml("\n", null, true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_nonNullNewlineReplacement() {
-		Assert.assertEquals("<br>", HtmlUtil.escapeForHtml("\n", "<br>", true));
+		Assertions.assertEquals("<br>", HtmlUtil.escapeForHtml("\n", "<br>", true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_happyPath() {
-		Assert.assertEquals("hello", HtmlUtil.escapeForHtml("hello", "<br>", true));
-		Assert.assertEquals("2 &lt; 4", HtmlUtil.escapeForHtml("2 < 4", "<br>", true));
+		Assertions.assertEquals("hello", HtmlUtil.escapeForHtml("hello", "<br>", true));
+		Assertions.assertEquals("2 &lt; 4", HtmlUtil.escapeForHtml("2 < 4", "<br>", true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_problemChars() {
-		Assert.assertEquals(" <br>&amp;    &lt;&gt;&#39;&#34;&#47;",
+		Assertions.assertEquals(" <br>&amp;    &lt;&gt;&#39;&#34;&#47;",
 			HtmlUtil.escapeForHtml(" \n&\t<>'\"/", "<br>", true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_multipleSpaces_inPreBlock() {
-		Assert.assertEquals("   ",
+		Assertions.assertEquals("   ",
 			HtmlUtil.escapeForHtml("   ", "<br>", true));
 	}
 
 
 	@Test
 	public void testEscapeForHtml_multipleSpaces_notInPreBlock() {
-		Assert.assertEquals(" &nbsp;&nbsp;",
+		Assertions.assertEquals(" &nbsp;&nbsp;",
 			HtmlUtil.escapeForHtml("   ", "<br>", false));
 	}
 
@@ -66,7 +66,7 @@ public class HtmlUtilTest {
 		String code = "<foo>\twidget\t</foo>";
 
 		String expected = "&lt;foo&gt;    widget    &lt;&#47;foo&gt;";
-		Assert.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", true));
+		Assertions.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", true));
 	}
 
 	@Test
@@ -75,22 +75,22 @@ public class HtmlUtilTest {
 		String code = "<foo>\twidget\t</foo>";
 
 		String expected = "&lt;foo&gt;&nbsp;&nbsp;&nbsp;&nbsp;widget&nbsp;&nbsp;&nbsp;&nbsp;&lt;&#47;foo&gt;";
-		Assert.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", false));
+		Assertions.assertEquals(expected, HtmlUtil.escapeForHtml(code, "<br>", false));
 	}
 
 	@Test
 	public void testGetHexString_null() {
-		Assert.assertNull(HtmlUtil.getHexString(null));
+		Assertions.assertNull(HtmlUtil.getHexString(null));
 	}
 
 	@Test
 	public void testGetHexString_allGreaterThan16() {
-		Assert.assertEquals("#ffffff", HtmlUtil.getHexString(Color.white));
+		Assertions.assertEquals("#ffffff", HtmlUtil.getHexString(Color.white));
 	}
 
 	@Test
 	public void testGetHexString_allLessThan16() {
-		Assert.assertEquals("#000000", HtmlUtil.getHexString(Color.black));
+		Assertions.assertEquals("#000000", HtmlUtil.getHexString(Color.black));
 	}
 
 	@Test
@@ -110,6 +110,6 @@ public class HtmlUtilTest {
 			"<span style=\"color: #000000;\">\\{</span><span style=\"color: #000000;\">}</span></pre>";
 
 		String actual = HtmlUtil.getTextAsHtml(textArea, 4, textArea.getDocument().getLength());
-		Assert.assertTrue(actual.matches(expectedRegex));
+		Assertions.assertTrue(actual.matches(expectedRegex));
 	}
 }

@@ -7,8 +7,8 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.Segment;
 
@@ -30,14 +30,14 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	public void testGetCurlyBracesDenoteCodeBlocks() {
-		Assert.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
+		Assertions.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 
@@ -66,9 +66,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token t = tm.getTokenList(createSegment("```javascript"), TokenTypes.NULL, 0);
 
-		Assert.assertTrue(t.is(TokenTypes.PREPROCESSOR, "```"));
+		Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "```"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.VARIABLE, "javascript"));
+		Assertions.assertTrue(t.is(TokenTypes.VARIABLE, "javascript"));
 	}
 
 
@@ -95,9 +95,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 
-		Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, t.getType());
+		Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, t.getType());
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 	}
 
 
@@ -118,11 +118,11 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 
-		Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, t.getType());
+		Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, t.getType());
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "."));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "."));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 	}
 
 
@@ -190,7 +190,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		String code = "> block quote";
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.is(TokenTypes.COMMENT_EOL, code));
+		Assertions.assertTrue(t.is(TokenTypes.COMMENT_EOL, code));
 	}
 
 
@@ -202,9 +202,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code = "   > block quote";
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, "   "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, "   "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.COMMENT_EOL, "> block quote"));
+		Assertions.assertTrue(t.is(TokenTypes.COMMENT_EOL, "> block quote"));
 	}
 
 
@@ -216,19 +216,19 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code = "first > block quote";
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "first"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "first"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, ">"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, ">"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "block"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "block"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "quote"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "quote"));
 	}
 
 
@@ -249,9 +249,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
-		Assert.assertEquals(TokenTypes.REGEX, t.getType());
+		Assertions.assertEquals(TokenTypes.REGEX, t.getType());
 		t = t.getNextToken();
-		Assert.assertEquals(TokenTypes.ANNOTATION, t.getType());
+		Assertions.assertEquals(TokenTypes.ANNOTATION, t.getType());
 	}
 
 
@@ -288,9 +288,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code = "---test";
 
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
 	}
 
 
@@ -301,11 +301,11 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code = "--- test";
 
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(Token.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(Token.WHITESPACE, " "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
 	}
 
 
@@ -316,11 +316,11 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code = "test ---";
 
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(Token.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(Token.WHITESPACE, " "));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
 	}
 
 
@@ -332,27 +332,27 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""), "Unexpected token: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 
 	}
 
@@ -365,19 +365,19 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "img"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "src"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'foo.png'"), "Unexpected token: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "/>"));
 
 	}
 
@@ -390,11 +390,11 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 	}
 
 
@@ -435,10 +435,9 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 				String code = "<" + tagName;
 				Segment segment = createSegment(code);
 				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-				Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+				Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 				token = token.getNextToken();
-				Assert.assertEquals("Not a valid markdown tag name token: " + token,
-					token.getType(), TokenTypes.MARKUP_TAG_NAME);
+				Assertions.assertEquals(token.getType(), TokenTypes.MARKUP_TAG_NAME);
 			}
 
 		}

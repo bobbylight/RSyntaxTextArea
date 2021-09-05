@@ -13,8 +13,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -40,8 +40,8 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 	public void test_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assert.assertEquals("#", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -54,7 +54,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			boolean shouldMark = Arrays.binarySearch(expected, i) >= 0;
-			Assert.assertEquals(shouldMark, tm.getMarkOccurrencesOfTokenType(i));
+			Assertions.assertEquals(shouldMark, tm.getMarkOccurrencesOfTokenType(i));
 		}
 
 	}
@@ -74,7 +74,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -89,7 +89,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_BOOLEAN, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_BOOLEAN, code));
 		}
 
 	}
@@ -109,7 +109,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
 		}
 
 	}
@@ -126,7 +126,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 		}
 
 	}
@@ -143,7 +143,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -163,7 +163,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue("Nope: " + token, token.is(TokenTypes.LITERAL_NUMBER_FLOAT, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_FLOAT, code));
 		}
 
 	}
@@ -187,7 +187,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.FUNCTION, token.getType());
+			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
 
 	}
@@ -197,8 +197,8 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("#", startAndEnd[0]);
-		Assert.assertNull(null, startAndEnd[1]);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 
@@ -219,7 +219,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.PREPROCESSOR, code));
+			Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, code));
 		}
 
 	}
@@ -242,7 +242,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.PREPROCESSOR, code));
+			Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, code));
 		}
 
 	}
@@ -260,7 +260,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Invalid hex literal: " + token, TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType(), "Invalid hex literal: " + token);
 		}
 
 	}
@@ -277,7 +277,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		}
 
 	}
@@ -293,7 +293,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue("Nope: " + token, token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
 		}
 
 		String[] octalInts = {
@@ -303,7 +303,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue("Nope: " + token, token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
 		}
 
 		String[] decimalInts = {
@@ -314,7 +314,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue("Nope: " + token, token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, code));
 		}
 
 	}
@@ -335,7 +335,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
+			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
 		}
 
 	}
@@ -355,7 +355,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.OPERATOR, token.getType());
+			Assertions.assertEquals(TokenTypes.OPERATOR, token.getType());
 		}
 
 	}
@@ -374,7 +374,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			Assertions.assertEquals(TokenTypes.VARIABLE, token.getType());
 		}
 
 	}
@@ -391,7 +391,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.SEPARATOR, token.getType());
+			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 		}
 
 	}
@@ -410,7 +410,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -426,7 +426,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -442,7 +442,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -458,7 +458,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -474,7 +474,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -490,7 +490,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 		strings = new String[] {
@@ -506,7 +506,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
+			Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, code));
 		}
 
 	}
@@ -523,7 +523,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			Assertions.assertEquals(TokenTypes.VARIABLE, token.getType());
 		}
 
 	}

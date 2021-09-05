@@ -7,10 +7,10 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.Segment;
 
@@ -24,12 +24,12 @@ import javax.swing.text.Segment;
 public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 	}
 
@@ -52,8 +52,8 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("'", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("'", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -106,12 +106,12 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 		}
 

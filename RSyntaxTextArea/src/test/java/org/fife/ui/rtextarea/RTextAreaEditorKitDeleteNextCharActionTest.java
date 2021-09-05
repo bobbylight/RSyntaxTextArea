@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.event.ActionEvent;
 
@@ -23,8 +23,8 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.DeleteNextCharAction action = new RTextAreaEditorKit.DeleteNextCharAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -38,7 +38,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeleteNextCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2\nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2\nline 3", textArea.getText());
 	}
 
 
@@ -51,7 +51,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeleteNextCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline \nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nline \nline 3", textArea.getText());
 	}
 
 
@@ -65,13 +65,13 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeleteNextCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nl2\nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nl2\nline 3", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.deleteNextCharAction,
+		Assertions.assertEquals(RTextAreaEditorKit.deleteNextCharAction,
 			new RTextAreaEditorKit.DeleteNextCharAction().getMacroID());
 	}
 }

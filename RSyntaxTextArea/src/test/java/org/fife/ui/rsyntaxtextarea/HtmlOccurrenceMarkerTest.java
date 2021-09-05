@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.rtextarea.SmartHighlightPainter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@code HtmlOccurrenceMarker} class.
@@ -26,8 +26,8 @@ public class HtmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		HtmlOccurrenceMarker marker = new HtmlOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("body", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
+		Assertions.assertEquals("body", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
 	}
 
 
@@ -40,8 +40,8 @@ public class HtmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		HtmlOccurrenceMarker marker = new HtmlOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("html", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
+		Assertions.assertEquals("html", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
 	}
 
 
@@ -54,7 +54,7 @@ public class HtmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.MARKUP_TAG_NAME, 0);
 
 		HtmlOccurrenceMarker marker = new HtmlOccurrenceMarker();
-		Assert.assertTrue(marker.isValidType(textArea, token));
+		Assertions.assertTrue(marker.isValidType(textArea, token));
 	}
 
 
@@ -67,7 +67,7 @@ public class HtmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.SEPARATOR, 0);
 
 		HtmlOccurrenceMarker marker = new HtmlOccurrenceMarker();
-		Assert.assertFalse(marker.isValidType(textArea, token));
+		Assertions.assertFalse(marker.isValidType(textArea, token));
 	}
 
 

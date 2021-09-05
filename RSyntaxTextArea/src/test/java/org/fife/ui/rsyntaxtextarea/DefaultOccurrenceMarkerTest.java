@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.rtextarea.SmartHighlightPainter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@code DefaultOccurrenceMarker} class.
@@ -26,8 +26,8 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("foo", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, actual.getType());
+		Assertions.assertEquals("foo", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, actual.getType());
 	}
 
 
@@ -40,8 +40,8 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("foo", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, actual.getType());
+		Assertions.assertEquals("foo", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, actual.getType());
 	}
 
 
@@ -55,7 +55,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.IDENTIFIER, 0);
 
 		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
-		Assert.assertTrue(marker.isValidType(textArea, token));
+		Assertions.assertTrue(marker.isValidType(textArea, token));
 	}
 
 
@@ -69,7 +69,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.DATA_TYPE, 0);
 
 		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
-		Assert.assertFalse(marker.isValidType(textArea, token));
+		Assertions.assertFalse(marker.isValidType(textArea, token));
 	}
 
 

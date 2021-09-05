@@ -6,11 +6,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitCollapseAllCommentFoldsActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -43,15 +43,15 @@ public class RSyntaxTextAreaEditorKitCollapseAllCommentFoldsActionTest extends A
 		a.actionPerformedImpl(e, textArea);
 
 		FoldManager foldManager = textArea.getFoldManager();
-		Assert.assertEquals(2, foldManager.getFoldCount());
-		Assert.assertTrue(foldManager.getFold(0).isCollapsed());
-		Assert.assertFalse(foldManager.getFold(1).isCollapsed());
-		Assert.assertTrue(foldManager.getFold(1).getChild(0).isCollapsed());
+		Assertions.assertEquals(2, foldManager.getFoldCount());
+		Assertions.assertTrue(foldManager.getFold(0).isCollapsed());
+		Assertions.assertFalse(foldManager.getFold(1).isCollapsed());
+		Assertions.assertTrue(foldManager.getFold(1).getChild(0).isCollapsed());
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaCollapseAllCommentFoldsAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCollapseAllCommentFoldsAction, a.getMacroID());
 	}
 }

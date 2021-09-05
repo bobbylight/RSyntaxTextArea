@@ -7,8 +7,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.rtextarea.RTextScrollPane;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -31,7 +31,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetFoldedLineBottomColor_gutterFound() {
 		RSyntaxTextArea textArea = createTextArea();
 		RTextScrollPane sp = new RTextScrollPane(textArea);
-		Assert.assertEquals(sp.getGutter().getFoldIndicatorForeground(),
+		Assertions.assertEquals(sp.getGutter().getFoldIndicatorForeground(),
 			RSyntaxUtilities.getFoldedLineBottomColor(textArea));
 	}
 
@@ -39,7 +39,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testGetFoldedLineBottomColor_noGutter() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertEquals(Color.GRAY, RSyntaxUtilities.getFoldedLineBottomColor(textArea));
+		Assertions.assertEquals(Color.GRAY, RSyntaxUtilities.getFoldedLineBottomColor(textArea));
 	}
 
 
@@ -47,44 +47,44 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetGutter_found() {
 		RSyntaxTextArea textArea = createTextArea();
 		RTextScrollPane sp = new RTextScrollPane(textArea);
-		Assert.assertEquals(sp.getGutter(), RSyntaxUtilities.getGutter(textArea));
+		Assertions.assertEquals(sp.getGutter(), RSyntaxUtilities.getGutter(textArea));
 	}
 
 
 	@Test
 	public void testGetGutter_notFound() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertNull(RSyntaxUtilities.getGutter(textArea));
+		Assertions.assertNull(RSyntaxUtilities.getGutter(textArea));
 	}
 
 
 	@Test
 	public void testGetHyperlinkForeground() {
-		Assert.assertNotNull(RSyntaxUtilities.getHyperlinkForeground());
+		Assertions.assertNotNull(RSyntaxUtilities.getHyperlinkForeground());
 	}
 
 
 	@Test
 	public void testGetLeadingWhitespace_string_none() {
-		Assert.assertEquals("", RSyntaxUtilities.getLeadingWhitespace("none"));
+		Assertions.assertEquals("", RSyntaxUtilities.getLeadingWhitespace("none"));
 	}
 
 
 	@Test
 	public void testGetLeadingWhitespace_string_spaces() {
-		Assert.assertEquals("  ", RSyntaxUtilities.getLeadingWhitespace("  two"));
+		Assertions.assertEquals("  ", RSyntaxUtilities.getLeadingWhitespace("  two"));
 	}
 
 
 	@Test
 	public void testGetLeadingWhitespace_string_tabs() {
-		Assert.assertEquals("\t\t", RSyntaxUtilities.getLeadingWhitespace("\t\ttwo"));
+		Assertions.assertEquals("\t\t", RSyntaxUtilities.getLeadingWhitespace("\t\ttwo"));
 	}
 
 
 	@Test
 	public void testGetLeadingWhitespace_string_spacesAndTabs() {
-		Assert.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(" \t \tfour"));
+		Assertions.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(" \t \tfour"));
 	}
 
 
@@ -92,7 +92,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetLeadingWhitespace_document_spacesAndTabs() throws BadLocationException {
 		RSyntaxTextArea textArea = createTextArea(" \t \tfour");
 		Document doc = textArea.getDocument();
-		Assert.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(doc, 0));
+		Assertions.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(doc, 0));
 	}
 
 
@@ -106,14 +106,14 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.IDENTIFIER, 0);
 		Token actual = RSyntaxUtilities.getNextImportantToken(t, textArea, 0);
-		Assert.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 
 		// Next token is space, so next "important" token is the following one
 		t = t.getNextToken(); // space character
 		chars = "one".toCharArray();
 		expected = new TokenImpl(chars, 0, chars.length - 1, 5, TokenTypes.IDENTIFIER, 0);
 		actual = RSyntaxUtilities.getNextImportantToken(t, textArea, 0);
-		Assert.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 
 
@@ -130,7 +130,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 12, TokenTypes.IDENTIFIER, 0);
 		Token actual = RSyntaxUtilities.getNextImportantToken(t, textArea, 0);
-		Assert.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 
 
@@ -143,7 +143,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(0, Position.Bias.Forward,
 			bounds, SwingConstants.EAST, new Position.Bias[1], view);
-		Assert.assertEquals(1, nextPos);
+		Assertions.assertEquals(1, nextPos);
 	}
 
 
@@ -158,7 +158,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(firstLineEnd, Position.Bias.Forward,
 			bounds, SwingConstants.EAST, new Position.Bias[1], view);
-		Assert.assertEquals(firstLineEnd + 1, nextPos);
+		Assertions.assertEquals(firstLineEnd + 1, nextPos);
 	}
 
 
@@ -171,7 +171,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(1, Position.Bias.Forward,
 			bounds, SwingConstants.WEST, new Position.Bias[1], view);
-		Assert.assertEquals(0, nextPos);
+		Assertions.assertEquals(0, nextPos);
 	}
 
 
@@ -186,7 +186,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(secondLineStart, Position.Bias.Forward,
 			bounds, SwingConstants.WEST, new Position.Bias[1], view);
-		Assert.assertEquals(secondLineStart - 1, nextPos);
+		Assertions.assertEquals(secondLineStart - 1, nextPos);
 	}
 
 
@@ -201,7 +201,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(secondLineStart, Position.Bias.Forward,
 			bounds, SwingConstants.NORTH, new Position.Bias[1], view);
-		Assert.assertEquals(0, nextPos);
+		Assertions.assertEquals(0, nextPos);
 	}
 
 
@@ -216,7 +216,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(0, Position.Bias.Forward,
 			bounds, SwingConstants.SOUTH, new Position.Bias[1], view);
-		Assert.assertEquals(secondLineStart, nextPos);
+		Assertions.assertEquals(secondLineStart, nextPos);
 	}
 
 
@@ -230,7 +230,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.IDENTIFIER, 0);
 		Token actual = RSyntaxUtilities.getPreviousImportantTokenFromOffs(doc, 5);
-		Assert.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 
 
@@ -241,14 +241,14 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.IDENTIFIER, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 0));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 1));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 2));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 3));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 0));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 1));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 2));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 3));
 
 		chars = " ".toCharArray();
 		expected = new TokenImpl(chars, 0, 0, 4, TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 4));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(textArea, 4));
 	}
 
 
@@ -260,14 +260,14 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.IDENTIFIER, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 0));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 1));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 2));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 3));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 0));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 1));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 2));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 3));
 
 		chars = " ".toCharArray();
 		expected = new TokenImpl(chars, 0, 0, 4, TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 4));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(document, 4));
 	}
 
 
@@ -279,14 +279,14 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		char[] chars = "line".toCharArray();
 		Token expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.IDENTIFIER, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 0));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 1));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 2));
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 3));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 0));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 1));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 2));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 3));
 
 		chars = " ".toCharArray();
 		expected = new TokenImpl(chars, 0, 0, 4, TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 4));
+		Assertions.assertEquals(expected, RSyntaxUtilities.getTokenAtOffset(t, 4));
 	}
 
 
@@ -294,7 +294,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetWordEnd() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
-		Assert.assertEquals(4, RSyntaxUtilities.getWordEnd(textArea, 1));
+		Assertions.assertEquals(4, RSyntaxUtilities.getWordEnd(textArea, 1));
 	}
 
 
@@ -302,19 +302,19 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetWordStart() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
-		Assert.assertEquals(0, RSyntaxUtilities.getWordStart(textArea, 1));
+		Assertions.assertEquals(0, RSyntaxUtilities.getWordStart(textArea, 1));
 	}
 
 
 	@Test
 	public void testIsBracket() {
-		Assert.assertTrue(RSyntaxUtilities.isBracket('['));
-		Assert.assertTrue(RSyntaxUtilities.isBracket(']'));
-		Assert.assertTrue(RSyntaxUtilities.isBracket('{'));
-		Assert.assertTrue(RSyntaxUtilities.isBracket('}'));
-		Assert.assertTrue(RSyntaxUtilities.isBracket('('));
-		Assert.assertTrue(RSyntaxUtilities.isBracket(')'));
-		Assert.assertFalse(RSyntaxUtilities.isBracket('x'));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket('['));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket(']'));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket('{'));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket('}'));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket('('));
+		Assertions.assertTrue(RSyntaxUtilities.isBracket(')'));
+		Assertions.assertFalse(RSyntaxUtilities.isBracket('x'));
 	}
 
 
@@ -329,13 +329,13 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testWildcardToPattern() {
 
-		Assert.assertEquals(".*",
+		Assertions.assertEquals(".*",
 			RSyntaxUtilities.wildcardToPattern("*", false, false).pattern());
 
-		Assert.assertEquals(".foo.",
+		Assertions.assertEquals(".foo.",
 			RSyntaxUtilities.wildcardToPattern("?foo?", false, false).pattern());
 
-		Assert.assertEquals("foobar\\.\\$tmp",
+		Assertions.assertEquals("foobar\\.\\$tmp",
 			RSyntaxUtilities.wildcardToPattern("foobar.$tmp", false, false).pattern());
 	}
 }

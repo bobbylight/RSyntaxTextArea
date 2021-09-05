@@ -11,9 +11,9 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -33,7 +33,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 	private static final int TS_PREV_TOKEN_TYPE = TokenTypes.NULL;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		TypeScriptTokenMaker.setE4xSupported(true);
 	}
@@ -53,32 +53,32 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("//", startAndEnd[0]);
-		Assert.assertNull(null, startAndEnd[1]);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 
 	@Test
 	public void testTS_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);
-		Assert.assertNull(tm.getLineCommentStartAndEnd(0)[1]);
+		Assertions.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);
+		Assertions.assertNull(tm.getLineCommentStartAndEnd(0)[1]);
 	}
 
 
 	@Test
 	public void testTS_api_isE4XSupported() {
-		Assert.assertTrue(TypeScriptTokenMaker.isE4xSupported());
+		Assertions.assertTrue(TypeScriptTokenMaker.isE4xSupported());
 		TypeScriptTokenMaker.setE4xSupported(false);
-		Assert.assertFalse(TypeScriptTokenMaker.isE4xSupported());
+		Assertions.assertFalse(TypeScriptTokenMaker.isE4xSupported());
 	}
 
 
 	@Test
 	public void testTS_api_setE4XSupported() {
-		Assert.assertTrue(TypeScriptTokenMaker.isE4xSupported());
+		Assertions.assertTrue(TypeScriptTokenMaker.isE4xSupported());
 		TypeScriptTokenMaker.setE4xSupported(false);
-		Assert.assertFalse(TypeScriptTokenMaker.isE4xSupported());
+		Assertions.assertFalse(TypeScriptTokenMaker.isE4xSupported());
 	}
 
 
@@ -93,17 +93,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -122,7 +122,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
 		}
 
 	}
@@ -144,7 +144,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
 		}
 
 	}
@@ -161,17 +161,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.DATA_TYPE, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.DATA_TYPE, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -187,7 +187,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 		}
 
 	}
@@ -200,7 +200,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		int initialTokenType = -9;//INTERNAL_IN_JS_COMMENT_DOCUMENTATION
 		Token token = tm.getTokenList(segment, initialTokenType, 0);
-		Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 	}
 
 
@@ -230,8 +230,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			// on a line. We could technically make that better, but it is not
 			// the common case
 			token = token.getNextToken();
-			Assert.assertEquals("Invalid block tag: " + blockTag,
-					TokenTypes.COMMENT_KEYWORD, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_KEYWORD, token.getType(), "Invalid block tag: " + blockTag);
 		}
 
 	}
@@ -253,8 +252,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			// on a line. We could technically make that better, but it is not
 			// the common case
 			token = token.getNextToken();
-			Assert.assertEquals("Invalid inline tag: " + inlineTag,
-					TokenTypes.COMMENT_KEYWORD, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_KEYWORD, token.getType());
 		}
 
 	}
@@ -271,7 +269,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		// on a line. We could technically make that better, but it is not
 		// the common case
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.COMMENT_MARKUP, "<code>"));
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MARKUP, "<code>"));
 	}
 
 
@@ -288,16 +286,16 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals(" */", token.getLexeme());
 
 		}
 
@@ -314,202 +312,202 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		Segment seg = createSegment(e4x);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "one"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "one"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "attr1"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "attr1"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"yes\""));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"yes\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "attr2"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "attr2"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'no'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'no'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foobar"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foobar"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "one"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "one"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// Comment
 		e4x = "var foo = <!-- Hello world -->;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world -->"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world -->"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// Comment with URL
 		e4x = "var foo = <!-- http://www.google.com -->;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- "));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// CDATA
 		e4x = "var foo = <![CDATA[foo]]>;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_CDATA_DELIMITER, "<![CDATA["));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_CDATA_DELIMITER, "<![CDATA["));
 		token = token.getNextToken();
-		Assert.assertTrue("nope - " + token, token.is(TokenTypes.MARKUP_CDATA, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_CDATA, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_CDATA_DELIMITER, "]]>"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_CDATA_DELIMITER, "]]>"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// DTD
 		e4x = "var foo = <!doctype FOO>;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_DTD, "<!doctype FOO>"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_DTD, "<!doctype FOO>"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// DTD containing a comment
 		e4x = "var foo = <!doctype FOO <!-- foo -->>;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_DTD, "<!doctype FOO "));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_DTD, "<!doctype FOO "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- foo -->"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- foo -->"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_DTD, ">"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_DTD, ">"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// Processing instruction
 		e4x = "var foo = <?xml version=\"1.0\"?>;";
 		seg = createSegment(e4x);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "var"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, "<?xml version=\"1.0\"?>"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, "<?xml version=\"1.0\"?>"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// "each" keyword, valid when e4x is enabled
 		seg = createSegment("each");
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "each"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "each"));
 
 		// e4x attribute
 		String attr = "@foo";
 		seg = createSegment(attr);
 		tm = new TypeScriptTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, attr));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, attr));
 
 	}
 
@@ -525,7 +523,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -547,19 +545,19 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
 			if (token != null && token.isPaintable() && token.length() > 0) {
-				Assert.assertFalse(token.isHyperlink());
-				Assert.assertTrue(token.is(TokenTypes.COMMENT_EOL, " extra"));
+				Assertions.assertFalse(token.isHyperlink());
+				Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, " extra"));
 			}
 
 		}
@@ -594,17 +592,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -620,17 +618,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] functions = code.split(" +");
 		for (int i = 0; i < functions.length; i++) {
-			Assert.assertEquals(functions[i], token.getLexeme());
-			Assert.assertEquals("Not a function token: " + token, TokenTypes.FUNCTION, token.getType());
+			Assertions.assertEquals(functions[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType(), "Not a function token: " + token);
 			if (i < functions.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -648,12 +646,12 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] literals = code.split(" +");
 		for (int i = 0; i < literals.length; i++) {
-			Assert.assertEquals(literals[i], token.getLexeme());
-			Assert.assertEquals("Not a hex number: " + token, TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+			Assertions.assertEquals(literals[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType(), "Not a hex number: " + token);
 			if (i < literals.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
@@ -677,24 +675,24 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals("Not a keyword token: " + token, TokenTypes.RESERVED_WORD, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType(), "Not a keyword token: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 		segment = createSegment("return");
 		token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-		Assert.assertEquals("return", token.getLexeme());
-		Assert.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
+		Assertions.assertEquals("return", token.getLexeme());
+		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 		token = token.getNextToken();
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -710,7 +708,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
 	}
@@ -723,7 +721,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		int initialTokenType = -8;//INTERNAL_IN_JS_MLC;
 		Token token = tm.getTokenList(segment, initialTokenType, 0);
-		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 	}
 
 
@@ -744,15 +742,15 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assert.assertEquals(" */", token.getLexeme());
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+			Assertions.assertEquals(" */", token.getLexeme());
 
 		}
 
@@ -772,7 +770,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
 		}
 
 		String[] floats = {
@@ -783,7 +781,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
 		}
 
 		String[] hex = {
@@ -794,7 +792,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
 		}
 
 		String[] errors = {
@@ -805,7 +803,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
 		}
 
 	}
@@ -824,17 +822,17 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals("Not an operator: " + token, TokenTypes.OPERATOR, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.OPERATOR, token.getType(), "Not an operator: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -850,7 +848,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.REGEX, token.getType());
+			Assertions.assertEquals(TokenTypes.REGEX, token.getType());
 		}
 
 	}
@@ -867,19 +865,19 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] separators = code.split(" +");
 		for (int i = 0; i < separators.length; i++) {
-			Assert.assertEquals(separators[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.SEPARATOR, token.getType());
+			Assertions.assertEquals(separators[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 			// Just one extra test here
-			Assert.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
+			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
 			if (i < separators.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(TokenTypes.NULL, token.getType());
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -893,7 +891,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		}
 
 	}
@@ -913,8 +911,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
-					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
 	}
@@ -932,7 +929,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
 	}
@@ -951,8 +948,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals("Not an ERROR_STRING_DOUBLE: " + token,
-					TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
 	}
@@ -971,7 +967,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -991,11 +987,11 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.VARIABLE, token.getType());
+			Assertions.assertEquals(TokenTypes.VARIABLE, token.getType());
 			token = token.getNextToken();
-			Assert.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 		}
 
 	}
@@ -1012,7 +1008,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.WHITESPACE, token.getType());
+			Assertions.assertEquals(TokenTypes.WHITESPACE, token.getType());
 		}
 
 	}

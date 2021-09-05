@@ -12,8 +12,8 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -89,8 +89,8 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			CSSTokenMaker tm = (CSSTokenMaker)createTokenMaker();
 			tm.setHighlightingLess(true);
 			Token t = tm.getTokenList(segment, initialTokenType, 0);
-			Assert.assertEquals("Token has unexpected type: orig=" + token +
-				", actual=" + t, expectedType, t.getType());
+			Assertions.assertEquals(expectedType, t.getType(),
+				"Token has unexpected type: orig=" + token + ", actual=" + t);
 		}
 
 	}
@@ -147,23 +147,23 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Test
 	public void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
 	@Test
 	public void testCss_getLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("/*", startAndEnd[0]);
-		Assert.assertEquals("*/", startAndEnd[1]);
+		Assertions.assertEquals("/*", startAndEnd[0]);
+		Assertions.assertEquals("*/", startAndEnd[1]);
 	}
 
 
 	@Test
 	public void testCss_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
 	}
 
 
@@ -172,16 +172,16 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		TokenMaker tm = createTokenMaker();
 
-		Assert.assertFalse(tm.getShouldIndentNextLineAfter(null));
-		Assert.assertFalse(tm.getShouldIndentNextLineAfter(new TokenImpl()));
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(null));
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(new TokenImpl()));
 
 		char[] ch = { '{' };
 		TokenImpl openCurly = new TokenImpl(ch, 0, 0, 0, TokenTypes.SEPARATOR, 0);
-		Assert.assertTrue(tm.getShouldIndentNextLineAfter(openCurly));
+		Assertions.assertTrue(tm.getShouldIndentNextLineAfter(openCurly));
 
 		ch = new char[] { '(' };
 		TokenImpl openParen = new TokenImpl(ch, 0, 0, 0, TokenTypes.SEPARATOR, 0);
-		Assert.assertTrue(tm.getShouldIndentNextLineAfter(openParen));
+		Assertions.assertTrue(tm.getShouldIndentNextLineAfter(openParen));
 	}
 
 
@@ -193,27 +193,27 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "{"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "padding"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "0"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "}"));
 
 	}
 
@@ -226,7 +226,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
 
 	}
 
@@ -234,12 +234,12 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 	public void testCss_isIdentifierChar() {
 		TokenMaker tm = createTokenMaker();
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
-			Assert.assertTrue(tm.isIdentifierChar(0, (char)ch));
-			Assert.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
 		}
-		Assert.assertTrue(tm.isIdentifierChar(0, '-'));
-		Assert.assertTrue(tm.isIdentifierChar(0, '_'));
-		Assert.assertTrue(tm.isIdentifierChar(0, '.'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
 	}
 
 
@@ -281,11 +281,11 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			tm.setHighlightingLess(true);
 
 				Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 		}
 	}
@@ -346,15 +346,15 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
 
-			Assert.assertFalse(token.isHyperlink());
-			Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
+			Assertions.assertFalse(token.isHyperlink());
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
+			Assertions.assertTrue(token.isHyperlink());
 
 			token = token.getNextToken();
-			Assert.assertFalse(token.isHyperlink());
-			Assert.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
+			Assertions.assertFalse(token.isHyperlink());
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
 		}
 	}
 
@@ -425,11 +425,11 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			tm.setHighlightingLess(true);
 
 			Token token = tm.getTokenList(segment, CSS_PROPERTY_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 		}
 	}
@@ -558,11 +558,11 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			tm.setHighlightingLess(true);
 
 			Token token = tm.getTokenList(segment, CSS_VALUE_PREV_TOKEN_TYPE, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 		}
 	}
@@ -614,42 +614,42 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"test.png\""));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 		code = "background-image: url('test.png');";
 		segment = createSegment(code);
 		tm = createTokenMaker();
 		token = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ":"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
+		Assertions.assertTrue(token.is(TokenTypes.FUNCTION, "url"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, "("));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'test.png'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
+		Assertions.assertTrue(token.is(TokenTypes.SEPARATOR, ")"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, ";"));
 
 	}
 
@@ -741,12 +741,12 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		TokenMaker tm = createTokenMaker();
 
-		Assert.assertEquals(
+		Assertions.assertEquals(
 			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_STRING));
-		Assert.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_CHAR));
-		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE,
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_MLC));
 	}
 

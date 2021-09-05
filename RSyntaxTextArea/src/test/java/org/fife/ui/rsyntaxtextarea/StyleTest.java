@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
@@ -22,30 +22,30 @@ public class StyleTest {
 	@Test
 	public void testConstructor_zeroArg() {
 		Style style = new Style();
-		Assert.assertEquals(Style.DEFAULT_FOREGROUND, style.foreground);
-		Assert.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
-		Assert.assertEquals(Style.DEFAULT_FONT, style.font);
-		Assert.assertFalse(style.underline);
+		Assertions.assertEquals(Style.DEFAULT_FOREGROUND, style.foreground);
+		Assertions.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
+		Assertions.assertEquals(Style.DEFAULT_FONT, style.font);
+		Assertions.assertFalse(style.underline);
 	}
 
 
 	@Test
 	public void testConstructor_oneArg() {
 		Style style = new Style(Color.RED);
-		Assert.assertEquals(Color.RED, style.foreground);
-		Assert.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
-		Assert.assertEquals(Style.DEFAULT_FONT, style.font);
-		Assert.assertFalse(style.underline);
+		Assertions.assertEquals(Color.RED, style.foreground);
+		Assertions.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
+		Assertions.assertEquals(Style.DEFAULT_FONT, style.font);
+		Assertions.assertFalse(style.underline);
 	}
 
 
 	@Test
 	public void testConstructor_twoArg() {
 		Style style = new Style(Color.RED, Color.BLUE);
-		Assert.assertEquals(Color.RED, style.foreground);
-		Assert.assertEquals(Color.BLUE, style.background);
-		Assert.assertEquals(Style.DEFAULT_FONT, style.font);
-		Assert.assertFalse(style.underline);
+		Assertions.assertEquals(Color.RED, style.foreground);
+		Assertions.assertEquals(Color.BLUE, style.background);
+		Assertions.assertEquals(Style.DEFAULT_FONT, style.font);
+		Assertions.assertFalse(style.underline);
 	}
 
 
@@ -53,10 +53,10 @@ public class StyleTest {
 	public void testConstructor_threeArg() {
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font);
-		Assert.assertEquals(Color.RED, style.foreground);
-		Assert.assertEquals(Color.BLUE, style.background);
-		Assert.assertEquals(font, style.font);
-		Assert.assertFalse(style.underline);
+		Assertions.assertEquals(Color.RED, style.foreground);
+		Assertions.assertEquals(Color.BLUE, style.background);
+		Assertions.assertEquals(font, style.font);
+		Assertions.assertFalse(style.underline);
 	}
 
 
@@ -64,10 +64,10 @@ public class StyleTest {
 	public void testConstructor_fourArg() {
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
-		Assert.assertEquals(Color.RED, style.foreground);
-		Assert.assertEquals(Color.BLUE, style.background);
-		Assert.assertEquals(font, style.font);
-		Assert.assertTrue(style.underline);
+		Assertions.assertEquals(Color.RED, style.foreground);
+		Assertions.assertEquals(Color.BLUE, style.background);
+		Assertions.assertEquals(font, style.font);
+		Assertions.assertTrue(style.underline);
 	}
 
 
@@ -77,7 +77,7 @@ public class StyleTest {
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
 
-		Assert.assertEquals(style, style.clone());
+		Assertions.assertEquals(style, style.clone());
 	}
 
 
@@ -89,7 +89,7 @@ public class StyleTest {
 		Style style2 = new Style(Color.RED, Color.BLUE, font, true);
 
 		//noinspection SimplifiableJUnitAssertion
-		Assert.assertTrue(style.equals(style2));
+		Assertions.assertTrue(style.equals(style2));
 	}
 
 
@@ -101,13 +101,13 @@ public class StyleTest {
 		Style style2 = new Style(Color.RED, Color.BLUE, font, false);
 
 		//noinspection SimplifiableJUnitAssertion
-		Assert.assertFalse(style.equals(style2));
+		Assertions.assertFalse(style.equals(style2));
 	}
 
 
 	@Test
 	public void testHashCode() {
-		Assert.assertNotEquals(0, new Style(Color.RED, Color.BLUE).hashCode());
+		Assertions.assertNotEquals(0, new Style(Color.RED, Color.BLUE).hashCode());
 	}
 
 
@@ -115,6 +115,6 @@ public class StyleTest {
 	public void testToString() {
 		String expected = "[Style: foreground: java.awt.Color[r=0,g=0,b=0], " +
 			"background: null, underline: false, font: null]";
-		Assert.assertEquals(expected, new Style().toString());
+		Assertions.assertEquals(expected, new Style().toString());
 	}
 }

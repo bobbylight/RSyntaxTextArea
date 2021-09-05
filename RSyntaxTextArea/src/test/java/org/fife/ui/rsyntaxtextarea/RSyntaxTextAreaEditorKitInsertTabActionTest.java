@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -33,7 +33,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent, textArea.getText()); // Unchanged
+		Assertions.assertEquals(origContent, textArea.getText()); // Unchanged
 	}
 
 
@@ -47,7 +47,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals('\t' + origContent, textArea.getText());
+		Assertions.assertEquals('\t' + origContent, textArea.getText());
 	}
 
 
@@ -67,7 +67,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		String expectedContent = "\tint main() {\n" +
 			"\t\tprintf(\"Hello world\n\");\n" +
 			"}";
-		Assert.assertEquals(expectedContent, textArea.getText());
+		Assertions.assertEquals(expectedContent, textArea.getText());
 	}
 
 
@@ -89,7 +89,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		String expectedContent = "    int main() {\n" +
 			"    \tprintf(\"Hello world\n\");\n" +
 			"}";
-		Assert.assertEquals(expectedContent, textArea.getText());
+		Assertions.assertEquals(expectedContent, textArea.getText());
 	}
 
 
@@ -109,13 +109,13 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 		String expectedContent = "\tint main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
 			"}";
-		Assert.assertEquals(expectedContent, textArea.getText());
+		Assertions.assertEquals(expectedContent, textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(DefaultEditorKit.insertTabAction,
+		Assertions.assertEquals(DefaultEditorKit.insertTabAction,
 			new RSyntaxTextAreaEditorKit.InsertTabAction().getMacroID());
 	}
 }

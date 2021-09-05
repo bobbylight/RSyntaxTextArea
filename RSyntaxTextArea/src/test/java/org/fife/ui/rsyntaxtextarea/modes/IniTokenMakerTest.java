@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -38,8 +38,8 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 	public void testGetLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assert.assertEquals(";", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals(";", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -55,7 +55,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -69,11 +69,11 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
 
 	}
 
@@ -86,15 +86,15 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
 
 	}
 
@@ -107,15 +107,15 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "dialog.title"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "hello"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "hello"));
 
 	}
 
@@ -134,7 +134,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.PREPROCESSOR, token.getType());
+			Assertions.assertEquals(TokenTypes.PREPROCESSOR, token.getType());
 		}
 
 	}

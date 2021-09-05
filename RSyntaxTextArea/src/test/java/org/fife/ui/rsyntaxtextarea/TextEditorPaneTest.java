@@ -12,10 +12,10 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 
 /**
@@ -24,23 +24,23 @@ import org.junit.runner.RunWith;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class TextEditorPaneTest {
 
 
 	@Test
 	public void testConstructor_zeroArg() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertEquals(TextEditorPane.INSERT_MODE, textArea.getTextMode());
-		Assert.assertFalse(textArea.getLineWrap());
+		Assertions.assertEquals(TextEditorPane.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertFalse(textArea.getLineWrap());
 	}
 
 
 	@Test
 	public void testConstructor_oneArg() {
 		TextEditorPane textArea = new TextEditorPane(TextEditorPane.OVERWRITE_MODE);
-		Assert.assertEquals(TextEditorPane.OVERWRITE_MODE, textArea.getTextMode());
-		Assert.assertFalse(textArea.getLineWrap());
+		Assertions.assertEquals(TextEditorPane.OVERWRITE_MODE, textArea.getTextMode());
+		Assertions.assertFalse(textArea.getLineWrap());
 	}
 
 
@@ -48,16 +48,16 @@ public class TextEditorPaneTest {
 	public void testGetSetEncoding() {
 
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertFalse(textArea.isDirty());
 
 		textArea.setEncoding("UTF-16");
-		Assert.assertEquals("UTF-16", textArea.getEncoding());
-		Assert.assertTrue(textArea.isDirty());
+		Assertions.assertEquals("UTF-16", textArea.getEncoding());
+		Assertions.assertTrue(textArea.isDirty());
 		textArea.setDirty(false);
 
 		textArea.setEncoding("UTF-8");
-		Assert.assertEquals("UTF-8", textArea.getEncoding());
-		Assert.assertTrue(textArea.isDirty());
+		Assertions.assertEquals("UTF-8", textArea.getEncoding());
+		Assertions.assertTrue(textArea.isDirty());
 
 	}
 
@@ -65,25 +65,25 @@ public class TextEditorPaneTest {
 	@Test
 	public void testInsertUpdate_setsDirtyFlag() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertFalse(textArea.isDirty());
 		textArea.insertUpdate(null);
-		Assert.assertTrue(textArea.isDirty());
+		Assertions.assertTrue(textArea.isDirty());
 	}
 
 
 	@Test
 	public void testIsLocal() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertTrue(textArea.isLocal());
+		Assertions.assertTrue(textArea.isLocal());
 	}
 
 
 	@Test
 	public void testIsSetReadOnly() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertFalse(textArea.isReadOnly());
+		Assertions.assertFalse(textArea.isReadOnly());
 		textArea.setReadOnly(true);
-		Assert.assertTrue(textArea.isReadOnly());
+		Assertions.assertTrue(textArea.isReadOnly());
 	}
 
 
@@ -101,9 +101,9 @@ public class TextEditorPaneTest {
 		textArea.load(loc);
 
 		// File didn't exist, check accordingly
-		Assert.assertTrue(textArea.getText().isEmpty());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertTrue(textArea.getText().isEmpty());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
 	}
 
 
@@ -121,9 +121,9 @@ public class TextEditorPaneTest {
 		textArea.load(loc, StandardCharsets.UTF_8);
 
 		// File didn't exist, check accordingly
-		Assert.assertTrue(textArea.getText().isEmpty());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertTrue(textArea.getText().isEmpty());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
 	}
 
 
@@ -141,9 +141,9 @@ public class TextEditorPaneTest {
 		textArea.load(loc, "utf-8");
 
 		// File didn't exist, check accordingly
-		Assert.assertTrue(textArea.getText().isEmpty());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertTrue(textArea.getText().isEmpty());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
 	}
 
 
@@ -163,10 +163,10 @@ public class TextEditorPaneTest {
 		textArea.load(loc, "utf-8");
 
 		// Verify file loaded properly and properties are as expected
-		Assert.assertEquals("lorem ipsum\n", textArea.getText());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
-		Assert.assertEquals(0, textArea.getCaretPosition());
+		Assertions.assertEquals("lorem ipsum\n", textArea.getText());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
+		Assertions.assertEquals(0, textArea.getCaretPosition());
 	}
 
 
@@ -186,10 +186,10 @@ public class TextEditorPaneTest {
 		textArea.load(loc, "utf-8");
 
 		// Verify file loaded properly and properties are as expected
-		Assert.assertEquals("lorem ipsum\n", textArea.getText());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
-		Assert.assertEquals(0, textArea.getCaretPosition());
+		Assertions.assertEquals("lorem ipsum\n", textArea.getText());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
+		Assertions.assertEquals(0, textArea.getCaretPosition());
 
 		// Modify it
 		textArea.append("added");
@@ -197,19 +197,19 @@ public class TextEditorPaneTest {
 		textArea.reload();
 
 		// Verify things are back to the way they were before the edit
-		Assert.assertEquals("lorem ipsum\n", textArea.getText());
-		Assert.assertFalse(textArea.canUndo());
-		Assert.assertFalse(textArea.isDirty());
-		Assert.assertEquals(0, textArea.getCaretPosition());
+		Assertions.assertEquals("lorem ipsum\n", textArea.getText());
+		Assertions.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.isDirty());
+		Assertions.assertEquals(0, textArea.getCaretPosition());
 	}
 
 
 	@Test
 	public void testRemoveUpdate_setsDirtyFlag() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertFalse(textArea.isDirty());
 		textArea.removeUpdate(null);
-		Assert.assertTrue(textArea.isDirty());
+		Assertions.assertTrue(textArea.isDirty());
 	}
 
 
@@ -228,8 +228,8 @@ public class TextEditorPaneTest {
 		textArea.save();
 
 		// Assert file contents were saved and editor state is updated
-		Assert.assertEquals(11, file.length());
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertEquals(11, file.length());
+		Assertions.assertFalse(textArea.isDirty());
 	}
 
 
@@ -247,20 +247,20 @@ public class TextEditorPaneTest {
 		textArea.saveAs(loc);
 
 		// Assert file contents were saved and editor state is updated
-		Assert.assertTrue(file.length() > 0); // Allow for BOM vs. no BOM (varying defaults)
-		Assert.assertFalse(textArea.isDirty());
+		Assertions.assertTrue(file.length() > 0); // Allow for BOM vs. no BOM (varying defaults)
+		Assertions.assertFalse(textArea.isDirty());
 	}
 
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testSetEncoding_invalidArg_null() {
-		new TextEditorPane().setEncoding(null);
+		Assertions.assertThrows(NullPointerException.class, () -> new TextEditorPane().setEncoding(null));
 	}
 
 
-	@Test(expected = UnsupportedCharsetException.class)
+	@Test
 	public void testSetEncoding_invalidArg_unsupportedCharset() {
-		new TextEditorPane().setEncoding("xxx");
+		Assertions.assertThrows(UnsupportedCharsetException.class, () -> new TextEditorPane().setEncoding("xxx"));
 	}
 
 

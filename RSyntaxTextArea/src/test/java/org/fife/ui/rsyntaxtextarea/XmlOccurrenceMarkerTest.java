@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.rtextarea.SmartHighlightPainter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@code XmlOccurrenceMarker} class.
@@ -26,8 +26,8 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		XmlOccurrenceMarker marker = new XmlOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("book", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
+		Assertions.assertEquals("book", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
 	}
 
 
@@ -40,8 +40,8 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 		XmlOccurrenceMarker marker = new XmlOccurrenceMarker();
 		Token actual = marker.getTokenToMark(textArea);
-		Assert.assertEquals("books", actual.getLexeme());
-		Assert.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
+		Assertions.assertEquals("books", actual.getLexeme());
+		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, actual.getType());
 	}
 
 
@@ -54,7 +54,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.MARKUP_TAG_NAME, 0);
 
 		XmlOccurrenceMarker marker = new XmlOccurrenceMarker();
-		Assert.assertTrue(marker.isValidType(textArea, token));
+		Assertions.assertTrue(marker.isValidType(textArea, token));
 	}
 
 
@@ -67,7 +67,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.SEPARATOR, 0);
 
 		XmlOccurrenceMarker marker = new XmlOccurrenceMarker();
-		Assert.assertFalse(marker.isValidType(textArea, token));
+		Assertions.assertFalse(marker.isValidType(textArea, token));
 	}
 
 

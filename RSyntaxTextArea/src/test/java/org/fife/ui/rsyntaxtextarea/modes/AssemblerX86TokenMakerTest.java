@@ -8,10 +8,10 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -23,12 +23,12 @@ import org.junit.Test;
 public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 	}
 
@@ -43,8 +43,8 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals(";", startAndEnd[0]);
-		Assert.assertNull(null, startAndEnd[1]);
+		Assertions.assertEquals(";", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 

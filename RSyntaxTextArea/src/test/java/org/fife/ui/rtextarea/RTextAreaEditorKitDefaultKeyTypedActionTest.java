@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -19,7 +19,7 @@ public class RTextAreaEditorKitDefaultKeyTypedActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.defaultKeyTypedAction,
+		Assertions.assertEquals(RTextAreaEditorKit.defaultKeyTypedAction,
 			new RTextAreaEditorKit.DefaultKeyTypedAction().getMacroID());
 	}
 }

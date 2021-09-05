@@ -6,8 +6,8 @@
  */
 package org.fife.ui.rsyntaxtextarea.parser;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -23,11 +23,11 @@ public class AbstractParserTest {
 	public void testGetHyperlinkListener() {
 
 		MockParser parser = new MockParser();
-		Assert.assertNull(parser.getHyperlinkListener());
+		Assertions.assertNull(parser.getHyperlinkListener());
 
 		ExtendedHyperlinkListener ehl = new MockExtendedHyperlinkListener();
 		parser.setHyperlinkListener(ehl);
-		Assert.assertEquals(ehl, parser.getHyperlinkListener());
+		Assertions.assertEquals(ehl, parser.getHyperlinkListener());
 
 	}
 
@@ -35,25 +35,25 @@ public class AbstractParserTest {
 	@Test
 	public void testGetImageBase_default() {
 		MockParser parser = new MockParser();
-		Assert.assertNull(parser.getImageBase());
+		Assertions.assertNull(parser.getImageBase());
 	}
 
 
 	@Test
 	public void testIsEnabled() {
 		MockParser parser = new MockParser();
-		Assert.assertTrue(parser.isEnabled());
+		Assertions.assertTrue(parser.isEnabled());
 		parser.setEnabled(false);
-		Assert.assertFalse(parser.isEnabled());
+		Assertions.assertFalse(parser.isEnabled());
 	}
 
 
 	@Test
 	public void testSetEnabled() {
 		MockParser parser = new MockParser();
-		Assert.assertTrue(parser.isEnabled());
+		Assertions.assertTrue(parser.isEnabled());
 		parser.setEnabled(false);
-		Assert.assertFalse(parser.isEnabled());
+		Assertions.assertFalse(parser.isEnabled());
 	}
 
 
@@ -61,11 +61,11 @@ public class AbstractParserTest {
 	public void testSetHyperlinkListener() {
 
 		MockParser parser = new MockParser();
-		Assert.assertNull(parser.getHyperlinkListener());
+		Assertions.assertNull(parser.getHyperlinkListener());
 
 		ExtendedHyperlinkListener ehl = new MockExtendedHyperlinkListener();
 		parser.setHyperlinkListener(ehl);
-		Assert.assertEquals(ehl, parser.getHyperlinkListener());
+		Assertions.assertEquals(ehl, parser.getHyperlinkListener());
 
 	}
 

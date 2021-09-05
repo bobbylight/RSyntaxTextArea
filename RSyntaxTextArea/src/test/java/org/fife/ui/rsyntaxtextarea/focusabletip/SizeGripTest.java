@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 
@@ -18,7 +18,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class SizeGripTest extends AbstractRSyntaxTextAreaTest {
 
 

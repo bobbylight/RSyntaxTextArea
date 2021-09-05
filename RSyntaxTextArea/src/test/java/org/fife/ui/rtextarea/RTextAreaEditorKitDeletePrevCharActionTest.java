@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.event.ActionEvent;
 
@@ -29,7 +29,7 @@ public class RTextAreaEditorKitDeletePrevCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeletePrevCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2\nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2\nline 3", textArea.getText());
 	}
 
 
@@ -42,7 +42,7 @@ public class RTextAreaEditorKitDeletePrevCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeletePrevCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline2\nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nline2\nline 3", textArea.getText());
 	}
 
 
@@ -56,13 +56,13 @@ public class RTextAreaEditorKitDeletePrevCharActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.DeletePrevCharAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nl2\nline 3", textArea.getText());
+		Assertions.assertEquals("line 1\nl2\nline 3", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.deletePrevCharAction,
+		Assertions.assertEquals(RTextAreaEditorKit.deletePrevCharAction,
 			new RTextAreaEditorKit.DeletePrevCharAction().getMacroID());
 	}
 }

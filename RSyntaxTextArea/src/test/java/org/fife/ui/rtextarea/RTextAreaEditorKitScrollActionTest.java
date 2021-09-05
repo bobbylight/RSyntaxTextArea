@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitScrollActionTest {
 
 
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitScrollActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("scroll",
+		Assertions.assertEquals("scroll",
 			new RTextAreaEditorKit.ScrollAction("scroll", 1).getMacroID());
 	}
 }

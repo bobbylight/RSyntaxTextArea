@@ -4,10 +4,10 @@
  */
 package org.fife.io;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -54,12 +54,12 @@ public class UnicodeReaderTest {
 		return file;
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
 	}
@@ -72,7 +72,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(file)) {
 			// Windows returns "UTF-8", Linux returns "UTF8"
 			String actualEncoding = r.getEncoding().replace("-", "");
-			Assert.assertEquals("UTF8", actualEncoding);
+			Assertions.assertEquals("UTF8", actualEncoding);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(file)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-16BE", actualEncoding);
+			Assertions.assertEquals("UTF-16BE", actualEncoding);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(file)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-16LE", actualEncoding);
+			Assertions.assertEquals("UTF-16LE", actualEncoding);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(file)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-32BE", actualEncoding);
+			Assertions.assertEquals("UTF-32BE", actualEncoding);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(file)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-32LE", actualEncoding);
+			Assertions.assertEquals("UTF-32LE", actualEncoding);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class UnicodeReaderTest {
 			// The encoding specified in the constructor was used since the file
 			// had no BOM
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-8", actualEncoding);
+			Assertions.assertEquals("UTF-8", actualEncoding);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class UnicodeReaderTest {
 			// The encoding specified in the constructor was used since the file
 			// had no BOM
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-8", actualEncoding);
+			Assertions.assertEquals("UTF-8", actualEncoding);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class UnicodeReaderTest {
 
 			// Different OS's have different default encodings.  Just ensure we
 			// populated the value.
-			Assert.assertNotNull(r.getEncoding());
+			Assertions.assertNotNull(r.getEncoding());
 		}
 	}
 
@@ -174,7 +174,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(fileFullPath)) {
 			// Windows returns "UTF-8", Linux returns "UTF8"
 			String actualEncoding = r.getEncoding().replace("-", "");
-			Assert.assertEquals("UTF8", actualEncoding);
+			Assertions.assertEquals("UTF8", actualEncoding);
 		}
 	}
 
@@ -187,7 +187,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(fileFullPath)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-16BE", actualEncoding);
+			Assertions.assertEquals("UTF-16BE", actualEncoding);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class UnicodeReaderTest {
 		try (UnicodeReader r = new UnicodeReader(fileFullPath)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-16LE", actualEncoding);
+			Assertions.assertEquals("UTF-16LE", actualEncoding);
 		}
 	}
 
@@ -213,7 +213,7 @@ public class UnicodeReaderTest {
 
 			// Different OS's have different default encodings.  Just ensure we
 			// populated the value.
-			Assert.assertNotNull(r.getEncoding());
+			Assertions.assertNotNull(r.getEncoding());
 		}
 	}
 
@@ -226,7 +226,7 @@ public class UnicodeReaderTest {
 			 UnicodeReader r = new UnicodeReader(in, StandardCharsets.UTF_8)) {
 
 			String actualEncoding = r.getEncoding();
-			Assert.assertEquals("UTF-8", actualEncoding);
+			Assertions.assertEquals("UTF-8", actualEncoding);
 		}
 	}
 }

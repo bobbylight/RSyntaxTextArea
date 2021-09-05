@@ -6,8 +6,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -46,30 +46,30 @@ public class JsonFoldParserTest {
 		FoldParser parser = new JsonFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(1, folds.size());
+		Assertions.assertEquals(1, folds.size());
 
 		Fold firstFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, firstFold.getFoldType());
-		Assert.assertEquals(0, firstFold.getStartOffset());
-		Assert.assertEquals(code.lastIndexOf('}'), firstFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
+		Assertions.assertEquals(0, firstFold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf('}'), firstFold.getEndOffset());
 
-		Assert.assertEquals(1, firstFold.getChildCount());
+		Assertions.assertEquals(1, firstFold.getChildCount());
 
 		Fold celebrityArrayFold = firstFold.getChild(0);
-		Assert.assertEquals(FoldType.CODE, celebrityArrayFold.getFoldType());
-		Assert.assertEquals(code.indexOf("["), celebrityArrayFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("]"), celebrityArrayFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, celebrityArrayFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("["), celebrityArrayFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("]"), celebrityArrayFold.getEndOffset());
 
-		Assert.assertEquals(2, celebrityArrayFold.getChildCount());
+		Assertions.assertEquals(2, celebrityArrayFold.getChildCount());
 
 		Fold clooneyFold = celebrityArrayFold.getChild(0);
-		Assert.assertEquals(FoldType.CODE, clooneyFold.getFoldType());
-		Assert.assertEquals(code.indexOf('{', code.indexOf('[')), clooneyFold.getStartOffset());
-		Assert.assertEquals(code.indexOf('}', code.indexOf("Clooney")), clooneyFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, clooneyFold.getFoldType());
+		Assertions.assertEquals(code.indexOf('{', code.indexOf('[')), clooneyFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf('}', code.indexOf("Clooney")), clooneyFold.getEndOffset());
 
 		Fold applegateFold = celebrityArrayFold.getChild(1);
-		Assert.assertEquals(FoldType.CODE, applegateFold.getFoldType());
-		Assert.assertEquals(code.indexOf('{', code.indexOf("Clooney")), applegateFold.getStartOffset());
-		Assert.assertEquals(code.indexOf('}', code.indexOf("Applegate")), applegateFold.getEndOffset());
+		Assertions.assertEquals(FoldType.CODE, applegateFold.getFoldType());
+		Assertions.assertEquals(code.indexOf('{', code.indexOf("Clooney")), applegateFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf('}', code.indexOf("Applegate")), applegateFold.getEndOffset());
 	}
 }

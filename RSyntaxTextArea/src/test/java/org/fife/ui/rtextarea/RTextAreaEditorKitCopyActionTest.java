@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -21,8 +21,8 @@ public class RTextAreaEditorKitCopyActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.CopyAction action = new RTextAreaEditorKit.CopyAction(
 			"copy", null, "Description", 0, null);
-		Assert.assertEquals("copy", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("copy", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -41,7 +41,7 @@ public class RTextAreaEditorKitCopyActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.copyAction,
+		Assertions.assertEquals(RTextAreaEditorKit.copyAction,
 			new RTextAreaEditorKit.CopyAction().getMacroID());
 	}
 }

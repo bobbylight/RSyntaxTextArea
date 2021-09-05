@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -19,7 +19,7 @@ public class RTextAreaEditorKitClipboardHistoryActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.clipboardHistoryAction,
+		Assertions.assertEquals(RTextAreaEditorKit.clipboardHistoryAction,
 			new RTextAreaEditorKit.ClipboardHistoryAction().getMacroID());
 	}
 }

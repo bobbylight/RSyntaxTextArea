@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -32,8 +32,8 @@ public class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyn
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent.indexOf("line 2"), textArea.getCaretPosition());
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(origContent.indexOf("line 2"), textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -47,8 +47,8 @@ public class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyn
 		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
 
 		// If the prev word starts on the prev line, just select the last word on the prev line
-		Assert.assertEquals(textArea.getText().indexOf('1'), textArea.getCaretPosition());
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(textArea.getText().indexOf('1'), textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -62,14 +62,14 @@ public class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyn
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", true).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent.indexOf("line 2"), textArea.getCaretPosition());
-		Assert.assertEquals("line ", textArea.getSelectedText());
+		Assertions.assertEquals(origContent.indexOf("line 2"), textArea.getCaretPosition());
+		Assertions.assertEquals("line ", textArea.getSelectedText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", true).getMacroID());
 	}
 }

@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
@@ -27,8 +27,8 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.IncreaseFontSizeAction action = new RTextAreaEditorKit.IncreaseFontSizeAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -41,7 +41,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.IncreaseFontSizeAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getFont().getSize() > origSize);
+		Assertions.assertTrue(textArea.getFont().getSize() > origSize);
 	}
 
 
@@ -57,7 +57,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 		RTextAreaEditorKit.IncreaseFontSizeAction action = new RTextAreaEditorKit.IncreaseFontSizeAction();
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(40, textArea.getFont().getSize());
+		Assertions.assertEquals(40, textArea.getFont().getSize());
 	}
 
 
@@ -71,13 +71,13 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.IncreaseFontSizeAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(textArea.getFont().getSize(), origFontSize);
+		Assertions.assertEquals(textArea.getFont().getSize(), origFontSize);
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaIncreaseFontSizeAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaIncreaseFontSizeAction,
 			new RTextAreaEditorKit.IncreaseFontSizeAction().getMacroID());
 	}
 }

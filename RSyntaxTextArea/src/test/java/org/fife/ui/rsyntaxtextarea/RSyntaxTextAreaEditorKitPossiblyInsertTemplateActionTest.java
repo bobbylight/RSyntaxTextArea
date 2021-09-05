@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,19 +20,19 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends AbstractRSyntaxTextAreaTest {
 
 	private static boolean origTemplatesEnabled;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origTemplatesEnabled = RSyntaxTextArea.getTemplatesEnabled();
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RSyntaxTextArea.setTemplatesEnabled(origTemplatesEnabled);
 	}
@@ -49,7 +49,7 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent, textArea.getText());
+		Assertions.assertEquals(origContent, textArea.getText());
 	}
 
 
@@ -63,7 +63,7 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent + " ", textArea.getText());
+		Assertions.assertEquals(origContent + " ", textArea.getText());
 	}
 
 
@@ -77,13 +77,13 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(origContent + " ", textArea.getText());
+		Assertions.assertEquals(origContent + " ", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction,
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction,
 			new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().getMacroID());
 	}
 }

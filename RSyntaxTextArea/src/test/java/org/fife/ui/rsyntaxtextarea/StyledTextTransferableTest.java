@@ -5,8 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.datatransfer.DataFlavor;
 
@@ -23,7 +23,7 @@ public class StyledTextTransferableTest {
 	public void testGetDataFlavors() {
 		byte[] rtfBytes = {};
 		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
-		Assert.assertEquals(4, t.getTransferDataFlavors().length);
+		Assertions.assertEquals(4, t.getTransferDataFlavors().length);
 	}
 
 
@@ -31,9 +31,9 @@ public class StyledTextTransferableTest {
 	public void testIsDataFlavorSupported_true() {
 		byte[] rtfBytes = {};
 		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
-		Assert.assertTrue(t.isDataFlavorSupported(DataFlavor.fragmentHtmlFlavor));
-		Assert.assertTrue(t.isDataFlavorSupported(new DataFlavor("text/rtf", "RTF")));
-		Assert.assertTrue(t.isDataFlavorSupported(DataFlavor.stringFlavor));
+		Assertions.assertTrue(t.isDataFlavorSupported(DataFlavor.fragmentHtmlFlavor));
+		Assertions.assertTrue(t.isDataFlavorSupported(new DataFlavor("text/rtf", "RTF")));
+		Assertions.assertTrue(t.isDataFlavorSupported(DataFlavor.stringFlavor));
 	}
 
 
@@ -41,6 +41,6 @@ public class StyledTextTransferableTest {
 	public void testIsDataFlavorSupported_false() {
 		byte[] rtfBytes = {};
 		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
-		Assert.assertFalse(t.isDataFlavorSupported(DataFlavor.imageFlavor));
+		Assertions.assertFalse(t.isDataFlavorSupported(DataFlavor.imageFlavor));
 	}
 }

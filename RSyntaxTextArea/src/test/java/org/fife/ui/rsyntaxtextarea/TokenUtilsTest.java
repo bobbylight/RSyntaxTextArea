@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.text.TabExpander;
 
@@ -16,19 +16,19 @@ public class TokenUtilsTest {
 
 	@Test
 	public void testIsBlankOrAllWhiteSpace_null() {
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(null));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(null));
 	}
 
 	@Test
 	public void testIsBlankOrAllWhiteSpace_nullToken() {
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(new TokenImpl()));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(new TokenImpl()));
 	}
 
 	@Test
 	public void testIsBlankOrAllWhiteSpace_internalNonPaintableTokenType() {
 		char[] chars = { 'a', 'b', 'c' };
 		Token t = new TokenImpl(chars, 0, 2, 0, -7, 0);
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class TokenUtilsTest {
 		char[] chars = { ' ' };
 		Token t = new TokenImpl(chars, 0, 0, 0,
 				TokenTypes.WHITESPACE, 0);
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class TokenUtilsTest {
 		char[] chars = "// This is a comment".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.COMMENT_EOL, 0);
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
 	}
 
 	@Test
@@ -58,24 +58,24 @@ public class TokenUtilsTest {
 		t.setNextToken(new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.RESERVED_WORD, 0));
 
-		Assert.assertFalse(TokenUtils.isBlankOrAllWhiteSpace(t));
+		Assertions.assertFalse(TokenUtils.isBlankOrAllWhiteSpace(t));
 	}
 
 	@Test
 	public void testIsBlankOrAllWhiteSpaceWithoutComments_null() {
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(null));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(null));
 	}
 
 	@Test
 	public void testIsBlankOrAllWhiteSpaceWithoutComments_nullToken() {
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(new TokenImpl()));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(new TokenImpl()));
 	}
 
 	@Test
 	public void testIsBlankOrAllWhiteSpaceWithoutComments_internalNonPaintableTokenType() {
 		char[] chars = { 'a', 'b', 'c' };
 		Token t = new TokenImpl(chars, 0, 2, 0, -7, 0);
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class TokenUtilsTest {
 		char[] chars = { ' ' };
 		Token t = new TokenImpl(chars, 0, 0, 0,
 			TokenTypes.WHITESPACE, 0);
-		Assert.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
+		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class TokenUtilsTest {
 		char[] chars = "// This is a comment".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.COMMENT_EOL, 0);
-		Assert.assertFalse(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
+		Assertions.assertFalse(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class TokenUtilsTest {
 		t.setNextToken(new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.RESERVED_WORD, 0));
 
-		Assert.assertFalse(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
+		Assertions.assertFalse(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
 	}
 
 	@Test
@@ -123,22 +123,22 @@ public class TokenUtilsTest {
 		// might vary between OS's
 
 		Token token = actual.tokenList;
-		Assert.assertEquals("blic", token.getLexeme());
+		Assertions.assertEquals("blic", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
-		Assert.assertEquals("class", token.getLexeme());
+		Assertions.assertEquals("class", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
-		Assert.assertEquals("Foobar", token.getLexeme());
+		Assertions.assertEquals("Foobar", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isLeftCurly());
+		Assertions.assertTrue(token.isLeftCurly());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isRightCurly());
-		Assert.assertEquals(TokenTypes.NULL, token.getNextToken().getType());
+		Assertions.assertTrue(token.isRightCurly());
+		Assertions.assertEquals(TokenTypes.NULL, token.getNextToken().getType());
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class TokenUtilsTest {
 		char[] chars = "      ".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(6, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
+		Assertions.assertEquals(6, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class TokenUtilsTest {
 		char[] chars = "  \t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(4, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
+		Assertions.assertEquals(4, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
 	}
 
 	@Test
@@ -165,7 +165,7 @@ public class TokenUtilsTest {
 		char[] chars = "\t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 2,
 			TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(2, TokenUtils.getWhiteSpaceTokenLength(t, 4, 2));
+		Assertions.assertEquals(2, TokenUtils.getWhiteSpaceTokenLength(t, 4, 2));
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class TokenUtilsTest {
 		char[] chars = "    \t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.WHITESPACE, 0);
-		Assert.assertEquals(8, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
+		Assertions.assertEquals(8, TokenUtils.getWhiteSpaceTokenLength(t, 4, 0));
 	}
 
 	@Test
@@ -187,7 +187,7 @@ public class TokenUtilsTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.RESERVED_WORD, 0);
 
 		String expected = "<span style=\"font-weight: bold;color: #0000ff;\">package</span>";
-		Assert.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
+		Assertions.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
 	}
 
 	@Test
@@ -200,7 +200,7 @@ public class TokenUtilsTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.COMMENT_EOL, 0);
 
 		String expected = "<span style=\"font-style: italic;color: #008000;\">&#47;&#47; comment</span>";
-		Assert.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
+		Assertions.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
 	}
 
 	@Test
@@ -213,6 +213,6 @@ public class TokenUtilsTest {
 		TokenImpl token = new TokenImpl(line, 0, line.length - 1, 0, TokenTypes.COMMENT_EOL, 0);
 
 		String expected = "<span style=\"font-style: italic;color: #008000;\">&lt;&amp;&gt;</span>";
-		Assert.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
+		Assertions.assertEquals(expected, TokenUtils.tokenToHtml(textArea, token));
 	}
 }

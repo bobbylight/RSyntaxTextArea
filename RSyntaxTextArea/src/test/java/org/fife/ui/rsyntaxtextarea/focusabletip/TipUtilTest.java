@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.RTextArea;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -21,12 +21,12 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class TipUtilTest {
 
 	@Test
 	public void getToolTipBackground_zeroArg() {
-		Assert.assertNotNull(TipUtil.getToolTipBackground());
+		Assertions.assertNotNull(TipUtil.getToolTipBackground());
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class TipUtilTest {
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.WHITE);
 
-		Assert.assertEquals(defaultTipBG, TipUtil.getToolTipBackground(textArea));
+		Assertions.assertEquals(defaultTipBG, TipUtil.getToolTipBackground(textArea));
 	}
 
 	/**
@@ -56,12 +56,12 @@ public class TipUtilTest {
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.RED);
 
-		Assert.assertEquals(Color.RED, TipUtil.getToolTipBackground(textArea));
+		Assertions.assertEquals(Color.RED, TipUtil.getToolTipBackground(textArea));
 	}
 
 	@Test
 	public void getToolTipBorder_zeroArg() {
-		Assert.assertNotNull(TipUtil.getToolTipBorder());
+		Assertions.assertNotNull(TipUtil.getToolTipBorder());
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class TipUtilTest {
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.WHITE);
 
-		Assert.assertNotNull(TipUtil.getToolTipBackground(textArea));
+		Assertions.assertNotNull(TipUtil.getToolTipBackground(textArea));
 	}
 
 	/**
@@ -90,9 +90,9 @@ public class TipUtilTest {
 		textArea.setBackground(Color.RED);
 
 		Border actual = TipUtil.getToolTipBorder(textArea);
-		Assert.assertTrue(actual instanceof LineBorder);
+		Assertions.assertTrue(actual instanceof LineBorder);
 		Border expected = BorderFactory.createLineBorder(Color.RED.brighter());
-		Assert.assertEquals(Color.RED.brighter(), ((LineBorder)actual).getLineColor());
+		Assertions.assertEquals(Color.RED.brighter(), ((LineBorder)actual).getLineColor());
 
 	}
 }

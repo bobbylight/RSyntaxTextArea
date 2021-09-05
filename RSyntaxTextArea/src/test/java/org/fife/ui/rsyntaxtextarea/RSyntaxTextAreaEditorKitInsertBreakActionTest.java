@@ -6,11 +6,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.RecordableTextAction;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -37,7 +37,7 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 		a.actionPerformedImpl(e, textArea);
 
 		String expectedResultContent = origContent + "\n\t\n}\n";
-		Assert.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 		a.actionPerformedImpl(e, textArea);
 
 		String expectedResultContent = "public void foo() {\n\n\t";
-		Assert.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
 	}
 
 	@Test
@@ -70,12 +70,12 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 		a.actionPerformedImpl(e, textArea);
 
 		String expectedResultContent = "public void foo() {\n\n}\n";
-		Assert.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.InsertBreakAction a = new RSyntaxTextAreaEditorKit.InsertBreakAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.insertBreakAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.insertBreakAction, a.getMacroID());
 	}
 }

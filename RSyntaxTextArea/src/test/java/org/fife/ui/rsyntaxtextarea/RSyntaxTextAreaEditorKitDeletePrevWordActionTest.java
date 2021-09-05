@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaEditorKitDeletePrevWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -43,12 +43,12 @@ public class RSyntaxTextAreaEditorKitDeletePrevWordActionTest extends AbstractRS
 
 		String expected = origText.replace("foo", "");
 		String actual = textArea.getText();
-		Assert.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.DeletePrevWordAction a = new RSyntaxTextAreaEditorKit.DeletePrevWordAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rtaDeletePrevWordAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rtaDeletePrevWordAction, a.getMacroID());
 	}
 }

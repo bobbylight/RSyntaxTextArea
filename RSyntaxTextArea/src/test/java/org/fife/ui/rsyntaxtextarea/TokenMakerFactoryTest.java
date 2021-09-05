@@ -5,10 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@code TokenMaker} class.
@@ -21,13 +21,13 @@ public class TokenMakerFactoryTest {
 	private TokenMakerFactory origTmf;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origTmf = TokenMakerFactory.getDefaultInstance();
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		TokenMakerFactory.setDefaultInstance(origTmf);
 	}
@@ -35,37 +35,37 @@ public class TokenMakerFactoryTest {
 
 	@Test
 	public void testGetDefaultInstance() {
-		Assert.assertNotNull(TokenMakerFactory.getDefaultInstance());
+		Assertions.assertNotNull(TokenMakerFactory.getDefaultInstance());
 	}
 
 
 	@Test
 	public void testGetTokenMaker_badKey() {
 		TokenMakerFactory tmf = TokenMakerFactory.getDefaultInstance();
-		Assert.assertNotNull(tmf.getTokenMaker("invalidKey"));
+		Assertions.assertNotNull(tmf.getTokenMaker("invalidKey"));
 	}
 
 
 	@Test
 	public void testKeySet() {
-		Assert.assertFalse(TokenMakerFactory.getDefaultInstance().keySet().isEmpty());
+		Assertions.assertFalse(TokenMakerFactory.getDefaultInstance().keySet().isEmpty());
 	}
 
 
 	@Test
 	public void testSetDefaultInstance() {
 
-		Assert.assertFalse(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
+		Assertions.assertFalse(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
 
 		TokenMakerFactory tmf = new TestTokenMakerFactory();
 		TokenMakerFactory.setDefaultInstance(tmf);
-		Assert.assertTrue(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
+		Assertions.assertTrue(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetDefaultInstance_passNull() {
-		TokenMakerFactory.setDefaultInstance(null);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> TokenMakerFactory.setDefaultInstance(null));
 	}
 
 

@@ -6,15 +6,15 @@ package org.fife.ui.rtextarea;
 
 
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import java.awt.datatransfer.StringSelection;
@@ -27,40 +27,42 @@ import java.awt.event.MouseEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testDeistall_rTextAreaRequired() {
-		new ConfigurableCaret().deinstall(new JTextArea());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			new ConfigurableCaret().deinstall(new JTextArea());
+		});
 	}
 
 
 	@Test
 	public void testGetSetPasteOnMiddleClick() {
 		ConfigurableCaret caret = new ConfigurableCaret();
-		Assert.assertTrue(caret.getPasteOnMiddleMouseClick());
+		Assertions.assertTrue(caret.getPasteOnMiddleMouseClick());
 		caret.setPasteOnMiddleMouseClick(false);
-		Assert.assertFalse(caret.getPasteOnMiddleMouseClick());
+		Assertions.assertFalse(caret.getPasteOnMiddleMouseClick());
 	}
 
 
 	@Test
 	public void testGetSetRoundedSelectionEdges() {
 		ConfigurableCaret caret = new ConfigurableCaret();
-		Assert.assertFalse(caret.getRoundedSelectionEdges());
+		Assertions.assertFalse(caret.getRoundedSelectionEdges());
 		caret.setRoundedSelectionEdges(true);
-		Assert.assertTrue(caret.getRoundedSelectionEdges());
+		Assertions.assertTrue(caret.getRoundedSelectionEdges());
 	}
 
 
 	@Test
 	public void testGetSetStyle() {
 		ConfigurableCaret caret = new ConfigurableCaret();
-		Assert.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
+		Assertions.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
 		caret.setStyle(CaretStyle.BLOCK_STYLE);
-		Assert.assertEquals(CaretStyle.BLOCK_STYLE, caret.getStyle());
+		Assertions.assertEquals(CaretStyle.BLOCK_STYLE, caret.getStyle());
 	}
 
 
@@ -68,7 +70,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 	public void testSetStyle_null() {
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.setStyle(null);
-		Assert.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
+		Assertions.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
 	}
 
 
@@ -76,18 +78,20 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetTextArea() {
 
 		ConfigurableCaret caret = new ConfigurableCaret();
-		Assert.assertNull(caret.getTextArea());
+		Assertions.assertNull(caret.getTextArea());
 
 		caret.install(new RTextArea());
-		Assert.assertNotNull(caret.getTextArea());
+		Assertions.assertNotNull(caret.getTextArea());
 
 		caret.deinstall(caret.getTextArea());
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInstall_rTextAreaRequired() {
-		new ConfigurableCaret().install(new JTextArea());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			new ConfigurableCaret().install(new JTextArea());
+		});
 	}
 
 
@@ -106,14 +110,14 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 	public void testIsSetAlwaysVisible() {
 
 		ConfigurableCaret caret = new ConfigurableCaret();
-		Assert.assertFalse(caret.isAlwaysVisible());
+		Assertions.assertFalse(caret.isAlwaysVisible());
 		caret.setAlwaysVisible(true);
-		Assert.assertTrue(caret.isAlwaysVisible());
+		Assertions.assertTrue(caret.isAlwaysVisible());
 	}
 
 
 	@Test
-	@Ignore("This test doesn't work in CI as the system clipboard will be blank")
+	@Disabled("This test doesn't work in CI as the system clipboard will be blank")
 	public void testMouseClicked_pasteOnMiddleMouseDown() {
 
 		RTextArea textArea = new RTextArea();
@@ -129,7 +133,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		caret.mouseClicked(e);
 
 		// Clipboard contents should be inserted into the document
-		Assert.assertEquals("foo", textArea.getText());
+		Assertions.assertEquals("foo", textArea.getText());
 	}
 
 
@@ -152,7 +156,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		caret.mouseClicked(e);
 
 		// The word at the x, y coordinates was selected
-		Assert.assertEquals("foo", textArea.getSelectedText());
+		Assertions.assertEquals("foo", textArea.getSelectedText());
 	}
 
 
@@ -170,7 +174,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		caret.mouseClicked(e);
 
 		// The entire line was selected
-		Assert.assertEquals("foo bar", textArea.getSelectedText());
+		Assertions.assertEquals("foo bar", textArea.getSelectedText());
 	}
 
 
@@ -225,7 +229,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		// Caret actually gets placed at offset 5, which is just after the
 		// opening curly of the closed fold that contains the target offset
 		// of 10.
-		Assert.assertEquals(5, caret.getDot());
+		Assertions.assertEquals(5, caret.getDot());
 	}
 
 
@@ -256,6 +260,6 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 		// Caret actually gets placed at offset 28, the start of the
 		// line *after* the last one in the collapsed fold.
-		Assert.assertEquals(28, caret.getDot());
+		Assertions.assertEquals(28, caret.getDot());
 	}
 }

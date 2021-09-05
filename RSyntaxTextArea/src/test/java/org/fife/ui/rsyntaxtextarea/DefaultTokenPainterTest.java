@@ -5,9 +5,9 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
-import org.fife.ui.SwingRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.TabExpander;
 import java.awt.*;
@@ -18,7 +18,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class DefaultTokenPainterTest extends AbstractRSyntaxTextAreaTest {
 
 

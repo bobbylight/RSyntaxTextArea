@@ -10,8 +10,8 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -27,8 +27,8 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = new MxmlTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("<!--", startAndEnd[0]);
-		Assert.assertEquals("-->", startAndEnd[1]);
+		Assertions.assertEquals("<!--", startAndEnd[0]);
+		Assertions.assertEquals("-->", startAndEnd[1]);
 	}
 
 
@@ -43,7 +43,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
 
 	}
@@ -57,15 +57,14 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		MxmlTokenMaker tm = new MxmlTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue("Token is not type MARKUP_COMMENT: " + token,
-				token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "), "Bad MARKUP_COMMENT: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
 
 	}
 
@@ -83,7 +82,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
 		}
 
 	}
@@ -100,7 +99,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
 		}
 
 	}
@@ -114,27 +113,27 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		MxmlTokenMaker tm = new MxmlTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "onload"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue("Unexpected token: " + token, token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""), "Unexpected token: " + token);
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "data-extra"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "'true'"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 
 	}
 
@@ -152,7 +151,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			MxmlTokenMaker tm = new MxmlTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
+			Assertions.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
 		}
 
 	}

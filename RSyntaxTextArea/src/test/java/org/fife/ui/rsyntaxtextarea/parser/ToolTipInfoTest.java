@@ -12,9 +12,9 @@ import java.net.URL;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -28,7 +28,7 @@ public class ToolTipInfoTest {
 	private MockHyperlinkListener mhl;
 	private URL imageBase;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws MalformedURLException {
 		mhl = new MockHyperlinkListener();
 		imageBase = new URL("file:///localhost/images");
@@ -38,39 +38,39 @@ public class ToolTipInfoTest {
 	@Test
 	public void testTwoArgConstructor() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
-		Assert.assertEquals("text", tti.getToolTipText());
-		Assert.assertEquals(mhl, tti.getHyperlinkListener());
-		Assert.assertNull(tti.getImageBase());
+		Assertions.assertEquals("text", tti.getToolTipText());
+		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
+		Assertions.assertNull(tti.getImageBase());
 	}
 
 
 	@Test
 	public void testThreeArgConstructor() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
-		Assert.assertEquals("text", tti.getToolTipText());
-		Assert.assertEquals(mhl, tti.getHyperlinkListener());
-		Assert.assertEquals(imageBase, tti.getImageBase());
+		Assertions.assertEquals("text", tti.getToolTipText());
+		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
+		Assertions.assertEquals(imageBase, tti.getImageBase());
 	}
 
 
 	@Test
 	public void testGetHyperlinkListener() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
-		Assert.assertEquals(mhl, tti.getHyperlinkListener());
+		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
 	}
 
 
 	@Test
 	public void testGetImageBase() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
-		Assert.assertEquals(imageBase, tti.getImageBase());
+		Assertions.assertEquals(imageBase, tti.getImageBase());
 	}
 
 
 	@Test
 	public void testGetToolTipText() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
-		Assert.assertEquals("text", tti.getToolTipText());
+		Assertions.assertEquals("text", tti.getToolTipText());
 	}
 
 

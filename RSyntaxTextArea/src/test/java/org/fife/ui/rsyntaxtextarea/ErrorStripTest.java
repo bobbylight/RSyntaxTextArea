@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -21,14 +21,14 @@ import java.awt.event.MouseEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 	private RSyntaxTextArea textArea;
 	private ErrorStrip strip;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		textArea = createTextArea();
@@ -57,54 +57,54 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	public void testGetSetCaretMarkerColor() {
-		Assert.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
+		Assertions.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
 		strip.setCaretMarkerColor(Color.RED);
-		Assert.assertEquals(Color.RED, strip.getCaretMarkerColor());
+		Assertions.assertEquals(Color.RED, strip.getCaretMarkerColor());
 	}
 
 
 	@Test
 	public void testGetSetFollowCaret() {
-		Assert.assertTrue(strip.getFollowCaret());
+		Assertions.assertTrue(strip.getFollowCaret());
 		strip.setFollowCaret(false);
-		Assert.assertFalse(strip.getFollowCaret());
+		Assertions.assertFalse(strip.getFollowCaret());
 	}
 
 
 	@Test
 	public void testGetSetLevelThreshold() {
-		Assert.assertEquals(ParserNotice.Level.WARNING, strip.getLevelThreshold());
+		Assertions.assertEquals(ParserNotice.Level.WARNING, strip.getLevelThreshold());
 		strip.setLevelThreshold(ParserNotice.Level.INFO);
-		Assert.assertEquals(ParserNotice.Level.INFO, strip.getLevelThreshold());
+		Assertions.assertEquals(ParserNotice.Level.INFO, strip.getLevelThreshold());
 	}
 
 
 	@Test
 	public void testGetSetShowMarkAll() {
-		Assert.assertTrue(strip.getShowMarkAll());
+		Assertions.assertTrue(strip.getShowMarkAll());
 		strip.setShowMarkAll(false);
-		Assert.assertFalse(strip.getShowMarkAll());
+		Assertions.assertFalse(strip.getShowMarkAll());
 	}
 
 
 	@Test
 	public void testGetSetShowMarkedOccurrences() {
-		Assert.assertTrue(strip.getShowMarkedOccurrences());
+		Assertions.assertTrue(strip.getShowMarkedOccurrences());
 		strip.setShowMarkedOccurrences(false);
-		Assert.assertFalse(strip.getShowMarkedOccurrences());
+		Assertions.assertFalse(strip.getShowMarkedOccurrences());
 	}
 
 
 	@Test
 	public void testGetPreferredSize() {
-		Assert.assertNotNull(strip.getPreferredSize());
+		Assertions.assertNotNull(strip.getPreferredSize());
 	}
 
 
 	@Test
 	public void testGetToolTipText() {
 		MouseEvent e = new MouseEvent(strip, 0, 0, 0, 1, 1, 1, false);
-		Assert.assertEquals("Line: 1", strip.getToolTipText(e));
+		Assertions.assertEquals("Line: 1", strip.getToolTipText(e));
 	}
 
 

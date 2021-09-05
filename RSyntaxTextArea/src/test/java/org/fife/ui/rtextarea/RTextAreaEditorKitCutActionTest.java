@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -21,8 +21,8 @@ public class RTextAreaEditorKitCutActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.CutAction action = new RTextAreaEditorKit.CutAction(
 			"cut", null, "Description", 0, null);
-		Assert.assertEquals("cut", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("cut", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -41,7 +41,7 @@ public class RTextAreaEditorKitCutActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.cutAction,
+		Assertions.assertEquals(RTextAreaEditorKit.cutAction,
 			new RTextAreaEditorKit.CutAction().getMacroID());
 	}
 }

@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitRedoActionTest {
 
 
@@ -26,8 +26,8 @@ public class RTextAreaEditorKitRedoActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.RedoAction action = new RTextAreaEditorKit.RedoAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -41,15 +41,15 @@ public class RTextAreaEditorKitRedoActionTest {
 		new RTextAreaEditorKit.UndoAction().actionPerformedImpl(e, textArea);
 		new RTextAreaEditorKit.RedoAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("foo", textArea.getText());
-		Assert.assertTrue(textArea.canUndo());
-		Assert.assertFalse(textArea.canRedo());
+		Assertions.assertEquals("foo", textArea.getText());
+		Assertions.assertTrue(textArea.canUndo());
+		Assertions.assertFalse(textArea.canRedo());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaRedoAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaRedoAction,
 			new RTextAreaEditorKit.RedoAction().getMacroID());
 	}
 }

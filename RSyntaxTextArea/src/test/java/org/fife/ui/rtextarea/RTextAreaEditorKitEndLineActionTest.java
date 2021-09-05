@@ -5,9 +5,9 @@
 package org.fife.ui.rtextarea;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -20,13 +20,13 @@ public class RTextAreaEditorKitEndLineActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	@Ignore("Need a displayable text area")
+	@Disabled("Need a displayable text area")
 	public void testActionPerformedImpl_noSelect_lineWrap() {
 	}
 
 
 	@Test
-	@Ignore("Need a displayable text area")
+	@Disabled("Need a displayable text area")
 	public void testActionPerformedImpl_select_lineWrap() {
 	}
 
@@ -40,8 +40,8 @@ public class RTextAreaEditorKitEndLineActionTest extends AbstractRTextAreaTest {
 		RTextAreaEditorKit.EndLineAction action = new RTextAreaEditorKit.EndLineAction("endLine", false);
 
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals("Hello world".length(), textArea.getSelectionStart());
-		Assert.assertEquals("Hello world".length(), textArea.getSelectionEnd());
+		Assertions.assertEquals("Hello world".length(), textArea.getSelectionStart());
+		Assertions.assertEquals("Hello world".length(), textArea.getSelectionEnd());
 	}
 
 
@@ -54,8 +54,8 @@ public class RTextAreaEditorKitEndLineActionTest extends AbstractRTextAreaTest {
 		RTextAreaEditorKit.EndLineAction action = new RTextAreaEditorKit.EndLineAction("endLine", true);
 
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(2, textArea.getSelectionStart());
-		Assert.assertEquals("Hello world".length(), textArea.getSelectionEnd());
+		Assertions.assertEquals(2, textArea.getSelectionStart());
+		Assertions.assertEquals("Hello world".length(), textArea.getSelectionEnd());
 	}
 
 
@@ -67,13 +67,13 @@ public class RTextAreaEditorKitEndLineActionTest extends AbstractRTextAreaTest {
 		RTextAreaEditorKit.EndLineAction action = new RTextAreaEditorKit.EndLineAction("endLine", true);
 
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(0, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(0, textArea.getSelectionEnd());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("end", new RTextAreaEditorKit.EndLineAction("end", false).getMacroID());
+		Assertions.assertEquals("end", new RTextAreaEditorKit.EndLineAction("end", false).getMacroID());
 	}
 }

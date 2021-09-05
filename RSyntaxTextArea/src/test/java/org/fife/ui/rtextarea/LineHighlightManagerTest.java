@@ -10,9 +10,9 @@ import java.awt.Color;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,7 +25,7 @@ public class LineHighlightManagerTest {
 
 	private LineHighlightManager lhm;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		RTextArea textArea = new RTextArea("0123456789\n0123456789\n0123456789");
 		lhm = new LineHighlightManager(textArea);
@@ -35,13 +35,13 @@ public class LineHighlightManagerTest {
 	@Test
 	public void testAddLineHighlight_happyPath() throws BadLocationException {
 
-		Assert.assertEquals(0, lhm.getLineHighlightCount());
+		Assertions.assertEquals(0, lhm.getLineHighlightCount());
 
 		lhm.addLineHighlight(1, Color.BLUE);
-		Assert.assertEquals(1, lhm.getLineHighlightCount());
+		Assertions.assertEquals(1, lhm.getLineHighlightCount());
 
 		lhm.addLineHighlight(2, Color.BLUE);
-		Assert.assertEquals(2, lhm.getLineHighlightCount());
+		Assertions.assertEquals(2, lhm.getLineHighlightCount());
 	}
 
 
@@ -49,13 +49,13 @@ public class LineHighlightManagerTest {
 	public void testAddLineHighlight_twoOnSameLine()
 			throws BadLocationException {
 
-		Assert.assertEquals(0, lhm.getLineHighlightCount());
+		Assertions.assertEquals(0, lhm.getLineHighlightCount());
 
 		lhm.addLineHighlight(1, Color.BLUE);
-		Assert.assertEquals(1, lhm.getLineHighlightCount());
+		Assertions.assertEquals(1, lhm.getLineHighlightCount());
 
 		lhm.addLineHighlight(1, Color.RED);
-		Assert.assertEquals(2, lhm.getLineHighlightCount());
+		Assertions.assertEquals(2, lhm.getLineHighlightCount());
 	}
 
 
@@ -65,14 +65,14 @@ public class LineHighlightManagerTest {
 
 		Object tag1 = lhm.addLineHighlight(1, Color.BLUE);
 		Object tag2 = lhm.addLineHighlight(1, Color.RED);
-		Assert.assertEquals(2, lhm.getLineHighlightCount());
+		Assertions.assertEquals(2, lhm.getLineHighlightCount());
 
 		// We're testing a bug here with LineHighlightInfo's equals() method,
 		// so we use a foolproof method of telling the two tags apart.
 		lhm.removeLineHighlight(tag1);
 		List<Object> remainingTags = lhm.getCurrentLineHighlightTags();
-		Assert.assertEquals(1, remainingTags.size());
-		Assert.assertSame(tag2, remainingTags.get(0));
+		Assertions.assertEquals(1, remainingTags.size());
+		Assertions.assertSame(tag2, remainingTags.get(0));
 	}
 
 
@@ -82,28 +82,28 @@ public class LineHighlightManagerTest {
 
 		Object tag1 = lhm.addLineHighlight(1, Color.BLUE);
 		Object tag2 = lhm.addLineHighlight(2, Color.BLUE);
-		Assert.assertEquals(2, lhm.getLineHighlightCount());
+		Assertions.assertEquals(2, lhm.getLineHighlightCount());
 
 		// We're testing a bug here with LineHighlightInfo's equals() method,
 		// so we use a foolproof method of telling the two tags apart.
 		lhm.removeLineHighlight(tag2);
 		List<Object> remainingTags = lhm.getCurrentLineHighlightTags();
-		Assert.assertEquals(1, remainingTags.size());
-		Assert.assertSame(tag1, remainingTags.get(0));
+		Assertions.assertEquals(1, remainingTags.size());
+		Assertions.assertSame(tag1, remainingTags.get(0));
 	}
 
 
 	@Test
 	public void testGetCurrentLineHighlightTags() throws BadLocationException {
 
-		Assert.assertEquals(0, lhm.getCurrentLineHighlightTags().size());
+		Assertions.assertEquals(0, lhm.getCurrentLineHighlightTags().size());
 
 		Object tag1 = lhm.addLineHighlight(0, Color.RED);
 		Object tag2 = lhm.addLineHighlight(2, Color.BLUE);
 		List<Object> actualTags = lhm.getCurrentLineHighlightTags();
-		Assert.assertEquals(2, actualTags.size());
-		Assert.assertEquals(tag1, actualTags.get(0));
-		Assert.assertEquals(tag2, actualTags.get(1));
+		Assertions.assertEquals(2, actualTags.size());
+		Assertions.assertEquals(tag1, actualTags.get(0));
+		Assertions.assertEquals(tag2, actualTags.get(1));
 	}
 
 
@@ -111,8 +111,8 @@ public class LineHighlightManagerTest {
 	public void testRemoveAllHighlights() throws BadLocationException {
 		lhm.addLineHighlight(1, Color.BLUE);
 		lhm.addLineHighlight(1, Color.RED);
-		Assert.assertEquals(2, lhm.getLineHighlightCount());
+		Assertions.assertEquals(2, lhm.getLineHighlightCount());
 		lhm.removeAllLineHighlights();
-		Assert.assertEquals(0, lhm.getLineHighlightCount());
+		Assertions.assertEquals(0, lhm.getLineHighlightCount());
 	}
 }

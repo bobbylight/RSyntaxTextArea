@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,13 +20,13 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTextAreaTest {
 
 	private RTextArea textArea;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		textArea = new RTextArea("one two one two\none two");
@@ -46,7 +46,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.EAST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(7, textArea.getCaret().getDot());
+		Assertions.assertEquals(7, textArea.getCaret().getDot());
 	}
 
 
@@ -59,7 +59,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.NORTH).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(0, textArea.getCaret().getDot());
+		Assertions.assertEquals(0, textArea.getCaret().getDot());
 	}
 
 
@@ -72,7 +72,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.SOUTH).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(16, textArea.getCaret().getDot());
+		Assertions.assertEquals(16, textArea.getCaret().getDot());
 	}
 
 
@@ -85,7 +85,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.WEST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(5, textArea.getCaretPosition());
+		Assertions.assertEquals(5, textArea.getCaretPosition());
 	}
 
 
@@ -98,9 +98,9 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", true, SwingConstants.EAST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(6, textArea.getSelectionStart());
-		Assert.assertEquals(7, textArea.getSelectionEnd());
-		Assert.assertEquals(7, textArea.getCaretPosition());
+		Assertions.assertEquals(6, textArea.getSelectionStart());
+		Assertions.assertEquals(7, textArea.getSelectionEnd());
+		Assertions.assertEquals(7, textArea.getCaretPosition());
 	}
 
 
@@ -113,9 +113,9 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", true, SwingConstants.WEST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(5, textArea.getSelectionStart());
-		Assert.assertEquals(6, textArea.getSelectionEnd());
-		Assert.assertEquals(5, textArea.getCaretPosition());
+		Assertions.assertEquals(5, textArea.getSelectionStart());
+		Assertions.assertEquals(6, textArea.getSelectionEnd());
+		Assertions.assertEquals(5, textArea.getCaretPosition());
 	}
 
 
@@ -130,8 +130,8 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 		// Selection removed, caret at end of prior selection
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.EAST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(6, textArea.getSelectionStart());
-		Assert.assertEquals(6, textArea.getSelectionEnd());
+		Assertions.assertEquals(6, textArea.getSelectionStart());
+		Assertions.assertEquals(6, textArea.getSelectionEnd());
 	}
 
 
@@ -146,14 +146,14 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 		// Selection removed, caret at start of prior selection
 		new RTextAreaEditorKit.NextVisualPositionAction("foo", false, SwingConstants.WEST).
 			actionPerformedImpl(e, textArea);
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(3, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(3, textArea.getSelectionEnd());
 	}
 
 
 	@Test
 	public void testGetMacroId() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.NextVisualPositionAction("foo", false,
 				SwingConstants.EAST).getMacroID());
 	}

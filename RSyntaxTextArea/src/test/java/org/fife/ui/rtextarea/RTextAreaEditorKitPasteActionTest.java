@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 
@@ -29,8 +29,8 @@ public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.PasteAction action = new RTextAreaEditorKit.PasteAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -44,13 +44,13 @@ public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "foo");
 		new RTextAreaEditorKit.PasteAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("foo", textArea.getText());
+		Assertions.assertEquals("foo", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(DefaultEditorKit.pasteAction,
+		Assertions.assertEquals(DefaultEditorKit.pasteAction,
 			new RTextAreaEditorKit.PasteAction().getMacroID());
 	}
 }

@@ -11,8 +11,8 @@ import javax.swing.text.DefaultEditorKit;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.EndWordAction;
 import org.fife.ui.rtextarea.RTextArea;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -48,20 +48,20 @@ public class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTe
 		for (int i = 0; i < "This".length(); i++) {
 			textArea.setCaretPosition(i);
 			action.actionPerformed(createActionEvent(textArea));
-			Assert.assertEquals("This".length(), textArea.getCaretPosition());
+			Assertions.assertEquals("This".length(), textArea.getCaretPosition());
 		}
 
 		textArea.setCaretPosition("This".length());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("This ".length(), textArea.getCaretPosition());
+		Assertions.assertEquals("This ".length(), textArea.getCaretPosition());
 
 		textArea.setCaretPosition("This ".length());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals("This is".length(), textArea.getCaretPosition());
+		Assertions.assertEquals("This is".length(), textArea.getCaretPosition());
 
 		textArea.setCaretPosition(TEXT.length());
 		action.actionPerformed(createActionEvent(textArea));
-		Assert.assertEquals(TEXT.length(), textArea.getCaretPosition());
+		Assertions.assertEquals(TEXT.length(), textArea.getCaretPosition());
 
 	}
 

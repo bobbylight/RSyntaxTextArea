@@ -5,12 +5,12 @@
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -23,7 +23,7 @@ import java.net.URL;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -33,10 +33,10 @@ public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new FocusableTip(textArea, null);
 
-		Assert.assertNull(tip.getImageBase());
+		Assertions.assertNull(tip.getImageBase());
 		URL url = new URL("https://www.google.com");
 		tip.setImageBase(url);
-		Assert.assertEquals(url, tip.getImageBase());
+		Assertions.assertEquals(url, tip.getImageBase());
 	}
 
 
@@ -46,10 +46,10 @@ public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new FocusableTip(textArea, null);
 
-		Assert.assertNull(tip.getMaxSize());
+		Assertions.assertNull(tip.getMaxSize());
 		Dimension maxSize = new Dimension(50, 50);
 		tip.setMaxSize(maxSize);
-		Assert.assertEquals(maxSize, tip.getMaxSize());
+		Assertions.assertEquals(maxSize, tip.getMaxSize());
 	}
 
 

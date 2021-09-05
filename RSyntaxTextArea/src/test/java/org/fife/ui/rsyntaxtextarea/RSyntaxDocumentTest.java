@@ -15,8 +15,8 @@ import org.fife.ui.rsyntaxtextarea.modes.CTokenMaker;
 import org.fife.ui.rsyntaxtextarea.modes.HTMLTokenMaker;
 import org.fife.ui.rsyntaxtextarea.modes.JavaScriptTokenMaker;
 import org.fife.ui.rsyntaxtextarea.modes.XMLTokenMaker;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -54,7 +54,7 @@ public class RSyntaxDocumentTest {
 	public void test1ArgConstructor() {
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
 		doc = new RSyntaxDocument(syntaxStyle);
-		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		//Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 	}
 
 
@@ -65,7 +65,7 @@ public class RSyntaxDocumentTest {
 
 		// Standard case, taking default TokenMakerFactory
 		doc = new RSyntaxDocument(null, syntaxStyle);
-		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		//Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		// Taking a custom TokenMakerFactory
 		TokenMakerFactory customTmf = new AbstractTokenMakerFactory() {
@@ -75,7 +75,7 @@ public class RSyntaxDocumentTest {
 			}
 		};
 		doc = new RSyntaxDocument(customTmf, syntaxStyle);
-		//Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		//Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 	}
 
@@ -94,7 +94,7 @@ public class RSyntaxDocumentTest {
 		int offs = 0;
 		String text = "package org.fife;";
 		doc.insertString(offs, text, null);
-		Assert.assertEquals(2, l.events.size());
+		Assertions.assertEquals(2, l.events.size());
 		DocumentEvent e = l.events.get(0);
 		// offset and length == start and end lines AFTER insert with new EOL tokens
 		assertDocumentEvent(e, DocumentEvent.EventType.CHANGE, 0, 0);
@@ -119,7 +119,7 @@ public class RSyntaxDocumentTest {
 		int oldLen = doc.getLength();
 		String text = "// Inserted line 1\nprintf(\"This is working\n\");";
 		doc.insertString(oldLen - 4, text, null);
-		Assert.assertEquals(2, l.events.size());
+		Assertions.assertEquals(2, l.events.size());
 		DocumentEvent e = l.events.get(0);
 		// offset and length == start and end lines AFTER insert with new EOL tokens
 		// In this case a new line was "added" by this change.
@@ -147,7 +147,7 @@ public class RSyntaxDocumentTest {
 
 		// Four events sent - One change/remove pair and one change/insert
 		// pair.  Remove is the one line replaced.
-		Assert.assertEquals(4, l.events.size());
+		Assertions.assertEquals(4, l.events.size());
 
 		DocumentEvent e = l.events.get(0);
 		// offset and length == start and end lines AFTER remove with new EOL
@@ -180,7 +180,7 @@ public class RSyntaxDocumentTest {
 		doc.replace(52, 3, null, null); // Replace "main" with "m"
 
 		// Two events sent - A change/remove pair.
-		Assert.assertEquals(2, l.events.size());
+		Assertions.assertEquals(2, l.events.size());
 
 		DocumentEvent e = l.events.get(0);
 		// offset and length == start and end lines AFTER remove with new EOL
@@ -202,7 +202,7 @@ public class RSyntaxDocumentTest {
 		for (int i=0; i<TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			int expected = tokenMaker.getClosestStandardTokenTypeForInternalType(i);
 			int actual = doc.getClosestStandardTokenTypeForInternalType(i);
-			Assert.assertEquals(expected, actual);
+			Assertions.assertEquals(expected, actual);
 		}
 
 	}
@@ -214,17 +214,17 @@ public class RSyntaxDocumentTest {
 		// Non-markup language
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertFalse(doc.getCompleteMarkupCloseTags());
+		Assertions.assertFalse(doc.getCompleteMarkupCloseTags());
 
 		// Markup language defaulting to false
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_PHP;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertFalse(doc.getCompleteMarkupCloseTags());
+		Assertions.assertFalse(doc.getCompleteMarkupCloseTags());
 
 		// Markup language defaulting to true
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertTrue(doc.getCompleteMarkupCloseTags());
+		Assertions.assertTrue(doc.getCompleteMarkupCloseTags());
 
 	}
 
@@ -236,30 +236,30 @@ public class RSyntaxDocumentTest {
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
 		TokenMaker tokenMaker = new CTokenMaker();
-		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
+		Assertions.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
 				doc.getCurlyBracesDenoteCodeBlocks(0));
 
 		// Language that does not use curly braces
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
 		tokenMaker = new XMLTokenMaker();
-		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
+		Assertions.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
 				doc.getCurlyBracesDenoteCodeBlocks(0));
 
 		// Language in which some sub-languages do, some don't
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_HTML;
 		doc.setSyntaxStyle(syntaxStyle);
 		tokenMaker = new HTMLTokenMaker();
-		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
+		Assertions.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(0),
 				doc.getCurlyBracesDenoteCodeBlocks(0));
-		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(1),
+		Assertions.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(1),
 				doc.getCurlyBracesDenoteCodeBlocks(1));
-		Assert.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(2),
+		Assertions.assertEquals(tokenMaker.getCurlyBracesDenoteCodeBlocks(2),
 				doc.getCurlyBracesDenoteCodeBlocks(2));
 		// Sanity
-		Assert.assertFalse(tokenMaker.getCurlyBracesDenoteCodeBlocks(0));
-		Assert.assertTrue(tokenMaker.getCurlyBracesDenoteCodeBlocks(1));
-		Assert.assertTrue(tokenMaker.getCurlyBracesDenoteCodeBlocks(2));
+		Assertions.assertFalse(tokenMaker.getCurlyBracesDenoteCodeBlocks(0));
+		Assertions.assertTrue(tokenMaker.getCurlyBracesDenoteCodeBlocks(1));
+		Assertions.assertTrue(tokenMaker.getCurlyBracesDenoteCodeBlocks(2));
 
 	}
 
@@ -269,12 +269,12 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertFalse(doc.getLanguageIsMarkup());
+		Assertions.assertFalse(doc.getLanguageIsMarkup());
 
 		// Language that does not use curly braces
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertTrue(doc.getLanguageIsMarkup());
+		Assertions.assertTrue(doc.getLanguageIsMarkup());
 
 	}
 
@@ -286,22 +286,24 @@ public class RSyntaxDocumentTest {
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
-		Assert.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(0));
-		Assert.assertEquals(TokenTypes.COMMENT_MULTILINE, doc.getLastTokenTypeOnLine(1));
-		Assert.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(2));
+		Assertions.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(0));
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, doc.getLastTokenTypeOnLine(1));
+		Assertions.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(2));
 
 	}
 
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void testGetLastTokenTypeOnLine_InvalidIndex() throws Exception {
+	@Test
+	public void testGetLastTokenTypeOnLine_InvalidIndex() {
 
-		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
-		doc = new RSyntaxDocument(syntaxStyle);
-		insertHelloWorldC(doc);
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
 
-		Assert.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(1000));
+			String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
+			doc = new RSyntaxDocument(syntaxStyle);
+			insertHelloWorldC(doc);
 
+			Assertions.assertEquals(TokenTypes.NULL, doc.getLastTokenTypeOnLine(1000));
+		});
 	}
 
 
@@ -311,17 +313,17 @@ public class RSyntaxDocumentTest {
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
 		String[] actual = doc.getLineCommentStartAndEnd(0);
-		Assert.assertEquals(2, actual.length);
-		Assert.assertEquals("//", actual[0]);
-		Assert.assertNull(actual[1]);
+		Assertions.assertEquals(2, actual.length);
+		Assertions.assertEquals("//", actual[0]);
+		Assertions.assertNull(actual[1]);
 
 		// Language that does not use curly braces
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
 		actual = doc.getLineCommentStartAndEnd(0);
-		Assert.assertEquals(2, actual.length);
-		Assert.assertEquals("<!--", actual[0]);
-		Assert.assertEquals("-->", actual[1]);
+		Assertions.assertEquals(2, actual.length);
+		Assertions.assertEquals("<!--", actual[0]);
+		Assertions.assertEquals("-->", actual[1]);
 
 	}
 
@@ -331,8 +333,8 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertTrue(doc.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
-		Assert.assertFalse(doc.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
+		Assertions.assertTrue(doc.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
+		Assertions.assertFalse(doc.getMarkOccurrencesOfTokenType(TokenTypes.COMMENT_EOL));
 
 	}
 
@@ -342,7 +344,7 @@ public class RSyntaxDocumentTest {
 		// Not really much we can test here
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertNotNull(doc.getOccurrenceMarker());
+		Assertions.assertNotNull(doc.getOccurrenceMarker());
 	}
 
 
@@ -353,11 +355,11 @@ public class RSyntaxDocumentTest {
 		doc = new RSyntaxDocument(syntaxStyle);
 		insertHelloWorldC(doc);
 
-		Assert.assertFalse(doc.getShouldIndentNextLine(0));
-		Assert.assertFalse(doc.getShouldIndentNextLine(1));
-		Assert.assertFalse(doc.getShouldIndentNextLine(2));
-		Assert.assertFalse(doc.getShouldIndentNextLine(3));
-		Assert.assertTrue(doc.getShouldIndentNextLine(4));
+		Assertions.assertFalse(doc.getShouldIndentNextLine(0));
+		Assertions.assertFalse(doc.getShouldIndentNextLine(1));
+		Assertions.assertFalse(doc.getShouldIndentNextLine(2));
+		Assertions.assertFalse(doc.getShouldIndentNextLine(3));
+		Assertions.assertTrue(doc.getShouldIndentNextLine(4));
 
 	}
 
@@ -367,15 +369,15 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		syntaxStyle = "text/custom";
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 	}
 
@@ -389,21 +391,21 @@ public class RSyntaxDocumentTest {
 
 		// #include <stdio.h>
 		Token t = doc.getTokenListForLine(0);
-		Assert.assertTrue(t.is(TokenTypes.PREPROCESSOR, "#include"));
+		Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "#include"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '<'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '<'));
 		t = t.getNextToken();
-		Assert.assertTrue(t.is(TokenTypes.IDENTIFIER, "stdio"));
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "stdio"));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '.'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '.'));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.IDENTIFIER, 'h'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.IDENTIFIER, 'h'));
 		t = t.getNextToken();
-		Assert.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '>'));
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '>'));
 		t = t.getNextToken();
-		Assert.assertEquals(new TokenImpl(), t); // Null token
+		Assertions.assertEquals(new TokenImpl(), t); // Null token
 
 	}
 
@@ -413,12 +415,12 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertTrue(doc.insertBreakSpecialHandling(null));
+		Assertions.assertTrue(doc.insertBreakSpecialHandling(null));
 
 		// Language that does not use curly braces
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertFalse(doc.insertBreakSpecialHandling(null));
+		Assertions.assertFalse(doc.insertBreakSpecialHandling(null));
 
 	}
 
@@ -428,8 +430,8 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertTrue(doc.isIdentifierChar(0, 'a'));
-		Assert.assertFalse(doc.isIdentifierChar(0, '%'));
+		Assertions.assertTrue(doc.isIdentifierChar(0, 'a'));
+		Assertions.assertFalse(doc.isIdentifierChar(0, '%'));
 
 	}
 
@@ -439,7 +441,7 @@ public class RSyntaxDocumentTest {
 		// Not much to test here
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertNotNull(doc.iterator());
+		Assertions.assertNotNull(doc.iterator());
 	}
 
 
@@ -448,15 +450,15 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		syntaxStyle = SyntaxConstants.SYNTAX_STYLE_XML;
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		syntaxStyle = "text/custom";
 		doc.setSyntaxStyle(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 	}
 
@@ -466,11 +468,11 @@ public class RSyntaxDocumentTest {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
-		Assert.assertEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
 
 		TokenMaker tokenMaker = new HTMLTokenMaker();
 		doc.setSyntaxStyle(tokenMaker);
-		Assert.assertNotEquals(syntaxStyle, doc.getSyntaxStyle());
+		Assertions.assertNotEquals(syntaxStyle, doc.getSyntaxStyle());
 
 	}
 
@@ -483,18 +485,18 @@ public class RSyntaxDocumentTest {
 
 		// By default, we do indeed get syntax highlighting for Java
 		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Assert.assertNotNull(doc.getLineCommentStartAndEnd(0));
+		Assertions.assertNotNull(doc.getLineCommentStartAndEnd(0));
 
 		// No mappings -> default to PlainTextTokenMaker
 		doc.setTokenMakerFactory(new EmptyTokenMakerFactory());
 		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		// Ghetto test to show we are not picking up a JavaTokenMaker
-		Assert.assertNull(doc.getLineCommentStartAndEnd(0));
+		Assertions.assertNull(doc.getLineCommentStartAndEnd(0));
 
 		// Verify restoring default instance
 		doc.setTokenMakerFactory(null);
 		doc.setSyntaxStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Assert.assertNotNull(doc.getLineCommentStartAndEnd(0));
+		Assertions.assertNotNull(doc.getLineCommentStartAndEnd(0));
 
 	}
 
@@ -511,9 +513,9 @@ public class RSyntaxDocumentTest {
 	 */
 	private static final void assertDocumentEvent(DocumentEvent e,
 			DocumentEvent.EventType eventType, int offs, int len) {
-		Assert.assertEquals(eventType, e.getType());
-		Assert.assertEquals(offs, e.getOffset());
-		Assert.assertEquals(len, e.getLength());
+		Assertions.assertEquals(eventType, e.getType());
+		Assertions.assertEquals(offs, e.getOffset());
+		Assertions.assertEquals(len, e.getLength());
 	}
 
 

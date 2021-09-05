@@ -8,8 +8,8 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
@@ -27,7 +27,7 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(new PlainTextTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(new PlainTextTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 
@@ -40,13 +40,13 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 		token = token.getNextToken();
 
 		while (token != null && token.isPaintable()) {
-			Assert.assertEquals("Not an identifier: " + token, TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType(), "Not an identifier: " + token);
 			token = token.getNextToken();
-			Assert.assertTrue(token.isWhitespace());
+			Assertions.assertTrue(token.isWhitespace());
 			token = token.getNextToken();
 		}
 
@@ -62,61 +62,61 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assert.assertEquals("http://www.sas.com", token.getLexeme());
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assert.assertEquals("ftp://fifesoft.com", token.getLexeme());
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertEquals("ftp://fifesoft.com", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assert.assertEquals("https://google.com", token.getLexeme());
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertEquals("https://google.com", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assert.assertEquals("www.yahoo.com", token.getLexeme());
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertEquals("www.yahoo.com", token.getLexeme());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertFalse(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
 		token = token.getNextToken();
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 
 		token = token.getNextToken();
-		Assert.assertTrue(token.isHyperlink());
-		Assert.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assert.assertEquals("file://test.txt", token.getLexeme());
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+		Assertions.assertEquals("file://test.txt", token.getLexeme());
 
 	}
 
@@ -130,13 +130,13 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 		Segment segment = createSegment(code);
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.isWhitespace());
+		Assertions.assertTrue(token.isWhitespace());
 		token = token.getNextToken();
 
 		while (token != null && token.isPaintable()) {
-			Assert.assertEquals("Not an identifier: " + token, TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType(), "Not an identifier: " + token);
 			token = token.getNextToken();
-			Assert.assertTrue(token.isWhitespace());
+			Assertions.assertTrue(token.isWhitespace());
 			token = token.getNextToken();
 		}
 

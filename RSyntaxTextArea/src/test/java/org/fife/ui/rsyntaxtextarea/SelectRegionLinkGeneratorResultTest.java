@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Unit tests for the {@link SelectRegionLinkGeneratorResult} class.
@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextAreaTest {
 
 
@@ -27,8 +27,8 @@ public class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextArea
 			new SelectRegionLinkGeneratorResult(textArea, 0, 3, 7);
 		result.execute();
 
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(7, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(7, textArea.getSelectionEnd());
 	}
 
 
@@ -38,7 +38,7 @@ public class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextArea
 		RSyntaxTextArea textArea = createTextArea("01234567890");
 		SelectRegionLinkGeneratorResult result =
 			new SelectRegionLinkGeneratorResult(textArea, 9, 3, 7);
-		Assert.assertEquals(9, result.getSourceOffset());
+		Assertions.assertEquals(9, result.getSourceOffset());
 	}
 
 

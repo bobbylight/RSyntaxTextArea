@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitEndActionTest {
 
 
@@ -31,8 +31,8 @@ public class RTextAreaEditorKitEndActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.EndAction("foo", false).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(text.length(), textArea.getCaretPosition());
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(text.length(), textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -46,14 +46,14 @@ public class RTextAreaEditorKitEndActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.EndAction("foo", true).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(text.length(), textArea.getCaretPosition());
-		Assert.assertNotNull(textArea.getSelectedText());
+		Assertions.assertEquals(text.length(), textArea.getCaretPosition());
+		Assertions.assertNotNull(textArea.getSelectedText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.EndAction("foo", false).getMacroID());
 	}
 }

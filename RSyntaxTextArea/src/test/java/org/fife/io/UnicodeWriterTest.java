@@ -4,10 +4,10 @@
  */
 package org.fife.io;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -38,12 +38,12 @@ public class UnicodeWriterTest {
 		}
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
 	}
@@ -59,7 +59,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), StandardCharsets.UTF_8)) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
+		Assertions.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-8")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-8", getFileEncoding(file));
+		Assertions.assertEquals("UTF-8", getFileEncoding(file));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-16BE", getFileEncoding(file));
+		Assertions.assertEquals("UTF-16BE", getFileEncoding(file));
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16LE")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-16LE", getFileEncoding(file));
+		Assertions.assertEquals("UTF-16LE", getFileEncoding(file));
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-32BE")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-32BE", getFileEncoding(file));
+		Assertions.assertEquals("UTF-32BE", getFileEncoding(file));
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-32LE")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-32LE", getFileEncoding(file));
+		Assertions.assertEquals("UTF-32LE", getFileEncoding(file));
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file, StandardCharsets.UTF_8)) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
+		Assertions.assertEquals(StandardCharsets.UTF_8.name(), getFileEncoding(file));
 	}
 
 	@Test
@@ -145,7 +145,7 @@ public class UnicodeWriterTest {
 		try (UnicodeWriter w = new UnicodeWriter(file, "UTF-8")) {
 			w.append(CONTENT);
 		}
-		Assert.assertEquals("UTF-8", getFileEncoding(file));
+		Assertions.assertEquals("UTF-8", getFileEncoding(file));
 	}
 
 	@Test
@@ -181,16 +181,16 @@ public class UnicodeWriterTest {
 
 		try (UnicodeWriter w = new UnicodeWriter(file, "UTF-32LE")) {
 			w.append(CONTENT);
-			Assert.assertEquals("UTF-32LE", w.getEncoding());
+			Assertions.assertEquals("UTF-32LE", w.getEncoding());
 		}
 	}
 
 	@Test
 	public void testGetSetWriteUtf8BOM() {
 		UnicodeWriter.setWriteUtf8BOM(true);
-		Assert.assertTrue(UnicodeWriter.getWriteUtf8BOM());
+		Assertions.assertTrue(UnicodeWriter.getWriteUtf8BOM());
 		UnicodeWriter.setWriteUtf8BOM(false);
-		Assert.assertFalse(UnicodeWriter.getWriteUtf8BOM());
+		Assertions.assertFalse(UnicodeWriter.getWriteUtf8BOM());
 	}
 
 	@Test
@@ -209,7 +209,7 @@ public class UnicodeWriterTest {
 		// Read file back and verify contents
 		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
 			String actual = r.readLine();
-			Assert.assertEquals(actual, testContent);
+			Assertions.assertEquals(actual, testContent);
 		}
 	}
 
@@ -227,8 +227,8 @@ public class UnicodeWriterTest {
 		// Read file back and verify contents
 		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
 			String actual = r.readLine();
-			Assert.assertEquals(1, actual.length());
-			Assert.assertEquals(testChar, actual.charAt(0));
+			Assertions.assertEquals(1, actual.length());
+			Assertions.assertEquals(testChar, actual.charAt(0));
 		}
 	}
 
@@ -247,7 +247,7 @@ public class UnicodeWriterTest {
 		// Read file back and verify contents
 		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
 			String actual = r.readLine();
-			Assert.assertEquals(actual, testContent);
+			Assertions.assertEquals(actual, testContent);
 		}
 	}
 }

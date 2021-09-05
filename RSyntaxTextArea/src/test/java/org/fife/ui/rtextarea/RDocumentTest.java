@@ -8,8 +8,8 @@ package org.fife.ui.rtextarea;
 
 import javax.swing.text.BadLocationException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -30,7 +30,7 @@ public class RDocumentTest {
 		doc.insertString(0, text, null);
 
 		for (int i=0; i<text.length(); i++) {
-			Assert.assertEquals(text.charAt(i), doc.charAt(i));
+			Assertions.assertEquals(text.charAt(i), doc.charAt(i));
 		}
 	}
 
@@ -46,34 +46,38 @@ public class RDocumentTest {
 
 		String expected = "Hello there world";
 		for (int i=0; i<expected.length(); i++) {
-			Assert.assertEquals(expected.charAt(i), doc.charAt(i));
+			Assertions.assertEquals(expected.charAt(i), doc.charAt(i));
 		}
 	}
 
 
-	@Test(expected = BadLocationException.class)
-	public void testCharAt_Invalid_NegativeOffset() throws Exception {
+	@Test
+	public void testCharAt_Invalid_NegativeOffset() {
 
-		String text = "Hello world";
+		Assertions.assertThrows(BadLocationException.class, () -> {
 
-		RDocument doc = new RDocument();
-		doc.insertString(0, text, null);
+			String text = "Hello world";
 
-		Assert.assertEquals('a', doc.charAt(-1));
+			RDocument doc = new RDocument();
+			doc.insertString(0, text, null);
 
+			Assertions.assertEquals('a', doc.charAt(-1));
+		});
 	}
 
 
-	@Test(expected = BadLocationException.class)
-	public void testCharAt_Invalid_OffsetTooLarge() throws Exception {
+	@Test
+	public void testCharAt_Invalid_OffsetTooLarge() {
 
-		String text = "Hello world";
+		Assertions.assertThrows(BadLocationException.class, () -> {
 
-		RDocument doc = new RDocument();
-		doc.insertString(0, text, null);
+			String text = "Hello world";
 
-		Assert.assertEquals('a', doc.charAt(text.length()+1));
+			RDocument doc = new RDocument();
+			doc.insertString(0, text, null);
 
+			Assertions.assertEquals('a', doc.charAt(text.length() + 1));
+		});
 	}
 
 

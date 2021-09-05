@@ -6,8 +6,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -29,8 +29,8 @@ public class TokenImplTest {
 
 		// Don't bother checking font and other styles since it may be host-specific
 		String actual = token.getHTMLRepresentation(textArea);
-		Assert.assertTrue(actual.startsWith("<font"));
-		Assert.assertTrue(actual.endsWith(">for</font>"));
+		Assertions.assertTrue(actual.startsWith("<font"));
+		Assertions.assertTrue(actual.endsWith(">for</font>"));
 
 	}
 
@@ -46,8 +46,8 @@ public class TokenImplTest {
 		// Don't bother checking font and other styles since it may be host-specific
 		String actual = token.getHTMLRepresentation(textArea);
 		System.out.println(actual);
-		Assert.assertTrue(actual.startsWith("<font"));
-		Assert.assertTrue(actual.endsWith("> &amp;&#09;&lt;&gt;&#39;&#34;&#47;</font>"));
+		Assertions.assertTrue(actual.startsWith("<font"));
+		Assertions.assertTrue(actual.endsWith("> &amp;&#09;&lt;&gt;&#39;&#34;&#47;</font>"));
 
 	}
 

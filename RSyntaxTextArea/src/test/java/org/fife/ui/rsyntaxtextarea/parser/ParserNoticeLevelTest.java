@@ -7,8 +7,8 @@
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -22,26 +22,26 @@ public class ParserNoticeLevelTest {
 
 	@Test
 	public void testGetNumericValue() {
-		Assert.assertEquals(0, Level.ERROR.getNumericValue());
-		Assert.assertEquals(1, Level.WARNING.getNumericValue());
-		Assert.assertEquals(2, Level.INFO.getNumericValue());
+		Assertions.assertEquals(0, Level.ERROR.getNumericValue());
+		Assertions.assertEquals(1, Level.WARNING.getNumericValue());
+		Assertions.assertEquals(2, Level.INFO.getNumericValue());
 	}
 
 
 	@Test
 	public void testIsEqualToOrWorseThan() {
 
-		Assert.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.ERROR));
-		Assert.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.WARNING));
-		Assert.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.INFO));
+		Assertions.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.ERROR));
+		Assertions.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.WARNING));
+		Assertions.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.INFO));
 
-		Assert.assertFalse(Level.WARNING.isEqualToOrWorseThan(Level.ERROR));
-		Assert.assertTrue(Level.WARNING.isEqualToOrWorseThan(Level.WARNING));
-		Assert.assertTrue(Level.WARNING.isEqualToOrWorseThan(Level.INFO));
+		Assertions.assertFalse(Level.WARNING.isEqualToOrWorseThan(Level.ERROR));
+		Assertions.assertTrue(Level.WARNING.isEqualToOrWorseThan(Level.WARNING));
+		Assertions.assertTrue(Level.WARNING.isEqualToOrWorseThan(Level.INFO));
 
-		Assert.assertFalse(Level.INFO.isEqualToOrWorseThan(Level.ERROR));
-		Assert.assertFalse(Level.INFO.isEqualToOrWorseThan(Level.WARNING));
-		Assert.assertTrue(Level.INFO.isEqualToOrWorseThan(Level.INFO));
+		Assertions.assertFalse(Level.INFO.isEqualToOrWorseThan(Level.ERROR));
+		Assertions.assertFalse(Level.INFO.isEqualToOrWorseThan(Level.WARNING));
+		Assertions.assertTrue(Level.INFO.isEqualToOrWorseThan(Level.INFO));
 
 	}
 

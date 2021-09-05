@@ -8,8 +8,8 @@ package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,7 +25,7 @@ public class DefaultParseResultTest {
 	public void testConstructor() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(parser, res.getParser());
 	}
 
 
@@ -34,16 +34,16 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getNotices().size());
+		Assertions.assertEquals(0, res.getNotices().size());
 
 		DefaultParserNotice notice = new DefaultParserNotice(parser, "message", 7);
 		res.addNotice(notice);
-		Assert.assertEquals(1, res.getNotices().size());
+		Assertions.assertEquals(1, res.getNotices().size());
 
 		notice = new DefaultParserNotice(parser, "message 2", 42);
 		res.addNotice(notice);
-		Assert.assertEquals(2, res.getNotices().size());
-		
+		Assertions.assertEquals(2, res.getNotices().size());
+
 	}
 
 
@@ -52,15 +52,15 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getNotices().size());
+		Assertions.assertEquals(0, res.getNotices().size());
 
 		DefaultParserNotice notice = new DefaultParserNotice(parser, "message", 7);
 		res.addNotice(notice);
-		Assert.assertEquals(1, res.getNotices().size());
+		Assertions.assertEquals(1, res.getNotices().size());
 
 		res.clearNotices();
-		Assert.assertEquals(0, res.getNotices().size());
-		
+		Assertions.assertEquals(0, res.getNotices().size());
+
 	}
 
 
@@ -69,11 +69,11 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertNull(res.getError());
+		Assertions.assertNull(res.getError());
 
 		Exception e = new Exception("Test exception");
 		res.setError(e);
-		Assert.assertEquals(e, res.getError());
+		Assertions.assertEquals(e, res.getError());
 
 	}
 
@@ -83,10 +83,10 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
 
 		res.setParsedLines(7, 42);
-		Assert.assertEquals(7, res.getFirstLineParsed());
+		Assertions.assertEquals(7, res.getFirstLineParsed());
 
 	}
 
@@ -96,10 +96,10 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
 
 		res.setParsedLines(7, 42);
-		Assert.assertEquals(42, res.getLastLineParsed());
+		Assertions.assertEquals(42, res.getLastLineParsed());
 
 	}
 
@@ -109,13 +109,13 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getNotices().size());
+		Assertions.assertEquals(0, res.getNotices().size());
 
 		DefaultParserNotice notice = new DefaultParserNotice(parser, "message", 7);
 		res.addNotice(notice);
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(1, notices.size());
-		Assert.assertEquals(notice, notices.get(0));
+		Assertions.assertEquals(1, notices.size());
+		Assertions.assertEquals(notice, notices.get(0));
 
 	}
 
@@ -124,7 +124,7 @@ public class DefaultParseResultTest {
 	public void testGetParser() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(parser, res.getParser());
 	}
 
 
@@ -132,9 +132,9 @@ public class DefaultParseResultTest {
 	public void testGetParseTime() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getParseTime());
+		Assertions.assertEquals(0, res.getParseTime());
 		res.setParseTime(5000);
-		Assert.assertEquals(5000, res.getParseTime());
+		Assertions.assertEquals(5000, res.getParseTime());
 	}
 
 
@@ -143,11 +143,11 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertNull(res.getError());
+		Assertions.assertNull(res.getError());
 
 		Exception e = new Exception("Test exception");
 		res.setError(e);
-		Assert.assertEquals(e, res.getError());
+		Assertions.assertEquals(e, res.getError());
 
 	}
 
@@ -157,12 +157,12 @@ public class DefaultParseResultTest {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 
 		res.setParsedLines(7, 42);
-		Assert.assertEquals(7, res.getFirstLineParsed());
-		Assert.assertEquals(42, res.getLastLineParsed());
+		Assertions.assertEquals(7, res.getFirstLineParsed());
+		Assertions.assertEquals(42, res.getLastLineParsed());
 
 	}
 
@@ -171,9 +171,9 @@ public class DefaultParseResultTest {
 	public void testSetParseTime() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
-		Assert.assertEquals(0, res.getParseTime());
+		Assertions.assertEquals(0, res.getParseTime());
 		res.setParseTime(5000);
-		Assert.assertEquals(5000, res.getParseTime());
+		Assertions.assertEquals(5000, res.getParseTime());
 	}
 
 

@@ -9,9 +9,9 @@ package org.fife.ui.rsyntaxtextarea.parser;
 import java.awt.Color;
 
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice.Level;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -26,7 +26,7 @@ public class DefaultParserNoticeTest {
 	private DefaultParserNotice notice;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		parser = new MockParser();
 	}
@@ -36,11 +36,11 @@ public class DefaultParserNoticeTest {
 	public void testDefaultParserNotice_3ArgConstructor() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals("Foo", notice.getMessage());
-		Assert.assertEquals(5, notice.getLine());
-		Assert.assertEquals(-1, notice.getOffset());
-		Assert.assertEquals(-1, notice.getLength());
-		Assert.assertFalse(notice.getKnowsOffsetAndLength());
+		Assertions.assertEquals("Foo", notice.getMessage());
+		Assertions.assertEquals(5, notice.getLine());
+		Assertions.assertEquals(-1, notice.getOffset());
+		Assertions.assertEquals(-1, notice.getLength());
+		Assertions.assertFalse(notice.getKnowsOffsetAndLength());
 
 	}
 
@@ -49,11 +49,11 @@ public class DefaultParserNoticeTest {
 	public void testDefaultParserNoticeParserNotice_5ArgConstructor() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals("Foo", notice.getMessage());
-		Assert.assertEquals(5, notice.getLine());
-		Assert.assertEquals(4, notice.getOffset());
-		Assert.assertEquals(7, notice.getLength());
-		Assert.assertTrue(notice.getKnowsOffsetAndLength());
+		Assertions.assertEquals("Foo", notice.getMessage());
+		Assertions.assertEquals(5, notice.getLine());
+		Assertions.assertEquals(4, notice.getOffset());
+		Assertions.assertEquals(7, notice.getLength());
+		Assertions.assertTrue(notice.getKnowsOffsetAndLength());
 
 	}
 
@@ -61,7 +61,7 @@ public class DefaultParserNoticeTest {
 	@Test
 	public void testCompareTo_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertTrue(notice.compareTo(null) < 0);
+		Assertions.assertTrue(notice.compareTo(null) < 0);
 	}
 
 
@@ -71,8 +71,8 @@ public class DefaultParserNoticeTest {
 		notice.setLevel(Level.ERROR);
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 5);
 		notice2.setLevel(Level.INFO);
-		Assert.assertTrue(notice.compareTo(notice2) < 0);
-		Assert.assertTrue(notice2.compareTo(notice) > 0);
+		Assertions.assertTrue(notice.compareTo(notice2) < 0);
+		Assertions.assertTrue(notice2.compareTo(notice) > 0);
 	}
 
 
@@ -85,8 +85,8 @@ public class DefaultParserNoticeTest {
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 6);
 		notice2.setLevel(Level.INFO);
 
-		Assert.assertTrue(notice.compareTo(notice2) < 0);
-		Assert.assertTrue(notice2.compareTo(notice) > 0);
+		Assertions.assertTrue(notice.compareTo(notice2) < 0);
+		Assertions.assertTrue(notice2.compareTo(notice) > 0);
 
 	}
 
@@ -100,8 +100,8 @@ public class DefaultParserNoticeTest {
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "FooBar", 5);
 		notice2.setLevel(Level.INFO);
 
-		Assert.assertTrue(notice.compareTo(notice2) < 0);
-		Assert.assertTrue(notice2.compareTo(notice) > 0);
+		Assertions.assertTrue(notice.compareTo(notice2) < 0);
+		Assertions.assertTrue(notice2.compareTo(notice) > 0);
 
 	}
 
@@ -111,13 +111,13 @@ public class DefaultParserNoticeTest {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
-		Assert.assertEquals(0, notice.compareTo(notice));
+		Assertions.assertEquals(0, notice.compareTo(notice));
 
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 5);
 		notice2.setLevel(Level.INFO);
 
-		Assert.assertEquals(0, notice.compareTo(notice2));
-		Assert.assertEquals(0, notice2.compareTo(notice));
+		Assertions.assertEquals(0, notice.compareTo(notice2));
+		Assertions.assertEquals(0, notice2.compareTo(notice));
 
 	}
 
@@ -129,11 +129,11 @@ public class DefaultParserNoticeTest {
 		int len = 7;
 		notice = new DefaultParserNotice(parser, "Foo", 5, offs, len);
 
-		Assert.assertFalse(notice.containsPosition(offs-1));
+		Assertions.assertFalse(notice.containsPosition(offs-1));
 		for (int i=offs; i<offs+len; i++) {
-			Assert.assertTrue(notice.containsPosition(i));
+			Assertions.assertTrue(notice.containsPosition(i));
 		}
-		Assert.assertFalse(notice.containsPosition(offs+len));
+		Assertions.assertFalse(notice.containsPosition(offs+len));
 
 	}
 
@@ -141,14 +141,14 @@ public class DefaultParserNoticeTest {
 	@Test
 	public void testEquals_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertFalse(notice.equals(null));
+		Assertions.assertFalse(notice.equals(null));
 	}
 
 
 	@Test
 	public void testEquals_differentObjectType() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertFalse(notice.equals("Hello world"));
+		Assertions.assertFalse(notice.equals("Hello world"));
 	}
 
 
@@ -161,8 +161,8 @@ public class DefaultParserNoticeTest {
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Bar", 6);
 		notice2.setLevel(Level.INFO);
 
-		Assert.assertFalse(notice.equals(notice2));
-		Assert.assertFalse(notice2.equals(notice));
+		Assertions.assertFalse(notice.equals(notice2));
+		Assertions.assertFalse(notice2.equals(notice));
 
 	}
 
@@ -176,9 +176,9 @@ public class DefaultParserNoticeTest {
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 5);
 		notice2.setLevel(Level.INFO);
 
-		Assert.assertTrue(notice.equals(notice));
-		Assert.assertTrue(notice.equals(notice2));
-		Assert.assertTrue(notice2.equals(notice));
+		Assertions.assertTrue(notice.equals(notice));
+		Assertions.assertTrue(notice.equals(notice2));
+		Assertions.assertTrue(notice2.equals(notice));
 
 	}
 
@@ -187,9 +187,9 @@ public class DefaultParserNoticeTest {
 	public void testGetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setColor(Color.yellow);
-		Assert.assertEquals(Color.yellow, notice.getColor());
+		Assertions.assertEquals(Color.yellow, notice.getColor());
 		notice.setColor(Color.orange);
-		Assert.assertEquals(Color.orange, notice.getColor());
+		Assertions.assertEquals(Color.orange, notice.getColor());
 	}
 
 
@@ -197,10 +197,10 @@ public class DefaultParserNoticeTest {
 	public void testGetKnowsOffsetAndLength() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertFalse(notice.getKnowsOffsetAndLength());
+		Assertions.assertFalse(notice.getKnowsOffsetAndLength());
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertTrue(notice.getKnowsOffsetAndLength());
+		Assertions.assertTrue(notice.getKnowsOffsetAndLength());
 
 	}
 
@@ -209,10 +209,10 @@ public class DefaultParserNoticeTest {
 	public void testGetLength() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals(-1, notice.getLength());
+		Assertions.assertEquals(-1, notice.getLength());
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals(7, notice.getLength());
+		Assertions.assertEquals(7, notice.getLength());
 
 	}
 
@@ -220,48 +220,48 @@ public class DefaultParserNoticeTest {
 	@Test
 	public void testGetLevel() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals(Level.ERROR, notice.getLevel());
+		Assertions.assertEquals(Level.ERROR, notice.getLevel());
 		notice.setLevel(Level.INFO);
-		Assert.assertEquals(Level.INFO, notice.getLevel());
+		Assertions.assertEquals(Level.INFO, notice.getLevel());
 		notice.setLevel(Level.WARNING);
-		Assert.assertEquals(Level.WARNING, notice.getLevel());
+		Assertions.assertEquals(Level.WARNING, notice.getLevel());
 	}
 
 
 	@Test
 	public void testGetLine() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals(5, notice.getLine());
+		Assertions.assertEquals(5, notice.getLine());
 	}
 
 
 	@Test
 	public void testGetMessage() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals("Foo", notice.getMessage());
+		Assertions.assertEquals("Foo", notice.getMessage());
 	}
 
 
 	@Test
 	public void testGetOffset() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals(4, notice.getOffset());
+		Assertions.assertEquals(4, notice.getOffset());
 	}
 
 
 	@Test
 	public void testGetParser() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertTrue(parser == notice.getParser());
+		Assertions.assertTrue(parser == notice.getParser());
 	}
 
 
 	@Test
 	public void testGetShowInEditor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertTrue(notice.getShowInEditor());
+		Assertions.assertTrue(notice.getShowInEditor());
 		notice.setShowInEditor(false);
-		Assert.assertFalse(notice.getShowInEditor());
+		Assertions.assertFalse(notice.getShowInEditor());
 	}
 
 
@@ -269,11 +269,11 @@ public class DefaultParserNoticeTest {
 	public void testGetToolTipText() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
+		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
 
 		final String TIP = "Hello world";
 		notice.setToolTipText(TIP);
-		Assert.assertEquals(TIP, notice.getToolTipText());
+		Assertions.assertEquals(TIP, notice.getToolTipText());
 
 	}
 
@@ -283,11 +283,11 @@ public class DefaultParserNoticeTest {
 
 		int line = 5;
 		DefaultParserNotice notice = new DefaultParserNotice(parser, "Foo", line);
-		Assert.assertEquals(line<<16 | notice.getOffset(), notice.hashCode());
+		Assertions.assertEquals(line<<16 | notice.getOffset(), notice.hashCode());
 
 		int offs = 3;
 		notice = new DefaultParserNotice(parser, "Foo", line, offs, 4);
-		Assert.assertEquals(line<<16 | notice.getOffset(), notice.hashCode());
+		Assertions.assertEquals(line<<16 | notice.getOffset(), notice.hashCode());
 
 	}
 
@@ -296,20 +296,20 @@ public class DefaultParserNoticeTest {
 	public void testSetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setColor(Color.yellow);
-		Assert.assertEquals(Color.yellow, notice.getColor());
+		Assertions.assertEquals(Color.yellow, notice.getColor());
 		notice.setColor(Color.orange);
-		Assert.assertEquals(Color.orange, notice.getColor());
+		Assertions.assertEquals(Color.orange, notice.getColor());
 	}
 
 
 	@Test
 	public void testSetLevel() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		Assert.assertEquals(Level.ERROR, notice.getLevel());
+		Assertions.assertEquals(Level.ERROR, notice.getLevel());
 		notice.setLevel(Level.INFO);
-		Assert.assertEquals(Level.INFO, notice.getLevel());
+		Assertions.assertEquals(Level.INFO, notice.getLevel());
 		notice.setLevel(Level.WARNING);
-		Assert.assertEquals(Level.WARNING, notice.getLevel());
+		Assertions.assertEquals(Level.WARNING, notice.getLevel());
 	}
 
 
@@ -317,18 +317,18 @@ public class DefaultParserNoticeTest {
 	public void testSetLevel_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
-		Assert.assertEquals(Level.INFO, notice.getLevel());
+		Assertions.assertEquals(Level.INFO, notice.getLevel());
 		notice.setLevel(null);
-		Assert.assertEquals(Level.ERROR, notice.getLevel());
+		Assertions.assertEquals(Level.ERROR, notice.getLevel());
 	}
 
 
 	@Test
 	public void testSetShowInEditor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertTrue(notice.getShowInEditor());
+		Assertions.assertTrue(notice.getShowInEditor());
 		notice.setShowInEditor(false);
-		Assert.assertFalse(notice.getShowInEditor());
+		Assertions.assertFalse(notice.getShowInEditor());
 	}
 
 
@@ -336,11 +336,11 @@ public class DefaultParserNoticeTest {
 	public void testSetToolTipText() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
+		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
 
 		final String TIP = "Hello world";
 		notice.setToolTipText(TIP);
-		Assert.assertEquals(TIP, notice.getToolTipText());
+		Assertions.assertEquals(TIP, notice.getToolTipText());
 
 	}
 
@@ -348,7 +348,7 @@ public class DefaultParserNoticeTest {
 	@Test
 	public void testToString() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
-		Assert.assertEquals("Line 5: Foo", notice.toString());
+		Assertions.assertEquals("Line 5: Foo", notice.toString());
 	}
 
 }

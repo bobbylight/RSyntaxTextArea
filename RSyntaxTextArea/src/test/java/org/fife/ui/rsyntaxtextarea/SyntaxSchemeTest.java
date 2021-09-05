@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class SyntaxSchemeTest {
 
 
@@ -32,7 +32,7 @@ public class SyntaxSchemeTest {
 		SyntaxScheme scheme = new SyntaxScheme(true);
 		SyntaxScheme scheme2 = (SyntaxScheme)scheme.clone();
 
-		Assert.assertEquals(scheme, scheme2);
+		Assertions.assertEquals(scheme, scheme2);
 	}
 
 
@@ -41,12 +41,12 @@ public class SyntaxSchemeTest {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 
-		Assert.assertNotNull(scheme.getStyle(TokenTypes.COMMENT_EOL));
+		Assertions.assertNotNull(scheme.getStyle(TokenTypes.COMMENT_EOL));
 		Style style = new Style(Color.RED, Color.BLUE);
 
 		scheme.setStyle(TokenTypes.COMMENT_EOL, style);
 		Style style2 = scheme.getStyle(TokenTypes.COMMENT_EOL);
-		Assert.assertEquals(style, style2);
+		Assertions.assertEquals(style, style2);
 	}
 
 
@@ -54,13 +54,13 @@ public class SyntaxSchemeTest {
 	public void testGetStylesAndGetStyleCount() {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
-		Assert.assertEquals(scheme.getStyleCount(), scheme.getStyles().length);
+		Assertions.assertEquals(scheme.getStyleCount(), scheme.getStyles().length);
 	}
 
 
 	@Test
 	public void testGetHashCode() {
-		Assert.assertNotEquals(0, new SyntaxScheme(true).hashCode());
+		Assertions.assertNotEquals(0, new SyntaxScheme(true).hashCode());
 	}
 
 
@@ -71,7 +71,7 @@ public class SyntaxSchemeTest {
 		String string = scheme.toCommaSeparatedString();
 
 		SyntaxScheme scheme2 = SyntaxScheme.loadFromString(string);
-		Assert.assertEquals(scheme, scheme2);
+		Assertions.assertEquals(scheme, scheme2);
 	}
 
 

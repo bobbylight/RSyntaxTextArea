@@ -8,18 +8,16 @@
  */
 package org.fife.ui.rtextarea;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
@@ -76,7 +74,7 @@ public class SearchEngineTest {
 			assertEqualsIgnoreCase(expected, actual);
 		}
 		int selOffs = textArea.getSelectionStart();
-		assertEquals("unexpected selection offset: ", offs, selOffs);
+		assertEquals(offs, selOffs, "unexpected selection offset: ");
 	}
 
 
@@ -98,8 +96,8 @@ public class SearchEngineTest {
 	}
 
 
-	@BeforeClass
-	public static void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 
 		// setUp() is called once per test, each with a new instantiation of
 		// SearchEngineTest, so check a static variable to ensure that

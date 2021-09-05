@@ -5,9 +5,9 @@
 package org.fife.ui.rtextarea;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -20,13 +20,13 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 
 	@Test
-	@Ignore("Need a displayable text area")
+	@Disabled("Need a displayable text area")
 	public void testActionPerformedImpl_noSelect_lineWrap() {
 	}
 
 
 	@Test
-	@Ignore("Need a displayable text area")
+	@Disabled("Need a displayable text area")
 	public void testActionPerformedImpl_select_lineWrap() {
 	}
 
@@ -42,18 +42,18 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 		// First, go to first non-whitespace offset
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(3, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(3, textArea.getSelectionEnd());
 
 		// Then to offset 0
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(0, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(0, textArea.getSelectionEnd());
 
 		// Then back to first non-whitespace offset
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(3, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(3, textArea.getSelectionEnd());
 	}
 
 
@@ -68,18 +68,18 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 		// First, go to first non-whitespace offset
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(14, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(14, textArea.getSelectionEnd());
 
 		// Then to offset 0
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(14, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(14, textArea.getSelectionEnd());
 
 		// Then back to first non-whitespace offset
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(3, textArea.getSelectionStart());
-		Assert.assertEquals(14, textArea.getSelectionEnd());
+		Assertions.assertEquals(3, textArea.getSelectionStart());
+		Assertions.assertEquals(14, textArea.getSelectionEnd());
 	}
 
 
@@ -91,13 +91,13 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 		RTextAreaEditorKit.BeginLineAction action = new RTextAreaEditorKit.BeginLineAction("beginLine", true);
 
 		action.actionPerformedImpl(null, textArea);
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(0, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(0, textArea.getSelectionEnd());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("begin", new RTextAreaEditorKit.BeginLineAction("begin", false).getMacroID());
+		Assertions.assertEquals("begin", new RTextAreaEditorKit.BeginLineAction("begin", false).getMacroID());
 	}
 }

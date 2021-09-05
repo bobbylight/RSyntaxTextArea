@@ -11,7 +11,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 
 /**
@@ -45,8 +45,8 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 			Segment segment = createSegment(token);
 			TokenMaker tm = createTokenMaker();
 			Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Token has unexpected type: orig=" + token +
-					", actual=" + t, expectedType, t.getType());
+			Assertions.assertEquals(expectedType, t.getType(),
+				"Token has unexpected type: orig=" + token + ", actual=" + t);
 		}
 
 	}
@@ -77,8 +77,8 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 			Segment segment = createSegment(token);
 			TokenMaker tm = createTokenMaker();
 			Token t = tm.getTokenList(segment, initialTokenType, 0);
-			Assert.assertEquals("Token has unexpected type: orig=" + token +
-				", actual=" + t, expectedType, t.getType());
+			Assertions.assertEquals(expectedType, t.getType(),
+				"Token has unexpected type: orig=" + token + ", actual=" + t);
 		}
 
 	}

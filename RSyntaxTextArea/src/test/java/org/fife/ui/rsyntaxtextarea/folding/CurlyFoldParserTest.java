@@ -7,8 +7,8 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -38,36 +38,36 @@ public class CurlyFoldParserTest {
 		CurlyFoldParser parser = new CurlyFoldParser();
 		List<Fold> folds = parser.getFolds(textArea);
 
-		Assert.assertEquals(1, folds.size());
+		Assertions.assertEquals(1, folds.size());
 
 		Fold topLevelFold = folds.get(0);
-		Assert.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
+		Assertions.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
 		int firstCurlyOffs = code.indexOf('{');
 		int lastCurlyOffs = code.lastIndexOf('}');
-		Assert.assertEquals(firstCurlyOffs, topLevelFold.getStartOffset());
-		Assert.assertEquals(lastCurlyOffs, topLevelFold.getEndOffset());
+		Assertions.assertEquals(firstCurlyOffs, topLevelFold.getStartOffset());
+		Assertions.assertEquals(lastCurlyOffs, topLevelFold.getEndOffset());
 
-		Assert.assertEquals(2, topLevelFold.getChildCount());
+		Assertions.assertEquals(2, topLevelFold.getChildCount());
 
 		Fold commentFold = topLevelFold.getChild(0);
-		Assert.assertEquals(FoldType.COMMENT, commentFold.getFoldType());
-		Assert.assertEquals(code.indexOf("/*"), commentFold.getStartOffset());
-		Assert.assertEquals(code.indexOf("*/") + 1, commentFold.getEndOffset());
+		Assertions.assertEquals(FoldType.COMMENT, commentFold.getFoldType());
+		Assertions.assertEquals(code.indexOf("/*"), commentFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf("*/") + 1, commentFold.getEndOffset());
 
 		Fold childFold = topLevelFold.getChild(1);
-		Assert.assertEquals(FoldType.CODE, childFold.getFoldType());
+		Assertions.assertEquals(FoldType.CODE, childFold.getFoldType());
 		int childOpenCurlyOffs = code.indexOf('{', firstCurlyOffs + 1);
 		int childCloseCurlyOffs = code.lastIndexOf('}', lastCurlyOffs - 1);
-		Assert.assertEquals(childOpenCurlyOffs, childFold.getStartOffset());
-		Assert.assertEquals(childCloseCurlyOffs, childFold.getEndOffset());
+		Assertions.assertEquals(childOpenCurlyOffs, childFold.getStartOffset());
+		Assertions.assertEquals(childCloseCurlyOffs, childFold.getEndOffset());
 	}
 
 
 	@Test
 	public void testGetSetFoldableMultiLineComments() {
 		CurlyFoldParser parser = new CurlyFoldParser();
-		Assert.assertTrue(parser.getFoldableMultiLineComments());
+		Assertions.assertTrue(parser.getFoldableMultiLineComments());
 		parser.setFoldableMultiLineComments(false);
-		Assert.assertFalse(parser.getFoldableMultiLineComments());
+		Assertions.assertFalse(parser.getFoldableMultiLineComments());
 	}
 }

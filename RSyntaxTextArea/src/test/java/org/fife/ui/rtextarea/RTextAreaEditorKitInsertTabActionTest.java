@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitInsertTabActionTest {
 
 
@@ -33,7 +33,7 @@ public class RTextAreaEditorKitInsertTabActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("hello world", textArea.getText());
+		Assertions.assertEquals("hello world", textArea.getText());
 	}
 
 
@@ -46,13 +46,13 @@ public class RTextAreaEditorKitInsertTabActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("hello\t world", textArea.getText());
+		Assertions.assertEquals("hello\t world", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(DefaultEditorKit.insertTabAction,
+		Assertions.assertEquals(DefaultEditorKit.insertTabAction,
 			new RTextAreaEditorKit.InsertTabAction().getMacroID());
 	}
 }

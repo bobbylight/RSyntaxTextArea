@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitToggleBookmarkActionTest {
 
 
@@ -36,13 +36,13 @@ public class RTextAreaEditorKitToggleBookmarkActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.ToggleBookmarkAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(1, gutter.getBookmarks().length);
+		Assertions.assertEquals(1, gutter.getBookmarks().length);
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaToggleBookmarkAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaToggleBookmarkAction,
 			new RTextAreaEditorKit.ToggleBookmarkAction().getMacroID());
 	}
 }

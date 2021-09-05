@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitVerticalPageActionTest {
 
 
@@ -34,8 +34,8 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.VerticalPageAction("foo", -1, false).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(5, textArea.getCaretPosition()); // End of first line
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(5, textArea.getCaretPosition()); // End of first line
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -51,8 +51,8 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.VerticalPageAction("foo", -1, true).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(5, textArea.getCaretPosition()); // End of first line
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(5, textArea.getCaretPosition()); // End of first line
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -68,8 +68,8 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.VerticalPageAction("foo", 1, false).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(20, textArea.getCaretPosition());
-		Assert.assertNull(textArea.getSelectedText());
+		Assertions.assertEquals(20, textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 
@@ -85,14 +85,14 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.VerticalPageAction("foo", 1, true).actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(20, textArea.getCaretPosition());
-		Assert.assertEquals("line 1\nline 2\nline 3", textArea.getSelectedText());
+		Assertions.assertEquals(20, textArea.getCaretPosition());
+		Assertions.assertEquals("line 1\nline 2\nline 3", textArea.getSelectedText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.VerticalPageAction("foo", 1, false).getMacroID());
 	}
 }

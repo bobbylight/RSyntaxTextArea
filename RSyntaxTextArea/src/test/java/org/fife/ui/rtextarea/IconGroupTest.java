@@ -6,8 +6,8 @@ package org.fife.ui.rtextarea;
 
 
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@link IconGroup} class.
@@ -23,7 +23,7 @@ public class IconGroupTest {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		//noinspection SimplifiableJUnitAssertion,EqualsWithItself
-		Assert.assertTrue(group.equals(group));
+		Assertions.assertTrue(group.equals(group));
 	}
 
 
@@ -31,7 +31,7 @@ public class IconGroupTest {
 	public void testGetFileTypeIcon_noIconFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertNull(group.getFileTypeIcon(SyntaxConstants.SYNTAX_STYLE_C));
+		Assertions.assertNull(group.getFileTypeIcon(SyntaxConstants.SYNTAX_STYLE_C));
 	}
 
 
@@ -39,7 +39,7 @@ public class IconGroupTest {
 	public void testGetFileTypeIcon_noSlashSoNoIconReturned() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertNull(group.getFileTypeIcon("invalidValue"));
+		Assertions.assertNull(group.getFileTypeIcon("invalidValue"));
 	}
 
 
@@ -47,7 +47,7 @@ public class IconGroupTest {
 	public void testGetHasSeparateLargeIcons_2ArgConstructor() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertFalse(group.hasSeparateLargeIcons());
+		Assertions.assertFalse(group.hasSeparateLargeIcons());
 	}
 
 
@@ -55,7 +55,7 @@ public class IconGroupTest {
 	public void testGetIcon_notFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertNull(group.getIcon("foo"));
+		Assertions.assertNull(group.getIcon("foo"));
 	}
 
 
@@ -63,20 +63,20 @@ public class IconGroupTest {
 	public void testGetLargeIcon_notFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertNull(group.getLargeIcon("foo"));
+		Assertions.assertNull(group.getLargeIcon("foo"));
 	}
 
 	@Test
 	public void testGetName() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertEquals("foo", group.getName());
+		Assertions.assertEquals("foo", group.getName());
 	}
 
 	@Test
 	public void testHashCode() {
 
 		IconGroup group = new IconGroup("foo", "/path");
-		Assert.assertTrue(group.hashCode() > 0);
+		Assertions.assertTrue(group.hashCode() > 0);
 	}
 }

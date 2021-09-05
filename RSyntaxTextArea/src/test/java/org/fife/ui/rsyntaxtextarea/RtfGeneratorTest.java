@@ -6,8 +6,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class RtfGeneratorTest {
 		generator.appendToDoc(SIMPLE_TEXT.get(2), null, null, null);
 
 		// We can't do an exact string comparison due to differing default fonts on different OS's
-		Assert.assertTrue(generator.getRtf().contains(SIMPLE_RTF_MINUS_HEADER));
+		Assertions.assertTrue(generator.getRtf().contains(SIMPLE_RTF_MINUS_HEADER));
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class RtfGeneratorTest {
 		int firstNewline = rtf.indexOf('\n');
 		int secondNewline = rtf.indexOf('\n', firstNewline + 1);
 		// "\cb1" is the background definition, "\u27721" is the code point
-		Assert.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\cb1 \\u27721 "));
+		Assertions.assertTrue(rtf.substring(secondNewline + 1).startsWith("\\cb1 \\u27721 "));
 	}
 
 }

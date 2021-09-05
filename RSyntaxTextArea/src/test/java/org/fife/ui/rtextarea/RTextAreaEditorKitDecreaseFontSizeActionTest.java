@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
@@ -23,8 +23,8 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.DecreaseFontSizeAction action = new RTextAreaEditorKit.DecreaseFontSizeAction(
 			"decreaseFontSize", null, "Description", 0, null);
-		Assert.assertEquals("decreaseFontSize", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("decreaseFontSize", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -39,7 +39,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 		RTextAreaEditorKit.DecreaseFontSizeAction action = new RTextAreaEditorKit.DecreaseFontSizeAction();
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(origFontSize - 1, textArea.getFont().getSize());
+		Assertions.assertEquals(origFontSize - 1, textArea.getFont().getSize());
 	}
 
 
@@ -55,7 +55,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 		RTextAreaEditorKit.DecreaseFontSizeAction action = new RTextAreaEditorKit.DecreaseFontSizeAction();
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(2, textArea.getFont().getSize());
+		Assertions.assertEquals(2, textArea.getFont().getSize());
 	}
 
 
@@ -70,13 +70,13 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 		RTextAreaEditorKit.DecreaseFontSizeAction action = new RTextAreaEditorKit.DecreaseFontSizeAction();
 		action.actionPerformedImpl(null, textArea);
 
-		Assert.assertEquals(2, textArea.getFont().getSize());
+		Assertions.assertEquals(2, textArea.getFont().getSize());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaDecreaseFontSizeAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaDecreaseFontSizeAction,
 			new RTextAreaEditorKit.DecreaseFontSizeAction().getMacroID());
 	}
 }

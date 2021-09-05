@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -21,8 +21,8 @@ public class RTextAreaEditorKitEndRecordingMacroActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.EndRecordingMacroAction action = new RTextAreaEditorKit.EndRecordingMacroAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -32,11 +32,11 @@ public class RTextAreaEditorKitEndRecordingMacroActionTest {
 		RTextAreaEditorKit.EndRecordingMacroAction action = new RTextAreaEditorKit.EndRecordingMacroAction();
 
 		RTextArea.beginRecordingMacro();
-		Assert.assertTrue(RTextArea.isRecordingMacro()); // Sanity check
+		Assertions.assertTrue(RTextArea.isRecordingMacro()); // Sanity check
 
 		try {
 			action.actionPerformedImpl(null, new RTextArea());
-			Assert.assertFalse(RTextArea.isRecordingMacro());
+			Assertions.assertFalse(RTextArea.isRecordingMacro());
 		} finally {
 			RTextArea.endRecordingMacro();
 		}
@@ -45,7 +45,7 @@ public class RTextAreaEditorKitEndRecordingMacroActionTest {
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaEndRecordingMacroAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaEndRecordingMacroAction,
 			new RTextAreaEditorKit.EndRecordingMacroAction().getMacroID());
 	}
 
@@ -53,6 +53,6 @@ public class RTextAreaEditorKitEndRecordingMacroActionTest {
 	@Test
 	public void testIsRecordable() {
 		RTextAreaEditorKit.EndRecordingMacroAction action = new RTextAreaEditorKit.EndRecordingMacroAction();
-		Assert.assertFalse(action.isRecordable());
+		Assertions.assertFalse(action.isRecordable());
 	}
 }

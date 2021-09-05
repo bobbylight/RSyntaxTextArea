@@ -15,12 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
-import org.junit.*;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -33,19 +33,19 @@ import javax.swing.event.HyperlinkListener;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	private boolean origTemplatesEnabled;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		origTemplatesEnabled = RSyntaxTextArea.getTemplatesEnabled();
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RSyntaxTextArea.setTemplatesEnabled(origTemplatesEnabled);
 	}
@@ -54,17 +54,17 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testConstructor_rowsAndColumns() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(25, 80);
-		Assert.assertEquals(25, textArea.getRows());
-		Assert.assertEquals(80, textArea.getColumns());
+		Assertions.assertEquals(25, textArea.getRows());
+		Assertions.assertEquals(80, textArea.getColumns());
 	}
 
 
 	@Test
 	public void testConstructor_textAndRowsAndColumns() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea("foo", 25, 80);
-		Assert.assertEquals("foo", textArea.getText());
-		Assert.assertEquals(25, textArea.getRows());
-		Assert.assertEquals(80, textArea.getColumns());
+		Assertions.assertEquals("foo", textArea.getText());
+		Assertions.assertEquals(25, textArea.getRows());
+		Assertions.assertEquals(80, textArea.getColumns());
 	}
 
 
@@ -72,9 +72,9 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testConstructor_documentAndTextAndRowsAndColumns() {
 		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc, "foo", 25, 80);
-		Assert.assertEquals("foo", textArea.getText());
-		Assert.assertEquals(25, textArea.getRows());
-		Assert.assertEquals(80, textArea.getColumns());
+		Assertions.assertEquals("foo", textArea.getText());
+		Assertions.assertEquals(25, textArea.getRows());
+		Assertions.assertEquals(80, textArea.getColumns());
 	}
 
 
@@ -123,81 +123,81 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testAnimateBracketMatching() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getAnimateBracketMatching());
+		Assertions.assertTrue(textArea.getAnimateBracketMatching());
 		textArea.setAnimateBracketMatching(false);
-		Assert.assertFalse(textArea.getAnimateBracketMatching());
+		Assertions.assertFalse(textArea.getAnimateBracketMatching());
 	}
 
 
 	@Test
 	public void testAntiAliasingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getAntiAliasingEnabled());
+		Assertions.assertTrue(textArea.getAntiAliasingEnabled());
 		textArea.setAntiAliasingEnabled(false);
-		Assert.assertFalse(textArea.getAntiAliasingEnabled());
+		Assertions.assertFalse(textArea.getAntiAliasingEnabled());
 	}
 
 
 	@Test
 	public void testAutoIndentEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.isAutoIndentEnabled());
+		Assertions.assertTrue(textArea.isAutoIndentEnabled());
 		textArea.setAutoIndentEnabled(false);
-		Assert.assertFalse(textArea.isAutoIndentEnabled());
+		Assertions.assertFalse(textArea.isAutoIndentEnabled());
 	}
 
 
 	@Test
 	public void testBracketMatchingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.isBracketMatchingEnabled());
+		Assertions.assertTrue(textArea.isBracketMatchingEnabled());
 		textArea.setBracketMatchingEnabled(false);
-		Assert.assertFalse(textArea.isBracketMatchingEnabled());
+		Assertions.assertFalse(textArea.isBracketMatchingEnabled());
 	}
 
 
 	@Test
 	public void testClearParsers() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertTrue(textArea.getParserCount() > 0);
+		Assertions.assertTrue(textArea.getParserCount() > 0);
 		textArea.clearParsers();
-		Assert.assertEquals(0, textArea.getParserCount());
+		Assertions.assertEquals(0, textArea.getParserCount());
 	}
 
 
 	@Test
 	public void testClearWhitespaceLinesEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.isClearWhitespaceLinesEnabled());
+		Assertions.assertTrue(textArea.isClearWhitespaceLinesEnabled());
 		textArea.setClearWhitespaceLinesEnabled(false);
-		Assert.assertFalse(textArea.isClearWhitespaceLinesEnabled());
+		Assertions.assertFalse(textArea.isClearWhitespaceLinesEnabled());
 	}
 
 
 	@Test
 	public void testCloseCurlyBraces() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getCloseCurlyBraces());
+		Assertions.assertTrue(textArea.getCloseCurlyBraces());
 		textArea.setCloseCurlyBraces(false);
-		Assert.assertFalse(textArea.getCloseCurlyBraces());
+		Assertions.assertFalse(textArea.getCloseCurlyBraces());
 	}
 
 
 	@Test
 	public void testCloseMarkupTags() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getCloseMarkupTags());
+		Assertions.assertTrue(textArea.getCloseMarkupTags());
 		textArea.setCloseMarkupTags(false);
-		Assert.assertFalse(textArea.getCloseMarkupTags());
+		Assertions.assertFalse(textArea.getCloseMarkupTags());
 	}
 
 
 	@Test
 	public void testCodeFoldingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.isCodeFoldingEnabled());
+		Assertions.assertFalse(textArea.isCodeFoldingEnabled());
 		textArea.setCodeFoldingEnabled(true);
-		Assert.assertTrue(textArea.isCodeFoldingEnabled());
+		Assertions.assertTrue(textArea.isCodeFoldingEnabled());
 	}
 
 
@@ -231,12 +231,12 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.fragmentHtmlFlavor);
-		Assert.assertTrue(clipboardContent.contains(expectedPortion));
+		Assertions.assertTrue(clipboardContent.contains(expectedPortion));
 	}
 
 
 	@Test
-	@Ignore("Fails in the CI environment for some reason")
+	@Disabled("Fails in the CI environment for some reason")
 	public void testCopyAsStyledText_zeroArg_rtf_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
@@ -256,8 +256,8 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Scanner scanner = new Scanner(clipboardContent);
 		scanner.useDelimiter("\\Z");
 		String clipboardString = scanner.next();
-		Assert.assertTrue("Unexpected clipboard contents: " + clipboardString,
-			clipboardString.contains(expectedPortion));
+		Assertions.assertTrue(clipboardString.contains(expectedPortion),
+			"Unexpected clipboard contents: " + clipboardString);
 	}
 
 
@@ -273,7 +273,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.stringFlavor);
-		Assert.assertEquals(textArea.getText(), clipboardContent);
+		Assertions.assertEquals(textArea.getText(), clipboardContent);
 	}
 
 
@@ -289,7 +289,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.stringFlavor);
-		Assert.assertEquals(textArea.getText(), clipboardContent);
+		Assertions.assertEquals(textArea.getText(), clipboardContent);
 	}
 
 
@@ -305,34 +305,34 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.stringFlavor);
-		Assert.assertEquals(textArea.getText(), clipboardContent);
+		Assertions.assertEquals(textArea.getText(), clipboardContent);
 	}
 
 
 	@Test
 	public void testEOLMarkersVisible() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getEOLMarkersVisible());
+		Assertions.assertFalse(textArea.getEOLMarkersVisible());
 		textArea.setEOLMarkersVisible(true);
-		Assert.assertTrue(textArea.getEOLMarkersVisible());
+		Assertions.assertTrue(textArea.getEOLMarkersVisible());
 	}
 
 
 	@Test
 	public void testGetSetRightHandSideCorrection() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertEquals(0, textArea.getRightHandSideCorrection());
+		Assertions.assertEquals(0, textArea.getRightHandSideCorrection());
 		textArea.setRightHandSideCorrection(5);
-		Assert.assertEquals(5, textArea.getRightHandSideCorrection());
+		Assertions.assertEquals(5, textArea.getRightHandSideCorrection());
 	}
 
 
 	@Test
 	public void testGetSetTemplatesEnabled() {
-		Assert.assertFalse(RSyntaxTextArea.getTemplatesEnabled());
+		Assertions.assertFalse(RSyntaxTextArea.getTemplatesEnabled());
 		try {
 			RSyntaxTextArea.setTemplatesEnabled(true);
-			Assert.assertTrue(RSyntaxTextArea.getTemplatesEnabled());
+			Assertions.assertTrue(RSyntaxTextArea.getTemplatesEnabled());
 		} finally {
 			RSyntaxTextArea.setTemplatesEnabled(false);
 		}
@@ -342,9 +342,9 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testFractionalFontMetricsEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getFractionalFontMetricsEnabled());
+		Assertions.assertFalse(textArea.getFractionalFontMetricsEnabled());
 		textArea.setFractionalFontMetricsEnabled(true);
-		Assert.assertTrue(textArea.getFractionalFontMetricsEnabled());
+		Assertions.assertTrue(textArea.getFractionalFontMetricsEnabled());
 	}
 
 
@@ -352,14 +352,14 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetBackgroundForToken() {
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "public");
 		Token token = textArea.getTokenListForLine(0);
-		Assert.assertNull(textArea.getBackgroundForToken(token));
+		Assertions.assertNull(textArea.getBackgroundForToken(token));
 	}
 
 
 	@Test
 	public void testGetLastVisibleOffset_foldingEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
+		Assertions.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
 	}
 
 
@@ -367,16 +367,16 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetLastVisibleOffset_foldingNotEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setCodeFoldingEnabled(false);
-		Assert.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
+		Assertions.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
 	}
 
 
 	@Test
 	public void testGetSetLinkGenerator() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertNull(textArea.getLinkGenerator());
+		Assertions.assertNull(textArea.getLinkGenerator());
 		textArea.setLinkGenerator((textArea1, offs) -> null);
-		Assert.assertNotNull(textArea.getLinkGenerator());
+		Assertions.assertNotNull(textArea.getLinkGenerator());
 	}
 
 
@@ -386,21 +386,21 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Font origFont = textArea.getFont();
 		Font newFont = origFont.deriveFont(Font.ITALIC, 22f);
 		textArea.setFont(newFont);
-		Assert.assertEquals(newFont, textArea.getFont());
+		Assertions.assertEquals(newFont, textArea.getFont());
 	}
 
 
 	@Test
 	public void testGetPopupMenu() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertNotNull(textArea.getPopupMenu());
+		Assertions.assertNotNull(textArea.getPopupMenu());
 	}
 
 
 	@Test
 	public void testGetShouldAutoIndentNextLine_autoIndentEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertTrue(textArea.getShouldIndentNextLine(0));
+		Assertions.assertTrue(textArea.getShouldIndentNextLine(0));
 	}
 
 
@@ -408,7 +408,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetShouldAutoIndentNextLine_autoIndentDisabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setAutoIndentEnabled(false);
-		Assert.assertFalse(textArea.getShouldIndentNextLine(0));
+		Assertions.assertFalse(textArea.getShouldIndentNextLine(0));
 	}
 
 
@@ -416,21 +416,21 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testGetToolTipText() {
 		RSyntaxTextArea textArea = createTextArea();
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0, 0, 1, false);
-		Assert.assertNull(textArea.getToolTipText(e));
+		Assertions.assertNull(textArea.getToolTipText(e));
 	}
 
 
 	@Test
 	public void testHighlightSecondaryLanguages() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getHighlightSecondaryLanguages());
+		Assertions.assertTrue(textArea.getHighlightSecondaryLanguages());
 		textArea.setHighlightSecondaryLanguages(false);
-		Assert.assertFalse(textArea.getHighlightSecondaryLanguages());
+		Assertions.assertFalse(textArea.getHighlightSecondaryLanguages());
 	}
 
 
 	@Test
-	@Ignore("Not possible to do the setup for this test headlessly currently")
+	@Disabled("Not possible to do the setup for this test headlessly currently")
 	public void testHyperlinkEventsAreFired_linkGenerator() {
 		// TODO: Figure out a way to do the setup necessary for
 		// link generator events to fire
@@ -450,18 +450,18 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		// Verify "entered" events are propagated
 		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.ENTERED);
-		Assert.assertNotNull(lastEvent[0]);
-		Assert.assertEquals(HyperlinkEvent.EventType.ENTERED, lastEvent[0].getEventType());
+		Assertions.assertNotNull(lastEvent[0]);
+		Assertions.assertEquals(HyperlinkEvent.EventType.ENTERED, lastEvent[0].getEventType());
 
 		// Verify "activated" events are propagated
 		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.ACTIVATED);
-		Assert.assertNotNull(lastEvent[0]);
-		Assert.assertEquals(HyperlinkEvent.EventType.ACTIVATED, lastEvent[0].getEventType());
+		Assertions.assertNotNull(lastEvent[0]);
+		Assertions.assertEquals(HyperlinkEvent.EventType.ACTIVATED, lastEvent[0].getEventType());
 
 		// Verify "exited" events are propagated
 		textArea.fireHyperlinkUpdate(HyperlinkEvent.EventType.EXITED);
-		Assert.assertNotNull(lastEvent[0]);
-		Assert.assertEquals(HyperlinkEvent.EventType.EXITED, lastEvent[0].getEventType());
+		Assertions.assertNotNull(lastEvent[0]);
+		Assertions.assertEquals(HyperlinkEvent.EventType.EXITED, lastEvent[0].getEventType());
 	}
 
 
@@ -469,27 +469,27 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testHyperlinkForeground() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setHyperlinkForeground(Color.pink);
-		Assert.assertEquals(Color.pink, textArea.getHyperlinkForeground());
+		Assertions.assertEquals(Color.pink, textArea.getHyperlinkForeground());
 	}
 
 
 	@Test
 	public void testHyperlinksEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getHyperlinksEnabled());
+		Assertions.assertTrue(textArea.getHyperlinksEnabled());
 		textArea.setHyperlinksEnabled(false);
-		Assert.assertFalse(textArea.getHyperlinksEnabled());
+		Assertions.assertFalse(textArea.getHyperlinksEnabled());
 	}
 
 
 	@Test
 	public void testMarkOccurrences() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getMarkOccurrences());
+		Assertions.assertFalse(textArea.getMarkOccurrences());
 		textArea.setMarkOccurrences(true);
-		Assert.assertTrue(textArea.getMarkOccurrences());
+		Assertions.assertTrue(textArea.getMarkOccurrences());
 		textArea.setMarkOccurrences(false); // Needed for code path
-		Assert.assertFalse(textArea.getMarkOccurrences());
+		Assertions.assertFalse(textArea.getMarkOccurrences());
 	}
 
 
@@ -497,7 +497,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testMarkOccurrencesColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesColor(Color.pink);
-		Assert.assertEquals(Color.pink, textArea.getMarkOccurrencesColor());
+		Assertions.assertEquals(Color.pink, textArea.getMarkOccurrencesColor());
 	}
 
 
@@ -505,7 +505,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testMarkOccurrencesDelay() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesDelay(5432);
-		Assert.assertEquals(5432, textArea.getMarkOccurrencesDelay());
+		Assertions.assertEquals(5432, textArea.getMarkOccurrencesDelay());
 	}
 
 
@@ -513,14 +513,16 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testMarkOccurrencesDelay_zero() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesDelay(0);
-		Assert.assertEquals(0, textArea.getMarkOccurrencesDelay());
+		Assertions.assertEquals(0, textArea.getMarkOccurrencesDelay());
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testMarkOccurrencesDelay_invalidValue() {
-		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setMarkOccurrencesDelay(-1);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			RSyntaxTextArea textArea = new RSyntaxTextArea();
+			textArea.setMarkOccurrencesDelay(-1);
+		});
 	}
 
 
@@ -528,7 +530,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testMatchedBracketBGColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMatchedBracketBGColor(Color.pink);
-		Assert.assertEquals(Color.pink, textArea.getMatchedBracketBGColor());
+		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBGColor());
 	}
 
 
@@ -536,7 +538,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testMatchedBracketBorderColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMatchedBracketBorderColor(Color.pink);
-		Assert.assertEquals(Color.pink, textArea.getMatchedBracketBorderColor());
+		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBorderColor());
 	}
 
 
@@ -548,14 +550,14 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		char[] chars = "int".toCharArray();
 		TokenImpl expected = new TokenImpl(chars, 0, chars.length - 1, 7, TokenTypes.DATA_TYPE, 0);
-		Assert.assertEquals(expected, textArea.modelToToken(8));
+		Assertions.assertEquals(expected, textArea.modelToToken(8));
 	}
 
 
 	@Test
 	public void testModelToToken_negativeValue() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertNull(textArea.modelToToken(-1));
+		Assertions.assertNull(textArea.modelToToken(-1));
 	}
 
 
@@ -603,25 +605,25 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	public void testPaintMatchedBracketPair() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getPaintMatchedBracketPair());
+		Assertions.assertFalse(textArea.getPaintMatchedBracketPair());
 		textArea.setPaintMatchedBracketPair(true);
-		Assert.assertTrue(textArea.getPaintMatchedBracketPair());
+		Assertions.assertTrue(textArea.getPaintMatchedBracketPair());
 	}
 
 	@Test
 	public void testPaintMarkOccurrencesBorder() {
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertFalse(textArea.getPaintMarkOccurrencesBorder());
+		Assertions.assertFalse(textArea.getPaintMarkOccurrencesBorder());
 		textArea.setPaintMarkOccurrencesBorder(true);
-		Assert.assertTrue(textArea.getPaintMarkOccurrencesBorder());
+		Assertions.assertTrue(textArea.getPaintMarkOccurrencesBorder());
 	}
 
 	@Test
 	public void testPaintTabLines() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getPaintTabLines());
+		Assertions.assertFalse(textArea.getPaintTabLines());
 		textArea.setPaintTabLines(true);
-		Assert.assertTrue(textArea.getPaintTabLines());
+		Assertions.assertTrue(textArea.getPaintTabLines());
 	}
 
 
@@ -631,17 +633,17 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.discardAllEdits();
 
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 		textArea.append("foo");
-		Assert.assertTrue(textArea.canUndo());
-		Assert.assertFalse(textArea.canRedo());
+		Assertions.assertTrue(textArea.canUndo());
+		Assertions.assertFalse(textArea.canRedo());
 
 		textArea.undoLastAction();
-		Assert.assertTrue(textArea.canRedo());
+		Assertions.assertTrue(textArea.canRedo());
 
 		textArea.redoLastAction();
-		Assert.assertFalse(textArea.canRedo());
-		Assert.assertTrue(textArea.getText().endsWith("foo"));
+		Assertions.assertFalse(textArea.canRedo());
+		Assertions.assertTrue(textArea.getText().endsWith("foo"));
 	}
 
 
@@ -666,24 +668,24 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetLinkScanningMask_invalidValue() {
-		createTextArea().setLinkScanningMask(0);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> createTextArea().setLinkScanningMask(0));
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetRightHandSideCorrection_invalidValue() {
-		createTextArea().setRightHandSideCorrection(-1);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> createTextArea().setRightHandSideCorrection(-1));
 	}
 
 
 	@Test
 	public void testSyntaxEditingStyle() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, textArea.getSyntaxEditingStyle());
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, textArea.getSyntaxEditingStyle());
 	}
 
 
@@ -691,7 +693,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testSyntaxEditingStyle_defaultForNullValue() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setSyntaxEditingStyle(null);
-		Assert.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
 	}
 
 
@@ -699,7 +701,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testTabLineColor() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setTabLineColor(Color.blue);
-		Assert.assertEquals(Color.blue, textArea.getTabLineColor());
+		Assertions.assertEquals(Color.blue, textArea.getTabLineColor());
 	}
 
 
@@ -707,7 +709,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testParserDelay() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setParserDelay(6789);
-		Assert.assertEquals(6789, textArea.getParserDelay());
+		Assertions.assertEquals(6789, textArea.getParserDelay());
 	}
 
 
@@ -718,7 +720,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		try {
 			Path tempDir = Files.createTempDirectory("testDir");
-			Assert.assertTrue(RSyntaxTextArea.setTemplateDirectory(tempDir.toString()));
+			Assertions.assertTrue(RSyntaxTextArea.setTemplateDirectory(tempDir.toString()));
 		} finally {
 			RSyntaxTextArea.setTemplatesEnabled(false);
 		}
@@ -733,7 +735,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		try {
 			Path tempDir = Files.createTempDirectory("testDir");
 			String nonExistentDir = tempDir.toString() + "/subdir";
-			Assert.assertTrue(RSyntaxTextArea.setTemplateDirectory(nonExistentDir));
+			Assertions.assertTrue(RSyntaxTextArea.setTemplateDirectory(nonExistentDir));
 		} finally {
 			RSyntaxTextArea.setTemplatesEnabled(false);
 		}
@@ -744,29 +746,29 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	public void testUndoLastAction() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.discardAllEdits();
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 		textArea.append("foo");
-		Assert.assertTrue(textArea.canUndo());
+		Assertions.assertTrue(textArea.canUndo());
 		textArea.undoLastAction();
-		Assert.assertFalse(textArea.canUndo());
+		Assertions.assertFalse(textArea.canUndo());
 	}
 
 
 	@Test
 	public void testUseFocusableTips() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertTrue(textArea.getUseFocusableTips());
+		Assertions.assertTrue(textArea.getUseFocusableTips());
 		textArea.setUseFocusableTips(false);
-		Assert.assertFalse(textArea.getUseFocusableTips());
+		Assertions.assertFalse(textArea.getUseFocusableTips());
 	}
 
 
 	@Test
 	public void testUseSelectedTextColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.getUseSelectedTextColor());
+		Assertions.assertFalse(textArea.getUseSelectedTextColor());
 		textArea.setUseSelectedTextColor(true);
-		Assert.assertTrue(textArea.getUseSelectedTextColor());
+		Assertions.assertTrue(textArea.getUseSelectedTextColor());
 	}
 
 
@@ -777,16 +779,16 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		char[] chars = "public".toCharArray();
 		TokenImpl expected = new TokenImpl(chars, 0, chars.length - 1, 0, TokenTypes.RESERVED_WORD, 0);
-		Assert.assertEquals(expected, textArea.viewToToken(new Point(1, 1)));
+		Assertions.assertEquals(expected, textArea.viewToToken(new Point(1, 1)));
 	}
 
 
 	@Test
 	public void testWhitespaceVisible() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assert.assertFalse(textArea.isWhitespaceVisible());
+		Assertions.assertFalse(textArea.isWhitespaceVisible());
 		textArea.setWhitespaceVisible(true);
-		Assert.assertTrue(textArea.isWhitespaceVisible());
+		Assertions.assertTrue(textArea.isWhitespaceVisible());
 	}
 
 }

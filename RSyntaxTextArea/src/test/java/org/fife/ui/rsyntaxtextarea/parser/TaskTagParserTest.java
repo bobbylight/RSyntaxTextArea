@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -26,7 +26,7 @@ public class TaskTagParserTest {
 	@Test
 	public void testConstructor() {
 		TaskTagParser parser = new TaskTagParser();
-		Assert.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
+		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
 	}
 
 
@@ -34,13 +34,13 @@ public class TaskTagParserTest {
 	public void testGetTaskPattern() {
 
 		TaskTagParser parser = new TaskTagParser();
-		Assert.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
+		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
 
 		parser.setTaskPattern("Hello|World");
-		Assert.assertEquals("Hello|World", parser.getTaskPattern());
+		Assertions.assertEquals("Hello|World", parser.getTaskPattern());
 
 		parser.setTaskPattern(null);
-		Assert.assertNull(parser.getTaskPattern());
+		Assertions.assertNull(parser.getTaskPattern());
 
 	}
 
@@ -55,15 +55,15 @@ public class TaskTagParserTest {
 		doc.insertString(0, "/* TODO: Fix this */", null);
 
 		ParseResult res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(1, notices.size());
+		Assertions.assertEquals(1, notices.size());
 		// Note that the parser does not understand EOL vs. MLC comments, so
 		// it just returns everything from the start of the task to the end of
 		// the line.
-		Assert.assertEquals("TODO: Fix this */", notices.get(0).getToolTipText());
+		Assertions.assertEquals("TODO: Fix this */", notices.get(0).getToolTipText());
 
 	}
 
@@ -79,11 +79,11 @@ public class TaskTagParserTest {
 		doc.insertString(0, "/* TODO: Fix this */ for", null);
 
 		ParseResult res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(0, notices.size());
+		Assertions.assertEquals(0, notices.size());
 
 	}
 
@@ -99,19 +99,19 @@ public class TaskTagParserTest {
 		doc.insertString(0, "/* TODO: Fix this */ for", null);
 
 		ParseResult res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
-		Assert.assertEquals(0, notices.size());
+		Assertions.assertEquals(0, notices.size());
 
 		doc.setSyntaxStyle((String)null); // Not really valid, but whatever
 		res = parser.parse(doc, doc.getSyntaxStyle());
-		Assert.assertEquals(parser, res.getParser());
-		Assert.assertEquals(0, res.getFirstLineParsed());
-		Assert.assertEquals(0, res.getLastLineParsed());
+		Assertions.assertEquals(parser, res.getParser());
+		Assertions.assertEquals(0, res.getFirstLineParsed());
+		Assertions.assertEquals(0, res.getLastLineParsed());
 		notices = res.getNotices();
-		Assert.assertEquals(0, notices.size());
+		Assertions.assertEquals(0, notices.size());
 
 	}
 
@@ -120,16 +120,16 @@ public class TaskTagParserTest {
 	public void testSetTaskPattern() {
 
 		TaskTagParser parser = new TaskTagParser();
-		Assert.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
+		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
 
 		parser.setTaskPattern("Hello|World");
-		Assert.assertEquals("Hello|World", parser.getTaskPattern());
+		Assertions.assertEquals("Hello|World", parser.getTaskPattern());
 
 		parser.setTaskPattern(null);
-		Assert.assertNull(parser.getTaskPattern());
+		Assertions.assertNull(parser.getTaskPattern());
 
 		parser.setTaskPattern(""); // We convert empty string to null
-		Assert.assertNull(parser.getTaskPattern());
+		Assertions.assertNull(parser.getTaskPattern());
 
 	}
 

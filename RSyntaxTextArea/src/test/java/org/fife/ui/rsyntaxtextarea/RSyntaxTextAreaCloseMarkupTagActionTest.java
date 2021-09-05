@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
@@ -34,7 +34,7 @@ public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxText
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 		a.actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getText().endsWith("\n<"));
+		Assertions.assertTrue(textArea.getText().endsWith("\n<"));
 	}
 
 	@Test
@@ -47,12 +47,12 @@ public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxText
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 		a.actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getText().endsWith("\n</books>"));
+		Assertions.assertTrue(textArea.getText().endsWith("\n</books>"));
 	}
 
 	@Test
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CloseMarkupTagAction a = new RSyntaxTextAreaEditorKit.CloseMarkupTagAction();
-		Assert.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction, a.getMacroID());
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction, a.getMacroID());
 	}
 }

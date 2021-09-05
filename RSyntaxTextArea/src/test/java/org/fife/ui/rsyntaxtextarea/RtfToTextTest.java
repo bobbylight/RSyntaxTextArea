@@ -1,7 +1,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +30,7 @@ public class RtfToTextTest {
 
 	@Test
 	public void testGetPlainText_byteArray() throws IOException {
-		Assert.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)));
+		Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	@Test
@@ -42,19 +42,19 @@ public class RtfToTextTest {
 		}
 		file.deleteOnExit();
 
-		Assert.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(file));
+		Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(file));
 	}
 
 	@Test
 	public void testGetPlainText_inputStream() throws IOException {
 		try (BufferedInputStream bin = new BufferedInputStream(new ByteArrayInputStream(
 			SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)))) {
-			Assert.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
+			Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
 		}
 	}
 
 	@Test
 	public void testGetPlainText_string() throws IOException {
-		Assert.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
+		Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
 	}
 }

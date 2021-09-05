@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitTimeDateActionTest {
 
 
@@ -26,8 +26,8 @@ public class RTextAreaEditorKitTimeDateActionTest {
 	public void testConstructor_multiArg() {
 		RTextAreaEditorKit.TimeDateAction action = new RTextAreaEditorKit.TimeDateAction(
 			"name", null, "Description", 0, null);
-		Assert.assertEquals("name", action.getName());
-		Assert.assertEquals("Description", action.getDescription());
+		Assertions.assertEquals("name", action.getName());
+		Assertions.assertEquals("Description", action.getDescription());
 	}
 
 
@@ -39,7 +39,7 @@ public class RTextAreaEditorKitTimeDateActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.TimeDateAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getText().length() > 0);
+		Assertions.assertTrue(textArea.getText().length() > 0);
 	}
 
 
@@ -52,13 +52,13 @@ public class RTextAreaEditorKitTimeDateActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.TimeDateAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals(0, textArea.getText().length());
+		Assertions.assertEquals(0, textArea.getText().length());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaTimeDateAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaTimeDateAction,
 			new RTextAreaEditorKit.TimeDateAction().getMacroID());
 	}
 }

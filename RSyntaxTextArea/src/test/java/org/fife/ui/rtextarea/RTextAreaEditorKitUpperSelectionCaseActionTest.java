@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitUpperSelectionCaseActionTest {
 
 
@@ -33,7 +33,7 @@ public class RTextAreaEditorKitUpperSelectionCaseActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.UpperSelectionCaseAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("hello World", textArea.getText());
+		Assertions.assertEquals("hello World", textArea.getText());
 	}
 
 
@@ -47,13 +47,13 @@ public class RTextAreaEditorKitUpperSelectionCaseActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.UpperSelectionCaseAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("heLLO WOrld", textArea.getText());
+		Assertions.assertEquals("heLLO WOrld", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaUpperSelectionCaseAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaUpperSelectionCaseAction,
 			new RTextAreaEditorKit.UpperSelectionCaseAction().getMacroID());
 	}
 }

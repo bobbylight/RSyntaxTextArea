@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -45,16 +45,16 @@ public class LatexTokenMakerTest extends AbstractTokenMakerTest2 {
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '\\'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '\\'));
 		token = token.getNextToken();
-		Assert.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '%'));
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '%'));
 	}
 
 
 	@Test
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("%", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("%", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 }

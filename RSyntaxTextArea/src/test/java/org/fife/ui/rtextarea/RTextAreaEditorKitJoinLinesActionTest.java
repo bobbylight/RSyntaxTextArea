@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitJoinLinesActionTest {
 
 
@@ -32,7 +32,7 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.JoinLinesAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2", textArea.getText());
 	}
 
 
@@ -45,7 +45,7 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.JoinLinesAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1line 2", textArea.getText());
+		Assertions.assertEquals("line 1line 2", textArea.getText());
 	}
 
 
@@ -58,13 +58,13 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.JoinLinesAction().actionPerformedImpl(e, textArea);
 
-		Assert.assertEquals("line 1\nline 2", textArea.getText());
+		Assertions.assertEquals("line 1\nline 2", textArea.getText());
 	}
 
 
 	@Test
 	public void testGetMacroID() {
-		Assert.assertEquals(RTextAreaEditorKit.rtaJoinLinesAction,
+		Assertions.assertEquals(RTextAreaEditorKit.rtaJoinLinesAction,
 			new RTextAreaEditorKit.JoinLinesAction().getMacroID());
 	}
 }

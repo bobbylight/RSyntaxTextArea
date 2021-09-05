@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class MacroTest {
 
 	@Test
 	public void testConstructor_zeroArg() {
-		Assert.assertNotNull(new Macro().getName());
+		Assertions.assertNotNull(new Macro().getName());
 	}
 
 
@@ -45,22 +45,22 @@ public class MacroTest {
 		file.deleteOnExit();
 
 		Macro macro = new Macro(file);
-		Assert.assertEquals("macroFile", macro.getName());
-		Assert.assertEquals(2, macro.getMacroRecords().size());
+		Assertions.assertEquals("macroFile", macro.getName());
+		Assertions.assertEquals(2, macro.getMacroRecords().size());
 	}
 
 
 	@Test
 	public void testConstructor_stringName() {
 		Macro macro = new Macro("foo");
-		Assert.assertEquals(0, macro.getMacroRecords().size());
+		Assertions.assertEquals(0, macro.getMacroRecords().size());
 	}
 
 
 	@Test
 	public void testConstructor_stringNameAndRecords_nullRecords() {
 		Macro macro = new Macro("foo", null);
-		Assert.assertEquals(0, macro.getMacroRecords().size());
+		Assertions.assertEquals(0, macro.getMacroRecords().size());
 	}
 
 
@@ -69,7 +69,7 @@ public class MacroTest {
 		Macro macro = new Macro("foo", Collections.singletonList(
 			new Macro.MacroRecord("foo", "bar")
 		));
-		Assert.assertEquals(1, macro.getMacroRecords().size());
+		Assertions.assertEquals(1, macro.getMacroRecords().size());
 	}
 
 
@@ -77,10 +77,10 @@ public class MacroTest {
 	public void testAddMacroRecord_happyPath() {
 
 		Macro macro = new Macro("foo");
-		Assert.assertEquals(0, macro.getMacroRecords().size());
+		Assertions.assertEquals(0, macro.getMacroRecords().size());
 
 		macro.addMacroRecord(new Macro.MacroRecord());
-		Assert.assertEquals(1, macro.getMacroRecords().size());
+		Assertions.assertEquals(1, macro.getMacroRecords().size());
 	}
 
 
@@ -88,19 +88,19 @@ public class MacroTest {
 	public void testAddMacroRecord_null() {
 
 		Macro macro = new Macro("foo");
-		Assert.assertEquals(0, macro.getMacroRecords().size());
+		Assertions.assertEquals(0, macro.getMacroRecords().size());
 
 		macro.addMacroRecord(null);
-		Assert.assertEquals(0, macro.getMacroRecords().size());
+		Assertions.assertEquals(0, macro.getMacroRecords().size());
 	}
 
 
 	@Test
 	public void testGetSetName() {
 		Macro macro = new Macro("foo");
-		Assert.assertEquals("foo", macro.getName());
+		Assertions.assertEquals("foo", macro.getName());
 		macro.setName("bar");
-		Assert.assertEquals("bar", macro.getName());
+		Assertions.assertEquals("bar", macro.getName());
 	}
 
 
@@ -112,6 +112,6 @@ public class MacroTest {
 
 		Macro macro = new Macro("test");
 		macro.saveToFile(file);
-		Assert.assertTrue(file.length() > 0);
+		Assertions.assertTrue(file.length() > 0);
 	}
 }

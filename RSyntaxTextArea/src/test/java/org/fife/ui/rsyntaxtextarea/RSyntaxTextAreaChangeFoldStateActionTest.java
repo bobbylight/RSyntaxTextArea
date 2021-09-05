@@ -6,10 +6,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,21 +20,21 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	public void testActionPerformedImpl_foldingEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		Assert.assertFalse(textArea.getFoldManager().getFold(0).isCollapsed());
+		Assertions.assertFalse(textArea.getFoldManager().getFold(0).isCollapsed());
 
 		RSyntaxTextAreaEditorKit.ChangeFoldStateAction a = new RSyntaxTextAreaEditorKit.ChangeFoldStateAction(
 			"foo", true);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCollapseFoldAction);
 		a.actionPerformedImpl(e, textArea);
 
-		Assert.assertTrue(textArea.getFoldManager().getFold(0).isCollapsed());
+		Assertions.assertTrue(textArea.getFoldManager().getFold(0).isCollapsed());
 	}
 
 	@Test
@@ -53,6 +53,6 @@ public class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTex
 	public void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.ChangeFoldStateAction a = new RSyntaxTextAreaEditorKit.ChangeFoldStateAction(
 			"foo", true);
-		Assert.assertEquals("foo", a.getMacroID());
+		Assertions.assertEquals("foo", a.getMacroID());
 	}
 }

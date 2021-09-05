@@ -10,8 +10,8 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -34,17 +34,17 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals(keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -74,17 +74,17 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals("Unexpected number for token " + i, keywords[i], token.getLexeme());
-			Assert.assertEquals("Invalid float: " + token, TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType(), "Invalid float: " + token);
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -92,7 +92,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	@Override
 	public void testGetLineCommentStartAndEnd() {
-		Assert.assertNull(new JsonTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertNull(new JsonTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 
@@ -107,17 +107,17 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
-			Assert.assertEquals("Unexpected number for token " + i, keywords[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
+			Assertions.assertEquals(keywords[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
 			if (i < keywords.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -129,7 +129,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		// Only need to check the first token
-		Assert.assertFalse(token.isComment());
+		Assertions.assertFalse(token.isComment());
 	}
 
 
@@ -139,7 +139,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 		Segment segment = createSegment(code);
 		JsonTokenMaker tm = new JsonTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "null"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "null"));
 	}
 
 
@@ -154,19 +154,19 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] separators = code.split(" +");
 		for (int i = 0; i < separators.length; i++) {
-			Assert.assertEquals(separators[i], token.getLexeme());
-			Assert.assertEquals(TokenTypes.SEPARATOR, token.getType());
+			Assertions.assertEquals(separators[i], token.getLexeme());
+			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 			// Just one extra test here
-			Assert.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
+			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
 			if (i < separators.length - 1) {
 				token = token.getNextToken();
-				Assert.assertTrue("Not a whitespace token: " + token, token.isWhitespace());
-				Assert.assertTrue("Not a single space: " + token, token.is(TokenTypes.WHITESPACE, " "));
+				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
+				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
 			}
 			token = token.getNextToken();
 		}
 
-		Assert.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
 
 	}
 
@@ -182,7 +182,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			JsonTokenMaker tm = new JsonTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Invalid string: " + token, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
 	}
@@ -200,7 +200,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			JsonTokenMaker tm = new JsonTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals("Invalid error-string: " + token, TokenTypes.ERROR_STRING_DOUBLE, token.getType());
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
 		}
 
 	}

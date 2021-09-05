@@ -5,11 +5,11 @@
 package org.fife.ui.rsyntaxtextarea.templates;
 
 
-import org.fife.ui.SwingRunner;
+import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Unit tests for the {@code StaticCodeTemplate} class.
@@ -17,25 +17,25 @@ import org.junit.runner.RunWith;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class StaticCodeTemplateTest {
 
 
 	@Test
 	public void testGetSetAfterCaretText() {
 		StaticCodeTemplate template = new StaticCodeTemplate();
-		Assert.assertNull(template.getAfterCaretText());
+		Assertions.assertNull(template.getAfterCaretText());
 		template.setAfterCaretText("foo");
-		Assert.assertEquals("foo", template.getAfterCaretText());
+		Assertions.assertEquals("foo", template.getAfterCaretText());
 	}
 
 
 	@Test
 	public void testGetSetBeforeCaretText() {
 		StaticCodeTemplate template = new StaticCodeTemplate();
-		Assert.assertNull(template.getBeforeCaretText());
+		Assertions.assertNull(template.getBeforeCaretText());
 		template.setBeforeCaretText("foo");
-		Assert.assertEquals("foo", template.getBeforeCaretText());
+		Assertions.assertEquals("foo", template.getBeforeCaretText());
 	}
 
 
@@ -47,14 +47,14 @@ public class StaticCodeTemplateTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea("id");
 		template.invoke(textArea);
 
-		Assert.assertEquals("beforeafter", textArea.getText());
-		Assert.assertEquals("before".length(), textArea.getCaretPosition());
+		Assertions.assertEquals("beforeafter", textArea.getText());
+		Assertions.assertEquals("before".length(), textArea.getCaretPosition());
 	}
 
 
 	@Test
 	public void testToString() {
 		String expected = "[StaticCodeTemplate: id=null, text=null|null]";
-		Assert.assertEquals(expected, new StaticCodeTemplate().toString());
+		Assertions.assertEquals(expected, new StaticCodeTemplate().toString());
 	}
 }

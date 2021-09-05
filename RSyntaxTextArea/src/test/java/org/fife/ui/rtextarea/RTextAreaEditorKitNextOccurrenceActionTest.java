@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.SwingRunner;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.event.ActionEvent;
 
@@ -20,13 +20,13 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-@RunWith(SwingRunner.class)
+@ExtendWith(SwingRunnerExtension.class)
 public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 	private RTextArea textArea;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		textArea = new RTextArea("one two one two\none two");
@@ -34,7 +34,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 	}
 
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RTextArea.setSelectedOccurrenceText(null);
 	}
@@ -48,8 +48,8 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextOccurrenceAction("foo").actionPerformedImpl(e, textArea);
-		Assert.assertEquals(0, textArea.getSelectionStart());
-		Assert.assertEquals(0, textArea.getSelectionEnd());
+		Assertions.assertEquals(0, textArea.getSelectionStart());
+		Assertions.assertEquals(0, textArea.getSelectionEnd());
 	}
 
 
@@ -62,8 +62,8 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextOccurrenceAction("foo").actionPerformedImpl(e, textArea);
-		Assert.assertEquals(4, textArea.getSelectionStart());
-		Assert.assertEquals(7, textArea.getSelectionEnd());
+		Assertions.assertEquals(4, textArea.getSelectionStart());
+		Assertions.assertEquals(7, textArea.getSelectionEnd());
 	}
 
 
@@ -77,8 +77,8 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextOccurrenceAction("foo").actionPerformedImpl(e, textArea);
-		Assert.assertEquals(8, textArea.getSelectionStart());
-		Assert.assertEquals(11, textArea.getSelectionEnd());
+		Assertions.assertEquals(8, textArea.getSelectionStart());
+		Assertions.assertEquals(11, textArea.getSelectionEnd());
 	}
 
 
@@ -92,8 +92,8 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
 		new RTextAreaEditorKit.NextOccurrenceAction("foo").actionPerformedImpl(e, textArea);
-		Assert.assertEquals(16, textArea.getSelectionStart());
-		Assert.assertEquals(19, textArea.getSelectionEnd());
+		Assertions.assertEquals(16, textArea.getSelectionStart());
+		Assertions.assertEquals(19, textArea.getSelectionEnd());
 	}
 
 
@@ -108,14 +108,14 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 		// Selection didn't change
 		new RTextAreaEditorKit.NextOccurrenceAction("foo").actionPerformedImpl(e, textArea);
-		Assert.assertEquals(16, textArea.getSelectionStart());
-		Assert.assertEquals(19, textArea.getSelectionEnd());
+		Assertions.assertEquals(16, textArea.getSelectionStart());
+		Assertions.assertEquals(19, textArea.getSelectionEnd());
 	}
 
 
 	@Test
 	public void testGetMacroId() {
-		Assert.assertEquals("foo",
+		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.NextOccurrenceAction("foo").getMacroID());
 	}
 }

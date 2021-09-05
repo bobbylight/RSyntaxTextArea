@@ -9,8 +9,10 @@ package org.fife.ui.rtextarea;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import javax.swing.text.BadLocationException;
 
 
 /**
@@ -25,8 +27,8 @@ public class SearchContextTest {
 	@Test
 	public void testConstructor_2Arg() {
 		SearchContext sc = new SearchContext("foo", true);
-		Assert.assertEquals("foo", sc.getSearchFor());
-		Assert.assertTrue(sc.getMatchCase());
+		Assertions.assertEquals("foo", sc.getSearchFor());
+		Assertions.assertTrue(sc.getMatchCase());
 	}
 
 
@@ -36,7 +38,7 @@ public class SearchContextTest {
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
 		sc.firePropertyChange("fooProp", false, true);
-		Assert.assertTrue(pcl.called);
+		Assertions.assertTrue(pcl.called);
 	}
 
 
@@ -61,14 +63,14 @@ public class SearchContextTest {
 		sc.setWholeWord(wholeWord);
 
 		SearchContext sc2 = sc.clone();
-		Assert.assertEquals(sc2.getSearchFor(), sc.getSearchFor());
-		Assert.assertEquals(sc2.getMatchCase(), sc.getMatchCase());
-		Assert.assertEquals(sc2.getMarkAll(), sc.getMarkAll());
-		Assert.assertEquals(sc2.isRegularExpression(), sc.isRegularExpression());
-		Assert.assertEquals(sc2.getReplaceWith(), sc.getReplaceWith());
-		Assert.assertEquals(sc2.getSearchForward(), sc.getSearchForward());
-		Assert.assertEquals(sc2.getSearchSelectionOnly(), sc.getSearchSelectionOnly());
-		Assert.assertEquals(sc2.getWholeWord(), sc.getWholeWord());
+		Assertions.assertEquals(sc2.getSearchFor(), sc.getSearchFor());
+		Assertions.assertEquals(sc2.getMatchCase(), sc.getMatchCase());
+		Assertions.assertEquals(sc2.getMarkAll(), sc.getMarkAll());
+		Assertions.assertEquals(sc2.isRegularExpression(), sc.isRegularExpression());
+		Assertions.assertEquals(sc2.getReplaceWith(), sc.getReplaceWith());
+		Assertions.assertEquals(sc2.getSearchForward(), sc.getSearchForward());
+		Assertions.assertEquals(sc2.getSearchSelectionOnly(), sc.getSearchSelectionOnly());
+		Assertions.assertEquals(sc2.getWholeWord(), sc.getWholeWord());
 
 	}
 
@@ -79,7 +81,7 @@ public class SearchContextTest {
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
 		sc.firePropertyChange("fooProp", false, true);
-		Assert.assertTrue(pcl.called);
+		Assertions.assertTrue(pcl.called);
 	}
 
 
@@ -89,7 +91,7 @@ public class SearchContextTest {
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
 		sc.firePropertyChange("fooProp", "old", "new");
-		Assert.assertTrue(pcl.called);
+		Assertions.assertTrue(pcl.called);
 	}
 
 
@@ -100,14 +102,16 @@ public class SearchContextTest {
 		sc.addPropertyChangeListener(pcl);
 		sc.removePropertyChangeListener(pcl);
 		sc.firePropertyChange("fooProp", false, true);
-		Assert.assertFalse(pcl.called);
+		Assertions.assertFalse(pcl.called);
 	}
 
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test
 	public void testSetSearchSelectionOnly_true() {
-		SearchContext sc = new SearchContext();
-		sc.setSearchSelectionOnly(true);
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+			SearchContext sc = new SearchContext();
+			sc.setSearchSelectionOnly(true);
+		});
 	}
 
 
@@ -117,7 +121,7 @@ public class SearchContextTest {
 				"replaceWith=null, matchCase=false, wholeWord=false, " +
 				"regex=false, markAll=true]";
 		SearchContext sc = new SearchContext();
-		Assert.assertEquals(EXPECTED, sc.toString());
+		Assertions.assertEquals(EXPECTED, sc.toString());
 	}
 
 

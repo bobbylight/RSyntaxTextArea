@@ -11,8 +11,8 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -45,7 +45,7 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
 	}
@@ -64,12 +64,12 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
-			Assert.assertTrue(token.isHyperlink());
-			Assert.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assert.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 		}
 
@@ -79,17 +79,17 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	public void testGetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assert.assertEquals("#", startAndEnd[0]);
-		Assert.assertNull(startAndEnd[1]);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
 	@Test
 	public void testGetMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assert.assertTrue(tm.getMarkOccurrencesOfTokenType(
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(
 				TokenTypes.RESERVED_WORD));
-		Assert.assertFalse(tm.getMarkOccurrencesOfTokenType(
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
 				TokenTypes.VARIABLE));
 	}
 
@@ -103,11 +103,11 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assert.assertTrue(token.is(TokenTypes.RESERVED_WORD, "127.0.0.1"));
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "127.0.0.1"));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();
-		Assert.assertTrue(token.is(TokenTypes.IDENTIFIER, "localhost"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "localhost"));
 
 	}
 
