@@ -24,7 +24,7 @@ import java.awt.*;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
+class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	private static void testDocumentEvent_happyPath(DocumentEvent.EventType eventType) {
@@ -78,7 +78,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetChildAllocation_notAllocatedYet() {
+	void testGetChildAllocation_notAllocatedYet() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -95,7 +95,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetMaximumSpan_happyPath() {
+	void testGetMaximumSpan_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -110,7 +110,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetMinimumSpan_happyPath() {
+	void testGetMinimumSpan_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -125,7 +125,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPreferredSpan_xAxis_happyPath() {
+	void testGetPreferredSpan_xAxis_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -140,7 +140,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPreferredSpan_yAxis_happyPath() {
+	void testGetPreferredSpan_yAxis_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -155,7 +155,7 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testNextTabStop_zero() {
+	void testNextTabStop_zero() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
@@ -169,13 +169,13 @@ public class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveUpdate_happyPath() {
+	void testRemoveUpdate_happyPath() {
 		testDocumentEvent_happyPath(DocumentEvent.EventType.REMOVE);
 	}
 
 
 	@Test
-	public void testYForLine_happyPath() throws BadLocationException {
+	void testYForLine_happyPath() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);

@@ -22,12 +22,12 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -38,7 +38,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testAllNumbers() {
+	void testAllNumbers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"34",
 			"34.",
@@ -56,7 +56,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'foobar'",
 			"'Dwayne 'The Rock' Johnson'"
@@ -65,7 +65,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testUnterminatedCharLiterals() {
+	void testUnterminatedCharLiterals() {
 		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'unterminated"
 		);
@@ -81,19 +81,19 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testComments() {
+	void testComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "-- This is a comment");
 	}
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			"<number>",
 			"<name>",
@@ -105,7 +105,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"_G",
 			"_VERSION",
@@ -141,7 +141,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testLongStrings() {
+	void testLongStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"[[Unterminated long string",
 			"[[Terminated long string]]"
@@ -150,7 +150,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultilineComments() {
+	void testMultilineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"--[[ This is a multi-line comment ]]"
 		);
@@ -158,7 +158,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 
 			// arithmetic operators
@@ -190,7 +190,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testReservedWords() {
+	void testReservedWords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"break",
 			"do",
@@ -214,7 +214,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(",
 			")",
@@ -227,7 +227,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"",
 			"\"Dwayne \"The Rock\" Johnson"
@@ -236,7 +236,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testUnterminatedStrings() {
+	void testUnterminatedStrings() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated"
 		);
@@ -244,7 +244,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

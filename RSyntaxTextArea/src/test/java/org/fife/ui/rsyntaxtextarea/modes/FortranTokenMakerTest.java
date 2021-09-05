@@ -22,12 +22,12 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -38,7 +38,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBeginningOfLineComments() {
+	void testBeginningOfLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			"C* This is a comment"
 		);
@@ -46,7 +46,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBeginningOfLineDocComments() {
+	void testBeginningOfLineDocComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			"D This is a comment"
 		);
@@ -54,7 +54,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBoolean() {
+	void testBoolean() {
 		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
 			".true.",
 			".false."
@@ -63,7 +63,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testChars() {
+	void testChars() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'foobar'",
 			"'unterminated"
@@ -72,7 +72,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEndOfLineComments() {
+	void testEndOfLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "! This is a comment");
 	}
 
@@ -86,13 +86,13 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"<",
 			">",
@@ -115,7 +115,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testReservedWords() {
+	void testReservedWords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"INCLUDE",
 			"PROGRAM",
@@ -291,7 +291,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"",
 			"\"unterminated"
@@ -300,7 +300,7 @@ public class FortranTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

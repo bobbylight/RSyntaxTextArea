@@ -24,11 +24,11 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetFoldedLineBottomColor_gutterFound() {
+	void testGetFoldedLineBottomColor_gutterFound() {
 		RSyntaxTextArea textArea = createTextArea();
 		RTextScrollPane sp = new RTextScrollPane(textArea);
 		Assertions.assertEquals(sp.getGutter().getFoldIndicatorForeground(),
@@ -37,14 +37,14 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetFoldedLineBottomColor_noGutter() {
+	void testGetFoldedLineBottomColor_noGutter() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertEquals(Color.GRAY, RSyntaxUtilities.getFoldedLineBottomColor(textArea));
 	}
 
 
 	@Test
-	public void testGetGutter_found() {
+	void testGetGutter_found() {
 		RSyntaxTextArea textArea = createTextArea();
 		RTextScrollPane sp = new RTextScrollPane(textArea);
 		Assertions.assertEquals(sp.getGutter(), RSyntaxUtilities.getGutter(textArea));
@@ -52,44 +52,44 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetGutter_notFound() {
+	void testGetGutter_notFound() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertNull(RSyntaxUtilities.getGutter(textArea));
 	}
 
 
 	@Test
-	public void testGetHyperlinkForeground() {
+	void testGetHyperlinkForeground() {
 		Assertions.assertNotNull(RSyntaxUtilities.getHyperlinkForeground());
 	}
 
 
 	@Test
-	public void testGetLeadingWhitespace_string_none() {
+	void testGetLeadingWhitespace_string_none() {
 		Assertions.assertEquals("", RSyntaxUtilities.getLeadingWhitespace("none"));
 	}
 
 
 	@Test
-	public void testGetLeadingWhitespace_string_spaces() {
+	void testGetLeadingWhitespace_string_spaces() {
 		Assertions.assertEquals("  ", RSyntaxUtilities.getLeadingWhitespace("  two"));
 	}
 
 
 	@Test
-	public void testGetLeadingWhitespace_string_tabs() {
+	void testGetLeadingWhitespace_string_tabs() {
 		Assertions.assertEquals("\t\t", RSyntaxUtilities.getLeadingWhitespace("\t\ttwo"));
 	}
 
 
 	@Test
-	public void testGetLeadingWhitespace_string_spacesAndTabs() {
+	void testGetLeadingWhitespace_string_spacesAndTabs() {
 		Assertions.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(" \t \tfour"));
 	}
 
 
 	@Test
-	public void testGetLeadingWhitespace_document_spacesAndTabs() throws BadLocationException {
+	void testGetLeadingWhitespace_document_spacesAndTabs() throws BadLocationException {
 		RSyntaxTextArea textArea = createTextArea(" \t \tfour");
 		Document doc = textArea.getDocument();
 		Assertions.assertEquals(" \t \t", RSyntaxUtilities.getLeadingWhitespace(doc, 0));
@@ -97,7 +97,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextImportantToken_skipWhitespaceOnSameLine() {
+	void testGetNextImportantToken_skipWhitespaceOnSameLine() {
 
 		RSyntaxTextArea textArea = createTextArea("line one\nline two\n line 3");
 		Token t = textArea.getTokenListForLine(0);
@@ -118,7 +118,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextImportantToken_goToNextLine() {
+	void testGetNextImportantToken_goToNextLine() {
 
 		RSyntaxTextArea textArea = createTextArea("line one   \nline two\n line 3");
 		Token t = textArea.getTokenListForLine(0);
@@ -135,7 +135,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_right_sameLine() throws BadLocationException {
+	void testGetNextVisualPositionFrom_right_sameLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -148,7 +148,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_right_nextLine() throws BadLocationException {
+	void testGetNextVisualPositionFrom_right_nextLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -163,7 +163,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_left_sameLine() throws BadLocationException {
+	void testGetNextVisualPositionFrom_left_sameLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -176,7 +176,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_left_prevLine() throws BadLocationException {
+	void testGetNextVisualPositionFrom_left_prevLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -191,7 +191,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_north() throws BadLocationException {
+	void testGetNextVisualPositionFrom_north() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -206,7 +206,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetNextVisualPositionFrom_south() throws BadLocationException {
+	void testGetNextVisualPositionFrom_south() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Rectangle bounds = textArea.getBounds();
@@ -221,7 +221,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPreviousImportantTokenFromOffs_skipWhitespaceOnSameLine() {
+	void testGetPreviousImportantTokenFromOffs_skipWhitespaceOnSameLine() {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
@@ -235,7 +235,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenAtOffset_textArea() {
+	void testGetTokenAtOffset_textArea() {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 
@@ -253,7 +253,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenAtOffset_document() {
+	void testGetTokenAtOffset_document() {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 		RSyntaxDocument document = (RSyntaxDocument)textArea.getDocument();
@@ -272,7 +272,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenAtOffset_tokenList() {
+	void testGetTokenAtOffset_tokenList() {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 		Token t = textArea.getTokenListForLine(0);
@@ -291,7 +291,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetWordEnd() throws BadLocationException {
+	void testGetWordEnd() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 		Assertions.assertEquals(4, RSyntaxUtilities.getWordEnd(textArea, 1));
@@ -299,7 +299,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetWordStart() throws BadLocationException {
+	void testGetWordStart() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
 		Assertions.assertEquals(0, RSyntaxUtilities.getWordStart(textArea, 1));
@@ -307,7 +307,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsBracket() {
+	void testIsBracket() {
 		Assertions.assertTrue(RSyntaxUtilities.isBracket('['));
 		Assertions.assertTrue(RSyntaxUtilities.isBracket(']'));
 		Assertions.assertTrue(RSyntaxUtilities.isBracket('{'));
@@ -319,7 +319,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPossiblyRepaintGutter() {
+	void testPossiblyRepaintGutter() {
 		RSyntaxTextArea textArea = createTextArea();
 		new RTextScrollPane(textArea);
 		RSyntaxUtilities.possiblyRepaintGutter(textArea);
@@ -327,7 +327,7 @@ public class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testWildcardToPattern() {
+	void testWildcardToPattern() {
 
 		Assertions.assertEquals(".*",
 			RSyntaxUtilities.wildcardToPattern("*", false, false).pattern());

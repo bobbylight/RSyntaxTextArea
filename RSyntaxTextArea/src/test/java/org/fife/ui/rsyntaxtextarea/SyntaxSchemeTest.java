@@ -23,11 +23,11 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class SyntaxSchemeTest {
+class SyntaxSchemeTest {
 
 
 	@Test
-	public void testClone() {
+	void testClone() {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 		SyntaxScheme scheme2 = (SyntaxScheme)scheme.clone();
@@ -37,7 +37,7 @@ public class SyntaxSchemeTest {
 
 
 	@Test
-	public void testGetSetStyle() {
+	void testGetSetStyle() {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 
@@ -51,7 +51,7 @@ public class SyntaxSchemeTest {
 
 
 	@Test
-	public void testGetStylesAndGetStyleCount() {
+	void testGetStylesAndGetStyleCount() {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 		Assertions.assertEquals(scheme.getStyleCount(), scheme.getStyles().length);
@@ -59,13 +59,13 @@ public class SyntaxSchemeTest {
 
 
 	@Test
-	public void testGetHashCode() {
+	void testGetHashCode() {
 		Assertions.assertNotEquals(0, new SyntaxScheme(true).hashCode());
 	}
 
 
 	@Test
-	public void testCreateAndLoadFromString() {
+	void testCreateAndLoadFromString() {
 
 		SyntaxScheme scheme = new SyntaxScheme(true);
 		String string = scheme.toCommaSeparatedString();
@@ -76,7 +76,7 @@ public class SyntaxSchemeTest {
 
 
 	@Test
-	public void testLoad() throws IOException {
+	void testLoad() throws IOException {
 
 		String xml = "<scheme>\n" +
 				"<style token='COMMENT_EOL' fg='$000000' bg='$f0f0f0' bold='true' italic='true' underline='true'/>\n" +

@@ -28,7 +28,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'",
 			"'\\b'",
@@ -38,7 +38,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals_continuedFromPreviousLine() {
+	void testCharLiterals_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			TokenTypes.LITERAL_CHAR,
 			"continued from previous line'",
@@ -48,7 +48,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			"-- Hello world"
 		);
@@ -56,7 +56,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"3.0",
 			"4.2",
@@ -67,7 +67,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			/* SQL99 aggregate functions */
@@ -114,7 +114,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIntegerLiterals() {
+	void testIntegerLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"0",
 			"598"
@@ -123,7 +123,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"ADD",
 			"ALL",
@@ -258,7 +258,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"/* Hello world */"
@@ -267,7 +267,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments_continuedFromPreviousLine() {
+	void testMultiLineComments_continuedFromPreviousLine() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, TokenTypes.COMMENT_MULTILINE,
 			" this is a continued comment */"
@@ -276,7 +276,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			">=",
 			"<=",
@@ -293,7 +293,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(",
 			")"
@@ -302,7 +302,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSquareBracketIdentifiers() {
+	void testSquareBracketIdentifiers() {
 		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
 			"[users]",
 			"[user id]"
@@ -311,7 +311,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"",
 			"\"hi\"",
@@ -322,7 +322,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals_continuedFromPreviousLine() {
+	void testStringLiterals_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"this is continued from the previous line\"",
@@ -332,7 +332,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

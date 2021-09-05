@@ -41,7 +41,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAddToken_identifier() {
+	void testAddToken_identifier() {
 
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 		String identifier = "foo";
@@ -55,7 +55,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAddToken_keyword() {
+	void testAddToken_keyword() {
 
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
@@ -75,7 +75,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAddToken_unknown() {
+	void testAddToken_unknown() {
 
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
@@ -89,7 +89,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAddToken_whitespace() {
+	void testAddToken_whitespace() {
 
 		AddTokenCatchingUnixShellTokenMaker tm = new AddTokenCatchingUnixShellTokenMaker();
 
@@ -118,7 +118,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetMarkOccurrencesOfTokenType() {
+	void testGetMarkOccurrencesOfTokenType() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -132,7 +132,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_identifierStart_LiteralBackQuote() {
+	void testGetTokenList_identifierStart_LiteralBackQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -150,7 +150,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_identifierStart_LiteralDoubleQuote() {
+	void testGetTokenList_identifierStart_LiteralDoubleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -168,7 +168,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_identifierStart_LiteralSingleQuote() {
+	void testGetTokenList_identifierStart_LiteralSingleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -186,7 +186,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_EolComment() {
+	void testGetTokenList_nullStart_EolComment() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -202,7 +202,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_EscapedBackQuote() {
+	void testGetTokenList_nullStart_EscapedBackQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -221,7 +221,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_EscapedDollarSign() {
+	void testGetTokenList_nullStart_EscapedDollarSign() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -240,7 +240,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_EscapedDoubleQuote() {
+	void testGetTokenList_nullStart_EscapedDoubleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -259,7 +259,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_EscapedSingleQuote() {
+	void testGetTokenList_nullStart_EscapedSingleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -278,7 +278,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_Identifiers() {
+	void testGetTokenList_nullStart_Identifiers() {
 
 		String code = "foo foo_bar ";
 		code += ". , ;"; // "separators2"
@@ -305,7 +305,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_LiteralBackQuote() {
+	void testGetTokenList_nullStart_LiteralBackQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -321,7 +321,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_LiteralDoubleQuote() {
+	void testGetTokenList_nullStart_LiteralDoubleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -337,7 +337,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_LiteralSingleQuote() {
+	void testGetTokenList_nullStart_LiteralSingleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -353,7 +353,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_Numeric() {
+	void testGetTokenList_nullStart_Numeric() {
 
 		String code = "42 722";
 
@@ -379,7 +379,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_Operators() {
+	void testGetTokenList_nullStart_Operators() {
 
 		String code = "= | > < &";
 
@@ -405,7 +405,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_Separators() {
+	void testGetTokenList_nullStart_Separators() {
 
 		String code = "( ) [ ]";
 
@@ -431,7 +431,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_Variable() {
+	void testGetTokenList_nullStart_Variable() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -455,7 +455,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_nullStart_WhiteSpace() {
+	void testGetTokenList_nullStart_WhiteSpace() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -475,7 +475,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_whitespaceStart_EolComment() {
+	void testGetTokenList_whitespaceStart_EolComment() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -493,7 +493,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_whitespaceStart_LiteralBackQuote() {
+	void testGetTokenList_whitespaceStart_LiteralBackQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -511,7 +511,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_whitespaceStart_LiteralDoubleQuote() {
+	void testGetTokenList_whitespaceStart_LiteralDoubleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -529,7 +529,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_whitespaceStart_LiteralSingleQuote() {
+	void testGetTokenList_whitespaceStart_LiteralSingleQuote() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -547,7 +547,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetTokenList_whitespaceStart_Variable() {
+	void testGetTokenList_whitespaceStart_Variable() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 
@@ -565,7 +565,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetWordsToHighlight() {
+	void testGetWordsToHighlight() {
 
 		UnixShellTokenMaker tm = new UnixShellTokenMaker();
 		TokenMap tokens = tm.getWordsToHighlight();

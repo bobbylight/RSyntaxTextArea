@@ -35,7 +35,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'",
@@ -55,7 +55,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 
 		String code = "char div_t double float int ldiv_t long short signed size_t unsigned void wchar_t";
 
@@ -81,7 +81,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -98,7 +98,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments_continuedFromPreviousLine() {
+	void testEolComments_continuedFromPreviousLine() {
 
 		String[] eolCommentLiterals = {
 			"this is still in an EOL comment",
@@ -115,7 +115,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world http://www.sas.com",
@@ -140,7 +140,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -191,7 +191,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -225,7 +225,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStandardFunctions() {
+	void testStandardFunctions() {
 
 		String[] functions = {
 			"abort",
@@ -441,7 +441,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String code = "auto break case const continue default do else enum " +
 				"extern for goto if register sizeof static struct " +
@@ -476,7 +476,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -493,7 +493,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -522,7 +522,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ | &&";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>=";
@@ -550,7 +550,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -578,7 +578,7 @@ public class CPlusPlusTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\\"\"",

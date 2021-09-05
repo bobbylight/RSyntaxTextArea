@@ -22,12 +22,12 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -38,7 +38,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testAnnotations() {
+	void testAnnotations() {
 		assertAllTokensOfType(TokenTypes.ANNOTATION,
 			"@foo"
 		);
@@ -46,7 +46,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBooleansAndNone() {
+	void testBooleansAndNone() {
 		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
 			"True",
 			"False",
@@ -55,7 +55,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFloatsAndImaginaries() {
+	void testFloatsAndImaginaries() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"34.",
 			"34.1",
@@ -84,7 +84,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIntegers() {
+	void testIntegers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"34",
 			"34L",
@@ -94,19 +94,19 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testComments() {
+	void testComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "# This is a comment");
 	}
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 		"char",
 			"double",
@@ -122,7 +122,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testLongStrings() {
+	void testLongStrings() {
 
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"\"long string\"\"\"",
@@ -137,7 +137,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"abs",
 			"apply",
@@ -206,7 +206,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"=",
 			"+",
@@ -246,7 +246,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testReservedWords() {
+	void testReservedWords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 		"and",
 			"as",
@@ -283,7 +283,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(",
 			")",
@@ -296,7 +296,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"",
 			"\"unterminated",
@@ -321,7 +321,7 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

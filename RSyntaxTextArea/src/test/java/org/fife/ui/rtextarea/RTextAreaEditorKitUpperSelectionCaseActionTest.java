@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitUpperSelectionCaseActionTest {
+class RTextAreaEditorKitUpperSelectionCaseActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		RTextArea textArea = new RTextArea("hello World");
 		textArea.setSelectionStart(2);
@@ -38,7 +38,7 @@ public class RTextAreaEditorKitUpperSelectionCaseActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("hello World");
 		textArea.setSelectionStart(2);
@@ -52,7 +52,7 @@ public class RTextAreaEditorKitUpperSelectionCaseActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaUpperSelectionCaseAction,
 			new RTextAreaEditorKit.UpperSelectionCaseAction().getMacroID());
 	}

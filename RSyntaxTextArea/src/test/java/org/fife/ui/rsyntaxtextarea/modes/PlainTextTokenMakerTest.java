@@ -32,7 +32,7 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 
 		String code =  "   foo bar\t\tbas\t  \tbaz ";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();
@@ -54,7 +54,7 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testUrls() {
+	void testUrls() {
 
 		String code =  "http://www.sas.com foo ftp://fifesoft.com bar https://google.com goo www.yahoo.com ber file://test.txt";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();
@@ -122,7 +122,7 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 
 		String code =  "   foo bar\t\tbas\t  \tbaz ";
 		PlainTextTokenMaker tm = new PlainTextTokenMaker();

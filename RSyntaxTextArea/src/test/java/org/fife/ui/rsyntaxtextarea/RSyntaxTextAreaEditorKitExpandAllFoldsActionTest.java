@@ -23,10 +23,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitExpandAllFoldsActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitExpandAllFoldsActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_expandAllFolds() {
+	void testActionPerformedImpl_expandAllFolds() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -59,7 +59,7 @@ public class RSyntaxTextAreaEditorKitExpandAllFoldsActionTest extends AbstractRS
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.ExpandAllFoldsAction a = new RSyntaxTextAreaEditorKit.ExpandAllFoldsAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaExpandAllFoldsAction, a.getMacroID());
 	}

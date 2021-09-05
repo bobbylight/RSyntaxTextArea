@@ -20,18 +20,18 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TaskTagParserTest {
+class TaskTagParserTest {
 
 
 	@Test
-	public void testConstructor() {
+	void testConstructor() {
 		TaskTagParser parser = new TaskTagParser();
 		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
 	}
 
 
 	@Test
-	public void testGetTaskPattern() {
+	void testGetTaskPattern() {
 
 		TaskTagParser parser = new TaskTagParser();
 		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());
@@ -46,7 +46,7 @@ public class TaskTagParserTest {
 
 
 	@Test
-	public void testParse_happyPath() throws Exception {
+	void testParse_happyPath() throws Exception {
 
 		TaskTagParser parser = new TaskTagParser();
 
@@ -69,7 +69,7 @@ public class TaskTagParserTest {
 
 
 	@Test
-	public void testParse_nullTaskPattern() throws Exception {
+	void testParse_nullTaskPattern() throws Exception {
 
 		TaskTagParser parser = new TaskTagParser();
 		parser.setTaskPattern(null);
@@ -89,7 +89,7 @@ public class TaskTagParserTest {
 
 
 	@Test
-	public void testParse_noLanguage() throws Exception {
+	void testParse_noLanguage() throws Exception {
 
 		TaskTagParser parser = new TaskTagParser();
 		parser.setTaskPattern(null);
@@ -117,7 +117,7 @@ public class TaskTagParserTest {
 
 
 	@Test
-	public void testSetTaskPattern() {
+	void testSetTaskPattern() {
 
 		TaskTagParser parser = new TaskTagParser();
 		Assertions.assertEquals("TODO|FIXME|HACK", parser.getTaskPattern());

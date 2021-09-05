@@ -22,10 +22,10 @@ import java.awt.*;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class TipUtilTest {
+class TipUtilTest {
 
 	@Test
-	public void getToolTipBackground_zeroArg() {
+	void getToolTipBackground_zeroArg() {
 		Assertions.assertNotNull(TipUtil.getToolTipBackground());
 	}
 
@@ -35,7 +35,7 @@ public class TipUtilTest {
 	 * color should be returned.
 	 */
 	@Test
-	public void testToolTipBackground_oneArg_whiteBackground() {
+	void testToolTipBackground_oneArg_whiteBackground() {
 
 		Color defaultTipBG = TipUtil.getToolTipBackground();
 
@@ -51,7 +51,7 @@ public class TipUtilTest {
 	 * of the content of the text area.
 	 */
 	@Test
-	public void testToolTipBackground_oneArg_nonWhiteBackground() {
+	void testToolTipBackground_oneArg_nonWhiteBackground() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.RED);
@@ -60,7 +60,7 @@ public class TipUtilTest {
 	}
 
 	@Test
-	public void getToolTipBorder_zeroArg() {
+	void getToolTipBorder_zeroArg() {
 		Assertions.assertNotNull(TipUtil.getToolTipBorder());
 	}
 
@@ -70,7 +70,7 @@ public class TipUtilTest {
 	 * border should be returned.
 	 */
 	@Test
-	public void testToolTipBorder_oneArg_whiteBackground() {
+	void testToolTipBorder_oneArg_whiteBackground() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.WHITE);
@@ -84,7 +84,7 @@ public class TipUtilTest {
 	 * background color will be.
 	 */
 	@Test
-	public void testToolTipBorder_oneArg_nonWhiteBackground() {
+	void testToolTipBorder_oneArg_nonWhiteBackground() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.setBackground(Color.RED);

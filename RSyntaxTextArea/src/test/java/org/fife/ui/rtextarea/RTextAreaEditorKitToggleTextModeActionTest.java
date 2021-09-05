@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitToggleTextModeActionTest {
+class RTextAreaEditorKitToggleTextModeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
@@ -40,7 +40,7 @@ public class RTextAreaEditorKitToggleTextModeActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaToggleTextModeAction,
 			new RTextAreaEditorKit.ToggleTextModeAction().getMacroID());
 	}

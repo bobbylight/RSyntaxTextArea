@@ -31,7 +31,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testAnnotations() {
+	void testAnnotations() {
 
 		String code = "@Test @Foo @Foo_Bar_Bas @Number7";
 
@@ -57,7 +57,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBinaryLiterals() {
+	void testBinaryLiterals() {
 
 		String code =
 			"0b0 0b1 0B0 0B1 0b010 0B010 0b0_10 0B0_10";
@@ -84,7 +84,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String code = "true false";
 
@@ -110,7 +110,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'",
 			"'\\b'",
@@ -132,7 +132,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals_error() {
+	void testCharLiterals_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'\\x'"
 		);
@@ -140,7 +140,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testClassNames_java_lang() {
+	void testClassNames_java_lang() {
 
 		String[] classNames = {
 			"Appendable",
@@ -266,7 +266,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testClassNames_java_io() {
+	void testClassNames_java_io() {
 
 		String[] classNames = {
 			"Closeable",
@@ -364,7 +364,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testClassNames_java_util() {
+	void testClassNames_java_util() {
 
 		String[] classNames = {
 			"Collection",
@@ -506,7 +506,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			"boolean",
 			"byte",
@@ -521,14 +521,14 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDocComments() {
+	void testDocComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			"/** Hello world */");
 	}
 
 
 	@Test
-	public void testDocComments_continuedFromPreviousLine() {
+	void testDocComments_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			TokenTypes.COMMENT_DOCUMENTATION,
 			"continued from a previous line */"
@@ -537,7 +537,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDocComments_keywords() {
+	void testDocComments_keywords() {
 		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
 			TokenTypes.COMMENT_DOCUMENTATION,
 
@@ -579,7 +579,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDocComments_markup() {
+	void testDocComments_markup() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			TokenTypes.COMMENT_DOCUMENTATION,
 			"<code>",
@@ -588,7 +588,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDocComments_URL() {
+	void testDocComments_URL() {
 
 		String[] docCommentLiterals = {
 			"file://test.txt",
@@ -613,14 +613,14 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			"// Hello world");
 	}
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world http://www.sas.com",
@@ -645,7 +645,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -696,7 +696,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -727,7 +727,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			"foo",
 			// Cyrillic chars - most Unicode chars are valid identifier chars
@@ -737,7 +737,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers_error() {
+	void testIdentifiers_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
 			"foo\\bar"
 		);
@@ -745,7 +745,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIntegerLiterals() {
+	void testIntegerLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"0",
 			"0l",
@@ -760,7 +760,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 	@Test
-	public void testIntegerLiterals_error() {
+	void testIntegerLiterals_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
 			"42rst"
 		);
@@ -768,7 +768,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String code = "abstract assert break case catch class const continue " +
 				"default do else enum extends final finally for goto if " +
@@ -805,7 +805,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"/* Hello world */"
 		);
@@ -813,7 +813,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments_continuedFromPreviousLine() {
+	void testMultiLineComments_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TokenTypes.COMMENT_MULTILINE,
 			"continued from a previous line */"
@@ -822,7 +822,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -851,7 +851,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOctalLiterals() {
+	void testOctalLiterals() {
 
 		// Note that octal tokens use the token type for hex literals.
 
@@ -884,7 +884,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ | && >>>";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -912,7 +912,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -940,7 +940,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"",
 			"\"hi\"",
@@ -951,7 +951,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiteral_error() {
+	void testStringLiteral_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated string",
 			"\"string with an invalid \\x escape in it\""
@@ -960,7 +960,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhiteSpace() {
+	void testWhiteSpace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"   ",

@@ -22,10 +22,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_goToMatchingBracket() {
+	void testActionPerformedImpl_goToMatchingBracket() {
 
 		String origContent = "public void foo() {\n" +
 			"  if (something) {\n" +
@@ -45,7 +45,7 @@ public class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends Abstr
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.GoToMatchingBracketAction a = new RSyntaxTextAreaEditorKit.GoToMatchingBracketAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction, a.getMacroID());
 	}

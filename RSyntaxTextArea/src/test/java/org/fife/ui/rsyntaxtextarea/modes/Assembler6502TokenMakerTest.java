@@ -27,12 +27,12 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -43,21 +43,21 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'foobar'");
 	}
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			"; Hello world");
 	}
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"; Hello world http://www.sas.com",
@@ -82,14 +82,14 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testErrorCharLiterals() {
+	void testErrorCharLiterals() {
 		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'unterminated");
 	}
 
 
 	@Test
-	public void testErrorStringLiterals() {
+	void testErrorStringLiterals() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated");
 	}
@@ -103,7 +103,7 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 	@Test
-	public void testPreprocessor() {
+	void testPreprocessor() {
 		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
 			"@foo",
 			"#foo",
@@ -116,7 +116,7 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testNumbers() {
+	void testNumbers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"34",
 			"$0a",
@@ -127,13 +127,13 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testInstructions() {
+	void testInstructions() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"ADC",
 			"AND",
@@ -227,19 +227,19 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testVariables() {
+	void testVariables() {
 		assertAllTokensOfType(TokenTypes.VARIABLE, ".varName");
 	}
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 		assertAllTokensOfType(TokenTypes.FUNCTION, "%function");
 	}
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"+",
 			"-",
@@ -280,14 +280,14 @@ public class Assembler6502TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"");
 	}
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

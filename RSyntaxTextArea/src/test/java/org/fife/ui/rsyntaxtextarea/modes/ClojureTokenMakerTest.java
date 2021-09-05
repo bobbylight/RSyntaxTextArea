@@ -31,7 +31,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"; Hello world",
 		};
@@ -40,7 +40,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"; Hello world http://www.sas.com",
@@ -65,7 +65,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -107,7 +107,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 		String[] functions = {
 				"*current-namespace*",
 				//"*in*",
@@ -272,7 +272,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 		String[] hexLiterals = {
 				"0x1", "0xfe", "0x333333", "0xFE"
 		};
@@ -281,7 +281,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 		String[] keywords = {
 				"case",
 				"class",
@@ -319,14 +319,14 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		String[] separators = { "(", ")" };
 		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
 	}
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};
@@ -335,7 +335,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testVariables() {
+	void testVariables() {
 		String[] variables = {
 				"*warn-on-reflection*",
 				"*1",

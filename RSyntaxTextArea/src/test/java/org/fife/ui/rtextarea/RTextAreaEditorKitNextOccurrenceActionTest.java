@@ -21,13 +21,13 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitNextOccurrenceActionTest {
+class RTextAreaEditorKitNextOccurrenceActionTest {
 
 	private RTextArea textArea;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		textArea = new RTextArea("one two one two\none two");
 		textArea.setCaretPosition(0);
@@ -35,13 +35,13 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		RTextArea.setSelectedOccurrenceText(null);
 	}
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_alsoNoPriorNextOccurrence() {
+	void testActionPerformedImpl_noSelection_alsoNoPriorNextOccurrence() {
 
 		// No selection and no previous "next occurrence" search
 
@@ -54,7 +54,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_nextOnSameLine() {
+	void testActionPerformedImpl_noSelection_nextOnSameLine() {
 
 		// No selection but "two" was previously searched for this way
 		RTextArea.setSelectedOccurrenceText("two");
@@ -68,7 +68,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_nextOnSameLine() {
+	void testActionPerformedImpl_selection_nextOnSameLine() {
 
 		// Select "one"
 		textArea.setSelectionStart(0);
@@ -83,7 +83,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_nextOnNextLine() {
+	void testActionPerformedImpl_selection_nextOnNextLine() {
 
 		// Select second "one"
 		textArea.setSelectionStart(8);
@@ -98,7 +98,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_noNextMatch() {
+	void testActionPerformedImpl_selection_noNextMatch() {
 
 		// Select last "one"
 		textArea.setSelectionStart(16);
@@ -114,7 +114,7 @@ public class RTextAreaEditorKitNextOccurrenceActionTest {
 
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.NextOccurrenceAction("foo").getMacroID());
 	}

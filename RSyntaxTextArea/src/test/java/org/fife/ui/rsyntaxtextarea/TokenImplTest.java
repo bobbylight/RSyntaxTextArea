@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TokenImplTest {
+class TokenImplTest {
 
 
 	@Test
-	public void testGetHTMLRepresentation_happyPath() {
+	void testGetHTMLRepresentation_happyPath() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 
@@ -36,7 +36,7 @@ public class TokenImplTest {
 
 
 	@Test
-	public void testGetHTMLRepresentation_problemChars() {
+	void testGetHTMLRepresentation_problemChars() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 

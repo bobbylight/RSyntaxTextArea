@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
+class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_select() {
+	void testActionPerformedImpl_select() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setCaretPosition(3);
@@ -32,7 +32,7 @@ public class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelect() {
+	void testActionPerformedImpl_noSelect() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setCaretPosition(3);
@@ -46,7 +46,7 @@ public class RTextAreaEditorKitBeginActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("begin", new RTextAreaEditorKit.BeginAction("begin", false).getMacroID());
 	}
 }

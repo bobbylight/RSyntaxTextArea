@@ -31,7 +31,7 @@ public class LatexTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"% Hello world",
 		};
@@ -40,7 +40,7 @@ public class LatexTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments_escapedPercentNotAComment() {
+	void testEolComments_escapedPercentNotAComment() {
 		String code = "\\% not-comment";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();

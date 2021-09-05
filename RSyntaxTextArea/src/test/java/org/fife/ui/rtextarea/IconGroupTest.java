@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class IconGroupTest {
+class IconGroupTest {
 
 
 	@Test
-	public void testEquals_sameGroup() {
+	void testEquals_sameGroup() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		//noinspection SimplifiableJUnitAssertion,EqualsWithItself
@@ -28,7 +28,7 @@ public class IconGroupTest {
 
 
 	@Test
-	public void testGetFileTypeIcon_noIconFound() {
+	void testGetFileTypeIcon_noIconFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertNull(group.getFileTypeIcon(SyntaxConstants.SYNTAX_STYLE_C));
@@ -36,7 +36,7 @@ public class IconGroupTest {
 
 
 	@Test
-	public void testGetFileTypeIcon_noSlashSoNoIconReturned() {
+	void testGetFileTypeIcon_noSlashSoNoIconReturned() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertNull(group.getFileTypeIcon("invalidValue"));
@@ -44,7 +44,7 @@ public class IconGroupTest {
 
 
 	@Test
-	public void testGetHasSeparateLargeIcons_2ArgConstructor() {
+	void testGetHasSeparateLargeIcons_2ArgConstructor() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertFalse(group.hasSeparateLargeIcons());
@@ -52,7 +52,7 @@ public class IconGroupTest {
 
 
 	@Test
-	public void testGetIcon_notFound() {
+	void testGetIcon_notFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertNull(group.getIcon("foo"));
@@ -60,21 +60,21 @@ public class IconGroupTest {
 
 
 	@Test
-	public void testGetLargeIcon_notFound() {
+	void testGetLargeIcon_notFound() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertNull(group.getLargeIcon("foo"));
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertEquals("foo", group.getName());
 	}
 
 	@Test
-	public void testHashCode() {
+	void testHashCode() {
 
 		IconGroup group = new IconGroup("foo", "/path");
 		Assertions.assertTrue(group.hashCode() > 0);

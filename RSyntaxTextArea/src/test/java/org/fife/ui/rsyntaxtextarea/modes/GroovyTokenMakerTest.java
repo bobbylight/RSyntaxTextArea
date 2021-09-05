@@ -35,7 +35,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testAnnotations() {
+	void testAnnotations() {
 
 		String code = "@Test @Foo @Foo_Bar_Bas @Number7";
 
@@ -61,7 +61,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBinaryLiterals() {
+	void testBinaryLiterals() {
 
 		String code =
 			"0b0 0b1 0B0 0B1 0b010 0B010 0b0_10 0B0_10";
@@ -88,7 +88,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String code = "true false";
 
@@ -114,7 +114,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -134,7 +134,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 
 		String code = "boolean byte char double float int long short";
 
@@ -160,7 +160,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDocComments() {
+	void testDocComments() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world */",
@@ -177,7 +177,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDocComments_URL() {
+	void testDocComments_URL() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world http://www.sas.com */",
@@ -206,7 +206,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -223,7 +223,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world http://www.sas.com",
@@ -248,7 +248,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -299,7 +299,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -330,7 +330,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testClassNames_java_lang() {
+	void testClassNames_java_lang() {
 
 		String[] classNames = { "Appendable",
 				"AutoCloseable",
@@ -443,7 +443,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		// Java keywords
 		String code = "abstract assert break case catch class const continue " +
@@ -484,7 +484,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -501,7 +501,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -530,7 +530,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOctalLiterals() {
+	void testOctalLiterals() {
 
 		// Note that octal tokens use the token type for hex literals.
 
@@ -563,7 +563,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testObjectClassMethodAdditions() {
+	void testObjectClassMethodAdditions() {
 
 		String[] additions = {
 			"addShutdownHook", "any", "asBoolean", "asType", "collect", "dump",
@@ -587,7 +587,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ | && >>>";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -615,7 +615,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -643,7 +643,7 @@ public class GroovyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",

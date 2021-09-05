@@ -18,11 +18,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class StaticCodeTemplateTest {
+class StaticCodeTemplateTest {
 
 
 	@Test
-	public void testGetSetAfterCaretText() {
+	void testGetSetAfterCaretText() {
 		StaticCodeTemplate template = new StaticCodeTemplate();
 		Assertions.assertNull(template.getAfterCaretText());
 		template.setAfterCaretText("foo");
@@ -31,7 +31,7 @@ public class StaticCodeTemplateTest {
 
 
 	@Test
-	public void testGetSetBeforeCaretText() {
+	void testGetSetBeforeCaretText() {
 		StaticCodeTemplate template = new StaticCodeTemplate();
 		Assertions.assertNull(template.getBeforeCaretText());
 		template.setBeforeCaretText("foo");
@@ -40,7 +40,7 @@ public class StaticCodeTemplateTest {
 
 
 	@Test
-	public void testInvoke_happyPath() throws Exception {
+	void testInvoke_happyPath() throws Exception {
 
 		StaticCodeTemplate template = new StaticCodeTemplate("id", "before", "after");
 
@@ -53,7 +53,7 @@ public class StaticCodeTemplateTest {
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		String expected = "[StaticCodeTemplate: id=null, text=null|null]";
 		Assertions.assertEquals(expected, new StaticCodeTemplate().toString());
 	}

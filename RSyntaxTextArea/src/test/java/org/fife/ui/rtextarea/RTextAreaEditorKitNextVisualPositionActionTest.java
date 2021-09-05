@@ -21,13 +21,13 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTextAreaTest {
+class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTextAreaTest {
 
 	private RTextArea textArea;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		textArea = new RTextArea("one two one two\none two");
 		textArea.setSize(800, 800);
@@ -38,7 +38,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_noSelect_east() {
+	void testActionPerformedImpl_noSelection_noSelect_east() {
 
 		textArea.setCaretPosition(6);
 
@@ -51,7 +51,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_noSelect_north() {
+	void testActionPerformedImpl_noSelection_noSelect_north() {
 
 		textArea.setCaretPosition(16);
 
@@ -64,7 +64,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_noSelect_south() {
+	void testActionPerformedImpl_noSelection_noSelect_south() {
 
 		textArea.setCaretPosition(0);
 
@@ -77,7 +77,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_noSelect_west() {
+	void testActionPerformedImpl_noSelection_noSelect_west() {
 
 		textArea.setCaretPosition(6);
 
@@ -90,7 +90,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_select_east() {
+	void testActionPerformedImpl_noSelection_select_east() {
 
 		textArea.setCaretPosition(6);
 
@@ -105,7 +105,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_select_west() {
+	void testActionPerformedImpl_noSelection_select_west() {
 
 		textArea.setCaretPosition(6);
 
@@ -120,7 +120,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_selection_noSelect_east() {
+	void testActionPerformedImpl_selection_noSelect_east() {
 
 		textArea.setSelectionStart(3);
 		textArea.setSelectionEnd(6);
@@ -136,7 +136,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testActionPerformedImpl_selection_noSelect_west() {
+	void testActionPerformedImpl_selection_noSelect_west() {
 
 		textArea.setSelectionStart(3);
 		textArea.setSelectionEnd(6);
@@ -152,7 +152,7 @@ public class RTextAreaEditorKitNextVisualPositionActionTest extends AbstractRTex
 
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.NextVisualPositionAction("foo", false,
 				SwingConstants.EAST).getMacroID());

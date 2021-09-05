@@ -23,11 +23,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
+class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCreateToolTip() {
+	void testCreateToolTip() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setBackground(Color.BLACK); // Something other than white
@@ -42,7 +42,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetFoldIconBackground() {
+	void testGetSetFoldIconBackground() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.setFoldIconBackground(Color.RED);
@@ -53,7 +53,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetFoldIconArmedBackground() {
+	void testGetSetFoldIconArmedBackground() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.setFoldIconArmedBackground(Color.RED);
@@ -64,7 +64,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPreferredSize() {
+	void testGetPreferredSize() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		Assertions.assertEquals(textArea.getHeight(), fi.getPreferredSize().height);
@@ -72,7 +72,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetAdditionalLeftMargin() {
+	void testGetSetAdditionalLeftMargin() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
@@ -83,7 +83,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetShowCollapsedRegionToolTips() {
+	void testGetSetShowCollapsedRegionToolTips() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		Assertions.assertTrue(fi.getShowCollapsedRegionToolTips());
@@ -93,7 +93,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_lineWrap() {
+	void testPaintComponent_lineWrap() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);
 		// Paint collapsed and uncollapsed folds
@@ -104,7 +104,7 @@ public class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_noLineWrap() {
+	void testPaintComponent_noLineWrap() {
 		RSyntaxTextArea textArea = createTextArea();
 		// Paint collapsed and uncollapsed folds
 		textArea.getFoldManager().getFold(0).getChild(0).setCollapsed(true);

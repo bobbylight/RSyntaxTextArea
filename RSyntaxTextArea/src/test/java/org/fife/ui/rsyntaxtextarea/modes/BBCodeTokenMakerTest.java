@@ -31,7 +31,7 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOutsideTag() {
+	void testOutsideTag() {
 
 		Segment segment = createSegment("one two");
 		TokenMaker tm = createTokenMaker();
@@ -46,7 +46,7 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testInsideTag() {
+	void testInsideTag() {
 
 		Segment segment = createSegment("[b foo=bar]");
 		TokenMaker tm = createTokenMaker();
@@ -70,7 +70,7 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testTagNames() {
+	void testTagNames() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_NAME, BBCodeTokenMaker.INTERNAL_INTAG,
 			"b",
 			"i",

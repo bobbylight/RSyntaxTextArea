@@ -16,11 +16,11 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class StyleTest {
+class StyleTest {
 
 
 	@Test
-	public void testConstructor_zeroArg() {
+	void testConstructor_zeroArg() {
 		Style style = new Style();
 		Assertions.assertEquals(Style.DEFAULT_FOREGROUND, style.foreground);
 		Assertions.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
@@ -30,7 +30,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testConstructor_oneArg() {
+	void testConstructor_oneArg() {
 		Style style = new Style(Color.RED);
 		Assertions.assertEquals(Color.RED, style.foreground);
 		Assertions.assertEquals(Style.DEFAULT_BACKGROUND, style.background);
@@ -40,7 +40,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testConstructor_twoArg() {
+	void testConstructor_twoArg() {
 		Style style = new Style(Color.RED, Color.BLUE);
 		Assertions.assertEquals(Color.RED, style.foreground);
 		Assertions.assertEquals(Color.BLUE, style.background);
@@ -50,7 +50,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testConstructor_threeArg() {
+	void testConstructor_threeArg() {
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font);
 		Assertions.assertEquals(Color.RED, style.foreground);
@@ -61,7 +61,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testConstructor_fourArg() {
+	void testConstructor_fourArg() {
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
 		Assertions.assertEquals(Color.RED, style.foreground);
@@ -72,7 +72,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testClone() {
+	void testClone() {
 
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
@@ -82,7 +82,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testEquals_areEqual() {
+	void testEquals_areEqual() {
 
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
@@ -94,7 +94,7 @@ public class StyleTest {
 
 
 	@Test
-	public void testEquals_notEqual() {
+	void testEquals_notEqual() {
 
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 10);
 		Style style = new Style(Color.RED, Color.BLUE, font, true);
@@ -106,13 +106,13 @@ public class StyleTest {
 
 
 	@Test
-	public void testHashCode() {
+	void testHashCode() {
 		Assertions.assertNotEquals(0, new Style(Color.RED, Color.BLUE).hashCode());
 	}
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		String expected = "[Style: foreground: java.awt.Color[r=0,g=0,b=0], " +
 			"background: null, underline: false, font: null]";
 		Assertions.assertEquals(expected, new Style().toString());

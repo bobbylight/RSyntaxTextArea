@@ -35,7 +35,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'",
@@ -55,7 +55,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world",
@@ -72,7 +72,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -158,7 +158,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 */
 
 	@Test
-	public void testStandardFunctions() {
+	void testStandardFunctions() {
 
 		String[] functions = {
 			"abs",
@@ -374,7 +374,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String code = "and cmp continue do else elsif eq esac for foreach ge " +
 				"if last le ne next not or redo sub unless until while xor";
@@ -401,7 +401,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == >> ~ | &&";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>=";
@@ -429,7 +429,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -457,7 +457,7 @@ public class PerlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\\"\"",

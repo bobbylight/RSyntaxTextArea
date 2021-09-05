@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 public abstract class AbstractRTextAreaTest {
 
 
-	public static Graphics2D createTestGraphics() {
+	protected static Graphics2D createTestGraphics() {
 		Graphics2D g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).createGraphics();
 		g.setClip(0, 0, 80, 80);
 		return g;

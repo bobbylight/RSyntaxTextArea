@@ -18,10 +18,10 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class PythonFoldParserTest {
+class PythonFoldParserTest {
 
 	@Test
-	public void testGetFold_happyPath() {
+	void testGetFold_happyPath() {
 
 		String code = "#!/usr/bin/env python\n" +
 			"\n" +

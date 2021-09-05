@@ -44,7 +44,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testComment() {
+	void testComment() {
 
 		String[] commentLiterals = {
 			"# Hello world",
@@ -62,7 +62,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testNameValuePair_happyPath() {
+	void testNameValuePair_happyPath() {
 
 		String code = "dialog.title=Options";
 		Segment segment = createSegment(code);
@@ -79,7 +79,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testNameValuePair_happyPath_withWhitespace() {
+	void testNameValuePair_happyPath_withWhitespace() {
 
 		String code = "dialog.title = Options";
 		Segment segment = createSegment(code);
@@ -100,7 +100,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testNameValuePair_equalSignInValue() {
+	void testNameValuePair_equalSignInValue() {
 
 		String code = "dialog.title=Options=hello";
 		Segment segment = createSegment(code);
@@ -121,7 +121,7 @@ public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSections() {
+	void testSections() {
 
 		String[] sectionLiterals = {
 			"[",

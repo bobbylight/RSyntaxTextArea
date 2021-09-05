@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitClipboardHistoryActionTest {
+class RTextAreaEditorKitClipboardHistoryActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.clipboardHistoryAction,
 			new RTextAreaEditorKit.ClipboardHistoryAction().getMacroID());
 	}

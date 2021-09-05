@@ -16,11 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class FoldingAwareIconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
+class FoldingAwareIconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_noLineWrap() {
+	void testPaintComponent_noLineWrap() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FoldingAwareIconRowHeader header = new FoldingAwareIconRowHeader(textArea);
@@ -31,7 +31,7 @@ public class FoldingAwareIconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_withLineWrap() {
+	void testPaintComponent_withLineWrap() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setLineWrap(true);

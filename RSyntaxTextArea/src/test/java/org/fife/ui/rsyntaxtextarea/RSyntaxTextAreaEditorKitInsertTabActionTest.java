@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setEnabled(false);
@@ -38,7 +38,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection() {
+	void testActionPerformedImpl_noSelection() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		String origContent = textArea.getText();
@@ -52,7 +52,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testActionPerformedImpl_multiLineSelection() {
+	void testActionPerformedImpl_multiLineSelection() {
 
 		String origContent = "int main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
@@ -72,7 +72,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testActionPerformedImpl_multiLineSelection_tabsEmulatedWithWhiteSpace() {
+	void testActionPerformedImpl_multiLineSelection_tabsEmulatedWithWhiteSpace() {
 
 		String origContent = "int main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
@@ -94,7 +94,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testActionPerformedImpl_singleLineSelection() {
+	void testActionPerformedImpl_singleLineSelection() {
 
 		String origContent = "int main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
@@ -114,7 +114,7 @@ public class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntax
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.insertTabAction,
 			new RSyntaxTextAreaEditorKit.InsertTabAction().getMacroID());
 	}

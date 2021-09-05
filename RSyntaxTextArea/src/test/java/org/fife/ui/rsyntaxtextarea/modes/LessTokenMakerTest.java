@@ -52,7 +52,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_comment() {
+	void testCss_comment() {
 
 		String[] commentLiterals = {
 			"/* Hello world */",
@@ -69,7 +69,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_comment_URL() {
+	void testCss_comment_URL() {
 
 		String code = "/* Hello world http://www.google.com */";
 		Segment segment = createSegment(code);
@@ -89,14 +89,14 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_getCurlyBracesDenoteCodeBlocks() {
+	void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
 	@Test
-	public void testCss_happyPath_simpleSelector() {
+	void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
 		Segment segment = createSegment(code);
@@ -129,7 +129,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_id() {
+	void testCss_id() {
 
 		String code = "#mainContent";
 		Segment segment = createSegment(code);
@@ -142,7 +142,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_isIdentifierChar() {
+	void testCss_isIdentifierChar() {
 		TokenMaker tm = createTokenMaker();
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
 			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
@@ -155,7 +155,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCss_propertyValue_function() {
+	void testCss_propertyValue_function() {
 
 		String code = "background-image: url(\"test.png\");";
 		Segment segment = createSegment(code);
@@ -203,7 +203,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLess_EolComments() {
+	void testLess_EolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -220,7 +220,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLess_EolComments_URL() {
+	void testLess_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world http://www.sas.com",
@@ -245,7 +245,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLess_getLineCommentStartAndEnd() {
+	void testLess_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("//", startAndEnd[0]);
@@ -254,7 +254,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLess_getMarkOccurrencesOfTokenType() {
+	void testLess_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
@@ -263,7 +263,7 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLess_selectorReferencingParentSelector() {
+	void testLess_selectorReferencingParentSelector() {
 
 		TokenMaker tm = createTokenMaker();
 

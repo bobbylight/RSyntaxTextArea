@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitSetWritableActionTest {
+class RTextAreaEditorKitSetWritableActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.setEditable(false);
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitSetWritableActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.writableAction,
 			new RTextAreaEditorKit.SetWritableAction().getMacroID());
 	}

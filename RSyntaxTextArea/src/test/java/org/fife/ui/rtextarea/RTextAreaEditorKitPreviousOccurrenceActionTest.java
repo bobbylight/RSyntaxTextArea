@@ -21,13 +21,13 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitPreviousOccurrenceActionTest {
+class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 	private RTextArea textArea;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		textArea = new RTextArea("one two one two\none two");
 		textArea.setCaretPosition(textArea.getText().length());
@@ -35,13 +35,13 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		RTextArea.setSelectedOccurrenceText(null);
 	}
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_alsoNoPriorPreviousOccurrence() {
+	void testActionPerformedImpl_noSelection_alsoNoPriorPreviousOccurrence() {
 
 		// No selection and no previous "next occurrence" search
 
@@ -55,7 +55,7 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection_nextOnSameLine() {
+	void testActionPerformedImpl_noSelection_nextOnSameLine() {
 
 		// No selection but "two" was previously searched for this way
 		RTextArea.setSelectedOccurrenceText("two");
@@ -69,7 +69,7 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_nextOnSameLine() {
+	void testActionPerformedImpl_selection_nextOnSameLine() {
 
 		// Select "two" on the first line
 		textArea.setCaretPosition(15);
@@ -85,7 +85,7 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_nextOnPreviousLine() {
+	void testActionPerformedImpl_selection_nextOnPreviousLine() {
 
 		// Select "one" on line 2
 		textArea.setCaretPosition(16);
@@ -101,7 +101,7 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection_noNextMatch() {
+	void testActionPerformedImpl_selection_noNextMatch() {
 
 		// Select first "one"
 		textArea.setSelectionStart(0);
@@ -117,7 +117,7 @@ public class RTextAreaEditorKitPreviousOccurrenceActionTest {
 
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.PreviousOccurrenceAction("foo").getMacroID());
 	}

@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitBeginRecordingMacroActionTest {
+class RTextAreaEditorKitBeginRecordingMacroActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.BeginRecordingMacroAction action = new RTextAreaEditorKit.BeginRecordingMacroAction(
 			"recordMacro", null, "Description", 0, null);
 		Assertions.assertEquals("recordMacro", action.getName());
@@ -27,7 +27,7 @@ public class RTextAreaEditorKitBeginRecordingMacroActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		Assertions.assertFalse(RTextArea.isRecordingMacro()); // Sanity check
 
@@ -43,14 +43,14 @@ public class RTextAreaEditorKitBeginRecordingMacroActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaBeginRecordingMacroAction,
 			new RTextAreaEditorKit.BeginRecordingMacroAction().getMacroID());
 	}
 
 
 	@Test
-	public void testIsRecordable() {
+	void testIsRecordable() {
 		RTextAreaEditorKit.BeginRecordingMacroAction action = new RTextAreaEditorKit.BeginRecordingMacroAction();
 		Assertions.assertFalse(action.isRecordable());
 	}

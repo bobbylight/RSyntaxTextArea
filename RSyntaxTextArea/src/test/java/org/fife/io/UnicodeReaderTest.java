@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @author Robert Futrell
  * @version 1.0
  */
-public class UnicodeReaderTest {
+class UnicodeReaderTest {
 
 	private static final String CONTENT = "Hello world";
 	private static boolean origWriteUtf8Bom = false;
@@ -55,17 +55,17 @@ public class UnicodeReaderTest {
 	}
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
 	}
 
 	@Test
-	public void testConstructor_file_utf8() throws IOException {
+	void testConstructor_file_utf8() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_8);
 
@@ -77,7 +77,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_file_utf16be() throws IOException {
+	void testConstructor_file_utf16be() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_16BE);
 
@@ -89,7 +89,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_file_utf16le() throws IOException {
+	void testConstructor_file_utf16le() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_16LE);
 
@@ -101,7 +101,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_file_utf32be() throws IOException {
+	void testConstructor_file_utf32be() throws IOException {
 
 		File file = createTempFile("UTF-32BE");
 
@@ -113,7 +113,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_file_utf32le() throws IOException {
+	void testConstructor_file_utf32le() throws IOException {
 
 		File file = createTempFile("UTF-32LE");
 
@@ -125,7 +125,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_fileWithDefaultEncoding_utf8() throws IOException {
+	void testConstructor_fileWithDefaultEncoding_utf8() throws IOException {
 
 		File file = createTempFileWithoutBOM();
 
@@ -139,7 +139,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_fileWithDefaultCharset_utf8() throws IOException {
+	void testConstructor_fileWithDefaultCharset_utf8() throws IOException {
 
 		File file = createTempFileWithoutBOM();
 
@@ -153,7 +153,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_fileWithNoDefaultEncodingSpecified() throws IOException {
+	void testConstructor_fileWithNoDefaultEncodingSpecified() throws IOException {
 
 		File file = createTempFileWithoutBOM();
 
@@ -166,7 +166,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileName_utf8() throws IOException {
+	void testConstructor_stringFileName_utf8() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_8);
 		String fileFullPath = file.getAbsolutePath();
@@ -179,7 +179,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileName_utf16be() throws IOException {
+	void testConstructor_stringFileName_utf16be() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_16BE);
 		String fileFullPath = file.getAbsolutePath();
@@ -192,7 +192,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileName_utf16le() throws IOException {
+	void testConstructor_stringFileName_utf16le() throws IOException {
 
 		File file = createTempFile(StandardCharsets.UTF_16LE);
 		String fileFullPath = file.getAbsolutePath();
@@ -205,7 +205,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameWithNoDefaultEncodingSpecified() throws IOException {
+	void testConstructor_stringFileNameWithNoDefaultEncodingSpecified() throws IOException {
 
 		File file = createTempFileWithoutBOM();
 
@@ -218,7 +218,7 @@ public class UnicodeReaderTest {
 	}
 
 	@Test
-	public void testConstructor_inputStreamWithCharsetSpecified() throws IOException {
+	void testConstructor_inputStreamWithCharsetSpecified() throws IOException {
 
 		File file = createTempFileWithoutBOM();
 

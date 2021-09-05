@@ -19,9 +19,9 @@ import java.awt.event.ActionEvent;
  */
 public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest {
 
-	public static final String DEFAULT_SYNTAX_STYLE = SyntaxConstants.SYNTAX_STYLE_C;
+	private static final String DEFAULT_SYNTAX_STYLE = SyntaxConstants.SYNTAX_STYLE_C;
 
-	public static final String DEFAULT_CODE = "{\n" +
+	protected static final String DEFAULT_CODE = "{\n" +
 		"  {\n" +
 		"    println(\"Wow\");\n" +
 		"  }\n" +
@@ -45,7 +45,7 @@ public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest 
 	 *
 	 * @return The text area.
 	 */
-	public static RSyntaxTextArea createTextArea() {
+	protected static RSyntaxTextArea createTextArea() {
 		return createTextArea(null);
 	}
 
@@ -56,7 +56,7 @@ public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest 
 	 * @param code A snippet of C code to edit.
 	 * @return The text area.
 	 */
-	public static RSyntaxTextArea createTextArea(String code) {
+	protected static RSyntaxTextArea createTextArea(String code) {
 		return createTextArea(null, code);
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractRSyntaxTextAreaTest extends AbstractRTextAreaTest 
 	 * @param code The initial code snippet to be editing.
 	 * @return The text area.
 	 */
-	public static RSyntaxTextArea createTextArea(String syntaxStyle, String code) {
+	protected static RSyntaxTextArea createTextArea(String syntaxStyle, String code) {
 
 		if (syntaxStyle == null) {
 			syntaxStyle = DEFAULT_SYNTAX_STYLE;

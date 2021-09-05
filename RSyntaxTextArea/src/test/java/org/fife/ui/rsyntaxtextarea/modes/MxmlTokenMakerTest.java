@@ -33,7 +33,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_comment() {
+	void testMxml_comment() {
 
 		String[] commentLiterals = {
 			"<!-- Hello world -->",
@@ -50,7 +50,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_comment_URL() {
+	void testMxml_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = createSegment(code);
@@ -70,7 +70,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_doctype() {
+	void testMxml_doctype() {
 
 		String[] doctypes = {
 			"<!doctype html>",
@@ -89,7 +89,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_entityReferences() {
+	void testMxml_entityReferences() {
 
 		String[] entityReferences = {
 			"&nbsp;", "&lt;", "&gt;", "&#4012",
@@ -106,7 +106,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_happyPath_tagWithAttributes() {
+	void testMxml_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = createSegment(code);
@@ -139,7 +139,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMxml_processingInstructions() {
+	void testMxml_processingInstructions() {
 
 		String[] doctypes = {
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",

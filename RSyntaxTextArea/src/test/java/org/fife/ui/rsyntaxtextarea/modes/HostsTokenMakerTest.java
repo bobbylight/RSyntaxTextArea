@@ -35,7 +35,7 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world",
@@ -52,7 +52,7 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world http://www.sas.com",
@@ -85,7 +85,7 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetMarkOccurrencesOfTokenType() {
+	void testGetMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(
 				TokenTypes.RESERVED_WORD));
@@ -95,7 +95,7 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String code = "127.0.0.1 localhost";
 

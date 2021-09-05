@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitScrollActionTest {
+class RTextAreaEditorKitScrollActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("foo");
 		RTextScrollPane sp = new RTextScrollPane(textArea);
@@ -36,7 +36,7 @@ public class RTextAreaEditorKitScrollActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("scroll",
 			new RTextAreaEditorKit.ScrollAction("scroll", 1).getMacroID());
 	}

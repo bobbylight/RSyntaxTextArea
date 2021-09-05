@@ -16,11 +16,11 @@ import java.awt.event.ActionEvent;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitDeleteNextCharActionTest {
+class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.DeleteNextCharAction action = new RTextAreaEditorKit.DeleteNextCharAction(
 			"name", null, "Description", 0, null);
 		Assertions.assertEquals("name", action.getName());
@@ -29,7 +29,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEditable() {
+	void testActionPerformedImpl_notEditable() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -43,7 +43,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection() {
+	void testActionPerformedImpl_noSelection() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -56,7 +56,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selection() {
+	void testActionPerformedImpl_selection() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf("ine 2"));
@@ -70,7 +70,7 @@ public class RTextAreaEditorKitDeleteNextCharActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.deleteNextCharAction,
 			new RTextAreaEditorKit.DeleteNextCharAction().getMacroID());
 	}

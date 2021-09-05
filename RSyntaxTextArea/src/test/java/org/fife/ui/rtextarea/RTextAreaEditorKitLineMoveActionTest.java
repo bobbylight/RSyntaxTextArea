@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitLineMoveActionTest {
+class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_moveDown_happyPath() {
+	void testActionPerformedImpl_moveDown_happyPath() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -50,7 +50,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_moveDown_doesNothingWhenOnLastLine() {
+	void testActionPerformedImpl_moveDown_doesNothingWhenOnLastLine() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -63,7 +63,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_moveUp_happyPath() {
+	void testActionPerformedImpl_moveUp_happyPath() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -76,7 +76,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_moveUp_doesNothingWhenOnFirstLine() {
+	void testActionPerformedImpl_moveUp_doesNothingWhenOnFirstLine() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -89,7 +89,7 @@ public class RTextAreaEditorKitLineMoveActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.LineMoveAction("foo", 1).getMacroID());
 	}

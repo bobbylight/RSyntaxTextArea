@@ -20,11 +20,11 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class BufferedImageBackgroundPainterStrategyTest extends AbstractRSyntaxTextAreaTest {
+class BufferedImageBackgroundPainterStrategyTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintImage_noImage() {
+	void testPaintImage_noImage() {
 		RSyntaxTextArea textArea = createTextArea();
 		BufferedImageBackgroundPainterStrategy strategy = new BufferedImageBackgroundPainterStrategy(textArea);
 		strategy.paintImage(createTestGraphics(), 0, 0);
@@ -32,7 +32,7 @@ public class BufferedImageBackgroundPainterStrategyTest extends AbstractRSyntaxT
 
 
 	@Test
-	public void testPaintImage_withImage() {
+	void testPaintImage_withImage() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		BufferedImageBackgroundPainterStrategy strategy = new BufferedImageBackgroundPainterStrategy(textArea);

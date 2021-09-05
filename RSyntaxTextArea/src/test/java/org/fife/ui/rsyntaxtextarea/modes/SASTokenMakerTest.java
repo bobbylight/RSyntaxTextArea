@@ -28,7 +28,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
@@ -40,7 +40,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"* Hello world",
 		};
@@ -58,7 +58,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 		String[] keywords = {
 				"_all_",
 				"_character_",
@@ -288,7 +288,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMacros() {
+	void testMacros() {
 
 		String[] macros = {
 				"%abort",
@@ -350,7 +350,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testProcs() {
+	void testProcs() {
 
 		String[] procs = {
 				/* Base SAS procs. */
@@ -409,14 +409,14 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		String[] separators = { "(", ")" };
 		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
 	}
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};

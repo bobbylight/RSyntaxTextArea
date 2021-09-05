@@ -18,11 +18,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DefaultParseResultTest {
+class DefaultParseResultTest {
 
 
 	@Test
-	public void testConstructor() {
+	void testConstructor() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
 		Assertions.assertEquals(parser, res.getParser());
@@ -30,7 +30,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testAddNotice() {
+	void testAddNotice() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -48,7 +48,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testClearNotices() {
+	void testClearNotices() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -65,7 +65,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetError() {
+	void testGetError() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -79,7 +79,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetFirstLineParsed() {
+	void testGetFirstLineParsed() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -92,7 +92,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetLastLineParsed() {
+	void testGetLastLineParsed() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -105,7 +105,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetNotices() {
+	void testGetNotices() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -121,7 +121,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetParser() {
+	void testGetParser() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
 		Assertions.assertEquals(parser, res.getParser());
@@ -129,7 +129,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testGetParseTime() {
+	void testGetParseTime() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
 		Assertions.assertEquals(0, res.getParseTime());
@@ -139,7 +139,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testSetError() {
+	void testSetError() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -153,7 +153,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testSetParsedLines() {
+	void testSetParsedLines() {
 
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
@@ -168,7 +168,7 @@ public class DefaultParseResultTest {
 
 
 	@Test
-	public void testSetParseTime() {
+	void testSetParseTime() {
 		MockParser parser = new MockParser();
 		DefaultParseResult res = new DefaultParseResult(parser);
 		Assertions.assertEquals(0, res.getParseTime());

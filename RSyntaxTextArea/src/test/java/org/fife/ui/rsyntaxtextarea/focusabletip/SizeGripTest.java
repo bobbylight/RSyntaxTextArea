@@ -19,18 +19,18 @@ import java.awt.*;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class SizeGripTest extends AbstractRSyntaxTextAreaTest {
+class SizeGripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_ltr() {
+	void testPaintComponent_ltr() {
 		SizeGrip grip = new SizeGrip();
 		grip.paintComponent(createTestGraphics());
 	}
 
 
 	@Test
-	public void testPaintComponent_rtl() {
+	void testPaintComponent_rtl() {
 		SizeGrip grip = new SizeGrip();
 		grip.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		grip.paintComponent(createTestGraphics());
@@ -38,7 +38,7 @@ public class SizeGripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_osx() {
+	void testPaintComponent_osx() {
 
 		String osName = System.getProperty("os.name");
 		System.setProperty("os.name", "OS X");

@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitCutActionTest {
+class RTextAreaEditorKitCutActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.CutAction action = new RTextAreaEditorKit.CutAction(
 			"cut", null, "Description", 0, null);
 		Assertions.assertEquals("cut", action.getName());
@@ -27,7 +27,7 @@ public class RTextAreaEditorKitCutActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -40,7 +40,7 @@ public class RTextAreaEditorKitCutActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.cutAction,
 			new RTextAreaEditorKit.CutAction().getMacroID());
 	}

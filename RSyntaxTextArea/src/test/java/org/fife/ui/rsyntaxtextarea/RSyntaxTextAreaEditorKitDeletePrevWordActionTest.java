@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitDeletePrevWordActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitDeletePrevWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_deletePrevWord() {
+	void testActionPerformedImpl_deletePrevWord() {
 
 		String origText = "/*\n" +
 			"    * comment\n" +
@@ -47,7 +47,7 @@ public class RSyntaxTextAreaEditorKitDeletePrevWordActionTest extends AbstractRS
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.DeletePrevWordAction a = new RSyntaxTextAreaEditorKit.DeletePrevWordAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rtaDeletePrevWordAction, a.getMacroID());
 	}

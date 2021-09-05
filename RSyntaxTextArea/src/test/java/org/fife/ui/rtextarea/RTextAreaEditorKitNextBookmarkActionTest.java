@@ -21,14 +21,14 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitNextBookmarkActionTest {
+class RTextAreaEditorKitNextBookmarkActionTest {
 
 	private RTextArea textArea;
 	private Gutter gutter;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		textArea = new RTextArea("line 1\nline 2\nline 3\nline 4");
 		textArea.setCaretPosition(0);
@@ -42,7 +42,7 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_nextBookmark_doNothingIfNoBookmarks() {
+	void testActionPerformedImpl_nextBookmark_doNothingIfNoBookmarks() {
 
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 
@@ -52,7 +52,7 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_nextBookmark_happyPath() throws BadLocationException {
+	void testActionPerformedImpl_nextBookmark_happyPath() throws BadLocationException {
 
 		gutter.toggleBookmark(1);
 		gutter.toggleBookmark(3);
@@ -72,7 +72,7 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_previousBookmark_happyPath() throws BadLocationException {
+	void testActionPerformedImpl_previousBookmark_happyPath() throws BadLocationException {
 
 		gutter.toggleBookmark(1);
 		gutter.toggleBookmark(3);
@@ -92,7 +92,7 @@ public class RTextAreaEditorKitNextBookmarkActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		RTextAreaEditorKit.NextBookmarkAction action = new RTextAreaEditorKit.NextBookmarkAction("name", true);
 		Assertions.assertEquals("name", action.getMacroID());
 	}

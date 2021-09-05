@@ -35,7 +35,7 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testComment() {
+	void testComment() {
 
 		String[] commentLiterals = {
 			"# Hello world",
@@ -61,7 +61,7 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testNameValuePair_happyPath() {
+	void testNameValuePair_happyPath() {
 
 		String code = "dialog.title=Options";
 		Segment segment = createSegment(code);

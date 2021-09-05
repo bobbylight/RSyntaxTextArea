@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setCaretPosition(1);
@@ -39,7 +39,7 @@ public class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends Abstrac
 
 
 	@Test
-	public void testActionPerformedImpl_foldingDisabled() {
+	void testActionPerformedImpl_foldingDisabled() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setCaretPosition(1);
@@ -51,7 +51,7 @@ public class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends Abstrac
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaToggleCurrentFoldAction,
 			new RSyntaxTextAreaEditorKit.ToggleCurrentFoldAction().getMacroID());
 	}

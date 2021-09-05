@@ -13,55 +13,55 @@ import java.awt.*;
 /**
  * Unit tests for the {@link HtmlUtil} class.
  */
-public class HtmlUtilTest {
+class HtmlUtilTest {
 
 	@Test
-	public void testEscapeForHtml_nullInput() {
+	void testEscapeForHtml_nullInput() {
 		Assertions.assertNull(HtmlUtil.escapeForHtml(null, "<br>", true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_nullNewlineReplacement() {
+	void testEscapeForHtml_nullNewlineReplacement() {
 		Assertions.assertEquals("", HtmlUtil.escapeForHtml("\n", null, true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_nonNullNewlineReplacement() {
+	void testEscapeForHtml_nonNullNewlineReplacement() {
 		Assertions.assertEquals("<br>", HtmlUtil.escapeForHtml("\n", "<br>", true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_happyPath() {
+	void testEscapeForHtml_happyPath() {
 		Assertions.assertEquals("hello", HtmlUtil.escapeForHtml("hello", "<br>", true));
 		Assertions.assertEquals("2 &lt; 4", HtmlUtil.escapeForHtml("2 < 4", "<br>", true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_problemChars() {
+	void testEscapeForHtml_problemChars() {
 		Assertions.assertEquals(" <br>&amp;    &lt;&gt;&#39;&#34;&#47;",
 			HtmlUtil.escapeForHtml(" \n&\t<>'\"/", "<br>", true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_multipleSpaces_inPreBlock() {
+	void testEscapeForHtml_multipleSpaces_inPreBlock() {
 		Assertions.assertEquals("   ",
 			HtmlUtil.escapeForHtml("   ", "<br>", true));
 	}
 
 
 	@Test
-	public void testEscapeForHtml_multipleSpaces_notInPreBlock() {
+	void testEscapeForHtml_multipleSpaces_notInPreBlock() {
 		Assertions.assertEquals(" &nbsp;&nbsp;",
 			HtmlUtil.escapeForHtml("   ", "<br>", false));
 	}
 
 	@Test
-	public void testEscapeForHtml_tab_inPreBlock() {
+	void testEscapeForHtml_tab_inPreBlock() {
 
 		String code = "<foo>\twidget\t</foo>";
 
@@ -70,7 +70,7 @@ public class HtmlUtilTest {
 	}
 
 	@Test
-	public void testEscapeForHtml_tab_notInPreBlock() {
+	void testEscapeForHtml_tab_notInPreBlock() {
 
 		String code = "<foo>\twidget\t</foo>";
 
@@ -79,22 +79,22 @@ public class HtmlUtilTest {
 	}
 
 	@Test
-	public void testGetHexString_null() {
+	void testGetHexString_null() {
 		Assertions.assertNull(HtmlUtil.getHexString(null));
 	}
 
 	@Test
-	public void testGetHexString_allGreaterThan16() {
+	void testGetHexString_allGreaterThan16() {
 		Assertions.assertEquals("#ffffff", HtmlUtil.getHexString(Color.white));
 	}
 
 	@Test
-	public void testGetHexString_allLessThan16() {
+	void testGetHexString_allLessThan16() {
 		Assertions.assertEquals("#000000", HtmlUtil.getHexString(Color.black));
 	}
 
 	@Test
-	public void testGetTextAsHtml_happyPath() {
+	void testGetTextAsHtml_happyPath() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("package foo;\npublic class Foobar {}");

@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_notEditable() {
+	void testActionPerformedImpl_notEditable() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, "<books>\n<");
 		textArea.setCaretPosition(textArea.getDocument().getLength());
@@ -38,7 +38,7 @@ public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxText
 	}
 
 	@Test
-	public void testActionPerformedImpl_alignCurlyBracesEnabled() {
+	void testActionPerformedImpl_alignCurlyBracesEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, "<books>\n<");
 		textArea.setCaretPosition(textArea.getDocument().getLength());
@@ -51,7 +51,7 @@ public class RSyntaxTextAreaCloseMarkupTagActionTest extends AbstractRSyntaxText
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CloseMarkupTagAction a = new RSyntaxTextAreaEditorKit.CloseMarkupTagAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction, a.getMacroID());
 	}

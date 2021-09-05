@@ -16,44 +16,44 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TokenMakerFactoryTest {
+class TokenMakerFactoryTest {
 
 	private TokenMakerFactory origTmf;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origTmf = TokenMakerFactory.getDefaultInstance();
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		TokenMakerFactory.setDefaultInstance(origTmf);
 	}
 
 
 	@Test
-	public void testGetDefaultInstance() {
+	void testGetDefaultInstance() {
 		Assertions.assertNotNull(TokenMakerFactory.getDefaultInstance());
 	}
 
 
 	@Test
-	public void testGetTokenMaker_badKey() {
+	void testGetTokenMaker_badKey() {
 		TokenMakerFactory tmf = TokenMakerFactory.getDefaultInstance();
 		Assertions.assertNotNull(tmf.getTokenMaker("invalidKey"));
 	}
 
 
 	@Test
-	public void testKeySet() {
+	void testKeySet() {
 		Assertions.assertFalse(TokenMakerFactory.getDefaultInstance().keySet().isEmpty());
 	}
 
 
 	@Test
-	public void testSetDefaultInstance() {
+	void testSetDefaultInstance() {
 
 		Assertions.assertFalse(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
 
@@ -64,7 +64,7 @@ public class TokenMakerFactoryTest {
 
 
 	@Test
-	public void testSetDefaultInstance_passNull() {
+	void testSetDefaultInstance_passNull() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> TokenMakerFactory.setDefaultInstance(null));
 	}
 

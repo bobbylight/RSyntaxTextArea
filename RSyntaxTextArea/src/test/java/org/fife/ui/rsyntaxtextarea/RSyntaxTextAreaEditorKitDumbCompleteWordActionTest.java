@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	/**
@@ -55,7 +55,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testActionPerformed_manyLinesInBetween() throws Exception {
+	void testActionPerformed_manyLinesInBetween() {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
@@ -78,7 +78,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testActionPerformed_dollarSignImportant() throws Exception {
+	void testActionPerformed_dollarSignImportant() {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
 				SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
@@ -94,7 +94,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testActionPerformed_underscoresImportant() throws Exception {
+	void testActionPerformed_underscoresImportant() {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
 				SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
@@ -124,7 +124,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testGetWordStart() throws Exception {
+	void testGetWordStart() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
@@ -164,7 +164,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testGetWordEnd() throws Exception {
+	void testGetWordEnd() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
@@ -204,7 +204,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testGetPreviousWord() throws Exception {
+	void testGetPreviousWord() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(
@@ -244,7 +244,7 @@ public class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends Abstract
 
 
 	@Test
-	public void testGetPreviousWord_manyLinesInBetween() throws Exception {
+	void testGetPreviousWord_manyLinesInBetween() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RSyntaxDocument doc = new RSyntaxDocument(

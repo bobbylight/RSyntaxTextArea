@@ -17,7 +17,7 @@ import javax.swing.text.BadLocationException;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FoldTest extends AbstractRSyntaxTextAreaTest {
+class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 	private static final String CODE_WITH_CHILDREN = "{\n" +
 		"  {\n" +
@@ -30,7 +30,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testContainsLine() throws BadLocationException {
+	void testContainsLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Fold fold = new Fold(FoldType.CODE, textArea, 0);
@@ -44,7 +44,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testContainsOrStartsOnLine() throws BadLocationException {
+	void testContainsOrStartsOnLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Fold fold = new Fold(FoldType.CODE, textArea, 0);
@@ -58,7 +58,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCreateChild() throws BadLocationException {
+	void testCreateChild() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Fold fold = new Fold(FoldType.CODE, textArea, 0);
@@ -72,7 +72,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetChildCount() throws BadLocationException {
+	void testGetChildCount() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -84,7 +84,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetChildren() {
+	void testGetChildren() {
 
 		RSyntaxTextArea textArea = createTextArea(CODE_WITH_CHILDREN);
 
@@ -94,7 +94,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetEndLine() throws BadLocationException {
+	void testGetEndLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -106,7 +106,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetHasChildFolds() throws BadLocationException {
+	void testGetHasChildFolds() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -118,7 +118,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetLastChild_noChildren() throws BadLocationException {
+	void testGetLastChild_noChildren() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -130,7 +130,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetLastChild_twoChildren() throws BadLocationException {
+	void testGetLastChild_twoChildren() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(CODE_WITH_CHILDREN);
 
@@ -148,7 +148,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetLineCount() throws BadLocationException {
+	void testGetLineCount() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -160,7 +160,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetStartLine() throws BadLocationException {
+	void testGetStartLine() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -173,7 +173,7 @@ public class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testToString() throws BadLocationException {
+	void testToString() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Fold fold = new Fold(FoldType.CODE, textArea, 0);

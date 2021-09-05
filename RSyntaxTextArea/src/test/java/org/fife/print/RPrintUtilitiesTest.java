@@ -23,7 +23,7 @@ import java.awt.print.PageFormat;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
+class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	private static String createContent(int minLength) {
@@ -40,7 +40,7 @@ public class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPrintDocumentMonospaced_happyPath() throws BadLocationException {
+	void testPrintDocumentMonospaced_happyPath() throws BadLocationException {
 
 		Graphics g = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
@@ -52,7 +52,7 @@ public class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPrintDocumentMonospacedWordWrap_happyPath() throws BadLocationException {
+	void testPrintDocumentMonospacedWordWrap_happyPath() throws BadLocationException {
 
 		Graphics g = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
@@ -64,7 +64,7 @@ public class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPrintDocumentWordWrap_happyPath() throws BadLocationException {
+	void testPrintDocumentWordWrap_happyPath() {
 
 		Graphics g = createTestGraphics();
 		RSyntaxTextArea textArea = createTextArea();

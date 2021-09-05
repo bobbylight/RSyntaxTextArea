@@ -16,11 +16,11 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitDecreaseFontSizeActionTest {
+class RTextAreaEditorKitDecreaseFontSizeActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.DecreaseFontSizeAction action = new RTextAreaEditorKit.DecreaseFontSizeAction(
 			"decreaseFontSize", null, "Description", 0, null);
 		Assertions.assertEquals("decreaseFontSize", action.getName());
@@ -29,7 +29,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -44,7 +44,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_closeToMinimumSize() {
+	void testActionPerformedImpl_closeToMinimumSize() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -60,7 +60,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_alreadyAtMinimumSize() {
+	void testActionPerformedImpl_alreadyAtMinimumSize() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -75,7 +75,7 @@ public class RTextAreaEditorKitDecreaseFontSizeActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaDecreaseFontSizeAction,
 			new RTextAreaEditorKit.DecreaseFontSizeAction().getMacroID());
 	}

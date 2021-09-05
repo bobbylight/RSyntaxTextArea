@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
+class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenToMark_beginningOfWord() {
+	void testGetTokenToMark_beginningOfWord() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);
@@ -32,7 +32,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenToMark_endOfWord() {
+	void testGetTokenToMark_endOfWord() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);
@@ -46,7 +46,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsValidType_validType() {
+	void testIsValidType_validType() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);
@@ -59,7 +59,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsValidType_invalidType() {
+	void testIsValidType_invalidType() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);
@@ -72,7 +72,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrences_forward() {
+	void testMarkOccurrences_forward() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);
@@ -89,7 +89,7 @@ public class XmlOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrences_backward() {
+	void testMarkOccurrences_backward() {
 
 		String origContent = "<books><book></book></books>";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, origContent);

@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_foldingEnabled() {
+	void testActionPerformedImpl_foldingEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertFalse(textArea.getFoldManager().getFold(0).isCollapsed());
@@ -38,7 +38,7 @@ public class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTex
 	}
 
 	@Test
-	public void testActionPerformedImpl_foldingNotEnabled() {
+	void testActionPerformedImpl_foldingNotEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setCodeFoldingEnabled(false);
@@ -50,7 +50,7 @@ public class RSyntaxTextAreaChangeFoldStateActionTest extends AbstractRSyntaxTex
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.ChangeFoldStateAction a = new RSyntaxTextAreaEditorKit.ChangeFoldStateAction(
 			"foo", true);
 		Assertions.assertEquals("foo", a.getMacroID());

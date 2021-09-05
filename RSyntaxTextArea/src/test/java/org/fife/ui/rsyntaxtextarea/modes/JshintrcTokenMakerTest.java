@@ -24,7 +24,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String code = "true false";
 
@@ -50,7 +50,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -97,7 +97,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testIntegerLiterals() {
+	void testIntegerLiterals() {
 
 		String code = "1 42 0 -1 -42";
 
@@ -123,7 +123,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testLineComments() {
+	void testLineComments() {
 		String code = "// Hello world";
 		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
@@ -133,7 +133,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testNullLiterals() {
+	void testNullLiterals() {
 		String code = "null";
 		Segment segment = createSegment(code);
 		JshintrcTokenMaker tm = new JshintrcTokenMaker();
@@ -143,7 +143,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "[ ] { }";
 
@@ -171,7 +171,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"", "\"\\\\/\\b\\f\\n\\r\\t\"",
@@ -188,7 +188,7 @@ public class JshintrcTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals_errors() {
+	void testStringLiterals_errors() {
 
 		String[] stringLiterals = {
 			"\"foo \\x bar\"",

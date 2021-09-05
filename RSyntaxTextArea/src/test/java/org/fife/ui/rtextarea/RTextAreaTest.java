@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 
@@ -19,19 +18,19 @@ import javax.swing.text.DefaultStyledDocument;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaTest {
+class RTextAreaTest {
 
 	private IconGroup origIconGroup;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origIconGroup = RTextArea.getIconGroup();
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		if (origIconGroup != null) {
 			RTextArea.setIconGroup(origIconGroup);
 		}
@@ -39,7 +38,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testCanRedo() {
+	void testCanRedo() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertFalse(textArea.canRedo());
 		textArea.replaceSelection("Hi");
@@ -52,7 +51,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testCanUndo() {
+	void testCanUndo() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertFalse(textArea.canUndo());
 		textArea.replaceSelection("Hi");
@@ -63,14 +62,14 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testCreateDefaultModel() {
+	void testCreateDefaultModel() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertTrue(textArea.createDefaultModel() instanceof RDocument);
 	}
 
 
 	@Test
-	public void testDiscardAllEdits() {
+	void testDiscardAllEdits() {
 		RTextArea textArea = new RTextArea();
 		textArea.replaceSelection("Hi");
 		Assertions.assertTrue(textArea.canUndo());
@@ -80,20 +79,20 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testGetPopupMenu() {
+	void testGetPopupMenu() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertNotNull(textArea.getPopupMenu());
 	}
 
 
 	@Test
-	public void testGetSetIconGroup() {
+	void testGetSetIconGroup() {
 		RTextArea.setIconGroup(new IconGroup("test", "group"));
 	}
 
 
 	@Test
-	public void testGetSetToolTipSupplier() {
+	void testGetSetToolTipSupplier() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertNull(textArea.getToolTipSupplier());
 		textArea.setToolTipSupplier((textArea1, e) -> null);
@@ -102,7 +101,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testRecordingMacro_happyPath() {
+	void testRecordingMacro_happyPath() {
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.beginRecordingMacro();
 		Assertions.assertTrue(RTextArea.isRecordingMacro());
@@ -112,7 +111,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testRecordingMacro_endWhileNotRecording() {
+	void testRecordingMacro_endWhileNotRecording() {
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.endRecordingMacro();
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
@@ -120,7 +119,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_null() {
+	void testReplaceSelection_null() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setSelectionStart(1);
 		textArea.setSelectionEnd(3);
@@ -130,7 +129,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_tabsEmulatedWithWhiteSpace_insertMode() {
+	void testReplaceSelection_tabsEmulatedWithWhiteSpace_insertMode() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setTabsEmulated(true);
 		textArea.setTabSize(4);
@@ -141,7 +140,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_tabsEmulatedWithWhiteSpace_unevenOffset() {
+	void testReplaceSelection_tabsEmulatedWithWhiteSpace_unevenOffset() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setTabsEmulated(true);
 		textArea.setTabSize(4);
@@ -152,7 +151,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_tabsEmulatedWithWhiteSpace_twoTabs() {
+	void testReplaceSelection_tabsEmulatedWithWhiteSpace_twoTabs() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setTabsEmulated(true);
 		textArea.setTabSize(4);
@@ -163,7 +162,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_tabsEmulatedWithWhiteSpace_mixedContent() {
+	void testReplaceSelection_tabsEmulatedWithWhiteSpace_mixedContent() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setTabsEmulated(true);
 		textArea.setTabSize(4);
@@ -174,7 +173,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testReplaceSelection_tabsEmulatedWithWhiteSpace_overwriteMode() {
+	void testReplaceSelection_tabsEmulatedWithWhiteSpace_overwriteMode() {
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setTabsEmulated(true);
 		textArea.setTextMode(RTextArea.OVERWRITE_MODE);
@@ -186,7 +185,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testMarkAllOnOccurrenceSearches() {
+	void testMarkAllOnOccurrenceSearches() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertTrue(textArea.getMarkAllOnOccurrenceSearches());
 		textArea.setMarkAllOnOccurrenceSearches(false);
@@ -195,14 +194,14 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testSetCaretStyle_nullDoesntThrowException() {
+	void testSetCaretStyle_nullDoesntThrowException() {
 		RTextArea textArea = new RTextArea();
 		textArea.setCaretStyle(RTextArea.INSERT_MODE, null);
 	}
 
 
 	@Test
-	public void testSetDocument_errorIfIncorrectType() {
+	void testSetDocument_errorIfIncorrectType() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			RTextArea textArea = new RTextArea();
 			textArea.setDocument(new DefaultStyledDocument());
@@ -211,7 +210,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void testSetPopupMenu() {
+	void testSetPopupMenu() {
 		RTextArea textArea = new RTextArea();
 		JPopupMenu popup = new JPopupMenu();
 		textArea.setPopupMenu(popup);
@@ -220,7 +219,7 @@ public class RTextAreaTest {
 
 
 	@Test
-	public void setTextMode_invalidMode() {
+	void setTextMode_invalidMode() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
 		textArea.setTextMode(-7);

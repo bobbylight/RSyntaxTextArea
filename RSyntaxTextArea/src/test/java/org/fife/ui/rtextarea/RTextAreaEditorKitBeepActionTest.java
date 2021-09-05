@@ -14,17 +14,17 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitBeepActionTest {
+class RTextAreaEditorKitBeepActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 		new RTextAreaEditorKit.BeepAction().actionPerformedImpl(null, null);
 	}
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.beepAction, new RTextAreaEditorKit.BeepAction().getMacroID());
 	}
 }

@@ -34,7 +34,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		TypeScriptTokenMaker.setE4xSupported(true);
 	}
 
@@ -59,7 +59,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_api_getLineCommentStartAndEnd() {
+	void testTS_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);
 		Assertions.assertNull(tm.getLineCommentStartAndEnd(0)[1]);
@@ -67,7 +67,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_api_isE4XSupported() {
+	void testTS_api_isE4XSupported() {
 		Assertions.assertTrue(TypeScriptTokenMaker.isE4xSupported());
 		TypeScriptTokenMaker.setE4xSupported(false);
 		Assertions.assertFalse(TypeScriptTokenMaker.isE4xSupported());
@@ -75,7 +75,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_api_setE4XSupported() {
+	void testTS_api_setE4XSupported() {
 		Assertions.assertTrue(TypeScriptTokenMaker.isE4xSupported());
 		TypeScriptTokenMaker.setE4xSupported(false);
 		Assertions.assertFalse(TypeScriptTokenMaker.isE4xSupported());
@@ -83,7 +83,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_BooleanLiterals() {
+	void testTS_BooleanLiterals() {
 
 		String code = "true false";
 
@@ -109,7 +109,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_CharLiterals_invalid() {
+	void testTS_CharLiterals_invalid() {
 
 		String[] charLiterals = {
 			"'\\xG7'", // Invalid hex/octal escape
@@ -129,7 +129,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_CharLiterals_valid() {
+	void testTS_CharLiterals_valid() {
 
 		String[] charLiterals = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -151,7 +151,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DataTypes() {
+	void testTS_DataTypes() {
 
 		String code = "boolean byte char double float int long short";
 
@@ -177,7 +177,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments() {
+	void testTS_DocComments() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world */",
@@ -194,7 +194,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments_ContinuedOntoNewLine() {
+	void testTS_DocComments_ContinuedOntoNewLine() {
 		String code = " */";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
@@ -205,7 +205,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments_BlockTags() {
+	void testTS_DocComments_BlockTags() {
 
 		String[] blockTags = {
 			"abstract", "access", "alias", "augments", "author", "borrows",
@@ -237,7 +237,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments_InlineTags() {
+	void testTS_DocComments_InlineTags() {
 
 		String[] inlineTags = { "link", "linkplain", "linkcode", "tutorial" };
 
@@ -259,7 +259,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments_Markup() {
+	void testTS_DocComments_Markup() {
 		String text = "<code>";
 		Segment segment = createSegment(text);
 		TokenMaker tm = createTokenMaker();
@@ -274,7 +274,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_DocComments_URL() {
+	void testTS_DocComments_URL() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world http://www.sas.com */",
@@ -303,7 +303,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_e4x() {
+	void testTS_e4x() {
 
 		TypeScriptTokenMaker.setE4xSupported(true);
 
@@ -513,7 +513,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_EolComments() {
+	void testTS_EolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -530,7 +530,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_EolComments_URL() {
+	void testTS_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
@@ -566,7 +566,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_FloatingPointLiterals() {
+	void testTS_FloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -608,7 +608,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Functions() {
+	void testTS_Functions() {
 
 		String code = "eval parseInt parseFloat escape unescape isNaN isFinite";
 
@@ -634,7 +634,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_HexLiterals() {
+	void testTS_HexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -660,7 +660,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Keywords() {
+	void testTS_Keywords() {
 
 		String code = "break case catch class const continue " +
 				"debugger default delete do else export extends finally for function if " +
@@ -698,7 +698,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_MultiLineComments() {
+	void testTS_MultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -715,7 +715,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_MultiLineComment_continuedOntoNewLine() {
+	void testTS_MultiLineComment_continuedOntoNewLine() {
 		String code = " */";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
@@ -726,7 +726,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_MultiLineComments_URL() {
+	void testTS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world file://test.txt */",
@@ -758,7 +758,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Numbers() {
+	void testTS_Numbers() {
 
 		String[] ints = {
 			"0", "42", /*"-7",*/
@@ -810,7 +810,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Operators() {
+	void testTS_Operators() {
 
 		String nonAssignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? << >> ! & == : >> ~ || && <<< >>>";
 		String assignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -838,7 +838,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Regexes() {
+	void testTS_Regexes() {
 
 		String[] regexes = {
 			"/foobar/", "/foobar/gim", "/foo\\/bar\\/bas/g",
@@ -855,7 +855,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Separators() {
+	void testTS_Separators() {
 
 		String code = "( ) [ ] { }";
 
@@ -883,7 +883,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Separators_renderedAsIdentifiers() {
+	void testTS_Separators_renderedAsIdentifiers() {
 
 		String[] separators2 = { ";", ",", "." };
 
@@ -898,7 +898,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_StringLiterals_invalid() {
+	void testTS_StringLiterals_invalid() {
 
 		String[] stringLiterals = {
 			"\"\\xG7\"", // Invalid hex/octal escape
@@ -918,7 +918,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_StringLiterals_valid() {
+	void testTS_StringLiterals_valid() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\x77\"", "\"\\u00fe\"", "\"\\\"\"",
@@ -936,7 +936,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testJS_TemplateLiterals_invalid() {
+	void testJS_TemplateLiterals_invalid() {
 
 		String[] templateLiterals = {
 			"`\\xG7`", // Invalid hex/octal escape
@@ -955,7 +955,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
+	void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
 
 		String[] templateLiterals = {
 			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
@@ -974,7 +974,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
+	void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
 
 		// Strings with tokens:  template, interpolated expression, template
 		String[] templateLiterals = {
@@ -998,7 +998,7 @@ public class TypeScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testTS_Whitespace() {
+	void testTS_Whitespace() {
 
 		String[] whitespace = {
 			" ", "\t", "\f", "   \t   ",

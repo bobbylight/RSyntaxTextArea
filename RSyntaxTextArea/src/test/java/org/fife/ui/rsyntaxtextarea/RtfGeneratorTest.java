@@ -19,7 +19,7 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RtfGeneratorTest {
+class RtfGeneratorTest {
 
 	/**
 	 * RTF generated from the simple text below, without the header that may have
@@ -39,7 +39,7 @@ public class RtfGeneratorTest {
 	);
 
 	@Test
-	public void testHappyPath() {
+	void testHappyPath() {
 
 		RtfGenerator generator = new RtfGenerator(Color.white);
 		generator.appendToDoc(SIMPLE_TEXT.get(0), null, null, null);
@@ -51,7 +51,7 @@ public class RtfGeneratorTest {
 	}
 
 	@Test
-	public void testNon7BitAscii() {
+	void testNon7BitAscii() {
 		RtfGenerator generator = new RtfGenerator(Color.white);
 		generator.appendToDoc("\u6c49", null, null, null);
 		String rtf = generator.getRtf();

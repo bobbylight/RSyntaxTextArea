@@ -22,10 +22,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_closingCurlyBraceAdded() {
+	void testActionPerformedImpl_closingCurlyBraceAdded() {
 
 		String origContent = "public void foo() {";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -41,7 +41,7 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 	}
 
 	@Test
-	public void testActionPerformedImpl_allWhiteSpaceLineCleared() {
+	void testActionPerformedImpl_allWhiteSpaceLineCleared() {
 
 		String origContent = "public void foo() {\n\t";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -57,7 +57,7 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 	}
 
 	@Test
-	public void testActionPerformedImpl_autoIndentNotEnabled() {
+	void testActionPerformedImpl_autoIndentNotEnabled() {
 
 		String origContent = "public void foo() {";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -74,7 +74,7 @@ public class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSynt
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.InsertBreakAction a = new RSyntaxTextAreaEditorKit.InsertBreakAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.insertBreakAction, a.getMacroID());
 	}

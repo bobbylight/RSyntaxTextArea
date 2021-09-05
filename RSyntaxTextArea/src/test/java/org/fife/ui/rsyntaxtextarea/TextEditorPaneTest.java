@@ -25,11 +25,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class TextEditorPaneTest {
+class TextEditorPaneTest {
 
 
 	@Test
-	public void testConstructor_zeroArg() {
+	void testConstructor_zeroArg() {
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertEquals(TextEditorPane.INSERT_MODE, textArea.getTextMode());
 		Assertions.assertFalse(textArea.getLineWrap());
@@ -37,7 +37,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testConstructor_oneArg() {
+	void testConstructor_oneArg() {
 		TextEditorPane textArea = new TextEditorPane(TextEditorPane.OVERWRITE_MODE);
 		Assertions.assertEquals(TextEditorPane.OVERWRITE_MODE, textArea.getTextMode());
 		Assertions.assertFalse(textArea.getLineWrap());
@@ -45,7 +45,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testGetSetEncoding() {
+	void testGetSetEncoding() {
 
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertFalse(textArea.isDirty());
@@ -63,7 +63,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testInsertUpdate_setsDirtyFlag() {
+	void testInsertUpdate_setsDirtyFlag() {
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertFalse(textArea.isDirty());
 		textArea.insertUpdate(null);
@@ -72,14 +72,14 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testIsLocal() {
+	void testIsLocal() {
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertTrue(textArea.isLocal());
 	}
 
 
 	@Test
-	public void testIsSetReadOnly() {
+	void testIsSetReadOnly() {
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertFalse(textArea.isReadOnly());
 		textArea.setReadOnly(true);
@@ -88,7 +88,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_noCharsetArg_localNonExistentFile() throws IOException {
+	void testLoad_noCharsetArg_localNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -108,7 +108,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_charset_localNonExistentFile() throws IOException {
+	void testLoad_charset_localNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -128,7 +128,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_string_loadNonExistentFile() throws IOException {
+	void testLoad_string_loadNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -148,7 +148,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testLoad_string_fileExists() throws IOException {
+	void testLoad_string_fileExists() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -171,7 +171,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testReload() throws IOException {
+	void testReload() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("foo"); // Just to add to the undo stack
@@ -205,7 +205,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testRemoveUpdate_setsDirtyFlag() {
+	void testRemoveUpdate_setsDirtyFlag() {
 		TextEditorPane textArea = new TextEditorPane();
 		Assertions.assertFalse(textArea.isDirty());
 		textArea.removeUpdate(null);
@@ -214,7 +214,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testSave_loadNonExistentFile() throws IOException {
+	void testSave_loadNonExistentFile() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 
@@ -234,7 +234,7 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testSaveAs() throws IOException {
+	void testSaveAs() throws IOException {
 
 		TextEditorPane textArea = new TextEditorPane();
 		textArea.append("lorem ipsum");
@@ -253,13 +253,13 @@ public class TextEditorPaneTest {
 
 
 	@Test
-	public void testSetEncoding_invalidArg_null() {
+	void testSetEncoding_invalidArg_null() {
 		Assertions.assertThrows(NullPointerException.class, () -> new TextEditorPane().setEncoding(null));
 	}
 
 
 	@Test
-	public void testSetEncoding_invalidArg_unsupportedCharset() {
+	void testSetEncoding_invalidArg_unsupportedCharset() {
 		Assertions.assertThrows(UnsupportedCharsetException.class, () -> new TextEditorPane().setEncoding("xxx"));
 	}
 

@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RtfToTextTest {
+class RtfToTextTest {
 
 	private static final String SIMPLE_RTF = "{\\rtf1\\ansi\\deff0\n" +
 		"{\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;}\n" +
@@ -29,12 +29,12 @@ public class RtfToTextTest {
 		"This line is the default color";
 
 	@Test
-	public void testGetPlainText_byteArray() throws IOException {
+	void testGetPlainText_byteArray() throws IOException {
 		Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	@Test
-	public void testGetPlainText_file() throws IOException {
+	void testGetPlainText_file() throws IOException {
 
 		File file = File.createTempFile("rstaTest", ".tmp");
 		try (PrintWriter w = new PrintWriter(file)) {
@@ -46,7 +46,7 @@ public class RtfToTextTest {
 	}
 
 	@Test
-	public void testGetPlainText_inputStream() throws IOException {
+	void testGetPlainText_inputStream() throws IOException {
 		try (BufferedInputStream bin = new BufferedInputStream(new ByteArrayInputStream(
 			SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)))) {
 			Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
@@ -54,7 +54,7 @@ public class RtfToTextTest {
 	}
 
 	@Test
-	public void testGetPlainText_string() throws IOException {
+	void testGetPlainText_string() throws IOException {
 		Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
 	}
 }

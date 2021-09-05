@@ -16,11 +16,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextAreaTest {
+class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testExecute() {
+	void testExecute() {
 
 		RSyntaxTextArea textArea = createTextArea("01234567890");
 		SelectRegionLinkGeneratorResult result =
@@ -33,7 +33,7 @@ public class SelectRegionLinkGeneratorResultTest extends AbstractRSyntaxTextArea
 
 
 	@Test
-	public void testGetSourceOffset() {
+	void testGetSourceOffset() {
 
 		RSyntaxTextArea textArea = createTextArea("01234567890");
 		SelectRegionLinkGeneratorResult result =

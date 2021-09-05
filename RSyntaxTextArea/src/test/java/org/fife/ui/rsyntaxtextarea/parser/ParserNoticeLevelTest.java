@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ParserNoticeLevelTest {
+class ParserNoticeLevelTest {
 
 
 	@Test
-	public void testGetNumericValue() {
+	void testGetNumericValue() {
 		Assertions.assertEquals(0, Level.ERROR.getNumericValue());
 		Assertions.assertEquals(1, Level.WARNING.getNumericValue());
 		Assertions.assertEquals(2, Level.INFO.getNumericValue());
@@ -29,7 +29,7 @@ public class ParserNoticeLevelTest {
 
 
 	@Test
-	public void testIsEqualToOrWorseThan() {
+	void testIsEqualToOrWorseThan() {
 
 		Assertions.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.ERROR));
 		Assertions.assertTrue(Level.ERROR.isEqualToOrWorseThan(Level.WARNING));

@@ -20,20 +20,20 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DefaultParserNoticeTest {
+class DefaultParserNoticeTest {
 
 	private MockParser parser;
 	private DefaultParserNotice notice;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		parser = new MockParser();
 	}
 
 
 	@Test
-	public void testDefaultParserNotice_3ArgConstructor() {
+	void testDefaultParserNotice_3ArgConstructor() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals("Foo", notice.getMessage());
@@ -46,7 +46,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testDefaultParserNoticeParserNotice_5ArgConstructor() {
+	void testDefaultParserNoticeParserNotice_5ArgConstructor() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Foo", notice.getMessage());
@@ -59,14 +59,14 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testCompareTo_null() {
+	void testCompareTo_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertTrue(notice.compareTo(null) < 0);
 	}
 
 
 	@Test
-	public void testCompareTo_differentLevels() {
+	void testCompareTo_differentLevels() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.ERROR);
 		DefaultParserNotice notice2 = new DefaultParserNotice(parser, "Foo", 5);
@@ -77,7 +77,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testCompareTo_differentLines() {
+	void testCompareTo_differentLines() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
@@ -92,7 +92,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testCompareTo_differentMessages() {
+	void testCompareTo_differentMessages() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
@@ -107,7 +107,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testCompareTo_equal() {
+	void testCompareTo_equal() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
@@ -123,7 +123,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testContainsPosition() {
+	void testContainsPosition() {
 
 		int offs = 4;
 		int len = 7;
@@ -139,21 +139,21 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testEquals_null() {
+	void testEquals_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertFalse(notice.equals(null));
 	}
 
 
 	@Test
-	public void testEquals_differentObjectType() {
+	void testEquals_differentObjectType() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertFalse(notice.equals("Hello world"));
 	}
 
 
 	@Test
-	public void testEquals_unequalParserNotice() {
+	void testEquals_unequalParserNotice() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
@@ -168,7 +168,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testEquals_equalParserNotice() {
+	void testEquals_equalParserNotice() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
@@ -184,7 +184,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetColor() {
+	void testGetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setColor(Color.yellow);
 		Assertions.assertEquals(Color.yellow, notice.getColor());
@@ -194,7 +194,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetKnowsOffsetAndLength() {
+	void testGetKnowsOffsetAndLength() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertFalse(notice.getKnowsOffsetAndLength());
@@ -206,7 +206,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetLength() {
+	void testGetLength() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals(-1, notice.getLength());
@@ -218,7 +218,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetLevel() {
+	void testGetLevel() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals(Level.ERROR, notice.getLevel());
 		notice.setLevel(Level.INFO);
@@ -229,35 +229,35 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetLine() {
+	void testGetLine() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals(5, notice.getLine());
 	}
 
 
 	@Test
-	public void testGetMessage() {
+	void testGetMessage() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals("Foo", notice.getMessage());
 	}
 
 
 	@Test
-	public void testGetOffset() {
+	void testGetOffset() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals(4, notice.getOffset());
 	}
 
 
 	@Test
-	public void testGetParser() {
+	void testGetParser() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertTrue(parser == notice.getParser());
 	}
 
 
 	@Test
-	public void testGetShowInEditor() {
+	void testGetShowInEditor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertTrue(notice.getShowInEditor());
 		notice.setShowInEditor(false);
@@ -266,7 +266,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testGetToolTipText() {
+	void testGetToolTipText() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
@@ -279,7 +279,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testHashCode() {
+	void testHashCode() {
 
 		int line = 5;
 		DefaultParserNotice notice = new DefaultParserNotice(parser, "Foo", line);
@@ -293,7 +293,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testSetColor() {
+	void testSetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setColor(Color.yellow);
 		Assertions.assertEquals(Color.yellow, notice.getColor());
@@ -303,7 +303,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testSetLevel() {
+	void testSetLevel() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		Assertions.assertEquals(Level.ERROR, notice.getLevel());
 		notice.setLevel(Level.INFO);
@@ -314,7 +314,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testSetLevel_null() {
+	void testSetLevel_null() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
 		notice.setLevel(Level.INFO);
 		Assertions.assertEquals(Level.INFO, notice.getLevel());
@@ -324,7 +324,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testSetShowInEditor() {
+	void testSetShowInEditor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertTrue(notice.getShowInEditor());
 		notice.setShowInEditor(false);
@@ -333,7 +333,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testSetToolTipText() {
+	void testSetToolTipText() {
 
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
@@ -346,7 +346,7 @@ public class DefaultParserNoticeTest {
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Line 5: Foo", notice.toString());
 	}

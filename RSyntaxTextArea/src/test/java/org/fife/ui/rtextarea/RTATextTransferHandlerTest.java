@@ -21,11 +21,11 @@ import java.awt.datatransfer.Transferable;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTATextTransferHandlerTest {
+class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testCreateTransferable_noSelection() {
+	void testCreateTransferable_noSelection() {
 
 		JTextArea textArea = new JTextArea("Hello world");
 		Assertions.assertNull(new RTATextTransferHandler().createTransferable(textArea));
@@ -33,7 +33,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testCreateTransferable_selection() {
+	void testCreateTransferable_selection() {
 
 		JTextArea textArea = new JTextArea("Hello world\r\nLine 2");
 		textArea.setSelectionStart(2);
@@ -47,7 +47,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testGetSourceActions_editableComponent() {
+	void testGetSourceActions_editableComponent() {
 		JTextArea textArea = new JTextArea();
 		int actual = new RTATextTransferHandler().getSourceActions(textArea);
 		Assertions.assertEquals(RTATextTransferHandler.COPY_OR_MOVE, actual);
@@ -55,7 +55,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testGetSourceActions_nonEditableComponent() {
+	void testGetSourceActions_nonEditableComponent() {
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
 		int actual = new RTATextTransferHandler().getSourceActions(textArea);
@@ -64,7 +64,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testImportData_happyPath() {
+	void testImportData_happyPath() {
 
 		JTextArea sourceArea = new JTextArea("Hello world\r\nLine 2");
 		sourceArea.setSelectionStart(2);
@@ -81,7 +81,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testImportData_withinSameComponentAndSelectionRange() {
+	void testImportData_withinSameComponentAndSelectionRange() {
 
 		JTextArea sourceArea = new JTextArea("Hello world");
 		sourceArea.setSelectionStart(2);
@@ -97,7 +97,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testCanImport_falseSinceNotEditable() {
+	void testCanImport_falseSinceNotEditable() {
 
 		Assertions.assertFalse(canImportImpl(false, DataFlavor.stringFlavor));
 		Assertions.assertFalse(canImportImpl(false, DataFlavor.getTextPlainUnicodeFlavor()));
@@ -105,7 +105,7 @@ public class RTATextTransferHandlerTest {
 
 
 	@Test
-	public void testCanImport_happyPath() {
+	void testCanImport_happyPath() {
 
 		Assertions.assertTrue(canImportImpl(true, DataFlavor.stringFlavor));
 		Assertions.assertTrue(canImportImpl(true, DataFlavor.getTextPlainUnicodeFlavor()));

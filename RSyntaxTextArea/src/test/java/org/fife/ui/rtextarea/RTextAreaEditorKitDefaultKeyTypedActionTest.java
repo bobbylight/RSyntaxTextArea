@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitDefaultKeyTypedActionTest {
+class RTextAreaEditorKitDefaultKeyTypedActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.defaultKeyTypedAction,
 			new RTextAreaEditorKit.DefaultKeyTypedAction().getMacroID());
 	}

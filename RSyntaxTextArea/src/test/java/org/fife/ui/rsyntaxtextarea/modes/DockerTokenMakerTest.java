@@ -35,7 +35,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'",
@@ -57,7 +57,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world",
@@ -82,7 +82,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String[] keywords = {
 				"maintainer",
@@ -115,7 +115,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String code = "| > >>";
 
@@ -141,7 +141,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void getTestMarkOccurrencesOfTokenType() {
+	void getTestMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.IDENTIFIER));
@@ -150,7 +150,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "[ ]";
 
@@ -178,7 +178,7 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\\"\"",

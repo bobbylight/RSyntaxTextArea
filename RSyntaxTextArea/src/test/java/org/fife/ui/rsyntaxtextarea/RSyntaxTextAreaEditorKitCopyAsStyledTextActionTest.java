@@ -22,10 +22,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_copyAsStyledText() throws Exception {
+	void testActionPerformedImpl_copyAsStyledText() throws Exception {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -49,7 +49,7 @@ public class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends Abstract
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CopyAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
 	}

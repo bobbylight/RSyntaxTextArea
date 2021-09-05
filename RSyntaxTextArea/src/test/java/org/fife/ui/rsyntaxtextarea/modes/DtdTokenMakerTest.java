@@ -35,7 +35,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetMarkOccurrencesOfTokenType() {
+	void testGetMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
 				TokenTypes.IDENTIFIER));
@@ -43,7 +43,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDtd_comment() {
+	void testDtd_comment() {
 
 		String[] commentLiterals = {
 			"<!-- Hello world -->",
@@ -60,7 +60,7 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDtd_comment_URL() {
+	void testDtd_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = createSegment(code);

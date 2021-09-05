@@ -21,25 +21,25 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends AbstractRSyntaxTextAreaTest {
 
 	private static boolean origTemplatesEnabled;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origTemplatesEnabled = RSyntaxTextArea.getTemplatesEnabled();
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		RSyntaxTextArea.setTemplatesEnabled(origTemplatesEnabled);
 	}
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		String origContent = "line 1\nline 2\nline 3";
 		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
@@ -54,7 +54,7 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 
 
 	@Test
-	public void testActionPerformedImpl_templatesNotEnabled() {
+	void testActionPerformedImpl_templatesNotEnabled() {
 
 		String origContent = "line 1\nline 2\nline 3";
 		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
@@ -68,7 +68,7 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 
 
 	@Test
-	public void testActionPerformedImpl_templatesEnabled_noMatchingTemplate() {
+	void testActionPerformedImpl_templatesEnabled_noMatchingTemplate() {
 
 		String origContent = "line 1\nline 2\nline 3";
 		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
@@ -82,7 +82,7 @@ public class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends Ab
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction,
 			new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().getMacroID());
 	}

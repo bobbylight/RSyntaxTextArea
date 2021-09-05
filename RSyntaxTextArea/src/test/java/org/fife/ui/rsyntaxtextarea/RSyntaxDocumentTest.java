@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxDocumentTest {
+class RSyntaxDocumentTest {
 
 	private RSyntaxDocument doc;
 
@@ -36,7 +36,7 @@ public class RSyntaxDocumentTest {
 	 * @param doc The document.
 	 * @throws Exception If something goes wrong (which should not happen).
 	 */
-	private static final void insertHelloWorldC(RSyntaxDocument doc)
+	private static void insertHelloWorldC(RSyntaxDocument doc)
 			throws Exception {
 		String str = "#include <stdio.h>\n"
 				+ "/*\n"
@@ -51,7 +51,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void test1ArgConstructor() {
+	void test1ArgConstructor() {
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
 		doc = new RSyntaxDocument(syntaxStyle);
 		//Assertions.assertEquals(syntaxStyle, doc.getSyntaxStyle());
@@ -59,7 +59,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void test2ArgConstructor() {
+	void test2ArgConstructor() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
 
@@ -81,7 +81,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testFireDocumentEvent_InsertWithNoNewLines() throws Exception {
+	void testFireDocumentEvent_InsertWithNoNewLines() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -105,7 +105,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testFireDocumentEvent_InsertWithTwoNewLines() throws Exception {
+	void testFireDocumentEvent_InsertWithTwoNewLines() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -132,7 +132,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testFireDocumentEvent_InsertWithTwoNewLinesOneReplaced() throws Exception {
+	void testFireDocumentEvent_InsertWithTwoNewLinesOneReplaced() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -168,7 +168,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testFireDocumentEvent_RemoveWithinOneLine() throws Exception {
+	void testFireDocumentEvent_RemoveWithinOneLine() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -193,7 +193,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetClosestStandardTokenTypeForInternalType() throws Exception {
+	void testGetClosestStandardTokenTypeForInternalType() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -209,7 +209,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetCompleteMarkupCloseTags() {
+	void testGetCompleteMarkupCloseTags() {
 
 		// Non-markup language
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
@@ -230,7 +230,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetCurlyBracesDenoteCodeBlocks() {
+	void testGetCurlyBracesDenoteCodeBlocks() {
 
 		// Language that does use curly braces
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
@@ -265,7 +265,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetLanguageIsMarkup() {
+	void testGetLanguageIsMarkup() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -280,7 +280,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetLastTokenTypeOnLine() throws Exception {
+	void testGetLastTokenTypeOnLine() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -294,7 +294,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetLastTokenTypeOnLine_InvalidIndex() {
+	void testGetLastTokenTypeOnLine_InvalidIndex() {
 
 		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
 
@@ -329,7 +329,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetMarkOccurrencesOfTokenType() {
+	void testGetMarkOccurrencesOfTokenType() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -340,7 +340,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetOccurrenceMarker() {
+	void testGetOccurrenceMarker() {
 		// Not really much we can test here
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -349,7 +349,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetShouldIndentNextLine() throws Exception {
+	void testGetShouldIndentNextLine() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -365,7 +365,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetSyntaxStyle() {
+	void testGetSyntaxStyle() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -383,7 +383,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testGetTokenListForLine() throws Exception {
+	void testGetTokenListForLine() throws Exception {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -411,7 +411,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testInsertBreakSpecialHandling() {
+	void testInsertBreakSpecialHandling() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -426,7 +426,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testIsIdentifierChar() {
+	void testIsIdentifierChar() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -437,7 +437,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testIterator() {
+	void testIterator() {
 		// Not much to test here
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -446,7 +446,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testSetSyntaxStyle() {
+	void testSetSyntaxStyle() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -464,7 +464,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testSetSyntaxStyle_CustomTokenMaker() {
+	void testSetSyntaxStyle_CustomTokenMaker() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -478,7 +478,7 @@ public class RSyntaxDocumentTest {
 
 
 	@Test
-	public void testSetTokenMakerFactory() {
+	void testSetTokenMakerFactory() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);
@@ -511,8 +511,8 @@ public class RSyntaxDocumentTest {
 	 * @param len The expected length.
 	 * @throws AssertionError If any value is not as expected.
 	 */
-	private static final void assertDocumentEvent(DocumentEvent e,
-			DocumentEvent.EventType eventType, int offs, int len) {
+	private static void assertDocumentEvent(DocumentEvent e,
+											DocumentEvent.EventType eventType, int offs, int len) {
 		Assertions.assertEquals(eventType, e.getType());
 		Assertions.assertEquals(offs, e.getOffset());
 		Assertions.assertEquals(len, e.getLength());
@@ -540,7 +540,7 @@ public class RSyntaxDocumentTest {
 
 		private List<DocumentEvent> events;
 
-		public TestDocumentListener() {
+		protected TestDocumentListener() {
 			events = new ArrayList<>();
 		}
 

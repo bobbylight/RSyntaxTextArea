@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitVerticalPageActionTest {
+class RTextAreaEditorKitVerticalPageActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_up_noSelect() {
+	void testActionPerformedImpl_up_noSelect() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -40,7 +40,7 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_up_select() {
+	void testActionPerformedImpl_up_select() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -57,7 +57,7 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_down_noSelect() {
+	void testActionPerformedImpl_down_noSelect() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -74,7 +74,7 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_down_select() {
+	void testActionPerformedImpl_down_select() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -91,7 +91,7 @@ public class RTextAreaEditorKitVerticalPageActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.VerticalPageAction("foo", 1, false).getMacroID());
 	}

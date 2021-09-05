@@ -108,7 +108,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_atRule() {
+	void testCss_atRule() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			CSS_PREV_TOKEN_TYPE,
 			"@charset",
@@ -125,7 +125,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_chars() {
+	void testCss_chars() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_CHAR_PREV_TOKEN_TYPE,
 			"'Hello world'",
@@ -135,7 +135,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_char_continuedFromPreviousLine() {
+	void testCss_char_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_CHAR_PREV_TOKEN_TYPE,
 			"world'",
@@ -145,14 +145,14 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_getCurlyBracesDenoteCodeBlocks() {
+	void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
 	@Test
-	public void testCss_getLineCommentStartAndEnd() {
+	protected void testCss_getLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("/*", startAndEnd[0]);
 		Assertions.assertEquals("*/", startAndEnd[1]);
@@ -160,7 +160,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_getMarkOccurrencesOfTokenType() {
+	void testCss_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(TokenTypes.RESERVED_WORD));
 		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(TokenTypes.VARIABLE));
@@ -168,7 +168,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_getShouldIndentNextLineAfter() {
+	void testCss_getShouldIndentNextLineAfter() {
 
 		TokenMaker tm = createTokenMaker();
 
@@ -186,7 +186,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_happyPath_simpleSelector() {
+	void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
 		Segment segment = createSegment(code);
@@ -219,7 +219,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_id() {
+	void testCss_id() {
 
 		String code = "#mainContent";
 		Segment segment = createSegment(code);
@@ -231,7 +231,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 	@Test
-	public void testCss_isIdentifierChar() {
+	void testCss_isIdentifierChar() {
 		TokenMaker tm = createTokenMaker();
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
 			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
@@ -244,7 +244,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessLineComment_noLess() {
+	void testCss_lessLineComment_noLess() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			CSS_PREV_TOKEN_TYPE,
 			"//"
@@ -253,7 +253,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessLineComment_lessEnabled() {
+	void testCss_lessLineComment_lessEnabled() {
 		assertAllTokensOfTypeLessMode(TokenTypes.COMMENT_EOL,
 			CSS_PREV_TOKEN_TYPE,
 			"//",
@@ -263,7 +263,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessLineComment_lessEnabled_url() {
+	void testCss_lessLineComment_lessEnabled_url() {
 
 
 		String[] eolCommentLiterals = {
@@ -292,7 +292,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessVar_noLess() {
+	void testCss_lessVar_noLess() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			CSS_PREV_TOKEN_TYPE,
 			"@something",
@@ -302,7 +302,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessVar_lessEnabled() {
+	void testCss_lessVar_lessEnabled() {
 		assertAllTokensOfTypeLessMode(TokenTypes.VARIABLE,
 			CSS_PREV_TOKEN_TYPE,
 			"@something",
@@ -312,7 +312,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment() {
+	void testCss_multiLineComment() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
 			"/* Hello world */"
@@ -321,7 +321,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment_continuedFromPreviousLine() {
+	void testCss_multiLineComment_continuedFromPreviousLine() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_MLC_PREV_TOKEN_TYPE,
 			" world */"
@@ -330,7 +330,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment_URL() {
+	void testCss_multiLineComment_URL() {
 
 		String[] comments = {
 			"/* Hello world file://test.txt */",
@@ -360,7 +360,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_operators() {
+	void testCss_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_PREV_TOKEN_TYPE,
 			"+",
@@ -375,7 +375,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_multiLineComment() {
+	void testCss_propertyBlock_property_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"/* Hello world*/"
@@ -384,7 +384,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_properties() {
+	void testCss_propertyBlock_property_properties() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"*foo",
@@ -398,7 +398,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_less_lineComment() {
+	void testCss_propertyBlock_property_less_lineComment() {
 		assertAllTokensOfTypeLessMode(TokenTypes.COMMENT_EOL,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"// Hello world"
@@ -407,7 +407,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_lessLineComment_lessEnabled_url() {
+	void testCss_propertyBlock_property_lessLineComment_lessEnabled_url() {
 
 
 		String[] eolCommentLiterals = {
@@ -436,7 +436,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_operators() {
+	void testCss_propertyBlock_property_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			":"
@@ -445,7 +445,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_separators() {
+	void testCss_propertyBlock_property_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"{",
@@ -455,7 +455,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_charLiteral() {
+	void testCss_propertyBlock_value_charLiteral() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"'foobar'"
@@ -464,7 +464,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_function() {
+	void testCss_propertyBlock_value_function() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"func("
@@ -473,7 +473,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_identifier() {
+	void testCss_propertyBlock_value_identifier() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"foobar",
@@ -484,7 +484,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_important() {
+	void testCss_propertyBlock_value_important() {
 		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"!important"
@@ -493,7 +493,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_multiLineComment() {
+	void testCss_propertyBlock_value_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"/* Hello world*/"
@@ -502,7 +502,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_number() {
+	void testCss_propertyBlock_value_number() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"42",
@@ -531,7 +531,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_less_lineComment() {
+	void testCss_propertyBlock_value_less_lineComment() {
 		assertAllTokensOfTypeLessMode(TokenTypes.COMMENT_EOL,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"// Hello world"
@@ -540,7 +540,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_lessLineComment_lessEnabled_url() {
+	void testCss_propertyBlock_value_lessLineComment_lessEnabled_url() {
 
 
 		String[] eolCommentLiterals = {
@@ -569,7 +569,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_less_lessVar() {
+	void testCss_propertyBlock_value_less_lessVar() {
 		assertAllTokensOfTypeLessMode(TokenTypes.VARIABLE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"@foo",
@@ -579,7 +579,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_operators() {
+	void testCss_propertyBlock_value_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			";"
@@ -588,7 +588,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_separators() {
+	void testCss_propertyBlock_value_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			")",
@@ -598,7 +598,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_string() {
+	void testCss_propertyBlock_value_string() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"\"foobar\""
@@ -607,7 +607,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyValue_function() {
+	void testCss_propertyValue_function() {
 
 		String code = "background-image: url(\"test.png\");";
 		Segment segment = createSegment(code);
@@ -655,7 +655,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_pseudoClass() {
+	void testCss_pseudoClass() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			CSS_PREV_TOKEN_TYPE,
 			":root",
@@ -690,7 +690,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_selectors() {
+	void testCss_selectors() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			CSS_PREV_TOKEN_TYPE,
 			"*",
@@ -704,7 +704,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_separators() {
+	void testCss_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_PREV_TOKEN_TYPE,
 			";",
@@ -717,7 +717,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_strings() {
+	void testCss_strings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_PREV_TOKEN_TYPE,
 			"\"Hello world\"",
@@ -727,7 +727,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_string_continuedFromPreviousLine() {
+	void testCss_string_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_STRING_PREV_TOKEN_TYPE,
 			"world\"",
@@ -737,7 +737,7 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetClosestStandardTokenTypeForInternalType() {
+	void testGetClosestStandardTokenTypeForInternalType() {
 
 		TokenMaker tm = createTokenMaker();
 

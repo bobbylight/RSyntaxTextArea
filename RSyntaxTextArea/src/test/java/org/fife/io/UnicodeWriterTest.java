@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
  * @author Robert Futrell
  * @version 1.0
  */
-public class UnicodeWriterTest {
+class UnicodeWriterTest {
 
 	private static final String CONTENT = "Hello world";
 	private static boolean origWriteUtf8Bom = false;
@@ -39,17 +39,17 @@ public class UnicodeWriterTest {
 	}
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origWriteUtf8Bom = UnicodeWriter.getWriteUtf8BOM();
 	}
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		UnicodeWriter.setWriteUtf8BOM(origWriteUtf8Bom);
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndCharset_utf8WithBOM() throws IOException {
+	void testConstructor_stringFileNameAndCharset_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -63,7 +63,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf8WithBOM() throws IOException {
+	void testConstructor_stringFileNameAndEncoding_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -77,7 +77,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf16be() throws IOException {
+	void testConstructor_stringFileNameAndEncoding_utf16be() throws IOException {
 
 		File file = createTempFile();
 
@@ -88,7 +88,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf16le() throws IOException {
+	void testConstructor_stringFileNameAndEncoding_utf16le() throws IOException {
 
 		File file = createTempFile();
 
@@ -99,7 +99,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf32be() throws IOException {
+	void testConstructor_stringFileNameAndEncoding_utf32be() throws IOException {
 
 		File file = createTempFile();
 
@@ -110,7 +110,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_stringFileNameAndEncoding_utf32le() throws IOException {
+	void testConstructor_stringFileNameAndEncoding_utf32le() throws IOException {
 
 		File file = createTempFile();
 
@@ -121,7 +121,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_fileAndCharset_utf8WithBOM() throws IOException {
+	void testConstructor_fileAndCharset_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -135,7 +135,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_fileAndEncoding_utf8WithBOM() throws IOException {
+	void testConstructor_fileAndEncoding_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -149,7 +149,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_outputStreamAndCharset_utf8WithBOM() throws IOException {
+	void testConstructor_outputStreamAndCharset_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -162,7 +162,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testConstructor_outputStreamAndEncoding_utf8WithBOM() throws IOException {
+	void testConstructor_outputStreamAndEncoding_utf8WithBOM() throws IOException {
 
 		// Force BOM so UnicodeReader can pick up on it
 		UnicodeWriter.setWriteUtf8BOM(true);
@@ -175,7 +175,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testGetEncoding() throws IOException {
+	void testGetEncoding() throws IOException {
 
 		File file = createTempFile();
 
@@ -186,7 +186,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testGetSetWriteUtf8BOM() {
+	void testGetSetWriteUtf8BOM() {
 		UnicodeWriter.setWriteUtf8BOM(true);
 		Assertions.assertTrue(UnicodeWriter.getWriteUtf8BOM());
 		UnicodeWriter.setWriteUtf8BOM(false);
@@ -194,7 +194,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testWrite_charArray() throws IOException {
+	void testWrite_charArray() throws IOException {
 
 		File file = createTempFile();
 
@@ -214,7 +214,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testWrite_singleInt() throws IOException {
+	void testWrite_singleInt() throws IOException {
 
 		File file = createTempFile();
 
@@ -233,7 +233,7 @@ public class UnicodeWriterTest {
 	}
 
 	@Test
-	public void testWrite_string() throws IOException {
+	void testWrite_string() throws IOException {
 
 		File file = createTempFile();
 

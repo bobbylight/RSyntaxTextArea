@@ -45,7 +45,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		// Comment at the start of a line
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
@@ -68,14 +68,14 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 
@@ -211,19 +211,19 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testLabels() {
+	void testLabels() {
 		assertAllTokensOfType(TokenTypes.PREPROCESSOR, ":label");
 	}
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR, "(", ")");
 	}
 
 
 	@Test
-	public void testSeparators_afterSpace() {
+	void testSeparators_afterSpace() {
 
 		TokenMaker tm = createTokenMaker();
 
@@ -240,21 +240,21 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"Hello world\"");
 	}
 
 
 	@Test
-	public void testStrings_unclosed() {
+	void testStrings_unclosed() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"Unclosed string");
 	}
 
 
 	@Test
-	public void testVariables() {
+	void testVariables() {
 		assertAllTokensOfType(TokenTypes.VARIABLE,
 			"%foo",
 			"%8",
@@ -265,7 +265,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 
 		assertAllTokensOfType(TokenTypes.WHITESPACE, " ", "\t");
 	}
@@ -281,7 +281,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetMarkOccurrencesOfTokenType() {
+	void testGetMarkOccurrencesOfTokenType() {
 
 		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
 
@@ -295,7 +295,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetWordsToHighlight() {
+	void testGetWordsToHighlight() {
 
 		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
 		TokenMap tokens = tm.getWordsToHighlight();

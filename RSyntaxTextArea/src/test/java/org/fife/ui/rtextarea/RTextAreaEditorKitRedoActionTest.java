@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitRedoActionTest {
+class RTextAreaEditorKitRedoActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.RedoAction action = new RTextAreaEditorKit.RedoAction(
 			"name", null, "Description", 0, null);
 		Assertions.assertEquals("name", action.getName());
@@ -32,7 +32,7 @@ public class RTextAreaEditorKitRedoActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.append("foo");
@@ -48,7 +48,7 @@ public class RTextAreaEditorKitRedoActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaRedoAction,
 			new RTextAreaEditorKit.RedoAction().getMacroID());
 	}

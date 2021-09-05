@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitInsertContentActionTest {
+class RTextAreaEditorKitInsertContentActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		RTextArea textArea = new RTextArea("hello world");
 		textArea.setCaretPosition(textArea.getText().indexOf(' '));
@@ -38,7 +38,7 @@ public class RTextAreaEditorKitInsertContentActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("hello world");
 		textArea.setCaretPosition(textArea.getText().indexOf(' '));
@@ -51,7 +51,7 @@ public class RTextAreaEditorKitInsertContentActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.insertContentAction,
 			new RTextAreaEditorKit.InsertContentAction().getMacroID());
 	}

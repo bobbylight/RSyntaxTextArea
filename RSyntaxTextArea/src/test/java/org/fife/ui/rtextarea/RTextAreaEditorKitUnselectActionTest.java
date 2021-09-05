@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitUnselectActionTest {
+class RTextAreaEditorKitUnselectActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.append("foo");
@@ -38,7 +38,7 @@ public class RTextAreaEditorKitUnselectActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaUnselectAction,
 			new RTextAreaEditorKit.UnselectAction().getMacroID());
 	}

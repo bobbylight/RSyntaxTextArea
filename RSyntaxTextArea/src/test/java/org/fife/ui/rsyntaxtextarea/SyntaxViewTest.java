@@ -18,11 +18,11 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
+class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenListForPhysicalLineAbove_foldingEnabled() throws BadLocationException {
+	void testGetTokenListForPhysicalLineAbove_foldingEnabled() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2");
@@ -41,7 +41,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenListForPhysicalLineAbove_noFolding() throws BadLocationException {
+	void testGetTokenListForPhysicalLineAbove_noFolding() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2");
@@ -61,7 +61,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenListForPhysicalLineBelow_foldingEnabled() throws BadLocationException {
+	void testGetTokenListForPhysicalLineBelow_foldingEnabled() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2\nline 3");
@@ -80,7 +80,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenListForPhysicalLineBelow_noFolding() throws BadLocationException {
+	void testGetTokenListForPhysicalLineBelow_noFolding() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2\nline 3");
@@ -100,7 +100,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testModelToView_fiveArg_endOfText() throws BadLocationException {
+	void testModelToView_fiveArg_endOfText() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2\nline 3");
@@ -120,7 +120,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testNextTabStop_offset0() throws BadLocationException {
+	void testNextTabStop_offset0() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2\nline 3");
@@ -133,7 +133,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testNextTabStop_tabSize0() throws BadLocationException {
+	void testNextTabStop_tabSize0() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE,
 			"line 0\nline 1\nline 2\nline 3");
@@ -147,7 +147,7 @@ public class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaint_foldedFolds() throws BadLocationException {
+	void testPaint_foldedFolds() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.getFoldManager().getFold(0).setCollapsed(true);

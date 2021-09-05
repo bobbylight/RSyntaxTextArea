@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitSelectWordActionTest {
+class RTextAreaEditorKitSelectWordActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(8);
@@ -39,7 +39,7 @@ public class RTextAreaEditorKitSelectWordActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.selectWordAction,
 			new RTextAreaEditorKit.SelectWordAction().getMacroID());
 	}

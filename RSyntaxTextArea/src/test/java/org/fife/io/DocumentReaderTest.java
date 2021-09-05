@@ -18,11 +18,11 @@ import javax.swing.text.PlainDocument;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DocumentReaderTest {
+class DocumentReaderTest {
 
 
 	@Test
-	public void testClose() {
+	void testClose() {
 		PlainDocument doc = new PlainDocument();
 		DocumentReader r = new DocumentReader(doc);
 		r.close();
@@ -30,7 +30,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testMark() throws Exception {
+	void testMark() throws Exception {
 
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, "0123456789", null);
@@ -50,7 +50,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testMarkSupported() {
+	void testMarkSupported() {
 		PlainDocument doc = new PlainDocument();
 		DocumentReader r = new DocumentReader(doc);
 		Assertions.assertTrue(r.markSupported());
@@ -59,7 +59,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testRead_intArg() throws Exception {
+	void testRead_intArg() throws Exception {
 
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, "0123456789", null);
@@ -84,7 +84,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testRead_charArrayArg_allAtOnce() throws Exception {
+	void testRead_charArrayArg_allAtOnce() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -104,7 +104,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testRead_charArrayArg_multipleReads() throws Exception {
+	void testRead_charArrayArg_multipleReads() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -133,7 +133,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testRead_3Arg_allAtOnce() throws Exception {
+	void testRead_3Arg_allAtOnce() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -153,7 +153,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testRead_3Arg_multipleReads() throws Exception {
+	void testRead_3Arg_multipleReads() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -182,7 +182,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testReady() {
+	void testReady() {
 		PlainDocument doc = new PlainDocument();
 		DocumentReader r = new DocumentReader(doc);
 		Assertions.assertTrue(r.ready());
@@ -191,7 +191,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testReset_NoMarkedOffset() throws Exception {
+	void testReset_NoMarkedOffset() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -212,7 +212,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testReset_MarkedOffset() throws Exception {
+	void testReset_MarkedOffset() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -233,7 +233,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testSeek_WithinDocument() throws Exception {
+	void testSeek_WithinDocument() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -254,7 +254,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testSeek_PastDocumentEnd() throws Exception {
+	void testSeek_PastDocumentEnd() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -271,7 +271,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testSkip_WithinDocument() throws Exception {
+	void testSkip_WithinDocument() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();
@@ -291,7 +291,7 @@ public class DocumentReaderTest {
 
 
 	@Test
-	public void testSkip_PastDocumentEnd() throws Exception {
+	void testSkip_PastDocumentEnd() throws Exception {
 
 		String content = "0123456789";
 		PlainDocument doc = new PlainDocument();

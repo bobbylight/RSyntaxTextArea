@@ -20,11 +20,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitDumbCompleteWordActionTest {
+class RTextAreaEditorKitDumbCompleteWordActionTest {
 
 
 	@Test
-	public void testGetWordStart() throws Exception {
+	void testGetWordStart() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RDocument doc = new RDocument();
@@ -64,7 +64,7 @@ public class RTextAreaEditorKitDumbCompleteWordActionTest {
 
 
 	@Test
-	public void testGetWordEnd() throws Exception {
+	void testGetWordEnd() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RDocument doc = new RDocument();
@@ -103,7 +103,7 @@ public class RTextAreaEditorKitDumbCompleteWordActionTest {
 
 
 	@Test
-	public void testGetPreviousWord() throws Exception {
+	void testGetPreviousWord() throws Exception {
 
 		DumbCompleteWordAction action = new DumbCompleteWordAction();
 		RDocument doc = new RDocument();

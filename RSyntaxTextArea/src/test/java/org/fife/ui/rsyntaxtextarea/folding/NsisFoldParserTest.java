@@ -18,10 +18,10 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class NsisFoldParserTest {
+class NsisFoldParserTest {
 
 	@Test
-	public void testGetFolds_happyPath() {
+	void testGetFolds_happyPath() {
 
 		String code =
 			"/*\n" +

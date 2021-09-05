@@ -35,7 +35,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String code = "true false";
 
@@ -61,7 +61,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -79,7 +79,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 
 		String code = "byte sbyte int uint short ushort long ulong float double char bool";
 
@@ -105,7 +105,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -122,7 +122,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -159,7 +159,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -187,7 +187,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String code = "abstract as base break case catch checked class const continue " +
 				"default delegate do else enum event explicit extern finally fixed for foreach goto if " +
@@ -217,7 +217,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -234,7 +234,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -263,7 +263,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ | &&";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>=";
@@ -291,7 +291,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -319,7 +319,7 @@ public class CSharpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",

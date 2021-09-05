@@ -21,11 +21,11 @@ import java.awt.*;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest {
+class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetAlpha() {
+	void testGetSetAlpha() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
 		Assertions.assertEquals(1f, painter.getAlpha(), 0.00001);
 		painter.setAlpha(0.5f);
@@ -34,7 +34,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testGetSetPaint() {
+	void testGetSetPaint() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
 		Assertions.assertNull(painter.getPaint());
 		painter.setPaint(Color.RED);
@@ -43,7 +43,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testGetSetRoundedEdges() {
+	void testGetSetRoundedEdges() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
 		Assertions.assertFalse(painter.getRoundedEdges());
 		painter.setRoundedEdges(true);
@@ -52,7 +52,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaint_highlightOnSingleLine_opaque() {
+	void testPaint_highlightOnSingleLine_opaque() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -63,7 +63,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaint_highlightOnSingleLine_opaque_withPaint() {
+	void testPaint_highlightOnSingleLine_opaque_withPaint() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -74,7 +74,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaint_highlightOnSingleLine_translucent() {
+	void testPaint_highlightOnSingleLine_translucent() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -85,19 +85,19 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaint_highlightOnMultipleLines_opaque() {
+	void testPaint_highlightOnMultipleLines_opaque() {
 		testPaintImpl(0, 20, 1f, null);
 	}
 
 
 	@Test
-	public void testPaint_highlightOnMultipleLines_opaque_withPaint() {
+	void testPaint_highlightOnMultipleLines_opaque_withPaint() {
 		testPaintImpl(0, 20, 1f, Color.RED);
 	}
 
 
 	@Test
-	public void testPaint_highlightOnMultipleLines_translucent() {
+	void testPaint_highlightOnMultipleLines_translucent() {
 		testPaintImpl(0, 20, 0.5f, null);
 	}
 
@@ -115,13 +115,13 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaintLayer_emptyLayerEgNoSelection_opaque() {
+	void testPaintLayer_emptyLayerEgNoSelection_opaque() {
 		testPaintLayerImpl(5, 5, 1f, null, true);
 	}
 
 
 	@Test
-	public void testPaintLayer_highlightOnSingleLine_opaque() {
+	void testPaintLayer_highlightOnSingleLine_opaque() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -132,7 +132,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaintLayer_highlightOnSingleLine_opaque_withPaint() {
+	void testPaintLayer_highlightOnSingleLine_opaque_withPaint() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -143,7 +143,7 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaintLayer_highlightOnSingleLine_translucent() {
+	void testPaintLayer_highlightOnSingleLine_translucent() {
 
 		// A text snippet not on the first line
 		int offs0 = DEFAULT_CODE.indexOf("println");
@@ -154,20 +154,20 @@ public class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest 
 
 
 	@Test
-	public void testPaintLayer_highlightOnMultipleLines_opaque() {
+	void testPaintLayer_highlightOnMultipleLines_opaque() {
 		// Entire view is a special case
 		testPaintLayerImpl(0, DEFAULT_CODE.length() + 1, 1f, null, true);
 	}
 
 
 	@Test
-	public void testPaintLayer_highlightOnMultipleLines_opaque_withPaint() {
+	void testPaintLayer_highlightOnMultipleLines_opaque_withPaint() {
 		testPaintLayerImpl(0, 20, 1f, Color.RED, true);
 	}
 
 
 	@Test
-	public void testPaintLayer_highlightOnMultipleLines_translucent() {
+	void testPaintLayer_highlightOnMultipleLines_translucent() {
 		// Entire view is a special case
 		testPaintLayerImpl(0, DEFAULT_CODE.length() + 1, 0.5f, null, false);
 	}

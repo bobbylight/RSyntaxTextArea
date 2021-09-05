@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	/**
@@ -36,7 +36,7 @@ public class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTe
 
 
 	@Test
-	public void testGetWordEnd_noSelection_happyPath() {
+	void testGetWordEnd_noSelection_happyPath() {
 
 		EndWordAction action = new EndWordAction("endWordAction", false);
 		RSyntaxDocument doc = new RSyntaxDocument(

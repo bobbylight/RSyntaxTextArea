@@ -28,7 +28,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBacktickLiterals() {
+	void testBacktickLiterals() {
 		String[] chars = {
 				"`a`", "`foobar`",
 		};
@@ -37,7 +37,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
@@ -49,7 +49,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"# Hello world",
 		};
@@ -67,7 +67,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIntegerLiterals() {
+	void testIntegerLiterals() {
 		String[] intLiterals = {
 				"0", "42", "77777",
 		};
@@ -76,7 +76,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 		String[] keywords = {
 				"addprefix",
 				"addsuffix",
@@ -112,7 +112,7 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};

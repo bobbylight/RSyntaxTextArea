@@ -16,23 +16,23 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest {
+class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
 	@Disabled("Need a displayable text area")
-	public void testActionPerformedImpl_noSelect_lineWrap() {
+	void testActionPerformedImpl_noSelect_lineWrap() {
 	}
 
 
 	@Test
 	@Disabled("Need a displayable text area")
-	public void testActionPerformedImpl_select_lineWrap() {
+	void testActionPerformedImpl_select_lineWrap() {
 	}
 
 
 	@Test
-	public void testActionPerformedImpl_noSelect_noLineWrap() {
+	void testActionPerformedImpl_noSelect_noLineWrap() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("   Hello world");
 		textArea.setCaretPosition(14);
@@ -58,7 +58,7 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 
 	@Test
-	public void testActionPerformedImpl_select_noLineWrap() {
+	void testActionPerformedImpl_select_noLineWrap() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("   Hello world");
 		textArea.setCaretPosition(14);
@@ -84,7 +84,7 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 
 	@Test
-	public void testActionPerformedImpl_select_noLineWrap_emptyLine() {
+	void testActionPerformedImpl_select_noLineWrap_emptyLine() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 
@@ -97,7 +97,7 @@ public class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("begin", new RTextAreaEditorKit.BeginLineAction("begin", false).getMacroID());
 	}
 }

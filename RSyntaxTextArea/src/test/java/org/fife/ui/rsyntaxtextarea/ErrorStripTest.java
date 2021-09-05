@@ -22,16 +22,15 @@ import java.awt.event.MouseEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
+class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
-	private RSyntaxTextArea textArea;
 	private ErrorStrip strip;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
-		textArea = createTextArea();
+		RSyntaxTextArea textArea = createTextArea();
 
 		// Force reparsing by instance, not by index, to avoid the
 		// code folding parser
@@ -44,19 +43,19 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddRemoveNotify() {
+	void testAddRemoveNotify() {
 		strip.addNotify();
 		strip.removeNotify();
 	}
 
 
 	@Test
-	public void testDoLayout() {
+	void testDoLayout() {
 		strip.doLayout();
 	}
 
 	@Test
-	public void testGetSetCaretMarkerColor() {
+	void testGetSetCaretMarkerColor() {
 		Assertions.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
 		strip.setCaretMarkerColor(Color.RED);
 		Assertions.assertEquals(Color.RED, strip.getCaretMarkerColor());
@@ -64,7 +63,7 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetFollowCaret() {
+	void testGetSetFollowCaret() {
 		Assertions.assertTrue(strip.getFollowCaret());
 		strip.setFollowCaret(false);
 		Assertions.assertFalse(strip.getFollowCaret());
@@ -72,7 +71,7 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetLevelThreshold() {
+	void testGetSetLevelThreshold() {
 		Assertions.assertEquals(ParserNotice.Level.WARNING, strip.getLevelThreshold());
 		strip.setLevelThreshold(ParserNotice.Level.INFO);
 		Assertions.assertEquals(ParserNotice.Level.INFO, strip.getLevelThreshold());
@@ -80,7 +79,7 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetShowMarkAll() {
+	void testGetSetShowMarkAll() {
 		Assertions.assertTrue(strip.getShowMarkAll());
 		strip.setShowMarkAll(false);
 		Assertions.assertFalse(strip.getShowMarkAll());
@@ -88,7 +87,7 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetShowMarkedOccurrences() {
+	void testGetSetShowMarkedOccurrences() {
 		Assertions.assertTrue(strip.getShowMarkedOccurrences());
 		strip.setShowMarkedOccurrences(false);
 		Assertions.assertFalse(strip.getShowMarkedOccurrences());
@@ -96,20 +95,20 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPreferredSize() {
+	void testGetPreferredSize() {
 		Assertions.assertNotNull(strip.getPreferredSize());
 	}
 
 
 	@Test
-	public void testGetToolTipText() {
+	void testGetToolTipText() {
 		MouseEvent e = new MouseEvent(strip, 0, 0, 0, 1, 1, 1, false);
 		Assertions.assertEquals("Line: 1", strip.getToolTipText(e));
 	}
 
 
 	@Test
-	public void testPaintComponent() {
+	void testPaintComponent() {
 
 		Graphics g = createTestGraphics();
 		strip.paintComponent(g);
@@ -117,13 +116,13 @@ public class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetMarkerToolTipProvider_null() {
+	void testSetMarkerToolTipProvider_null() {
 		strip.setMarkerToolTipProvider(null); // No exception thrown
 	}
 
 
 	@Test
-	public void testSetMarkerToolTipProvider_notNull() {
+	void testSetMarkerToolTipProvider_notNull() {
 		ErrorStrip.ErrorStripMarkerToolTipProvider provider = notices -> "test";
 		strip.setMarkerToolTipProvider(provider);
 	}

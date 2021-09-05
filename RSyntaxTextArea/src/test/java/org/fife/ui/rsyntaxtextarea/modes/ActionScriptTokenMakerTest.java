@@ -27,12 +27,12 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -52,7 +52,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_api_getLineCommentStartAndEnd() {
+	void testJS_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);
 		Assertions.assertNull(tm.getLineCommentStartAndEnd(0)[1]);
@@ -60,7 +60,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_BooleanLiterals() {
+	void testJS_BooleanLiterals() {
 
 		String code = "true false";
 
@@ -86,7 +86,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_CharLiterals_invalid() {
+	void testJS_CharLiterals_invalid() {
 
 		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'\\xG7'", // Invalid hex/octal escape
@@ -98,7 +98,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_CharLiterals_valid() {
+	void testJS_CharLiterals_valid() {
 
 		String[] charLiterals = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -119,7 +119,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DataTypes() {
+	void testJS_DataTypes() {
 
 		String code = "String Number int uint Boolean Null";
 
@@ -145,7 +145,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_EolComments() {
+	void testJS_EolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -162,7 +162,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_EolComments_URL() {
+	void testJS_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
@@ -198,7 +198,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_FloatingPointLiterals() {
+	void testJS_FloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -240,7 +240,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Functions() {
+	void testJS_Functions() {
 
 		String code = "eval parseInt parseFloat escape unescape isNaN isFinite";
 
@@ -266,7 +266,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_HexLiterals() {
+	void testJS_HexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -292,7 +292,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Keywords() {
+	void testJS_Keywords() {
 
 		String[] keywords = {
 			"add",
@@ -373,7 +373,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComments() {
+	void testJS_MultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -390,7 +390,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComment_fromPreviousLine() {
 
 		String[] mlcLiterals = {
 			" this is continued from a prior line */",
@@ -407,7 +407,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComments_URL() {
+	void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -436,7 +436,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Numbers() {
+	void testJS_Numbers() {
 
 		String[] ints = {
 			"0", "42", /*"-7",*/
@@ -488,7 +488,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Operators() {
+	void testJS_Operators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ && >>>";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -516,7 +516,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Separators() {
+	void testJS_Separators() {
 
 		String code = "( ) [ ] { }";
 
@@ -544,7 +544,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Separators_renderedAsIdentifiers() {
+	void testJS_Separators_renderedAsIdentifiers() {
 
 		String[] separators2 = { ";", ",", "." };
 
@@ -559,7 +559,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_invalid() {
+	void testJS_StringLiterals_invalid() {
 
 		String[] stringLiterals = {
 			"\"\\xG7\"", // Invalid hex/octal escape
@@ -580,7 +580,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_valid() {
+	void testJS_StringLiterals_valid() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
@@ -598,7 +598,7 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Whitespace() {
+	void testJS_Whitespace() {
 
 		String[] whitespace = {
 			" ", "\t", "\f", "   \t   ",

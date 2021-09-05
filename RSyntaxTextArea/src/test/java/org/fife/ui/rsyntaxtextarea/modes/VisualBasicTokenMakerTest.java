@@ -25,12 +25,12 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -41,7 +41,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBooleans() {
+	void testBooleans() {
 		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
 			"true",
 			"false"
@@ -58,13 +58,13 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			"Boolean",
 			"Byte",
@@ -87,14 +87,14 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			"' Hello world");
 	}
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"' Hello world http://www.sas.com",
@@ -119,7 +119,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testNumbers_floats() {
+	void testNumbers_floats() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"34.",
 			"34.1",
@@ -134,7 +134,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testNumbers_hex() {
+	void testNumbers_hex() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
 			"&h3a",
 			"&h3aUI",
@@ -145,7 +145,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testNumbers_integers() {
+	void testNumbers_integers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"34",
 			"34UI",
@@ -156,7 +156,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"&",
 			"&=",
@@ -182,7 +182,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testReservedWords() {
+	void testReservedWords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"AddHandler",
 			"AddressOf",
@@ -326,7 +326,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(",
 			")"
@@ -335,7 +335,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\""
 		);
@@ -343,7 +343,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testUnterminatedStrings() {
+	void testUnterminatedStrings() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated"
 		);
@@ -351,7 +351,7 @@ public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

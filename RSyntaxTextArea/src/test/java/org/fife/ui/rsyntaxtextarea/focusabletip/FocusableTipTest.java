@@ -24,11 +24,11 @@ import java.net.URL;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
+class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetImageBase() throws IOException {
+	void testGetSetImageBase() throws IOException {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new FocusableTip(textArea, null);
@@ -41,7 +41,7 @@ public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetMaxSize() throws IOException {
+	void testGetSetMaxSize() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new FocusableTip(textArea, null);
@@ -54,7 +54,7 @@ public class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testShowFocusableTip_happyPath() {
+	void testShowFocusableTip_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new FocusableTip(textArea, null);

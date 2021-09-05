@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_increaseFontSize() {
+	void testActionPerformedImpl_increaseFontSize() {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -52,7 +52,7 @@ public class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends Abstract
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.IncreaseFontSizeAction a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rtaIncreaseFontSizeAction, a.getMacroID());
 	}

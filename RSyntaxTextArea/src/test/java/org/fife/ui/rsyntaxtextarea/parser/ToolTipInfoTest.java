@@ -23,20 +23,20 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ToolTipInfoTest {
+class ToolTipInfoTest {
 
 	private MockHyperlinkListener mhl;
 	private URL imageBase;
 
 	@BeforeEach
-	public void setUp() throws MalformedURLException {
+	void setUp() throws MalformedURLException {
 		mhl = new MockHyperlinkListener();
 		imageBase = new URL("file:///localhost/images");
 	}
 
 
 	@Test
-	public void testTwoArgConstructor() {
+	void testTwoArgConstructor() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
 		Assertions.assertEquals("text", tti.getToolTipText());
 		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
@@ -45,7 +45,7 @@ public class ToolTipInfoTest {
 
 
 	@Test
-	public void testThreeArgConstructor() {
+	void testThreeArgConstructor() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
 		Assertions.assertEquals("text", tti.getToolTipText());
 		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
@@ -54,21 +54,21 @@ public class ToolTipInfoTest {
 
 
 	@Test
-	public void testGetHyperlinkListener() {
+	void testGetHyperlinkListener() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
 		Assertions.assertEquals(mhl, tti.getHyperlinkListener());
 	}
 
 
 	@Test
-	public void testGetImageBase() {
+	void testGetImageBase() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl, imageBase);
 		Assertions.assertEquals(imageBase, tti.getImageBase());
 	}
 
 
 	@Test
-	public void testGetToolTipText() {
+	void testGetToolTipText() {
 		ToolTipInfo tti = new ToolTipInfo("text", mhl);
 		Assertions.assertEquals("text", tti.getToolTipText());
 	}

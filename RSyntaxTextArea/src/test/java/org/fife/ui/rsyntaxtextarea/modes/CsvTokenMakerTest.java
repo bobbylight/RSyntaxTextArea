@@ -35,7 +35,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_comma() {
+	void testCsv_comma() {
 
 		Segment segment = createSegment(",");
 		TokenMaker tm = createTokenMaker();
@@ -45,7 +45,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_4columns_noQuotes() {
+	void testCsv_4columns_noQuotes() {
 
 		String code = "one,two,three,four";
 		Segment segment = createSegment(code);
@@ -71,7 +71,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_4columns_quotes() {
+	void testCsv_4columns_quotes() {
 
 		String code = "\"one\",\"two\",\"three,threeagain\",\"four\"";
 		Segment segment = createSegment(code);
@@ -97,7 +97,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_newlineInQuotedRegion() {
+	void testCsv_newlineInQuotedRegion() {
 
 		String code = "one,\"unfinished-two";
 		Segment segment = createSegment(code);
@@ -116,7 +116,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_quotedRegionContinuedOnNewLine() {
+	void testCsv_quotedRegionContinuedOnNewLine() {
 
 		String code = "continued-quoted-region\",another";
 		Segment segment = createSegment(code);
@@ -134,7 +134,7 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCsv_escapedQuotesInQuotedRegion() {
+	void testCsv_escapedQuotesInQuotedRegion() {
 
 		String code = "\"quoted \"\" string\"";
 		Segment segment = createSegment(code);

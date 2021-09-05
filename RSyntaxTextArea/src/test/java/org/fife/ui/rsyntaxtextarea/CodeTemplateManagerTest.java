@@ -21,18 +21,18 @@ import java.nio.file.Path;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
+class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConstructor_zeroArg() {
+	void testConstructor_zeroArg() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		Assertions.assertEquals(0, manager.getTemplates().length);
 	}
 
 
 	@Test
-	public void testAddTemplate_null() {
+	void testAddTemplate_null() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			CodeTemplateManager manager = new CodeTemplateManager();
 			manager.addTemplate(null);
@@ -41,14 +41,14 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddTemplate_happyPath() {
+	void testAddTemplate_happyPath() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		manager.addTemplate(new StaticCodeTemplate());
 	}
 
 
 	@Test
-	public void testGetTemplate_noMatchingTemplate() {
+	void testGetTemplate_noMatchingTemplate() {
 		RSyntaxTextArea textArea = createTextArea();
 		CodeTemplateManager manager = new CodeTemplateManager();
 		manager.addTemplate(new StaticCodeTemplate("id", "foo", "bar"));
@@ -57,13 +57,13 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTemplates() {
+	void testGetTemplates() {
 		Assertions.assertEquals(0, new CodeTemplateManager().getTemplates().length);
 	}
 
 
 	@Test
-	public void testRemoveTemplate_stringArg_null() {
+	void testRemoveTemplate_stringArg_null() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			CodeTemplateManager manager = new CodeTemplateManager();
 			manager.removeTemplate((String)null);
@@ -72,7 +72,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveTemplate_stringArg_happyPath_found() {
+	void testRemoveTemplate_stringArg_happyPath_found() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		manager.addTemplate(new StaticCodeTemplate("id", "foo", "bar"));
 		Assertions.assertNotNull(manager.removeTemplate("id"));
@@ -80,7 +80,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveTemplate_stringArg_happyPath_notFound() {
+	void testRemoveTemplate_stringArg_happyPath_notFound() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		manager.addTemplate(new StaticCodeTemplate("id", "foo", "bar"));
 		Assertions.assertNull(manager.removeTemplate("notFound"));
@@ -88,7 +88,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveTemplate_codeTemplateArg_null() {
+	void testRemoveTemplate_codeTemplateArg_null() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			CodeTemplateManager manager = new CodeTemplateManager();
 			manager.removeTemplate((CodeTemplate) null);
@@ -97,7 +97,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveTemplate_codeTemplateArg_happyPath_found() {
+	void testRemoveTemplate_codeTemplateArg_happyPath_found() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		CodeTemplate template = new StaticCodeTemplate("id", "foo", "bar");
 		manager.addTemplate(template);
@@ -107,7 +107,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveTemplate_codeTemplateArg_happyPath_notFound() {
+	void testRemoveTemplate_codeTemplateArg_happyPath_notFound() {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		CodeTemplate template = new StaticCodeTemplate("id", "foo", "bar");
 		manager.addTemplate(template);
@@ -118,7 +118,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testReplaceTemplates() {
+	void testReplaceTemplates() {
 
 		CodeTemplateManager manager = new CodeTemplateManager();
 		CodeTemplate template = new StaticCodeTemplate("id", "foo", "bar");
@@ -130,7 +130,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetTemplateDirectory_dirExists() throws IOException {
+	void testSetTemplateDirectory_dirExists() throws IOException {
 
 		CodeTemplateManager manager = new CodeTemplateManager();
 
@@ -148,7 +148,7 @@ public class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetTemplateDirectory_dirDoesNotExist() {
+	void testSetTemplateDirectory_dirDoesNotExist() {
 
 		CodeTemplateManager manager = new CodeTemplateManager();
 		Assertions.assertEquals(-1, manager.setTemplateDirectory(new File("doesNotExist")));

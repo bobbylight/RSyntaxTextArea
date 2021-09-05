@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ActiveLineRangeEventTest {
+class ActiveLineRangeEventTest {
 
 
 	@Test
-	public void testHappyPath() {
+	void testHappyPath() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		ActiveLineRangeEvent e = new ActiveLineRangeEvent(textArea, 1, 2);
 		Assertions.assertEquals(1, e.getMin());

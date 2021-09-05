@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
+class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenToMark_beginningOfWord() {
+	void testGetTokenToMark_beginningOfWord() {
 
 		String origContent = "public int foo() {}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -32,7 +32,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTokenToMark_endOfWord() {
+	void testGetTokenToMark_endOfWord() {
 
 		String origContent = "public int foo() {}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -46,7 +46,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsValidType_validType() {
+	void testIsValidType_validType() {
 
 		String origContent = "public int foo() {}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -60,7 +60,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsValidType_invalidType() {
+	void testIsValidType_invalidType() {
 
 		String origContent = "public int foo() {}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -74,7 +74,7 @@ public class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrences() {
+	void testMarkOccurrences() {
 
 		String origContent = "public int foo() {}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);

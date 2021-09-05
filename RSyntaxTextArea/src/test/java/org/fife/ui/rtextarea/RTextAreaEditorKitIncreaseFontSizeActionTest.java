@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitIncreaseFontSizeActionTest {
+class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.IncreaseFontSizeAction action = new RTextAreaEditorKit.IncreaseFontSizeAction(
 			"name", null, "Description", 0, null);
 		Assertions.assertEquals("name", action.getName());
@@ -33,7 +33,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("hello world");
 		int origSize = textArea.getFont().getSize();
@@ -46,7 +46,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_closeToMaximumSize() {
+	void testActionPerformedImpl_closeToMaximumSize() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -62,7 +62,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_alreadyMaxSize() {
+	void testActionPerformedImpl_alreadyMaxSize() {
 
 		RTextArea textArea = new RTextArea("hello world");
 		int origFontSize = (int)RTextAreaEditorKit.IncreaseFontSizeAction.MAXIMUM_SIZE;
@@ -76,7 +76,7 @@ public class RTextAreaEditorKitIncreaseFontSizeActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaIncreaseFontSizeAction,
 			new RTextAreaEditorKit.IncreaseFontSizeAction().getMacroID());
 	}

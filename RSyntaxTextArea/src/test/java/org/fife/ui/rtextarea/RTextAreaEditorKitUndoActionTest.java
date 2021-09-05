@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitUndoActionTest {
+class RTextAreaEditorKitUndoActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.UndoAction action = new RTextAreaEditorKit.UndoAction(
 			"name", null, "Description", 0, null);
 		Assertions.assertEquals("name", action.getName());
@@ -32,7 +32,7 @@ public class RTextAreaEditorKitUndoActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 		textArea.append("foo");
@@ -47,7 +47,7 @@ public class RTextAreaEditorKitUndoActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaUndoAction,
 			new RTextAreaEditorKit.UndoAction().getMacroID());
 	}

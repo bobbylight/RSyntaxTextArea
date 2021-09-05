@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ThemeTest {
+class ThemeTest {
 
 
 	/**
@@ -294,7 +294,7 @@ public class ThemeTest {
 
 
 	@Test
-	public void testApply() {
+	void testApply() {
 
 		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
 				SyntaxConstants.SYNTAX_STYLE_PHP);
@@ -317,7 +317,7 @@ public class ThemeTest {
 
 
 	@Test
-	public void testLoad_fromStream_noDefaultFont_withArmedBG() throws Exception {
+	void testLoad_fromStream_noDefaultFont_withArmedBG() throws Exception {
 
 		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1.xml");
 		Theme theme = Theme.load(in);
@@ -336,7 +336,7 @@ public class ThemeTest {
 
 
 	@Test
-	public void testLoad_fromStream_noDefaultFont_noArmedBG() throws Exception {
+	void testLoad_fromStream_noDefaultFont_noArmedBG() throws Exception {
 
 		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1_noArmedBG.xml");
 		Theme theme = Theme.load(in);
@@ -355,7 +355,7 @@ public class ThemeTest {
 
 
 	@Test
-	public void testSave() throws Exception {
+	void testSave() throws Exception {
 
 		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
 				SyntaxConstants.SYNTAX_STYLE_PHP);

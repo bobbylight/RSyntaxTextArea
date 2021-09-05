@@ -24,14 +24,14 @@ import java.util.Arrays;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
+class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 	private JFrame frame;
 	private RSyntaxTextArea textArea;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		frame = new JFrame();
 		textArea = createTextArea();
@@ -42,14 +42,14 @@ public class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	@Disabled("These tests run locally, but not in CI environment for some reason")
-	public void testGetPreferredSize() {
+	void testGetPreferredSize() {
 		Assertions.assertNotNull(new ClipboardHistoryPopup(frame, textArea).getPreferredSize());
 	}
 
 
 	@Test
 	@Disabled("These tests run locally, but not in CI environment for some reason")
-	public void testSetContents() {
+	void testSetContents() {
 		new ClipboardHistoryPopup(frame, textArea).setContents(Arrays.asList(
 			"one", "two", "three"
 		));

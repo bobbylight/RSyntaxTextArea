@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TokenIteratorTest {
+class TokenIteratorTest {
 
 	private static final RSyntaxTextAreaEditorKit kit =
 			new RSyntaxTextAreaEditorKit();
@@ -36,7 +36,7 @@ public class TokenIteratorTest {
 	 * same set of tokens as manually getting the token list for each line.
 	 */
 	@Test
-	public void testBasicIteration() throws Exception {
+	void testBasicIteration() throws Exception {
 
 		RSyntaxDocument doc = null;
 
@@ -65,7 +65,7 @@ public class TokenIteratorTest {
 	 * Tests empty documents, documents with lots of blank lines, etc.
 	 */
 	@Test
-	public void testEmptyLines() throws Exception {
+	void testEmptyLines() throws Exception {
 
 		RSyntaxDocument doc = new RSyntaxDocument(
 				SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -112,7 +112,7 @@ public class TokenIteratorTest {
 	 *
 	 * @param doc The document.
 	 */
-	private static final void assertIteratorMatchesList(RSyntaxDocument doc) {
+	private static void assertIteratorMatchesList(RSyntaxDocument doc) {
 
 		List<Token> expected = getTokens(doc);
 		int index = 0;
@@ -133,7 +133,7 @@ public class TokenIteratorTest {
 	 *  @param doc The document.
 	 *  @return The list of tokens, in the order in which they appear.
 	 */
-	private static final List<Token> getTokens(RSyntaxDocument doc) {
+	private static List<Token> getTokens(RSyntaxDocument doc) {
 
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();

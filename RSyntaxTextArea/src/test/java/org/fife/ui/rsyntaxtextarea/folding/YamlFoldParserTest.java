@@ -18,10 +18,10 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class YamlFoldParserTest {
+class YamlFoldParserTest {
 
 	@Test
-	public void testGetFolds_happyPath() {
+	void testGetFolds_happyPath() {
 
 		String code =
 			"men:\n" +

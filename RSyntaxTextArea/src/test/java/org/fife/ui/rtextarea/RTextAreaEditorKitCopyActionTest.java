@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitCopyActionTest {
+class RTextAreaEditorKitCopyActionTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.CopyAction action = new RTextAreaEditorKit.CopyAction(
 			"copy", null, "Description", 0, null);
 		Assertions.assertEquals("copy", action.getName());
@@ -27,7 +27,7 @@ public class RTextAreaEditorKitCopyActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("Hello world");
 		textArea.setSelectionStart(2);
@@ -40,7 +40,7 @@ public class RTextAreaEditorKitCopyActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.copyAction,
 			new RTextAreaEditorKit.CopyAction().getMacroID());
 	}

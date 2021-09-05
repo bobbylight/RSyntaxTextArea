@@ -22,11 +22,11 @@ import java.beans.PropertyChangeListener;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
+class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConstructor_oneArg() {
+	void testConstructor_oneArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
 		Assertions.assertEquals(1250, manager.getDelay());
@@ -34,7 +34,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConstructor_twoArg() {
+	void testConstructor_twoArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(2000, textArea);
 		Assertions.assertEquals(2000, manager.getDelay());
@@ -42,7 +42,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testActionPerformed_parsersFireChangeEvents() {
+	void testActionPerformed_parsersFireChangeEvents() {
 
 		boolean[] parserNoticeChangeEventFired = { false };
 
@@ -69,7 +69,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddRemoveParser() {
+	void testAddRemoveParser() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
@@ -92,7 +92,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetToolTipText() {
+	void testGetToolTipText() {
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -119,7 +119,7 @@ public class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPropertyChange_document() {
+	void testPropertyChange_document() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);

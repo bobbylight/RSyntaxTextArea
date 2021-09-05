@@ -37,7 +37,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void test_api_getLineCommentStartAndEnd() {
+	void test_api_getLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("#", startAndEnd[0]);
@@ -46,7 +46,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void test_api_getMarkOccurrencesOfTokenType() {
+	void test_api_getMarkOccurrencesOfTokenType() {
 
 		TokenMaker tm = createTokenMaker();
 		// NOTE: This array must be sorted for this test to work!
@@ -61,7 +61,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBacktickLiterals() {
+	void testBacktickLiterals() {
 
 		String[] chars = {
 			"`Hello world`",
@@ -81,7 +81,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String[] booleans = { "true", "false" };
 
@@ -96,7 +96,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'Hello world'",
@@ -116,7 +116,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testDocComments() {
+	void testDocComments() {
 
 		String[] docCommentLiterals = {
 			"=begin Hello world =end"
@@ -133,7 +133,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world",
@@ -150,7 +150,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String[] floats = {
 			"3e10", "3e+10", "3e-10",
@@ -170,7 +170,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 
 		String[] functions = {
 			"Array", "Float", "Integer", "String", "at_exit", "autoload",
@@ -203,7 +203,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHeredoc_EOF() {
+	void testHeredoc_EOF() {
 
 		// Note that the terminating "EOF" should be on another line in real
 		// Ruby scripts, but our lexer does not discern that.
@@ -226,7 +226,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHeredoc_EOT() {
+	void testHeredoc_EOT() {
 
 		// Note that the terminating "EOT" should be on another line in real
 		// Ruby scripts, but our lexer does not discern that.
@@ -249,7 +249,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 
 		String[] hexLiterals = {
 			"0x1", "0xfe", "0x333333333333 ",
@@ -267,7 +267,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 
 		String[] identifiers = {
 			"foo", "_foo", "foo9", "_foo9",
@@ -284,7 +284,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testIntegerLiterals() {
+	void testIntegerLiterals() {
 
 		String[] binaryInts = {
 			"0b0", "0b111", "0b001", "0b10_01",
@@ -321,7 +321,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		String[] keywords = {
 			"alias", "BEGIN", "begin", "break", "case", "class", "def",
@@ -342,7 +342,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String[] operators = {
 			"and", "or", "not",
@@ -362,7 +362,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testPredefinedVariables() {
+	void testPredefinedVariables() {
 
 		// ("$"([!@&`\'+0-9~=/\,;.<>_*$?:\"]|"DEBUG"|"FILENAME"|"LOAD_PATH"|"stderr"|"stdin"|"stdout"|"VERBOSE"|([\-][0adFiIlpwv])))
 		String[] predefinedVars = {
@@ -381,7 +381,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String[] separators = {
 			"(", ")", "{", "}",
@@ -398,7 +398,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] strings = {
 			"\"Hello world\"",
@@ -513,7 +513,7 @@ public class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testVariables() {
+	void testVariables() {
 
 		String[] vars = {
 			"$foo", "@foo", "@@foo",

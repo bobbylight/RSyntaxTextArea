@@ -21,7 +21,7 @@ import org.xml.sax.EntityResolver;
  * @author Robert Futrell
  * @version 1.0
  */
-public class XmlParserTest {
+class XmlParserTest {
 
 
 	private void assertCleanParseResult_oneLineDocument(XmlParser parser,
@@ -35,7 +35,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testZeroArgConstructor() {
+	void testZeroArgConstructor() {
 		XmlParser parser = new XmlParser();
 		Assertions.assertNull(parser.getHyperlinkListener());
 		Assertions.assertNull(parser.getImageBase());
@@ -43,7 +43,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testOneArgConstructor() {
+	void testOneArgConstructor() {
 		EntityResolver resolver = null;
 		XmlParser parser = new XmlParser(resolver);
 		Assertions.assertNull(parser.getHyperlinkListener());
@@ -52,7 +52,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testIsValidating() {
+	void testIsValidating() {
 		XmlParser parser = new XmlParser();
 		Assertions.assertFalse(parser.isValidating());
 		parser.setValidating(true);
@@ -61,7 +61,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testParse_emptyDocument() throws Exception {
+	void testParse_emptyDocument() {
 
 		XmlParser parser = new XmlParser();
 
@@ -75,7 +75,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testParse_error_unclosedTag_nodtd() throws Exception {
+	void testParse_error_unclosedTag_nodtd() throws Exception {
 
 		XmlParser parser = new XmlParser();
 
@@ -98,7 +98,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testParse_error_unclosedTag_withDtd() throws Exception {
+	void testParse_error_unclosedTag_withDtd() throws Exception {
 
 		XmlParser parser = new XmlParser();
 
@@ -122,7 +122,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testParse_happyPath() throws Exception {
+	void testParse_happyPath() throws Exception {
 
 		XmlParser parser = new XmlParser();
 
@@ -137,7 +137,7 @@ public class XmlParserTest {
 
 
 	@Test
-	public void testSetValidating() {
+	void testSetValidating() {
 		XmlParser parser = new XmlParser();
 		Assertions.assertFalse(parser.isValidating());
 		parser.setValidating(true);

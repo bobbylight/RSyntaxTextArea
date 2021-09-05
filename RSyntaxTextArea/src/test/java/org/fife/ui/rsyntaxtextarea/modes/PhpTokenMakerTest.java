@@ -87,7 +87,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testBooleanLiterals() {
+	void testBooleanLiterals() {
 
 		String code = "<?php true false TRUE FALSE ?>";
 
@@ -119,7 +119,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -139,7 +139,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -181,7 +181,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 */
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -223,7 +223,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 
 		assertAllTokensOfType(TokenTypes.FUNCTION, PHPTokenMaker.INTERNAL_IN_PHP,
 			"__call",
@@ -1142,7 +1142,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD, PHPTokenMaker.INTERNAL_IN_PHP,
 			"__CLASS__",
@@ -1222,7 +1222,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords2() {
+	void testKeywords2() {
 
 		String code = "exit return";
 
@@ -1248,7 +1248,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -1265,7 +1265,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -1294,7 +1294,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ && >>>";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -1322,7 +1322,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -1350,7 +1350,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
@@ -1367,7 +1367,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_atRule() {
+	void testCss_atRule() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			CSS_PREV_TOKEN_TYPE,
 			"@charset",
@@ -1384,7 +1384,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_chars() {
+	void testCss_chars() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_PREV_TOKEN_TYPE,
 			"'Hello world'",
@@ -1394,7 +1394,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_char_continuedFromPreviousLine() {
+	void testCss_char_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_CHAR_PREV_TOKEN_TYPE,
 			"world'",
@@ -1405,14 +1405,14 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_getCurlyBracesDenoteCodeBlocks() {
+	void testCss_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(PHPTokenMaker.LANG_INDEX_CSS));
 	}
 
 
 	@Test
-	public void testCss_getLineCommentStartAndEnd() {
+	void testCss_getLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
 			PHPTokenMaker.LANG_INDEX_CSS);
 		Assertions.assertEquals("/*", startAndEnd[0]);
@@ -1421,7 +1421,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_happyPath_stateContinuesToNextLine_mainState() {
+	void testCss_happyPath_stateContinuesToNextLine_mainState() {
 		TokenMaker tm = createTokenMaker();
 		Segment segment = createSegment("");
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
@@ -1430,7 +1430,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_happyPath_stateContinuesToNextLine_valueState() {
+	void testCss_happyPath_stateContinuesToNextLine_valueState() {
 		TokenMaker tm = createTokenMaker();
 		Segment segment = createSegment("");
 		Token token = tm.getTokenList(segment, CSS_VALUE_PREV_TOKEN_TYPE, 0);
@@ -1439,7 +1439,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_happyPath_styleEndTagSwitchesState() {
+	void testCss_happyPath_styleEndTagSwitchesState() {
 		Segment segment = createSegment("</style>");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
@@ -1453,7 +1453,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_happyPath_simpleSelector() {
+	void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";
 		Segment segment = createSegment(code);
@@ -1486,7 +1486,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_id() {
+	void testCss_id() {
 
 		String code = "#mainContent";
 		Segment segment = createSegment(code);
@@ -1499,7 +1499,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessLineComment_noLess() {
+	void testCss_lessLineComment_noLess() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			CSS_PREV_TOKEN_TYPE,
 			"//"
@@ -1508,7 +1508,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_lessVar_noLess() {
+	void testCss_lessVar_noLess() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			CSS_PREV_TOKEN_TYPE,
 			"@something",
@@ -1518,7 +1518,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment() {
+	void testCss_multiLineComment() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
@@ -1528,7 +1528,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment_continuedFromPreviousLine() {
+	void testCss_multiLineComment_continuedFromPreviousLine() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_MLC_PREV_TOKEN_TYPE,
 			" world */",
@@ -1538,7 +1538,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_multiLineComment_URL() {
+	void testCss_multiLineComment_URL() {
 
 		String[] comments = {
 			"/* Hello world file://test.txt */",
@@ -1568,7 +1568,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_operators() {
+	void testCss_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_PREV_TOKEN_TYPE,
 			"+",
@@ -1583,7 +1583,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_multiLineComment() {
+	void testCss_propertyBlock_property_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"/* Hello world*/"
@@ -1592,7 +1592,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_properties() {
+	void testCss_propertyBlock_property_properties() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			"*foo",
@@ -1606,7 +1606,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_operators() {
+	void testCss_propertyBlock_property_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			":"
@@ -1615,7 +1615,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_property_separators() {
+	void testCss_propertyBlock_property_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
 			//"{",
@@ -1625,7 +1625,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_charLiteral() {
+	void testCss_propertyBlock_value_charLiteral() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"'foobar'"
@@ -1634,7 +1634,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_function() {
+	void testCss_propertyBlock_value_function() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"func("
@@ -1643,7 +1643,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_identifier() {
+	void testCss_propertyBlock_value_identifier() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"foobar",
@@ -1654,7 +1654,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_important() {
+	void testCss_propertyBlock_value_important() {
 		assertAllTokensOfType(TokenTypes.ANNOTATION,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"!important"
@@ -1663,7 +1663,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_multiLineComment() {
+	void testCss_propertyBlock_value_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"/* Hello world*/"
@@ -1672,7 +1672,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_number() {
+	void testCss_propertyBlock_value_number() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"42",
@@ -1701,7 +1701,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_operators() {
+	void testCss_propertyBlock_value_operators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			";"
@@ -1710,7 +1710,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_separators() {
+	void testCss_propertyBlock_value_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			")",
@@ -1720,7 +1720,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyBlock_value_string() {
+	void testCss_propertyBlock_value_string() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
 			"\"foobar\""
@@ -1729,7 +1729,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_propertyValue_function() {
+	void testCss_propertyValue_function() {
 
 		String code = "background-image: url(\"test.png\");";
 		Segment segment = createSegment(code);
@@ -1777,7 +1777,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_pseudoClass() {
+	void testCss_pseudoClass() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			CSS_PREV_TOKEN_TYPE,
 			":root",
@@ -1812,7 +1812,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_pseudoClass_unknown() {
+	void testCss_pseudoClass_unknown() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			CSS_PREV_TOKEN_TYPE,
 			":xxxyzz"
@@ -1821,7 +1821,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_selectors() {
+	void testCss_selectors() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			CSS_PREV_TOKEN_TYPE,
 			"*",
@@ -1835,7 +1835,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_separators() {
+	void testCss_separators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			CSS_PREV_TOKEN_TYPE,
 			";",
@@ -1848,7 +1848,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_strings() {
+	void testCss_strings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_PREV_TOKEN_TYPE,
 			"\"Hello world\"",
@@ -1859,7 +1859,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCss_string_continuedFromPreviousLine() {
+	void testCss_string_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_STRING_PREV_TOKEN_TYPE,
 			"world\"",
@@ -1869,7 +1869,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attribute_unclosedDoubleQuote() {
+	void testHtml_attribute_unclosedDoubleQuote() {
 
 		String code = "\"Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1883,7 +1883,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attribute_unclosedSingleQuote() {
+	void testHtml_attribute_unclosedSingleQuote() {
 
 		String code = "'Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1897,7 +1897,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attributeScriptTag_unclosedDoubleQuote() {
+	void testHtml_attributeScriptTag_unclosedDoubleQuote() {
 
 		String code = "\"Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1911,7 +1911,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attributeScriptTag_unclosedSingleQuote() {
+	void testHtml_attributeScriptTag_unclosedSingleQuote() {
 
 		String code = "'Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1925,7 +1925,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attributeStyleTag_unclosedDoubleQuote() {
+	void testHtml_attributeStyleTag_unclosedDoubleQuote() {
 
 		String code = "\"Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1939,7 +1939,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_attributeStyleTag_unclosedSingleQuote() {
+	void testHtml_attributeStyleTag_unclosedSingleQuote() {
 
 		String code = "'Unterminated attribute";
 		Segment segment = createSegment(code);
@@ -1953,7 +1953,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_comment() {
+	void testHtml_comment() {
 
 		String[] commentLiterals = {
 			"<!-- Hello world -->",
@@ -1971,7 +1971,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_comment_URL() {
+	void testHtml_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = createSegment(code);
@@ -1991,7 +1991,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_doctype() {
+	void testHtml_doctype() {
 
 		String[] doctypes = {
 			"<!doctype html>",
@@ -2011,7 +2011,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_entityReferences() {
+	void testHtml_entityReferences() {
 
 		String[] entityReferences = {
 			"&nbsp;", "&lt;", "&gt;", "&#4012",
@@ -2028,7 +2028,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_tagWithAttributes() {
+	void testHtml_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = createSegment(code);
@@ -2061,7 +2061,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_closedTag() {
+	void testHtml_happyPath_closedTag() {
 
 		String code = "<img src='foo.png'/>";
 		Segment segment = createSegment(code);
@@ -2086,7 +2086,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_closingTag() {
+	void testHtml_happyPath_closingTag() {
 
 		String code = "</body>";
 		Segment segment = createSegment(code);
@@ -2103,7 +2103,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_inTag_unterminatedOnThisLine() {
+	void testHtml_inTag_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG, 0);
@@ -2112,7 +2112,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_inTagScript_unterminatedOnThisLine() {
+	void testHtml_inTagScript_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
@@ -2121,7 +2121,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_inTagStyle_unterminatedOnThisLine() {
+	void testHtml_inTagStyle_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_STYLE, 0);
@@ -2130,7 +2130,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_validHtml5TagNames() {
+	void testHtml_validHtml5TagNames() {
 
 		String[] tagNames = {
 			"a", "abbr", "acronym", "address", "applet", "area", "article",
@@ -2178,7 +2178,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_loneIdentifier() {
+	void testHtml_loneIdentifier() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			"foo",
 			"123"
@@ -2187,7 +2187,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_BooleanLiterals() {
+	void testJS_BooleanLiterals() {
 
 		String code = "true false";
 
@@ -2211,7 +2211,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_CharLiterals_invalid() {
+	void testJS_CharLiterals_invalid() {
 
 		String[] charLiterals = {
 			"'\\xG7'", // Invalid hex/octal escape
@@ -2231,7 +2231,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_CharLiterals_valid() {
+	void testJS_CharLiterals_valid() {
 
 		String[] charLiterals = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
@@ -2253,7 +2253,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DataTypes() {
+	void testJS_DataTypes() {
 
 		String code = "boolean byte char double float int long short";
 
@@ -2277,7 +2277,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DocComments() {
+	void testJS_DocComments() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world */",
@@ -2294,7 +2294,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DocComments_BlockTags() {
+	void testJS_DocComments_BlockTags() {
 
 		String[] blockTags = {
 			"abstract", "access", "alias", "augments", "author", "borrows",
@@ -2326,7 +2326,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DocComments_InlineTags() {
+	void testJS_DocComments_InlineTags() {
 
 		String[] inlineTags = { "link", "linkplain", "linkcode", "tutorial" };
 
@@ -2348,7 +2348,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DocComments_Markup() {
+	void testJS_DocComments_Markup() {
 		String text = "<code>";
 		Segment segment = createSegment(text);
 		TokenMaker tm = createTokenMaker();
@@ -2363,7 +2363,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_DocComments_URL() {
+	void testJS_DocComments_URL() {
 
 		String[] docCommentLiterals = {
 			"/** Hello world http://www.sas.com */",
@@ -2392,7 +2392,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_EolComments() {
+	void testJS_EolComments() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world",
@@ -2409,7 +2409,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_EolComments_terminatedEarlyByScriptTag() {
+	void testJS_EolComments_terminatedEarlyByScriptTag() {
 
 		Segment segment = createSegment("// comment ended by a </script>");
 		TokenMaker tm = createTokenMaker();
@@ -2426,7 +2426,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_EolComments_URL() {
+	void testJS_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
@@ -2462,7 +2462,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_FloatingPointLiterals() {
+	void testJS_FloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -2502,7 +2502,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Functions() {
+	void testJS_Functions() {
 
 		String code = "eval parseInt parseFloat escape unescape isNaN isFinite";
 
@@ -2526,7 +2526,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_HexLiterals() {
+	void testJS_HexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -2552,7 +2552,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Keywords() {
+	void testJS_Keywords() {
 
 		String code = "break case catch class const continue " +
 				"debugger default delete do else export extends finally for function if " +
@@ -2586,7 +2586,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComments() {
+	void testJS_MultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -2604,7 +2604,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComment_fromPreviousLine() {
 
 		String[] mlcLiterals = {
 			" this is continued from a prior line */",
@@ -2623,7 +2623,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComment_terminatedEarlyByScriptTag() {
+	void testJS_MultiLineComment_terminatedEarlyByScriptTag() {
 
 		Segment segment = createSegment("/* comment ended by a </script>");
 		TokenMaker tm = createTokenMaker();
@@ -2640,7 +2640,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_MultiLineComments_URL() {
+	void testJS_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -2669,7 +2669,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Numbers() {
+	void testJS_Numbers() {
 
 		String[] ints = {
 			"0", "42", /*"-7",*/
@@ -2721,7 +2721,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Operators() {
+	void testJS_Operators() {
 
 		String assignmentOperators = "+ - <= ^ ++ < * >= % -- > / != ? >> ! & == : >> ~ && >>>";
 		String nonAssignmentOperators = "= -= *= /= |= &= ^= += %= <<= >>= >>>=";
@@ -2747,7 +2747,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Regexes() {
+	void testJS_Regexes() {
 
 		String[] regexes = {
 			"/foobar/", "/foobar/gim", "/foo\\/bar\\/bas/g",
@@ -2764,7 +2764,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Separators() {
+	void testJS_Separators() {
 
 		String code = "( ) [ ] { }";
 
@@ -2790,7 +2790,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Separators_renderedAsIdentifiers() {
+	void testJS_Separators_renderedAsIdentifiers() {
 
 		String[] separators2 = { ";", ",", "." };
 
@@ -2805,7 +2805,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_invalid() {
+	void testJS_StringLiterals_invalid() {
 
 		String[] stringLiterals = {
 			"\"\\xG7\"", // Invalid hex/octal escape
@@ -2825,7 +2825,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_valid() {
+	void testJS_StringLiterals_valid() {
 
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\x77\"", "\"\\u00fe\"", "\"\\\"\"",
@@ -2843,7 +2843,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_fromPriorLine_valid() {
+	void testJS_StringLiterals_fromPriorLine_valid() {
 
 		String[] stringLiterals = {
 			"continued from prior line\"",
@@ -2860,7 +2860,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_StringLiterals_fromPriorLine_invalid() {
+	void testJS_StringLiterals_fromPriorLine_invalid() {
 
 		String[] stringLiterals = {
 			"continued from prior line\"",
@@ -2877,7 +2877,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_invalid() {
+	void testJS_TemplateLiterals_invalid() {
 
 		String[] templateLiterals = {
 			"`\\xG7`", // Invalid hex/octal escape
@@ -2896,7 +2896,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_invalid_continuedFromPriorLine() {
+	void testJS_TemplateLiterals_invalid_continuedFromPriorLine() {
 
 		String[] templateLiterals = {
 			"and my name is Fred`"
@@ -2914,7 +2914,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
+	void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
 
 		String[] templateLiterals = {
 			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
@@ -2933,7 +2933,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
+	void testJS_TemplateLiterals_valid_withInterpolatedExpression() {
 
 		// Strings with tokens:  template, interpolated expression, template
 		String[] templateLiterals = {
@@ -2957,7 +2957,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
+	void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
 
 		String[] templateLiterals = {
 			"and my name is Fred`"
@@ -2975,7 +2975,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_TemplateLiterals_valid_continuedFromPriorLine_withInterpolatedExpression() {
+	void testJS_TemplateLiterals_valid_continuedFromPriorLine_withInterpolatedExpression() {
 
 		String[] templateLiterals = {
 			"and my name is ${name}`"
@@ -2997,7 +2997,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_terminatedEarlyByScriptTag() {
+	void testJS_terminatedEarlyByScriptTag() {
 
 		Segment segment = createSegment("</script>");
 		TokenMaker tm = createTokenMaker();
@@ -3012,7 +3012,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testJS_Whitespace() {
+	void testJS_Whitespace() {
 
 		String[] whitespace = {
 			" ", "\t", "\f", "   \t   ",

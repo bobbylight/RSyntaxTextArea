@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DocumentRangeTest {
+class DocumentRangeTest {
 
 
 	@Test
-	public void testConstructor_HappyPath() {
+	void testConstructor_HappyPath() {
 		DocumentRange range = new DocumentRange(5, 8);
 		Assertions.assertEquals(5, range.getStartOffset());
 		Assertions.assertEquals(8, range.getEndOffset());
@@ -28,25 +28,25 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testConstructor_NegativeStart() {
+	void testConstructor_NegativeStart() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(-1, 8));
 	}
 
 
 	@Test
-	public void testConstructor_NegativeEnd() {
+	void testConstructor_NegativeEnd() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(5, -2));
 	}
 
 
 	@Test
-	public void testConstructor_EndLessThanStart() {
+	void testConstructor_EndLessThanStart() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(9, 8));
 	}
 
 
 	@Test
-	public void testCompareTo() {
+	void testCompareTo() {
 
 		DocumentRange range = new DocumentRange(5, 8);
 
@@ -72,7 +72,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testEquals() {
+	void testEquals() {
 
 		DocumentRange range = new DocumentRange(5, 8);
 
@@ -86,7 +86,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testGetEndOffset() {
+	void testGetEndOffset() {
 		DocumentRange range = new DocumentRange(5, 8);
 		Assertions.assertEquals(8, range.getEndOffset());
 		range.set(1,  2);
@@ -95,7 +95,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testGetStartOffset() {
+	void testGetStartOffset() {
 		DocumentRange range = new DocumentRange(5, 8);
 		Assertions.assertEquals(5, range.getStartOffset());
 		range.set(9,  12);
@@ -104,7 +104,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testHashCode() {
+	void testHashCode() {
 		// NOTE: Not a good test, assumes formula of hash code!
 		DocumentRange range = new DocumentRange(5, 8);
 		Assertions.assertEquals(5+8, range.hashCode());
@@ -112,7 +112,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testIsZeroLength() {
+	void testIsZeroLength() {
 		Assertions.assertFalse(new DocumentRange(1, 3).isZeroLength());
 		Assertions.assertFalse(new DocumentRange(2, 3).isZeroLength());
 		Assertions.assertTrue(new DocumentRange(3, 3).isZeroLength());
@@ -120,7 +120,7 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testSet_HappyPath() {
+	void testSet_HappyPath() {
 		DocumentRange range = new DocumentRange(1, 1);
 		range.set(5, 8);
 		Assertions.assertEquals(5, range.getStartOffset());
@@ -129,33 +129,33 @@ public class DocumentRangeTest {
 
 
 	@Test
-	public void testSet_NegativeStart() {
+	void testSet_NegativeStart() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(1, 1).set(-1, 8));
 
 	}
 
 
 	@Test
-	public void testSet_NegativeEnd() {
+	void testSet_NegativeEnd() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(1, 1).set(5, -2));
 	}
 
 
 	@Test
-	public void testSet_EndLessThanStart() {
+	void testSet_EndLessThanStart() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> new DocumentRange(1, 1).set(9, 8));
 	}
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		DocumentRange range = new DocumentRange(5, 8);
 		Assertions.assertEquals("[DocumentRange: 5-8]", range.toString());
 	}
 
 
 	@Test
-	public void testTranslate() {
+	void testTranslate() {
 		DocumentRange range = new DocumentRange(5, 8);
 		range.translate(6);
 		Assertions.assertEquals(11, range.getStartOffset());

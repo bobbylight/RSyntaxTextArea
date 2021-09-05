@@ -19,29 +19,29 @@ import java.awt.*;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class VisibleWhitespaceTokenPainterTest extends AbstractRSyntaxTextAreaTest {
+class VisibleWhitespaceTokenPainterTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintImpl_notSelected_noSTC() {
+	void testPaintImpl_notSelected_noSTC() {
 		testPaintImplImpl(false, false);
 	}
 
 
 	@Test
-	public void testPaintImpl_notSelected_sTC() {
+	void testPaintImpl_notSelected_sTC() {
 		testPaintImplImpl(false, true);
 	}
 
 
 	@Test
-	public void testPaintImpl_selected_noSTC() {
+	void testPaintImpl_selected_noSTC() {
 		testPaintImplImpl(true, false);
 	}
 
 
 	@Test
-	public void testPaintImpl_selected_sTC() {
+	void testPaintImpl_selected_sTC() {
 		testPaintImplImpl(true, true);
 	}
 

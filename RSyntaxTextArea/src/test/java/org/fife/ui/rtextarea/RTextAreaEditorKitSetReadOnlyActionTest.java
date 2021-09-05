@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitSetReadOnlyActionTest {
+class RTextAreaEditorKitSetReadOnlyActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 		Assertions.assertTrue(textArea.isEditable());
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitSetReadOnlyActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.readOnlyAction,
 			new RTextAreaEditorKit.SetReadOnlyAction().getMacroID());
 	}

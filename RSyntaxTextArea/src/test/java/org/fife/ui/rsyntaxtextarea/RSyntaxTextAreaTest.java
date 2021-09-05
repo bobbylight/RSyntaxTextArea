@@ -34,25 +34,25 @@ import javax.swing.event.HyperlinkListener;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	private boolean origTemplatesEnabled;
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		origTemplatesEnabled = RSyntaxTextArea.getTemplatesEnabled();
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 		RSyntaxTextArea.setTemplatesEnabled(origTemplatesEnabled);
 	}
 
 
 	@Test
-	public void testConstructor_rowsAndColumns() {
+	void testConstructor_rowsAndColumns() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(25, 80);
 		Assertions.assertEquals(25, textArea.getRows());
 		Assertions.assertEquals(80, textArea.getColumns());
@@ -60,7 +60,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConstructor_textAndRowsAndColumns() {
+	void testConstructor_textAndRowsAndColumns() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea("foo", 25, 80);
 		Assertions.assertEquals("foo", textArea.getText());
 		Assertions.assertEquals(25, textArea.getRows());
@@ -69,7 +69,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConstructor_documentAndTextAndRowsAndColumns() {
+	void testConstructor_documentAndTextAndRowsAndColumns() {
 		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C);
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc, "foo", 25, 80);
 		Assertions.assertEquals("foo", textArea.getText());
@@ -79,7 +79,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddRemoveActiveLineRangeListener() {
+	void testAddRemoveActiveLineRangeListener() {
 
 		ActiveLineRangeListener listener = e -> {
 			// Do nothing
@@ -92,7 +92,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddRemoveHyperlinkListener() {
+	void testAddRemoveHyperlinkListener() {
 
 		HyperlinkListener listener = e -> {
 			// Do nothing
@@ -105,7 +105,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAddRemoveParser() {
+	void testAddRemoveParser() {
 
 		Parser parser = new AbstractParser() {
 			@Override
@@ -121,7 +121,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAnimateBracketMatching() {
+	void testAnimateBracketMatching() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getAnimateBracketMatching());
 		textArea.setAnimateBracketMatching(false);
@@ -130,7 +130,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAntiAliasingEnabled() {
+	void testAntiAliasingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getAntiAliasingEnabled());
 		textArea.setAntiAliasingEnabled(false);
@@ -139,7 +139,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testAutoIndentEnabled() {
+	void testAutoIndentEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.isAutoIndentEnabled());
 		textArea.setAutoIndentEnabled(false);
@@ -148,7 +148,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testBracketMatchingEnabled() {
+	void testBracketMatchingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.isBracketMatchingEnabled());
 		textArea.setBracketMatchingEnabled(false);
@@ -157,7 +157,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testClearParsers() {
+	void testClearParsers() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertTrue(textArea.getParserCount() > 0);
 		textArea.clearParsers();
@@ -166,7 +166,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testClearWhitespaceLinesEnabled() {
+	void testClearWhitespaceLinesEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.isClearWhitespaceLinesEnabled());
 		textArea.setClearWhitespaceLinesEnabled(false);
@@ -175,7 +175,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCloseCurlyBraces() {
+	void testCloseCurlyBraces() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getCloseCurlyBraces());
 		textArea.setCloseCurlyBraces(false);
@@ -184,7 +184,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCloseMarkupTags() {
+	void testCloseMarkupTags() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getCloseMarkupTags());
 		textArea.setCloseMarkupTags(false);
@@ -193,7 +193,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCodeFoldingEnabled() {
+	void testCodeFoldingEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.isCodeFoldingEnabled());
 		textArea.setCodeFoldingEnabled(true);
@@ -202,7 +202,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testConfigurePopupMenu() {
+	void testConfigurePopupMenu() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		JPopupMenu menu = textArea.getPopupMenu();
@@ -211,7 +211,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCopyAsStyledText_zeroArg_html_happyPath() throws Exception {
+	void testCopyAsStyledText_zeroArg_html_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -237,7 +237,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	@Disabled("Fails in the CI environment for some reason")
-	public void testCopyAsStyledText_zeroArg_rtf_happyPath() throws Exception {
+	void testCopyAsStyledText_zeroArg_rtf_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -262,7 +262,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCopyAsStyledText_zeroArg_string_happyPath() throws Exception {
+	void testCopyAsStyledText_zeroArg_string_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -278,7 +278,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCopyAsStyledText_themeArg_string_happyPath() throws Exception {
+	void testCopyAsStyledText_themeArg_string_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -294,7 +294,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testCopyAsStyledText_nullThemeArg_string_happyPath() throws Exception {
+	void testCopyAsStyledText_nullThemeArg_string_happyPath() throws Exception {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -310,7 +310,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testEOLMarkersVisible() {
+	void testEOLMarkersVisible() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getEOLMarkersVisible());
 		textArea.setEOLMarkersVisible(true);
@@ -319,7 +319,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetRightHandSideCorrection() {
+	void testGetSetRightHandSideCorrection() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertEquals(0, textArea.getRightHandSideCorrection());
 		textArea.setRightHandSideCorrection(5);
@@ -328,7 +328,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetTemplatesEnabled() {
+	void testGetSetTemplatesEnabled() {
 		Assertions.assertFalse(RSyntaxTextArea.getTemplatesEnabled());
 		try {
 			RSyntaxTextArea.setTemplatesEnabled(true);
@@ -340,7 +340,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testFractionalFontMetricsEnabled() {
+	void testFractionalFontMetricsEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getFractionalFontMetricsEnabled());
 		textArea.setFractionalFontMetricsEnabled(true);
@@ -349,7 +349,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetBackgroundForToken() {
+	void testGetBackgroundForToken() {
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "public");
 		Token token = textArea.getTokenListForLine(0);
 		Assertions.assertNull(textArea.getBackgroundForToken(token));
@@ -357,14 +357,14 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetLastVisibleOffset_foldingEnabled() {
+	void testGetLastVisibleOffset_foldingEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
 	}
 
 
 	@Test
-	public void testGetLastVisibleOffset_foldingNotEnabled() {
+	void testGetLastVisibleOffset_foldingNotEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setCodeFoldingEnabled(false);
 		Assertions.assertEquals(textArea.getDocument().getLength(), textArea.getLastVisibleOffset());
@@ -372,7 +372,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetLinkGenerator() {
+	void testGetSetLinkGenerator() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertNull(textArea.getLinkGenerator());
 		textArea.setLinkGenerator((textArea1, offs) -> null);
@@ -381,7 +381,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetFont() {
+	void testGetSetFont() {
 		RSyntaxTextArea textArea = createTextArea();
 		Font origFont = textArea.getFont();
 		Font newFont = origFont.deriveFont(Font.ITALIC, 22f);
@@ -391,21 +391,21 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetPopupMenu() {
+	void testGetPopupMenu() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertNotNull(textArea.getPopupMenu());
 	}
 
 
 	@Test
-	public void testGetShouldAutoIndentNextLine_autoIndentEnabled() {
+	void testGetShouldAutoIndentNextLine_autoIndentEnabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertTrue(textArea.getShouldIndentNextLine(0));
 	}
 
 
 	@Test
-	public void testGetShouldAutoIndentNextLine_autoIndentDisabled() {
+	void testGetShouldAutoIndentNextLine_autoIndentDisabled() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setAutoIndentEnabled(false);
 		Assertions.assertFalse(textArea.getShouldIndentNextLine(0));
@@ -413,7 +413,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetToolTipText() {
+	void testGetToolTipText() {
 		RSyntaxTextArea textArea = createTextArea();
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0, 0, 1, false);
 		Assertions.assertNull(textArea.getToolTipText(e));
@@ -421,7 +421,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testHighlightSecondaryLanguages() {
+	void testHighlightSecondaryLanguages() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getHighlightSecondaryLanguages());
 		textArea.setHighlightSecondaryLanguages(false);
@@ -431,14 +431,14 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	@Disabled("Not possible to do the setup for this test headlessly currently")
-	public void testHyperlinkEventsAreFired_linkGenerator() {
+	void testHyperlinkEventsAreFired_linkGenerator() {
 		// TODO: Figure out a way to do the setup necessary for
 		// link generator events to fire
 	}
 
 
 	@Test
-	public void testHyperlinkEventsAreFired_noLinkGenerator() {
+	void testHyperlinkEventsAreFired_noLinkGenerator() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"// https://www.google.com");
@@ -466,7 +466,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testHyperlinkForeground() {
+	void testHyperlinkForeground() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setHyperlinkForeground(Color.pink);
 		Assertions.assertEquals(Color.pink, textArea.getHyperlinkForeground());
@@ -474,7 +474,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testHyperlinksEnabled() {
+	void testHyperlinksEnabled() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getHyperlinksEnabled());
 		textArea.setHyperlinksEnabled(false);
@@ -483,7 +483,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrences() {
+	void testMarkOccurrences() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getMarkOccurrences());
 		textArea.setMarkOccurrences(true);
@@ -494,7 +494,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrencesColor() {
+	void testMarkOccurrencesColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesColor(Color.pink);
 		Assertions.assertEquals(Color.pink, textArea.getMarkOccurrencesColor());
@@ -502,7 +502,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrencesDelay() {
+	void testMarkOccurrencesDelay() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesDelay(5432);
 		Assertions.assertEquals(5432, textArea.getMarkOccurrencesDelay());
@@ -510,7 +510,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrencesDelay_zero() {
+	void testMarkOccurrencesDelay_zero() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrencesDelay(0);
 		Assertions.assertEquals(0, textArea.getMarkOccurrencesDelay());
@@ -518,7 +518,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMarkOccurrencesDelay_invalidValue() {
+	void testMarkOccurrencesDelay_invalidValue() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			RSyntaxTextArea textArea = new RSyntaxTextArea();
 			textArea.setMarkOccurrencesDelay(-1);
@@ -527,7 +527,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMatchedBracketBGColor() {
+	void testMatchedBracketBGColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMatchedBracketBGColor(Color.pink);
 		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBGColor());
@@ -535,7 +535,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMatchedBracketBorderColor() {
+	void testMatchedBracketBorderColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMatchedBracketBorderColor(Color.pink);
 		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBorderColor());
@@ -543,7 +543,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testModelToToken() {
+	void testModelToToken() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("public int foo;");
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -555,14 +555,14 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testModelToToken_negativeValue() {
+	void testModelToToken_negativeValue() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertNull(textArea.modelToToken(-1));
 	}
 
 
 	@Test
-	public void testPaintComponent_noWrappedLines_happyPath() {
+	void testPaintComponent_noWrappedLines_happyPath() {
 
 		String code = "/**\n" +
 			" * This is a class\n" +
@@ -582,7 +582,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_wrappedLines_happyPath() {
+	void testPaintComponent_wrappedLines_happyPath() {
 
 		String code = "/**\n" +
 			" * This is a class\n" +
@@ -603,7 +603,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintMatchedBracketPair() {
+	void testPaintMatchedBracketPair() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getPaintMatchedBracketPair());
 		textArea.setPaintMatchedBracketPair(true);
@@ -611,7 +611,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 	@Test
-	public void testPaintMarkOccurrencesBorder() {
+	void testPaintMarkOccurrencesBorder() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertFalse(textArea.getPaintMarkOccurrencesBorder());
 		textArea.setPaintMarkOccurrencesBorder(true);
@@ -619,7 +619,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 	@Test
-	public void testPaintTabLines() {
+	void testPaintTabLines() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getPaintTabLines());
 		textArea.setPaintTabLines(true);
@@ -628,7 +628,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRedoLastAction() {
+	void testRedoLastAction() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.discardAllEdits();
@@ -648,40 +648,40 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testRemoveNotify() {
+	void testRemoveNotify() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.removeNotify();
 	}
 
 
 	@Test
-	public void testSaveTemplates_templatesNotEnabled() {
+	void testSaveTemplates_templatesNotEnabled() {
 		RSyntaxTextArea.setTemplatesEnabled(false);
 		RSyntaxTextArea.saveTemplates();
 	}
 
 
 	@Test
-	public void testSaveTemplates_templatesEnabled() {
+	void testSaveTemplates_templatesEnabled() {
 		RSyntaxTextArea.setTemplatesEnabled(true);
 		RSyntaxTextArea.saveTemplates();
 	}
 
 
 	@Test
-	public void testSetLinkScanningMask_invalidValue() {
+	void testSetLinkScanningMask_invalidValue() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> createTextArea().setLinkScanningMask(0));
 	}
 
 
 	@Test
-	public void testSetRightHandSideCorrection_invalidValue() {
+	void testSetRightHandSideCorrection_invalidValue() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> createTextArea().setRightHandSideCorrection(-1));
 	}
 
 
 	@Test
-	public void testSyntaxEditingStyle() {
+	void testSyntaxEditingStyle() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -690,7 +690,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSyntaxEditingStyle_defaultForNullValue() {
+	void testSyntaxEditingStyle_defaultForNullValue() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setSyntaxEditingStyle(null);
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
@@ -698,7 +698,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testTabLineColor() {
+	void testTabLineColor() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setTabLineColor(Color.blue);
 		Assertions.assertEquals(Color.blue, textArea.getTabLineColor());
@@ -706,7 +706,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testParserDelay() {
+	void testParserDelay() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setParserDelay(6789);
 		Assertions.assertEquals(6789, textArea.getParserDelay());
@@ -714,7 +714,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetTemplateDirectory_dirExists() throws IOException {
+	void testSetTemplateDirectory_dirExists() throws IOException {
 
 		RSyntaxTextArea.setTemplatesEnabled(true);
 
@@ -728,7 +728,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetTemplateDirectory_dirDoesNotExist() throws IOException {
+	void testSetTemplateDirectory_dirDoesNotExist() throws IOException {
 
 		RSyntaxTextArea.setTemplatesEnabled(true);
 
@@ -743,7 +743,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testUndoLastAction() {
+	void testUndoLastAction() {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.discardAllEdits();
 		Assertions.assertFalse(textArea.canUndo());
@@ -755,7 +755,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testUseFocusableTips() {
+	void testUseFocusableTips() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertTrue(textArea.getUseFocusableTips());
 		textArea.setUseFocusableTips(false);
@@ -764,7 +764,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testUseSelectedTextColor() {
+	void testUseSelectedTextColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.getUseSelectedTextColor());
 		textArea.setUseSelectedTextColor(true);
@@ -773,7 +773,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testViewToToken() {
+	void testViewToToken() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "public int foo;");
 
@@ -784,7 +784,7 @@ public class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testWhitespaceVisible() {
+	void testWhitespaceVisible() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		Assertions.assertFalse(textArea.isWhitespaceVisible());
 		textArea.setWhitespaceVisible(true);

@@ -31,7 +31,7 @@ public class HtaccessTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"# Hello world",
 		};
@@ -40,7 +40,7 @@ public class HtaccessTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"# Hello world http://www.sas.com",
@@ -73,7 +73,7 @@ public class HtaccessTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 
 		String[] functions = {
 				"AcceptPathInfo",

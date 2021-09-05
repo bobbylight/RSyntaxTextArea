@@ -16,29 +16,29 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DynamicIntArrayTest {
+class DynamicIntArrayTest {
 
 
 	@Test
-	public void testZeroArgConstructor() {
+	void testZeroArgConstructor() {
 		new DynamicIntArray();
 	}
 
 
 	@Test
-	public void testIntArgConstructor() {
+	void testIntArgConstructor() {
 		new DynamicIntArray(100);
 	}
 
 
 	@Test
-	public void testArrayArgConstructor() {
+	void testArrayArgConstructor() {
 		new DynamicIntArray(new int[] { 0, 1, 2 });
 	}
 
 
 	@Test
-	public void testAdd_1ArgOverload() {
+	void testAdd_1ArgOverload() {
 		DynamicIntArray array = new DynamicIntArray();
 		Assertions.assertEquals(0, array.getSize());
 		array.add(5);
@@ -49,7 +49,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testAdd_2ArgOverload_Array() {
+	void testAdd_2ArgOverload_Array() {
 
 		DynamicIntArray array = new DynamicIntArray();
 		Assertions.assertEquals(0, array.getSize());
@@ -70,7 +70,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testAdd_2ArgOverload_2Ints() {
+	void testAdd_2ArgOverload_2Ints() {
 
 		DynamicIntArray array = new DynamicIntArray();
 		Assertions.assertEquals(0, array.getSize());
@@ -88,7 +88,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testClear() {
+	void testClear() {
 		DynamicIntArray array = new DynamicIntArray(new int[] { 1, 2, 3 });
 		Assertions.assertEquals(3, array.getSize());
 		array.clear();
@@ -97,7 +97,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testContains() {
+	void testContains() {
 		DynamicIntArray array = new DynamicIntArray(new int[] { 1, 2, 3 });
 		Assertions.assertFalse(array.contains(0));
 		Assertions.assertTrue(array.contains(1));
@@ -108,7 +108,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testDecrement() {
+	void testDecrement() {
 		DynamicIntArray array = new DynamicIntArray(new int[] { 7, 7, 7, 7, 7 });
 		array.decrement(2, 4);
 		Assertions.assertEquals(7, array.get(0));
@@ -120,7 +120,7 @@ public class DynamicIntArrayTest {
 
 
 	@Test
-	public void testfill() {
+	void testfill() {
 		DynamicIntArray array = new DynamicIntArray(new int[] { 7, 7, 7, 7, 7 });
 		for (int i = 0; i < array.getSize(); i++) {
 			Assertions.assertEquals(7, array.get(i));

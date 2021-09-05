@@ -18,10 +18,10 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class LinesWithContentFoldParserTest {
+class LinesWithContentFoldParserTest {
 
 	@Test
-	public void testHappyPath() {
+	void testHappyPath() {
 
 		String code = "; this is a block of code\n" +
 			"LDA #$01\n" +

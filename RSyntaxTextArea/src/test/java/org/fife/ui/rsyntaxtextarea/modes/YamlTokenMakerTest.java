@@ -31,7 +31,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"# Hello world",
 		};
@@ -49,7 +49,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 
 		String code = "- : ? & * ! % @ `";
 
@@ -75,7 +75,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -103,7 +103,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators2() {
+	void testSeparators2() {
 
 		String code = "; , .";
 
@@ -131,7 +131,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals_doubleQuote() {
+	void testStringLiterals_doubleQuote() {
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};
@@ -140,7 +140,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals_doubleQuote_error() {
+	void testStringLiterals_doubleQuote_error() {
 		String[] stringLiterals = {
 			"\"Hello world unterminated",
 			"\"Invalid escape \\uINVALID\"",
@@ -150,7 +150,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals_singleQuote() {
+	void testStringLiterals_singleQuote() {
 		String[] stringLiterals = {
 			"''", "'hi'", "'\\u00fe'", "'\\\''",
 		};
@@ -159,7 +159,7 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals_singleQuote_error() {
+	void testStringLiterals_singleQuote_error() {
 		String[] stringLiterals = {
 			"'Hello world unterminated",
 			"'Invalid escape \\uINVALID'",

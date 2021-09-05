@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitJoinLinesActionTest {
+class RTextAreaEditorKitJoinLinesActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEnabled() {
+	void testActionPerformedImpl_notEnabled() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_happyPath() {
+	void testActionPerformedImpl_happyPath() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -50,7 +50,7 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_doesNothingWhenOnLastLine() {
+	void testActionPerformedImpl_doesNothingWhenOnLastLine() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -63,7 +63,7 @@ public class RTextAreaEditorKitJoinLinesActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaJoinLinesAction,
 			new RTextAreaEditorKit.JoinLinesAction().getMacroID());
 	}

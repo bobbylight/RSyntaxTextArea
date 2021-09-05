@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaEditorKitEndWordActionTest {
+class RTextAreaEditorKitEndWordActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelect() {
+	void testActionPerformedImpl_noSelect() {
 
 		String text = "word word word";
 		RTextArea textArea = new RTextArea(text);
@@ -34,7 +34,7 @@ public class RTextAreaEditorKitEndWordActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_select() {
+	void testActionPerformedImpl_select() {
 
 		String text = "word word word";
 		RTextArea textArea = new RTextArea(text);
@@ -50,7 +50,7 @@ public class RTextAreaEditorKitEndWordActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("end", new RTextAreaEditorKit.EndWordAction("end", false).getMacroID());
 	}
 }

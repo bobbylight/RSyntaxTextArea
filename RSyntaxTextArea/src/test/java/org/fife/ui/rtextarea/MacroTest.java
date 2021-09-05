@@ -19,7 +19,7 @@ import java.util.Collections;
  * @author Robert Futrell
  * @version 1.0
  */
-public class MacroTest {
+class MacroTest {
 
 	private static final String MACRO_XML = "<macro>\n" +
 		"  <macroName>macroFile</macroName>\n" +
@@ -30,13 +30,13 @@ public class MacroTest {
 
 
 	@Test
-	public void testConstructor_zeroArg() {
+	void testConstructor_zeroArg() {
 		Assertions.assertNotNull(new Macro().getName());
 	}
 
 
 	@Test
-	public void testConstructor_fileArg() throws IOException {
+	void testConstructor_fileArg() throws IOException {
 
 		File file = File.createTempFile("rstaUnitTests", ".tmp");
 		try (PrintWriter w = new PrintWriter(file)) {
@@ -51,21 +51,21 @@ public class MacroTest {
 
 
 	@Test
-	public void testConstructor_stringName() {
+	void testConstructor_stringName() {
 		Macro macro = new Macro("foo");
 		Assertions.assertEquals(0, macro.getMacroRecords().size());
 	}
 
 
 	@Test
-	public void testConstructor_stringNameAndRecords_nullRecords() {
+	void testConstructor_stringNameAndRecords_nullRecords() {
 		Macro macro = new Macro("foo", null);
 		Assertions.assertEquals(0, macro.getMacroRecords().size());
 	}
 
 
 	@Test
-	public void testConstructor_stringNameAndRecords_nonNullRecords() {
+	void testConstructor_stringNameAndRecords_nonNullRecords() {
 		Macro macro = new Macro("foo", Collections.singletonList(
 			new Macro.MacroRecord("foo", "bar")
 		));
@@ -74,7 +74,7 @@ public class MacroTest {
 
 
 	@Test
-	public void testAddMacroRecord_happyPath() {
+	void testAddMacroRecord_happyPath() {
 
 		Macro macro = new Macro("foo");
 		Assertions.assertEquals(0, macro.getMacroRecords().size());
@@ -85,7 +85,7 @@ public class MacroTest {
 
 
 	@Test
-	public void testAddMacroRecord_null() {
+	void testAddMacroRecord_null() {
 
 		Macro macro = new Macro("foo");
 		Assertions.assertEquals(0, macro.getMacroRecords().size());
@@ -96,7 +96,7 @@ public class MacroTest {
 
 
 	@Test
-	public void testGetSetName() {
+	void testGetSetName() {
 		Macro macro = new Macro("foo");
 		Assertions.assertEquals("foo", macro.getName());
 		macro.setName("bar");
@@ -105,7 +105,7 @@ public class MacroTest {
 
 
 	@Test
-	public void testSaveToFile() throws IOException {
+	void testSaveToFile() throws IOException {
 
 		File file = File.createTempFile("rstaUnitTests", ".tmp");
 		file.deleteOnExit();

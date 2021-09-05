@@ -12,27 +12,27 @@ import javax.swing.text.TabExpander;
 /**
  * Unit tests for the {@link TokenUtils} class.
  */
-public class TokenUtilsTest {
+class TokenUtilsTest {
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_null() {
+	void testIsBlankOrAllWhiteSpace_null() {
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(null));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_nullToken() {
+	void testIsBlankOrAllWhiteSpace_nullToken() {
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(new TokenImpl()));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_internalNonPaintableTokenType() {
+	void testIsBlankOrAllWhiteSpace_internalNonPaintableTokenType() {
 		char[] chars = { 'a', 'b', 'c' };
 		Token t = new TokenImpl(chars, 0, 2, 0, -7, 0);
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpace(t));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_singleWhiteSpaceToken() {
+	void testIsBlankOrAllWhiteSpace_singleWhiteSpaceToken() {
 		char[] chars = { ' ' };
 		Token t = new TokenImpl(chars, 0, 0, 0,
 				TokenTypes.WHITESPACE, 0);
@@ -40,7 +40,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_singleCommentToken() {
+	void testIsBlankOrAllWhiteSpace_singleCommentToken() {
 		char[] chars = "// This is a comment".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.COMMENT_EOL, 0);
@@ -48,7 +48,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpace_spacesFollowedByNonSpaceNonComment() {
+	void testIsBlankOrAllWhiteSpace_spacesFollowedByNonSpaceNonComment() {
 
 		char[] chars = "    ".toCharArray();
 		TokenImpl t = new TokenImpl(chars, 0, chars.length - 1, 0,
@@ -62,24 +62,24 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_null() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_null() {
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(null));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_nullToken() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_nullToken() {
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(new TokenImpl()));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_internalNonPaintableTokenType() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_internalNonPaintableTokenType() {
 		char[] chars = { 'a', 'b', 'c' };
 		Token t = new TokenImpl(chars, 0, 2, 0, -7, 0);
 		Assertions.assertTrue(TokenUtils.isBlankOrAllWhiteSpaceWithoutComments(t));
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_singleWhiteSpaceToken() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_singleWhiteSpaceToken() {
 		char[] chars = { ' ' };
 		Token t = new TokenImpl(chars, 0, 0, 0,
 			TokenTypes.WHITESPACE, 0);
@@ -87,7 +87,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_singleCommentToken() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_singleCommentToken() {
 		char[] chars = "// This is a comment".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
 			TokenTypes.COMMENT_EOL, 0);
@@ -95,7 +95,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testIsBlankOrAllWhiteSpaceWithoutComments_spacesFollowedByNonSpaceNonComment() {
+	void testIsBlankOrAllWhiteSpaceWithoutComments_spacesFollowedByNonSpaceNonComment() {
 
 		char[] chars = "    ".toCharArray();
 		TokenImpl t = new TokenImpl(chars, 0, chars.length - 1, 0,
@@ -109,7 +109,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void getTokenSubList_happyPath() {
+	void getTokenSubList_happyPath() {
 
 		TabExpander e = (x, tabOffset) -> x + 5;
 
@@ -142,7 +142,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testGetWhiteSpaceTokenLength_allSpaces() {
+	void testGetWhiteSpaceTokenLength_allSpaces() {
 
 		char[] chars = "      ".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
@@ -151,7 +151,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testGetWhiteSpaceTokenLength_tab_toNextTabStop() {
+	void testGetWhiteSpaceTokenLength_tab_toNextTabStop() {
 
 		char[] chars = "  \t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
@@ -160,7 +160,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testGetWhiteSpaceTokenLength_tabOnly_toNextTabStop() {
+	void testGetWhiteSpaceTokenLength_tabOnly_toNextTabStop() {
 
 		char[] chars = "\t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 2,
@@ -169,7 +169,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testGetWhiteSpaceTokenLength_tab_onATabStop() {
+	void testGetWhiteSpaceTokenLength_tab_onATabStop() {
 
 		char[] chars = "    \t".toCharArray();
 		Token t = new TokenImpl(chars, 0, chars.length - 1, 0,
@@ -178,7 +178,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testTokenToHtml_bold() {
+	void testTokenToHtml_bold() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -191,7 +191,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testTokenToHtml_italics() {
+	void testTokenToHtml_italics() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -204,7 +204,7 @@ public class TokenUtilsTest {
 	}
 
 	@Test
-	public void testTokenToHtml_htmlIsEscaped() {
+	void testTokenToHtml_htmlIsEscaped() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);

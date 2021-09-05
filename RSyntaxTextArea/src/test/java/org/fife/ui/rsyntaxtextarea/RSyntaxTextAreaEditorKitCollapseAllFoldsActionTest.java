@@ -22,10 +22,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitCollapseAllFoldsActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitCollapseAllFoldsActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_collapseAllFolds() {
+	void testActionPerformedImpl_collapseAllFolds() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -50,7 +50,7 @@ public class RSyntaxTextAreaEditorKitCollapseAllFoldsActionTest extends Abstract
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CollapseAllFoldsAction a = new RSyntaxTextAreaEditorKit.CollapseAllFoldsAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCollapseAllFoldsAction, a.getMacroID());
 	}

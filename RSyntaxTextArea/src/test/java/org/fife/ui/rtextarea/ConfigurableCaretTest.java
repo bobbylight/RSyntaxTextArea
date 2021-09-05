@@ -28,11 +28,11 @@ import java.awt.event.MouseEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
+class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testDeistall_rTextAreaRequired() {
+	void testDeistall_rTextAreaRequired() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			new ConfigurableCaret().deinstall(new JTextArea());
 		});
@@ -40,7 +40,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetPasteOnMiddleClick() {
+	void testGetSetPasteOnMiddleClick() {
 		ConfigurableCaret caret = new ConfigurableCaret();
 		Assertions.assertTrue(caret.getPasteOnMiddleMouseClick());
 		caret.setPasteOnMiddleMouseClick(false);
@@ -49,7 +49,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetRoundedSelectionEdges() {
+	void testGetSetRoundedSelectionEdges() {
 		ConfigurableCaret caret = new ConfigurableCaret();
 		Assertions.assertFalse(caret.getRoundedSelectionEdges());
 		caret.setRoundedSelectionEdges(true);
@@ -58,7 +58,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetSetStyle() {
+	void testGetSetStyle() {
 		ConfigurableCaret caret = new ConfigurableCaret();
 		Assertions.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
 		caret.setStyle(CaretStyle.BLOCK_STYLE);
@@ -67,7 +67,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetStyle_null() {
+	void testSetStyle_null() {
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.setStyle(null);
 		Assertions.assertEquals(CaretStyle.THICK_VERTICAL_LINE_STYLE, caret.getStyle());
@@ -75,7 +75,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testGetTextArea() {
+	void testGetTextArea() {
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		Assertions.assertNull(caret.getTextArea());
@@ -88,7 +88,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testInstall_rTextAreaRequired() {
+	void testInstall_rTextAreaRequired() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			new ConfigurableCaret().install(new JTextArea());
 		});
@@ -96,7 +96,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testInstallDeinstall() {
+	void testInstallDeinstall() {
 
 		RTextArea textArea = new RTextArea();
 
@@ -107,7 +107,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testIsSetAlwaysVisible() {
+	void testIsSetAlwaysVisible() {
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		Assertions.assertFalse(caret.isAlwaysVisible());
@@ -118,7 +118,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	@Disabled("This test doesn't work in CI as the system clipboard will be blank")
-	public void testMouseClicked_pasteOnMiddleMouseDown() {
+	void testMouseClicked_pasteOnMiddleMouseDown() {
 
 		RTextArea textArea = new RTextArea();
 		ConfigurableCaret caret = new ConfigurableCaret();
@@ -138,7 +138,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMouseClicked_doubleClickSelectsWord() {
+	void testMouseClicked_doubleClickSelectsWord() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -161,7 +161,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testMouseClicked_tripleClickSelectsLine() {
+	void testMouseClicked_tripleClickSelectsLine() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -179,14 +179,14 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaint() {
+	void testPaint() {
 		for (CaretStyle style : CaretStyle.values()) {
 			testPaintImpl(style);
 		}
 	}
 
 
-	public void testPaintImpl(CaretStyle caretStyle) {
+	protected void testPaintImpl(CaretStyle caretStyle) {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -202,7 +202,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetCaretPosition_skipsOverFold() {
+	void testSetCaretPosition_skipsOverFold() {
 
 		String code = "{\n" +
 			"  {\n" +
@@ -234,7 +234,7 @@ public class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testSetCaretPosition_skipsOverFold_forward() {
+	void testSetCaretPosition_skipsOverFold_forward() {
 
 		String code = "{\n" +
 			"  {\n" +

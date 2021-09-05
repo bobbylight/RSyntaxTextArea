@@ -33,7 +33,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_comment() {
+	void testXML_comment() {
 
 		String[] commentLiterals = {
 			"<!-- Hello world -->",
@@ -50,7 +50,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_comment_URL() {
+	void testXML_comment_URL() {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = createSegment(code);
@@ -70,7 +70,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_doctype() {
+	void testXML_doctype() {
 
 		String[] doctypes = {
 			"<!doctype html>",
@@ -89,7 +89,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_entityReferences() {
+	void testXML_entityReferences() {
 
 		String[] entityReferences = {
 			"&nbsp;", "&lt;", "&gt;", "&#4012",
@@ -106,7 +106,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_happyPath_tagWithAttributes() {
+	void testXML_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = createSegment(code);
@@ -139,7 +139,7 @@ public class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testXML_processingInstructions() {
+	void testXML_processingInstructions() {
 
 		String[] doctypes = {
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",

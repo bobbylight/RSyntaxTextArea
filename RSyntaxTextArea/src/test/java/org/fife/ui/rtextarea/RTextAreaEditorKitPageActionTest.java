@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
+class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_left_noSelect() {
+	void testActionPerformedImpl_left_noSelect() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -40,7 +40,7 @@ public class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_left_select() {
+	void testActionPerformedImpl_left_select() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -57,7 +57,7 @@ public class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_right_noSelect() {
+	void testActionPerformedImpl_right_noSelect() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -74,7 +74,7 @@ public class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_right_select() {
+	void testActionPerformedImpl_right_select() {
 
 		String content = "line 1\nline 2\nline 3";
 
@@ -91,7 +91,7 @@ public class RTextAreaEditorKitPageActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.PageAction("foo", true, false).getMacroID());
 	}

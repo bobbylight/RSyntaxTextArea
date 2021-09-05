@@ -22,11 +22,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
+class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testConstructor_multiArg() {
+	void testConstructor_multiArg() {
 		RTextAreaEditorKit.PasteAction action = new RTextAreaEditorKit.PasteAction(
 			"name", null, "Description", 0, null);
 		Assertions.assertEquals("name", action.getName());
@@ -35,7 +35,7 @@ public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl() {
+	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea();
 
@@ -49,7 +49,7 @@ public class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(DefaultEditorKit.pasteAction,
 			new RTextAreaEditorKit.PasteAction().getMacroID());
 	}

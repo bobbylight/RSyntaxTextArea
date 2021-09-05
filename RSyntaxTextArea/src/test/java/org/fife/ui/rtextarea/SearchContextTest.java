@@ -12,8 +12,6 @@ import java.beans.PropertyChangeListener;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.BadLocationException;
-
 
 /**
  * Unit tests for the {@code SearchContext} class.
@@ -21,11 +19,11 @@ import javax.swing.text.BadLocationException;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SearchContextTest {
+class SearchContextTest {
 
 
 	@Test
-	public void testConstructor_2Arg() {
+	void testConstructor_2Arg() {
 		SearchContext sc = new SearchContext("foo", true);
 		Assertions.assertEquals("foo", sc.getSearchFor());
 		Assertions.assertTrue(sc.getMatchCase());
@@ -33,7 +31,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testAddPropertyChangeListener() {
+	void testAddPropertyChangeListener() {
 		TestPropertyChangeListener pcl = new TestPropertyChangeListener();
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
@@ -43,7 +41,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testClone() {
+	void testClone() {
 
 		String searchFor = "foo";
 		boolean matchCase = true;
@@ -76,7 +74,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testFirePropertyChange_booleanArgs() {
+	void testFirePropertyChange_booleanArgs() {
 		TestPropertyChangeListener pcl = new TestPropertyChangeListener();
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
@@ -86,7 +84,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testFirePropertyChange_stringArgs() {
+	void testFirePropertyChange_stringArgs() {
 		TestPropertyChangeListener pcl = new TestPropertyChangeListener();
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
@@ -96,7 +94,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testRemovePropertyChangeListener() {
+	void testRemovePropertyChangeListener() {
 		TestPropertyChangeListener pcl = new TestPropertyChangeListener();
 		SearchContext sc = new SearchContext();
 		sc.addPropertyChangeListener(pcl);
@@ -107,7 +105,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testSetSearchSelectionOnly_true() {
+	void testSetSearchSelectionOnly_true() {
 		Assertions.assertThrows(UnsupportedOperationException.class, () -> {
 			SearchContext sc = new SearchContext();
 			sc.setSearchSelectionOnly(true);
@@ -116,7 +114,7 @@ public class SearchContextTest {
 
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		final String EXPECTED = "[SearchContext: searchFor=null, " +
 				"replaceWith=null, matchCase=false, wholeWord=false, " +
 				"regex=false, markAll=true]";
@@ -128,9 +126,9 @@ public class SearchContextTest {
 	private static class TestPropertyChangeListener
 			implements PropertyChangeListener {
 
-		public boolean called;
+		protected boolean called;
 
-		public TestPropertyChangeListener() {
+		protected TestPropertyChangeListener() {
 			called = false;
 		}
 

@@ -19,11 +19,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
+class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_noLineWrap_happyPath() {
+	void testPaintComponent_noLineWrap_happyPath() {
 
 		String code = "if (true) {\n" +
 			"   println('Do work');\n" +
@@ -40,7 +40,7 @@ public class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testPaintComponent_lineWrap_happyPath() {
+	void testPaintComponent_lineWrap_happyPath() {
 
 		String code = "if (true) {\n" +
 			"   println('Do work');\n" +

@@ -19,11 +19,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FileLocationTest {
+class FileLocationTest {
 
 
 	@Test
-	public void testCreate_StringArg_FileName() throws Exception {
+	void testCreate_StringArg_FileName() {
 		String url = "test.txt";
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof FileFileLocation);
@@ -33,7 +33,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_StringArg_FileUrl() throws Exception {
+	void testCreate_StringArg_FileUrl() {
 		String url = File.separatorChar == '/' ?
 				"file:///test.txt" : "file:///C:/test.txt";
 		FileLocation loc = FileLocation.create(url);
@@ -44,7 +44,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_StringArg_FtpUrl() throws Exception {
+	void testCreate_StringArg_FtpUrl() {
 		String url = "ftp://ftp.microsoft.com/deskapps/readme.txt";
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof URLFileLocation);
@@ -54,7 +54,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_StringArg_HttpUrl() throws Exception {
+	void testCreate_StringArg_HttpUrl() {
 		String url = "http://google.com";
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof URLFileLocation);
@@ -64,7 +64,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_StringArg_HttpsUrl() throws Exception {
+	void testCreate_StringArg_HttpsUrl() {
 		String url = "https://google.com";
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof URLFileLocation);
@@ -74,7 +74,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_FileArg() throws Exception {
+	void testCreate_FileArg() {
 		File file = new File(File.separatorChar == '/' ?
 				"test.txt" : "C:/test.txt");
 		FileLocation loc = FileLocation.create(file);
@@ -85,7 +85,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_UrlArg_HttpsUrl() throws Exception {
+	void testCreate_UrlArg_HttpsUrl() throws Exception {
 		URL url = new URL("https://google.com");
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof URLFileLocation);
@@ -95,7 +95,7 @@ public class FileLocationTest {
 
 
 	@Test
-	public void testCreate_UrlArg_FileUrl() throws Exception {
+	void testCreate_UrlArg_FileUrl() throws Exception {
 		URL url = new URL("file:///test.txt");
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertTrue(loc instanceof FileFileLocation);

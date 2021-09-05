@@ -18,11 +18,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RDocumentTest {
+class RDocumentTest {
 
 
 	@Test
-	public void testCharAt_Simple() throws Exception {
+	void testCharAt_Simple() throws Exception {
 
 		String text = "Hello world";
 
@@ -36,7 +36,7 @@ public class RDocumentTest {
 
 
 	@Test
-	public void testCharAt_ModifiedGapChange() throws Exception {
+	void testCharAt_ModifiedGapChange() throws Exception {
 
 		String text = "Hello world";
 
@@ -52,7 +52,7 @@ public class RDocumentTest {
 
 
 	@Test
-	public void testCharAt_Invalid_NegativeOffset() {
+	void testCharAt_Invalid_NegativeOffset() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 
@@ -67,7 +67,7 @@ public class RDocumentTest {
 
 
 	@Test
-	public void testCharAt_Invalid_OffsetTooLarge() {
+	void testCharAt_Invalid_OffsetTooLarge() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 

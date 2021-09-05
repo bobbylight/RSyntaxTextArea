@@ -23,12 +23,12 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -39,7 +39,7 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDecimalNumbers() {
+	void testDecimalNumbers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
 			"34f",
 			"34F",
@@ -56,7 +56,7 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testErrorStringLiterals() {
+	void testErrorStringLiterals() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated");
 	}
@@ -71,7 +71,7 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHexNumbers() {
+	void testHexNumbers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
 			"0x34",
 			"0x34L",
@@ -81,7 +81,7 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIntegers() {
+	void testIntegers() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"34",
 			"34L",
@@ -91,13 +91,13 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testIdentifiers() {
+	void testIdentifiers() {
 		assertAllTokensOfType( TokenTypes.IDENTIFIER, "foo");
 	}
 
 
 	@Test
-	public void testReservedWords() {
+	void testReservedWords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"append",
 			"array",
@@ -227,13 +227,13 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testComments() {
+	void testComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "# This is a comment");
 	}
 
 
 	@Test
-	public void testOperators() {
+	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"=", "!", "+", "-", "*", "/", ">", ">=", "<", "<=", "%", "&", "|", "^", "~"
 		);
@@ -241,7 +241,7 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(", ")", "[", "]", "{", "}"
 		);
@@ -249,14 +249,14 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStrings() {
+	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"");
 	}
 
 
 	@Test
-	public void testWhitespace() {
+	void testWhitespace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
 			"\t",

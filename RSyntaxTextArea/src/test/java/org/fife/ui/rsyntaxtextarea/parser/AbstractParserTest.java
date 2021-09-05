@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class AbstractParserTest {
+class AbstractParserTest {
 
 
 	@Test
-	public void testGetHyperlinkListener() {
+	void testGetHyperlinkListener() {
 
 		MockParser parser = new MockParser();
 		Assertions.assertNull(parser.getHyperlinkListener());
@@ -33,14 +33,14 @@ public class AbstractParserTest {
 
 
 	@Test
-	public void testGetImageBase_default() {
+	void testGetImageBase_default() {
 		MockParser parser = new MockParser();
 		Assertions.assertNull(parser.getImageBase());
 	}
 
 
 	@Test
-	public void testIsEnabled() {
+	void testIsEnabled() {
 		MockParser parser = new MockParser();
 		Assertions.assertTrue(parser.isEnabled());
 		parser.setEnabled(false);
@@ -49,7 +49,7 @@ public class AbstractParserTest {
 
 
 	@Test
-	public void testSetEnabled() {
+	void testSetEnabled() {
 		MockParser parser = new MockParser();
 		Assertions.assertTrue(parser.isEnabled());
 		parser.setEnabled(false);
@@ -58,7 +58,7 @@ public class AbstractParserTest {
 
 
 	@Test
-	public void testSetHyperlinkListener() {
+	void testSetHyperlinkListener() {
 
 		MockParser parser = new MockParser();
 		Assertions.assertNull(parser.getHyperlinkListener());

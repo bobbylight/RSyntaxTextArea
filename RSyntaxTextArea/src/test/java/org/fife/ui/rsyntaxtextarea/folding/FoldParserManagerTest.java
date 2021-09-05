@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class FoldParserManagerTest {
+class FoldParserManagerTest {
 
 	@Test
-	public void testAddFoldParserMapping() {
+	void testAddFoldParserMapping() {
 
 		FoldParserManager fpm = FoldParserManager.get();
 
@@ -29,7 +29,7 @@ public class FoldParserManagerTest {
 	}
 
 	@Test
-	public void testDefaultFoldParsersDefined() {
+	void testDefaultFoldParsersDefined() {
 
 		FoldParserManager fpm = FoldParserManager.get();
 

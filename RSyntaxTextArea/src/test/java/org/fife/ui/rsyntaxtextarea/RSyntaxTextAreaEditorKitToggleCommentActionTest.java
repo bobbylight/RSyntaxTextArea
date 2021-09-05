@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	public void testActionPerformedImpl_singleLine_addComment() {
+	void testActionPerformedImpl_singleLine_addComment() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
 			"line 1\nline 2\nline 3");
@@ -38,7 +38,7 @@ public class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSy
 
 
 	@Test
-	public void testActionPerformedImpl_singleLine_removeComment() {
+	void testActionPerformedImpl_singleLine_removeComment() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
 			"line 1\n//line 2\nline 3");
@@ -53,7 +53,7 @@ public class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSy
 
 
 	@Test
-	public void testActionPerformedImpl_multipleLines_addComment() {
+	void testActionPerformedImpl_multipleLines_addComment() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
 			"line 1\nline 2\nline 3");
@@ -69,7 +69,7 @@ public class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSy
 
 
 	@Test
-	public void testActionPerformedImpl_multipleLines_removeComment() {
+	void testActionPerformedImpl_multipleLines_removeComment() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
 			"//line 1\n//line 2\nline 3");
@@ -85,7 +85,7 @@ public class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSy
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaToggleCommentAction,
 			new RSyntaxTextAreaEditorKit.ToggleCommentAction().getMacroID());
 	}

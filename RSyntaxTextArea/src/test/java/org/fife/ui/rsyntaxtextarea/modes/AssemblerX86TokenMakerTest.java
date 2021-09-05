@@ -24,12 +24,12 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 	}
 
 
 	@AfterEach
-	public void tearDown() {
+	void tearDown() {
 	}
 
 
@@ -49,7 +49,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testPreprocessor() {
+	void testPreprocessor() {
 
 		String[] preprocessors = {
 				".186",
@@ -263,7 +263,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFunctions() {
+	void testFunctions() {
 
 		String[] functions = {
 				"DB",
@@ -288,7 +288,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testDataTypes() {
+	void testDataTypes() {
 
 		String[] dataTypes = {
 				"BYTE",
@@ -311,7 +311,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testRegisters() {
+	void testRegisters() {
 
 		String[] registers = {
 				"AL",
@@ -393,7 +393,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testP3Instructions() {
+	void testP3Instructions() {
 
 		String[] instructions = {
 				"AAA",
@@ -858,7 +858,7 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testComments() {
+	void testComments() {
 		String[] comments = {
 				"; This is a comment",
 		};

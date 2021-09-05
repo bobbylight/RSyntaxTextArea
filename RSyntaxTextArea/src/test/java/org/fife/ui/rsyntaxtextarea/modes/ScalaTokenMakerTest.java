@@ -31,7 +31,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testCharLiterals() {
+	void testCharLiterals() {
 		String[] chars = {
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
@@ -43,7 +43,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments() {
+	void testEolComments() {
 		String[] eolCommentLiterals = {
 			"// Hello world",
 		};
@@ -52,7 +52,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testEolComments_URL() {
+	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world http://www.sas.com",
@@ -77,7 +77,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testFloatingPointLiterals() {
+	void testFloatingPointLiterals() {
 
 		String code =
 			// Basic doubles
@@ -128,7 +128,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHexLiterals() {
+	void testHexLiterals() {
 		String[] hexLiterals = {
 				"0x1", "0xfe", "0x333333", "0xFE"
 		};
@@ -137,7 +137,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testKeywords() {
+	void testKeywords() {
 		String[] keywords = {
 				"abstract",
 				"case",
@@ -185,7 +185,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments() {
+	void testMultiLineComments() {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
@@ -196,7 +196,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMultiLineComments_URL() {
+	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
 			"/* Hello world http://www.sas.com */",
@@ -225,7 +225,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testSeparators() {
+	void testSeparators() {
 
 		String code = "( ) [ ] { }";
 
@@ -253,7 +253,7 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testStringLiterals() {
+	void testStringLiterals() {
 		String[] stringLiterals = {
 			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
 		};

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SearchEngineTest {
+class SearchEngineTest {
 
 	private RSyntaxTextArea textArea = new RSyntaxTextArea();
 
@@ -97,7 +97,7 @@ public class SearchEngineTest {
 
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		// setUp() is called once per test, each with a new instantiation of
 		// SearchEngineTest, so check a static variable to ensure that
@@ -130,7 +130,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.find()</code> when searching backward.
 	 */
 	@Test
-	public void testSearchEngineFindBackward() {
+	void testSearchEngineFindBackward() {
 		testSearchEngineFindBackwardImpl(true);
 		testSearchEngineFindBackwardImpl(false);
 	}
@@ -296,7 +296,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.find()</code> when searching forward.
 	 */
 	@Test
-	public void testSearchEngineFindForward() {
+	void testSearchEngineFindForward() {
 		testSearchEngineFindForwardImpl(true);
 		testSearchEngineFindForwardImpl(false);
 	}
@@ -457,7 +457,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.find()</code> when searching with wrap.
 	 */
 	@Test
-	public void testSearchEngineFindWrap() {
+	void testSearchEngineFindWrap() {
 		testSearchEngineWrapImpl();
 	}
 
@@ -514,7 +514,7 @@ public class SearchEngineTest {
 	 * https://github.com/bobbylight/RSyntaxTextArea/issues/38
 	 */
 	@Test
-	public void testSearchEngineRegexFindEmptyString() throws Exception {
+	void testSearchEngineRegexFindEmptyString() {
 
 		textArea.setText("how the who for what is it howhow");
 
@@ -539,7 +539,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.markAll()</code>.
 	 */
 	@Test
-	public void testSearchEngineMarkAll() {
+	void testSearchEngineMarkAll() {
 
 		textArea.setText(text);
 
@@ -808,7 +808,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replace()</code> when searching backward.
 	 */
 	@Test
-	public void testSearchEngineReplaceBackward() {
+	void testSearchEngineReplaceBackward() {
 		testSearchEngineReplace(false);
 	}
 
@@ -817,13 +817,13 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replace()</code> when searching forward.
 	 */
 	@Test
-	public void testSearchEngineReplaceForward() {
+	void testSearchEngineReplaceForward() {
 		testSearchEngineReplace(true);
 	}
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches() {
+	void testSearchEngineReplaceAll_zeroLengthMatches() {
 
 		textArea.setText("one two three");
 
@@ -838,7 +838,7 @@ public class SearchEngineTest {
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches_emptyText() {
+	void testSearchEngineReplaceAll_zeroLengthMatches_emptyText() {
 
 		textArea.setText("");
 
@@ -853,7 +853,7 @@ public class SearchEngineTest {
 
 
 	@Test
-	public void testSearchEngineReplaceAll_zeroLengthMatches_multiMatch() {
+	void testSearchEngineReplaceAll_zeroLengthMatches_multiMatch() {
 
 		textArea.setText("a\nba\n\na");
 
@@ -871,7 +871,7 @@ public class SearchEngineTest {
 	 * Tests <code>SearchEngine.replaceAll()</code>.
 	 */
 	@Test
-	public void testSearchEngineReplaceAll() {
+	void testSearchEngineReplaceAll() {
 
 		SearchContext context = new SearchContext();
 		context.setReplaceWith("FOOBAR");
@@ -969,7 +969,7 @@ public class SearchEngineTest {
 	 * has captured groups.
 	 */
 	@Test
-	public void testSearchEngineRegexReplaceAllWithCapturedGroups() {
+	void testSearchEngineRegexReplaceAllWithCapturedGroups() {
 
 		SearchContext context = new SearchContext();
 		context.setRegularExpression(true);

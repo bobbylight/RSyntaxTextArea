@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_decreaseIndent() {
+	void testActionPerformedImpl_decreaseIndent() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -55,7 +55,7 @@ public class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRS
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.DecreaseIndentAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction, a.getMacroID());
 	}

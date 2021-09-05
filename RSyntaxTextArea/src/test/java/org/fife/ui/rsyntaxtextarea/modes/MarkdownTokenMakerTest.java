@@ -29,7 +29,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetCurlyBracesDenoteCodeBlocks() {
+	void testGetCurlyBracesDenoteCodeBlocks() {
 		Assertions.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
 	}
 
@@ -42,7 +42,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownHeaders() {
+	void testMarkdownHeaders() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"# Heading 1",
 			"## Heading 2",
@@ -52,7 +52,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownSyntaxHighlightingStarting_noLanguageSpecified() {
+	void testMarkdownSyntaxHighlightingStarting_noLanguageSpecified() {
 		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
 			"```",
 			"``` This is a block paragraph on a single line ```"
@@ -61,7 +61,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownSyntaxHighlightingStarting_languageSpecified() {
+	void testMarkdownSyntaxHighlightingStarting_languageSpecified() {
 
 		TokenMaker tm = createTokenMaker();
 		Token t = tm.getTokenList(createSegment("```javascript"), TokenTypes.NULL, 0);
@@ -73,19 +73,19 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownUnorderedListItem_minus() {
+	void testMarkdownUnorderedListItem_minus() {
 		testMarkdownUnorderedListItemImpl("- ");
 	}
 
 
 	@Test
-	public void testMarkdownUnorderedListItem_star() {
+	void testMarkdownUnorderedListItem_star() {
 		testMarkdownUnorderedListItemImpl("* ");
 	}
 
 
 	@Test
-	public void testMarkdownUnorderedListItem_plus() {
+	void testMarkdownUnorderedListItem_plus() {
 		testMarkdownUnorderedListItemImpl("+ ");
 	}
 
@@ -102,13 +102,13 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownOrderedListItem_singleDigit() {
+	void testMarkdownOrderedListItem_singleDigit() {
 		testMarkdownOrderedListItemImpl("1. ");
 	}
 
 
 	@Test
-	public void testMarkdownOrderedListItem_multipleDigits() {
+	void testMarkdownOrderedListItem_multipleDigits() {
 		testMarkdownOrderedListItemImpl("572. ");
 	}
 
@@ -127,7 +127,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownBoldItalic() {
+	void testMarkdownBoldItalic() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"***",
 			"***word***",
@@ -140,7 +140,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownBold() {
+	void testMarkdownBold() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
 			"**",
 			"**word**",
@@ -153,7 +153,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownItalic() {
+	void testMarkdownItalic() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			"*",
 			"*word*",
@@ -166,7 +166,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownStrikethrough() {
+	void testMarkdownStrikethrough() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"~~",
 			"~~word~~",
@@ -176,7 +176,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownOperators() {
+	void testMarkdownOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"~"
 		);
@@ -184,7 +184,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownBlockQuote_beginningOfLine() {
+	void testMarkdownBlockQuote_beginningOfLine() {
 
 		TokenMaker tm = createTokenMaker();
 
@@ -195,7 +195,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownBlockQuote_firstNonWhitespaceToken() {
+	void testMarkdownBlockQuote_firstNonWhitespaceToken() {
 
 		TokenMaker tm = createTokenMaker();
 
@@ -209,7 +209,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownBlockQuote_badSinceNotFirstNonWhitespaceToken() {
+	void testMarkdownBlockQuote_badSinceNotFirstNonWhitespaceToken() {
 
 		TokenMaker tm = createTokenMaker();
 
@@ -233,13 +233,13 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownUrl() {
+	void testMarkdownUrl() {
 		testMarkdownImageOrUrlImpl("[test label](https://google.com)");
 	}
 
 
 	@Test
-	public void testMarkdownImage() {
+	void testMarkdownImage() {
 		testMarkdownImageOrUrlImpl("![test label](https://google.com)");
 	}
 
@@ -256,7 +256,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownShorthandUrl() {
+	void testMarkdownShorthandUrl() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"<https://google.com>",
 			"<www.google.com>",
@@ -266,7 +266,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownEmailAddress() {
+	void testMarkdownEmailAddress() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"<fake.address@google.com>"
 		);
@@ -274,7 +274,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownHr_happyPath() {
+	void testMarkdownHr_happyPath() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			"---"
 		);
@@ -282,7 +282,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownHr_error_wordAdjacentToToken() {
+	void testMarkdownHr_error_wordAdjacentToToken() {
 
 		TokenMaker tm = createTokenMaker();
 		String code = "---test";
@@ -295,7 +295,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownHr_error_firstButNotAloneOnLine() {
+	void testMarkdownHr_error_firstButNotAloneOnLine() {
 
 		TokenMaker tm = createTokenMaker();
 		String code = "--- test";
@@ -310,7 +310,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testMarkdownHr_error_notFirstOnLine() {
+	void testMarkdownHr_error_notFirstOnLine() {
 
 		TokenMaker tm = createTokenMaker();
 		String code = "test ---";
@@ -325,7 +325,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_tagWithAttributes() {
+	void testHtml_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = createSegment(code);
@@ -358,7 +358,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_closedTag() {
+	void testHtml_happyPath_closedTag() {
 
 		String code = "<img src='foo.png'/>";
 		Segment segment = createSegment(code);
@@ -383,7 +383,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_happyPath_closingTag() {
+	void testHtml_happyPath_closingTag() {
 
 		String code = "</body>";
 		Segment segment = createSegment(code);
@@ -399,7 +399,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_allowedTagNames() {
+	void testHtml_allowedTagNames() {
 
 		String[] tagNames = {
 			"a", "abbr", "acronym", "address", "applet", "area", "article",
@@ -445,7 +445,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testHtml_loneIdentifier() {
+	void testHtml_loneIdentifier() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			"foo",
 			"123"

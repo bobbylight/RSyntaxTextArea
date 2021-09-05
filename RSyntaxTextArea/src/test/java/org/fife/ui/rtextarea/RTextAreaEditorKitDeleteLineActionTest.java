@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RTextAreaEditorKitDeleteLineActionTest {
+class RTextAreaEditorKitDeleteLineActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_notEditable() {
+	void testActionPerformedImpl_notEditable() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -37,7 +37,7 @@ public class RTextAreaEditorKitDeleteLineActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_noSelection() {
+	void testActionPerformedImpl_noSelection() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
@@ -50,7 +50,7 @@ public class RTextAreaEditorKitDeleteLineActionTest {
 
 
 	@Test
-	public void testActionPerformedImpl_selectionWithNoCharsSelectedOnLastLine() {
+	void testActionPerformedImpl_selectionWithNoCharsSelectedOnLastLine() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('1'));
@@ -64,7 +64,7 @@ public class RTextAreaEditorKitDeleteLineActionTest {
 
 
 	@Test
-	public void testGetMacroID() {
+	void testGetMacroID() {
 		Assertions.assertEquals(RTextAreaEditorKit.rtaDeleteLineAction,
 			new RTextAreaEditorKit.DeleteLineAction().getMacroID());
 	}

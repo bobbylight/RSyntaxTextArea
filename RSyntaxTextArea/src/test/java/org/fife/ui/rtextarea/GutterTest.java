@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class GutterTest {
+class GutterTest {
 
 	private static final String PLAIN_TEXT = "Line 1\n"
 			+ "Line 2\n"
@@ -33,7 +33,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddLineTrackingIcon_2Arg_Valid() throws Exception {
+	void testAddLineTrackingIcon_2Arg_Valid() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -53,7 +53,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddLineTrackingIcon_2Arg_Invalid() {
+	void testAddLineTrackingIcon_2Arg_Invalid() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 			RTextArea textArea = new RTextArea(PLAIN_TEXT);
@@ -66,7 +66,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddLineTrackingIcon_3Arg_Valid() throws Exception {
+	void testAddLineTrackingIcon_3Arg_Valid() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -87,7 +87,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddLineTrackingIcon_3Arg_Invalid() {
+	void testAddLineTrackingIcon_3Arg_Invalid() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 			RTextArea textArea = new RTextArea(PLAIN_TEXT);
@@ -101,7 +101,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddOffsetTrackingIcon_2Arg_Valid() throws Exception {
+	void testAddOffsetTrackingIcon_2Arg_Valid() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -119,7 +119,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddOffsetTrackingIcon_2Arg_Invalid() {
+	void testAddOffsetTrackingIcon_2Arg_Invalid() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 			RTextArea textArea = new RTextArea(PLAIN_TEXT);
@@ -132,7 +132,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddOffsetTrackingIcon_3Arg_Valid() throws Exception {
+	void testAddOffsetTrackingIcon_3Arg_Valid() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -151,7 +151,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testAddOffsetTrackingIcon_3Arg_Invalid() {
+	void testAddOffsetTrackingIcon_3Arg_Invalid() {
 
 		Assertions.assertThrows(BadLocationException.class, () -> {
 
@@ -166,7 +166,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetActiveLineRangeColor() {
+	void testGetActiveLineRangeColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -183,7 +183,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetBookmarkIcon() {
+	void testGetBookmarkIcon() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -197,7 +197,7 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_EmptyArray() {
+	void getBookmarks_EmptyArray() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -207,7 +207,7 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_SomeBookmarks() throws Exception {
+	void getBookmarks_SomeBookmarks() throws Exception {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);
@@ -219,7 +219,7 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_SomeBookmarks_BookmarkingDisabled() {
+	void getBookmarks_SomeBookmarks_BookmarkingDisabled() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		Assertions.assertEquals(0, gutter.getBookmarks().length); // Non-null
@@ -227,7 +227,7 @@ public class GutterTest {
 
 
 	@Test
-	public void getBookmarks_SomeBookmarks_NoIcon() {
+	void getBookmarks_SomeBookmarks_NoIcon() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);
@@ -237,7 +237,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetBorderColor() {
+	void testGetBorderColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -254,7 +254,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetFoldBackground() {
+	void testGetFoldBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -271,7 +271,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetFoldIndicatorForeground() {
+	void testGetFoldIndicatorForeground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -293,7 +293,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetIconRowHeaderInheritsGutterBackground() {
+	void testGetIconRowHeaderInheritsGutterBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -306,7 +306,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetLineNumberColor() {
+	void testGetLineNumberColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -323,7 +323,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetLineNumberFont() {
+	void testGetLineNumberFont() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -340,7 +340,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetLineNumberStartIndex() {
+	void testGetLineNumberStartIndex() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -353,7 +353,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetLineNumbersEnabled() {
+	void testGetLineNumbersEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -366,7 +366,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetSetSpacingBetweenLineNumbersAndFoldIndicator() {
+	void testGetSetSpacingBetweenLineNumbersAndFoldIndicator() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -378,7 +378,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetSetShowCollapsedRegionToolTips() {
+	void testGetSetShowCollapsedRegionToolTips() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -391,7 +391,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testGetTrackingIcons_EmptyArray() throws Exception {
+	void testGetTrackingIcons_EmptyArray() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -404,7 +404,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testIsFoldIndicatorEnabled() {
+	void testIsFoldIndicatorEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -417,7 +417,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testIsBookmarkingEnabled() {
+	void testIsBookmarkingEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -430,7 +430,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testIsIconRowHeaderEnabled() {
+	void testIsIconRowHeaderEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -443,7 +443,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testRemoveAllTrackingIcons_Simple() throws Exception {
+	void testRemoveAllTrackingIcons_Simple() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -460,7 +460,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testRemoveTrackingIcon_Simple() throws Exception {
+	void testRemoveTrackingIcon_Simple() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -477,7 +477,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetActiveLineRangeColor() {
+	void testSetActiveLineRangeColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -494,7 +494,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetBookmarkIcon() {
+	void testSetBookmarkIcon() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -508,7 +508,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetBorderColor() {
+	void testSetBorderColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -526,20 +526,20 @@ public class GutterTest {
 
 	@Test
 	@Disabled("Not yet implemented")
-	public void testSetComponentOrientation() {
+	void testSetComponentOrientation() {
 
 	}
 
 
 	@Test
 	@Disabled("Not yet implemented")
-	public void testSetFoldIcons() {
+	void testSetFoldIcons() {
 
 	}
 
 
 	@Test
-	public void testSetFoldBackground() {
+	void testSetFoldBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -561,7 +561,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetIconRowHeaderInheritsGutterBackground() {
+	void testSetIconRowHeaderInheritsGutterBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -574,7 +574,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetLineNumberColor() {
+	void testSetLineNumberColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -591,7 +591,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetLineNumberFont() {
+	void testSetLineNumberFont() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -608,7 +608,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetLineNumberFont_NullArg() {
+	void testSetLineNumberFont_NullArg() {
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			RTextArea textArea = new RTextArea(PLAIN_TEXT);
 			Gutter gutter = new Gutter(textArea);
@@ -618,7 +618,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetLineNumberStartIndex() {
+	void testSetLineNumberStartIndex() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -631,7 +631,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetLineNumbersEnabled() {
+	void testSetLineNumbersEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -644,7 +644,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetTrackingIcons_EmptyArray() throws Exception {
+	void testSetTrackingIcons_EmptyArray() throws Exception {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -657,7 +657,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetFoldIcons_Simple() {
+	void testSetFoldIcons_Simple() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		Icon collapsedIcon = new EmptyTestIcon();
@@ -668,7 +668,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetFoldIndicatorEnabled() {
+	void testSetFoldIndicatorEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -684,7 +684,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetBookmarkingEnabled() {
+	void testSetBookmarkingEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -697,7 +697,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testSetIconRowHeaderEnabled() {
+	void testSetIconRowHeaderEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -713,7 +713,7 @@ public class GutterTest {
 
 
 	@Test
-	public void testToggleBookmark() throws Exception {
+	void testToggleBookmark() throws Exception {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 		gutter.setBookmarkingEnabled(true);

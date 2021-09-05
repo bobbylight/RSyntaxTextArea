@@ -18,10 +18,10 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CurlyFoldParserTest {
+class CurlyFoldParserTest {
 
 	@Test
-	public void testGetFolds_notJava_happyPath() {
+	void testGetFolds_notJava_happyPath() {
 
 		String code = "void foo() {\n" +
 			"  /* This is a\n" +
@@ -64,7 +64,7 @@ public class CurlyFoldParserTest {
 
 
 	@Test
-	public void testGetSetFoldableMultiLineComments() {
+	void testGetSetFoldableMultiLineComments() {
 		CurlyFoldParser parser = new CurlyFoldParser();
 		Assertions.assertTrue(parser.getFoldableMultiLineComments());
 		parser.setFoldableMultiLineComments(false);

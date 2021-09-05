@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-public class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	public void testActionPerformedImpl_closeCurlyBrace() {
+	void testActionPerformedImpl_closeCurlyBrace() {
 
 		RSyntaxTextArea textArea = createTextArea();
 
@@ -41,7 +41,7 @@ public class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTex
 	}
 
 	@Test
-	public void testGetMacroId() {
+	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CloseCurlyBraceAction a = new RSyntaxTextAreaEditorKit.CloseCurlyBraceAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction, a.getMacroID());
 	}
