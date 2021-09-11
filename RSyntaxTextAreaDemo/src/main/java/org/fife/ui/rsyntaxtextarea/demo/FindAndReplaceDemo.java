@@ -71,7 +71,7 @@ public final class FindAndReplaceDemo extends JFrame implements ActionListener {
 		});
 
 		// Make Ctrl+F/Cmd+F focus the search field
-		int defaultMod = Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask();
+		int defaultMod = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		im = textArea.getInputMap();
 		am = textArea.getActionMap();
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, defaultMod), "doSearch");
