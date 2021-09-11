@@ -19,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
  * <code>RTextArea</code>/<code>RSyntaxTextArea</code>.
@@ -108,14 +113,11 @@ class SearchEngineTest {
 			StringBuilder sb = new StringBuilder();
 			InputStream in = SearchEngineTest.class.
 					getResourceAsStream("SearchEngineTest.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String s = null;
-			try {
-				while ((s=br.readLine())!=null) {
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+				String s;
+				while ((s = br.readLine()) != null) {
 					sb.append(s).append("\n");
 				}
-			} finally {
-				br.close();
 			}
 
 			// Strip off last newline
@@ -963,6 +965,89 @@ class SearchEngineTest {
 
 	}
 
+
+	/**
+	 * Verifies that the "wrap" flag is enabled when doing a "replace all"
+	 * operation.  This needs to be done to avoid infinite loops, and is
+	 * OK since the entire document is scanned anyway.
+	 */
+	@Test
+	void testSearchEngineReplaceAll_ignoreWrapFlag_noRegex() {
+
+		// If the wrap flag wasn't ignored here, we'd have an
+		// infinite loop since the searched-for text is a
+		// substring of the replacement text.
+		SearchContext context = new SearchContext();
+		context.setSearchWrap(true);
+		context.setSearchFor("o");
+		context.setReplaceWith("oo");
+
+		textArea.setText(text);
+		textArea.setCaretPosition(20); // Somewhere in the middle
+		int count = replaceAllImpl(context);
+		assertEquals(11, count);
+
+	}
+
+
+	/**
+	 * Verifies that the "wrap" flag is enabled when doing a "replace all"
+	 * operation.  This needs to be done to avoid infinite loops, and is
+	 * OK since the entire document is scanned anyway.
+	 */
+	@Test
+	void testSearchEngineReplaceAll_ignoreWrapFlag_regex() {
+
+		// If the wrap flag wasn't ignored here, we'd have an
+		// infinite loop since the searched-for text is a
+		// substring of the replacement text.
+		SearchContext context = new SearchContext();
+		context.setSearchWrap(true);
+		context.setRegularExpression(true);
+		context.setSearchFor("[ou]");
+		context.setReplaceWith("oo");
+
+		textArea.setText(text);
+		textArea.setCaretPosition(20); // Somewhere in the middle
+		int count = replaceAllImpl(context);
+		assertEquals(18, count);
+
+	}
+
+
+	@Test
+	void testSearchEngineReplaceAll_documentFilterBlocksReplacement() {
+
+		SearchContext context = new SearchContext();
+		context.setSearchWrap(true);
+		context.setSearchFor("o");
+		context.setReplaceWith("X");
+
+		// "o" chars to replace are everywhere - before and after
+		// the caret, and inside and outside of the range protected
+		// by a DocumentFilter.
+		textArea.setText(text);
+		textArea.setCaretPosition(20); // Somewhere in the middle
+		((AbstractDocument)textArea.getDocument()).setDocumentFilter(new DocumentFilter() {
+			@Override
+			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+				throws BadLocationException {
+				if (offset >= 30) {
+					super.replace(fb, offset, length, text, attrs);
+				}
+			}
+		});
+
+		// Note that our count is wrong here - it's the count of matches, not
+		// replacements.  But there's no way for SearchEngine to know that
+		// a DocumentFilter forbade some of the replacements.
+		int count = replaceAllImpl(context);
+		assertEquals(11, count);
+
+		// Note only chars >= offset 30 are updated
+		String expected = "How much wood wOuld a woodChuck chUck, if a wXXdchuck cXuld chuck wXXd?";
+		assertEquals(expected, textArea.getText());
+	}
 
 	/**
 	 * Tests <code>SearchEngine.replaceAll()</code> when the replacement string

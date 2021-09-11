@@ -996,6 +996,15 @@ public final class SearchEngine {
 			context.setMarkAll(false);
 		}
 
+		// We also don't want to enable wrapping, since that can lead to
+		// infinite loops when replacing content e.g. replace "foo" with
+		// "foobar".  This is OK to do since the Replace All always scans
+		// the entire document.
+		if (context.getSearchWrap()) {
+			context = context.clone();
+			context.setSearchWrap(false);
+		}
+
 		SearchResult lastFound = null;
 		int count = 0;
 		textArea.beginAtomicEdit();
