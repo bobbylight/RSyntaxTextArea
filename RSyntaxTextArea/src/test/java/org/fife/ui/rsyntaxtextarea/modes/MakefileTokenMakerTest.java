@@ -29,31 +29,50 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testBacktickLiterals() {
-		String[] chars = {
-				"`a`", "`foobar`",
-		};
-		assertAllTokensOfType(chars, TokenTypes.LITERAL_BACKQUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			"`a`",
+			"`foobar`"
+		);
 	}
 
 
 	@Test
 	void testCharLiterals() {
-		String[] chars = {
-			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
-			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
-			"'\\11'", "'\\22'", "'\\33'",
-			"'\\1'",
-		};
-		assertAllTokensOfType(chars, TokenTypes.LITERAL_CHAR);
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'a'",
+			"'\\b'",
+			"'\\t'",
+			"'\\r'",
+			"'\\f'",
+			"'\\n'",
+			"'\\u00fe'",
+			"'\\u00FE'",
+			"'\\111'",
+			"'\\222'",
+			"'\\333'",
+			"'\\11'",
+			"'\\22'",
+			"'\\33'",
+			"'\\1'"
+		);
+	}
+
+
+	@Test
+	void testCharLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			"'a",
+			"'another unclosed char literal",
+			"'unclosed with \\' an escaped single quote"
+		);
 	}
 
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"# Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"# Hello world"
+		);
 	}
 
 
@@ -67,56 +86,101 @@ public class MakefileTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"clean",
+			"build",
+			"build.all",
+			"build-all",
+			"build_all"
+		);
+	}
+
+
+	@Test
 	void testIntegerLiterals() {
-		String[] intLiterals = {
-				"0", "42", "77777",
-		};
-		assertAllTokensOfType(intLiterals, TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"42",
+			"77777"
+		);
 	}
 
 
 	@Test
 	void testKeywords() {
-		String[] keywords = {
-				"addprefix",
-				"addsuffix",
-				"basename",
-				"dir",
-				"filter",
-				"filter-out",
-				"findstring",
-				"firstword",
-				"foreach",
-				"join",
-				"notdir",
-				"origin",
-				"pathsubst",
-				"shell",
-				"sort",
-				"strip",
-				"suffix",
-				"wildcard",
-				"word",
-				"words",
-				"ifeq",
-				"ifneq",
-				"else",
-				"endif",
-				"define",
-				"endef",
-				"ifdef",
-				"ifndef",
-		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			"addprefix",
+			"addsuffix",
+			"basename",
+			"dir",
+			"filter",
+			"filter-out",
+			"findstring",
+			"firstword",
+			"foreach",
+			"join",
+			"notdir",
+			"origin",
+			"pathsubst",
+			"shell",
+			"sort",
+			"strip",
+			"suffix",
+			"wildcard",
+			"word",
+			"words",
+			"ifeq",
+			"ifneq",
+			"else",
+			"endif",
+			"define",
+			"endef",
+			"ifdef",
+			"ifndef"
+		);
 	}
 
 
 	@Test
+	void testLabels() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"clean:",
+			"build:",
+			"build.all:",
+			"build-all:",
+			"build_all:"
+		);
+	}
+
+
+	@Test
+	void testOperators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			"=",
+			":=",
+			"+=",
+			"?="
+		);
+	}
+
+	@Test
 	void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"\\\"\""
+		);
+	}
+
+
+	@Test
+	void testStringLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"unclosed string literal",
+			"\"unclosed \\\" with an escaped double quote"
+		);
 	}
 
 

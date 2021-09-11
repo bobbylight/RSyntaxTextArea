@@ -210,7 +210,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 Letter					= [A-Za-z]
 Digit					= [0-9]
-IdentifierStart			= ({Letter}|[_\.])
+IdentifierStart			= ({Letter}|[_\-\.])
 IdentifierPart			= ({IdentifierStart}|{Digit})
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
 Label					= ({Identifier}":")

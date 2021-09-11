@@ -79,6 +79,7 @@ abstract class AbstractTokenMakerTest2 extends AbstractTokenMakerTest {
 			Token t = tm.getTokenList(segment, initialTokenType, 0);
 			Assertions.assertEquals(expectedType, t.getType(),
 				"Token has unexpected type: orig=" + token + ", actual=" + t);
+			Assertions.assertFalse(t.getNextToken().isPaintable()); // null token
 		}
 
 	}
