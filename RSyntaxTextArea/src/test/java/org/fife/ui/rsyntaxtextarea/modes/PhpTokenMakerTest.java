@@ -1502,6 +1502,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testCss_lessLineComment_noLess() {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			CSS_PREV_TOKEN_TYPE,
+			false,
 			"//"
 		);
 	}
@@ -1599,8 +1600,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 			"foo",
 			"_",
 			"*_",
-			"foo9",
-			"foo9:bar"
+			"foo9"
 		);
 	}
 
@@ -1637,6 +1637,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testCss_propertyBlock_value_function() {
 		assertAllTokensOfType(TokenTypes.FUNCTION,
 			CSS_VALUE_PREV_TOKEN_TYPE,
+			false,
 			"func("
 		);
 	}
@@ -1815,7 +1816,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testCss_pseudoClass_unknown() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
 			CSS_PREV_TOKEN_TYPE,
-			":xxxyzz"
+			":"
 		);
 	}
 

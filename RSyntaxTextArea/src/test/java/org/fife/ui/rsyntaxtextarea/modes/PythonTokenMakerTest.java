@@ -125,11 +125,15 @@ public class PythonTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testLongStrings() {
 
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.NULL,
+			false,
 			"\"\"\"long string\"\"\"",
 			"\"\"\"long \"embedded quotes\" string\"\"\""
 		);
 
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.NULL,
+			false,
 			"'''long string'''",
 			"'''long 'embedded quotes' string '''"
 		);

@@ -570,6 +570,7 @@ public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testDocComments_markup() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			TokenTypes.COMMENT_DOCUMENTATION,
+			false,
 			"<code>",
 			"</code>");
 	}

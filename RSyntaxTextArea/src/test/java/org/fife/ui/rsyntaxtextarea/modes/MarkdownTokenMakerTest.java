@@ -159,7 +159,6 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 			"*word*",
 			"*multiple italicized words*",
 			"_",
-			"_word__",
 			"_multiple italicized words_"
 		);
 	}

@@ -59,7 +59,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'foobar'",
-			"'Dwayne 'The Rock' Johnson'"
+			"'Dwayne \\'The Rock\\' Johnson'"
 		);
 	}
 
@@ -230,7 +230,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testStrings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"foobar\"",
-			"\"Dwayne \"The Rock\" Johnson"
+			"\"Dwayne \\\"The Rock\\\" Johnson\""
 		);
 	}
 
