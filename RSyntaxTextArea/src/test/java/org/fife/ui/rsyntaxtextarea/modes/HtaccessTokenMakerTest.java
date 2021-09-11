@@ -32,10 +32,9 @@ public class HtaccessTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"# Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"# Hello world"
+		);
 	}
 
 
@@ -229,7 +228,7 @@ public class HtaccessTokenMakerTest extends AbstractTokenMakerTest2 {
 				"XBitHack",
 		};
 
-		assertAllTokensOfType(functions, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, functions);
 	}
 
 

@@ -32,10 +32,9 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"; Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"; Hello world"
+		);
 	}
 
 
@@ -258,7 +257,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 				"zero?",
 				"zipmap",
 		};
-		assertAllTokensOfType(functions, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, functions);
 	}
 
 
@@ -273,10 +272,9 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testHexLiterals() {
-		String[] hexLiterals = {
-				"0x1", "0xfe", "0x333333", "0xFE"
-		};
-		assertAllTokensOfType(hexLiterals, TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
+			"0x1", "0xfe", "0x333333", "0xFE"
+		);
 	}
 
 
@@ -314,23 +312,24 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 				"when-let",
 				"when-not",
 		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD, keywords);
 	}
 
 
 	@Test
 	void testSeparators() {
-		String[] separators = { "(", ")" };
-		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")"
+		);
 	}
 
 
 	@Test
 	void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\""
+		);
 	}
 
 
@@ -367,7 +366,7 @@ public class ClojureTokenMakerTest extends AbstractTokenMakerTest2 {
 				"*unchecked-math*",
 				"*use-context-classloader*",
 		};
-		assertAllTokensOfType(variables, TokenTypes.VARIABLE);
+		assertAllTokensOfType(TokenTypes.VARIABLE, variables);
 	}
 
 

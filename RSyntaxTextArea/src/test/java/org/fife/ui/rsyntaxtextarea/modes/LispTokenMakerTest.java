@@ -32,10 +32,9 @@ public class LispTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"; Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"; Hello world"
+		);
 	}
 
 
@@ -117,10 +116,9 @@ public class LispTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testHexLiterals() {
-		String[] hexLiterals = {
-				"0x1", "0xfe", "0x333333", "0xFE"
-		};
-		assertAllTokensOfType(hexLiterals, TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
+			"0x1", "0xfe", "0x333333", "0xFE"
+		);
 	}
 
 
@@ -219,18 +217,15 @@ public class LispTokenMakerTest extends AbstractTokenMakerTest2 {
 				"with-slots",
 				"with-standard-io-syntax",
 		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD, keywords);
 	}
 
 
 	@Test
 	void testMultiLineComments() {
-
-		String[] mlcLiterals = {
-			"#| Hello world |#",
-		};
-
-		assertAllTokensOfType(mlcLiterals, TokenTypes.COMMENT_MULTILINE);
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"#| Hello world |#"
+		);
 	}
 
 
@@ -265,17 +260,18 @@ public class LispTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testSeparators() {
-		String[] separators = { "(", ")" };
-		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")"
+		);
 	}
 
 
 	@Test
 	void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\""
+	);
 	}
 
 

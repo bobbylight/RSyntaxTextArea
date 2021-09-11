@@ -261,7 +261,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"SuppressWarnings"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 
@@ -359,7 +359,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"Serial"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 
@@ -501,7 +501,7 @@ public class JavaTokenMakerTest extends AbstractTokenMakerTest2 {
 			"ServiceConfigurationError"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 

@@ -252,7 +252,7 @@ public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 			"SuppressWarnings"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 
@@ -350,7 +350,7 @@ public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 			"Serial"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 
@@ -492,7 +492,7 @@ public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 			"ServiceConfigurationError"
 		};
 
-		assertAllTokensOfType(classNames, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
 	}
 
 

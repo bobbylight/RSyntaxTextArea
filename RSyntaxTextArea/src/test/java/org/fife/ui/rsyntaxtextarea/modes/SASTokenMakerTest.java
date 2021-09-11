@@ -35,7 +35,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 			"'\\11'", "'\\22'", "'\\33'",
 			"'\\1'",
 		};
-		assertAllTokensOfType(chars, TokenTypes.LITERAL_CHAR);
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR, chars);
 	}
 
 
@@ -44,7 +44,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 		String[] eolCommentLiterals = {
 			"* Hello world",
 		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL, eolCommentLiterals);
 	}
 
 
@@ -283,7 +283,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 				"window",
 				"x",
 		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD, keywords);
 	}
 
 
@@ -345,7 +345,7 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 				"%window",
 		};
 
-		assertAllTokensOfType(macros, TokenTypes.FUNCTION);
+		assertAllTokensOfType(TokenTypes.FUNCTION, macros);
 	}
 
 
@@ -404,23 +404,25 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 				"univariate",
 		};
 
-		assertAllTokensOfType(procs, TokenTypes.DATA_TYPE);
+		assertAllTokensOfType(TokenTypes.DATA_TYPE, procs);
 	}
 
 
 	@Test
 	void testSeparators() {
-		String[] separators = { "(", ")" };
-		assertAllTokensOfType(separators, TokenTypes.SEPARATOR);
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")"
+		);
 	}
 
 
 	@Test
 	void testStringLiterals() {
 		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
+			"\"\"", "\"hi\"", "\"\\u00fe\"",
 		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, stringLiterals);
 	}
 
 

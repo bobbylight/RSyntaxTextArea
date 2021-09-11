@@ -32,22 +32,20 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testCharLiterals() {
-		String[] chars = {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
 			"'\\11'", "'\\22'", "'\\33'",
-			"'\\1'",
-		};
-		assertAllTokensOfType(chars, TokenTypes.LITERAL_CHAR);
+			"'\\1'"
+		);
 	}
 
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"// Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"// Hello world"
+		);
 	}
 
 
@@ -129,69 +127,64 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testHexLiterals() {
-		String[] hexLiterals = {
-				"0x1", "0xfe", "0x333333", "0xFE"
-		};
-		assertAllTokensOfType(hexLiterals, TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
+			"0x1", "0xfe", "0x333333", "0xFE"
+		);
 	}
 
 
 	@Test
 	void testKeywords() {
-		String[] keywords = {
-				"abstract",
-				"case",
-				"catch",
-				"class",
-				"def",
-				"do",
-				"else",
-				"extends",
-				"false",
-				"final",
-				"finally",
-				"for",
-				"forSome",
-				"if",
-				"implicit",
-				"import",
-				"lazy",
-				"match",
-				"new",
-				"null",
-				"object",
-				"override",
-				"package",
-				"private",
-				"protected",
-				"requires",
-				"return",
-				"sealed",
-				"super",
-				"this",
-				"throw",
-				"trait",
-				"try",
-				"true",
-				"type",
-				"val",
-				"var",
-				"while",
-				"with",
-				"yield",
-		};
-		assertAllTokensOfType(keywords, TokenTypes.RESERVED_WORD);
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			"abstract",
+			"case",
+			"catch",
+			"class",
+			"def",
+			"do",
+			"else",
+			"extends",
+			"false",
+			"final",
+			"finally",
+			"for",
+			"forSome",
+			"if",
+			"implicit",
+			"import",
+			"lazy",
+			"match",
+			"new",
+			"null",
+			"object",
+			"override",
+			"package",
+			"private",
+			"protected",
+			"requires",
+			"return",
+			"sealed",
+			"super",
+			"this",
+			"throw",
+			"trait",
+			"try",
+			"true",
+			"type",
+			"val",
+			"var",
+			"while",
+			"with",
+			"yield"
+		);
 	}
 
 
 	@Test
 	void testMultiLineComments() {
-
-		String[] mlcLiterals = {
-			"/* Hello world */",
-		};
-
-		assertAllTokensOfType(mlcLiterals, TokenTypes.COMMENT_MULTILINE);
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world */"
+		);
 	}
 
 
@@ -254,10 +247,9 @@ public class ScalaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\""
+		);
 	}
 
 

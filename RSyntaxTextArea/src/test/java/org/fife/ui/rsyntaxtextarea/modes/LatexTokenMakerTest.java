@@ -32,10 +32,9 @@ public class LatexTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"% Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"% Hello world"
+		);
 	}
 
 

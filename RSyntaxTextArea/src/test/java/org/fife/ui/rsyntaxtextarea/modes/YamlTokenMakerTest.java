@@ -32,10 +32,9 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"# Hello world",
-		};
-		assertAllTokensOfType(eolCommentLiterals, TokenTypes.COMMENT_EOL);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"# Hello world"
+		);
 	}
 
 
@@ -132,39 +131,34 @@ public class YamlTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testStringLiterals_doubleQuote() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"");
 	}
 
 
 	@Test
 	void testStringLiterals_doubleQuote_error() {
-		String[] stringLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"Hello world unterminated",
-			"\"Invalid escape \\uINVALID\"",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.ERROR_STRING_DOUBLE);
+			"\"Invalid escape \\uINVALID\""
+		);
 	}
 
 
 	@Test
 	void testStringLiterals_singleQuote() {
-		String[] stringLiterals = {
-			"''", "'hi'", "'\\u00fe'", "'\\\''",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.LITERAL_CHAR);
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"''", "'hi'", "'\\u00fe'", "'\\\''"
+		);
 	}
 
 
 	@Test
 	void testStringLiterals_singleQuote_error() {
-		String[] stringLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			"'Hello world unterminated",
-			"'Invalid escape \\uINVALID'",
-		};
-		assertAllTokensOfType(stringLiterals, TokenTypes.ERROR_CHAR);
+			"'Invalid escape \\uINVALID'"
+		);
 	}
 
 
