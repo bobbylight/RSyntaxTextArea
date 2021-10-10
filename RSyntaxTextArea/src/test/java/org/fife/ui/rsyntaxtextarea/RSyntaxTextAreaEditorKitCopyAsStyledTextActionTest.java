@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 
 
 /**
- * Unit tests for the {@link RSyntaxTextAreaEditorKit.CopyAsStyledTextAction} class.
+ * Unit tests for the {@link RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction} class.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -39,7 +39,7 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction();
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -49,8 +49,47 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 	}
 
 	@Test
+	void testActionPerformedImpl_cutAsStyledText() throws Exception {
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
+			"/*\n" +
+				"* comment\n" +
+				"*/\n" +
+				"public void foo() {\n" +
+				"  /* comment\n" +
+				"     two */\n" +
+				"}");
+
+		textArea.setCaretPosition(5);
+		textArea.moveCaretPosition(8);
+
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+
+		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
+			getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent);
+
+
+		String expected = 	"/*\n" +
+			"* ment\n" +
+			"*/\n" +
+			"public void foo() {\n" +
+			"  /* comment\n" +
+			"     two */\n" +
+			"}";
+
+		Assertions.assertEquals(expected, textArea.getText());
+	}
+
+	@Test
 	void testGetMacroId() {
-		RSyntaxTextAreaEditorKit.CopyAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction();
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
+
+		a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction, a.getMacroID());
+
 	}
 }
