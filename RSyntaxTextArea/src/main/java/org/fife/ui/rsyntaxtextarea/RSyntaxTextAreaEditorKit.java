@@ -77,6 +77,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaCollapseAllCommentFoldsAction = "RSTA.CollapseAllCommentFoldsAction";
 	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
 	public static final String rstaCopyAsStyledTextAction   = "RSTA.CopyAsStyledTextAction";
+	public static final String rstaCutAsStyledTextAction   = "RSTA.CutAsStyledTextAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
@@ -101,7 +102,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new ChangeFoldStateAction(rstaCollapseFoldAction, true),
 		new ChangeFoldStateAction(rstaExpandFoldAction, false),
 		new CollapseAllFoldsAction(),
-		new CopyAsStyledTextAction(),
+		new CopyCutAsStyledTextAction(false),
+		new CopyCutAsStyledTextAction(true),
 		//new DecreaseFontSizeAction(),
 		new DecreaseIndentAction(),
 		new DeletePrevWordAction(),
@@ -627,29 +629,48 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Action for copying text as styled text.
 	 */
-	public static class CopyAsStyledTextAction extends RecordableTextAction {
+	public static class CopyCutAsStyledTextAction extends RecordableTextAction {
 
 		private Theme theme;
+		private boolean cutAction = false;
 
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 2L;
 
-		public CopyAsStyledTextAction() {
-			super(rstaCopyAsStyledTextAction);
+		private static String getActionName(boolean cutAction) {
+			return cutAction ? rstaCutAsStyledTextAction : rstaCopyAsStyledTextAction;
 		}
 
-		public CopyAsStyledTextAction(String themeName, Theme theme) {
-			super(rstaCopyAsStyledTextAction + "_" + themeName);
+		public CopyCutAsStyledTextAction(boolean cutAction) {
+			super(getActionName(cutAction));
+			this.cutAction = cutAction;
+		}
+
+		public CopyCutAsStyledTextAction(String themeName, Theme theme, boolean cutAction) {
+			super(getActionName(cutAction) + "_" + themeName);
 			this.theme = theme;
+			this.cutAction = cutAction;
+
 		}
 
-		public CopyAsStyledTextAction(String name, Icon icon, String desc,
-									  Integer mnemonic, KeyStroke accelerator) {
+		public CopyCutAsStyledTextAction(String name, Icon icon, String desc,
+										 Integer mnemonic, KeyStroke accelerator) {
 			super(name, icon, desc, mnemonic, accelerator);
 		}
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			((RSyntaxTextArea)textArea).copyAsStyledText(theme);
+			if (cutAction) {
+				int selStart = textArea.getSelectionStart();
+				int selEnd = textArea.getSelectionEnd();
+
+				try {
+					textArea.getDocument().remove(selStart, selEnd - selStart);
+				} catch (BadLocationException ex) {
+					System.err.println("Ups... That's not expected: " + ex);
+					ex.printStackTrace();
+				}
+			}
 			textArea.requestFocusInWindow();
 		}
 

@@ -56,6 +56,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
+import org.fife.ui.rtextarea.ClipboardHistory;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaUI;
 import org.fife.ui.rtextarea.RecordableTextAction;
@@ -681,6 +682,7 @@ private boolean fractionalFontMetricsEnabled;
 		Clipboard cb = getToolkit().getSystemClipboard();
 		try {
 			cb.setContents(contents, null);
+			ClipboardHistory.get().add(getSelectedText());
 		} catch (IllegalStateException ise) {
 			UIManager.getLookAndFeel().provideErrorFeedback(null);
 		}

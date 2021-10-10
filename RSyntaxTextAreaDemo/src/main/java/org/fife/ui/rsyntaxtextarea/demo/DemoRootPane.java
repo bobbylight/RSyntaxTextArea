@@ -82,7 +82,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 	private static Action createCopyAsStyledTextAction(String themeName) throws IOException {
 		String resource = "/org/fife/ui/rsyntaxtextarea/themes/" + themeName + ".xml";
 		Theme theme = Theme.load(DemoRootPane.class.getResourceAsStream(resource));
-		return new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction(themeName, theme);
+		return new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(themeName, theme, false);
 	}
 
 
@@ -203,7 +203,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		int ctrlShift = InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK;
 		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctrlShift), "copyAsStyledText");
-		am.put("copyAsStyledText", new RSyntaxTextAreaEditorKit.CopyAsStyledTextAction());
+		am.put("copyAsStyledText", new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false));
 
 		try {
 
