@@ -138,9 +138,9 @@ public final class HtmlUtil {
 			.append("font-family: \"").append(textArea.getFont().getFamily()).append("\", courier;");
 		if (textArea.getBackground() != null) { // May be null if it is an image
 			sb.append(" background: ")
-				.append(HtmlUtil.getHexString(textArea.getBackground()))
-				.append("'>");
+				.append(HtmlUtil.getHexString(textArea.getBackground()));
 		}
+		sb.append("'>");
 
 		Token token = textArea.getTokenListFor(start, end);
 		for (Token t = token; t != null; t = t.getNextToken()) {
