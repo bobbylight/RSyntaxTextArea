@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
 /**
@@ -110,6 +111,21 @@ class HtmlUtilTest {
 			"<span style=\"color: #000000;\">\\{</span><span style=\"color: #000000;\">}</span></pre>";
 
 		String actual = HtmlUtil.getTextAsHtml(textArea, 4, textArea.getDocument().getLength());
+		Assertions.assertTrue(actual.matches(expectedRegex));
+	}
+
+	@Test
+	void testGetTextAsHtml_backgroundImage() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA);
+		textArea.setText("package foo;\npublic class Foobar {}");
+
+		Image image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+		textArea.setBackgroundImage(image);
+		// We can't do an exact string comparison due to differing default fonts on different OS's
+		String expectedRegex = "<pre style='font-family: \"\\w+\", courier;'>.*" +
+			"<span style=\"color: #000000;\">ag</span></pre>";
+
+		String actual = HtmlUtil.getTextAsHtml(textArea, 4, 6);
 		Assertions.assertTrue(actual.matches(expectedRegex));
 	}
 }
