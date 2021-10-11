@@ -413,6 +413,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public RSyntaxTextArea(RSyntaxDocument doc, String text,int rows,int cols) {
 		super(doc, text, rows, cols);
+		setSyntaxEditingStyle(doc.getSyntaxStyle());
 	}
 
 
