@@ -443,8 +443,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						Token t = doc.getTokenListForLine(
 											rsta.getCaretLineNumber());
 						t = RSyntaxUtilities.getTokenAtOffset(t, dot-1);
-						if (t!=null && t.getType()==Token.MARKUP_TAG_DELIMITER) {
-							//System.out.println("Huzzah - closing tag!");
+						if (t!=null && t.getType()==Token.MARKUP_TAG_DELIMITER) { // Closing tag
 							String tagName = discoverTagName(doc, dot);
 							if (tagName!=null) {
 								rsta.replaceSelection(tagName + (char)(ch+2));
@@ -666,9 +665,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 				try {
 					textArea.getDocument().remove(selStart, selEnd - selStart);
-				} catch (BadLocationException ex) {
-					System.err.println("Ups... That's not expected: " + ex);
-					ex.printStackTrace();
+				} catch (BadLocationException ble) {
+					ble.printStackTrace();
+					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				}
 			}
 			textArea.requestFocusInWindow();
