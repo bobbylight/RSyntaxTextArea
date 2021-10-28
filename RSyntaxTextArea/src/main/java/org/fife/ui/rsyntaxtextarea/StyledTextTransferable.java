@@ -29,7 +29,7 @@ import java.io.StringReader;
 class StyledTextTransferable implements Transferable {
 
 	/**
-	 * The tranferred plain text
+	 * The transferred plain text.
 	 */
 	private String plain;
 
