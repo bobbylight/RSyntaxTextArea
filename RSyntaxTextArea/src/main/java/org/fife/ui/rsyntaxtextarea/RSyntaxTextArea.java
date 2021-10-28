@@ -677,13 +677,15 @@ private boolean fractionalFontMetricsEnabled;
 		// Get the selection as RTF
 		byte[] rtfBytes = getTextAsRtf(selStart, selEnd);
 
+		String plainText = getSelectedText();
+
 		// Set the system clipboard contents to the RTF selection.
-		StyledTextTransferable contents = new StyledTextTransferable(html, rtfBytes);
+		StyledTextTransferable contents = new StyledTextTransferable(plainText, html, rtfBytes);
 
 		Clipboard cb = getToolkit().getSystemClipboard();
 		try {
 			cb.setContents(contents, null);
-			ClipboardHistory.get().add(getSelectedText());
+			ClipboardHistory.get().add(plainText);
 		} catch (IllegalStateException ise) {
 			UIManager.getLookAndFeel().provideErrorFeedback(null);
 		}

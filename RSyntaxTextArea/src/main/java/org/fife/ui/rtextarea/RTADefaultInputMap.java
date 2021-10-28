@@ -89,20 +89,20 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN,shift),				RTextAreaEditorKit.rtaSelectionPageDownAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN,defaultModifier|shift),	RTextAreaEditorKit.rtaSelectionPageRightAction);
 
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_CUT,    0),					DefaultEditorKit.cutAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_COPY,   0),					DefaultEditorKit.copyAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_CUT,    0),					getCutAction());
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_COPY,   0),					getCopyAction());
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE,  0),					DefaultEditorKit.pasteAction);
 
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_X,      defaultModifier),			DefaultEditorKit.cutAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_C,      defaultModifier),			DefaultEditorKit.copyAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_X,      defaultModifier),			getCutAction());
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_C,      defaultModifier),			getCopyAction());
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_V,      defaultModifier),			DefaultEditorKit.pasteAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_V,      defaultModifier|shift),		RTextAreaEditorKit.clipboardHistoryAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),					DefaultEditorKit.deleteNextCharAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, shift),					DefaultEditorKit.cutAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, shift),					getCutAction());
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, defaultModifier),			RTextAreaEditorKit.rtaDeleteRestOfLineAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0),					RTextAreaEditorKit.rtaToggleTextModeAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, shift),					DefaultEditorKit.pasteAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, defaultModifier),			DefaultEditorKit.copyAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, defaultModifier),			getCopyAction());
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_A,      defaultModifier),			DefaultEditorKit.selectAllAction);
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_D,      defaultModifier),			RTextAreaEditorKit.rtaDeleteLineAction);
@@ -144,6 +144,14 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_M,      defaultModifier|shift),	RTextAreaEditorKit.rtaPlaybackLastMacroAction);
 		*/
 
+	}
+
+	protected String getCopyAction() {
+		return DefaultEditorKit.copyAction;
+	}
+
+	protected String getCutAction() {
+		return DefaultEditorKit.cutAction;
 	}
 
 }

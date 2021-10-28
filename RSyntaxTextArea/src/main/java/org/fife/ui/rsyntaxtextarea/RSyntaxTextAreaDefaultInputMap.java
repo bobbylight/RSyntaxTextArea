@@ -74,5 +74,12 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
 	}
 
+	protected String getCopyAction() {
+		return RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction;
+	}
+
+	protected String getCutAction() {
+		return RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction;
+	}
 
 }
