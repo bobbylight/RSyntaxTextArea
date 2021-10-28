@@ -134,13 +134,13 @@ public final class HtmlUtil {
 	public static String getTextAsHtml(RSyntaxTextArea textArea, int start, int end) {
 
 		// Create the selection as HTML
-		StringBuilder sb = new StringBuilder("<pre style='")
-			.append("font-family: \"").append(textArea.getFont().getFamily()).append("\", courier;");
+		StringBuilder sb = new StringBuilder("<pre style=\"")
+			.append("font-family: '").append(textArea.getFont().getFamily()).append("', courier;");
 		if (textArea.getBackground() != null) { // May be null if it is an image
 			sb.append(" background: ")
 				.append(HtmlUtil.getHexString(textArea.getBackground()));
 		}
-		sb.append("'>");
+		sb.append("\">");
 
 		Token token = textArea.getTokenListFor(start, end);
 		for (Token t = token; t != null; t = t.getNextToken()) {

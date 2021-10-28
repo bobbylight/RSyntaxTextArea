@@ -29,6 +29,11 @@ import java.io.StringReader;
 class StyledTextTransferable implements Transferable {
 
 	/**
+	 * The tranferred plain text
+	 */
+	private String plain;
+
+	/**
 	 * The transferred text, as HTML.
 	 */
 	private String html;
@@ -56,7 +61,8 @@ class StyledTextTransferable implements Transferable {
 	 * @param html The transferred text, as HTML.
 	 * @param rtfBytes The transferred text, as RTF bytes.
 	 */
-	StyledTextTransferable(String html, byte[] rtfBytes) {
+	StyledTextTransferable(String plain, String html, byte[] rtfBytes) {
+		this.plain = plain;
 		this.html = html;
 		this.rtfBytes = rtfBytes;
 	}
@@ -75,15 +81,11 @@ class StyledTextTransferable implements Transferable {
 		}
 
 		else if (flavor.equals(FLAVORS[2])) { // stringFlavor
-			return rtfBytes ==null ? "" : RtfToText.getPlainText(rtfBytes);
+			return plain;
 		}
 
 		else if (flavor.equals(FLAVORS[3])) { // plainTextFlavor (deprecated)
-			String text = ""; // Valid if data==null
-			if (rtfBytes !=null) {
-				text = RtfToText.getPlainText(rtfBytes);
-			}
-			return new StringReader(text);
+			return new StringReader(plain);
 		}
 
 		throw new UnsupportedFlavorException(flavor);

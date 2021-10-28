@@ -22,7 +22,7 @@ class StyledTextTransferableTest {
 	@Test
 	void testGetDataFlavors() {
 		byte[] rtfBytes = {};
-		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
+		StyledTextTransferable t = new StyledTextTransferable("", "foo", rtfBytes);
 		Assertions.assertEquals(4, t.getTransferDataFlavors().length);
 	}
 
@@ -30,7 +30,7 @@ class StyledTextTransferableTest {
 	@Test
 	void testIsDataFlavorSupported_true() {
 		byte[] rtfBytes = {};
-		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
+		StyledTextTransferable t = new StyledTextTransferable("", "foo", rtfBytes);
 		Assertions.assertTrue(t.isDataFlavorSupported(DataFlavor.fragmentHtmlFlavor));
 		Assertions.assertTrue(t.isDataFlavorSupported(new DataFlavor("text/rtf", "RTF")));
 		Assertions.assertTrue(t.isDataFlavorSupported(DataFlavor.stringFlavor));
@@ -40,7 +40,7 @@ class StyledTextTransferableTest {
 	@Test
 	void testIsDataFlavorSupported_false() {
 		byte[] rtfBytes = {};
-		StyledTextTransferable t = new StyledTextTransferable("foo", rtfBytes);
+		StyledTextTransferable t = new StyledTextTransferable("", "foo", rtfBytes);
 		Assertions.assertFalse(t.isDataFlavorSupported(DataFlavor.imageFlavor));
 	}
 }
