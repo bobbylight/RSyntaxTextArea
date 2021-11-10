@@ -401,7 +401,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 // HTML-specific stuff.
 Whitespace					= ([ \t\f]+)
 LineTerminator				= ([\n])
-Identifier					= ([^ \t\n<&*_`~]+)
+Identifier					= ([^ \t\n<&*`_~][^ \t\n<&*`~]*)
 EntityReference					= ([&][^; \t]*[;]?)
 InTagIdentifier				= ([^ \t\n\"\'/=>]+)
 

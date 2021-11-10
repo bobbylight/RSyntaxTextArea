@@ -324,6 +324,16 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	void testMarkdown_loneIdentifier() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"identifier_with_underscores",
+			"123"
+		);
+	}
+
+
+	@Test
 	void testHtml_happyPath_tagWithAttributes() {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
@@ -440,14 +450,5 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 			}
 
 		}
-	}
-
-
-	@Test
-	void testHtml_loneIdentifier() {
-		assertAllTokensOfType(TokenTypes.IDENTIFIER,
-			"foo",
-			"123"
-		);
 	}
 }
