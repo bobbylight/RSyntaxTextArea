@@ -2,6 +2,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
+import org.fife.ui.rsyntaxtextarea.HtmlOccurrenceMarker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
@@ -120,21 +121,28 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testCharLiterals() {
-
-		String[] chars = {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			PHPTokenMaker.INTERNAL_IN_PHP,
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
 			"'\\11'", "'\\22'", "'\\33'",
-			"'\\1'",
-		};
+			"'\\1'"
+		);
+	}
 
-		for (String code : chars) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_IN_PHP, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
-		}
 
+	@Test
+	void testCharLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			PHPTokenMaker.INTERNAL_IN_PHP_CHAR,
+			"rest of the string'");
+	}
+
+
+	@Test
+	void testCreateOccurrenceMarker() {
+		PHPTokenMaker tm = (PHPTokenMaker)createTokenMaker();
+		Assertions.assertTrue(tm.createOccurrenceMarker() instanceof HtmlOccurrenceMarker);
 	}
 
 
@@ -1142,6 +1150,19 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	void testGetSetCompleteClosingTags() {
+		try {
+			PHPTokenMaker tm = (PHPTokenMaker)createTokenMaker();
+			Assertions.assertFalse(tm.getCompleteCloseTags());
+			PHPTokenMaker.setCompleteCloseTags(true);
+			Assertions.assertTrue(tm.getCompleteCloseTags());
+		} finally {
+			PHPTokenMaker.setCompleteCloseTags(false);
+		}
+	}
+
+
+	@Test
 	void testKeywords() {
 
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD, PHPTokenMaker.INTERNAL_IN_PHP,
@@ -1249,18 +1270,20 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testMultiLineComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			PHPTokenMaker.INTERNAL_IN_PHP,
+			"/* Hello world */"
+		);
+	}
 
-		String[] mlcLiterals = {
-			"/* Hello world */",
-		};
 
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_IN_PHP, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+	@Test
+	void testMultiLineComments_continueFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			PHPTokenMaker.INTERNAL_IN_PHP_MLC,
+			"continued from another line",
+			"continued from another line and closed */"
+		);
 	}
 
 
@@ -1268,7 +1291,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
+			"/* Hello world https://www.sas.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -1282,7 +1305,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -1351,18 +1374,18 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			PHPTokenMaker.INTERNAL_IN_PHP,
+			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"");
 
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
+	}
 
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_IN_PHP, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
 
+	@Test
+	void testStringLiteral_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			PHPTokenMaker.INTERNAL_IN_PHP_STRING,
+			"rest of the string\"");
 	}
 
 

@@ -207,17 +207,17 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a PHP multiline comment.
 	 */
-	private static final int INTERNAL_IN_PHP_MLC				= -(5<<11);
+	static final int INTERNAL_IN_PHP_MLC				= -(5<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline string.
 	 */
-	private static final int INTERNAL_IN_PHP_STRING				= -(6<<11);
+	static final int INTERNAL_IN_PHP_STRING				= -(6<<11);
 
 	/**
 	 * Token type specifying we're in a PHP multiline char.
 	 */
-	private static final int INTERNAL_IN_PHP_CHAR				= -(7<<11);
+	static final int INTERNAL_IN_PHP_CHAR				= -(7<<11);
 
 	/**
 	 * The state previous CSS-related state we were in before going into a CSS
@@ -446,7 +446,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.MARKUP_COMMENT:
 				state = COMMENT;
@@ -1254,7 +1254,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\n\\\'<]+				{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	\n						{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
 	\\u{HexDigit}{4}		{}
@@ -1272,6 +1271,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								return firstToken;
 							}
 	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
@@ -1360,9 +1360,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 							}
 	"<"						{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
+	\n |
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 }
 
@@ -1399,7 +1399,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
 							}
 	"<"						{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\n |
 	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
 
 }
@@ -2547,20 +2547,20 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[^hwf\n\*]+					{}
 	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]						{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
 	\*							{}
+	\n |
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 }
 
 
 <PHP_STRING> {
 	[^\n\\\$\"]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
 	\\.?				{ /* Skip escaped chars. */ }
 	{PHP_Variable}		{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	"$"					{}
 	\"					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
 }
 
@@ -2568,7 +2568,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <PHP_CHAR> {
 	[^\n\\\']+			{}
 	\\.?				{ /* Skip escaped single quotes only, but this should still work. */ }
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
 	\'					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
 }
