@@ -133,7 +133,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JavaScript documentation comment.
 	 */
-	private static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -12;
+	static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -12;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
@@ -153,7 +153,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_VALID		= -16;
+	static final int INTERNAL_IN_JS_CHAR_VALID		= -16;
 
 	/**
 	 * Internal type denoting a line ending in CSS.

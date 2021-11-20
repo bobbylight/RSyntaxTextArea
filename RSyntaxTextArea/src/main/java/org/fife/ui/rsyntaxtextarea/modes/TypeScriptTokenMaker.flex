@@ -66,60 +66,60 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JavaScript multiline comment.
 	 */
-	private static final int INTERNAL_IN_JS_MLC				= -8;
+	static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Token type specifying we're in a JavaScript documentation comment.
 	 */
-	private static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -9;
+	static final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -9;
 	
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -10;
+	static final int INTERNAL_IN_JS_STRING_INVALID	= -10;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -11;
+	static final int INTERNAL_IN_JS_STRING_VALID		= -11;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -12;
+	static final int INTERNAL_IN_JS_CHAR_INVALID	= -12;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_VALID		= -13;
+	static final int INTERNAL_IN_JS_CHAR_VALID		= -13;
 
-	private static final int INTERNAL_E4X = -14;
+	static final int INTERNAL_E4X = -14;
 
-	private static final int INTERNAL_E4X_INTAG = -15;
+	static final int INTERNAL_E4X_INTAG = -15;
 
-	private static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -16;
+	static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -16;
 
-	private static final int INTERNAL_IN_E4X_COMMENT = -17;
+	static final int INTERNAL_IN_E4X_COMMENT = -17;
 
-	private static final int INTERNAL_E4X_DTD = -18;
+	static final int INTERNAL_E4X_DTD = -18;
 
-	private static final int INTERNAL_E4X_DTD_INTERNAL = -19;
+	static final int INTERNAL_E4X_DTD_INTERNAL = -19;
 
-	private static final int INTERNAL_E4X_ATTR_SINGLE = -20;
+	static final int INTERNAL_E4X_ATTR_SINGLE = -20;
 
-	private static final int INTERNAL_E4X_ATTR_DOUBLE = -21;
+	static final int INTERNAL_E4X_ATTR_DOUBLE = -21;
 
-	private static final int INTERNAL_E4X_MARKUP_CDATA = -22;
+	static final int INTERNAL_E4X_MARKUP_CDATA = -22;
 
 	/**
 	 * Token type specifying we're in a valid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID = -23;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line template literal.
 	 */
-	private static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
+	static final int INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID = -24;
 
 	/**
 	 * When in the JS_STRING state, whether the current string is valid.

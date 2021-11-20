@@ -80,6 +80,20 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	 */
 	private static final int JS_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS;
 
+	private static final int JS_MLC_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_MLC;
+
+	private static final int JS_INVALID_STRING_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_STRING_INVALID;
+
+	private static final int JS_VALID_STRING_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_STRING_VALID;
+
+	private static final int JS_INVALID_CHAR_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_CHAR_INVALID;
+
+	private static final int JS_VALID_CHAR_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_CHAR_VALID;
+
+	private static final int JS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID;
+
+	private static final int JS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID;
+
 
 	/**
 	 * Returns a new instance of the <code>TokenMaker</code> to test.
@@ -960,91 +974,71 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	void testJS_BooleanLiterals() {
-
-		String code = "true false";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			JS_PREV_TOKEN_TYPE,
+			"true",
+			"false"
+		);
 	}
 
 
 	@Test
 	void testJS_CharLiterals_invalid() {
-
-		String[] charLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			JS_PREV_TOKEN_TYPE,
 			"'\\xG7'", // Invalid hex/octal escape
 			"'foo\\ubar'", "'\\u00fg'", // Invalid Unicode escape
 			"'My name is \\ubar and I \\", // Continued onto another line
-			"'This is unterminated and ", // Unterminated string
-		};
-
-		for (String code : charLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assertions.assertEquals(TokenTypes.ERROR_CHAR, token.getType());
-		}
-
+			"'This is unterminated and " // Unterminated string
+		);
 	}
 
 
 	@Test
 	void testJS_CharLiterals_valid() {
-
-		String[] charLiterals = {
-			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			JS_PREV_TOKEN_TYPE,			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
 			"'\\x77'",
 			"'\\11'", "'\\22'", "'\\33'",
 			"'\\1'",
-			"'My name is Robert and I \\", // Continued onto another line
-		};
+			"'My name is Robert and I \\" // Continued onto another line
+		);
+	}
 
-		for (String code : charLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
-		}
 
+	@Test
+	void testJS_CharLiterals_fromPriorLine_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			JS_INVALID_CHAR_PREV_TOKEN_TYPE,
+			"still an invalid char literal",
+			"still an invalid char literal even though terminated'"
+		);
+	}
+
+
+	@Test
+	void testJS_CharLiterals_fromPriorLine_valid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			JS_VALID_CHAR_PREV_TOKEN_TYPE,
+			"still a valid char literal'"
+		);
 	}
 
 
 	@Test
 	void testJS_DataTypes() {
-
-		String code = "boolean byte char double float int long short";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.DATA_TYPE, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			JS_PREV_TOKEN_TYPE,
+			"boolean",
+			"byte",
+			"char",
+			"double",
+			"float",
+			"int",
+			"long",
+			"short"
+		);
 	}
 
 
@@ -1058,27 +1052,10 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : eolCommentLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 		}
 
-	}
-
-
-	@Test
-	void testJS_EolComments_terminatedEarlyByScriptTag() {
-
-		Segment segment = createSegment("// comment ended by a </script>");
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
 	}
 
 
@@ -1097,7 +1074,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 
 			token = token.getNextToken();
@@ -1124,24 +1101,24 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		String code =
 			// Basic doubles
 			"3.0 4.2 3.0 4.2 .111 " +
-			// Basic floats ending in f, F, d, or D
-			"3f 3F 3d 3D 3.f 3.F 3.d 3.D 3.0f 3.0F 3.0d 3.0D .111f .111F .111d .111D " +
-			// lower-case exponent, no sign
-			"3e7f 3e7F 3e7d 3e7D 3.e7f 3.e7F 3.e7d 3.e7D 3.0e7f 3.0e7F 3.0e7d 3.0e7D .111e7f .111e7F .111e7d .111e7D " +
-			// Upper-case exponent, no sign
-			"3E7f 3E7F 3E7d 3E7D 3.E7f 3.E7F 3.E7d 3.E7D 3.0E7f 3.0E7F 3.0E7d 3.0E7D .111E7f .111E7F .111E7d .111E7D " +
-			// Lower-case exponent, positive
-			"3e+7f 3e+7F 3e+7d 3e+7D 3.e+7f 3.e+7F 3.e+7d 3.e+7D 3.0e+7f 3.0e+7F 3.0e+7d 3.0e+7D .111e+7f .111e+7F .111e+7d .111e+7D " +
-			// Upper-case exponent, positive
-			"3E+7f 3E+7F 3E+7d 3E+7D 3.E+7f 3.E+7F 3.E+7d 3.E+7D 3.0E+7f 3.0E+7F 3.0E+7d 3.0E+7D .111E+7f .111E+7F .111E+7d .111E+7D " +
-			// Lower-case exponent, negative
-			"3e-7f 3e-7F 3e-7d 3e-7D 3.e-7f 3.e-7F 3.e-7d 3.e-7D 3.0e-7f 3.0e-7F 3.0e-7d 3.0e-7D .111e-7f .111e-7F .111e-7d .111e-7D " +
-			// Upper-case exponent, negative
-			"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
+				// Basic floats ending in f, F, d, or D
+				"3f 3F 3d 3D 3.f 3.F 3.d 3.D 3.0f 3.0F 3.0d 3.0D .111f .111F .111d .111D " +
+				// lower-case exponent, no sign
+				"3e7f 3e7F 3e7d 3e7D 3.e7f 3.e7F 3.e7d 3.e7D 3.0e7f 3.0e7F 3.0e7d 3.0e7D .111e7f .111e7F .111e7d .111e7D " +
+				// Upper-case exponent, no sign
+				"3E7f 3E7F 3E7d 3E7D 3.E7f 3.E7F 3.E7d 3.E7D 3.0E7f 3.0E7F 3.0E7d 3.0E7D .111E7f .111E7F .111E7d .111E7D " +
+				// Lower-case exponent, positive
+				"3e+7f 3e+7F 3e+7d 3e+7D 3.e+7f 3.e+7F 3.e+7d 3.e+7D 3.0e+7f 3.0e+7F 3.0e+7d 3.0e+7D .111e+7f .111e+7F .111e+7d .111e+7D " +
+				// Upper-case exponent, positive
+				"3E+7f 3E+7F 3E+7d 3E+7D 3.E+7f 3.E+7F 3.E+7d 3.E+7D 3.0E+7f 3.0E+7F 3.0E+7d 3.0E+7D .111E+7f .111E+7F .111E+7d .111E+7D " +
+				// Lower-case exponent, negative
+				"3e-7f 3e-7F 3e-7d 3e-7D 3.e-7f 3.e-7F 3.e-7d 3.e-7D 3.0e-7f 3.0e-7F 3.0e-7d 3.0e-7D .111e-7f .111e-7F .111e-7d .111e-7D " +
+				// Upper-case exponent, negative
+				"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
 
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -1155,30 +1132,23 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 		}
 
+		Assertions.assertEquals(JS_PREV_TOKEN_TYPE, token.getType(), "Wrong type for " + token);
+
 	}
 
 
 	@Test
 	void testJS_Functions() {
-
-		String code = "eval parseInt parseFloat escape unescape isNaN isFinite";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		String[] functions = code.split(" +");
-		for (int i = 0; i < functions.length; i++) {
-			Assertions.assertEquals(functions[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType(), "Not a function token: " + token);
-			if (i < functions.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			JS_PREV_TOKEN_TYPE,
+			"eval",
+			"parseInt",
+			"parseFloat",
+			"escape",
+			"unescape",
+			"isNaN",
+			"isFinite"
+		);
 	}
 
 
@@ -1186,12 +1156,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testJS_HexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
-				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
-				"0x1L 0xfeL 0x333333333333L 0X1L 0XfeL 0X33333333333L 0xFEL 0XFEL ";
+			"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
+			"0x1L 0xfeL 0x333333333333L 0X1L 0XfeL 0X33333333333L 0xFEL 0XFEL ";
 
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] literals = code.split(" +");
 		for (int i = 0; i < literals.length; i++) {
@@ -1209,98 +1179,72 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
+	void testJS_Identifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			JS_PREV_TOKEN_TYPE,
+			"foo",
+			"$bar",
+			"var1"
+		);
+	}
+
+
+	@Test
+	void testJS_Identifiers_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			JS_PREV_TOKEN_TYPE,
+			"\\"
+		);
+	}
+
+
+	@Test
 	void testJS_Keywords() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			JS_PREV_TOKEN_TYPE,
+			"break", "case", "catch", "class", "const", "continue",
+			"debugger", "default", "delete", "do", "else", "export", "extends", "finally", "for", "function", "if",
+			"import", "in", "instanceof", "let", "new", "super", "switch",
+			"this", "throw", "try", "typeof", "void", "while", "with",
+			"NaN", "Infinity",
+			"let" // As of 1.7, which is our default version
+		);
 
-		String code = "break case catch class const continue " +
-				"debugger default delete do else export extends finally for function if " +
-				"import in instanceof let new super switch " +
-				"this throw try typeof void while with " +
-				"NaN Infinity " +
-				"let"; // As of 1.7, which is our default version
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType(), "Not a keyword token: " + token);
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		segment = createSegment("return");
-		token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-		Assertions.assertEquals("return", token.getLexeme());
-		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
-
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			JS_PREV_TOKEN_TYPE,
+			"return"
+		);
 	}
 
 
 	@Test
 	void testJS_MultiLineComments() {
-
-		String[] mlcLiterals = {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			JS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* Unterminated",
-		};
-
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+			"/* Unterminated"
+		);
 	}
 
 
 	@Test
 	void testJS_MultiLineComment_fromPreviousLine() {
-
-		String[] mlcLiterals = {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			JS_MLC_PREV_TOKEN_TYPE,
 			" this is continued from a prior line */",
-			" this is also continued, but not terminated",
-		};
-
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_MLC,
-				0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
-	}
-
-
-	@Test
-	void testJS_MultiLineComment_terminatedEarlyByScriptTag() {
-
-		Segment segment = createSegment("/* comment ended by a </script>");
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+			" this is also continued, but not terminated"
+		);
 	}
 
 
 	@Test
 	void testJS_MultiLineComments_URL() {
-
 		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
+			"/* Hello world file://test.txt */",
+			"/* Hello world ftp://ftp.google.com */",
+			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
+			"/* Hello world www.google.com */"
 		};
 
 		for (String code : mlcLiterals) {
@@ -1308,13 +1252,12 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -1337,7 +1280,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : ints) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
 		}
 
@@ -1348,7 +1291,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : floats) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
 		}
 
@@ -1359,7 +1302,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : hex) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType());
 		}
 
@@ -1370,7 +1313,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : errors) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.ERROR_NUMBER_FORMAT, token.getType());
 		}
 
@@ -1386,7 +1329,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
 		String[] keywords = code.split(" +");
 		for (int i = 0; i < keywords.length; i++) {
@@ -1400,64 +1343,44 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 			token = token.getNextToken();
 		}
 
+		Assertions.assertEquals(JS_PREV_TOKEN_TYPE, token.getType());
+
 	}
 
 
 	@Test
 	void testJS_Regexes() {
-
-		String[] regexes = {
-			"/foobar/", "/foobar/gim", "/foo\\/bar\\/bas/g",
-		};
-
-		for (String code : regexes) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assertions.assertEquals(TokenTypes.REGEX, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.REGEX,
+			JS_PREV_TOKEN_TYPE,
+			"/foobar/",
+			"/foobar/gim",
+			"/foo\\/bar\\/bas/g"
+		);
 	}
 
 
 	@Test
 	void testJS_Separators() {
-
-		String code = "( ) [ ] { }";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		String[] separators = code.split(" +");
-		for (int i = 0; i < separators.length; i++) {
-			Assertions.assertEquals(separators[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
-			// Just one extra test here
-			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
-			if (i < separators.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			JS_PREV_TOKEN_TYPE,
+			"(",
+			")",
+			"[",
+			"]",
+			"{",
+			"}"
+		);
 	}
 
 
 	@Test
 	void testJS_Separators_renderedAsIdentifiers() {
-
-		String[] separators2 = { ";", ",", "." };
-
-		for (String code : separators2) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			JS_PREV_TOKEN_TYPE,
+			";",
+			",",
+			"."
+		);
 	}
 
 
@@ -1474,7 +1397,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
@@ -1492,7 +1415,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
@@ -1500,92 +1423,43 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	void testJS_StringLiterals_fromPriorLine_valid() {
-
-		String[] stringLiterals = {
-			"continued from prior line\"",
-		};
-
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_STRING_VALID, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
-
+	void testJS_StringLiteralsFromPreviousLine_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			JS_INVALID_STRING_PREV_TOKEN_TYPE,
+			"this is the rest of the string\"",
+			"the rest of the string but still unterminated"
+		);
 	}
 
 
 	@Test
-	void testJS_StringLiterals_fromPriorLine_invalid() {
-
-		String[] stringLiterals = {
-			"continued from prior line\"",
-		};
-
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_STRING_INVALID, 0);
-			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
-		}
-
+	void testJS_StringLiteralsFromPreviousLine_valid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			JS_VALID_STRING_PREV_TOKEN_TYPE,
+			"this is the rest of the string\""
+		);
 	}
 
 
 	@Test
 	void testJS_TemplateLiterals_invalid() {
-
-		String[] templateLiterals = {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			JS_PREV_TOKEN_TYPE,
 			"`\\xG7`", // Invalid hex/octal escape
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
-			"`My name is \\ubar and I ", // Continued onto another line
-		};
-
-		for (String code : templateLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
-		}
-
-	}
-
-
-	@Test
-	void testJS_TemplateLiterals_invalid_continuedFromPriorLine() {
-
-		String[] templateLiterals = {
-			"and my name is Fred`"
-		};
-
-		for (String code : templateLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID,
-				0);
-			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
-		}
-
+			"`My name is \\ubar and I " // Continued onto another line
+		);
 	}
 
 
 	@Test
 	void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
-
-		String[] templateLiterals = {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			JS_PREV_TOKEN_TYPE,
 			"``", "`hi`", "`\\x77`", "`\\u00fe`", "`\\\"`",
 			"`My name is Robert and I", // String continued on another line
-			"`My name is Robert and I \\", // String continued on another line
-		};
-
-		for (String code : templateLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
-		}
-
+			"`My name is Robert and I \\" // String continued on another line
+		);
 	}
 
 
@@ -1617,31 +1491,13 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testJS_TemplateLiterals_valid_continuedFromPriorLine() {
 
 		String[] templateLiterals = {
-			"and my name is Fred`"
-		};
-
-		for (String code : templateLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
-				0);
-			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
-		}
-
-	}
-
-
-	@Test
-	void testJS_TemplateLiterals_valid_continuedFromPriorLine_withInterpolatedExpression() {
-
-		String[] templateLiterals = {
 			"and my name is ${name}`"
 		};
 
 		for (String code : templateLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID,
+			Token token = tm.getTokenList(segment, JS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE,
 				0);
 			Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType());
 			token = token.getNextToken();
@@ -1654,17 +1510,10 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	void testJS_terminatedEarlyByScriptTag() {
-
-		Segment segment = createSegment("</script>");
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
-
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_DELIMITER, token.getType());
+	void testJS_TemplateLiterals_invalid_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			JS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE,
+			"this is still an invalid template literal`");
 	}
 
 
@@ -1678,7 +1527,7 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		for (String code : whitespace) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_IN_JS, 0);
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 			Assertions.assertEquals(TokenTypes.WHITESPACE, token.getType());
 		}
 
