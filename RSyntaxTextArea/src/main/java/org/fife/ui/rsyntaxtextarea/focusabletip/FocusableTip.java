@@ -114,7 +114,7 @@ public class FocusableTip {
 		// doesn't return its proper preferred size until after it is displayed.
 		// See http://forums.sun.com/thread.jspa?forumID=57&threadID=574810
 		// for a discussion.
-		SwingUtilities.invokeLater(() -> {
+		invokeLater(() -> {
 
 			// If a new FocusableTip is requested while another one is
 			// *focused* and visible, the focused tip (i.e. "tipWindow")
@@ -210,6 +210,11 @@ public class FocusableTip {
 	 */
 	static String getString(String key) {
 		return MSG.getString(key);
+	}
+
+
+	protected void invokeLater(Runnable r) {
+		SwingUtilities.invokeLater(r);
 	}
 
 

@@ -175,8 +175,8 @@ class TipWindow extends JWindow implements ActionListener {
 	 */
 	void fixSize() {
 
-		Dimension d = textArea.getPreferredSize();
-		Rectangle r = null;
+		Dimension d;
+		Rectangle r;
 		try {
 
 			// modelToView call is required for this hack, never remove!
