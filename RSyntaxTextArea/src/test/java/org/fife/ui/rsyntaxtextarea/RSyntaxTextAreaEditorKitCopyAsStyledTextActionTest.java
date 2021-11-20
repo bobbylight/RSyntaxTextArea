@@ -84,6 +84,43 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 	}
 
 	@Test
+	void test_disabledStyledCopyCutAction() throws Exception {
+
+		String text = "/*\n" +
+			"* comment\n" +
+			"*/\n" +
+			"public void foo() {\n" +
+			"  /* comment\n" +
+			"     two */\n" +
+			"}";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, text);
+		textArea.setEditable(false);
+
+		textArea.setCaretPosition(5);
+		textArea.moveCaretPosition(8);
+
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+
+		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent);
+		Assertions.assertEquals(text, textArea.getText());
+
+		textArea.setCaretPosition(8);
+		textArea.moveCaretPosition(11);
+
+		//Trying to cut "men". This shouldn't happen as the textArea is not editable.
+		a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+		clipboardContent = (String)textArea.getToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent, "Clipboard content should be unchanged");
+		Assertions.assertEquals(text, textArea.getText());
+
+	}
+
+	@Test
 	void testGetMacroId() {
 		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
