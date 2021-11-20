@@ -37,6 +37,7 @@ class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 		textArea = createTextArea();
 		frame.add(textArea);
 		frame.pack();
+		frame.setVisible(true);
 	}
 
 
