@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 
 
@@ -36,7 +37,7 @@ class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 		frame = new JFrame();
 		textArea = createTextArea();
 		frame.add(textArea);
-		frame.pack();
+		frame.setSize(new Dimension(300, 300));//pack();
 		frame.setVisible(true);
 	}
 
