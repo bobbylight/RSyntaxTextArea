@@ -658,6 +658,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (cutAction && (!textArea.isEditable() || !textArea.isEnabled())) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
 			((RSyntaxTextArea)textArea).copyAsStyledText(theme);
 			if (cutAction) {
 				int selStart = textArea.getSelectionStart();
