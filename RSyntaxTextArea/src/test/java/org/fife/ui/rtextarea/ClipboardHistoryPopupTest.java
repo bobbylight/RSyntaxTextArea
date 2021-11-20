@@ -41,14 +41,12 @@ class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	@Disabled("These tests run locally, but not in CI environment for some reason")
 	void testGetPreferredSize() {
 		Assertions.assertNotNull(new ClipboardHistoryPopup(frame, textArea).getPreferredSize());
 	}
 
 
 	@Test
-	@Disabled("These tests run locally, but not in CI environment for some reason")
 	void testSetContents() {
 		new ClipboardHistoryPopup(frame, textArea).setContents(Arrays.asList(
 			"one", "two", "three"
