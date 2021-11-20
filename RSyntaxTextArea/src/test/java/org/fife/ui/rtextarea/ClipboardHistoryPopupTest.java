@@ -37,6 +37,7 @@ class ClipboardHistoryPopupTest extends AbstractRSyntaxTextAreaTest {
 		frame = new JFrame();
 		textArea = createTextArea();
 		frame.add(textArea);
+		// Must force a size for tests to work headlessly in CI environment
 		frame.setSize(new Dimension(300, 300));//pack();
 		frame.setVisible(true);
 	}

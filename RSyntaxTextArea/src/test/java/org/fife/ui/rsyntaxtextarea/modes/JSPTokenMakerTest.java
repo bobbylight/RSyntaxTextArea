@@ -2096,4 +2096,40 @@ public class JSPTokenMakerTest extends AbstractTokenMakerTest2 {
 	}
 
 
+	@Test
+	void testExtra_ScriptTagTerminatesJsEolComment() {
+
+		String code = "// Hello world </script>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, "// Hello world "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "script"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+	}
+
+
+	@Test
+	void testExtra_ScriptTagTerminatesJsMLC() {
+
+		String code = "/* Hello world </script>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "script"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
+	}
+
+
 }
