@@ -17,10 +17,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.font.FontRenderContext;
 import java.io.File;
 import java.lang.reflect.Method;
@@ -33,13 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkEvent;
@@ -56,10 +47,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
-import org.fife.ui.rtextarea.ClipboardHistory;
-import org.fife.ui.rtextarea.RTextArea;
-import org.fife.ui.rtextarea.RTextAreaUI;
-import org.fife.ui.rtextarea.RecordableTextAction;
+import org.fife.ui.rtextarea.*;
 
 
 /**
@@ -786,7 +774,21 @@ private boolean fractionalFontMetricsEnabled;
 		collapseAllFoldsAction = new RSyntaxTextAreaEditorKit.CollapseAllFoldsAction(true);
 		expandAllFoldsAction = new RSyntaxTextAreaEditorKit.ExpandAllFoldsAction(true);
 
+		RecordableTextAction plainCut = cutAction;
+		RecordableTextAction plainCopy = copyAction;
+		cutAction = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		copyAction = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		copyActionAttributes(plainCopy, copyAction);
+		copyActionAttributes(plainCut, cutAction);
 	}
+
+	private static void copyActionAttributes(RecordableTextAction from, RecordableTextAction to) {
+		to.setName(from.getName());
+		to.setMnemonic(from.getMnemonic());
+		to.setShortDescription(from.getShortDescription());
+		to.setAccelerator(from.getAccelerator());
+	}
+
 
 
 	/**

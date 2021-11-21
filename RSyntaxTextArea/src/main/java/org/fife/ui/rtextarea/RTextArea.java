@@ -23,14 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.InputMap;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
@@ -159,8 +152,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	private ToolTipSupplier toolTipSupplier;
 
-	private static RecordableTextAction cutAction;
-	private static RecordableTextAction copyAction;
+	protected static RecordableTextAction cutAction;
+	protected static RecordableTextAction copyAction;
 	private static RecordableTextAction pasteAction;
 	private static RecordableTextAction deleteAction;
 	private static RecordableTextAction undoAction;
