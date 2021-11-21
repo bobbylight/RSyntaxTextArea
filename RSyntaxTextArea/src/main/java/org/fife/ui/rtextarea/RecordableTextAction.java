@@ -189,6 +189,15 @@ public abstract class RecordableTextAction extends TextAction {
 		return (String)getValue(NAME);
 	}
 
+	/**
+	 * Returns the short description for this action.
+	 *
+	 * @return The short description for this action.
+	 * @see #setShortDescription(String)
+	 */
+	public String getShortDescription() {
+		return (String)getValue(SHORT_DESCRIPTION);
+	}
 
 	/**
 	 * Returns whether or not this action will be recorded and replayed in
