@@ -24,13 +24,29 @@ import org.junit.jupiter.api.Test;
 public class CTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new CTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.FUNCTION;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -161,15 +177,6 @@ public class CTokenMakerTest extends AbstractTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("//", startAndEnd[0]);
-		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 

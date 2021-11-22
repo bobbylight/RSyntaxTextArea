@@ -32,22 +32,29 @@ public class LessTokenMakerTest extends AbstractTokenMakerTest {
 	private static final int CSS_PREV_TOKEN_TYPE = TokenTypes.NULL;
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new LessTokenMaker();
 	}
 
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("//", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i  == TokenTypes.RESERVED_WORD || i == TokenTypes.VARIABLE;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 

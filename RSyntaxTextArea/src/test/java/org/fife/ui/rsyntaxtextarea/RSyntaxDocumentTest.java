@@ -329,7 +329,7 @@ class RSyntaxDocumentTest {
 
 
 	@Test
-	void testGetMarkOccurrencesOfTokenType() {
+	void testCommon_getMarkOccurrencesOfTokenType() {
 
 		String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_C;
 		doc = new RSyntaxDocument(syntaxStyle);

@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
+public class TclTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach
@@ -35,6 +35,25 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new TclTokenMaker();
+	}
+
+
+	@Test
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.FUNCTION;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -59,14 +78,6 @@ public class TclTokenMakerTest extends AbstractTokenMakerTest2 {
 	void testErrorStringLiterals() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated");
-	}
-
-
-	@Test
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("#", startAndEnd[0]);
-		Assertions.assertNull(startAndEnd[1]);
 	}
 
 

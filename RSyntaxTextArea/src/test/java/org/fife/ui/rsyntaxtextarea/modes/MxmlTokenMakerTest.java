@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,28 @@ import org.junit.jupiter.api.Test;
 public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
+	@Override
+	protected TokenMaker createTokenMaker() {
+		return new MxmlTokenMaker();
+	}
+
+
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = new MxmlTokenMaker().getLineCommentStartAndEnd(0);
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("<!--", startAndEnd[0]);
 		Assertions.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -41,7 +58,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : commentLiterals) {
 			Segment segment = createSegment(code);
-			MxmlTokenMaker tm = new MxmlTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
@@ -54,7 +71,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		String code = "<!-- Hello world http://www.google.com -->";
 		Segment segment = createSegment(code);
-		MxmlTokenMaker tm = new MxmlTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		Assertions.assertFalse(token.isHyperlink());
@@ -80,7 +97,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : doctypes) {
 			Segment segment = createSegment(code);
-			MxmlTokenMaker tm = new MxmlTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
 		}
@@ -97,7 +114,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : entityReferences) {
 			Segment segment = createSegment(code);
-			MxmlTokenMaker tm = new MxmlTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
 		}
@@ -110,7 +127,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		String code = "<body onload=\"doSomething()\" data-extra='true'>";
 		Segment segment = createSegment(code);
-		MxmlTokenMaker tm = new MxmlTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
@@ -149,7 +166,7 @@ public class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : doctypes) {
 			Segment segment = createSegment(code);
-			MxmlTokenMaker tm = new MxmlTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
 		}

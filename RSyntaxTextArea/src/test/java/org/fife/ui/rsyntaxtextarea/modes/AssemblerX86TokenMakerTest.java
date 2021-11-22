@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
+public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach
@@ -41,10 +41,21 @@ public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals(";", startAndEnd[0]);
-		Assertions.assertNull(null, startAndEnd[1]);
+		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 

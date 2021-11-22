@@ -2073,9 +2073,6 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		switch (languageIndex) {

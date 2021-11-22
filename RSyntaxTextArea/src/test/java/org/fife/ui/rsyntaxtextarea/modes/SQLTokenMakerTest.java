@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
+public class SQLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
@@ -106,7 +106,7 @@ public class SQLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("--", startAndEnd[0]);
 		Assertions.assertNull(null, startAndEnd[1]);

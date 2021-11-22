@@ -8,10 +8,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenImpl;
-import org.fife.ui.rsyntaxtextarea.TokenMap;
-import org.fife.ui.rsyntaxtextarea.TokenTypes;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +20,37 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  */
 public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
+
+
+	@Override
+	protected TokenMaker createTokenMaker() {
+		return new UnixShellTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		TokenMaker tm = createTokenMaker();
+		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		for (int i=0; i<TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER ||
+				i == TokenTypes.VARIABLE;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
+
+	}
 
 
 	/**
@@ -109,32 +137,9 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetLineCommentStartAndEnd() {
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
-		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("#", startAndEnd[0]);
-		Assertions.assertNull(startAndEnd[1]);
-	}
-
-
-	@Test
-	void testGetMarkOccurrencesOfTokenType() {
-
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
-
-		for (int i=0; i<TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
-			boolean expected = i == TokenTypes.IDENTIFIER ||
-					i == TokenTypes.VARIABLE;
-			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
-		}
-
-	}
-
-
-	@Test
 	void testGetTokenList_identifierStart_LiteralBackQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "foo`cat foo.txt`";
 		Segment s = createSegment(text);
@@ -152,7 +157,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_identifierStart_LiteralDoubleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "foo\"Hello world\"";
 		Segment s = createSegment(text);
@@ -170,7 +175,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_identifierStart_LiteralSingleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "foo'Hello world'";
 		Segment s = createSegment(text);
@@ -188,7 +193,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_EolComment() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "# This is a comment";
 		Segment s = createSegment(text);
@@ -204,7 +209,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_EscapedBackQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		// Parsed as two identifiers: '\\' and '`'
 		String text = "\\`";
@@ -223,7 +228,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_EscapedDollarSign() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		// Parsed as two identifiers: '\\' and '$'
 		String text = "\\$";
@@ -242,7 +247,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_EscapedDoubleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		// Parsed as two identifiers: '\\' and '"'
 		String text = "\\\"";
@@ -261,7 +266,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_EscapedSingleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		// Parsed as two identifiers: '\\' and "'"
 		String text = "\\'";
@@ -284,7 +289,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		code += ". , ;"; // "separators2"
 
 		Segment segment = createSegment(code);
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -307,7 +312,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_LiteralBackQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "`cat foo.txt`";
 		Segment s = createSegment(text);
@@ -323,7 +328,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_LiteralDoubleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "\"Hello world\"";
 		Segment s = createSegment(text);
@@ -339,7 +344,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_LiteralSingleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "'Hello world'";
 		Segment s = createSegment(text);
@@ -358,7 +363,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "42 722";
 
 		Segment segment = createSegment(code);
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -384,7 +389,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "= | > < &";
 
 		Segment segment = createSegment(code);
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -410,7 +415,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "( ) [ ]";
 
 		Segment segment = createSegment(code);
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -433,7 +438,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_Variable() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = "$PATH";
 		Segment s = createSegment(text);
@@ -457,7 +462,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_nullStart_WhiteSpace() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " ";
 		Segment s = createSegment(text);
@@ -477,7 +482,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_whitespaceStart_EolComment() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " # This is a comment";
 		Segment s = createSegment(text);
@@ -495,7 +500,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_whitespaceStart_LiteralBackQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " `cat foo.txt`";
 		Segment s = createSegment(text);
@@ -513,7 +518,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_whitespaceStart_LiteralDoubleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " \"Hello world\"";
 		Segment s = createSegment(text);
@@ -531,7 +536,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_whitespaceStart_LiteralSingleQuote() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " 'Hello world'";
 		Segment s = createSegment(text);
@@ -549,7 +554,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetTokenList_whitespaceStart_Variable() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		String text = " $PATH";
 		Segment s = createSegment(text);
@@ -567,8 +572,8 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testGetWordsToHighlight() {
 
-		UnixShellTokenMaker tm = new UnixShellTokenMaker();
-		TokenMap tokens = tm.getWordsToHighlight();
+		TokenMaker tm = createTokenMaker();
+		TokenMap tokens = ((UnixShellTokenMaker)tm).getWordsToHighlight();
 
 		int reservedWord = TokenTypes.RESERVED_WORD;
 		assertTokenMapContains(tokens, "case", reservedWord);
@@ -586,7 +591,7 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		assertTokenMapContains(tokens, "until", reservedWord);
 		assertTokenMapContains(tokens, "while", reservedWord);
 
-		int function = Token.FUNCTION;
+		int function = TokenTypes.FUNCTION;
 		assertTokenMapContains(tokens, "addbib", function);
 		assertTokenMapContains(tokens, "admin", function);
 		assertTokenMapContains(tokens, "alias", function);

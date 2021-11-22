@@ -24,12 +24,8 @@ import org.junit.jupiter.api.Test;
 public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new DockerTokenMaker();
 	}
 
@@ -74,10 +70,21 @@ public class DockerTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertArrayEquals(new String[] { "#", null }, startAndEnd);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.RESERVED_WORD;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 

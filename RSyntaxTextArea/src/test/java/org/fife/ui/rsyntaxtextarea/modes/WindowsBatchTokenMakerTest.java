@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
+public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
@@ -272,7 +272,7 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("rem ", startAndEnd[0]);
@@ -281,9 +281,10 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	void testGetMarkOccurrencesOfTokenType() {
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
 
-		WindowsBatchTokenMaker tm = new WindowsBatchTokenMaker();
+		TokenMaker tm = createTokenMaker();
 
 		for (int i=0; i<TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			boolean expected = i == TokenTypes.IDENTIFIER ||

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
+public class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -108,10 +108,55 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			HTMLTokenMaker.LANG_INDEX_DEFAULT);
 		Assertions.assertEquals("<!--", startAndEnd[0]);
 		Assertions.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
+	void testCommon_getLineCommentStartAndEnd_css() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			HTMLTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertEquals("/*", startAndEnd[0]);
+		Assertions.assertEquals("*/", startAndEnd[1]);
+	}
+
+
+	@Test
+	void testCommon_getLineCommentStartAndEnd_js() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			HTMLTokenMaker.LANG_INDEX_JS);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	void testCommon_getSetCloseCompleteTags() {
+		HTMLTokenMaker tm = (HTMLTokenMaker)createTokenMaker();
+		Assertions.assertFalse(tm.getCompleteCloseTags());
+		try {
+			HTMLTokenMaker.setCompleteCloseTags(true);
+			Assertions.assertTrue(tm.getCompleteCloseTags());
+		} finally {
+			HTMLTokenMaker.setCompleteCloseTags(false);
+		}
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.MARKUP_TAG_NAME;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -158,15 +203,6 @@ public class HTMLTokenMakerTest extends AbstractTokenMakerTest2 {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
 			HTMLTokenMaker.LANG_INDEX_CSS));
-	}
-
-
-	@Test
-	void testCss_getLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
-			HTMLTokenMaker.LANG_INDEX_CSS);
-		Assertions.assertEquals("/*", startAndEnd[0]);
-		Assertions.assertEquals("*/", startAndEnd[1]);
 	}
 
 

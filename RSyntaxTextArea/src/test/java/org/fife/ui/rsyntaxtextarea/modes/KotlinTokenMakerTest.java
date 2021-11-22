@@ -19,12 +19,32 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
+public class KotlinTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new KotlinTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.FUNCTION;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -672,15 +692,6 @@ public class KotlinTokenMakerTest extends AbstractTokenMakerTest2 {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("//", startAndEnd[0]);
-		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 

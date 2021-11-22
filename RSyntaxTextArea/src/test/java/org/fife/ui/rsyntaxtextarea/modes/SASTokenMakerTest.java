@@ -18,12 +18,32 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
+public class SASTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new SASTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("*", startAndEnd[0]);
+		Assertions.assertNull(null, startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.VARIABLE;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -45,15 +65,6 @@ public class SASTokenMakerTest extends AbstractTokenMakerTest2 {
 			"* Hello world",
 		};
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, eolCommentLiterals);
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("*", startAndEnd[0]);
-		Assertions.assertNull(null, startAndEnd[1]);
 	}
 
 

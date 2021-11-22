@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
+public class LuaTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach
@@ -73,7 +73,7 @@ public class LuaTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("--", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);

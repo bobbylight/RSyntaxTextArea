@@ -233,9 +233,9 @@ public abstract class TokenMakerBase implements TokenMaker {
 	/**
 	 * Returns whether tokens of the specified type should have "mark
 	 * occurrences" enabled for the current programming language.  The default
-	 * implementation returns true if <tt>type</tt> is {@link Token#IDENTIFIER}.
-	 * Subclasses can override this method to support other token types, such
-	 * as {@link Token#VARIABLE}.
+	 * implementation returns true if <tt>type</tt> is
+	 * {@link TokenTypes#IDENTIFIER}. Subclasses can override this method to
+	 * support other token types, such as {@link TokenTypes#VARIABLE}.
 	 *
 	 * @param type The token type.
 	 * @return Whether tokens of this type should have "mark occurrences"
@@ -243,7 +243,7 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER;
+		return type==TokenTypes.IDENTIFIER;
 	}
 
 

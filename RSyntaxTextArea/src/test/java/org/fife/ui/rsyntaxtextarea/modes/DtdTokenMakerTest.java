@@ -24,21 +24,26 @@ import org.junit.jupiter.api.Test;
 public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new DtdTokenMaker();
 	}
 
 
 	@Test
-	void testGetMarkOccurrencesOfTokenType() {
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
 		TokenMaker tm = createTokenMaker();
-		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
-				TokenTypes.IDENTIFIER));
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -77,13 +82,6 @@ public class DtdTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertFalse(token.isHyperlink());
 		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
 
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 

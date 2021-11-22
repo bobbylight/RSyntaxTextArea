@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,36 @@ import org.junit.jupiter.api.Test;
 public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 
+	@Override
+	protected TokenMaker createTokenMaker() {
+		return new JsonTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		Assertions.assertNull(new JsonTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
+		}
+	}
+
+
 	@Test
 	void testBooleanLiterals() {
 
 		String code = "true false";
 
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -69,7 +93,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 			"3E-7 3.0E-7 0.111E-7 -3E-7 -3.0E-7 -0.111E-7";
 
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -90,19 +114,12 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		Assertions.assertNull(new JsonTokenMaker().getLineCommentStartAndEnd(0));
-	}
-
-
-	@Test
 	void testIntegerLiterals() {
 
 		String code = "1 42 0 -1 -42";
 
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] keywords = code.split(" +");
@@ -126,7 +143,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 	void testNoMultiLineComments() {
 		String code = "// Hello world";
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		// Only need to check the first token
 		Assertions.assertFalse(token.isComment());
@@ -137,7 +154,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 	void testNullLiterals() {
 		String code = "null";
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "null"));
 	}
@@ -149,7 +166,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "[ ] { }";
 
 		Segment segment = createSegment(code);
-		JsonTokenMaker tm = new JsonTokenMaker();
+		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
 		String[] separators = code.split(" +");
@@ -180,7 +197,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
-			JsonTokenMaker tm = new JsonTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
@@ -198,7 +215,7 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 
 		for (String code : stringLiterals) {
 			Segment segment = createSegment(code);
-			JsonTokenMaker tm = new JsonTokenMaker();
+			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType());
 		}

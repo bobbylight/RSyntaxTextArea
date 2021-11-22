@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
+public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -100,6 +100,27 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new PHPTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("<!--", startAndEnd[0]);
+		Assertions.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i  == TokenTypes.FUNCTION || i == TokenTypes.VARIABLE ||
+				i == TokenTypes.MARKUP_TAG_NAME;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -1153,15 +1174,6 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest2 {
 			//("velocis_"("autocommit"|"close"|"commit"|"connect"|"exec"|"fetch"|"fieldname"|"fieldnum"|"freeresult"|"off_autocommit"|"result"|"rollback")),
 			"virtual"
 		);
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("<!--", startAndEnd[0]);
-		Assertions.assertEquals("-->", startAndEnd[1]);
 	}
 
 

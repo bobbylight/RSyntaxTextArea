@@ -24,13 +24,27 @@ import javax.swing.text.Segment;
 public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new CsvTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.DATA_TYPE;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -104,11 +118,11 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assertions.assertTrue(token.is(Token.IDENTIFIER, "one"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "one"));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(Token.DATA_TYPE, "\"unfinished-two"));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"unfinished-two"));
 
 		token = token.getNextToken();
 		Assertions.assertEquals(token.getType(), CsvTokenMaker.INTERNAL_STRING | 1);
@@ -123,11 +137,11 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CsvTokenMaker.INTERNAL_STRING | 1, 0);
 
-		Assertions.assertTrue(token.is(Token.DATA_TYPE, "continued-quoted-region\""));
+		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "continued-quoted-region\""));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, ','));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(Token.IDENTIFIER, "another"));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "another"));
 
 		Assertions.assertFalse(token.getNextToken().isPaintable());
 	}
@@ -141,13 +155,6 @@ public class CsvTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		Assertions.assertTrue(token.is(Token.IDENTIFIER, "\"quoted \"\" string\""));
-	}
-
-
-	@Test
-	@Override
-	public void testGetLineCommentStartAndEnd() {
-		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"quoted \"\" string\""));
 	}
 }

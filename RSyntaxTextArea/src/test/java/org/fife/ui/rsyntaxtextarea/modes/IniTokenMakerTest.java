@@ -24,18 +24,14 @@ import org.junit.jupiter.api.Test;
 public class IniTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new IniTokenMaker();
 	}
 
 
 	@Test
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertEquals(";", startAndEnd[0]);

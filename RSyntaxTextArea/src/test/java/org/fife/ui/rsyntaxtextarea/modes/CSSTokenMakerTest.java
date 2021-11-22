@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
+public class CSSTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -104,6 +104,23 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new CSSTokenMaker();
+	}
+
+
+	@Test
+	public void testCommon_GetLineCommentStartAndEnd() {
+		testCss_getLineCommentStartAndEnd();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.RESERVED_WORD;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -757,11 +774,5 @@ public class CSSTokenMakerTest extends AbstractTokenMakerTest2 {
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_CHAR));
 		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_MLC));
-	}
-
-
-	@Test
-	public void testGetLineCommentStartAndEnd() {
-		testCss_getLineCommentStartAndEnd();
 	}
 }

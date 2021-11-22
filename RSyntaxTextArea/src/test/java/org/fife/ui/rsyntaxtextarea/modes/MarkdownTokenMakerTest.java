@@ -19,7 +19,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
+public class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
@@ -29,15 +29,26 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 
 
 	@Test
-	void testGetCurlyBracesDenoteCodeBlocks() {
-		Assertions.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
-		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i  == TokenTypes.MARKUP_TAG_NAME;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
+	}
+
+
+	@Test
+	void testGetCurlyBracesDenoteCodeBlocks() {
+		Assertions.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
 	}
 
 
@@ -302,7 +313,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
 		t = t.getNextToken();
-		Assertions.assertTrue(t.is(Token.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 		t = t.getNextToken();
 		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
 	}
@@ -317,7 +328,7 @@ public class MarkdownTokenMakerTest extends AbstractTokenMakerTest2 {
 		Token t = tm.getTokenList(createSegment(code), TokenTypes.NULL, 0);
 		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "test"));
 		t = t.getNextToken();
-		Assertions.assertTrue(t.is(Token.WHITESPACE, " "));
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 		t = t.getNextToken();
 		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "---"));
 	}

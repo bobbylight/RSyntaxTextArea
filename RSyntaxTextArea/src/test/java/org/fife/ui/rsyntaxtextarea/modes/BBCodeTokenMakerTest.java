@@ -21,12 +21,23 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
+public class BBCodeTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new BBCodeTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
+			boolean expected = i == TokenTypes.IDENTIFIER;
+			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
 	}
 
 
@@ -92,7 +103,7 @@ public class BBCodeTokenMakerTest extends AbstractTokenMakerTest2 {
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
 }

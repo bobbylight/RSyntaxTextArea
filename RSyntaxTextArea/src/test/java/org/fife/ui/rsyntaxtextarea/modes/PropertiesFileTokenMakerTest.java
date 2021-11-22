@@ -24,12 +24,8 @@ import org.junit.jupiter.api.Test;
 public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new PropertiesFileTokenMaker();
 	}
 
@@ -53,7 +49,7 @@ public class PropertiesFileTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	@Override
-	public void testGetLineCommentStartAndEnd() {
+	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("#", startAndEnd[0]);
 		Assertions.assertNull(null, startAndEnd[1]);

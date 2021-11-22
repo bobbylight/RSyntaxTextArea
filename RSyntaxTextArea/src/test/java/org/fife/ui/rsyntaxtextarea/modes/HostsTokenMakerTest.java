@@ -24,13 +24,29 @@ import org.junit.jupiter.api.Test;
 public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 
-	/**
-	 * Returns a new instance of the <code>TokenMaker</code> to test.
-	 *
-	 * @return The <code>TokenMaker</code> to test.
-	 */
-	private TokenMaker createTokenMaker() {
+	@Override
+	protected TokenMaker createTokenMaker() {
 		return new HostsTokenMaker();
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_GetLineCommentStartAndEnd() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_getMarkOccurrencesOfTokenType() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(
+			TokenTypes.RESERVED_WORD));
+		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
+			TokenTypes.VARIABLE));
 	}
 
 
@@ -73,24 +89,6 @@ public class HostsTokenMakerTest extends AbstractTokenMakerTest {
 
 		}
 
-	}
-
-
-	@Test
-	public void testGetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("#", startAndEnd[0]);
-		Assertions.assertNull(startAndEnd[1]);
-	}
-
-
-	@Test
-	void testGetMarkOccurrencesOfTokenType() {
-		TokenMaker tm = createTokenMaker();
-		Assertions.assertTrue(tm.getMarkOccurrencesOfTokenType(
-				TokenTypes.RESERVED_WORD));
-		Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(
-				TokenTypes.VARIABLE));
 	}
 
 
