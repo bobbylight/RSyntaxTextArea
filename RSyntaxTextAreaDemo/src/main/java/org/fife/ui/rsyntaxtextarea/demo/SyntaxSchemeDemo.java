@@ -14,8 +14,6 @@ import org.fife.ui.rsyntaxtextarea.*;
  * an XML file. The latter method is preferred since it's more modular, and
  * provides a way for your users to customize RSTA in your application.<p>
  *
- * This example uses RSyntaxTextArea 3.1.4.<p>
- *
  * Project Home: http://fifesoft.com/rsyntaxtextarea<br>
  * Downloads: https://sourceforge.net/projects/rsyntaxtextarea
  */
@@ -85,6 +83,8 @@ public final class SyntaxSchemeDemo extends JFrame implements ActionListener {
 
    /**
     * Changes the styles used in the editor programmatically.
+	* Odd selections are purposely made here to show how different token
+	* types can have different fonts, etc.
     */
    private void changeStyleProgrammatically() {
 
@@ -97,7 +97,7 @@ public final class SyntaxSchemeDemo extends JFrame implements ActionListener {
       scheme.getStyle(Token.DATA_TYPE).foreground = Color.blue;
       scheme.getStyle(Token.LITERAL_STRING_DOUBLE_QUOTE).underline = true;
       scheme.getStyle(Token.COMMENT_EOL).font = new Font("Georgia",
-            Font.ITALIC, 12);
+            Font.ITALIC, 18);
 
       textArea.revalidate();
 

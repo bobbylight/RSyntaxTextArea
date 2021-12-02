@@ -1,5 +1,13 @@
+plugins {
+    id 'application'
+}
+
 archivesBaseName = 'rstademo'
 
 dependencies {
     implementation project(':RSyntaxTextArea')
+}
+
+application {
+    mainClass.set('org.fife.ui.rsyntaxtextarea.demo.RSyntaxTextAreaDemoApp')
 }

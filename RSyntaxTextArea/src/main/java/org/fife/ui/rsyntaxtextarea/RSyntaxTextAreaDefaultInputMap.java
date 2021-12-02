@@ -67,17 +67,21 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_MULTIPLY, defaultMod),		RSyntaxTextAreaEditorKit.rstaExpandAllFoldsAction);
 
 		// NOTE:  no modifiers => mapped to keyTyped.  If we had "0" as a second
-		// second parameter, we'd get the template action (keyPressed) AND the
+		// parameter, we'd get the template action (keyPressed) AND the
 		// default space action (keyTyped).
 		//put(KeyStroke.getKeyStroke(' '),			RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, defaultShift),		RSyntaxTextAreaEditorKit.rstaPossiblyInsertTemplateAction);
 
 	}
 
+
+	@Override
 	protected String getCopyAction() {
 		return RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction;
 	}
 
+
+	@Override
 	protected String getCutAction() {
 		return RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction;
 	}

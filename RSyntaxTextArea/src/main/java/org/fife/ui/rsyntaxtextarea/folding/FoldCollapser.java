@@ -95,7 +95,7 @@ public class FoldCollapser {
 	public boolean getShouldCollapse(Fold fold) {
 		int type = fold.getFoldType();
 		for (Integer typeToCollapse : typesToCollapse) {
-			if (type== typeToCollapse) {
+			if (type == typeToCollapse) {
 				return true;
 			}
 		}

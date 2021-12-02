@@ -223,6 +223,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		// far as light/dark is concerned, this property can be omitted.
 		System.setProperty(MatchedBracketPopup.PROPERTY_CONSIDER_TEXTAREA_BACKGROUND, "true");
 
+		textArea.setEditable(false);
 		return textArea;
 	}
 

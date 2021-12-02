@@ -24,6 +24,18 @@ all unit tests, and create the jar, run:
 RSTA 3.0 and newer requires Java 8 to compile and run.  If you need
 Java 6 compatibility, you'll need to use a 2.6.x version.
 
+# Demos
+
+There are several simple demo applications in the
+`RSyntaxTextAreaDemo` submodule.  To run the "main" one, which
+shows off syntax highlighting and code folding for several
+languages as well as several common configuration options,
+run:
+
+```bash
+./gradlew RSyntaxTextAreaDemo:run
+```
+
 # Example Usage
 
 RSyntaxTextArea is simply a subclass of JTextComponent, so it can be dropped into any Swing application with ease.
