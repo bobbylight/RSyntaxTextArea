@@ -65,77 +65,53 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an unquoted/double quoted/backtick EOF heredoc.
+	 * an EOF heredoc.
 	 */
-	public static final int INTERNAL_HEREDOC_EOF_UNQUOTED			= -1;
+	public static final int INTERNAL_HEREDOC_EOF			= -1;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an single quoted EOF heredoc.
+	 * an EOT heredoc.
 	 */
-	public static final int INTERNAL_HEREDOC_EOF_SINGLE_QUOTED		= -2;
-
-	/**
-	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an double quoted EOF heredoc.
-	 */
-	public static final int INTERNAL_HEREDOC_EOF_DOUBLE_QUOTED		= -3;
-
-	/**
-	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an unquoted/double quoted/backtick EOT heredoc.
-	 */
-	public static final int INTERNAL_HEREDOC_EOT_UNQUOTED			= -4;
-
-	/**
-	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an single quoted EOT heredoc.
-	 */
-	public static final int INTERNAL_HEREDOC_EOT_SINGLE_QUOTED		= -5;
-
-	/**
-	 * Token type specific to RubyTokenMaker; this signals that we are inside
-	 * an double quoted EOT heredoc.
-	 */
-	public static final int INTERNAL_HEREDOC_EOT_DOUBLE_QUOTED		= -6;
+	public static final int INTERNAL_HEREDOC_EOT			= -2;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q!...! style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_BANG				= -7;
+	public static final int INTERNAL_STRING_Q_BANG				= -3;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q{...} style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_CURLY_BRACE		= -8;
+	public static final int INTERNAL_STRING_Q_CURLY_BRACE		= -4;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q&lt;...&gt; style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_LT					= -9;
+	public static final int INTERNAL_STRING_Q_LT					= -5;
 
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q(...) style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_PAREN					= -10;
+	public static final int INTERNAL_STRING_Q_PAREN					= -6;
 
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q/.../ style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_SLASH				= -11;
+	public static final int INTERNAL_STRING_Q_SLASH				= -7;
 
 	/**
 	 * Token type specific to RubyTokenMaker; this signals that we are inside
 	 * a %Q[...] style double quoted string.
 	 */
-	public static final int INTERNAL_STRING_Q_SQUARE_BRACKET		= -12;
+	public static final int INTERNAL_STRING_Q_SQUARE_BRACKET		= -8;
 
 
 	/**
@@ -154,6 +130,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	private void addEndToken(int tokenType) {
 		addToken(zzMarkedPos,zzMarkedPos, tokenType);
+	}
+
+
+	/**
+	 * Adds the token specified to the current linked list of tokens.
+	 *
+	 * @param tokenType The token's type.
+	 * @see #addToken(int, int, int)
+	 */
+	private void addHyperlinkToken(int start, int end, int tokenType) {
+		int so = start + offsetShift;
+		addToken(zzBuffer, start,end, tokenType, so, true);
 	}
 
 
@@ -195,9 +183,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
@@ -213,7 +198,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -235,46 +220,30 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
-			case Token.COMMENT_DOCUMENTATION:
+			case TokenTypes.COMMENT_DOCUMENTATION:
 				state = DOCCOMMENT;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR_LITERAL;
 				start = text.offset;
 				break;
-			case Token.LITERAL_BACKQUOTE:
+			case TokenTypes.LITERAL_BACKQUOTE:
 				state = BACKTICKS;
 				start = text.offset;
 				break;
-			case INTERNAL_HEREDOC_EOF_UNQUOTED:
-				state = HEREDOC_EOF_UNQUOTED;
+			case INTERNAL_HEREDOC_EOF:
+				state = HEREDOC_EOF;
 				start = text.offset;
 				break;
-			case INTERNAL_HEREDOC_EOF_SINGLE_QUOTED:
-				state = HEREDOC_EOF_SINGLE_QUOTED;
-				start = text.offset;
-				break;
-			case INTERNAL_HEREDOC_EOF_DOUBLE_QUOTED:
-				state = HEREDOC_EOF_DOUBLE_QUOTED;
-				start = text.offset;
-				break;
-			case INTERNAL_HEREDOC_EOT_UNQUOTED:
-				state = HEREDOC_EOT_UNQUOTED;
-				start = text.offset;
-				break;
-			case INTERNAL_HEREDOC_EOT_SINGLE_QUOTED:
-				state = HEREDOC_EOT_SINGLE_QUOTED;
-				start = text.offset;
-				break;
-			case INTERNAL_HEREDOC_EOT_DOUBLE_QUOTED:
-				state = HEREDOC_EOT_DOUBLE_QUOTED;
+			case INTERNAL_HEREDOC_EOT:
+				state = HEREDOC_EOT;
 				start = text.offset;
 				break;
 			case INTERNAL_STRING_Q_BANG:
@@ -302,7 +271,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -402,6 +371,14 @@ ErrorIdentifier			= ({NonSeparator}+)
 PreDefinedVariable			= ("$"([!@&`\'+0-9~=/\,;.<>_*$?:\"]|"DEBUG"|"FILENAME"|"LOAD_PATH"|"stderr"|"stdin"|"stdout"|"VERBOSE"|([\-][0adFiIlpwv])))
 Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 
+URLGenDelim				= ([:\/\?#\[\]@])
+URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
+URLUnreserved			= ({Letter}|"_"|{Digit}|[\-\.\~])
+URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
+URLCharacters			= ({URLCharacter}*)
+URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
+URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
 %state STRING
 %state STRING_Q_BANG
 %state STRING_Q_CURLY_BRACE
@@ -411,12 +388,8 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 %state STRING_Q_LT
 %state CHAR_LITERAL
 %state BACKTICKS
-%state HEREDOC_EOF_UNQUOTED
-%state HEREDOC_EOF_SINGLE_QUOTED
-%state HEREDOC_EOF_DOUBLE_QUOTED
-%state HEREDOC_EOT_UNQUOTED
-%state HEREDOC_EOT_SINGLE_QUOTED
-%state HEREDOC_EOT_DOUBLE_QUOTED
+%state HEREDOC_EOF
+%state HEREDOC_EOT
 %state DOCCOMMENT
 
 %%
@@ -456,7 +429,7 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 	"until" |
 	"when" |
 	"while" |
-	"yield"					{ addToken(Token.RESERVED_WORD); }
+	"yield"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	"Array" |
 	"Float" |
@@ -511,20 +484,20 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 	"test" |
 	"trace_var" |
 	"trap" |
-	"untrace_var"					{ addToken(Token.FUNCTION); } 
+	"untrace_var"					{ addToken(TokenTypes.FUNCTION); }
 
 	"and" |
 	"or" |
-	"not"					{ addToken(Token.OPERATOR); }
+	"not"					{ addToken(TokenTypes.OPERATOR); }
 
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	{BooleanLiteral}			{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 
-	{Variable}						{ addToken(Token.VARIABLE); }
-	{Symbol}						{ addToken(Token.PREPROCESSOR); }
+	{Variable}						{ addToken(TokenTypes.VARIABLE); }
+	{Symbol}						{ addToken(TokenTypes.PREPROCESSOR); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
 	\"							{ start = zzMarkedPos-1; yybegin(STRING); }
@@ -538,122 +511,122 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 	\`							{ start = zzMarkedPos-1; yybegin(BACKTICKS); }
 
 	/* Comment literals. */
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{LineCommentBegin}.*			{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 	{DocCommentBegin}				{ start = zzMarkedPos-6; yybegin(DOCCOMMENT); }
 
 	/* "Here-document" syntax.  This is only implemented for the common */
 	/* cases.                                                           */
-	"<<EOF"						{ start = zzStartRead; yybegin(HEREDOC_EOF_UNQUOTED); }
-	"<<" {WhiteSpace}* \""EOF"\"		{ start = zzStartRead; yybegin(HEREDOC_EOF_UNQUOTED); }
-	"<<" {WhiteSpace}* \'"EOF"\'		{ start = zzStartRead; yybegin(HEREDOC_EOF_SINGLE_QUOTED); }
-	"<<" {WhiteSpace}* \`"EOF"\`		{ start = zzStartRead; yybegin(HEREDOC_EOF_UNQUOTED); }
-	"<<EOT"						{ start = zzStartRead; yybegin(HEREDOC_EOT_UNQUOTED); }
-	"<<" {WhiteSpace}* \""EOT"\"		{ start = zzStartRead; yybegin(HEREDOC_EOT_UNQUOTED); }
-	"<<" {WhiteSpace}* \'"EOT"\'		{ start = zzStartRead; yybegin(HEREDOC_EOT_SINGLE_QUOTED); }
-	"<<" {WhiteSpace}* \`"EOT"\`		{ start = zzStartRead; yybegin(HEREDOC_EOT_UNQUOTED); }
+	"<<EOF" |
+	"<<" {WhiteSpace}* \""EOF"\" |
+	"<<" {WhiteSpace}* \'"EOF"\' |
+	"<<" {WhiteSpace}* \`"EOF"\`		{ start = zzStartRead; yybegin(HEREDOC_EOF); }
+	"<<EOT" |
+	"<<" {WhiteSpace}* \""EOT"\" |
+	"<<" {WhiteSpace}* \'"EOT"\' |
+	"<<" {WhiteSpace}* \`"EOT"\`		{ start = zzStartRead; yybegin(HEREDOC_EOT); }
 
 	/* Separators and operators. */
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{DecimalLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
+	{DecimalLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{HexLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{FloatLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
 
-	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
+	{ErrorIdentifier}				{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 
 <STRING> {
 	[^\n\\\"]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
 
 <STRING_Q_BANG> {
 	[^\n\\\!]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_BANG); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\!					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_BANG); return firstToken; }
+	\!					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_BANG); return firstToken; }
 }
 
 
 <STRING_Q_CURLY_BRACE> {
 	[^\n\\\}]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_CURLY_BRACE); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\}					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_CURLY_BRACE); return firstToken; }
+	\}					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_CURLY_BRACE); return firstToken; }
 }
 
 
 <STRING_Q_LT> {
 	[^\n\\\>]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_LT); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\>					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_LT); return firstToken; }
+	\>					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_LT); return firstToken; }
 }
 
 
 <STRING_Q_PAREN> {
 	[^\n\\\)]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_PAREN); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\)					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_PAREN); return firstToken; }
+	\)					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_PAREN); return firstToken; }
 }
 
 
 <STRING_Q_SLASH> {
 	[^\n\\\/]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SLASH); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\/					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SLASH); return firstToken; }
+	\/					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SLASH); return firstToken; }
 }
 
 
 <STRING_Q_SQUARE_BRACKET> {
 	[^\n\\\]]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SQUARE_BRACKET); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\]					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SQUARE_BRACKET); return firstToken; }
+	\]					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_STRING_Q_SQUARE_BRACKET); return firstToken; }
 }
 
 
 <CHAR_LITERAL> {
 	[^\n\\\']+			{}
 	\\.?					{ /* Skip escaped single quotes only, but this should still work. */ }
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
-	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 }
 
 
 <BACKTICKS> {
 	[^\n\\\`]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
+	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE); }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_BACKQUOTE); return firstToken; }
 }
 
 
-<HEREDOC_EOF_UNQUOTED> {
+<HEREDOC_EOF> {
 	/* NOTE: The closing "EOF" is supposed to be on a line by itself -  */
 	/* no surrounding whitespace or other chars.  However, the way      */
 	/* we're hacking the JFLex scanning, something like ^"EOF"$ doesn't */
@@ -661,47 +634,17 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 	/* since the production after "EOF" will match any line containing  */
 	/* EOF and any other chars.                                         */
 	/* NOTE2: This case is used for unquoted <<EOF, double quoted       */
-	/* <<"EOF" and backticks <<`EOF`, since they all follow the same    */
-	/* syntactic rules.                                                 */
-	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	/* <<"EOF", single-quoted <<'EOF' and backticks <<`EOF`, since they */
+	/* all follow the same syntactic rules.                              */
+	"EOF"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF); return firstToken; }
 }
 
 
-<HEREDOC_EOF_SINGLE_QUOTED> {
-	/* NOTE: The closing "EOF" is supposed to be on a line by itself -  */
-	/* no surrounding whitespace or other chars.  However, the way      */
-	/* we're hacking the JFLex scanning, something like ^"EOF"$ doesn't */
-	/* work.  Fortunately we don't need the start- and end-line anchors */
-	/* since the production after "EOF" will match any line containing  */
-	/* EOF and any other chars.                                         */
-	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
-	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
-	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
-}
-
-
-<HEREDOC_EOF_DOUBLE_QUOTED> {
-	/* NOTE: The closing "EOF" is supposed to be on a line by itself -  */
-	/* no surrounding whitespace or other chars.  However, the way      */
-	/* we're hacking the JFLex scanning, something like ^"EOF"$ doesn't */
-	/* work.  Fortunately we don't need the start- and end-line anchors */
-	/* since the production after "EOF" will match any line containing  */
-	/* EOF and any other chars.                                         */
-	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
-	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
-	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
-}
-
-
-<HEREDOC_EOT_UNQUOTED> {
+<HEREDOC_EOT> {
 	/* NOTE: The closing "EOT" is supposed to be on a line by itself -  */
 	/* no surrounding whitespace or other chars.  However, the way      */
 	/* we're hacking the JFLex scanning, something like ^"EOT"$ doesn't */
@@ -709,52 +652,31 @@ Variable					= ({PreDefinedVariable}|([@][@]?|[$]){Identifier})
 	/* since the production after "EOT" will match any line containing  */
 	/* EOF and any other chars.                                         */
 	/* NOTE2: This case is used for unquoted <<EOT, double quoted       */
-	/* <<"EOT" and backticks <<`EOT`, since they all follow the same    */
-	/* syntactic rules.                                                 */
-	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	/* <<"EOT", single-quoted <<'EOT' and backticks <<`EOT`, since they */
+	/* all follow the same syntactic rules.                              */
+	"EOT"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
-}
-
-
-<HEREDOC_EOT_SINGLE_QUOTED> {
-	/* NOTE: The closing "EOT" is supposed to be on a line by itself -  */
-	/* no surrounding whitespace or other chars.  However, the way      */
-	/* we're hacking the JFLex scanning, something like ^"EOT"$ doesn't */
-	/* work.  Fortunately we don't need the start- and end-line anchors */
-	/* since the production after "EOT" will match any line containing  */
-	/* EOT and any other chars.                                         */
-	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
-	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
-	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
-}
-
-
-<HEREDOC_EOT_DOUBLE_QUOTED> {
-	/* NOTE: The closing "EOT" is supposed to be on a line by itself -  */
-	/* no surrounding whitespace or other chars.  However, the way      */
-	/* we're hacking the JFLex scanning, something like ^"EOT"$ doesn't */
-	/* work.  Fortunately we don't need the start- and end-line anchors */
-	/* since the production after "EOT" will match any line containing  */
-	/* EOT and any other chars.                                         */
-	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
-	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
-	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
+	\n |
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT); return firstToken; }
 }
 
 
 <DOCCOMMENT> {
 
-	[^\n\=]+				{}
-	{DocCommentEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+3, Token.COMMENT_DOCUMENTATION); }
-	=					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
-	<<EOF>>					{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	[^hwf\n=]+				{}
+	{URL}					{
+                                int temp = zzStartRead;
+                                if (start <= zzStartRead - 1) {
+                                    addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                }
+                                addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION);
+                                start = zzMarkedPos;
+                            }
+	[hwf]					{}
 
+	{DocCommentEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+3, TokenTypes.COMMENT_DOCUMENTATION); }
+	=			    		{}
+	\n |
+	<<EOF>>					{ yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); return firstToken; }
 }
