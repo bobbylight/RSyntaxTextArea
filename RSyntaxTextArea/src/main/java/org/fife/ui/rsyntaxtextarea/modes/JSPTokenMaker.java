@@ -6540,14 +6540,14 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
 	 * double-quote attribute.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE			= -1;
+	static final int INTERNAL_ATTR_DOUBLE			= -1;
 
 
 	/**
 	 * Type specific to JSPTokenMaker denoting a line ending with an unclosed
 	 * single-quote attribute.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE			= -2;
+	static final int INTERNAL_ATTR_SINGLE			= -2;
 
 
 	/**
@@ -6555,43 +6555,43 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
 	 * still inside of the tag.
 	 */
-	private static final int INTERNAL_INTAG					= -3;
+	static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to JSPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed <code>&lt;script&gt;</code> tag.
 	 */
-	private static final int INTERNAL_INTAG_SCRIPT			= -4;
+	static final int INTERNAL_INTAG_SCRIPT			= -4;
 
 	/**
 	 * Token type specifying we're in a double-quoted attribute in a
 	 * script tag.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
+	static final int INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT = -5;
 
 	/**
 	 * Token type specifying we're in a single-quoted attribute in a
 	 * script tag.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
+	static final int INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT = -6;
 
 	/**
 	 * Token type specifying that the user has
 	 * ended a line with an unclosed <code>&lt;style&gt;</code> tag.
 	 */
-	private static final int INTERNAL_INTAG_STYLE			= -7;
+	static final int INTERNAL_INTAG_STYLE			= -7;
 
 	/**
 	 * Token type specifying we're in a double-quoted attribute in a
 	 * style tag.
 	 */
-	private static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
+	static final int INTERNAL_ATTR_DOUBLE_QUOTE_STYLE = -8;
 
 	/**
 	 * Token type specifying we're in a single-quoted attribute in a
 	 * style tag.
 	 */
-	private static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
+	static final int INTERNAL_ATTR_SINGLE_QUOTE_STYLE = -9;
 
 	/**
 	 * Token type specifying we're in a JSP hidden comment ("<%-- ... --%>").
@@ -7792,7 +7792,13 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 240: break;
         case 124:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
+          {
+			  int temp = zzStartRead;
+			  if (start <= zzStartRead - 1) {
+				  addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT);
+			  }
+			  addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT);
+			  start = zzMarkedPos;
           }
         case 241: break;
         case 6:

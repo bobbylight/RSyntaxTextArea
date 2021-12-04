@@ -836,7 +836,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <COMMENT> {
 	[^hwf\n\-]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
+	{URL}					{
+                                int temp = zzStartRead;
+                                if (start <= zzStartRead - 1) {
+                                    addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT);
+                                }
+                                addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT);
+                                start = zzMarkedPos;
+
+                            }
 	[hwf]					{}
 	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); }
 	"-"						{}

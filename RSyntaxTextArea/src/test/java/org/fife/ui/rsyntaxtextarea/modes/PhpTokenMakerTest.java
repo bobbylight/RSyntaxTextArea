@@ -66,6 +66,24 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	 */
 	private static final int CSS_CHAR_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_CSS_CHAR;
 
+	private static final int HTML_ATTR_DOUBLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_DOUBLE;
+
+	private static final int HTML_ATTR_SINGLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_SINGLE;
+
+	private static final int HTML_ATTR_SCRIPT_DOUBLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT;
+
+	private static final int HTML_ATTR_SCRIPT_SINGLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT;
+
+	private static final int HTML_ATTR_STYLE_DOUBLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE;
+
+	private static final int HTML_ATTR_STYLE_SINGLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE;
+
+	private static final int HTML_INTAG_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_INTAG;
+
+	private static final int HTML_INTAG_SCRIPT_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_INTAG_SCRIPT;
+
+	private static final int HTML_INTAG_STYLE_PREV_TOKEN_TYPE = PHPTokenMaker.INTERNAL_INTAG_STYLE;
+
 	/**
 	 * The last token type on the previous line for this token maker to
 	 * start parsing a new line as JS.  This constant is only here so we can
@@ -1921,124 +1939,166 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testHtml_attribute_unclosedDoubleQuote() {
-
-		String code = "\"Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_DOUBLE, token.getType());
+	void testHtml_attribute_doubleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_INTAG_PREV_TOKEN_TYPE,
+			"\"attribute value\"",
+			"\"unclosed attribute value"
+		);
 	}
 
 
 	@Test
-	void testHtml_attribute_unclosedSingleQuote() {
-
-		String code = "'Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_SINGLE, token.getType());
+	void testHtml_attribute_doubleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_DOUBLE_PREV_TOKEN_TYPE,
+			"continued from prior line\"",
+			"continued and still unterminated"
+		);
 	}
 
 
 	@Test
-	void testHtml_attributeScriptTag_unclosedDoubleQuote() {
-
-		String code = "\"Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT, token.getType());
+	void testHtml_attribute_singleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTMLTokenMaker.INTERNAL_INTAG,
+			"'attribute value'",
+			"'unclosed attribute value"
+		);
 	}
 
 
 	@Test
-	void testHtml_attributeScriptTag_unclosedSingleQuote() {
-
-		String code = "'Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT, token.getType());
+	void testHtml_attribute_singleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_SINGLE_PREV_TOKEN_TYPE,
+			"continued from prior line'",
+			"continued and still unterminated"
+		);
 	}
 
 
 	@Test
-	void testHtml_attributeStyleTag_unclosedDoubleQuote() {
-
-		String code = "\"Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE, token.getType());
+	void testHtml_attributeScriptTag_doubleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_INTAG_SCRIPT_PREV_TOKEN_TYPE,
+			"\"attribute value\"",
+			"\"unclosed attribute value"
+		);
 	}
 
 
 	@Test
-	void testHtml_attributeStyleTag_unclosedSingleQuote() {
+	void testHtml_attributeScriptTag_doubleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_SCRIPT_DOUBLE_PREV_TOKEN_TYPE,
+			"continued from prior line\"",
+			"continued and still unterminated"
+		);
+	}
 
-		String code = "'Unterminated attribute";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
 
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assertions.assertEquals(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(PHPTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE, token.getType());
+	@Test
+	void testHtml_attributeScriptTag_singleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTMLTokenMaker.INTERNAL_INTAG_SCRIPT,
+			"'attribute value'",
+			"'unclosed attribute value"
+		);
+	}
+
+
+	@Test
+	void testHtml_attributeScriptTag_singleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_SCRIPT_SINGLE_PREV_TOKEN_TYPE,
+			"continued from prior line'",
+			"continued and still unterminated"
+		);
+	}
+
+
+	@Test
+	void testHtml_attributeStyleTag_doubleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_INTAG_STYLE_PREV_TOKEN_TYPE,
+			"\"attribute value\"",
+			"\"unclosed attribute value"
+		);
+	}
+
+
+	@Test
+	void testHtml_attributeStyleTag_doubleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_STYLE_DOUBLE_PREV_TOKEN_TYPE,
+			"continued from prior line\"",
+			"continued and still unterminated"
+		);
+	}
+
+
+	@Test
+	void testHtml_attributeStyleTag_singleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_INTAG_STYLE_PREV_TOKEN_TYPE,
+			"'attribute value'",
+			"'unclosed attribute value"
+		);
+	}
+
+
+	@Test
+	void testHtml_attributeStyleTag_singleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HTML_ATTR_STYLE_SINGLE_PREV_TOKEN_TYPE,
+			"continued from prior line'",
+			"continued and still unterminated"
+		);
 	}
 
 
 	@Test
 	void testHtml_comment() {
-
-		String[] commentLiterals = {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			TokenTypes.NULL,
 			"<!-- Hello world -->",
-			"<!-- unterminated",
-		};
+			"<!-- unterminated"
+		);
+	}
 
-		for (String code : commentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
-		}
 
+	@Test
+	void testHtml_comment_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			TokenTypes.MARKUP_COMMENT,
+			"continued but unterminated",
+			"continued -->"
+		);
 	}
 
 
 	@Test
 	void testHtml_comment_URL() {
 
-		String code = "<!-- Hello world http://www.google.com -->";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		String[] urls = {
+			"file://test.txt",
+			"ftp://ftp.google.com",
+			"http://www.google.com",
+			"https://www.google.com",
+			"www.google.com"
+		};
 
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "));
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
-		token = token.getNextToken();
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
+		for (String literal : urls) {
 
+			Segment segment = createSegment(literal);
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, TokenTypes.MARKUP_COMMENT, 0);
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
+			Assertions.assertEquals(literal, token.getLexeme());
+		}
 	}
 
 
@@ -2158,7 +2218,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTag_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG, 0);
+		Token token = tm.getTokenList(segment, HTML_INTAG_PREV_TOKEN_TYPE, 0);
 		Assertions.assertEquals(PHPTokenMaker.INTERNAL_INTAG, token.getType());
 	}
 
@@ -2167,7 +2227,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTagScript_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
+		Token token = tm.getTokenList(segment, HTML_INTAG_SCRIPT_PREV_TOKEN_TYPE, 0);
 		Assertions.assertEquals(PHPTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
 	}
 
@@ -2176,7 +2236,7 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTagStyle_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, PHPTokenMaker.INTERNAL_INTAG_STYLE, 0);
+		Token token = tm.getTokenList(segment, HTML_INTAG_STYLE_PREV_TOKEN_TYPE, 0);
 		Assertions.assertEquals(PHPTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
 	}
 
