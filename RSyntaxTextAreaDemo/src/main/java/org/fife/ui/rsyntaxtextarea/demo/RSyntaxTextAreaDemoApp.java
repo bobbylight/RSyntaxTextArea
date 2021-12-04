@@ -26,7 +26,6 @@ public final class RSyntaxTextAreaDemoApp extends JFrame {
 			try {
 				UIManager.setLookAndFeel(UIManager.
 										getSystemLookAndFeelClassName());
-//UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 			} catch (Exception e) {
 				e.printStackTrace(); // Never happens
 			}

@@ -468,14 +468,16 @@ public class ConfigurableCaret extends DefaultCaret {
 					// Draw a vertical line.
 					default:
 					case VERTICAL_LINE_STYLE:
-						g.drawLine(r.x,r.y, r.x,r.y+r.height);
+						int lineY = r.y + 1;
+						g.drawLine(r.x,lineY, r.x,lineY+r.height);
 						break;
 
 					// A thicker vertical line.
 					case THICK_VERTICAL_LINE_STYLE:
-						g.drawLine(r.x,r.y, r.x,r.y+r.height);
+						lineY = r.y + 1;
+						g.drawLine(r.x,lineY, r.x,lineY+r.height);
 						r.x++;
-						g.drawLine(r.x,r.y, r.x,r.y+r.height);
+						g.drawLine(r.x,lineY, r.x,lineY+r.height);
 						break;
 
 				} // End of switch (style).
