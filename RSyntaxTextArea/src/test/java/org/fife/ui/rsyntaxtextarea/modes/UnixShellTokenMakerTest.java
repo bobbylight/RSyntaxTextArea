@@ -137,6 +137,270 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testGetTokenList_backtickStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "`A \\`backtick\\` literal`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`A \\`backtick\\` literal`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_backtickStart_variables() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "`My $name is very ${foo} ${adjective}`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`My "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$name"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, " is very "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${foo}"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, " "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${adjective}"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_backtickStart_variableEscaped() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "`\\$notAVariable \\${notAVariable}`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`\\$notAVariable \\${notAVariable}`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_backtickStart_endWithNonCurlyVariable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "`Hello $name`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$name"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+	}
+
+
+	@Test
+	void testGetTokenList_backtickStart_variablesUnclosed() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "`${unclosedVar";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedVar"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE, token.getType()); // Marker token
+
+	}
+
+
+	@Test
+	void testGetTokenList_doubleQuoteStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "\"A \\\"doubleQuote\\\" literal\\";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"A \\\"doubleQuote\\\" literal\\"));
+
+		token = token.getNextToken();
+		Assertions.assertNull(token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_doubleQuoteStart_variables() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "\"My $name is very ${foo} ${adjective}\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"My "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$name"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, " is very "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${foo}"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, " "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${adjective}"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\""));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_doubleQuoteStart_variableEscaped() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "\"\\$notAVariable \\${notAVariable}\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\\$notAVariable \\${notAVariable}\""));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_doubleQuoteStart_endWithNonCurlyVariable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "\"Hello $name\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$name"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\""));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+	}
+
+
+	@Test
+	void testGetTokenList_doubleQuoteStart_variablesUnclosed() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "\"${unclosedVar";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\""));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedVar"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType()); // Marker token
+
+	}
+
+
+	@Test
+	void testGetTokenList_eolStart_bang() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "#!";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, "#!"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_eolStart_anythingElse() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "# this is a comment";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, "# this is a comment"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "foo\\";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '\\'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_equals() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "foo=";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
 	void testGetTokenList_identifierStart_LiteralBackQuote() {
 
 		TokenMaker tm = createTokenMaker();
@@ -183,6 +447,296 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'Hello world'"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_operator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "foo|";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '|'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_separator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "foo(";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '('));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_separator2() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "foo,";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, ','));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_slash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "foo/";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo/"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_variable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "foo$bar";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$bar"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_identifierStart_whiteSpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "foo ";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalCharStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "'A \\'char\\' literal with escapes'";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'A \\'char\\' literal with escapes'"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42\\";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '\\'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_LiteralBackQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42`cat 42.txt`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`cat 42.txt`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_LiteralDoubleQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42\"Hello world\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"Hello world\""));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_LiteralSingleQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42'Hello world'";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'Hello world'"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_operator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "42|";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '|'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_separator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "42(";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '('));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_separator2() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "42,";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, ','));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_variable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42$bar";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$bar"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_literalNumberStart_whiteSpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "42 ";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, "42"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 
 		token = token.getNextToken();
 		Assertions.assertEquals(new TokenImpl(), token);
@@ -480,6 +1034,206 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testGetTokenList_variableStart_backSlash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo\\";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '\\'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_equals() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "$foo=";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_LiteralBackQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo`cat foo.txt`";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`cat foo.txt`"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_LiteralDoubleQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo\"Hello world\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"Hello world\""));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_LiteralSingleQuote() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo'Hello world'";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_CHAR, "'Hello world'"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_operator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "$foo|";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '|'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_separator() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "$foo(";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '('));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_separator2() {
+
+		TokenMaker tm = createTokenMaker();
+
+		// Variable assignment
+		String text = "$foo,";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, ','));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_slash() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo/";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '/'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_variable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo$bar";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo$bar"));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_variableStart_whiteSpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "$foo ";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "$foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
 	void testGetTokenList_whitespaceStart_EolComment() {
 
 		TokenMaker tm = createTokenMaker();
@@ -562,6 +1316,22 @@ public class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, text.trim()));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void testGetTokenList_whitespaceStart_whitespace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = "  \t ";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, "  \t "));
 
 		token = token.getNextToken();
 		Assertions.assertEquals(new TokenImpl(), token);

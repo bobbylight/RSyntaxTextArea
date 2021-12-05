@@ -88,9 +88,6 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
@@ -423,7 +420,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		// See, when we find a token, its starting position is always of the form:
 		// 'startOffset + (currentTokenStart-offset)'; but since startOffset and
 		// offset are constant, tokens' starting positions become:
-		// 'newStartOffset+currentTokenStart' for one less subraction operation.
+		// 'newStartOffset+currentTokenStart' for one less subtraction operation.
 		int newStartOffset = startOffset - offset;
 
 		currentTokenStart = offset;
