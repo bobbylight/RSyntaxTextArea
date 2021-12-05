@@ -6,12 +6,11 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
-import org.fife.ui.rsyntaxtextarea.TokenMap;
-import org.fife.ui.rsyntaxtextarea.TokenTypes;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.text.Segment;
 
 
 /**
@@ -69,7 +68,6 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testIdentifiers() {
-
 		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
@@ -217,25 +215,27 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testOperators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			"@",
+			"*",
+			"<",
+			">",
+			"=",
+			"?"
+		);
+	}
+
+
+	@Test
 	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR, "(", ")");
 	}
 
 
 	@Test
-	void testSeparators_afterSpace() {
-
-		TokenMaker tm = createTokenMaker();
-
-		Token t = tm.getTokenList(createSegment(" ("), TokenTypes.NULL, 0);
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, '('));
-
-		t = tm.getTokenList(createSegment(" )"), TokenTypes.NULL, 0);
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, ')'));
+	void testSeparators2() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER, ".", ";");
 	}
 
 
@@ -260,14 +260,208 @@ public class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
 			"%8",
 			"%~dp0",
 			"%%xyz",
-			"%{isthisright}");
+			"%%xyz%%",
+			"%%foo0:~,-bar%%",
+			"%{isthisright}"
+		);
+	}
+
+
+	@Test
+	void testVariables_doublePercent_terminatedBySpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("%%var "), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.is(TokenTypes.VARIABLE, "%%var"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+	}
+
+
+	@Test
+	void testVariables_tilde_terminatedBySpace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("%~dp0 "), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.is(TokenTypes.VARIABLE, "%~dp0"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
 	}
 
 
 	@Test
 	void testWhitespace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE, " ", "\t", "  \t ");
+	}
 
-		assertAllTokensOfType(TokenTypes.WHITESPACE, " ", "\t");
+
+	@Test
+	void test_identifierStart_operators() {
+
+		TokenMaker tm = createTokenMaker();
+		char[] operators = "@*<>=?".toCharArray();
+
+		for (char operator : operators) {
+			Token t = tm.getTokenList(createSegment("foo" + operator), TokenTypes.NULL, 0);
+			Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+			t = t.getNextToken();
+			Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, operator));
+		}
+	}
+
+
+	@Test
+	void test_identifierStart_separators() {
+
+		TokenMaker tm = createTokenMaker();
+
+		for (char separator : "()".toCharArray()) {
+			Token t = tm.getTokenList(createSegment("foo" + separator), TokenTypes.NULL, 0);
+			Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+			t = t.getNextToken();
+			Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, separator));
+		}
+	}
+
+
+	@Test
+	void test_identifierStart_separators2() {
+
+		TokenMaker tm = createTokenMaker();
+
+		for (char separator : ",;".toCharArray()) {
+			Token t = tm.getTokenList(createSegment("foo" + separator), TokenTypes.NULL, 0);
+			Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+			t = t.getNextToken();
+			Assertions.assertTrue(t.isSingleChar(TokenTypes.IDENTIFIER, separator));
+		}
+	}
+
+
+	@Test
+	void test_identifierStart_string() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("foo\"bar\""), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"bar\""));
+	}
+
+
+	@Test
+	void test_identifierStart_variable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("foo%var%"), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.VARIABLE, "%var%"));
+	}
+
+
+	@Test
+	void test_identifierStart_whitespace() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("foo "), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "foo"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+	}
+
+
+	@Test
+	void test_whitespaceStart_operators() {
+
+		TokenMaker tm = createTokenMaker();
+		char[] operators = "@*<>=?".toCharArray();
+
+		for (char operator : operators) {
+			Token t = tm.getTokenList(createSegment(" " + operator), TokenTypes.NULL, 0);
+			Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+			t = t.getNextToken();
+			Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, operator));
+		}
+	}
+
+
+	@Test
+	void test_whitespaceStart_separators() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment(" ("), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, '('));
+
+		t = tm.getTokenList(createSegment(" )"), TokenTypes.NULL, 0);
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.SEPARATOR, ')'));
+	}
+
+
+	@Test
+	void test_whitespaceStart_separators2() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = " , ;";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, ','));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, ';'));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
+	}
+
+
+	@Test
+	void test_whitespaceStart_strings() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = " \"Hello world\"";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, text.trim()));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+	}
+
+
+	@Test
+	void test_whitespaceStart_Variable() {
+
+		TokenMaker tm = createTokenMaker();
+
+		String text = " %PATH%";
+		Segment s = createSegment(text);
+		Token token = tm.getTokenList(s, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, text.trim()));
+
+		token = token.getNextToken();
+		Assertions.assertEquals(new TokenImpl(), token);
+
 	}
 
 
