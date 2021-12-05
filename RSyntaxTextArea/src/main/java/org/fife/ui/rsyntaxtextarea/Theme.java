@@ -479,6 +479,13 @@ public class Theme {
 			elem = doc.createElement("tokenStyles");
 			Field[] fields = TokenTypes.class.getFields();
 			for (Field field : fields) {
+
+				// IntelliJ's coverage analysis injects fields named
+				// things like __$lineHits$__.  Yuck.
+				if (field.getName().startsWith("__")) {
+					continue;
+				}
+
 				int value = field.getInt(null);
 				if (value != TokenTypes.DEFAULT_NUM_TOKEN_TYPES) {
 					Style style = scheme.getStyle(value);

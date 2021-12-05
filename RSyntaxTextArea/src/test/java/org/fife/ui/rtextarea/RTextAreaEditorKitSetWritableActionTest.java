@@ -41,4 +41,11 @@ class RTextAreaEditorKitSetWritableActionTest {
 		Assertions.assertEquals(DefaultEditorKit.writableAction,
 			new RTextAreaEditorKit.SetWritableAction().getMacroID());
 	}
+
+
+	@Test
+	void testIsRecordable() {
+		RTextAreaEditorKit.SetWritableAction a = new RTextAreaEditorKit.SetWritableAction();
+		Assertions.assertFalse(a.isRecordable());
+	}
 }

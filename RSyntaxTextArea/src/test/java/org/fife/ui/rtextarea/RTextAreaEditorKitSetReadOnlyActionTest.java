@@ -41,4 +41,11 @@ class RTextAreaEditorKitSetReadOnlyActionTest {
 		Assertions.assertEquals(DefaultEditorKit.readOnlyAction,
 			new RTextAreaEditorKit.SetReadOnlyAction().getMacroID());
 	}
+
+
+	@Test
+	void testIsRecordable() {
+		RTextAreaEditorKit.SetReadOnlyAction a = new RTextAreaEditorKit.SetReadOnlyAction();
+		Assertions.assertFalse(a.isRecordable());
+	}
 }

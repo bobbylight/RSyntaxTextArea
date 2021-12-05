@@ -885,28 +885,14 @@ public class Gutter extends JPanel {
 	}
 
 
-//	public void setUI(ComponentUI ui) {
-//
-//		Border gutterBorder = getBorder();
-//
-//		super.setUI(ui);
-//
-//		// Some LaFs, such as WebLookAndFeel, override borders even when
-//		// they aren't UIResources.
-//		Border border = getBorder();
-//		if (border != gutterBorder) {
-//			setBorder(gutterBorder);
-//		}
-//
-//	}
-//
-//
-@Override
-public void setBorder(Border border) {
-	if (border instanceof GutterBorder) {
-		super.setBorder(border);
+	@Override
+	public void setBorder(Border border) {
+		if (border instanceof GutterBorder) {
+			super.setBorder(border);
+		}
 	}
-}
+
+
 	/**
 	 * The border used by the gutter.
 	 */

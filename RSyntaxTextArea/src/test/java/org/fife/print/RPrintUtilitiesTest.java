@@ -52,6 +52,30 @@ class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testPrintDocumentMonospaced_happyPath_tabSizeZero() throws BadLocationException {
+
+		Graphics g = createTestGraphics();
+		PlainDocument doc = new PlainDocument();
+		doc.insertString(0, createContent(5000), null);
+		PageFormat pageFormat = new PageFormat();
+
+		RPrintUtilities.printDocumentMonospaced(g, doc, 10, 0, pageFormat, 0);
+	}
+
+
+	@Test
+	void testPrintDocumentMonospaced_happyPath_empty() throws BadLocationException {
+
+		Graphics g = createTestGraphics();
+		PlainDocument doc = new PlainDocument();
+		doc.insertString(0, createContent(0), null);
+		PageFormat pageFormat = new PageFormat();
+
+		RPrintUtilities.printDocumentMonospaced(g, doc, 10, 0, pageFormat, 4);
+	}
+
+
+	@Test
 	void testPrintDocumentMonospacedWordWrap_happyPath() throws BadLocationException {
 
 		Graphics g = createTestGraphics();

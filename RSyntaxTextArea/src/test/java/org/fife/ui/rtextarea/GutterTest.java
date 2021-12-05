@@ -4,14 +4,15 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Point;
+import java.awt.*;
 
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-class GutterTest {
+class GutterTest extends AbstractRTextAreaTest {
 
 	private static final String PLAIN_TEXT = "Line 1\n"
 			+ "Line 2\n"
@@ -35,8 +36,12 @@ class GutterTest {
 	@Test
 	void testAddLineTrackingIcon_2Arg_Valid() throws Exception {
 
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		// Extra coverage/logic for RSyntaxTextAreas
+		RSyntaxTextArea textArea = new RSyntaxTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
+		gutter.setLineNumbersEnabled(true);
+		gutter.setIconRowHeaderEnabled(true);
+		gutter.setBookmarkingEnabled(true);
 		Icon icon = new EmptyTestIcon();
 
 		GutterIconInfo gii = gutter.addLineTrackingIcon(1, icon);
@@ -166,7 +171,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetActiveLineRangeColor() {
+	void testGetSetActiveLineRangeColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -237,7 +242,18 @@ class GutterTest {
 
 
 	@Test
-	void testGetBorderColor() {
+	void testGetSetArmedFoldBackground() {
+
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+
+		gutter.setArmedFoldBackground(Color.PINK);
+		Assertions.assertEquals(Color.PINK, gutter.getArmedFoldBackground());
+	}
+
+
+	@Test
+	void testGetSetBorderColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -254,7 +270,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetFoldBackground() {
+	void testGetSetFoldBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -267,11 +283,16 @@ class GutterTest {
 		gutter.setFoldBackground(color);
 		Assertions.assertEquals(color, gutter.getFoldBackground());
 
+		// Sets to default - not a public value, but also not Color.green.
+		gutter.setFoldBackground(null);
+		Assertions.assertNotNull(gutter.getFoldBackground());
+		Assertions.assertNotEquals(color, gutter.getFoldBackground());
+
 	}
 
 
 	@Test
-	void testGetFoldIndicatorForeground() {
+	void testGetSetFoldIndicatorForeground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -293,7 +314,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetIconRowHeaderInheritsGutterBackground() {
+	void testGetSetIconRowHeaderInheritsGutterBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -306,7 +327,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetLineNumberColor() {
+	void testGetSetLineNumberColor() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -323,7 +344,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetLineNumberFont() {
+	void testGetSetLineNumberFont() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -353,7 +374,7 @@ class GutterTest {
 
 
 	@Test
-	void testGetLineNumbersEnabled() {
+	void testGetSetLineNumbersEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -413,6 +434,9 @@ class GutterTest {
 		gutter.setFoldIndicatorEnabled(true);
 		Assertions.assertTrue(gutter.isFoldIndicatorEnabled());
 
+		gutter.setFoldIndicatorEnabled(false);
+		Assertions.assertFalse(gutter.isFoldIndicatorEnabled());
+
 	}
 
 
@@ -430,7 +454,7 @@ class GutterTest {
 
 
 	@Test
-	void testIsIconRowHeaderEnabled() {
+	void testIsSetIconRowHeaderEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
@@ -439,6 +463,43 @@ class GutterTest {
 		gutter.setIconRowHeaderEnabled(true);
 		Assertions.assertTrue(gutter.isIconRowHeaderEnabled());
 
+		gutter.setIconRowHeaderEnabled(false);
+		Assertions.assertFalse(gutter.isIconRowHeaderEnabled());
+
+	}
+
+
+	@Test
+	void testPaint() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea(PLAIN_TEXT);
+		textArea.setCodeFoldingEnabled(true);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+		Gutter gutter = new Gutter(textArea);
+		gutter.setBounds(0, 0, 80, 80);
+		gutter.paint(createTestGraphics());
+	}
+
+
+	@Test
+	void testPropertyChange_codeFoldingTogglingUpdatesGutter() {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setCodeFoldingEnabled(true);
+		Gutter gutter = new Gutter(textArea);
+		Assertions.assertTrue(gutter.isFoldIndicatorEnabled());
+
+		textArea.setCodeFoldingEnabled(false);
+		Assertions.assertFalse(gutter.isFoldIndicatorEnabled());
+	}
+
+
+	@Test
+	void testPropertyChange_newDocumentUpdatesGutter() {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Gutter gutter = new Gutter(textArea);
+
+		textArea.setDocument(new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C));
 	}
 
 
@@ -477,133 +538,25 @@ class GutterTest {
 
 
 	@Test
-	void testSetActiveLineRangeColor() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-
-		Color color = Color.blue;
-		gutter.setActiveLineRangeColor(color);
-		Assertions.assertEquals(color, gutter.getActiveLineRangeColor());
-
-		color = Color.red;
-		gutter.setActiveLineRangeColor(color);
-		Assertions.assertEquals(color, gutter.getActiveLineRangeColor());
-
-	}
-
-
-	@Test
-	void testSetBookmarkIcon() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assertions.assertNull(gutter.getBookmarkIcon());
-
-		Icon icon = new EmptyTestIcon();
-		gutter.setBookmarkIcon(icon);
-		Assertions.assertEquals(icon, gutter.getBookmarkIcon());
-
-	}
-
-
-	@Test
-	void testSetBorderColor() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-
-		Color color = Color.red;
-		gutter.setBorderColor(color);
-		Assertions.assertEquals(color, gutter.getBorderColor());
-
-		color = Color.green;
-		gutter.setBorderColor(color);
-		Assertions.assertEquals(color, gutter.getBorderColor());
-
-	}
-
-
-	@Test
-	@Disabled("Not yet implemented")
 	void testSetComponentOrientation() {
 
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+
+		gutter.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		Assertions.assertEquals(ComponentOrientation.RIGHT_TO_LEFT, gutter.getComponentOrientation());
+
+		gutter.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		Assertions.assertEquals(ComponentOrientation.LEFT_TO_RIGHT, gutter.getComponentOrientation());
 	}
 
 
 	@Test
-	@Disabled("Not yet implemented")
 	void testSetFoldIcons() {
-
-	}
-
-
-	@Test
-	void testSetFoldBackground() {
-
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-
-		Color color = Color.red;
-		gutter.setFoldBackground(color);
-		Assertions.assertEquals(color, gutter.getFoldBackground());
-
-		color = Color.green;
-		gutter.setFoldBackground(color);
-		Assertions.assertEquals(color, gutter.getFoldBackground());
-
-		// Sets to default - not a public value, but also not Color.green.
-		gutter.setFoldBackground(null);
-		Assertions.assertNotNull(gutter.getFoldBackground());
-		Assertions.assertNotEquals(color, gutter.getFoldBackground());
-
-	}
-
-
-	@Test
-	void testSetIconRowHeaderInheritsGutterBackground() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assertions.assertFalse(gutter.getIconRowHeaderInheritsGutterBackground());
-
-		gutter.setIconRowHeaderInheritsGutterBackground(true);
-		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
-
-	}
-
-
-	@Test
-	void testSetLineNumberColor() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-
-		Color color = Color.red;
-		gutter.setLineNumberColor(color);
-		Assertions.assertEquals(color, gutter.getLineNumberColor());
-
-		color = Color.green;
-		gutter.setLineNumberColor(color);
-		Assertions.assertEquals(color, gutter.getLineNumberColor());
-
-	}
-
-
-	@Test
-	void testSetLineNumberFont() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-
-		Font font = new Font("Comic Sans", Font.PLAIN, 13);
-		gutter.setLineNumberFont(font);
-		Assertions.assertEquals(font, gutter.getLineNumberFont());
-
-		font = new Font("Arial", Font.ITALIC, 22);
-		gutter.setLineNumberFont(font);
-		Assertions.assertEquals(font, gutter.getLineNumberFont());
-
+		Icon icon = new EmptyTestIcon();
+		gutter.setFoldIcons(icon, icon);
 	}
 
 
@@ -626,19 +579,6 @@ class GutterTest {
 
 		gutter.setLineNumberingStartIndex(24);
 		Assertions.assertEquals(24, gutter.getLineNumberingStartIndex());
-
-	}
-
-
-	@Test
-	void testSetLineNumbersEnabled() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assertions.assertTrue(gutter.getLineNumbersEnabled());
-
-		gutter.setLineNumbersEnabled(true);
-		Assertions.assertTrue(gutter.getLineNumbersEnabled());
 
 	}
 
@@ -668,47 +608,10 @@ class GutterTest {
 
 
 	@Test
-	void testSetFoldIndicatorEnabled() {
-
+	void testSetTextArea_newTextArea() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Assertions.assertFalse(gutter.isFoldIndicatorEnabled());
-
-		gutter.setFoldIndicatorEnabled(true);
-		Assertions.assertTrue(gutter.isFoldIndicatorEnabled());
-
-		gutter.setFoldIndicatorEnabled(false);
-		Assertions.assertFalse(gutter.isFoldIndicatorEnabled());
-
-	}
-
-
-	@Test
-	void testSetBookmarkingEnabled() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assertions.assertFalse(gutter.isBookmarkingEnabled());
-
-		gutter.setBookmarkingEnabled(true);
-		Assertions.assertTrue(gutter.isBookmarkingEnabled());
-
-	}
-
-
-	@Test
-	void testSetIconRowHeaderEnabled() {
-
-		RTextArea textArea = new RTextArea(PLAIN_TEXT);
-		Gutter gutter = new Gutter(textArea);
-		Assertions.assertFalse(gutter.isIconRowHeaderEnabled());
-
-		gutter.setIconRowHeaderEnabled(true);
-		Assertions.assertTrue(gutter.isIconRowHeaderEnabled());
-
-		gutter.setIconRowHeaderEnabled(false);
-		Assertions.assertFalse(gutter.isIconRowHeaderEnabled());
-
+		gutter.setTextArea(new RSyntaxTextArea(PLAIN_TEXT));
 	}
 
 
@@ -724,4 +627,18 @@ class GutterTest {
 	}
 
 
+	@Test
+	void testGutterBorder_getSetColor() {
+		Gutter.GutterBorder border = new Gutter.GutterBorder(1, 1, 1, 1);
+		border.setColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, border.getColor());
+	}
+
+
+	@Test
+	void testGutterBorder_setEdges() {
+		Gutter.GutterBorder border = new Gutter.GutterBorder(1, 1, 1, 1);
+		border.setEdges(2, 2, 2, 2);
+		Assertions.assertEquals(new Insets(2, 2, 2, 2), border.getBorderInsets());
+	}
 }

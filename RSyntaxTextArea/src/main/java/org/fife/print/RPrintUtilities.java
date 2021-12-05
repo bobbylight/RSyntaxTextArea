@@ -83,7 +83,7 @@ public abstract class RPrintUtilities {
 			}
 		}
 
-		return (breakPoint==-1 ? maxCharsPerLine-1 : breakPoint);
+		return breakPoint==-1 ? maxCharsPerLine-1 : breakPoint;
 
 	}
 
@@ -408,7 +408,7 @@ public abstract class RPrintUtilities {
 				doc.getText(currentLineStart+startingOffset, currentLineEnd-(currentLineStart+startingOffset),
 							currentLineSeg);
 			} catch (BadLocationException ble) {
-				System.err.println("BadLocationException in print (where there shouldn't be one!): " + ble);
+				ble.printStackTrace();
 				return Printable.NO_SUCH_PAGE;
 			}
 
@@ -538,9 +538,6 @@ public abstract class RPrintUtilities {
 	 * font being used for the printing.
 	 */
 	private static class RPrintTabExpander implements TabExpander {
-
-		RPrintTabExpander() {
-		}
 
 		@Override
 		public float nextTabStop(float x, int tabOffset) {
