@@ -55,7 +55,7 @@ import org.fife.ui.rsyntaxtextarea.*;
  *
  */
 
-public class CsvTokenMaker extends AbstractJFlexCTokenMaker {
+public class CsvTokenMaker extends AbstractJFlexTokenMaker {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;

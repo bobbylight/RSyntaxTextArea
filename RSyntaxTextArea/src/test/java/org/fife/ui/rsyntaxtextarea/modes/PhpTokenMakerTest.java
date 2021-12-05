@@ -124,9 +124,22 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(PHPTokenMaker.LANG_INDEX_DEFAULT);
 		Assertions.assertEquals("<!--", startAndEnd[0]);
 		Assertions.assertEquals("-->", startAndEnd[1]);
+
+		startAndEnd = createTokenMaker().getLineCommentStartAndEnd(PHPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
+
+		startAndEnd = createTokenMaker().getLineCommentStartAndEnd(PHPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertEquals("/*", startAndEnd[0]);
+		Assertions.assertEquals("*/", startAndEnd[1]);
+
+		startAndEnd = createTokenMaker().getLineCommentStartAndEnd(PHPTokenMaker.LANG_INDEX_PHP);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -1431,7 +1444,46 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	void testStringLiteral_continuedFromPriorLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			PHPTokenMaker.INTERNAL_IN_PHP_STRING,
-			"rest of the string\"");
+			"rest of the string unterminated",
+			"rest of the string\""
+		);
+	}
+
+
+	@Test
+	void testStringLiteral_variable() {
+		assertAllTokensOfType(TokenTypes.VARIABLE,
+			PHPTokenMaker.INTERNAL_IN_PHP_STRING,
+			"$foo",
+			"$foo9",
+			"$foo_bar"
+		);
+	}
+
+
+	@Test
+	void testCodeBlockInMiddleOfJavaScriptString() {
+
+		Segment code = createSegment("'This is <?php echo \"bonkers\" ?>'");
+		Token t = createTokenMaker().getTokenList(code, JS_PREV_TOKEN_TYPE, 0);
+
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_CHAR, "'This is "));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "<?php"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.RESERVED_WORD, "echo"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\"bonkers\""));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.WHITESPACE, " "));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.MARKUP_TAG_DELIMITER, "?>"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_CHAR, "'"));
 	}
 
 
@@ -2365,6 +2417,102 @@ public class PhpTokenMakerTest extends AbstractTokenMakerTest {
 			"long",
 			"short"
 		);
+	}
+
+
+	@Test
+	void testJS_DocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JS_PREV_TOKEN_TYPE,
+			"/** Hello world */"
+		);
+	}
+
+
+	@Test
+	void testJS_DocComments_BlockTags() {
+
+		String[] blockTags = {
+			"abstract", "access", "alias", "augments", "author", "borrows",
+			"callback", "classdesc", "constant", "constructor", "constructs",
+			"copyright", "default", "deprecated", "desc", "enum", "event",
+			"example", "exports", "external", "file", "fires", "global",
+			"ignore", "inner", "instance", "kind", "lends", "license",
+			"link", "member", "memberof", "method", "mixes", "mixin", "module",
+			"name", "namespace", "param", "private", "property", "protected",
+			"public", "readonly", "requires", "return", "returns", "see", "since",
+			"static", "summary", "this", "throws", "todo",
+			"type", "typedef", "variation", "version"
+		};
+
+		for (String blockTag : blockTags) {
+			blockTag = "@" + blockTag;
+			Segment segment = createSegment(blockTag);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JS_DOC_COMMENT_PREV_TOKEN_TYPE, 0);
+			// Can sometimes produce empty tokens, if e.g. @foo is first token
+			// on a line. We could technically make that better, but it is not
+			// the common case
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.COMMENT_KEYWORD, token.getType(), "Invalid block tag: " + blockTag);
+		}
+
+	}
+
+
+	// This fails because we create a (possibly) 0-length token before this - yuck!
+//	@Test
+//	void testJS_DocComments_InlineTags() {
+//		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+//			JS_DOC_COMMENT_PREV_TOKEN_TYPE,
+//			"@link",
+//			"@linkplain",
+//			"@linkcode",
+//			"@tutorial"
+//		);
+//	}
+
+
+	@Test
+	void testJS_DocComments_Markup() {
+		String text = "<code>";
+		Segment segment = createSegment(text);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, JS_DOC_COMMENT_PREV_TOKEN_TYPE, 0);
+		// Can sometimes produce empty tokens, if e.g. @foo is first token
+		// on a line. We could technically make that better, but it is not
+		// the common case
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MARKUP, "<code>"));
+	}
+
+
+	@Test
+	void testJS_DocComments_URL() {
+
+		String[] docCommentLiterals = {
+			"/** Hello world http://www.sas.com */",
+		};
+
+		for (String code : docCommentLiterals) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+
+			token = token.getNextToken();
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+			Assertions.assertEquals(" */", token.getLexeme());
+
+		}
+
 	}
 
 

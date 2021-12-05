@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JsonTokenMakerTest extends AbstractTokenMakerTest {
+public class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override
@@ -43,6 +44,18 @@ public class JsonTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
+		}
+	}
+	@Test
+	@Override
+	public void testCommon_getShouldIndentNextLineAfter() {
+		TokenMaker tm = createTokenMaker();
+		Token[] indentAfter = {
+			new TokenImpl("{".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, 0),
+			new TokenImpl("[".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, 0),
+		};
+		for (Token token : indentAfter) {
+			Assertions.assertTrue(tm.getShouldIndentNextLineAfter(token));
 		}
 	}
 

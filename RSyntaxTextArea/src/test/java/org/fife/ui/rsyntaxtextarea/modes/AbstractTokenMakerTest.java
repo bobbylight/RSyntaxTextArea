@@ -9,6 +9,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 
 /**
- * Utility classes for unit tests for <code>TokenMaker</code> implementations.
+ * Utility methods for unit tests for <code>TokenMaker</code> implementations.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -130,5 +131,21 @@ abstract class AbstractTokenMakerTest {
 			boolean expected = i == TokenTypes.IDENTIFIER;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+
+
+	/**
+	 * Verifies the {@code getShouldIndentNextLineAfter()} method.
+	 */
+	@Test
+	public void testCommon_getShouldIndentNextLineAfter() {
+
+		// NOTE: This is a pretty sorry test, but it's hard to test "no token implies indent the next
+		// line," which is the default behavior.
+		TokenMaker tm = createTokenMaker();
+		for (int tokenType = 0; tokenType < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; tokenType++) {
+			Token token = new TokenImpl("{".toCharArray(), 0, 0, 0, tokenType, 0);
+			Assertions.assertFalse(tm.getShouldIndentNextLineAfter(token));
+		};
 	}
 }

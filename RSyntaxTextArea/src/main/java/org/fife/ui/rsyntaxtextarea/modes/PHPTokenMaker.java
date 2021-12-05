@@ -24712,9 +24712,6 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 			case Token.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
-			case Token.VARIABLE:
-				state = DTD;
-				break;
 			case INTERNAL_INTAG:
 				state = INTAG;
 				break;
@@ -25152,7 +25149,13 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 109:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos;
+          {
+			  int temp=zzStartRead;
+			  if (start <= zzStartRead - 1) {
+				  addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+			  }
+			  addToken(temp,zzMarkedPos-1, Token.VARIABLE);
+			  start = zzMarkedPos;
           }
         case 137: break;
         case 67:

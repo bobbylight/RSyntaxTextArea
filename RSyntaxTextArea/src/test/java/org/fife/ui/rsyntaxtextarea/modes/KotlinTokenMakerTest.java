@@ -19,7 +19,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-public class KotlinTokenMakerTest extends AbstractTokenMakerTest {
+public class KotlinTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
+public class ActionScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@BeforeEach
@@ -59,14 +59,6 @@ public class ActionScriptTokenMakerTest extends AbstractTokenMakerTest {
 			boolean expected = i == TokenTypes.IDENTIFIER || i == TokenTypes.FUNCTION;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
-	}
-
-
-	@Test
-	void testJS_api_getLineCommentStartAndEnd() {
-		TokenMaker tm = createTokenMaker();
-		Assertions.assertEquals("//", tm.getLineCommentStartAndEnd(0)[0]);
-		Assertions.assertNull(tm.getLineCommentStartAndEnd(0)[1]);
 	}
 
 

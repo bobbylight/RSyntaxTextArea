@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ScalaTokenMakerTest extends AbstractTokenMakerTest {
+public class ScalaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override

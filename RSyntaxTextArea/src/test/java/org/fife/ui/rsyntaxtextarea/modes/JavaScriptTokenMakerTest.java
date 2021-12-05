@@ -20,7 +20,7 @@ import org.junit.jupiter.api.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
+public class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -224,18 +224,10 @@ public class JavaScriptTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testJS_DocComments() {
-
-		String[] docCommentLiterals = {
-			"/** Hello world */",
-		};
-
-		for (String code : docCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JS_PREV_TOKEN_TYPE,
+			"/** Hello world */"
+		);
 	}
 
 

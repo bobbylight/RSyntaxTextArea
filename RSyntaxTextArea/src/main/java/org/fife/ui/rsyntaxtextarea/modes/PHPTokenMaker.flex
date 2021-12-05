@@ -451,9 +451,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 			case Token.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
-			case Token.VARIABLE:
-				state = DTD;
-				break;
 			case INTERNAL_INTAG:
 				state = INTAG;
 				break;
@@ -2565,7 +2562,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <PHP_STRING> {
 	[^\n\\\$\"]+		{}
 	\\.?				{ /* Skip escaped chars. */ }
-	{PHP_Variable}		{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{PHP_Variable}		{
+                            int temp=zzStartRead;
+                            if (start <= zzStartRead - 1) {
+                                addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                            }
+                            addToken(temp,zzMarkedPos-1, Token.VARIABLE);
+                            start = zzMarkedPos;
+                        }
 	"$"					{}
 	\"					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
 	\n |
