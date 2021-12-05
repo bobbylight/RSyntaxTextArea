@@ -49,7 +49,7 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testIdentifiers() {
+	void testHappyPath_textAndSpaces() {
 
 		String code =  "   foo bar\t\tbas\t  \tbaz ";
 		TokenMaker tm = createTokenMaker();
@@ -67,96 +67,67 @@ public class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 		}
 
+	}
+
+
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo999",
+			"912",
+			"FooBar"
+		);
+	}
+
+
+	@Test
+	void testSeparators() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"-",
+			"+",
+			"/",
+			"_",
+			"&",
+			"$"
+		);
 	}
 
 
 	@Test
 	void testUrls() {
 
-		String code =  "http://www.sas.com foo ftp://fifesoft.com bar https://google.com goo www.yahoo.com ber file://test.txt";
-		TokenMaker tm = createTokenMaker();
+		String[] urls = {
+			"file://test.txt",
+			"ftp://ftp.google.com",
+			"http://www.google.com",
+			"https://www.google.com",
+			"www.google.com"
+		};
 
-		Segment segment = createSegment(code);
+		for (String url : urls) {
 
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assertions.assertEquals("http://www.sas.com", token.getLexeme());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
+			Segment segment = createSegment(url);
+			TokenMaker tm = createTokenMaker();
 
-		token = token.getNextToken();
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assertions.assertEquals("ftp://fifesoft.com", token.getLexeme());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assertions.assertEquals("https://google.com", token.getLexeme());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assertions.assertEquals("www.yahoo.com", token.getLexeme());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertFalse(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isWhitespace());
-
-		token = token.getNextToken();
-		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-		Assertions.assertEquals("file://test.txt", token.getLexeme());
-
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+			Assertions.assertEquals(url, token.getLexeme());
+		}
 	}
 
 
 	@Test
 	void testWhitespace() {
-
-		String code =  "   foo bar\t\tbas\t  \tbaz ";
-		TokenMaker tm = createTokenMaker();
-
-		Segment segment = createSegment(code);
-
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assertions.assertTrue(token.isWhitespace());
-		token = token.getNextToken();
-
-		while (token != null && token.isPaintable()) {
-			Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType(), "Not an identifier: " + token);
-			token = token.getNextToken();
-			Assertions.assertTrue(token.isWhitespace());
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"  ",
+			"\t",
+			"\t\t",
+			" \t ",
+			"\t  \t"
+		);
 	}
 
 

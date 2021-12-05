@@ -8,12 +8,11 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenImpl;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
-import org.fife.ui.rsyntaxtextarea.TokenTypes;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 
 /**
@@ -147,5 +146,14 @@ abstract class AbstractTokenMakerTest {
 			Token token = new TokenImpl("{".toCharArray(), 0, 0, 0, tokenType, 0);
 			Assertions.assertFalse(tm.getShouldIndentNextLineAfter(token));
 		};
+	}
+
+
+	@Test
+	void testCommon_yyclose() throws IOException {
+		TokenMaker tm = createTokenMaker();
+		if (tm instanceof AbstractJFlexTokenMaker) {
+			((AbstractJFlexTokenMaker)tm).yyclose();
+		}
 	}
 }

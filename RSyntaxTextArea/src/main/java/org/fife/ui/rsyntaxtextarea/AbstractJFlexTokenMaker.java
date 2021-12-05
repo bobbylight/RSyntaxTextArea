@@ -10,6 +10,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import javax.swing.text.Segment;
+import java.io.IOException;
 
 
 /**
@@ -35,6 +36,14 @@ public abstract class AbstractJFlexTokenMaker extends TokenMakerBase {
 	 * @param newState The new JFlex state to enter.
 	 */
 	public abstract void yybegin(int newState);
+
+
+	/**
+	 * Closes the input stream.  This method is defined for test purposes.
+	 *
+	 * @throws IOException If an IO error occurs.
+	 */
+	public abstract void yyclose() throws IOException;
 
 
 	/**
