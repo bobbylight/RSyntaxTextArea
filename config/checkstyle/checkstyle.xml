@@ -210,7 +210,11 @@
         <!--<module name="FinalParameters"/>-->
         <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
+<!--        <module name="UnnecessaryParentheses"/>-->
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
 
     </module>
 

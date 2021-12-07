@@ -16,8 +16,8 @@ ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
 jacocoTestReport {
 	reports {
-		xml.enabled = true // codecov depends on xml format report
-		html.enabled = true
+		xml.required = true // codecov depends on xml format report
+		html.required = true
 	}
 }
 
