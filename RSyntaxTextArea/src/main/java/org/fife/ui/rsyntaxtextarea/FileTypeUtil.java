@@ -417,7 +417,7 @@ public final class FileTypeUtil implements SyntaxConstants {
         initFiltersImpl(map, SYNTAX_STYLE_HTML, "*.htm", "*.html");
         initFiltersImpl(map, SYNTAX_STYLE_INI, "*.ini", ".editorconfig");
         initFiltersImpl(map, SYNTAX_STYLE_JAVA, "*.java");
-        initFiltersImpl(map, SYNTAX_STYLE_JAVASCRIPT, "*.js");
+        initFiltersImpl(map, SYNTAX_STYLE_JAVASCRIPT, "*.js", "*.jsx");
         initFiltersImpl(map, SYNTAX_STYLE_JSP, "*.jsp");
         initFiltersImpl(map, SYNTAX_STYLE_JSON_WITH_COMMENTS, ".jshintrc", "tslint.json");
         initFiltersImpl(map, SYNTAX_STYLE_JSON, "*.json");
@@ -440,12 +440,12 @@ public final class FileTypeUtil implements SyntaxConstants {
         initFiltersImpl(map, SYNTAX_STYLE_SCALA, "*.scala");
         initFiltersImpl(map, SYNTAX_STYLE_SQL, "*.sql");
         initFiltersImpl(map, SYNTAX_STYLE_TCL, "*.tcl", "*.tk");
-        initFiltersImpl(map, SYNTAX_STYLE_TYPESCRIPT, "*.ts");
+        initFiltersImpl(map, SYNTAX_STYLE_TYPESCRIPT, "*.ts", "*.tsx");
         initFiltersImpl(map, SYNTAX_STYLE_UNIX_SHELL, "*.sh", "*.?sh");
         initFiltersImpl(map, SYNTAX_STYLE_VISUAL_BASIC, "*.vb");
         initFiltersImpl(map, SYNTAX_STYLE_WINDOWS_BATCH, "*.bat", "*.cmd");
         initFiltersImpl(map, SYNTAX_STYLE_XML, "*.xml", "*.xsl", "*.xsd", "*.xslt", "*.wsdl",
-            "*.svg", "*.tmx", "*.tsx", "*.pom", "*.manifest");
+            "*.svg", "*.tmx", "*.pom", "*.manifest");
         initFiltersImpl(map, SYNTAX_STYLE_YAML, "*.yml", "*.yaml");
     }
 
