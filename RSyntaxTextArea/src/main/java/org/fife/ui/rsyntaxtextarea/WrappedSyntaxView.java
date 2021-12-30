@@ -139,7 +139,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			currentWidth -= tokenWidth;
 			x0 += tokenWidth;
 			p += t.length();
-//System.err.println("*** *** *** token fit entirely (width==" + tokenWidth + "), adding " + t.textCount + " to p, now p==" + p);
+//System.err.println("*** *** *** token fit entirely (width==" + tokenWidth + "), adding " +
+// t.textCount + " to p, now p==" + p);
 			t = t.getNextToken();
 		}
 //System.err.println("... ... whole line fits; returning p==" + p);
