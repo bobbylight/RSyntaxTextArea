@@ -120,7 +120,7 @@ public class RTATextTransferHandler extends TransferHandler {
 
 			if (sbuff == null) {
 				sbuff = new StringBuilder(nch);
-                   }
+			}
 			last = 0;
 
 			for (int counter = 0; counter < nch; counter++) {
@@ -238,7 +238,7 @@ public class RTATextTransferHandler extends TransferHandler {
 	 *
 	 * @param source The component that was the source of the data.
 	 * @param data   The data that was transferred or possibly null
-     *               if the action is <code>NONE</code>.
+	 *               if the action is <code>NONE</code>.
 	 * @param action The actual action that was performed.
 	 */
 	@Override

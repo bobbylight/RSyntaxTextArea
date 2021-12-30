@@ -135,7 +135,7 @@ public abstract class RPrintUtilities {
 		int numPrintedLines = 0;
 
 		// Keep going while there are more lines in the document.
-		currentDocLineNumber = 0;						// The line number of the document we're currently on.
+		currentDocLineNumber = 0;						// Line number of the document we're currently on
 		rootElement = doc.getDefaultRootElement();		// To shorten accesses in our loop.
 		numDocLines = rootElement.getElementCount();	// The number of lines in our document.
 		while (currentDocLineNumber<numDocLines) {
@@ -260,7 +260,7 @@ public abstract class RPrintUtilities {
 		int numPrintedLines = 0;
 
 		// Keep going while there are more lines in the document.
-		currentDocLineNumber = 0;						// The line number of the document we're currently on.
+		currentDocLineNumber = 0;						// Line number of the document we're currently on
 		rootElement = doc.getDefaultRootElement();		// To shorten accesses in our loop.
 		numDocLines = rootElement.getElementCount();	// The number of lines in our document.
 		while (currentDocLineNumber<numDocLines) {
@@ -479,7 +479,7 @@ public abstract class RPrintUtilities {
 					} catch (BadLocationException ble) {
 						System.err.println("BadLocationException in print (a):");
 						System.err.println("==> currentLineStart: " + currentLineStart +
-									"; startingOffset: " + startingOffset + "; currentPos: " + currentPos);
+							"; startingOffset: " + startingOffset + "; currentPos: " + currentPos);
 						System.err.println("==> Range: " + (currentLineStart+startingOffset) + " - " +
 									(currentLineStart+startingOffset+currentPos));
 						ble.printStackTrace();

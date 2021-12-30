@@ -1176,14 +1176,14 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				// second undo puts it back.
 				undoManager.beginInternalAtomicEdit();
 				((AbstractDocument)doc).replace(start, end - start,
-                               		                     str, null);
+					str, null);
 			} catch (BadLocationException e) {
 				throw new IllegalArgumentException(e.getMessage());
 			} finally {
 				undoManager.endInternalAtomicEdit();
 			}
 		}
-    }
+	}
 
 
 	/**

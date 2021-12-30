@@ -168,7 +168,7 @@ public class CurlyFoldParser implements FoldParser {
 									currentFold.setEndOffset(mlcEnd);
 									currentFold = currentFold.getParent();
 								}
-								//System.out.println("Ending MLC at: " + mlcEnd + ", parent==" + currentFold);
+								//System.out.println("Ending MLC at: " + mlcEnd);
 								inMLC = false;
 								mlcStart = 0;
 							}
@@ -241,7 +241,7 @@ public class CurlyFoldParser implements FoldParser {
 						if (currentFold!=null) {
 							currentFold.setEndOffset(t.getOffset());
 							Fold parentFold = currentFold.getParent();
-							//System.out.println("... Adding regular fold at " + t.offset + ", parent==" + parentFold);
+							//System.out.println("... Adding regular fold at " + t.offset);
 							// Don't add fold markers for single-line blocks
 							if (currentFold.isOnSingleLine()) {
 								if (!currentFold.removeFromParent()) {

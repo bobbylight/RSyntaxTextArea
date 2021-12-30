@@ -40,6 +40,7 @@
     -->
 
 	<property name="fileExtensions" value="java"/>
+    <property name="tabWidth" value="4"/>
 
 	<!-- Part of turning off individual checks: -->
 	<!-- http://stackoverflow.com/questions/4023185/how-to-disable-a-particular-checkstyle-rule-for-a-particular-line-of-code -->
@@ -66,7 +67,7 @@
 	</module>
 
     <module name="LineLength">
-        <property name="max" value="150"/>
+        <property name="max" value="140"/>
     </module>
 
     <!-- Checks for whitespace                               -->
