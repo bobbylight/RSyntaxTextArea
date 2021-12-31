@@ -1,11 +1,11 @@
 /*
- * 02/11/2009
- *
- * LineNumberList.java - Renders line numbers in an RTextScrollPane.
- *
- * This library is distributed under a modified BSD license.  See the included
- * LICENSE file for details.
- */
+* 02/11/2009
+*
+* LineNumberList.java - Renders line numbers in an RTextScrollPane.
+*
+* This library is distributed under a modified BSD license.  See the included
+* LICENSE file for details.
+*/
 package org.fife.ui.rtextarea;
 
 import java.awt.Color;
@@ -38,13 +38,13 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
 
 /**
- * Renders line numbers in the gutter.
- *
- * @author Robert Futrell
- * @version 1.0
- */
+* Renders line numbers in the gutter.
+*
+* @author Robert Futrell
+* @version 1.0
+*/
 public class LineNumberList extends AbstractGutterComponent
-								implements MouseInputListener {
+implements MouseInputListener {
 
 	private int currentLine;	// The last line the caret was on.
 	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
@@ -59,72 +59,72 @@ public class LineNumberList extends AbstractGutterComponent
 	private int mouseDragStartOffset;
 
 	/**
-	 * Listens for events from the current text area.
-	 */
+	* Listens for events from the current text area.
+	*/
 	private Listener l;
 
 	/**
-	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
-	 * each paint.
-	 */
+	* Used in {@link #paintComponent(Graphics)} to prevent reallocation on
+	* each paint.
+	*/
 	private Insets textAreaInsets;
 
 	/**
-	 * Used in {@link #paintComponent(Graphics)} to prevent reallocation on
-	 * each paint.
-	 */
+	* Used in {@link #paintComponent(Graphics)} to prevent reallocation on
+	* each paint.
+	*/
 	private Rectangle visibleRect;
 
 	/**
-	 * The index at which line numbering should start.  The default value is
-	 * <code>1</code>, but applications can change this if, for example, they
-	 * are displaying a subset of lines in a file.
-	 */
+	* The index at which line numbering should start.  The default value is
+	* <code>1</code>, but applications can change this if, for example, they
+	* are displaying a subset of lines in a file.
+	*/
 	private int lineNumberingStartIndex;
 
 	/**
-	 * The color of current line number.
-	 */
+	* The color of current line number.
+	*/
 	private Color currentLineNumberColor;
 
 	/**
-	 * Constructs a new <code>LineNumberList</code> using default values for
-	 * line number color (gray) and highlighting the current line.
-	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
-	 */
+	* Constructs a new <code>LineNumberList</code> using default values for
+	* line number color (gray) and highlighting the current line.
+	*
+	* @param textArea The text component for which line numbers will be
+	*        displayed.
+	*/
 	public LineNumberList(RTextArea textArea) {
 		this(textArea, null);
 	}
 
 
 	/**
-	 * Constructs a new <code>LineNumberList</code>.
-	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
-	 * @param numberColor The color to use for the line numbers.  If this is
-	 *        <code>null</code>, gray will be used.
-	 * @param currentLineNumberColor The color to use for the current line number.  If this is
-	 *        <code>null</code>, blue shade will be used.
-	 */
+	* Constructs a new <code>LineNumberList</code>.
+	*
+	* @param textArea The text component for which line numbers will be
+	*        displayed.
+	* @param numberColor The color to use for the line numbers.  If this is
+	*        <code>null</code>, gray will be used.
+	* @param currentLineNumberColor The color to use for the current line number.  If this is
+	*        <code>null</code>, blue shade will be used.
+	*/
 	public LineNumberList(RTextArea textArea, Color numberColor, Color currentLineNumberColor) {
 		this(textArea, numberColor);
 		this.currentLineNumberColor = currentLineNumberColor;
 		if(this.currentLineNumberColor == null){
-			this.currentLineNumberColor = new Color(126, 20, 219);
+			this.currentLineNumberColor = numberColor;
 		}
 	}
 
 	/**
-	 * Constructs a new <code>LineNumberList</code>.
-	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
-	 * @param numberColor The color to use for the line numbers.  If this is
-	 *        <code>null</code>, gray will be used.
-	 */
+	* Constructs a new <code>LineNumberList</code>.
+	*
+	* @param textArea The text component for which line numbers will be
+	*        displayed.
+	* @param numberColor The color to use for the line numbers.  If this is
+	*        <code>null</code>, gray will be used.
+	*/
 	public LineNumberList(RTextArea textArea, Color numberColor) {
 
 		super(textArea);
@@ -135,15 +135,15 @@ public class LineNumberList extends AbstractGutterComponent
 		else {
 			setForeground(Color.GRAY);
 		}
-
+		currentLineNumberColor = numberColor;
 	}
 
 
 	/**
-	 * Overridden to set width of this component correctly when we are first
-	 * displayed (as keying off of the RTextArea gives us (0,0) when it isn't
-	 * yet displayed.
-	 */
+	* Overridden to set width of this component correctly when we are first
+	* displayed (as keying off of the RTextArea gives us (0,0) when it isn't
+	* yet displayed.
+	*/
 	@Override
 	public void addNotify() {
 		super.addNotify();
@@ -156,10 +156,10 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Calculates the last line number index painted in this component.
-	 *
-	 * @return The last line number index painted in this component.
-	 */
+	* Calculates the last line number index painted in this component.
+	*
+	* @return The last line number index painted in this component.
+	*/
 	private int calculateLastVisibleLineNumber() {
 		int lastLine = 0;
 		if (textArea!=null) {
@@ -170,12 +170,12 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Returns the starting line's line number.  The default value is
-	 * <code>1</code>.
-	 *
-	 * @return The index
-	 * @see #setLineNumberingStartIndex(int)
-	 */
+	* Returns the starting line's line number.  The default value is
+	* <code>1</code>.
+	*
+	* @return The index
+	* @see #setLineNumberingStartIndex(int)
+	*/
 	public int getLineNumberingStartIndex() {
 		return lineNumberingStartIndex;
 	}
@@ -189,11 +189,11 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Returns the width of the empty border on this component's right-hand
-	 * side (or left-hand side, if the orientation is RTL).
-	 *
-	 * @return The border width.
-	 */
+	* Returns the width of the empty border on this component's right-hand
+	* side (or left-hand side, if the orientation is RTL).
+	*
+	* @return The border width.
+	*/
 	private int getRhsBorderWidth() {
 		int w = 4;
 		if (textArea instanceof RSyntaxTextArea) {
@@ -302,10 +302,10 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Paints this component.
-	 *
-	 * @param g The graphics context.
-	 */
+	* Paints this component.
+	*
+	* @param g The graphics context.
+	*/
 	@Override
 	protected void paintComponent(Graphics g) {
 
@@ -359,17 +359,18 @@ public class LineNumberList extends AbstractGutterComponent
 		}
 		final int rhsBorderWidth = getRhsBorderWidth();
 
-/*
+		/*
 		// Highlight the current line's line number, if desired.
 		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
-				currentLine<=bottomLine) {
+		currentLine<=bottomLine) {
 			g.setColor(textArea.getCurrentLineHighlightColor());
 			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight,
-						cellWidth,cellHeight);
+			cellWidth,cellHeight);
 		}
-*/
+		*/
 
 		// Paint line numbers
+		int caretLineNumber = textArea.getCaretLineNumber() + 1;
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
@@ -378,7 +379,7 @@ public class LineNumberList extends AbstractGutterComponent
 			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
 				int width = metrics.stringWidth(number);
-				if(textArea.getCaretLineNumber() + 1 == line + getLineNumberingStartIndex() - 1){
+				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
 					g.setColor(currentLineNumberColor);
 				}
 				else{
@@ -408,7 +409,7 @@ public class LineNumberList extends AbstractGutterComponent
 			int line = topLine + 1;
 			while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
-				if(textArea.getCaretLineNumber() + 1 == line + getLineNumberingStartIndex() - 1){
+				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
 					g.setColor(currentLineNumberColor);
 				}
 				else{
@@ -433,11 +434,11 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Paints line numbers for text areas with line wrap enabled.
-	 *
-	 * @param g The graphics context.
-	 * @param visibleRect The visible rectangle of these line numbers.
-	 */
+	* Paints line numbers for text areas with line wrap enabled.
+	*
+	* @param g The graphics context.
+	* @param visibleRect The visible rectangle of these line numbers.
+	*/
 	private void paintWrappedLineNumbers(Graphics g, Rectangle visibleRect) {
 
 		// The variables we use are as follows:
@@ -479,7 +480,7 @@ public class LineNumberList extends AbstractGutterComponent
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
 		int topPosition = textArea.viewToModel(
-								new Point(visibleRect.x,visibleRect.y));
+		new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 		FoldManager fm = null;
 		if (textArea instanceof RSyntaxTextArea) {
@@ -492,7 +493,7 @@ public class LineNumberList extends AbstractGutterComponent
 		// (possibly) partially-visible view.
 		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
 		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
-												visibleEditorRect);
+		visibleEditorRect);
 		int y = r.y;
 		final int rhsBorderWidth = getRhsBorderWidth();
 		int rhs;
@@ -510,6 +511,8 @@ public class LineNumberList extends AbstractGutterComponent
 		// end of the text area.
 		g.setColor(getForeground());
 
+		int caretLineNumber = textArea.getCaretLineNumber() + 1;
+
 		while (y < visibleBottom) {
 
 			r = LineNumberList.getChildViewBounds(v, topLine, visibleEditorRect);
@@ -526,6 +529,12 @@ public class LineNumberList extends AbstractGutterComponent
 			// Paint the line number.
 			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
 			String number = Integer.toString(index);
+			if(caretLineNumber == index){
+				g.setColor(currentLineNumberColor);
+			}
+			else{
+				g.setColor(getForeground());
+			}
 			if (ltr) {
 				int strWidth = metrics.stringWidth(number);
 				g.drawString(number, rhs-strWidth,y+ascent);
@@ -558,8 +567,8 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Called when this component is removed from the view hierarchy.
-	 */
+	* Called when this component is removed from the view hierarchy.
+	*/
 	@Override
 	public void removeNotify() {
 		super.removeNotify();
@@ -570,10 +579,10 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Repaints a single line in this list.
-	 *
-	 * @param line The line to repaint.
-	 */
+	* Repaints a single line in this list.
+	*
+	* @param line The line to repaint.
+	*/
 	private void repaintLine(int line) {
 		int y = textArea.getInsets().top;
 		y += line*cellHeight;
@@ -582,11 +591,11 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Overridden to ensure line number cell sizes are updated with the
-	 * font size change.
-	 *
-	 * @param font The new font to use for line numbers.
-	 */
+	* Overridden to ensure line number cell sizes are updated with the
+	* font size change.
+	*
+	* @param font The new font to use for line numbers.
+	*/
 	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
@@ -596,13 +605,13 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Sets the starting line's line number.  The default value is
-	 * <code>1</code>.  Applications can call this method to change this value
-	 * if they are displaying a subset of lines in a file, for example.
-	 *
-	 * @param index The new index.
-	 * @see #getLineNumberingStartIndex()
-	 */
+	* Sets the starting line's line number.  The default value is
+	* <code>1</code>.  Applications can call this method to change this value
+	* if they are displaying a subset of lines in a file, for example.
+	*
+	* @param index The new index.
+	* @see #getLineNumberingStartIndex()
+	*/
 	public void setLineNumberingStartIndex(int index) {
 		if (index!=lineNumberingStartIndex) {
 			lineNumberingStartIndex = index;
@@ -613,10 +622,10 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Sets the text area being displayed.
-	 *
-	 * @param textArea The text area.
-	 */
+	* Sets the text area being displayed.
+	*
+	* @param textArea The text area.
+	*/
 	@Override
 	public void setTextArea(RTextArea textArea) {
 
@@ -641,10 +650,10 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Changes the height of the cells in the JList so that they are as tall as
-	 * font. This function should be called whenever the user changes the Font
-	 * of <code>textArea</code>.
-	 */
+	* Changes the height of the cells in the JList so that they are as tall as
+	* font. This function should be called whenever the user changes the Font
+	* of <code>textArea</code>.
+	*/
 	private void updateCellHeights() {
 		if (textArea!=null) {
 			cellHeight = textArea.getLineHeight();
@@ -659,9 +668,9 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Changes the width of the cells in the JList so you can see every digit
-	 * of each.
-	 */
+	* Changes the width of the cells in the JList so you can see every digit
+	* of each.
+	*/
 	void updateCellWidths() {
 
 		int oldCellWidth = cellWidth;
@@ -674,7 +683,7 @@ public class LineNumberList extends AbstractGutterComponent
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
 				int lineCount = textArea.getLineCount() +
-						getLineNumberingStartIndex() - 1;
+				getLineNumberingStartIndex() - 1;
 				do {
 					lineCount = lineCount/10;
 					count++;
@@ -691,8 +700,8 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Listens for events in the text area we're interested in.
-	 */
+	* Listens for events in the text area we're interested in.
+	*/
 	private class Listener implements CaretListener, PropertyChangeListener {
 
 		private boolean installed;
@@ -712,7 +721,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 			if (!textArea.getLineWrap()) {
 				int line = textArea.getDocument().getDefaultRootElement().
-										getElementIndex(dot);
+				getElementIndex(dot);
 				if (currentLine!=line) {
 					repaintLine(line);
 					repaintLine(currentLine);
@@ -725,10 +734,10 @@ public class LineNumberList extends AbstractGutterComponent
 					if (y!=lastY) {
 						lastY = y;
 						currentLine = textArea.getDocument().
-								getDefaultRootElement().getElementIndex(dot);
+						getDefaultRootElement().getElementIndex(dot);
 						repaint(); // *Could* be optimized...
 					}
-				} catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 			}
@@ -752,7 +761,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 			// If they change the current line highlight in any way...
 			if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
-				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
+			RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
 				repaintLine(currentLine);
 			}
 
