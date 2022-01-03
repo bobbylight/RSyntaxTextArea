@@ -51,20 +51,20 @@ subprojects {
     spotbugsMain {
         reports {
             html {
-                enabled = true
+                required = true
             }
             xml {
-                enabled = false
+                required = false
             }
         }
     }
     spotbugsTest {
         reports {
             html {
-                enabled = true
+                required = true
             }
             xml {
-                enabled = false
+                required = false
             }
         }
     }
