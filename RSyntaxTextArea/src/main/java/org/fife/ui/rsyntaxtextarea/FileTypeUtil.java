@@ -388,8 +388,6 @@ public final class FileTypeUtil implements SyntaxConstants {
 		map = new HashMap<>();
 
 		initFiltersImpl(map, SYNTAX_STYLE_ACTIONSCRIPT, "*.as", "*.asc");
-
-		initFiltersImpl(map, SYNTAX_STYLE_ACTIONSCRIPT, "*.as", "*.asc");
 		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_6502, "*.s");
 		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_X86, "*.asm");
 		initFiltersImpl(map, SYNTAX_STYLE_BBCODE, "*.bbc");
@@ -402,6 +400,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_D, "*.d");
 		initFiltersImpl(map, SYNTAX_STYLE_DART, "*.dart");
 		initFiltersImpl(map, SYNTAX_STYLE_DELPHI, "*.pas");
+		initFiltersImpl(map, SYNTAX_STYLE_DOCKERFILE, "Dockerfile");
 		initFiltersImpl(map, SYNTAX_STYLE_DTD, "*.dtd");
 		initFiltersImpl(map, SYNTAX_STYLE_FORTRAN, "*.f", "*.for", "*.fort", "*.f77", "*.f90");
 		initFiltersImpl(map, SYNTAX_STYLE_GO, "*.go");
@@ -412,16 +411,16 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_INI, "*.ini", ".editorconfig");
 		initFiltersImpl(map, SYNTAX_STYLE_JAVA, "*.java");
 		initFiltersImpl(map, SYNTAX_STYLE_JAVASCRIPT, "*.js", "*.jsx");
-		initFiltersImpl(map, SYNTAX_STYLE_JSP, "*.jsp");
 		initFiltersImpl(map, SYNTAX_STYLE_JSON_WITH_COMMENTS, ".jshintrc", "tslint.json");
 		initFiltersImpl(map, SYNTAX_STYLE_JSON, "*.json");
+		initFiltersImpl(map, SYNTAX_STYLE_JSP, "*.jsp");
 		initFiltersImpl(map, SYNTAX_STYLE_KOTLIN, "*.kt", "*.kts");
 		initFiltersImpl(map, SYNTAX_STYLE_LATEX, "*.tex", "*.ltx", "*.latex");
 		initFiltersImpl(map, SYNTAX_STYLE_LESS, "*.less");
 		initFiltersImpl(map, SYNTAX_STYLE_LISP, "*.cl", "*.clisp", "*.el", "*.l", "*.lisp", "*.lsp", "*.ml");
 		initFiltersImpl(map, SYNTAX_STYLE_LUA, "*.lua");
-		initFiltersImpl(map, SYNTAX_STYLE_MARKDOWN, "*.md");
 		initFiltersImpl(map, SYNTAX_STYLE_MAKEFILE, "Makefile", "makefile");
+		initFiltersImpl(map, SYNTAX_STYLE_MARKDOWN, "*.md");
 		initFiltersImpl(map, SYNTAX_STYLE_MXML, "*.mxml");
 		initFiltersImpl(map, SYNTAX_STYLE_NSIS, "*.nsi");
 		initFiltersImpl(map, SYNTAX_STYLE_PERL, "*.perl", "*.pl", "*.pm");
