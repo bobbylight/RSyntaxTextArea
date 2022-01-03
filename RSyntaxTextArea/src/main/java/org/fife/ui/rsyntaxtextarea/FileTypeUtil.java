@@ -393,14 +393,14 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_BBCODE, "*.bbc");
 		initFiltersImpl(map, SYNTAX_STYLE_C, "*.c");
 		initFiltersImpl(map, SYNTAX_STYLE_CLOJURE, "*.clj");
-		initFiltersImpl(map, SYNTAX_STYLE_CPLUSPLUS, "*.cpp", "*.cxx", "*.h");
+		initFiltersImpl(map, SYNTAX_STYLE_CPLUSPLUS, "*.cpp", "*.cxx", "*.h", "*.hpp");
 		initFiltersImpl(map, SYNTAX_STYLE_CSHARP, "*.cs");
 		initFiltersImpl(map, SYNTAX_STYLE_CSS, "*.css");
 		initFiltersImpl(map, SYNTAX_STYLE_CSV, "*.csv");
 		initFiltersImpl(map, SYNTAX_STYLE_D, "*.d");
 		initFiltersImpl(map, SYNTAX_STYLE_DART, "*.dart");
 		initFiltersImpl(map, SYNTAX_STYLE_DELPHI, "*.pas");
-		initFiltersImpl(map, SYNTAX_STYLE_DOCKERFILE, "Dockerfile");
+		initFiltersImpl(map, SYNTAX_STYLE_DOCKERFILE, "*.dockerfile", "Dockerfile");
 		initFiltersImpl(map, SYNTAX_STYLE_DTD, "*.dtd");
 		initFiltersImpl(map, SYNTAX_STYLE_FORTRAN, "*.f", "*.for", "*.fort", "*.f77", "*.f90");
 		initFiltersImpl(map, SYNTAX_STYLE_GO, "*.go");
