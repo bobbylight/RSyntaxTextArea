@@ -80,9 +80,9 @@ class ClipboardHistoryPopup extends JWindow {
 
 		JPanel cp = new JPanel(new BorderLayout());
 		cp.setBorder(BorderFactory.createCompoundBorder(
-				org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil.getToolTipBorder(),
+				TipUtil.getToolTipBorder(),
 				BorderFactory.createEmptyBorder(2, 5, 5, 5)));
-		cp.setBackground(org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil.getToolTipBackground());
+		cp.setBackground(TipUtil.getToolTipBackground());
 		setContentPane(cp);
 
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
