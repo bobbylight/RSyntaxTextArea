@@ -404,7 +404,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_DTD, "*.dtd");
 		initFiltersImpl(map, SYNTAX_STYLE_FORTRAN, "*.f", "*.for", "*.fort", "*.f77", "*.f90");
 		initFiltersImpl(map, SYNTAX_STYLE_GO, "*.go");
-		initFiltersImpl(map, SYNTAX_STYLE_GROOVY, "*.groovy", "*.gradle", "*.grv");
+		initFiltersImpl(map, SYNTAX_STYLE_GROOVY, "*.groovy", "*.gradle", "*.grv", "*.gy", "*.gvy", "*.gsh");
 		initFiltersImpl(map, SYNTAX_STYLE_HOSTS, "hosts");
 		initFiltersImpl(map, SYNTAX_STYLE_HTACCESS, ".htaccess");
 		initFiltersImpl(map, SYNTAX_STYLE_HTML, "*.htm", "*.html");
