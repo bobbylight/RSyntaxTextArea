@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an enhancement for this library
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
