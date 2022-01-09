@@ -972,6 +972,51 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testTestBlock_allOnOneLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block\"\"\""
+		);
+	}
+
+
+	@Test
+	void testTestBlock_continuingToAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block"
+		);
+	}
+
+
+	@Test
+	void testTestBlock_continuedFromAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another line and unterminated",
+			"continued from another line and terminated\"\"\""
+		);
+	}
+
+
+	@Test
+	void testTestBlock_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a \\\"\"\" text block\"\"\"",
+			"\"\"\"this is a \\\"\"\" text block"
+		);
+	}
+
+
+	@Test
+	void testTestBlock_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another \\\"\"\" line and unterminated",
+			"continued from another \\\"\"\" line and terminated\"\"\""
+		);
+	}
+
+
+	@Test
 	void testWhiteSpace() {
 		assertAllTokensOfType(TokenTypes.WHITESPACE,
 			" ",
