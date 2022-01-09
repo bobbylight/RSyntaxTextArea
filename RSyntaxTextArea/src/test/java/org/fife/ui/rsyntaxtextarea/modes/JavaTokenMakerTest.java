@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override
@@ -105,27 +105,10 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testBooleanLiterals() {
-
-		String code = "true false";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			"true",
+			"false"
+		);
 	}
 
 
@@ -162,7 +145,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testClassNames_java_lang() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Appendable",
 			"AutoCloseable",
 			"CharSequence",
@@ -279,16 +262,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"Override",
 			"SafeVarargs",
 			"SuppressWarnings"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
 	@Test
 	void testClassNames_java_io() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Closeable",
 			"DataInput",
 			"DataOutput",
@@ -377,16 +358,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"IOError",
 
 			"Serial"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
 	@Test
 	void testClassNames_java_util() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Collection",
 			"Comparator",
 			"Deque",
@@ -519,9 +498,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"UnknownFormatFlagsException",
 
 			"ServiceConfigurationError"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
@@ -819,6 +796,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world unterminated",
 			"/* Hello world */"
 		);
 	}
@@ -828,6 +806,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TokenTypes.COMMENT_MULTILINE,
+			"continued from a previous ine and unterminated",
 			"continued from a previous line */"
 		);
 	}
@@ -925,29 +904,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testSeparators() {
-
-		String code = "( ) [ ] { }";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		String[] separators = code.split(" +");
-		for (int i = 0; i < separators.length; i++) {
-			Assertions.assertEquals(separators[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
-			// Just one extra test here
-			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
-			if (i < separators.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")",
+			"[",
+			"]",
+			"{",
+			"}"
+		);
 	}
 
 
@@ -958,6 +922,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"\"hi\"",
 			"\"\\u00fe\"",
 			"\"\\\"\""
+		);
+	}
+
+
+	@Test
+	void testStringLiterals_validEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\\b\\s\\t\\n\\f\\r\\n\\\"\\'\\\\\""
 		);
 	}
 
