@@ -117,6 +117,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'",
 			"'\\b'",
+			"'\\s'",
 			"'\\t'",
 			"'\\r'",
 			"'\\f'",
@@ -759,37 +760,74 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testKeywords() {
 
-		String code = "abstract assert break case catch class const continue " +
-				"default do else enum extends final finally for goto if " +
-				"implements import instanceof interface native new null package " +
-				"private protected public static strictfp super switch " +
-				"synchronized this throw throws transient try void volatile while";
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			"_",
+			"abstract",
+			"assert",
+			"break",
+			"case",
+			"catch",
+			"class",
+			"const",
+			"continue",
+			"default",
+			"do",
+			"else",
+			"enum",
+			"exports",
+			"extends",
+			"final",
+			"finally",
+			"for",
+			"goto",
+			"if",
+			"implements",
+			"import",
+			"instanceof",
+			"interface",
+			"module",
+			"native",
+			"new",
+			"non-sealed",
+			"null",
+			"open",
+			"opens",
+			"package",
+			"permits",
+			"private",
+			"protected",
+			"provides",
+			"public",
+			"record",
+			"requires",
+			"sealed",
+			"static",
+			"strictfp",
+			"super",
+			"switch",
+			"synchronized",
+			"this",
+			"throw",
+			"throws",
+			"to",
+			"transient",
+			"transitive",
+			"try",
+			"uses",
+			"void",
+			"volatile",
+			"while",
+			"with"
+		);
+	}
 
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
-		segment = createSegment("return");
-		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assertions.assertEquals("return", token.getLexeme());
-		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+	@Test
+	void testKeywords_exitingMethod() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			"return",
+			"yield"
+		);
 	}
 
 
