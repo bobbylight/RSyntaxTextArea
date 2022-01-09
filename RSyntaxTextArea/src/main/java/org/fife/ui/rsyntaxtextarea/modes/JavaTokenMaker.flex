@@ -313,6 +313,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	/* Keywords */
+	"_"	 |
 	"abstract"|
 	"assert" |
 	"break"	 |
@@ -325,6 +326,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"do"	 |
 	"else"	 |
 	"enum"	 |
+	"exports" |
 	"extends" |
 	"final"	 |
 	"finally" |
@@ -335,13 +337,22 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"import" |
 	"instanceof" |
 	"interface" |
+	"module" |
 	"native" |
 	"new"	 |
+	"non-sealed" |
 	"null"	 |
+	"open" |
+	"opens" |
 	"package" |
+	"permits" |
 	"private" |
 	"protected" |
+	"provides" |
 	"public" |
+	"record" |
+	"requires" |
+	"sealed" |
 	"static" |
 	"strictfp" |
 	"super"	 |
@@ -350,11 +361,16 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"this"	 |
 	"throw"	 |
 	"throws" |
+	"to" |
 	"transient" |
+	"transitive" |
 	"try"	 |
+	"uses" |
 	"void"	 |
 	"volatile" |
-	"while"					{ addToken(Token.RESERVED_WORD); }
+	"while" |
+	"with"					{ addToken(Token.RESERVED_WORD); }
+    "yield" |
 	"return"				{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Data types. */
@@ -365,7 +381,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"float" |
 	"int" |
 	"long" |
-	"short"					{ addToken(Token.DATA_TYPE); }
+	"short" |
+	"var"					{ addToken(Token.DATA_TYPE); }
 
 	/* Booleans. */
 	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
