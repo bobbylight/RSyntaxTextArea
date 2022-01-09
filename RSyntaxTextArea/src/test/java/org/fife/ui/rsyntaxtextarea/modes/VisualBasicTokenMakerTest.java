@@ -21,7 +21,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-public class VisualBasicTokenMakerTest extends AbstractTokenMakerTest {
+class VisualBasicTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach

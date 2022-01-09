@@ -20,7 +20,7 @@ import org.junit.jupiter.api.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to

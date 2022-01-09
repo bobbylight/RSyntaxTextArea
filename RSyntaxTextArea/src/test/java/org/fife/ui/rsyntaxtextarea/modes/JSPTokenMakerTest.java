@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JSPTokenMakerTest extends AbstractTokenMakerTest {
+class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to

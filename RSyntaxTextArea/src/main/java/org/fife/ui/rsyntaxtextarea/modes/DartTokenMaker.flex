@@ -68,7 +68,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JavaScript multi-line comment.
 	 */
-	private static final int INTERNAL_IN_JS_MLC				= -8;
+	static final int INTERNAL_IN_JS_MLC				= -8;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.

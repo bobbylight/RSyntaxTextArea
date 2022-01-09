@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
+class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@BeforeEach

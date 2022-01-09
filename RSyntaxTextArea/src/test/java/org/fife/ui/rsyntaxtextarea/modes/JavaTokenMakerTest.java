@@ -944,7 +944,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTestBlock_allOnOneLine() {
+	void testTextBlock_allOnOneLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"\"this is a text block\"\"\""
 		);
@@ -952,7 +952,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTestBlock_continuingToAnotherLine() {
+	void testTextBlock_continuingToAnotherLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"\"this is a text block"
 		);
@@ -960,7 +960,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTestBlock_continuedFromAnotherLine() {
+	void testTextBlock_continuedFromAnotherLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"continued from another line and unterminated",
@@ -970,7 +970,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTestBlock_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+	void testTextBlock_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"\"\"\"this is a \\\"\"\" text block\"\"\"",
 			"\"\"\"this is a \\\"\"\" text block"
@@ -979,7 +979,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTestBlock_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+	void testTextBlock_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			"continued from another \\\"\"\" line and unterminated",
