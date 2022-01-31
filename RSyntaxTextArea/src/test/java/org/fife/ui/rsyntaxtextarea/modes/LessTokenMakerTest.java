@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to

@@ -729,6 +729,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * registration) or Windows (allow mixed case, etc.).
 	 *
 	 * @return An integer constant representing the OS.
+	 * @see #isOsCaseSensitive()
 	 */
 	public static int getOS() {
 		return OS;
@@ -1246,6 +1247,17 @@ return c.getLineStartOffset(line);
 	 */
 	public static boolean isNonWordChar(Token t) {
 		return t.length()==1 && !RSyntaxUtilities.isLetter(t.charAt(0));
+	}
+
+
+	/**
+	 * Returns whether the OS is case-sensitive.
+	 *
+	 * @return Whether the OS is case-sensitive.
+	 * @see #getOS()
+	 */
+	public static boolean isOsCaseSensitive() {
+		return OS != RSyntaxUtilities.OS_WINDOWS && OS != RSyntaxUtilities.OS_MAC_OSX;
 	}
 
 

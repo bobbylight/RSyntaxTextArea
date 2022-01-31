@@ -289,7 +289,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		public void actionPerformed(ActionEvent e) {
 			JOptionPane.showMessageDialog(DemoRootPane.this,
 					"<html><b>RSyntaxTextArea</b> - A Swing syntax highlighting text component" +
-					"<br>Version 3.1.0" +
+					"<br>Version 3.1.6" +
 					"<br>Licensed under a modified BSD license",
 					"About RSyntaxTextArea",
 					JOptionPane.INFORMATION_MESSAGE);

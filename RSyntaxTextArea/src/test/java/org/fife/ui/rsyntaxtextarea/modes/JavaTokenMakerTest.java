@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override
@@ -105,27 +105,10 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testBooleanLiterals() {
-
-		String code = "true false";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			"true",
+			"false"
+		);
 	}
 
 
@@ -134,6 +117,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'",
 			"'\\b'",
+			"'\\s'",
 			"'\\t'",
 			"'\\r'",
 			"'\\f'",
@@ -162,7 +146,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testClassNames_java_lang() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Appendable",
 			"AutoCloseable",
 			"CharSequence",
@@ -279,16 +263,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"Override",
 			"SafeVarargs",
 			"SuppressWarnings"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
 	@Test
 	void testClassNames_java_io() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Closeable",
 			"DataInput",
 			"DataOutput",
@@ -377,16 +359,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"IOError",
 
 			"Serial"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
 	@Test
 	void testClassNames_java_util() {
 
-		String[] classNames = {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
 			"Collection",
 			"Comparator",
 			"Deque",
@@ -519,9 +499,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"UnknownFormatFlagsException",
 
 			"ServiceConfigurationError"
-		};
-
-		assertAllTokensOfType(TokenTypes.FUNCTION, classNames);
+		);
 	}
 
 
@@ -782,43 +760,81 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testKeywords() {
 
-		String code = "abstract assert break case catch class const continue " +
-				"default do else enum extends final finally for goto if " +
-				"implements import instanceof interface native new null package " +
-				"private protected public static strictfp super switch " +
-				"synchronized this throw throws transient try void volatile while";
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			"_",
+			"abstract",
+			"assert",
+			"break",
+			"case",
+			"catch",
+			"class",
+			"const",
+			"continue",
+			"default",
+			"do",
+			"else",
+			"enum",
+			"exports",
+			"extends",
+			"final",
+			"finally",
+			"for",
+			"goto",
+			"if",
+			"implements",
+			"import",
+			"instanceof",
+			"interface",
+			"module",
+			"native",
+			"new",
+			"non-sealed",
+			"null",
+			"open",
+			"opens",
+			"package",
+			"permits",
+			"private",
+			"protected",
+			"provides",
+			"public",
+			"record",
+			"requires",
+			"sealed",
+			"static",
+			"strictfp",
+			"super",
+			"switch",
+			"synchronized",
+			"this",
+			"throw",
+			"throws",
+			"to",
+			"transient",
+			"transitive",
+			"try",
+			"uses",
+			"void",
+			"volatile",
+			"while",
+			"with"
+		);
+	}
 
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
-		segment = createSegment("return");
-		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assertions.assertEquals("return", token.getLexeme());
-		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
-		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+	@Test
+	void testKeywords_exitingMethod() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			"return",
+			"yield"
+		);
 	}
 
 
 	@Test
 	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world unterminated",
 			"/* Hello world */"
 		);
 	}
@@ -828,6 +844,7 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TokenTypes.COMMENT_MULTILINE,
+			"continued from a previous ine and unterminated",
 			"continued from a previous line */"
 		);
 	}
@@ -925,29 +942,14 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testSeparators() {
-
-		String code = "( ) [ ] { }";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		String[] separators = code.split(" +");
-		for (int i = 0; i < separators.length; i++) {
-			Assertions.assertEquals(separators[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
-			// Just one extra test here
-			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
-			if (i < separators.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"(",
+			")",
+			"[",
+			"]",
+			"{",
+			"}"
+		);
 	}
 
 
@@ -963,10 +965,63 @@ public class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testStringLiterals_validEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\\b\\s\\t\\n\\f\\r\\n\\\"\\'\\\\\""
+		);
+	}
+
+
+	@Test
 	void testStringLiteral_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
 			"\"unterminated string",
 			"\"string with an invalid \\x escape in it\""
+		);
+	}
+
+
+	@Test
+	void testTextBlock_allOnOneLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block\"\"\""
+		);
+	}
+
+
+	@Test
+	void testTextBlock_continuingToAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block"
+		);
+	}
+
+
+	@Test
+	void testTextBlock_continuedFromAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another line and unterminated",
+			"continued from another line and terminated\"\"\""
+		);
+	}
+
+
+	@Test
+	void testTextBlock_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a \\\"\"\" text block\"\"\"",
+			"\"\"\"this is a \\\"\"\" text block"
+		);
+	}
+
+
+	@Test
+	void testTextBlock_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another \\\"\"\" line and unterminated",
+			"continued from another \\\"\"\" line and terminated\"\"\""
 		);
 	}
 

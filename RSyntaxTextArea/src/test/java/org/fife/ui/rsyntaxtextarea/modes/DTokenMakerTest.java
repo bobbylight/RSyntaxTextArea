@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override

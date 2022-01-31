@@ -129,7 +129,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static final String rtaNextOccurrenceAction		= "RTA.NextOccurrenceAction";
 
 	/**
-     * Action to select the previous occurrence of the selected text.
+	 * Action to select the previous occurrence of the selected text.
 	 */
 	public static final String rtaPrevOccurrenceAction		= "RTA.PrevOccurrenceAction";
 
@@ -270,8 +270,8 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		new NextVisualPositionAction(downAction, false, SwingConstants.SOUTH),
 		new NextVisualPositionAction(selectionUpAction, true, SwingConstants.NORTH),
 		new NextVisualPositionAction(selectionDownAction, true, SwingConstants.SOUTH),
-        new NextOccurrenceAction(rtaNextOccurrenceAction),
-        new PreviousOccurrenceAction(rtaPrevOccurrenceAction),
+		new NextOccurrenceAction(rtaNextOccurrenceAction),
+		new PreviousOccurrenceAction(rtaPrevOccurrenceAction),
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
 		new PageAction(rtaSelectionPageLeftAction, true, true),
@@ -972,9 +972,9 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			if (beep) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 			}
-            if (textArea != null) {
-                textArea.requestFocusInWindow();
-            }
+			if (textArea != null) {
+				textArea.requestFocusInWindow();
+			}
 
 		}
 
@@ -2051,7 +2051,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 			return getName();
 		}
 
-    }
+	}
 
 
 	/**
@@ -2277,10 +2277,10 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 	}
 
 
-    /**
-     * Positions the caret at the beginning of the previous word.
-     */
-    public static class PreviousWordAction extends RecordableTextAction {
+	/**
+	 * Positions the caret at the beginning of the previous word.
+	 */
+	public static class PreviousWordAction extends RecordableTextAction {
 
  		private boolean select;
 

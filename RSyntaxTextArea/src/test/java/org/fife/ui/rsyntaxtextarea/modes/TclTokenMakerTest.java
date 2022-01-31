@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class TclTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class TclTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@BeforeEach

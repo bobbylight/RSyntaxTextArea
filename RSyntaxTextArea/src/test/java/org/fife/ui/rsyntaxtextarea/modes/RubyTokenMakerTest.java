@@ -24,7 +24,7 @@ import java.io.InputStream;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RubyTokenMakerTest extends AbstractTokenMakerTest {
+class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override

@@ -91,4 +91,3 @@ RSyntaxTextArea provides syntax highlighting, code folding, and many other featu
 * Add an issue on GitHub
 * Peruse [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
 * Check the project's [home page](http://bobbylight.github.io/RSyntaxTextArea/)
-

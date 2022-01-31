@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class ActionScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class ActionScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@BeforeEach

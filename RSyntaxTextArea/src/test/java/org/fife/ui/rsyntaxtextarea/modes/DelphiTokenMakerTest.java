@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DelphiTokenMakerTest extends AbstractTokenMakerTest {
+class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Override

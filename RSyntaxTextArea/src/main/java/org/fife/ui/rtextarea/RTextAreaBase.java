@@ -62,7 +62,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	private boolean fadeCurrentLineHighlight;	// "Fade effect" for current line highlight.
 	private boolean roundedSelectionEdges;
 	private int previousCaretY;
-    int currentCaretY;							// Used to know when to rehighlight current line.
+	int currentCaretY;							// Used to know when to rehighlight current line.
 
 	private BackgroundPainterStrategy backgroundPainter;	// Paints the background.
 
@@ -225,7 +225,7 @@ public abstract class RTextAreaBase extends JTextArea {
 
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
-        StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
 		for (int i=0; i<tabSize; i++) {
 			stringBuilder.append(" ");
 		}

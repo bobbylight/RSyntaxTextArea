@@ -125,7 +125,7 @@ import org.fife.ui.rtextarea.*;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 3.1.4
+ * @version 3.1.6
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
@@ -3117,8 +3117,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * uniformity among all text areas in an application.<p>
 	 *
 	 * For more flexible boilerplate code insertion, consider using the
-	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">TemplateCompletion
-	 * class</a> in the
+	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+	 * TemplateCompletion class</a> in the
 	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
 	 * add-on library</a>.
 	 *

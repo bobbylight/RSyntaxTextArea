@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-public class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override
@@ -356,19 +356,66 @@ public class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testMultiLineChar_allOnOneLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block\"\"\""
+		);
+	}
+
+
+	@Test
+	void testMultiLineChar_continuingToAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'''this is a text block"
+		);
+	}
+
+
+	@Test
+	void testMultiLineChar_continuedFromAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued from another line and unterminated",
+			"continued from another line and terminated'''"
+		);
+	}
+
+
+	@Test
+	void testMultiLineChar_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'''this is a \\''' text block'''",
+			"'''this is a \\''' text block"
+		);
+	}
+
+
+	@Test
+	void testMultiLineChar_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued from another \\''' line and unterminated",
+			"continued from another \\''' line and terminated'''"
+		);
+	}
+
+
+	@Test
 	void testMultiLineComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world unterminated",
+			"/* Hello world */"
+		);
+	}
 
-		String[] mlcLiterals = {
-			"/* Hello world */",
-		};
 
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+	@Test
+	void testMultiLineComments_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			DartTokenMaker.INTERNAL_IN_JS_MLC,
+			"continued from a previous ine and unterminated",
+			"continued from a previous line */"
+		);
 	}
 
 
@@ -398,6 +445,51 @@ public class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		}
 
+	}
+
+
+	@Test
+	void testMultiLineString_allOnOneLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block\"\"\""
+		);
+	}
+
+
+	@Test
+	void testMultiLineString_continuingToAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a text block"
+		);
+	}
+
+
+	@Test
+	void testMultiLineString_continuedFromAnotherLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another line and unterminated",
+			"continued from another line and terminated\"\"\""
+		);
+	}
+
+
+	@Test
+	void testMultiLineString_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"\"this is a \\\"\"\" text block\"\"\"",
+			"\"\"\"this is a \\\"\"\" text block"
+		);
+	}
+
+
+	@Test
+	void testMultiLineString_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from another \\\"\"\" line and unterminated",
+			"continued from another \\\"\"\" line and terminated\"\"\""
+		);
 	}
 
 
@@ -471,6 +563,19 @@ public class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testWhiteSpace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"   ",
+			"\t",
+			"\t\t",
+			"\t  \n",
+			"\f"
+		);
 	}
 
 
