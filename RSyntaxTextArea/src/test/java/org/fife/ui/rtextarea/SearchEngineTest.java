@@ -819,8 +819,8 @@ class SearchEngineTest {
 	 */
 	@Test
 	void testSearchEngineReplaceBackwardOnEmptyDocument() {
-		var textArea = new RSyntaxTextArea();
-		var context = new SearchContext("nothing");
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		SearchContext context = new SearchContext("nothing");
 		context.setSearchWrap(true);
 		context.setSearchForward(false);
 		assertDoesNotThrow(() -> {
