@@ -44,7 +44,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * @version 1.0
  */
 public class LineNumberList extends AbstractGutterComponent
-implements MouseInputListener {
+								implements MouseInputListener {
 
 	private int currentLine;	// The last line the caret was on.
 	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
@@ -98,25 +98,6 @@ implements MouseInputListener {
 		this(textArea, null);
 	}
 
-
-	/**
-	 * Constructs a new <code>LineNumberList</code>.
-	 *
-	 * @param textArea The text component for which line numbers will be
-	 *        displayed.
-	 * @param numberColor The color to use for the line numbers.  If this is
-	 *        <code>null</code>, gray will be used.
-	 * @param currentLineNumberColor The color to use for the current line number.  If this is
-	 *        <code>null</code>, blue shade will be used.
-	 */
-	public LineNumberList(RTextArea textArea, Color numberColor, Color currentLineNumberColor) {
-		this(textArea, numberColor);
-		this.currentLineNumberColor = currentLineNumberColor;
-		if(this.currentLineNumberColor == null){
-			this.currentLineNumberColor = numberColor;
-		}
-	}
-
 	/**
 	 * Constructs a new <code>LineNumberList</code>.
 	 *
@@ -126,6 +107,22 @@ implements MouseInputListener {
 	 *        <code>null</code>, gray will be used.
 	 */
 	public LineNumberList(RTextArea textArea, Color numberColor) {
+		this(textArea, numberColor, null);
+	}
+
+
+	/**
+	 * Constructs a new <code>LineNumberList</code>.
+	 *
+	 * @param textArea The text component for which line numbers will be
+	 *        displayed.
+	 * @param numberColor The color to use for the line numbers.  If this is
+	 *        <code>null</code>, gray will be used.
+	 * @param currentLineNumberColor The color to use for the current line number.
+	 *        If this is <code>null</code>, the current line's number will not have
+	 *        a special color.
+	 */
+	public LineNumberList(RTextArea textArea, Color numberColor, Color currentLineNumberColor) {
 
 		super(textArea);
 
@@ -135,7 +132,11 @@ implements MouseInputListener {
 		else {
 			setForeground(Color.GRAY);
 		}
-		currentLineNumberColor = numberColor;
+
+		this.currentLineNumberColor = currentLineNumberColor;
+		if (this.currentLineNumberColor == null) {
+			this.currentLineNumberColor = getForeground();
+		}
 	}
 
 
@@ -166,6 +167,19 @@ implements MouseInputListener {
 			lastLine = textArea.getLineCount()+getLineNumberingStartIndex()-1;
 		}
 		return lastLine;
+	}
+
+
+	/**
+	 * Returns the color to use when painting the current line's line
+	 * number.
+	 *
+	 * @return The color to use when painting the current line's line
+	 *         number.  This will never be {@code null}.
+	 * @see #setCurrentLineNumberColor(Color)
+	 */
+	public Color getCurrentLineNumberColor() {
+		return currentLineNumberColor;
 	}
 
 
@@ -379,10 +393,10 @@ implements MouseInputListener {
 			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
 				int width = metrics.stringWidth(number);
-				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
+				if (caretLineNumber == line + getLineNumberingStartIndex() - 1) {
 					g.setColor(currentLineNumberColor);
 				}
-				else{
+				else {
 					g.setColor(getForeground());
 				}
 				g.drawString(number, rhs-width,y);
@@ -409,10 +423,10 @@ implements MouseInputListener {
 			int line = topLine + 1;
 			while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
-				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
+				if (caretLineNumber == line + getLineNumberingStartIndex() - 1) {
 					g.setColor(currentLineNumberColor);
 				}
-				else{
+				else {
 					g.setColor(getForeground());
 				}
 				g.drawString(number, rhsBorderWidth, y);
@@ -480,7 +494,7 @@ implements MouseInputListener {
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
 		int topPosition = textArea.viewToModel(
-		new Point(visibleRect.x,visibleRect.y));
+								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 		FoldManager fm = null;
 		if (textArea instanceof RSyntaxTextArea) {
@@ -493,7 +507,7 @@ implements MouseInputListener {
 		// (possibly) partially-visible view.
 		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
 		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
-		visibleEditorRect);
+												visibleEditorRect);
 		int y = r.y;
 		final int rhsBorderWidth = getRhsBorderWidth();
 		int rhs;
@@ -529,10 +543,10 @@ implements MouseInputListener {
 			// Paint the line number.
 			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
 			String number = Integer.toString(index);
-			if(caretLineNumber == index){
+			if (caretLineNumber == index) {
 				g.setColor(currentLineNumberColor);
 			}
-			else{
+			else {
 				g.setColor(getForeground());
 			}
 			if (ltr) {
@@ -587,6 +601,23 @@ implements MouseInputListener {
 		int y = textArea.getInsets().top;
 		y += line*cellHeight;
 		repaint(0,y, cellWidth,cellHeight);
+	}
+
+
+	/**
+	 * Sets the color to use when painting the current line's line
+	 * number.
+	 *
+	 * @param color The color to use.  If this is {@code null},
+	 *        the current line's line number will be painted
+	 *        just like any other.
+	 * @see #getCurrentLineNumberColor()
+	 */
+	public void setCurrentLineNumberColor(Color color) {
+		if (color == null) {
+			color = getForeground();
+		}
+		currentLineNumberColor = color;
 	}
 
 
@@ -683,7 +714,7 @@ implements MouseInputListener {
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
 				int lineCount = textArea.getLineCount() +
-				getLineNumberingStartIndex() - 1;
+						getLineNumberingStartIndex() - 1;
 				do {
 					lineCount = lineCount/10;
 					count++;
@@ -721,7 +752,7 @@ implements MouseInputListener {
 
 			if (!textArea.getLineWrap()) {
 				int line = textArea.getDocument().getDefaultRootElement().
-				getElementIndex(dot);
+										getElementIndex(dot);
 				if (currentLine!=line) {
 					repaintLine(line);
 					repaintLine(currentLine);
@@ -734,10 +765,10 @@ implements MouseInputListener {
 					if (y!=lastY) {
 						lastY = y;
 						currentLine = textArea.getDocument().
-						getDefaultRootElement().getElementIndex(dot);
+								getDefaultRootElement().getElementIndex(dot);
 						repaint(); // *Could* be optimized...
 					}
-					} catch (BadLocationException ble) {
+				} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 			}
@@ -761,7 +792,7 @@ implements MouseInputListener {
 
 			// If they change the current line highlight in any way...
 			if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
-			RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
+				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
 				repaintLine(currentLine);
 			}
 
