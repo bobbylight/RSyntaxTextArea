@@ -72,7 +72,7 @@ public final class SearchEngine {
 		boolean doMarkAll = textArea instanceof RTextArea && context.getMarkAll();
 
 		String text = context.getSearchFor();
-		if (text==null || text.length()==0) {
+		if (text==null || text.length()==0 || textArea.getText().isEmpty()) {
 			if (doMarkAll) {
 				// Force "mark all" event to be broadcast so listeners know to
 				// clear their mark-all markers.  The RSTA already cleared its
@@ -251,7 +251,7 @@ public final class SearchEngine {
 		// Be smart about the text we grab to search in.  We grab more than
 		// a single line because our searches can return multi-line results.
 		// We copy only the chars that will be searched through.
-		String findIn = null;
+		String findIn;
 		try {
 			if (forward) {
 				findIn = textArea.getText(start,
@@ -262,7 +262,7 @@ public final class SearchEngine {
 			}
 		} catch (BadLocationException ble) {
 			// Never happens; findIn will be null anyway.
-			ble.printStackTrace();
+			throw new RuntimeException(ble);
 		}
 
 		return findIn;
