@@ -814,6 +814,19 @@ class SearchEngineTest {
 		testSearchEngineReplace(false);
 	}
 
+	/**
+	 * https://github.com/bobbylight/RSyntaxTextArea/issues/427
+	 */
+	@Test
+	void testSearchEngineReplaceBackwardOnEmptyDocument() {
+		var textArea = new RSyntaxTextArea();
+		var context = new SearchContext("nothing");
+		context.setSearchWrap(true);
+		context.setSearchForward(false);
+		assertDoesNotThrow(() -> {
+			SearchEngine.find(textArea, context);
+		});
+	}
 
 	/**
 	 * Tests <code>SearchEngine.replace()</code> when searching forward.
