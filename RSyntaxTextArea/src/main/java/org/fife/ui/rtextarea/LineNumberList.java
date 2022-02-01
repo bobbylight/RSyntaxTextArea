@@ -44,7 +44,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * @version 1.0
  */
 public class LineNumberList extends AbstractGutterComponent
-								implements MouseInputListener {
+implements MouseInputListener {
 
 	private int currentLine;	// The last line the caret was on.
 	private int lastY = -1;		// Used to check if caret changes lines when line wrap is enabled.
@@ -82,6 +82,10 @@ public class LineNumberList extends AbstractGutterComponent
 	 */
 	private int lineNumberingStartIndex;
 
+	/**
+	 * The color of current line number.
+	 */
+	private Color currentLineNumberColor;
 
 	/**
 	 * Constructs a new <code>LineNumberList</code> using default values for
@@ -102,6 +106,24 @@ public class LineNumberList extends AbstractGutterComponent
 	 *        displayed.
 	 * @param numberColor The color to use for the line numbers.  If this is
 	 *        <code>null</code>, gray will be used.
+	 * @param currentLineNumberColor The color to use for the current line number.  If this is
+	 *        <code>null</code>, blue shade will be used.
+	 */
+	public LineNumberList(RTextArea textArea, Color numberColor, Color currentLineNumberColor) {
+		this(textArea, numberColor);
+		this.currentLineNumberColor = currentLineNumberColor;
+		if(this.currentLineNumberColor == null){
+			this.currentLineNumberColor = numberColor;
+		}
+	}
+
+	/**
+	 * Constructs a new <code>LineNumberList</code>.
+	 *
+	 * @param textArea The text component for which line numbers will be
+	 *        displayed.
+	 * @param numberColor The color to use for the line numbers.  If this is
+	 *        <code>null</code>, gray will be used.
 	 */
 	public LineNumberList(RTextArea textArea, Color numberColor) {
 
@@ -113,7 +135,7 @@ public class LineNumberList extends AbstractGutterComponent
 		else {
 			setForeground(Color.GRAY);
 		}
-
+		currentLineNumberColor = numberColor;
 	}
 
 
@@ -337,18 +359,18 @@ public class LineNumberList extends AbstractGutterComponent
 		}
 		final int rhsBorderWidth = getRhsBorderWidth();
 
-/*
+		/*
 		// Highlight the current line's line number, if desired.
 		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
-				currentLine<=bottomLine) {
+		currentLine<=bottomLine) {
 			g.setColor(textArea.getCurrentLineHighlightColor());
 			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight,
-						cellWidth,cellHeight);
+			cellWidth,cellHeight);
 		}
-*/
+		*/
 
 		// Paint line numbers
-		g.setColor(getForeground());
+		int caretLineNumber = textArea.getCaretLineNumber() + 1;
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
@@ -357,6 +379,12 @@ public class LineNumberList extends AbstractGutterComponent
 			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
 				int width = metrics.stringWidth(number);
+				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
+					g.setColor(currentLineNumberColor);
+				}
+				else{
+					g.setColor(getForeground());
+				}
 				g.drawString(number, rhs-width,y);
 				y += cellHeight;
 				if (fm!=null) {
@@ -381,6 +409,12 @@ public class LineNumberList extends AbstractGutterComponent
 			int line = topLine + 1;
 			while (y<visibleRect.y+visibleRect.height && line<textArea.getLineCount()) {
 				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+				if(caretLineNumber == line + getLineNumberingStartIndex() - 1){
+					g.setColor(currentLineNumberColor);
+				}
+				else{
+					g.setColor(getForeground());
+				}
 				g.drawString(number, rhsBorderWidth, y);
 				y += cellHeight;
 				if (fm!=null) {
@@ -446,7 +480,7 @@ public class LineNumberList extends AbstractGutterComponent
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
 		int topPosition = textArea.viewToModel(
-								new Point(visibleRect.x,visibleRect.y));
+		new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 		FoldManager fm = null;
 		if (textArea instanceof RSyntaxTextArea) {
@@ -459,7 +493,7 @@ public class LineNumberList extends AbstractGutterComponent
 		// (possibly) partially-visible view.
 		Rectangle visibleEditorRect = ui.getVisibleEditorRect();
 		Rectangle r = LineNumberList.getChildViewBounds(v, topLine,
-												visibleEditorRect);
+		visibleEditorRect);
 		int y = r.y;
 		final int rhsBorderWidth = getRhsBorderWidth();
 		int rhs;
@@ -477,6 +511,8 @@ public class LineNumberList extends AbstractGutterComponent
 		// end of the text area.
 		g.setColor(getForeground());
 
+		int caretLineNumber = textArea.getCaretLineNumber() + 1;
+
 		while (y < visibleBottom) {
 
 			r = LineNumberList.getChildViewBounds(v, topLine, visibleEditorRect);
@@ -493,6 +529,12 @@ public class LineNumberList extends AbstractGutterComponent
 			// Paint the line number.
 			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
 			String number = Integer.toString(index);
+			if(caretLineNumber == index){
+				g.setColor(currentLineNumberColor);
+			}
+			else{
+				g.setColor(getForeground());
+			}
 			if (ltr) {
 				int strWidth = metrics.stringWidth(number);
 				g.drawString(number, rhs-strWidth,y+ascent);
@@ -641,7 +683,7 @@ public class LineNumberList extends AbstractGutterComponent
 				FontMetrics fontMetrics = getFontMetrics(font);
 				int count = 0;
 				int lineCount = textArea.getLineCount() +
-						getLineNumberingStartIndex() - 1;
+				getLineNumberingStartIndex() - 1;
 				do {
 					lineCount = lineCount/10;
 					count++;
@@ -679,7 +721,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 			if (!textArea.getLineWrap()) {
 				int line = textArea.getDocument().getDefaultRootElement().
-										getElementIndex(dot);
+				getElementIndex(dot);
 				if (currentLine!=line) {
 					repaintLine(line);
 					repaintLine(currentLine);
@@ -692,10 +734,10 @@ public class LineNumberList extends AbstractGutterComponent
 					if (y!=lastY) {
 						lastY = y;
 						currentLine = textArea.getDocument().
-								getDefaultRootElement().getElementIndex(dot);
+						getDefaultRootElement().getElementIndex(dot);
 						repaint(); // *Could* be optimized...
 					}
-				} catch (BadLocationException ble) {
+					} catch (BadLocationException ble) {
 					ble.printStackTrace();
 				}
 			}
@@ -719,7 +761,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 			// If they change the current line highlight in any way...
 			if (RTextArea.HIGHLIGHT_CURRENT_LINE_PROPERTY.equals(name) ||
-				RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
+			RTextArea.CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY.equals(name)) {
 				repaintLine(currentLine);
 			}
 
