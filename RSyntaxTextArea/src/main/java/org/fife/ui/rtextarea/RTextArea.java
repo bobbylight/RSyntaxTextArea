@@ -906,7 +906,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		carets = new CaretStyle[2];
 		setCaretStyle(INSERT_MODE, CaretStyle.THICK_VERTICAL_LINE_STYLE);
 		setCaretStyle(OVERWRITE_MODE, CaretStyle.BLOCK_STYLE);
-		setDragEnabled(true);			// Enable drag-and-drop.
+		setDragEnabled(!GraphicsEnvironment.isHeadless());
 
 		setTextMode(INSERT_MODE); // Carets array must be created first!
 		setMarkAllOnOccurrenceSearches(true);
