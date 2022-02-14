@@ -178,7 +178,7 @@ public class LineNumberList extends AbstractGutterComponent
 	 *         number.  If this is {@code null}, the regular line
 	 *         number color will be used.
 	 * @see #setCurrentLineNumberColor(Color)
-	 * @see {@link #getForeground()}
+	 * @see #getForeground()
 	 */
 	public Color getCurrentLineNumberColor() {
 		return currentLineNumberColor;
