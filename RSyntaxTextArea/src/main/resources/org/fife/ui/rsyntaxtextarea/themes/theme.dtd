@@ -66,6 +66,7 @@
       color      CDATA #REQUIRED>
 <!ATTLIST lineNumbers
       fg         CDATA #REQUIRED
+      currentFG  CDATA #IMPLIED
       fontFamily CDATA #IMPLIED
       fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator

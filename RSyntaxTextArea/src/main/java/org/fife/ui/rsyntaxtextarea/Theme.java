@@ -101,6 +101,7 @@ public class Theme {
 	public Color activeLineRangeColor;
 	public boolean iconRowHeaderInheritsGutterBG;
 	public Color lineNumberColor;
+	public Color currentLineNumberColor;
 	public String lineNumberFont;
 	public int lineNumberFontSize;
 	public Color foldIndicatorFG;
@@ -166,6 +167,7 @@ public class Theme {
 			activeLineRangeColor = gutter.getActiveLineRangeColor();
 			iconRowHeaderInheritsGutterBG = gutter.getIconRowHeaderInheritsGutterBackground();
 			lineNumberColor = gutter.getLineNumberColor();
+			currentLineNumberColor = gutter.getCurrentLineNumberColor();
 			lineNumberFont = gutter.getLineNumberFont().getFamily();
 			lineNumberFontSize = gutter.getLineNumberFont().getSize();
 			foldIndicatorFG = gutter.getFoldIndicatorForeground();
@@ -217,6 +219,7 @@ public class Theme {
 			gutter.setActiveLineRangeColor(activeLineRangeColor);
 			gutter.setIconRowHeaderInheritsGutterBackground(iconRowHeaderInheritsGutterBG);
 			gutter.setLineNumberColor(lineNumberColor);
+			gutter.setCurrentLineNumberColor(currentLineNumberColor);
 			String fontName = lineNumberFont!=null ? lineNumberFont :
 				baseFont.getFamily();
 			int fontSize = lineNumberFontSize>0 ? lineNumberFontSize :
@@ -456,6 +459,9 @@ public class Theme {
 
 			elem = doc.createElement("lineNumbers");
 			elem.setAttribute("fg", colorToString(lineNumberColor));
+			if (currentLineNumberColor != null) {
+				elem.setAttribute("currentFG", colorToString(currentLineNumberColor));
+			}
 			if (lineNumberFont != null) {
 				elem.setAttribute("fontFamily", lineNumberFont);
 			}
@@ -740,6 +746,8 @@ public class Theme {
 			else if ("lineNumbers".equals(qName)) {
 				String color = attrs.getValue("fg");
 				theme.lineNumberColor = stringToColor(color);
+				color = attrs.getValue("currentFG");
+				theme.currentLineNumberColor = stringToColor(color);
 				theme.lineNumberFont = attrs.getValue("fontFamily");
 				theme.lineNumberFontSize = parseInt(attrs, "fontSize", -1);
 			}

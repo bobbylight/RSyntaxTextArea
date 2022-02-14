@@ -270,6 +270,21 @@ class GutterTest extends AbstractRTextAreaTest {
 
 
 	@Test
+	void testGetSetCurrentLineNumberColor() {
+
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+
+		Assertions.assertNull(gutter.getCurrentLineNumberColor());
+
+		Color color = Color.red;
+		gutter.setCurrentLineNumberColor(color);
+		Assertions.assertEquals(color, gutter.getCurrentLineNumberColor());
+
+	}
+
+
+	@Test
 	void testGetSetFoldBackground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);

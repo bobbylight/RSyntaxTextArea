@@ -28,7 +28,7 @@
    
    <!-- Gutter styling. -->
    <gutterBorder color="dddddd"/>
-   <lineNumbers fg="787878"/>
+   <lineNumbers fg="787878" currentFG="343434"/>
    <foldIndicator fg="808080" iconBg="ffffff"/>
    <iconRowHeader activeLineRange="3399ff"/>
    

@@ -65,6 +65,7 @@ class ThemeTest {
 		Assertions.assertNotEquals(gutter1.getIconRowHeaderInheritsGutterBackground(), gutter2.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertNotEquals(gutter1.getLineNumberColor(), gutter2.getLineNumberColor());
 		Assertions.assertNotEquals(gutter1.getLineNumberFont(), gutter2.getLineNumberFont());
+		Assertions.assertNotEquals(gutter1.getCurrentLineNumberColor(), gutter2.getCurrentLineNumberColor());
 		Assertions.assertNotEquals(gutter1.getFoldIndicatorForeground(), gutter2.getFoldIndicatorForeground());
 		Assertions.assertNotEquals(gutter1.getFoldBackground(), gutter2.getFoldBackground());
 
@@ -106,6 +107,7 @@ class ThemeTest {
 		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
 		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
+		Assertions.assertEquals(Color.blue, gutter.getCurrentLineNumberColor());
 		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
 		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
@@ -117,7 +119,52 @@ class ThemeTest {
 
 	/**
 	 * Asserts whether a text area and gutter match the styles defined in
-	 * <code>ThemeTest_theme1.xml</code>.
+	 * <code>ThemeTest_theme1_noLineNumbers_currentFG.xml</code>.
+	 */
+	private void assertColorsMatchTheme1_noLineNumbers_currentFG(
+			RSyntaxTextArea textArea, Gutter gutter) {
+
+		Assertions.assertEquals(Color.red, textArea.getBackground());
+		Assertions.assertEquals(Color.red, textArea.getCaretColor());
+		Assertions.assertFalse(textArea.getUseSelectedTextColor());
+		Assertions.assertEquals(Color.red, textArea.getSelectedTextColor());
+		Assertions.assertEquals(Color.red, textArea.getSelectionColor());
+		Assertions.assertTrue(textArea.getRoundedSelectionEdges());
+		Assertions.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assertions.assertTrue(textArea.getFadeCurrentLineHighlight());
+		Assertions.assertEquals(Color.red, textArea.getTabLineColor());
+		Assertions.assertEquals(Color.red, textArea.getMarginLineColor());
+		Assertions.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
+		Assertions.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assertions.assertTrue(textArea.getPaintMarkOccurrencesBorder());
+		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
+		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assertions.assertTrue(textArea.getPaintMatchedBracketPair());
+		Assertions.assertTrue(textArea.getAnimateBracketMatching());
+		Assertions.assertEquals(Color.red, textArea.getHyperlinkForeground());
+		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
+			Assertions.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
+		}
+
+		Assertions.assertEquals(Color.red, gutter.getBackground());
+		Assertions.assertEquals(Color.red, gutter.getBorderColor());
+		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
+		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
+		Assertions.assertNull(gutter.getCurrentLineNumberColor());
+		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
+		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
+		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
+		Assertions.assertEquals(Color.red, gutter.getFoldBackground());
+		Assertions.assertEquals(Color.green, gutter.getArmedFoldBackground());
+
+	}
+
+
+	/**
+	 * Asserts whether a text area and gutter match the styles defined in
+	 * <code>ThemeTest_theme1_noArmedBG.xml</code>.
 	 */
 	private void assertColorsMatchTheme1_noArmedBG(RSyntaxTextArea textArea,
 										 Gutter gutter) {
@@ -150,6 +197,7 @@ class ThemeTest {
 		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
 		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
+		Assertions.assertEquals(Color.blue, gutter.getCurrentLineNumberColor());
 		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
 		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
@@ -193,6 +241,7 @@ class ThemeTest {
 		Assertions.assertEquals(gutter1.getActiveLineRangeColor(), gutter2.getActiveLineRangeColor());
 		Assertions.assertEquals(gutter1.getIconRowHeaderInheritsGutterBackground(), gutter2.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertEquals(gutter1.getLineNumberColor(), gutter2.getLineNumberColor());
+		Assertions.assertEquals(gutter1.getCurrentLineNumberColor(), gutter2.getCurrentLineNumberColor());
 		Assertions.assertEquals(gutter1.getLineNumberFont(), gutter2.getLineNumberFont());
 		Assertions.assertEquals(gutter1.getFoldIndicatorForeground(), gutter2.getFoldIndicatorForeground());
 		Assertions.assertEquals(gutter1.getFoldBackground(), gutter2.getFoldBackground());
@@ -270,6 +319,7 @@ class ThemeTest {
 		gutter.setActiveLineRangeColor(Color.orange);
 		gutter.setIconRowHeaderInheritsGutterBackground(!gutter.getIconRowHeaderInheritsGutterBackground());
 		gutter.setLineNumberColor(Color.orange);
+		gutter.setCurrentLineNumberColor(Color.orange);
 		gutter.setLineNumberFont(font);
 		gutter.setFoldIndicatorForeground(Color.orange);
 		gutter.setFoldBackground(Color.orange);
@@ -350,6 +400,25 @@ class ThemeTest {
 
 		theme.apply(textArea1);
 		assertColorsMatchTheme1_noArmedBG(textArea1, gutter1);
+
+	}
+
+
+	@Test
+	void testLoad_fromStream_noDefaultFont_noLineNumbers_currenetFG() throws Exception {
+
+		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1_noLineNumbers_currentFG.xml");
+		Theme theme = Theme.load(in);
+		in.close();
+
+		RSyntaxTextArea textArea1 = new RSyntaxTextArea(
+			SyntaxConstants.SYNTAX_STYLE_PHP);
+		RTextScrollPane sp1 = new RTextScrollPane(textArea1);
+		Gutter gutter1 = sp1.getGutter();
+		initWithOddProperties(textArea1, gutter1);
+
+		theme.apply(textArea1);
+		assertColorsMatchTheme1_noLineNumbers_currentFG(textArea1, gutter1);
 
 	}
 

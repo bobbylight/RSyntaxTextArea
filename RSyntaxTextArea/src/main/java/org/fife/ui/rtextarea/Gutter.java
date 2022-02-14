@@ -20,6 +20,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -90,6 +91,13 @@ public class Gutter extends JPanel {
 	private Color lineNumberColor;
 
 	/**
+	 * The color used to render the currently active line's
+	 * line number.  If this is {@code null},
+	 * {@link #lineNumberColor} is used.
+	 */
+	private Color currentLineNumberColor;
+
+	/**
 	 * The starting index for line numbers in the gutter.
 	 */
 	private int lineNumberingStartIndex;
@@ -135,7 +143,7 @@ public class Gutter extends JPanel {
 	public Gutter(RTextArea textArea) {
 
 		listener = new TextAreaListener();
-		lineNumberColor = Color.gray;
+		lineNumberColor = LineNumberList.DEFAULT_LINE_NUMBER_COLOR;
 		lineNumberFont = RTextArea.getDefaultFont();
 		lineNumberingStartIndex = 1;
 		iconRowHeaderInheritsGutterBackground = false;
@@ -317,6 +325,19 @@ public class Gutter extends JPanel {
 	 */
 	public Color getBorderColor() {
 		return ((GutterBorder)getBorder()).getColor();
+	}
+
+
+	/**
+	 * The color used to render the currently active line's line number.
+	 * If this is {@code null}, {@link #getLineNumberColor()} is used.
+	 *
+	 * @return The color.
+	 * @see #setCurrentLineNumberColor(Color)
+	 * @see #getLineNumberColor()
+	 */
+	public Color getCurrentLineNumberColor() {
+		return currentLineNumberColor;
 	}
 
 
@@ -615,6 +636,24 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Sets the color used to render the currently active line's line number.
+	 * If this is {@code null}, {@link #getLineNumberColor()} is used.
+	 *
+	 * @param color The color to use.
+	 * @see #getCurrentLineNumberColor()
+	 * @see #setLineNumberColor(Color)
+	 */
+	public void setCurrentLineNumberColor(Color color) {
+		if (!Objects.equals(color, currentLineNumberColor)) {
+			currentLineNumberColor = color;
+			if (lineNumberList!=null) {
+				lineNumberList.setCurrentLineNumberColor(color);
+			}
+		}
+	}
+
+
+	/**
 	 * Sets the icons to use to represent collapsed and expanded folds.
 	 *
 	 * @param collapsedIcon The collapsed fold icon.  This cannot be
@@ -721,6 +760,7 @@ public class Gutter extends JPanel {
 	 *
 	 * @param color The color to use when painting line numbers.
 	 * @see #getLineNumberColor()
+	 * @see #setCurrentLineNumberColor(Color)
 	 */
 	public void setLineNumberColor(Color color) {
 		if (color!=null && !color.equals(lineNumberColor)) {
@@ -840,6 +880,8 @@ public class Gutter extends JPanel {
 				lineNumberList = kit.createLineNumberList(textArea);
 				lineNumberList.setFont(getLineNumberFont());
 				lineNumberList.setForeground(getLineNumberColor());
+				lineNumberList.setCurrentLineNumberColor(
+					getCurrentLineNumberColor());
 				lineNumberList.setLineNumberingStartIndex(
 						getLineNumberingStartIndex());
 			}

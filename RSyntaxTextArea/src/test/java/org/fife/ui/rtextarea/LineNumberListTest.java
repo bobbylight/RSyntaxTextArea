@@ -43,9 +43,9 @@ class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
 		list.setCurrentLineNumberColor(Color.BLUE);
 		Assertions.assertEquals(Color.BLUE, list.getCurrentLineNumberColor());
 
-		// Verify changing to a null value sets it to the default line number color
+		// Verify changing to a null value also works
 		list.setCurrentLineNumberColor(null);
-		Assertions.assertEquals(list.getForeground(), list.getCurrentLineNumberColor());
+		Assertions.assertNull(list.getCurrentLineNumberColor());
 	}
 
 
