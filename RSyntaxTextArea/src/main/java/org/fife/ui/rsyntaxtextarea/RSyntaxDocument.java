@@ -78,8 +78,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 	private transient int lastLine = -1;
 	private transient Token cachedTokenList;
-	private transient int useCacheCount = 0;
-	private transient int tokenRetrievalCount = 0;
+	private transient int useCacheCount;
+	private transient int tokenRetrievalCount;
 
 	private transient Segment s;
 
@@ -330,6 +330,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * Returns the text to place at the beginning and end of a
 	 * line to "comment" it in this programming language.
 	 *
+	 * @param languageIndex The language index to get comment information
+	 *        for.
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.  A <code>null</code> value for either means there
 	 *         is no string to add for that part.  A value of
@@ -478,8 +480,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * Deserializes a document.
 	 *
 	 * @param in The stream to read from.
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @throws ClassNotFoundException If an unexpected error occurs.
+	 * @throws IOException If an IO error occurs.
 	 */
 	private void readObject(ObjectInputStream in)
 						throws ClassNotFoundException, IOException {

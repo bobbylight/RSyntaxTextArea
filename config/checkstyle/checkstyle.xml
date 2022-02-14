@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-          "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-          "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!--
 
@@ -39,18 +39,18 @@
         <property name="basedir" value="${basedir}"/>
     -->
 
-	<property name="fileExtensions" value="java"/>
+    <property name="fileExtensions" value="java"/>
     <property name="tabWidth" value="4"/>
 
-	<!-- Part of turning off individual checks: -->
-	<!-- http://stackoverflow.com/questions/4023185/how-to-disable-a-particular-checkstyle-rule-for-a-particular-line-of-code -->
-	<module name="SuppressWarningsFilter" />
+    <!-- Part of turning off individual checks: -->
+    <!-- http://stackoverflow.com/questions/4023185/how-to-disable-a-particular-checkstyle-rule-for-a-particular-line-of-code -->
+    <module name="SuppressWarningsFilter" />
 
     <!-- Checks that a package-info.java file exists for each package.     -->
     <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocPackage -->
     <module name="JavadocPackage">
-		<property name="allowLegacy" value="true"/> <!-- Allow package.html in addition to package-info.java -->
-	</module>
+        <property name="allowLegacy" value="true"/> <!-- Allow package.html in addition to package-info.java -->
+    </module>
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
@@ -63,8 +63,8 @@
     <!-- Checks for Size Violations.                    -->
     <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="FileLength">
-		<property name="max" value="2000"/>
-	</module>
+        <property name="max" value="2000"/>
+    </module>
 
     <module name="LineLength">
         <property name="max" value="120"/>
@@ -77,10 +77,10 @@
     <!-- Miscellaneous other checks.                   -->
     <!-- See http://checkstyle.sf.net/config_misc.html -->
     <module name="RegexpSingleline">
-       <property name="format" value="\s+$"/>
-       <property name="minimum" value="0"/>
-       <property name="maximum" value="0"/>
-       <property name="message" value="Line has trailing spaces."/>
+        <property name="format" value="\s+$"/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="message" value="Line has trailing spaces."/>
     </module>
 
     <!-- Checks for Headers                                -->
@@ -92,20 +92,37 @@
 
     <module name="TreeWalker">
 
-		<!-- Part of turning off individual checks: -->
-		<!-- http://stackoverflow.com/questions/5761188/checkstyle-suppressioncommentfilter-not-ignoring-specified-rule/5764666#5764666 -->
-		<module name="SuppressWarningsHolder" />
+        <!-- Part of turning off individual checks: -->
+        <!-- http://stackoverflow.com/questions/5761188/checkstyle-suppressioncommentfilter-not-ignoring-specified-rule/5764666#5764666 -->
+        <module name="SuppressWarningsHolder" />
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <!--<module name="JavadocMethod"/> This is just too whiny for now. -->
         <module name="JavadocType"/>
-		<!--
+        <!--
         <module name="JavadocVariable">
-			<property name="scope" value="package"/>
-		</module>
-		-->
+            <property name="scope" value="package"/>
+        </module>
+        -->
         <module name="JavadocStyle"/>
+        <module name="AtclauseOrder"/>
+        <module name="InvalidJavadocPosition"/>
+        <module name="JavadocBlockTagLocation"/>
+        <module name="JavadocMethod">
+            <property name="accessModifiers" value="public"/>
+        </module>
+        <module name="JavadocMissingLeadingAsterisk"/>
+        <module name="JavadocMissingWhitespaceAfterAsterisk"/>
+        <module name="JavadocTagContinuationIndentation"/>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="RequireEmptyLineBeforeBlockTagGroup"/>
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF"/>
+        </module>
+        <module name="MissingJavadocPackage"/>
+        <module name="MissingJavadocType"/>
 
         <module name="JavadocContentLocationCheck"/>
 
@@ -121,6 +138,12 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
+        <!-- Checks for annotations.                                      -->
+        <!-- See https://checkstyle.sourceforge.io/config_annotation.html -->
+        <module name="AnnotationLocation"/>
+        <module name="AnnotationUseStyle"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingOverride"/>
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
@@ -133,12 +156,12 @@
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
         <module name="MethodLength">
-			<property name="max" value="300"/>
-		</module>
+            <property name="max" value="300"/>
+        </module>
         <module name="ParameterNumber">
-			<property name="max" value="9"/>
-			<!--<property name="ignoreOverriddenMethods" value="true"/>-->
-		</module>
+            <property name="max" value="9"/>
+            <!--<property name="ignoreOverriddenMethods" value="true"/>-->
+        </module>
 
 
         <!-- Checks for whitespace                               -->
@@ -149,8 +172,8 @@
         <!--<module name="NoWhitespaceAfter"/>-->
         <!--<module name="NoWhitespaceBefore"/>-->
         <module name="OperatorWrap">
-			<property name="option" value="eol"/>
-		</module>
+            <property name="option" value="eol"/>
+        </module>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <!--<module name="WhitespaceAround"/>-->
@@ -168,30 +191,41 @@
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces"> <!-- Allow stuff like "while (doSomething(minus-minus-count));" -->
-			<property name="allowEmptyLoopBody" value="true"/>
-		</module>
-		<module name="RightCurly"> <!-- Right curlies should be alone in if/else -->
-			<property name="option" value="alone"/>
-			<property name="tokens" value="LITERAL_ELSE, METHOD_DEF"/>
-		</module>
+            <property name="allowEmptyLoopBody" value="true"/>
+        </module>
+        <module name="RightCurly"> <!-- Right curlies should be alone in if/else -->
+            <property name="option" value="alone"/>
+            <property name="tokens" value="LITERAL_ELSE, METHOD_DEF"/>
+        </module>
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <!--<module name="AvoidInlineConditionals"/>-->
         <!--<module name="EmptyStatement"/> Removed to allow "while (doSomething());" -->
+        <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
-		<!-- Completely overridden since it's common in Java to do e.g. this.foo = foo;
+        <module name="ExplicitInitialization"/>
+        <!-- Completely overridden since it's common in Java to do e.g. this.foo = foo;
         <module name="HiddenField">
-			<property name="ignoreSetter" value="true" />
-			<property name="ignoreConstructorParameter" value="true" />
-		</module>
-		-->
+            <property name="ignoreSetter" value="true" />
+            <property name="ignoreConstructorParameter" value="true" />
+        </module>
+        -->
+        <!--        <module name="IllegalCatch"/>-->
         <module name="IllegalInstantiation"/>
+        <module name="IllegalThrows"/>
+        <module name="IllegalType"/>
         <!--<module name="InnerAssignment"/> -->
         <!--<module name="MagicNumber"/> Unfortunately, too much noise -->
         <!--<module name="MissingSwitchDefault"/>-->
+        <module name="MultipleVariableDeclarations"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+        <!--        <module name="UnnecessaryParentheses"/>-->
+        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
@@ -200,27 +234,35 @@
         <module name="HideUtilityClassConstructor"/>
         <!--<module name="InterfaceIsType"/> Allow constant interfaces -->
         <module name="VisibilityModifier">
-			<property name="protectedAllowed" value="true"/>
-			<property name="packageAllowed" value="true"/>
-		</module>
+            <property name="protectedAllowed" value="true"/>
+            <property name="packageAllowed" value="true"/>
+        </module>
 
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <module name="ArrayTypeStyle"/>
+        <!--<module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowByTailComment" value="true"/>
+        </module>-->
+        <module name="CommentsIndentation"/>
         <!--<module name="FinalParameters"/>-->
         <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
-<!--        <module name="UnnecessaryParentheses"/>-->
-        <module name="UnnecessarySemicolonInEnumeration"/>
-        <module name="UnnecessarySemicolonInTryWithResources"/>
-        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
-        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+
+        <!-- Checks for metrics.                                       -->
+        <!-- See https://checkstyle.sourceforge.io/config_metrics.html -->
+        <!--        <module name="CyclomaticComplexity"/>-->
 
     </module>
 
-	<module name="SuppressionFilter">
-		<property name="file" value="${config_loc}/rstaSuppressions.xml"/>
-	</module>
+    <module name="Translation">
+        <property name="baseName" value="^(?:FocusableTip|ErrorStrip|RSyntaxTextArea|RTextArea).*"/>
+    </module>
+    <module name="UniqueProperties"/>
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/rstaSuppressions.xml"/>
+    </module>
 
 </module>

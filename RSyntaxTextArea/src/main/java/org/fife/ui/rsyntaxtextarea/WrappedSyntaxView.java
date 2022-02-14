@@ -53,7 +53,12 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	/**
 	 * This is reused to keep from allocating/deallocating.
 	 */
-	private Segment s, drawSeg;
+	private Segment s;
+
+	/**
+	 * This is reused to keep from allocating/deallocating.
+	 */
+	private Segment drawSeg;
 
 	/**
 	 * Another variable initialized once to keep from allocating/deallocating.
@@ -68,10 +73,10 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	private TokenImpl tempToken;
 	private TokenImpl lineCountTempToken;
 
-//	/**
-//	 * The end-of-line marker.
-//	 */
-//	private static final char[] eolMarker = { '.' };
+	// /**
+	//  * The end-of-line marker.
+	//  */
+	// private static final char[] eolMarker = { '.' };
 
 	/**
 	 * The width of this view cannot be below this amount, as if the width
@@ -106,7 +111,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * construction.
 	 */
 	protected int calculateBreakPosition(int p0, Token tokenList, float x0) {
-//System.err.println("------ beginning calculateBreakPosition() --------");
+		//System.err.println("------ beginning calculateBreakPosition() --------");
 		int p = p0;
 		RSyntaxTextArea textArea = (RSyntaxTextArea)getContainer();
 		float currentWidth = getWidth();
@@ -121,9 +126,9 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		currentWidth = Math.max(currentWidth, MIN_WIDTH);
 		Token t = tokenList;
 		while (t!=null && t.isPaintable()) {
-// FIXME:  Replace the code below with the commented-out line below.  This will
-// allow long tokens to be broken at embedded spaces (such as MLC's).  But it
-// currently throws BadLocationExceptions sometimes...
+			// FIXME:  Replace the code below with the commented-out line below.  This will
+			// allow long tokens to be broken at embedded spaces (such as MLC's).  But it
+			// currently throws BadLocationExceptions sometimes...
 			float tokenWidth = t.getWidth(textArea, this, x0);
 			if (tokenWidth>currentWidth) {
 				// If the current token alone is too long for this line,
@@ -134,30 +139,30 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				// Return the first non-whitespace char (i.e., don't start
 				// off the continuation of a wrapped line with whitespace).
 				return t.isWhitespace() ? p+t.length() : p;
-//return getBreakLocation(t, fm, x0, currentWidth, this);
+				//return getBreakLocation(t, fm, x0, currentWidth, this);
 			}
 			currentWidth -= tokenWidth;
 			x0 += tokenWidth;
 			p += t.length();
-//System.err.println("*** *** *** token fit entirely (width==" + tokenWidth + "), adding " +
-// t.textCount + " to p, now p==" + p);
+			//System.err.println("*** *** *** token fit entirely (width==" + tokenWidth + "), adding " +
+			// t.textCount + " to p, now p==" + p);
 			t = t.getNextToken();
 		}
-//System.err.println("... ... whole line fits; returning p==" + p);
-//System.err.println("------ ending calculateBreakPosition() --------");
+		//System.err.println("... ... whole line fits; returning p==" + p);
+		//System.err.println("------ ending calculateBreakPosition() --------");
 
-//		return p;
-return p + 1;
+		//		return p;
+		return p + 1;
 	}
 
-//private int getBreakLocation(Token t, FontMetrics fm, int x0, int x,
-//								TabExpander e) {
-//	Segment s = new Segment();
-//	s.array = t.text;
-//	s.offset = t.getTextOffset();
-//	s.count = t.textCount;
-//	return t.offset + Utilities.getBreakLocation(s, fm, x0, x, e, t.offset);
-//}
+	//private int getBreakLocation(Token t, FontMetrics fm, int x0, int x,
+	//								TabExpander e) {
+	//	Segment s = new Segment();
+	//	s.array = t.text;
+	//	s.offset = t.getTextOffset();
+	//	s.count = t.textCount;
+	//	return t.offset + Utilities.getBreakLocation(s, fm, x0, x, e, t.offset);
+	//}
 
 	/**
 	 * Gives notification from the document that attributes were changed
@@ -180,9 +185,9 @@ return p + 1;
 	 * {@link #childAllocation(int, Rectangle)} since it allows you to account
 	 * for hidden lines in collapsed fold regions.
 	 *
-	 * @param line
-	 * @param y
-	 * @param alloc
+	 * @param line The line to get the view allocation for.
+	 * @param y The y-offset to set for the allocation.
+	 * @param alloc The set allocation value.
 	 */
 	private void childAllocation2(int line, int y, Rectangle alloc) {
 		alloc.x += getOffset(X_AXIS, line);
@@ -791,21 +796,21 @@ return p + 1;
 	 *        character or the next character represented by the offset, in
 	 *        case the position is a boundary of two views; <code>b0</code>
 	 *        will have one of these values:
-	 * <ul>
-	 *    <li> <code>Position.Bias.Forward</code>
-	 *    <li> <code>Position.Bias.Backward</code>
-	 * </ul>
+	 *        <ul>
+	 *           <li> <code>Position.Bias.Forward</code>
+	 *           <li> <code>Position.Bias.Backward</code>
+	 *        </ul>
 	 * @param p1 the position of the last character (&gt;=0)
 	 * @param b1 the bias for the second character position, defined
-	 *		one of the legal values shown above
+	 *        one of the legal values shown above
 	 * @param a the area of the view, which encompasses the requested region
 	 * @return the bounding box which is a union of the region specified
-	 *		by the first and last character positions
-	 * @exception BadLocationException  if the given position does
-	 *   not represent a valid location in the associated document
-	 * @exception IllegalArgumentException if <code>b0</code> or
-	 *		<code>b1</code> are not one of the
-	 *		legal <code>Position.Bias</code> values listed above
+	 *         by the first and last character positions
+	 * @throws BadLocationException  if the given position does
+	 *         not represent a valid location in the associated document
+	 * @throws IllegalArgumentException if <code>b0</code> or
+	 *		   <code>b1</code> are not one of the
+	 *		   legal <code>Position.Bias</code> values listed above
 	 * @see View#viewToModel
 	 */
 	@Override
@@ -866,7 +871,7 @@ return p + 1;
 	 *
 	 * @param x the current position &gt;= 0
 	 * @param tabOffset the position within the text stream
-	 *   that the tab occurred at &gt;= 0.
+	 *        that the tab occurred at &gt;= 0.
 	 * @return the tab stop, measured in points &gt;= 0
 	 */
 	@Override
@@ -990,7 +995,7 @@ return p + 1;
 	private void setSegment(int p0, int p1, Document document,
 							Segment seg) {
 		try {
-//System.err.println("... in setSharedSegment, p0/p1==" + p0 + "/" + p1);
+			//System.err.println("... in setSharedSegment, p0/p1==" + p0 + "/" + p1);
 			document.getText(p0, p1-p0, seg);
 			//System.err.println("... in setSharedSegment: s=='" + s + "'; line/numLines==" + line + "/" + numLines);
 		} catch (BadLocationException ble) { // Never happens
@@ -1118,7 +1123,7 @@ return p + 1;
 	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
 		return yForLineContaining(alloc,
 				getElement().getElement(line).getStartOffset());
-//return alloc.y + getOffset(Y_AXIS, line);
+		//return alloc.y + getOffset(Y_AXIS, line);
 	}
 
 
@@ -1181,9 +1186,9 @@ return p + 1;
 			float x0 = 0;// FIXME:  should be alloc.x!! alloc.x;//0;
 
 
-//System.err.println(">>> calculateLineCount: " + startOffset + "-" + p1);
+			//System.err.println(">>> calculateLineCount: " + startOffset + "-" + p1);
 			for (int p0=startOffset; p0<p1;) {
-//System.err.println("... ... " + p0 + ", " + p1);
+				//System.err.println("... ... " + p0 + ", " + p1);
 				nlines += 1;
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
 						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
@@ -1191,23 +1196,21 @@ return p + 1;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
 
-//System.err.println("... ... ... break position p==" + p);
-				p0 = (p == p0) ? ++p : p; // this is the fix of #4410243
-									// we check on situation when
-									// width is too small and
-									// break position is calculated
-									// incorrectly.
-//System.err.println("... ... ... new p0==" + p0);
+				//System.err.println("... ... ... break position p==" + p);
+				// This is the fix of #4410243 - width is too small and
+				// break position is calculated incorrectly
+				p0 = (p == p0) ? ++p : p;
+				//System.err.println("... ... ... new p0==" + p0);
 			}
-/*
-int numLines = 0;
-try {
-	numLines = textArea.getLineCount();
-} catch (BadLocationException ble) {
-	ble.printStackTrace();
-}
-System.err.println(">>> >>> calculated number of lines for this view (line " + line + "/" + numLines + ": " + nlines);
-*/
+			/*
+			int numLines = 0;
+			try {
+				numLines = textArea.getLineCount();
+			} catch (BadLocationException ble) {
+				ble.printStackTrace();
+			}
+			System.err.println(">>> >>> calculated # of lines for this view (" + line + "/" + numLines + ": " + nlines);
+			*/
 			return nlines;
 		}
 
@@ -1337,7 +1340,7 @@ System.err.println(">>> >>> calculated number of lines for this view (line " + l
 		 * @param fy the Y coordinate
 		 * @param a the allocated region to render into
 		 * @return the location within the model that best represents the
-		 *  given point in the view
+		 *         given point in the view
 		 * @see View#viewToModel
 		 */
 		@Override

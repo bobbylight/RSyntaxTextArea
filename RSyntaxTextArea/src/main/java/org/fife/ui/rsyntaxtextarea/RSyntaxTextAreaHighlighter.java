@@ -71,11 +71,11 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	/**
 	 * Adds a special "marked occurrence" highlight.
 	 *
-	 * @param start
-	 * @param end
-	 * @param p
+	 * @param start The start offset.
+	 * @param end  The end offset, exclusive.
+	 * @param p The painter to use.
 	 * @return A tag to reference the highlight later.
-	 * @throws BadLocationException
+	 * @throws BadLocationException If the specified range is invalid.
 	 * @see #clearMarkOccurrencesHighlights()
 	 */
 	Object addMarkedOccurrenceHighlight(int start, int end,
@@ -101,7 +101,8 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 *
 	 * @param notice The notice from a {@link Parser}.
 	 * @return A tag with which to reference the highlight.
-	 * @throws BadLocationException
+	 * @throws BadLocationException If the specified notice references
+	 *         invalid offsets.
 	 * @see #clearParserHighlights()
 	 * @see #clearParserHighlights(Parser)
 	 */

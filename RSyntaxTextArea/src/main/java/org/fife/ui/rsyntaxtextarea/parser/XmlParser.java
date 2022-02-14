@@ -140,7 +140,7 @@ public class XmlParser extends AbstractParser {
 		spf.setValidating(validating);
 	}
 
-/*
+	/*
 	public static void main(String[] args) {
 		javax.swing.JFrame frame = new javax.swing.JFrame();
 		org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textArea = new
@@ -167,7 +167,7 @@ public class XmlParser extends AbstractParser {
 		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-*/
+	*/
 
 	/**
 	 * Callback notified when errors are found in the XML document.  Adds a

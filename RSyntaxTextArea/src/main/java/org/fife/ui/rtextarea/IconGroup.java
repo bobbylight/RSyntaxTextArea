@@ -185,8 +185,8 @@ public class IconGroup {
 	 * Returns the icon from this icon group with the specified name.
 	 *
 	 * @param name The name of the icon.  For example, if you want the icon
-	 * specified in <code>new.gif</code>, this value should be
-	 * <code>new</code>.
+	 *        specified in <code>new.gif</code>, this value should be
+	 *        <code>new</code>.
 	 * @return The icon, or <code>null</code> if it could not be found or
 	 *         loaded.
 	 * @see #getLargeIcon

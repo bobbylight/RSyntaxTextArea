@@ -14,7 +14,7 @@ For more information, visit [http://bobbylight.github.io/RSyntaxTextArea/](http:
 Available in the [Maven Central repository](http://search.maven.org/#search%7Cga%7C1%7Crsyntaxtextarea%20jar) (`com.fifesoft:rsyntaxtextarea:XXX`).
 SNAPSHOT builds of the in-development, unreleased version are hosted on [Sonatype](https://oss.sonatype.org/content/repositories/snapshots/com/fifesoft/rsyntaxtextarea/).
 
-Please see the [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
+Please see [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
 for an overview of features and a deep-dive into the code!
 
 # Building

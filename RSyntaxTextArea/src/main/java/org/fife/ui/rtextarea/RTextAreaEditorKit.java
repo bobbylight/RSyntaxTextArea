@@ -52,7 +52,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 // FIXME:  Replace Utilities calls with custom versions (in RSyntaxUtilities) to
 // cut down on all of the modelToViews, as each call causes
 // a getTokenList => expensive!
-@SuppressWarnings({ "checkstyle:constantname" })
+@SuppressWarnings("checkstyle:constantname")
 public class RTextAreaEditorKit extends DefaultEditorKit {
 
 	/**
@@ -356,10 +356,10 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * @param in  The stream to read from
 	 * @param doc The destination for the insertion.
 	 * @param pos The location in the document to place the
-	 *   content &gt;= 0.
-	 * @exception IOException on any I/O error
-	 * @exception BadLocationException if pos represents an invalid
-	 *   location within the document.
+	 *        content &gt;= 0.
+	 * @throws IOException on any I/O error
+	 * @throws BadLocationException if pos represents an invalid
+	 *         location within the document.
 	*/
 	@Override
 	public void read(Reader in, Document doc, int pos)
@@ -1711,13 +1711,13 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		private void moveLineDown(RTextArea textArea, int line, int lineCount)
 									throws BadLocationException {
 
-			// If we'd be moving lines past the end of the document, stop.
-			// We could perhaps just decide to move the lines to the end of the
-			// file, but this just keeps things simple.
-//			if (textArea.getLineCount() - line < lineCount) {
-//				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-//				return;
-//			}
+			// // If we'd be moving lines past the end of the document, stop.
+			// // We could perhaps just decide to move the lines to the end of the
+			// // file, but this just keeps things simple.
+			// if (textArea.getLineCount() - line < lineCount) {
+			// 	UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+			// 	return;
+			// }
 
 			Document doc = textArea.getDocument();
 			Element root = doc.getDefaultRootElement();

@@ -344,32 +344,6 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	}
 
 
-//	private static int binaryFindFoldContainingLine(int line) {
-//
-//List allFolds;
-//
-//		int low = 0;
-//		int high = allFolds.size() - 1;
-//
-//		while (low <= high) {
-//			int mid = (low + high) >> 1;
-//			Fold midVal = (Fold)allFolds.get(mid);
-//			if (midVal.containsLine(line)) {
-//				return mid;
-//			}
-//			if (line<=midVal.getStartLine()) {
-//				high = mid - 1;
-//			}
-//			else { // line > midVal.getEndLine()
-//				low = mid + 1;
-//			}
-//		}
-//
-//		return -(low + 1); // key not found
-//
-//	}
-
-
 	@Override
 	public boolean isCodeFoldingEnabled() {
 		return codeFoldingEnabled;

@@ -978,6 +978,14 @@ public class Gutter extends JPanel {
 			this.color = color;
 		}
 
+		/**
+		 * Sets the edges of the gutter.
+		 *
+		 * @param top The top value.
+		 * @param left The left value.
+		 * @param bottom The bottom value.
+		 * @param right The right value.
+		 */
 		public void setEdges(int top, int left, int bottom, int right) {
 			this.top = top;
 			this.left = left;

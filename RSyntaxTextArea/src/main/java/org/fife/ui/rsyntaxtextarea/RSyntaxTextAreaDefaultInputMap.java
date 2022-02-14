@@ -29,7 +29,7 @@ import org.fife.ui.rtextarea.RTextArea;
  * @author Robert Futrell
  * @version 1.0
  */
-@SuppressWarnings({ "checkstyle:linelength" })
+@SuppressWarnings("checkstyle:linelength")
 public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 
 	/**

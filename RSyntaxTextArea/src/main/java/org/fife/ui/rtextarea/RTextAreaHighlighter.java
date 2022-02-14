@@ -217,6 +217,13 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 		/**
 		 * Restricts the region based on the receivers offsets and messages
 		 * the painter to paint the region.
+		 *
+		 * @param g The graphics context to use.
+		 * @param p0 The start offset.
+		 * @param p1 The end offset.
+		 * @param viewBounds T?he view bounds.
+		 * @param editor The text component that contains the highlights.
+		 * @param view The view being rendered.
 		 */
 		void paintLayeredHighlights(Graphics g, int p0, int p1,
 					Shape viewBounds, JTextComponent editor, View view);
@@ -272,7 +279,7 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 	 * A straightforward implementation of <code>HighlightInfo</code> for
 	 * painting layered highlights.
 	 */
-	@SuppressWarnings({ "checkstyle:visibilitymodifier" })
+	@SuppressWarnings("checkstyle:visibilitymodifier")
 	protected static class LayeredHighlightInfoImpl extends HighlightInfoImpl
 			implements LayeredHighlightInfo {
 

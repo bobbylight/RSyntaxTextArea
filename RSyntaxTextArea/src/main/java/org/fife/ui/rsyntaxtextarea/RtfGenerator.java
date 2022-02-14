@@ -71,6 +71,8 @@ public class RtfGenerator {
 
 	/**
 	 * Constructor.
+	 *
+	 * @param mainBG The main background color to use.
 	 */
 	public RtfGenerator(Color mainBG) {
 		this.mainBG = mainBG;

@@ -37,6 +37,11 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	private static final Set<String> TAGS_REQUIRING_CLOSING =
 			getRequiredClosingTags();
 
+	/**
+	 * Returns the set of HTML tags that require a closing tag.
+	 *
+	 * @return The set of HTML tags that require a closing tag.
+	 */
 	public static final Set<String> getRequiredClosingTags() {
 		final String[] tags = {
 			"html",

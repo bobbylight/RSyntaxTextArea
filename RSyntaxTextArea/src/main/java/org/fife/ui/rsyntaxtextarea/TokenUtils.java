@@ -250,7 +250,7 @@ public final class TokenUtils {
 	/**
 	 * A sub-list of tokens.
 	 */
-	@SuppressWarnings({ "checkstyle:visibilitymodifier" })
+	@SuppressWarnings("checkstyle:visibilitymodifier")
 	public static class TokenSubList {
 
 		/**

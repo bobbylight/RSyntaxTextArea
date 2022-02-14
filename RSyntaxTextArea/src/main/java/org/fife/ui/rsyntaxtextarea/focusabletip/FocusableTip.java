@@ -269,6 +269,12 @@ public class FocusableTip {
 	}
 
 
+	/**
+	 * Callback called when this tool tip is requested.
+	 *
+	 * @param e The mouse event that is triggering the tool tip.
+	 * @param text The text to display.
+	 */
 	public void toolTipRequested(MouseEvent e, String text) {
 
 		if (text==null || text.length()==0) {

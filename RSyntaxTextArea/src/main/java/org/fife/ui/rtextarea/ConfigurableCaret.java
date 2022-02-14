@@ -63,17 +63,17 @@ public class ConfigurableCaret extends DefaultCaret {
 	/**
 	 * Action used to select a word on a double click.
 	 */
-	private static transient Action selectWord = null;
+	private static transient Action selectWord;
 
 	/**
 	 * Action used to select a line on a triple click.
 	 */
-	private static transient Action selectLine = null;
+	private static transient Action selectLine;
 
 	/**
 	 * holds last MouseEvent which caused the word selection.
 	 */
-	private transient MouseEvent selectedWordEvent = null;
+	private transient MouseEvent selectedWordEvent;
 
 	/**
 	 * Used for fastest-possible retrieval of the character at the

@@ -550,6 +550,7 @@ public class ErrorStrip extends JPanel {
 	}
 
 
+	@Override
 	public void updateUI() {
 
 		super.updateUI();
@@ -558,6 +559,7 @@ public class ErrorStrip extends JPanel {
 			setCaretMarkerColor(getDefaultCaretMarkerColor());
 		}
 	}
+
 
 	/**
 	 * Returns the line in the text area corresponding to a y-offset in this

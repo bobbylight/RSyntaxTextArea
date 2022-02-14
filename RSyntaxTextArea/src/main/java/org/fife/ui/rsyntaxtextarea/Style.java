@@ -31,7 +31,7 @@ import javax.swing.JPanel;
  * @author Robert Futrell
  * @version 0.6
  */
-@SuppressWarnings({ "checkstyle:visibilitymodifier" })
+@SuppressWarnings("checkstyle:visibilitymodifier")
 public class Style implements Cloneable {
 
 	public static final Color DEFAULT_FOREGROUND	= Color.BLACK;

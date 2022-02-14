@@ -4,6 +4,7 @@
     "-//Puppy Crawl//DTD Suppressions 1.1//EN"
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
+    <suppress files=".*Demo(?:App)?\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*TokenMaker.*\.java" checks="[a-zA-Z0-9]*"/>
     <suppress files=".*src[\\/]test[\\/].*" checks="[a-zA-Z0-9]*"/>
 

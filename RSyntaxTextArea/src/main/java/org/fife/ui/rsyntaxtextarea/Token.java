@@ -253,11 +253,6 @@ public interface Token extends TokenTypes {
 	 * @return The last document position that will fit in the specified amount
 	 *         of pixels.
 	 */
-	/*
-	 * @see #getTokenListOffsetBeforeX
-	 * FIXME:  This method does not compute correctly!  It needs to be abstract
-	 * and implemented by subclasses.
-	 */
 	int getOffsetBeforeX(RSyntaxTextArea textArea, TabExpander e,
 							float startX, float endBeforeX);
 

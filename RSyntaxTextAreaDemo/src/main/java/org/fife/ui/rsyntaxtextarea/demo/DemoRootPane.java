@@ -46,7 +46,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		gutter.setBookmarkIcon(new ImageIcon(url));
 		getContentPane().add(scrollPane);
 		ErrorStrip errorStrip = new ErrorStrip(textArea);
-//errorStrip.setBackground(java.awt.Color.blue);
+		//errorStrip.setBackground(java.awt.Color.blue);
 		getContentPane().add(errorStrip, BorderLayout.LINE_END);
 		setJMenuBar(createMenuBar());
 	}

@@ -204,9 +204,9 @@ public abstract class RTextAreaBase extends JTextArea {
 	/*
 	 * TODO: Figure out why RTextArea doesn't work with RTL orientation!
 	 */
-//	public void applyComponentOrientation(ComponentOrientation orientation) {
-//		super.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-//	}
+	//public void applyComponentOrientation(ComponentOrientation orientation) {
+	//	super.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+	//}
 
 
 	/**
@@ -913,12 +913,12 @@ try {
 	 * TODO: Figure out why RTextArea doesn't work with RTL (e.g. Arabic)
 	 * and fix it!
 	 */
-//	public void setComponentOrientation(ComponentOrientation o) {
-//		if (!o.isLeftToRight()) {
-//			o = ComponentOrientation.LEFT_TO_RIGHT;
-//		}
-//		super.setComponentOrientation(o);
-//	}
+	//public void setComponentOrientation(ComponentOrientation o) {
+	//	if (!o.isLeftToRight()) {
+	//		o = ComponentOrientation.LEFT_TO_RIGHT;
+	//	}
+	//	super.setComponentOrientation(o);
+	//}
 
 
 	/**
@@ -1076,7 +1076,7 @@ try {
 	 * Sets the number of 'm' widths the margin line is over.
 	 *
 	 * @param size The margin size.
-	 * #see #getDefaultMarginLinePosition
+	 * @see #getDefaultMarginLinePosition
 	 * @see #getMarginLinePosition
 	 */
 	public void setMarginLinePosition(int size) {

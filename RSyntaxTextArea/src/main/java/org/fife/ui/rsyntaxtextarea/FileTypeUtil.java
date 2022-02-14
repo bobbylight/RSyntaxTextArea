@@ -105,10 +105,10 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * Case-sensitivity is taken into account appropriately.
 	 *
 	 * @param fileFilter The file filter for which to create equivalent regular
-	 *                   expressions.  This filter can currently only contain the
-	 *                   wildcards {@code '*'} and {@code '?'}.
+	 *        expressions.  This filter can currently only contain the
+	 *        wildcards {@code '*'} and {@code '?'}.
 	 * @return A <code>Pattern</code> representing an equivalent regular
-	 * expression for the string passed in.
+	 *         expression for the string passed in.
 	 * @throws PatternSyntaxException If the file filter could not be parsed.
 	 */
 	public static Pattern fileFilterToPattern(String fileFilter) {
@@ -171,8 +171,8 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 *
 	 * @param textArea The text area to examine.
 	 * @return The guessed content type.  This may be
-	 * {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
-	 * determined, but will never be {@code null}.
+	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
+	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File)
 	 * @see #guessContentType(File, boolean)
@@ -250,8 +250,8 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 *
 	 * @param file The file, which may be {@code null}.
 	 * @return The guessed file type. This may be
-	 * {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
-	 * determined, but will never be {@code null}.
+	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
+	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File, boolean)
 	 * @see #guessContentType(RSyntaxTextArea)
@@ -270,13 +270,13 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * supports syntax highlighting files with an extension the default
 	 * implementation doesn't know about.
 	 *
-	 * @param file    The file, which may be {@code null}.
+	 * @param file The file, which may be {@code null}.
 	 * @param filters The map of {@code SyntaxConstants} values to lists of
-	 *                wildcard filters.  If this is {@code null}, a default set of
-	 *                filters is used.
+	 *        wildcard filters.  If this is {@code null}, a default set of
+	 *        filters is used.
 	 * @return The guessed file type. This may be
-	 * {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
-	 * determined, but will never be {@code null}.
+	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
+	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File, boolean)
 	 * @see #guessContentType(RSyntaxTextArea)
@@ -288,11 +288,11 @@ public final class FileTypeUtil implements SyntaxConstants {
 	/**
 	 * Guesses the type of content in a file, based on its name.
 	 *
-	 * @param file                   The file, which may be {@code null}.
+	 * @param file The file, which may be {@code null}.
 	 * @param ignoreBackupExtensions Whether to ignore backup extensions.
 	 * @return The guessed file type. This may be
-	 * {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
-	 * determined, but will never be {@code null}.
+	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
+	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File)
 	 * @see #guessContentType(RSyntaxTextArea)
@@ -310,14 +310,14 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * supports syntax highlighting files with an extension the default
 	 * implementation doesn't know about.
 	 *
-	 * @param file                   The file, which may be {@code null}.
-	 * @param filters                The map of {@code SyntaxConstants} values to lists of
-	 *                               wildcard filters.  If this is {@code null}, a default set of
-	 *                               filters is used.
+	 * @param file The file, which may be {@code null}.
+	 * @param filters The map of {@code SyntaxConstants} values to lists of
+	 *        wildcard filters.  If this is {@code null}, a default set of
+	 *        filters is used.
 	 * @param ignoreBackupExtensions Whether to ignore backup extensions.
 	 * @return The guessed file type. This may be
-	 * {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
-	 * determined, but will never be {@code null}.
+	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
+	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File)
 	 * @see #guessContentType(RSyntaxTextArea)
@@ -354,7 +354,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @param filters  The map of {@code SyntaxConstants} values to lists of
 	 *                 wildcard filters.
 	 * @return The syntax style for the file, or {@code null} if nothing could
-	 * be determined.
+	 *         be determined.
 	 */
 	private static String guessContentTypeImpl(String fileName, Map<String, List<String>> filters) {
 

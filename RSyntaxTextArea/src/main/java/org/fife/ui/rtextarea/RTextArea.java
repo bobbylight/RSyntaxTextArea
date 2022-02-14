@@ -273,6 +273,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 *
 	 * @param line The line to highlight.  This is zero-based.
 	 * @param color The color to highlight the line with.
+	 * @return An opaque tag that can be used to remove the highlight later.
 	 * @throws BadLocationException If <code>line</code> is an invalid line
 	 *         number.
 	 * @see #removeLineHighlight(Object)
@@ -337,6 +338,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Returns whether an undo is possible.
 	 *
+	 * @return Whether the operation was successful.
 	 * @see #canRedo()
 	 * @see #undoLastAction()
 	 */
@@ -348,6 +350,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Returns whether a redo is possible.
 	 *
+	 * @return Whether the operation was successful.
 	 * @see #canUndo()
 	 * @see #redoLastAction()
 	 */
@@ -548,13 +551,11 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * Removes all undoable edits from this document's undo manager.  This
 	 * method also makes the undo/redo actions disabled.
 	 */
-	/*
-	 * NOTE:  For some reason, it appears I have to create an entirely new
-	 *        <code>undoManager</code> for undo/redo to continue functioning
-	 *        properly; if I don't, it only ever lets you do one undo.  Not
-	 *        too sure why this is...
-	 */
 	public void discardAllEdits() {
+		// NOTE:  For some reason, it appears I have to create an entirely new
+		// 	<code>undoManager</code> for undo/redo to continue functioning
+		// properly; if I don't, it only ever lets you do one undo.  Not
+		// too sure why this is...
 		undoManager.discardAllEdits();
 		getDocument().removeUndoableEditListener(undoManager);
 		undoManager = createUndoManager();
@@ -580,10 +581,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #isRecordingMacro()
 	 * @see #beginRecordingMacro()
 	 */
-	/*
-	 * FIXME:  This should throw an exception if we're not recording a macro.
-	 */
 	public static synchronized void endRecordingMacro() {
+		// FIXME: This should throw an exception if we're not recording a macro.
 		if (!isRecordingMacro()) {
 			return;
 		}
@@ -1155,7 +1154,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param start the start position &gt;= 0
 	 * @param end the end position &gt;= start
 	 * @exception IllegalArgumentException  if part of the range is an
-	 *  invalid position in the model
+	 *            invalid position in the model.
 	 * @see #insert(String, int)
 	 * @see #replaceRange(String, int, int)
 	 */

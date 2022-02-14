@@ -417,43 +417,25 @@ class ParserManager implements DocumentListener, ActionListener,
 		String tip = null;
 		HyperlinkListener listener = null;
 		parserForTip = null;
-		Point p = e.getPoint();
 
-//		try {
+		if (noticeHighlightPairs!=null) {
+
+			Point p = e.getPoint();
 			int pos = textArea.viewToModel(p);
-			/*
-			Highlighter.Highlight[] highlights = textArea.getHighlighter().
-												getHighlights();
-			for (int i=0; i<highlights.length; i++) {
-				Highlighter.Highlight h = highlights[i];
-				//if (h instanceof ParserNoticeHighlight) {
-				//	ParserNoticeHighlight pnh = (ParserNoticeHighlight)h;
-					int start = h.getStartOffset();
-					int end = h.getEndOffset();
-					if (start<=pos && end>=pos) {
-						//return pnh.getMessage();
-						return textArea.getText(start, end-start);
+
+			for (NoticeHighlightPair pair : noticeHighlightPairs) {
+				ParserNotice notice = pair.notice;
+				if (noticeContainsPosition(notice, pos) &&
+						noticeContainsPointInView(notice, p)) {
+					tip = notice.getToolTipText();
+					parserForTip = notice.getParser();
+					if (parserForTip instanceof HyperlinkListener) {
+						listener = (HyperlinkListener)parserForTip;
 					}
-				//}
-			}
-			*/
-			if (noticeHighlightPairs!=null) {
-				for (NoticeHighlightPair pair : noticeHighlightPairs) {
-					ParserNotice notice = pair.notice;
-					if (noticeContainsPosition(notice, pos) &&
-							noticeContainsPointInView(notice, p)) {
-						tip = notice.getToolTipText();
-						parserForTip = notice.getParser();
-						if (parserForTip instanceof HyperlinkListener) {
-							listener = (HyperlinkListener)parserForTip;
-						}
-						break;
-					}
+					break;
 				}
 			}
-//		} catch (BadLocationException ble) {
-//			ble.printStackTrace();	// Should never happen.
-//		}
+		}
 
 		URL imageBase = parserForTip==null ? null : parserForTip.getImageBase();
 		return new ToolTipInfo(tip, listener, imageBase);
@@ -554,7 +536,8 @@ class ParserManager implements DocumentListener, ActionListener,
 
 		try {
 
-			int start, end;
+			int start;
+			int end;
 			if (notice.getKnowsOffsetAndLength()) {
 				start = notice.getOffset();
 				end = start + notice.getLength() - 1;

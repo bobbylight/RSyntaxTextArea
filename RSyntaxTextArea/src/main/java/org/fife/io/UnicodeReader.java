@@ -42,13 +42,13 @@ import java.nio.charset.Charset;
  * @author Robert Futrell
  * @version 0.9
  */
-@SuppressWarnings({ "checkstyle:magicnumber" })
+@SuppressWarnings("checkstyle:magicnumber")
 public class UnicodeReader extends Reader {
 
 	/**
 	 * The input stream from which we're really reading.
 	 */
-	private InputStreamReader internalIn = null;
+	private InputStreamReader internalIn;
 
 	/**
 	 * The encoding being used.  We keep our own instead of using the string
@@ -221,7 +221,8 @@ public class UnicodeReader extends Reader {
 		PushbackInputStream tempIn = new PushbackInputStream(in, BOM_SIZE);
 
 		byte[] bom = new byte[BOM_SIZE];
-		int n, unread;
+		int n;
+		int unread;
 		n = tempIn.read(bom, 0, bom.length);
 
 		if ((bom[0]==(byte)0x00) && (bom[1]==(byte)0x00) &&

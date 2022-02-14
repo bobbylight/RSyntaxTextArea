@@ -99,7 +99,7 @@ public abstract class RPrintUtilities {
 	 * @param pageIndex The page number to print.
 	 * @param pageFormat The format to print the page with.
 	 * @param tabSize The number of spaces to expand tabs to.
-	 *
+	 * @return One of the constants from {@code Printable}.
 	 * @see #printDocumentMonospacedWordWrap
 	 */
 	public static int printDocumentMonospaced(Graphics g, Document doc, int fontSize, int pageIndex,
@@ -223,7 +223,7 @@ public abstract class RPrintUtilities {
 	 * @param pageIndex The page number to print.
 	 * @param pageFormat The format to print the page with.
 	 * @param tabSize The number of spaces to expand tabs to.
-	 *
+	 * @return One of the constants from {@code Printable}.
 	 * @see #printDocumentMonospaced
 	 */
 	public static int printDocumentMonospacedWordWrap(Graphics g, Document doc,
@@ -352,7 +352,7 @@ public abstract class RPrintUtilities {
 	 * @param pageIndex The page number to print.
 	 * @param pageFormat The format to print the page with.
 	 * @param tabSize The number of spaces to convert tabs to.
-	 *
+	 * @return One of the constants from {@code Printable}.
 	 */
 	public static int printDocumentWordWrap(Graphics g, JTextComponent textComponent,
 										Font font, int pageIndex,
@@ -418,7 +418,8 @@ public abstract class RPrintUtilities {
 			// Figure out how long the line is, in pixels.
 			int currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0, tabExpander, 0);
 
-//System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" + LINE_LENGTH_IN_PIXELS);
+			//System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" +
+			// LINE_LENGTH_IN_PIXELS);
 			// If it'll fit by itself on a printed line, great.
 			if (currentLineLengthInPixels <= lineLengthInPixels) {
 				currentDocLineNumber += 1; 	// We (will) have printed one more line from the document.
@@ -432,7 +433,8 @@ public abstract class RPrintUtilities {
 				int currentPos = -1;
 				while (currentLineLengthInPixels > lineLengthInPixels) {
 
-//System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" + LINE_LENGTH_IN_PIXELS);
+					//System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" +
+					// LINE_LENGTH_IN_PIXELS);
 
 					// Remove any spaces and/or tabs from the end of the segment (would cause problems if you left 'em).
 					currentLineSeg = removeEndingWhitespace(currentLineSeg);

@@ -154,13 +154,27 @@ public interface FoldManager {
 	int getLastVisibleLine();
 
 
+	/**
+	 * Returns the visible line above a specified line.
+	 *
+	 * @param line The line to check.
+	 * @return The visible line above the specified line.
+	 * @see #getVisibleLineBelow(int)
+	 */
 	int getVisibleLineAbove(int line);
 
 
+	/**
+	 * Returns the visible line below a specified line.
+	 *
+	 * @param line The line to check.
+	 * @return The visible line below the specified line.
+	 * @see #getVisibleLineAbove(int)
+	 */
 	int getVisibleLineBelow(int line);
 
 
-    /**
+	/**
 	 * Returns whether code folding is enabled.  Note that only certain
 	 * languages support code folding; those that do not will ignore this
 	 * property.

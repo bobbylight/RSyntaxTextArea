@@ -2679,6 +2679,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * imposes a fair performance penalty.  This method fires a property change
 	 * event of type {@link #HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY}.
 	 *
+	 * @param highlight Whether to highlight secondary languages.
 	 * @see #getHighlightSecondaryLanguages()
 	 * @see #setSecondaryLanguageBackground(int, Color)
 	 * @see #getSecondaryLanguageCount()
@@ -3260,13 +3261,13 @@ private boolean fractionalFontMetricsEnabled;
 	 *         position.
 	 * @see #modelToToken(int)
 	 */
-	/*
-	 * TODO: This is a little inefficient.  This should convert view
-	 * coordinates to the underlying token (if any).  The way things currently
-	 * are, we're calling getTokenListForLine() twice (once in viewToModel()
-	 * and once here).
-	 */
 	public Token viewToToken(Point p) {
+		/*
+		 * TODO: This is a little inefficient.  This should convert view
+		 * coordinates to the underlying token (if any).  The way things currently
+		 * are, we're calling getTokenListForLine() twice (once in viewToModel()
+		 * and once here).
+		 */
 		return modelToToken(viewToModel(p));
 	}
 

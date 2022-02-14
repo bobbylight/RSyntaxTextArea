@@ -607,21 +607,24 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * otherwise, a <code>ClassCastException</code> could be thrown.
 	 *
 	 * @param pos the position to convert &gt;= 0
+	 * @param b The bias of the request.
 	 * @param a the allocated region in which to render
 	 * @param direction the direction from the current position that can
-	 *  be thought of as the arrow keys typically found on a keyboard.
-	 *  This will be one of the following values:
-	 * <ul>
-	 * <li>SwingConstants.WEST
-	 * <li>SwingConstants.EAST
-	 * <li>SwingConstants.NORTH
-	 * <li>SwingConstants.SOUTH
-	 * </ul>
-	 * @return the location within the model that best represents the next
-	 *  location visual position
-	 * @throws  BadLocationException if {@code pos} is invalid.
+	 *        be thought of as the arrow keys typically found on a keyboard.
+	 *        This will be one of the following values:
+	 *        <ul>
+	 *          <li>SwingConstants.WEST
+	 *          <li>SwingConstants.EAST
+	 *          <li>SwingConstants.NORTH
+	 *          <li>SwingConstants.SOUTH
+	 *        </ul>
+	 * @param biasRet The return bias.
+	 * @param view The parent view.
+	 * @return The location within the model that best represents the next
+	 *         location visual position.
+	 * @throws BadLocationException if {@code pos} is invalid.
 	 * @throws IllegalArgumentException if <code>direction</code>
-	 *		doesn't have one of the legal values above
+	 *		   doesn't have one of the legal values above
 	 */
 	public static int getNextVisualPositionFrom(int pos, Position.Bias b,
 									Shape a, int direction,
@@ -789,8 +792,9 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * @param c the editor
 	 * @param offs the offset in the document &gt;= 0
 	 * @param x the X coordinate &gt;= 0
+	 * @param e How to expand tabs.
 	 * @return the position &gt;= 0 if the request can be computed, otherwise
-	 *  a value of -1 will be returned.
+	 *         a value of -1 will be returned.
 	 * @exception BadLocationException if the offset is out of range
 	 */
 	public static int getPositionAbove(RSyntaxTextArea c, int offs,
@@ -822,8 +826,9 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * @param c the editor
 	 * @param offs the offset in the document &gt;= 0
 	 * @param x the X coordinate &gt;= 0
+	 * @param e How to expand tabs.
 	 * @return the position &gt;= 0 if the request can be computed, otherwise
-	 *  a value of -1 will be returned.
+	 *         a value of -1 will be returned.
 	 * @exception BadLocationException if the offset is out of range
 	 */
 	public static int getPositionBelow(RSyntaxTextArea c, int offs,
@@ -1328,6 +1333,8 @@ return c.getLineStartOffset(line);
 	 *
 	 * @param textArea The text component whose selection is to be centered.
 	 * @param range The range to select.
+	 * @param select Whether to select (vs. just scroll the text range into
+	 *        view).
 	 */
 	public static void selectAndPossiblyCenter(JTextArea textArea,
 			DocumentRange range, boolean select) {

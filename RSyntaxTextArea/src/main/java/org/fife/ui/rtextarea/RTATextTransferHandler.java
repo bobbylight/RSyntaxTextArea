@@ -66,8 +66,8 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * @param c The text component to see whether it will accept any of the
 	 *        specified data flavors as input.
 	 */
-	 protected DataFlavor getImportFlavor(DataFlavor[] flavors,
-	 								JTextComponent c) {
+	protected DataFlavor getImportFlavor(DataFlavor[] flavors,
+							 JTextComponent c) {
 
 		DataFlavor refFlavor = null;
 		DataFlavor stringFlavor = null;
@@ -196,9 +196,9 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * models are not mutable, so a transfer operation of COPY only should
 	 * be advertised in that case.
 	 *
-	 * @param c  The component holding the data to be transferred.  This
-	 *  argument is provided to enable sharing of TransferHandlers by
-	 *  multiple components.
+	 * @param c The component holding the data to be transferred.  This
+	 *        argument is provided to enable sharing of TransferHandlers by
+	 *        multiple components.
 	 * @return If the text component is editable, COPY_OR_MOVE is returned,
 	 *         otherwise just COPY is allowed.
 	 */
@@ -217,8 +217,8 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * Create a Transferable to use as the source for a data transfer.
 	 *
 	 * @param comp  The component holding the data to be transferred.  This
-	 *  argument is provided to enable sharing of TransferHandlers by
-	 *  multiple components.
+	 *        argument is provided to enable sharing of TransferHandlers by
+	 *        multiple components.
 	 * @return  The representation of the data to be transferred.
 	 *
 	 */
@@ -266,8 +266,8 @@ public class RTATextTransferHandler extends TransferHandler {
 	 * imported into the component.
 	 *
 	 * @param comp  The component to receive the transfer.  This
-	 *  argument is provided to enable sharing of TransferHandlers by
-	 *  multiple components.
+	 *        argument is provided to enable sharing of TransferHandlers by
+	 *        multiple components.
 	 * @param t The data to import
 	 * @return <code>true</code> iff the data was inserted into the component.
 	 */
@@ -363,11 +363,11 @@ public class RTATextTransferHandler extends TransferHandler {
 		 * of the object returned is defined by the representation class of the flavor.
 		 *
 		 * @param flavor the requested flavor for the data
+		 * @throws IOException if the data is no longer available
+		 *         in the requested flavor.
+		 * @throws UnsupportedFlavorException if the requested data flavor is
+		 *         not supported.
 		 * @see DataFlavor#getRepresentationClass
-		 * @exception IOException                if the data is no longer available
-		 *              in the requested flavor.
-		 * @exception UnsupportedFlavorException if the requested data flavor is
-		 *              not supported.
 		 */
 		@Override
 		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
@@ -423,6 +423,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		/**
 		 * Returns whether or not the specified data flavor is supported for
 		 * this object.
+		 *
 		 * @param flavor the requested flavor for the data
 		 * @return boolean indicating whether or not the data flavor is supported
 		 */
@@ -440,6 +441,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		/**
 		 * Returns whether or not the specified data flavor is an plain flavor that
 		 * is supported.
+		 *
 		 * @param flavor the requested flavor for the data
 		 * @return boolean indicating whether or not the data flavor is supported
 		 */
@@ -464,6 +466,7 @@ public class RTATextTransferHandler extends TransferHandler {
 		/**
 		 * Returns whether or not the specified data flavor is a String flavor that
 		 * is supported.
+		 *
 		 * @param flavor the requested flavor for the data
 		 * @return boolean indicating whether or not the data flavor is supported
 		 */

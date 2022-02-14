@@ -269,6 +269,14 @@ public class DynamicIntArray implements Serializable {
 	}
 
 
+	/**
+	 * Inserts a specific value multiple times into a specific
+	 * offset in this array.
+	 *
+	 * @param offs The offset to insert at.
+	 * @param count The number of values to insert.
+	 * @param value The value to insert.
+	 */
 	public void insertRange(int offs, int count, int value) {
 		if (offs>size) {
 			throwException2(offs);

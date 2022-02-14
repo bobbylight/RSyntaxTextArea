@@ -42,7 +42,8 @@ public abstract class ImageBackgroundPainterStrategy
 
 	private RTextAreaBase textArea;
 	private Image master;
-	private int oldWidth, oldHeight;
+	private int oldWidth;
+	private int oldHeight;
 	private int scalingHint;
 
 

@@ -52,6 +52,14 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testFoo() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setText("test");
+		Assertions.assertEquals("test", textArea.getText());
+	}
+
+
+	@Test
 	void testConstructor_rowsAndColumns() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(25, 80);
 		Assertions.assertEquals(25, textArea.getRows());

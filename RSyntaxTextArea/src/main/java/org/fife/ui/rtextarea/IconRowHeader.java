@@ -548,7 +548,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 
 		RTextAreaUI ui = (RTextAreaUI)textArea.getUI();
 		View v = ui.getRootView(textArea).getView(0);
-//		boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
+		//boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
@@ -590,7 +590,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		while (y < visibleBottom) {
 
 			r = getChildViewBounds(v, topLine, visibleEditorRect);
-//			int lineEndY = r.y+r.height;
+			//int lineEndY = r.y+r.height;
 
 			/*
 			// Highlight the current line's line number, if desired.

@@ -654,7 +654,8 @@ public final class SearchEngine {
 	private static boolean isWholeWord(CharSequence searchIn,
 											int offset, int len) {
 
-		boolean wsBefore, wsAfter;
+		boolean wsBefore;
+		boolean wsAfter;
 
 		try {
 			wsBefore = !Character.isLetterOrDigit(searchIn.charAt(offset - 1));
@@ -709,10 +710,7 @@ public final class SearchEngine {
 	public static SearchResult markAll(RTextArea textArea,
 			SearchContext context) {
 		textArea.clearMarkAllHighlights();
-//		if (context.getMarkAll()) {
-			return markAllImpl(textArea, context);
-//		}
-//		return new SearchResult();
+		return markAllImpl(textArea, context);
 	}
 
 

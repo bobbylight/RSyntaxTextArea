@@ -131,6 +131,15 @@ public final class HtmlUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * Returns text from a text area as HTML.  Markup is added so that the
+	 * HTML represents the syntax highlighting in the editor.
+	 *
+	 * @param textArea The text area.
+	 * @param start The start offset.
+	 * @param end The end offset.
+	 * @return The HTML.
+	 */
 	public static String getTextAsHtml(RSyntaxTextArea textArea, int start, int end) {
 
 		// Create the selection as HTML

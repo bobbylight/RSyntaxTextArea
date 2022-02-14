@@ -37,7 +37,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @version 1.0
  * @see Theme
  */
-@SuppressWarnings({ "checkstyle:magicnumber" })
+@SuppressWarnings("checkstyle:magicnumber")
 public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	private Style[] styles;
@@ -344,7 +344,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 											integer);
 					}
 
-					Color fg = null; String temp = tokens[pos+1];
+					Color fg = null;
+					String temp = tokens[pos+1];
 					if (!"-".equals(temp)) { // "-" => keep fg as null
 						fg = stringToColor(temp);
 					}

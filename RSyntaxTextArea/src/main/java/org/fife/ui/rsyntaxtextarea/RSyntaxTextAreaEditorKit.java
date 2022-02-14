@@ -66,7 +66,7 @@ import org.fife.ui.rtextarea.RecordableTextAction;
  * @author Robert Futrell
  * @version 0.5
  */
-@SuppressWarnings({ "checkstyle:constantname" })
+@SuppressWarnings("checkstyle:constantname")
 public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
@@ -631,7 +631,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static class CopyCutAsStyledTextAction extends RecordableTextAction {
 
 		private Theme theme;
-		private boolean cutAction = false;
+		private boolean cutAction;
 
 		private static final long serialVersionUID = 2L;
 
@@ -1671,7 +1671,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				int markLine = map.getElementIndex(mark);
 				int first = Math.min(dotLine, markLine);
 				int last = Math.max(dotLine, markLine);
-				Element elem; int start;
+				Element elem;
+				int start;
 
 				// Since we're using Document.insertString(), we must mimic the
 				// soft tab behavior provided by RTextArea.replaceSelection().

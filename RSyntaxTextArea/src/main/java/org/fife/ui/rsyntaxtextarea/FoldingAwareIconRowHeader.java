@@ -200,7 +200,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		// costly.  It's cheaper to just grab the child views' bounds.
 
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
-//		boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
+		//boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int topPosition = textArea.viewToModel(
