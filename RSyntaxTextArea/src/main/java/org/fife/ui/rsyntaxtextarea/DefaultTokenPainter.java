@@ -118,7 +118,7 @@ class DefaultTokenPainter implements TokenPainter {
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
-						g.draw																																																																																																	Chars(text, flushIndex, flushLen, (int)x,(int)y);
+						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
