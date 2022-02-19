@@ -1042,6 +1042,33 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
+	 * Overridden to disable drag-and-drop if the user triple-clicks.
+	 * Typically, the user will select text, or double-click a word, then
+	 * drag it to its destination.  Triple-clicking before dragging text to
+	 * a new location is rare.  For that reason, we disable it in that case
+	 * since it causes issues with triple-click-to-select-by-line.
+	 * See https://github.com/bobbylight/RSyntaxTextArea/issues/59 for more
+	 * information.
+	 *
+	 * @param e The mouse event being dispatched.
+	 */
+	@Override
+	protected void processMouseEvent(MouseEvent e) {
+
+		boolean disableDndHack = getDragEnabled() && e.getClickCount() > 2;
+		if (disableDndHack) {
+			setDragEnabled(false);
+		}
+
+		super.processMouseEvent(e);
+
+		if (disableDndHack) {
+			setDragEnabled(true);
+		}
+	}
+
+
+	/**
 	 * We override this method because the super version gives us an entirely
 	 * new <code>Document</code>, thus requiring us to re-attach our Undo
 	 * manager.  With this version we just replace the text.
