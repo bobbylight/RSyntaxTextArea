@@ -744,7 +744,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * the user's click count (single, double or triple).
 	 */
 	public enum SelectionType {
-		CHAR, WORD, LINE;
+		CHAR, WORD, LINE
 	}
 
 
