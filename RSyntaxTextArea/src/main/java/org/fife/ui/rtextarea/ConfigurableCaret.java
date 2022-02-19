@@ -26,13 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.plaf.TextUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.NavigationFilter;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
+import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
@@ -99,6 +93,21 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * editable) on middle-mouse clicks.
 	 */
 	private boolean pasteOnMiddleMouseClick;
+
+	/**
+	 * The offset into the document where selection started.
+	 */
+	private int selectionStart;
+
+	/**
+	 * The offset into the document where selection ended.
+	 */
+	private int selectionEnd;
+
+	/**
+	 * Defines the current selection behavior.
+	 */
+	private SelectionType selectionType;
 
 	/**
 	 * Creates the caret using {@link CaretStyle#THICK_VERTICAL_LINE_STYLE}.
@@ -292,39 +301,12 @@ public class ConfigurableCaret extends DefaultCaret {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		if (! e.isConsumed()) {
+		if (!e.isConsumed()) {
 
 			RTextArea textArea = getTextArea();
 			int nclicks = e.getClickCount();
 
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (nclicks>2) {
-					nclicks %= 2; // Alternate selecting word/line.
-					switch (nclicks) {
-						case 0:
-							selectWord(e);
-							selectedWordEvent = null;
-							break;
-						case 1:
-							Action a = null;
-							ActionMap map = textArea.getActionMap();
-							if (map != null) {
-								a = map.get(RTextAreaEditorKit.selectLineAction);
-							}
-							if (a == null) {
-								if (selectLine == null) {
-									selectLine = new RTextAreaEditorKit.SelectLineAction();
-								}
-								a = selectLine;
-							}
-							a.actionPerformed(new ActionEvent(textArea,
-										ActionEvent.ACTION_PERFORMED,
-										null, e.getWhen(), e.getModifiers()));
-					}
-				}
-			}
-
-			else if (SwingUtilities.isMiddleMouseButton(e) &&
+			if (SwingUtilities.isMiddleMouseButton(e) &&
 					getPasteOnMiddleMouseClick()) {
 				if (nclicks == 1 && textArea.isEditable() && textArea.isEnabled()) {
 					// Paste the system selection, if it exists (e.g., on UNIX
@@ -357,14 +339,56 @@ public class ConfigurableCaret extends DefaultCaret {
 						} catch (HeadlessException he) {
 							// do nothing... there is no system clipboard
 						}
-					} // if (c!=null)
-				} // if (nclicks == 1 && component.isEditable() && component.isEnabled())
-			} // else if (SwingUtilities.isMiddleMouseButton(e))
+					}
+				}
+			}
 
-		} // if (!c.isConsumed())
+		}
 
 	}
 
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+
+		System.out.println("Dragging, consumed == " + e.isConsumed());
+
+		// Handle per-word and per-line selection since DefaultCaret
+		// doesn't handle those cases
+		if (!e.isConsumed() && SwingUtilities.isLeftMouseButton(e) &&
+					(SelectionType.WORD == selectionType || SelectionType.LINE == selectionType)) {
+
+			JTextComponent tc = getComponent();
+			int offs = tc.viewToModel(e.getPoint());
+			if (offs < 0) {
+				return;
+			}
+			boolean wordSelection = SelectionType.WORD == selectionType;
+
+			try {
+
+				if (offs > selectionEnd) {
+					int endOffs = wordSelection ? Utilities.getWordEnd(tc, offs) : Utilities.getRowEnd(tc, offs);
+					select(selectionStart, endOffs);
+				}
+				else if (offs < selectionStart) {
+					int endOffs = wordSelection ? Utilities.getWordStart(tc, offs) :
+						Utilities.getRowStart(tc, offs);
+					select(selectionEnd, endOffs);
+				}
+				else {
+					select(selectionStart, selectionEnd);
+				}
+			} catch (BadLocationException ble) {
+				UIManager.getLookAndFeel().provideErrorFeedback(tc);
+			}
+		}
+
+		// Normal per-char selection
+		else {
+			super.mouseDragged(e);
+		}
+	}
 
 	/**
 	 * Overridden to also focus the text component on right mouse clicks.
@@ -373,13 +397,59 @@ public class ConfigurableCaret extends DefaultCaret {
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
+
 		super.mousePressed(e);
-		if (!e.isConsumed() && SwingUtilities.isRightMouseButton(e)) {
+
+		if (SwingUtilities.isLeftMouseButton(e)) {
+
+			switch (e.getClickCount()) {
+				case 1:
+					selectionType = SelectionType.CHAR;
+					break;
+				case 2:
+					if (!e.isConsumed()) {
+						selectionType = SelectionType.WORD;
+					}
+					break;
+				case 3:
+				default:
+					if (!e.isConsumed() || getComponent().getDragEnabled()) {
+						selectionType = SelectionType.LINE;
+					}
+					break;
+			}
+
+			System.out.println("New selectionType (pressed): " + selectionType);
+
+			if (SelectionType.LINE == selectionType) {
+				JTextComponent tc = getComponent();
+				Action a = tc.getActionMap().get(RTextAreaEditorKit.selectLineAction);
+				a.actionPerformed(new ActionEvent(tc, ActionEvent.ACTION_PERFORMED,
+					null, e.getWhen(), e.getModifiers()));
+			}
+
+			if (SelectionType.WORD == selectionType || SelectionType.LINE == selectionType) {
+				int dot = getDot();
+				int mark = getMark();
+				selectionStart = Math.min(dot, mark);
+				selectionEnd = Math.max(dot, mark);
+			}
+		}
+
+		else if (SwingUtilities.isRightMouseButton(e) && !e.isConsumed()) {
 			JTextComponent c = getComponent();
-			if (c!=null && c.isEnabled() && c.isRequestFocusEnabled()) {
+			if (c != null && c.isEnabled() && c.isRequestFocusEnabled()) {
 				c.requestFocusInWindow();
 			}
 		}
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		selectionType = null;
+		System.out.println("New selectionType (released): " + selectionType);
+		super.mouseReleased(e);
 	}
 
 
@@ -490,6 +560,15 @@ public class ConfigurableCaret extends DefaultCaret {
 
 	}
 
+
+	private void select(int mark, int dot) {
+		if (mark != getMark()) {
+			setDot(mark);
+		}
+		if (dot != getDot()) {
+			moveDot(dot);
+		}
+	}
 
 	/**
 	 * Selects word based on a mouse event.
@@ -657,6 +736,15 @@ public class ConfigurableCaret extends DefaultCaret {
 
 		} // End of if (rect!=null && rect.width<=1).
 
+	}
+
+
+	/**
+	 * Describes the current selection behavior.  This is determined by
+	 * the user's click count (single, double or triple).
+	 */
+	public enum SelectionType {
+		CHAR, WORD, LINE;
 	}
 
 
