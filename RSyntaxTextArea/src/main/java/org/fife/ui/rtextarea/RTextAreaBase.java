@@ -48,6 +48,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY = "RTA.currentLineHighlightColor";
 	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY = "RTA.currentLineHighlightFade";
 	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY = "RTA.currentLineHighlight";
+	public static final String LINE_HEIGHT_MULTIPLIER_PROPERTY = "RTA.lineHeightMultiplier";
 	public static final String ROUNDED_SELECTION_PROPERTY = "RTA.roundedSelection";
 
 	private boolean tabsEmulatedWithSpaces;		// If true, tabs will be expanded to spaces.
