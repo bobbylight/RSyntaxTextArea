@@ -351,8 +351,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
-		System.out.println("Dragging, consumed == " + e.isConsumed());
-
 		// Handle per-word and per-line selection since DefaultCaret
 		// doesn't handle those cases
 		if (!e.isConsumed() && SwingUtilities.isLeftMouseButton(e) &&
@@ -419,8 +417,6 @@ public class ConfigurableCaret extends DefaultCaret {
 					break;
 			}
 
-			System.out.println("New selectionType (pressed): " + selectionType);
-
 			if (SelectionType.LINE == selectionType) {
 				JTextComponent tc = getComponent();
 				Action a = tc.getActionMap().get(RTextAreaEditorKit.selectLineAction);
@@ -448,7 +444,6 @@ public class ConfigurableCaret extends DefaultCaret {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		selectionType = null;
-		System.out.println("New selectionType (released): " + selectionType);
 		super.mouseReleased(e);
 	}
 

@@ -2445,18 +2445,18 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 	 */
 	public static class SelectLineAction extends RecordableTextAction {
 
- 		private Action start;
 		private Action end;
 
 		public SelectLineAction() {
 			super(selectLineAction);
-			start = new BeginLineAction("pigdog", false);
 			end = new EndLineAction("pigdog", true);
 		}
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			start.actionPerformed(e);
+			// We don't use BeginLineAction since we don't want to skip leading
+			// whitespace when calling this action.
+			moveDotToStartOfLine(textArea);
 			end.actionPerformed(e);
 		}
 
@@ -2465,6 +2465,14 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 			return DefaultEditorKit.selectLineAction;
 		}
 
+		private void moveDotToStartOfLine(JTextComponent tc) {
+			int offs = tc.getCaretPosition();
+			try {
+				tc.setCaretPosition(Utilities.getRowStart(tc, offs));
+			} catch (BadLocationException ble) {
+				UIManager.getLookAndFeel().provideErrorFeedback(tc);
+			}
+		}
 	}
 
 

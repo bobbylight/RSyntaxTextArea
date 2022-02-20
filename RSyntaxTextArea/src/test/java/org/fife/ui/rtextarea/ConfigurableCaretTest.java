@@ -138,7 +138,7 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testMouseClicked_doubleClickSelectsWord() {
+	void testMousePressed_doubleClickSelectsWord() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -152,8 +152,8 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		// mimic the user clicking on it.
 		textArea.setCaretPosition(0);
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0,
-			2, 4, false, MouseEvent.BUTTON1);
-		caret.mouseClicked(e);
+			2, 2, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
 
 		// The word at the x, y coordinates was selected
 		Assertions.assertEquals("foo", textArea.getSelectedText());
@@ -161,7 +161,7 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testMouseClicked_tripleClickSelectsLine() {
+	void testMousePressed_tripleClickSelectsLine() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -171,7 +171,7 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		// Synthetic left-mouse button double click
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
 			2, 3, false, MouseEvent.BUTTON1);
-		caret.mouseClicked(e);
+		caret.mousePressed(e);
 
 		// The entire line was selected
 		Assertions.assertEquals("foo bar", textArea.getSelectedText());
@@ -186,7 +186,7 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	protected void testPaintImpl(CaretStyle caretStyle) {
+	private void testPaintImpl(CaretStyle caretStyle) {
 
 		RTextArea textArea = createTextArea("foo bar");
 
