@@ -9,13 +9,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -148,11 +143,40 @@ public final class RSyntaxUtilities implements SwingConstants {
 
 
 	/**
+	 * Returns the best possible anti-alias hints to use when rendering text.
+	 * If {@link #getDesktopAntiAliasHints()} returns non-{@code null}, its
+	 * value is returned.  Otherwise, default anti-aliasing values are
+	 * returned.
+	 *
+	 * @return The rendering hints.  This will never be {@code null}.
+	 * @see #getDesktopAntiAliasHints()
+	 */
+	public static Map<?, ?> getBestPossibleAntiAliasHints() {
+
+		Map<?, ?> hints = RSyntaxUtilities.getDesktopAntiAliasHints();
+
+		// If the desktop query method comes up empty, use the standard
+		// Java2D greyscale method.  Note this will likely NOT be as
+		// nice as what would be used if the getDesktopAntiAliasHints()
+		// call worked.
+		if (hints == null) {
+			Map<RenderingHints.Key, Object> temp = new HashMap<>();
+			temp.put(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			hints = temp;
+		}
+
+		return hints;
+	}
+
+
+	/**
 	 * Returns the rendering hints for text that will most accurately reflect
 	 * those of the native windowing system.
 	 *
 	 * @return The rendering hints, or <code>null</code> if they cannot be
 	 *         determined.
+	 * @see #getBestPossibleAntiAliasHints()
 	 */
 	public static Map<?,?> getDesktopAntiAliasHints() {
 		return (Map<?,?>)Toolkit.getDefaultToolkit().

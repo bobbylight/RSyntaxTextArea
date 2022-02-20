@@ -251,7 +251,7 @@ public class LineNumberList extends AbstractGutterComponent
 		addMouseListener(this);
 		addMouseMotionListener(this);
 
-		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
+		aaHints = RSyntaxUtilities.getBestPossibleAntiAliasHints();
 
 	}
 

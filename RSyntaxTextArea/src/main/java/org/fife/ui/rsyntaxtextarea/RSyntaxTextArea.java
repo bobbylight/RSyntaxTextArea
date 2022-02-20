@@ -4,28 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.*;
-import java.awt.font.FontRenderContext;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -2034,8 +2021,8 @@ private boolean fractionalFontMetricsEnabled;
 		isScanningForLinks = false;
 		setUseFocusableTips(true);
 
-		setDefaultAntiAliasingState();
 		restoreDefaultSyntaxScheme();
+		setDefaultAntiAliasingState();
 
 		setHighlightSecondaryLanguages(true);
 		secondaryLanguageBackgrounds = new Color[3];
@@ -2330,18 +2317,7 @@ private boolean fractionalFontMetricsEnabled;
 		if (enabled!=currentlyEnabled) {
 
 			if (enabled) {
-				aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
-				// If the desktop query method comes up empty, use the standard
-				// Java2D greyscale method.  Note this will likely NOT be as
-				// nice as what would be used if the getDesktopAntiAliasHints()
-				// call worked.
-				if (aaHints==null) {
-					Map<RenderingHints.Key, Object> temp =
-						new HashMap<>();
-					temp.put(RenderingHints.KEY_TEXT_ANTIALIASING,
-							RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-					aaHints = temp;
-				}
+				aaHints = RSyntaxUtilities.getBestPossibleAntiAliasHints();
 			}
 			else {
 				aaHints = null;
@@ -2475,55 +2451,22 @@ private boolean fractionalFontMetricsEnabled;
 	private void setDefaultAntiAliasingState() {
 
 		// Most accurate technique, but not available on all OSes.
-		aaHints = RSyntaxUtilities.getDesktopAntiAliasHints();
-		if (aaHints==null) {
-
-			Map<RenderingHints.Key, Object> temp =
-				new HashMap<>();
-
-			// In Java 6+, you can figure out what text AA hint Swing uses for
-			// JComponents...
-			JLabel label = new JLabel();
-			FontMetrics fm = label.getFontMetrics(label.getFont());
-			Object hint = null;
-			//FontRenderContext frc = fm.getFontRenderContext();
-			//hint = fm.getAntiAliasingHint();
-			try {
-				Method m = FontMetrics.class.getMethod("getFontRenderContext");
-				FontRenderContext frc = (FontRenderContext)m.invoke(fm);
-				m = FontRenderContext.class.getMethod("getAntiAliasingHint");
-				hint = m.invoke(frc);
-			} catch (RuntimeException re) {
-				throw re; // FindBugs
-			} catch (Exception e) {
-				// Swallow, either Java 1.5, or running in an applet
-			}
-
-			// If not running Java 6+, default to AA enabled on Windows where
-			// the software AA is pretty fast, and default (e.g. disabled) on
-			// non-Windows.  Note that OS X always uses AA no matter what
-			// rendering hints you give it, so this is a moot point there.
-			//System.out.println("Rendering hint: " + hint);
-			if (hint==null) {
-				String os = System.getProperty("os.name").toLowerCase();
-				if (os.contains("windows")) {
-					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
-				}
-				else {
-					hint = RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT;
-				}
-			}
-			temp.put(RenderingHints.KEY_TEXT_ANTIALIASING, hint);
-
-			aaHints = temp;
-
-		}
+		aaHints = RSyntaxUtilities.getBestPossibleAntiAliasHints();
 
 		// We must be connected to a screen resource for our graphics
 		// to be non-null.
 		if (isDisplayable()) {
 			refreshFontMetrics(getGraphics2D(getGraphics()));
 		}
+
+		// If not, we might be running headlessly.  Take a stab at
+		// our rendering hints and create an artificial graphics context.
+		else {
+			Graphics2D g2d = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
+			g2d.setRenderingHints(RSyntaxUtilities.getBestPossibleAntiAliasHints());
+			refreshFontMetrics(g2d);
+		}
+
 		repaint();
 
 	}

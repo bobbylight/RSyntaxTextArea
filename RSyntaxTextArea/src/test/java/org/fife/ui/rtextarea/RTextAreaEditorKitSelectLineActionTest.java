@@ -20,13 +20,14 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-class RTextAreaEditorKitSelectLineActionTest {
+class RTextAreaEditorKitSelectLineActionTest extends AbstractRTextAreaTest {
 
 
 	@Test
 	void testActionPerformedImpl_noSelection() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
+		textArea.setBounds(0, 0, 80, 80);
 		textArea.setCaretPosition(textArea.getText().indexOf('2'));
 
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
