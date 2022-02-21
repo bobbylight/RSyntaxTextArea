@@ -16,15 +16,22 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -707,6 +714,33 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, textArea.getSyntaxEditingStyle());
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, textArea.getSyntaxEditingStyle());
+	}
+
+
+	/**
+	 * In {@code RSyntaxTextArea}, the code path {@code setDocument()} ->
+	 * {@code setSyntaxEditingStyle()} should not call back into the
+	 * Document to update its TokenMaker. Best-case, this call is
+	 * unnecessary as the Document is what's triggering this update so
+	 * it already has the right value; worst-case, for custom TokenMakers
+	 * not registered with the TokenMakerFactory, syntax highlighting
+	 * can be lost.
+	 * See https://github.com/bobbylight/RSyntaxTextArea/issues/206.
+	 */
+	@Test
+	void testSyntaxEditingStyle_dontUpdateDocumentIfCalledViaSetDocument() {
+
+		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
+		RSyntaxDocument docSpy = Mockito.spy(doc);
+		docSpy.setSyntaxStyle(new JavaTokenMaker());
+		RSyntaxTextArea textArea = new RSyntaxTextArea(docSpy);
+
+		// Verify the Document has its syntax style set only once, by the explicit
+		// call to the setSyntaxStyle(TokenMaker) overload.
+		// Verifying the string overload isn't called per GitHub issue 206.
+		verify(docSpy, times(1)).setSyntaxStyle(any(TokenMaker.class));
+		verify(docSpy, times(0)).setSyntaxStyle(anyString());
+
 	}
 
 

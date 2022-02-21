@@ -2950,9 +2950,20 @@ private boolean fractionalFontMetricsEnabled;
 			styleKey = SYNTAX_STYLE_NONE;
 		}
 		if (!styleKey.equals(syntaxStyleKey)) {
+
 			String oldStyle = syntaxStyleKey;
 			syntaxStyleKey = styleKey;
-			((RSyntaxDocument)getDocument()).setSyntaxStyle(styleKey);
+
+			// A little confusing, but in the code path of
+			// RSyntaxTextArea.setDocument() -> setSyntaxEditingStyle(),
+			// there's no need to update the Document's syntax style here
+			// since it was fetched from there.  Wasteful, AND causes
+			// but #206.
+			RSyntaxDocument doc = (RSyntaxDocument)getDocument();
+			if (!styleKey.equals(doc.getSyntaxStyle())) {
+				((RSyntaxDocument)getDocument()).setSyntaxStyle(styleKey);
+			}
+
 			firePropertyChange(SYNTAX_STYLE_PROPERTY, oldStyle, styleKey);
 			setActiveLineRange(-1, -1);
 		}
