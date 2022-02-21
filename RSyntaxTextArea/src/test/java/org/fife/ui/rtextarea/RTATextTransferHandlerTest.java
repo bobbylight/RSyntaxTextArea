@@ -6,10 +6,12 @@ package org.fife.ui.rtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
@@ -99,6 +101,8 @@ class RTATextTransferHandlerTest {
 	@Test
 	void testCanImport_falseSinceNotEditable() {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		Assertions.assertFalse(canImportImpl(false, DataFlavor.stringFlavor));
 		Assertions.assertFalse(canImportImpl(false, DataFlavor.getTextPlainUnicodeFlavor()));
 	}
@@ -106,6 +110,8 @@ class RTATextTransferHandlerTest {
 
 	@Test
 	void testCanImport_happyPath() {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		Assertions.assertTrue(canImportImpl(true, DataFlavor.stringFlavor));
 		Assertions.assertTrue(canImportImpl(true, DataFlavor.getTextPlainUnicodeFlavor()));

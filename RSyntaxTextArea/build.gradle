@@ -115,17 +115,3 @@ signing {
 tasks.withType(Sign) {
     onlyIf { isReleaseVersion }
 }
-
-test {
-    testLogging {
-        events 'failed' //, 'passed', 'skipped', 'standardOut', 'standardError'
-
-        showExceptions true
-        exceptionFormat 'full'
-        showCauses true
-        showStackTraces true
-
-        showStandardStreams = false
-        systemProperty('java.awt.headless', 'true') // <-- pass headless=true to the test JVM
-    }
-}

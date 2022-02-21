@@ -39,15 +39,20 @@ import javax.swing.text.View;
  */
 public class SmartHighlightPainter extends ChangeableHighlightPainter {
 
+	/**
+	 * The default highlight color.
+	 */
+	public static final Color DEFAULT_HIGHLIGHT_COLOR = Color.LIGHT_GRAY;
+
 	private Color borderColor;
 	private boolean paintBorder;
 
 
 	/**
-	 * Creates a highlight painter that defaults to blue.
+	 * Creates a highlight painter using a default color.
 	 */
 	public SmartHighlightPainter() {
-		super(Color.BLUE);
+		super(DEFAULT_HIGHLIGHT_COLOR);
 	}
 
 
@@ -97,7 +102,16 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 			}
 		}
 
+		// Occurs in word wrap mode only.  Mark an occurrence that ends at the
+		// last offset in the document, then hit backspace.  That last marked
+		// occurrence will fill the entire viewport's height until repainted
+		// 1 second later.  To avoid this, short-circuit if a highlight
+		// being painted has an offset past the document length.
+		// https://github.com/bobbylight/RSyntaxTextArea/issues/149
+		p1 = Math.min(p1, c.getDocument().getLength());
+
 		if (p0 == view.getStartOffset() && p1 == view.getEndOffset()) {
+
 			// Contained in view, can just use bounds.
 			Rectangle alloc;
 			if (viewBounds instanceof Rectangle) {
