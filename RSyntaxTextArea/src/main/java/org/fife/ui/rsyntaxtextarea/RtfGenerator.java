@@ -8,9 +8,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -490,7 +488,9 @@ public class RtfGenerator {
 		lastBold = false;
 		lastItalic = false;
 		lastFontSize = DEFAULT_FONT_SIZE;
-		screenRes = Toolkit.getDefaultToolkit().getScreenResolution();
+		// Dummy resolution when running headless
+		screenRes = GraphicsEnvironment.isHeadless() ? 72 :
+			Toolkit.getDefaultToolkit().getScreenResolution();
 	}
 
 

@@ -221,6 +221,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testCopyAsStyledText_zeroArg_html_happyPath() throws Exception {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("public int getValue();");
@@ -247,6 +249,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Disabled("Fails in the CI environment for some reason")
 	void testCopyAsStyledText_zeroArg_rtf_happyPath() throws Exception {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("public int getValue();");
@@ -272,6 +276,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testCopyAsStyledText_zeroArg_string_happyPath() throws Exception {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("public int getValue();");
@@ -288,6 +294,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testCopyAsStyledText_themeArg_string_happyPath() throws Exception {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		textArea.setText("public int getValue();");
@@ -303,6 +311,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testCopyAsStyledText_nullThemeArg_string_happyPath() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
@@ -440,6 +450,9 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	@Disabled("Not possible to do the setup for this test headlessly currently")
 	void testHyperlinkEventsAreFired_linkGenerator() {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		// TODO: Figure out a way to do the setup necessary for
 		// link generator events to fire
 	}

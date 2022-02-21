@@ -9,6 +9,7 @@ import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -57,6 +58,8 @@ class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testShowFocusableTip_happyPath() {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RSyntaxTextArea textArea = createTextArea();
 		FocusableTip tip = new TestableFocusableTip(textArea, null);

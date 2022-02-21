@@ -6,6 +6,7 @@ package org.fife.ui.rtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -36,6 +37,8 @@ class RTextAreaEditorKitPasteActionTest extends AbstractRTextAreaTest {
 
 	@Test
 	void testActionPerformedImpl() {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RTextArea textArea = new RTextArea();
 

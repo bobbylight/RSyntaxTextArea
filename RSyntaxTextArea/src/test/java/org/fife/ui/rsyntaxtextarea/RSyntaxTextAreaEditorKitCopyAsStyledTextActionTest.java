@@ -8,9 +8,11 @@ package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 
@@ -26,6 +28,8 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 
 	@Test
 	void testActionPerformedImpl_copyAsStyledText() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -50,6 +54,8 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 
 	@Test
 	void testActionPerformedImpl_cutAsStyledText() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -86,6 +92,8 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 	@Test
 	void test_disabledStyledCopyCutAction() throws Exception {
 
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
 		String text = "/*\n" +
 			"* comment\n" +
 			"*/\n" +
@@ -110,7 +118,7 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 		textArea.setCaretPosition(8);
 		textArea.moveCaretPosition(11);
 
-		//Trying to cut "men". This shouldn't happen as the textArea is not editable.
+		// Trying to cut "men". This shouldn't happen as the textArea is not editable.
 		a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
 		e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
