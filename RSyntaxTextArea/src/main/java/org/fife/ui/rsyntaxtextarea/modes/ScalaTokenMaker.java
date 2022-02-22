@@ -24,7 +24,7 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
  * Scanner for the Scala programming language.<p>
  *
  * This implementation was created using
- * <a href="http://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
+ * <a href="https://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
  * was modified for performance.  Memory allocation needs to be almost
  * completely removed to be competitive with the handwritten lexers (subclasses
  * of <code>AbstractTokenMaker</code>, so this class has been modified so that
