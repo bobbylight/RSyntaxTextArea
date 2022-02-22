@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 
@@ -54,6 +55,22 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertFalse(caret.getRoundedSelectionEdges());
 		caret.setRoundedSelectionEdges(true);
 		Assertions.assertTrue(caret.getRoundedSelectionEdges());
+	}
+
+
+	@Test
+	void testGetSetSelectionVisible() {
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		RTextArea textArea = new RTextArea();
+		caret.install(textArea);
+
+		caret.setSelectionVisible(true); // e.g. made visible
+		Assertions.assertTrue(caret.isSelectionVisible());
+		caret.setSelectionVisible(false); // Ignored on purpose
+		Assertions.assertTrue(caret.isSelectionVisible());
+
+		caret.deinstall(textArea);
 	}
 
 
@@ -117,6 +134,94 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testMouseClicked_doNothing_eventAlreadyConsumed() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON2);
+		e.consume();
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
+	void testMouseClicked_doNothing_notMiddleMouseButton() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
+	void testMouseClicked_doNothing_pasteOnMiddleMouseClickFalse() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.setPasteOnMiddleMouseClick(false);
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON2);
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
+	void testMouseClicked_doNothing_middleClickButDoubleClick() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 2, false, MouseEvent.BUTTON2);
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
+	void testMouseClicked_doNothing_textAreaNotEditable() {
+
+		RTextArea textArea = new RTextArea();
+		textArea.setEditable(false);
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON2);
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
+	void testMouseClicked_doNothing_textAreaNotEnabled() {
+
+		RTextArea textArea = new RTextArea();
+		textArea.setEnabled(false);
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button click
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON2);
+		caret.mouseClicked(e);
+	}
+
+
+	@Test
 	@Disabled("This test doesn't work in CI as the system clipboard will be blank")
 	void testMouseClicked_pasteOnMiddleMouseDown() {
 
@@ -138,7 +243,176 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testMousePressed_doubleClickSelectsWord() {
+	void testMouseDragged_doNothing_eventAlreadyConsumed() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button drag event
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		e.consume();
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_doNothing_notLeftMouseButton() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic middle-mouse button drag event
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON2);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_doNothing_charSelectionType() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button press
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 20,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_doNothing_textAreaHasNoSize() {
+
+		RTextArea textArea = new RTextArea();
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button double-click (to enable word selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 2, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 20,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_wordSelectionType_draggedForward() {
+
+		RTextArea textArea = new RTextArea("Hello world");
+		textArea.setSize(new Dimension(80, 80));
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button double-click (to enable word selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 2, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 20,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_wordSelectionType_draggedBackward() {
+
+		RTextArea textArea = new RTextArea("Hello world");
+		textArea.setSize(new Dimension(80, 80));
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button double-click (to enable word selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 20,
+			10, 2, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_wordSelectionType_draggedWithinPriorSelection() {
+
+		RTextArea textArea = new RTextArea("Hello world");
+		textArea.setSize(new Dimension(80, 80));
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+		caret.setDot(0);
+		caret.moveDot(textArea.getDocument().getLength());
+
+		// Synthetic left-mouse button double-click (to enable word selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 5,
+			5, 2, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_lineSelectionType_draggedForward() {
+
+		RTextArea textArea = new RTextArea("Hello world\nHello world");
+		textArea.setSize(new Dimension(80, 80));
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button triple-click (to enable line selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 3, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 10,
+			40, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMouseDragged_lineSelectionType_draggedBackward() {
+
+		RTextArea textArea = new RTextArea("Hello world\nHello world");
+		textArea.setSize(new Dimension(80, 80));
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button triple-click (to enable line selection)
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 10,
+			40, 3, false, MouseEvent.BUTTON1);
+		caret.mousePressed(e);
+
+		// Synthetic left-mouse button drag event
+		e = new MouseEvent(textArea, 0, 0, 0, 10,
+			10, 1, false, MouseEvent.BUTTON1);
+		caret.mouseDragged(e);
+	}
+
+
+	@Test
+	void testMousePressed_leftButton_doubleClickSelectsWord() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
@@ -161,20 +435,98 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testMousePressed_tripleClickSelectsLine() {
+	void testMousePressed_leftButton_tripleClickSelectsLine() {
 
 		RTextArea textArea = createTextArea("foo bar");
 
 		ConfigurableCaret caret = new ConfigurableCaret();
 		caret.install(textArea);
 
-		// Synthetic left-mouse button double click
+		// Synthetic left-mouse button triple click
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
 			2, 3, false, MouseEvent.BUTTON1);
 		caret.mousePressed(e);
 
 		// The entire line was selected
 		Assertions.assertEquals("foo bar", textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testMousePressed_rightButton_doNothing_eventConsumed() {
+
+		RTextArea textArea = createTextArea("foo bar");
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic right-mouse button press
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
+			2, 1, false, MouseEvent.BUTTON3);
+		e.consume();
+		caret.mousePressed(e);
+	}
+
+
+	@Test
+	void testMousePressed_rightButton_doNothing_textAreaNotEnabled() {
+
+		RTextArea textArea = createTextArea("foo bar");
+		textArea.setEnabled(false);
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic right-mouse button press
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
+			2, 1, false, MouseEvent.BUTTON3);
+		caret.mousePressed(e);
+	}
+
+
+	@Test
+	void testMousePressed_rightButton_doNothing_textAreaNotRequestFocusEnabled() {
+
+		RTextArea textArea = createTextArea("foo bar");
+		textArea.setRequestFocusEnabled(false);
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic right-mouse button press
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
+			2, 1, false, MouseEvent.BUTTON3);
+		caret.mousePressed(e);
+	}
+
+
+	@Test
+	void testMousePressed_rightButton_success_textAreaRequestsFocus() {
+
+		RTextArea textArea = createTextArea("foo bar");
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic right-mouse button press
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
+			2, 1, false, MouseEvent.BUTTON3);
+		caret.mousePressed(e);
+	}
+
+
+	@Test
+	void testMouseReleased() {
+
+		RTextArea textArea = createTextArea("foo bar");
+
+		ConfigurableCaret caret = new ConfigurableCaret();
+		caret.install(textArea);
+
+		// Synthetic left-mouse button release
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 2,
+			2, 1, false, MouseEvent.BUTTON1);
+		caret.mouseReleased(e);
 	}
 
 

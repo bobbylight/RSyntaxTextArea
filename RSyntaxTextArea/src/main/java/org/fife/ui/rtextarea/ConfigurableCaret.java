@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Action;
-import javax.swing.ActionMap;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
@@ -53,21 +52,6 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
  * @version 0.6
  */
 public class ConfigurableCaret extends DefaultCaret {
-
-	/**
-	 * Action used to select a word on a double click.
-	 */
-	private static transient Action selectWord;
-
-	/**
-	 * Action used to select a line on a triple click.
-	 */
-	private static transient Action selectLine;
-
-	/**
-	 * holds last MouseEvent which caused the word selection.
-	 */
-	private transient MouseEvent selectedWordEvent;
 
 	/**
 	 * Used for fastest-possible retrieval of the character at the
@@ -314,31 +298,29 @@ public class ConfigurableCaret extends DefaultCaret {
 					// to paste it; this doesn't work on Windows).  If the system
 					// doesn't support system selection, just do a normal paste.
 					JTextComponent c = (JTextComponent) e.getSource();
-					if (c != null) {
-						try {
-							Toolkit tk = c.getToolkit();
-							Clipboard buffer = tk.getSystemSelection();
-							// If the system supports system selections, (e.g. UNIX),
-							// try to do it.
-							if (buffer != null) {
-								adjustCaret(e);
-								TransferHandler th = c.getTransferHandler();
-								if (th != null) {
-									Transferable trans = buffer.getContents(null);
-									if (trans != null) {
-										th.importData(c, trans);
-									}
+					try {
+						Toolkit tk = c.getToolkit();
+						Clipboard buffer = tk.getSystemSelection();
+						// If the system supports system selections, (e.g. UNIX),
+						// try to do it.
+						if (buffer != null) {
+							adjustCaret(e);
+							TransferHandler th = c.getTransferHandler();
+							if (th != null) {
+								Transferable trans = buffer.getContents(null);
+								if (trans != null) {
+									th.importData(c, trans);
 								}
-								adjustFocus(true);
 							}
-							// If the system doesn't support system selections
-							// (e.g. Windows), just do a normal paste.
-							else {
-								textArea.paste();
-							}
-						} catch (HeadlessException he) {
-							// do nothing... there is no system clipboard
+							adjustFocus(true);
 						}
+						// If the system doesn't support system selections
+						// (e.g. Windows), just do a normal paste.
+						else {
+							textArea.paste();
+						}
+					} catch (HeadlessException he) {
+						// do nothing... there is no system clipboard
 					}
 				}
 			}
@@ -563,34 +545,6 @@ public class ConfigurableCaret extends DefaultCaret {
 		if (dot != getDot()) {
 			moveDot(dot);
 		}
-	}
-
-	/**
-	 * Selects word based on a mouse event.
-	 */
-	private void selectWord(MouseEvent e) {
-		if (selectedWordEvent != null &&
-				selectedWordEvent.getX() == e.getX() &&
-				selectedWordEvent.getY() == e.getY()) {
-			// We've already the done selection for this.
-			return;
-		}
-		Action a = null;
-		RTextArea textArea = getTextArea();
-		ActionMap map = textArea.getActionMap();
-		if (map != null) {
-			a = map.get(RTextAreaEditorKit.selectWordAction);
-		}
-		if (a == null) {
-			if (selectWord == null) {
-				selectWord = new RTextAreaEditorKit.SelectWordAction();
-			}
-			a = selectWord;
-		}
-		a.actionPerformed(new ActionEvent(textArea,
-							ActionEvent.ACTION_PERFORMED,
-							null, e.getWhen(), e.getModifiers()));
-		selectedWordEvent = e;
 	}
 
 
