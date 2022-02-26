@@ -473,6 +473,12 @@ private boolean fractionalFontMetricsEnabled;
 	public void addParser(Parser parser) {
 		if (parserManager==null) {
 			parserManager = new ParserManager(this);
+			// ParserManagers by default aren't started. They are typically
+			// started by addNotify() so we must manually start a new one
+			// if it's added after being displayed.
+			if (isDisplayable()) {
+				parserManager.restartParsing();
+			}
 		}
 		parserManager.addParser(parser);
 	}
@@ -2873,6 +2879,12 @@ private boolean fractionalFontMetricsEnabled;
 	public void setParserDelay(int millis) {
 		if (parserManager==null) {
 			parserManager = new ParserManager(this);
+			// ParserManagers by default aren't started. They are typically
+			// started by addNotify() so we must manually start a new one
+			// if it's added after being displayed.
+			if (isDisplayable()) {
+				parserManager.restartParsing();
+			}
 		}
 		parserManager.setDelay(millis);
 	}
