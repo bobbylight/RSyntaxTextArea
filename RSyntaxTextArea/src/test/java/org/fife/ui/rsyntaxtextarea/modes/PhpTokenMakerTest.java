@@ -271,6 +271,17 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testPhp_errorNumericLiterals() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			PHPTokenMaker.INTERNAL_IN_PHP,
+			"42foo",
+			"1e17foo",
+			"0x1ffoo"
+		);
+	}
+
+
+	@Test
 	void testPhp_FloatingPointLiterals() {
 
 		String code =
@@ -1232,6 +1243,30 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 		} finally {
 			PHPTokenMaker.setCompleteCloseTags(false);
 		}
+	}
+
+
+	@Test
+	void testPhp_HexLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_HEXADECIMAL,
+			PHPTokenMaker.INTERNAL_IN_PHP,
+			"0x1f", "0x1fl", "0x1fL",
+			"0X1f", "0X1fl", "0X1fL",
+			"0x1F", "0x1Fl", "0x1FL",
+			"0X1F", "0X1Fl", "0X1FL",
+			"071" // Octal numbers are rendered with hex styling
+		);
+	}
+
+
+	@Test
+	void testPhp_IntegerLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			PHPTokenMaker.INTERNAL_IN_PHP,
+			"0", "42", /*"-7",*/
+			"0l", "42l",
+			"0L", "42L"
+		);
 	}
 
 

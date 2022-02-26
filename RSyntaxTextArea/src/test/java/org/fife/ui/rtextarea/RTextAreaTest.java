@@ -8,7 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.StringReader;
 
 
 /**
@@ -34,6 +41,23 @@ class RTextAreaTest {
 		if (origIconGroup != null) {
 			RTextArea.setIconGroup(origIconGroup);
 		}
+	}
+
+
+	@Test
+	void testAddLineHighlight_happyPath() throws BadLocationException {
+		RTextArea textArea = new RTextArea("line 1\nline 2");
+		Object tag = textArea.addLineHighlight(1, Color.BLUE);
+		Assertions.assertNotNull(tag);
+	}
+
+
+	@Test
+	void testAddLineHighlight_errorOnInvalidLine() {
+		RTextArea textArea = new RTextArea();
+		Assertions.assertThrows(BadLocationException.class, () -> {
+			textArea.addLineHighlight(1, Color.BLUE);
+		});
 	}
 
 
@@ -79,6 +103,36 @@ class RTextAreaTest {
 
 
 	@Test
+	void testGetAction_invalidActionValue() {
+		Assertions.assertNull(RTextArea.getAction(-1));
+		Assertions.assertNull(RTextArea.getAction(1000));
+	}
+
+
+	@Test
+	void testGetAction_validActionValues() {
+
+		// Actions are lazily instantiated on first RSTA creation
+		RTextArea textArea = new RTextArea();
+
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.COPY_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.CUT_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.DELETE_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.PASTE_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.REDO_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.SELECT_ALL_ACTION));
+		Assertions.assertNotNull(RTextArea.getAction(RTextArea.UNDO_ACTION));
+	}
+
+
+	@Test
+	void testGetCurrentMacro_nothingBeingRecorded() {
+		RTextArea textArea = new RTextArea(); // Not strictly needed
+		Assertions.assertNull(RTextArea.getCurrentMacro());
+	}
+
+
+	@Test
 	void testGetPopupMenu() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertNotNull(textArea.getPopupMenu());
@@ -101,6 +155,48 @@ class RTextAreaTest {
 
 
 	@Test
+	void testGetToolTipText_noToolTipSupplier() {
+		RTextArea textArea = new RTextArea();
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 1, false);
+		Assertions.assertNull(textArea.getToolTipText(e));
+	}
+
+
+	@Test
+	void testGetToolTipText_withToolTipSupplier() {
+
+		String tip = "Tool tip text";
+		RTextArea textArea = new RTextArea();
+		textArea.setToolTipSupplier((textArea1, e) -> tip);
+
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 1, false);
+		Assertions.assertEquals(tip, textArea.getToolTipText(e));
+	}
+
+
+	@Test
+	void testMarkAllOnOccurrenceSearches() {
+		RTextArea textArea = new RTextArea();
+		Assertions.assertTrue(textArea.getMarkAllOnOccurrenceSearches());
+		textArea.setMarkAllOnOccurrenceSearches(false);
+		Assertions.assertFalse(textArea.getMarkAllOnOccurrenceSearches());
+	}
+
+
+	@Test
+	void testRead_withDesc() throws IOException {
+
+		StringReader sr = new StringReader("Test content");
+		RTextArea textArea = new RTextArea();
+		textArea.read(sr, "desc");
+
+		Assertions.assertEquals("desc", textArea.getDocument().
+			getProperty(Document.StreamDescriptionProperty));
+		Assertions.assertEquals("Test content", textArea.getText());
+	}
+
+
+	@Test
 	void testRecordingMacro_happyPath() {
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.beginRecordingMacro();
@@ -115,6 +211,51 @@ class RTextAreaTest {
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
 		RTextArea.endRecordingMacro();
 		Assertions.assertFalse(RTextArea.isRecordingMacro());
+	}
+
+
+	@Test
+	void testRemoveAllLineHighlights() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea("line 1\nline 2");
+		textArea.addLineHighlight(0, Color.BLUE);
+
+		LineHighlightManager lhm = textArea.getLineHighlightManager();
+		Assertions.assertEquals(1, lhm.getCurrentLineHighlightTags().size());
+
+		textArea.removeAllLineHighlights();
+		Assertions.assertEquals(0, lhm.getCurrentLineHighlightTags().size());
+	}
+
+
+	@Test
+	void testRemoveLineHighlight() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea("line 1\nline 2");
+		Object tag = textArea.addLineHighlight(0, Color.BLUE);
+
+		LineHighlightManager lhm = textArea.getLineHighlightManager();
+		Assertions.assertEquals(1, lhm.getCurrentLineHighlightTags().size());
+
+		textArea.removeLineHighlight(tag);
+		Assertions.assertEquals(0, lhm.getCurrentLineHighlightTags().size());
+	}
+
+
+	@Test
+	void testReplaceRange_error_endBeforeStart() {
+		RTextArea textArea = new RTextArea();
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			textArea.replaceRange("replacement", 2, 1);
+		});
+	}
+
+
+	@Test
+	void testReplaceRange_happyPath() {
+		RTextArea textArea = new RTextArea("111");
+		textArea.replaceRange("2", 1, 2);
+		Assertions.assertEquals("121", textArea.getText());
 	}
 
 
@@ -185,11 +326,25 @@ class RTextAreaTest {
 
 
 	@Test
-	void testMarkAllOnOccurrenceSearches() {
+	void testSetActionProperties_charMnemonic_doNothingForInvalidAction() {
 		RTextArea textArea = new RTextArea();
-		Assertions.assertTrue(textArea.getMarkAllOnOccurrenceSearches());
-		textArea.setMarkAllOnOccurrenceSearches(false);
-		Assertions.assertFalse(textArea.getMarkAllOnOccurrenceSearches());
+		RTextArea.setActionProperties(-1, "foo", 'x', null);
+	}
+
+
+	@Test
+	void testSetActionProperties_intMnemonic_doNothingForInvalidAction() {
+		RTextArea textArea = new RTextArea();
+		RTextArea.setActionProperties(-1, "foo", -1, null);
+	}
+
+
+	@Test
+	void testSetCaret() {
+		RTextArea textArea = new RTextArea();
+		Caret newCaret = new ConfigurableCaret();
+		textArea.setCaret(newCaret);
+		Assertions.assertEquals(newCaret, textArea.getCaret());
 	}
 
 
