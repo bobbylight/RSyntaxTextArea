@@ -7,9 +7,11 @@ package org.fife.ui.rtextarea;
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
@@ -21,6 +23,16 @@ import java.awt.image.BufferedImage;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class BufferedImageBackgroundPainterStrategyTest extends AbstractRSyntaxTextAreaTest {
+
+
+	@Test
+	void testGetSetScalingHint() {
+		RSyntaxTextArea textArea = createTextArea();
+		BufferedImageBackgroundPainterStrategy strategy = new BufferedImageBackgroundPainterStrategy(textArea);
+		Assertions.assertEquals(Image.SCALE_FAST, strategy.getScalingHint());
+		strategy.setScalingHint(Image.SCALE_AREA_AVERAGING);
+		Assertions.assertEquals(Image.SCALE_AREA_AVERAGING, strategy.getScalingHint());
+	}
 
 
 	@Test
@@ -40,6 +52,7 @@ class BufferedImageBackgroundPainterStrategyTest extends AbstractRSyntaxTextArea
 		BufferedImage image = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
 		strategy.setImage(image);
 
-		strategy.paintImage(createTestGraphics(), 0, 0);
+		Rectangle bounds = new Rectangle(0, 0, 80, 80);
+		strategy.paint(createTestGraphics(), bounds);
 	}
 }

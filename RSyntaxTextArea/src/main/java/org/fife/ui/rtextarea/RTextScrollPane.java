@@ -189,7 +189,11 @@ public class RTextScrollPane extends JScrollPane {
 	 * @see #setViewportView(Component)
 	 */
 	public RTextArea getTextArea() {
-		return (RTextArea)getViewport().getView();
+		Component view = getViewport().getView();
+		if (view instanceof RTextArea) {
+			return (RTextArea)view;
+		}
+		return getFirstRTextAreaDescendant(view);
 	}
 
 

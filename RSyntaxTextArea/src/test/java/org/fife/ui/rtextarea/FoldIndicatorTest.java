@@ -7,6 +7,7 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
@@ -72,12 +73,21 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testGetSetAdditionalLeftMargin() {
-
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
 		Assertions.assertEquals(0, fi.getAdditionalLeftMargin());
 		fi.setAdditionalLeftMargin(5);
 		Assertions.assertEquals(5, fi.getAdditionalLeftMargin());
+	}
+
+
+	@Test
+	void testGetSetAdditionalLeftMargin_error_negativeValue() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			fi.setAdditionalLeftMargin(-1);
+		});
 	}
 
 
@@ -88,6 +98,99 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertTrue(fi.getShowCollapsedRegionToolTips());
 		fi.setShowCollapsedRegionToolTips(false);
 		Assertions.assertFalse(fi.getShowCollapsedRegionToolTips());
+	}
+
+
+	@Test
+	void testGetToolTipLocation_codeFoldingNotEnabled() {
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.setCodeFoldingEnabled(false);
+		FoldIndicator fi = new FoldIndicator(textArea);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0, 0, 1, false);
+		// Code folding disabled -> component never renders tool tip text
+		Assertions.assertNull(fi.getToolTipLocation(e));
+	}
+
+
+	@Test
+	void testGetToolTipLocation_codeFoldingEnabledButStillNoToolTipText() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 1, false);
+		Assertions.assertNull(fi.getToolTipLocation(e));
+	}
+
+
+	@Test
+	void testGetToolTipLocation_codeFoldingEnabledAndHoverOverCollapsedFold() {
+
+		RSyntaxTextArea textArea = createTextArea("{\n  println(\"hi\");\n}\n");
+
+		// FoldIndicator needs a parent Gutter to calculate where to display
+		// the tool tip, but Gutter doesn't expose its child FoldIndicator
+		// via its API.  So here we really hack things to get around this.
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Gutter hackyGutter = new Gutter(textArea);
+		hackyGutter.add(fi);
+
+		// Collapse the top-level fold, and create a synthetic mouse-over
+		// event over its fold indicataor.
+		textArea.getFoldManager().getFold(0).setCollapsed(true);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
+
+		// Don't check against a specific pixel location in case tests run
+		// with slightly different default LaFs
+		Assertions.assertNotNull(fi.getToolTipLocation(e));
+	}
+
+
+	@Test
+	void testGetToolTipText_codeFoldingNotEnabled() {
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.setCodeFoldingEnabled(false);
+		FoldIndicator fi = new FoldIndicator(textArea);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 0, 0, 1, false);
+		// Code folding disabled -> component never renders tool tip text
+		Assertions.assertNull(fi.getToolTipText(e));
+	}
+
+
+	@Test
+	void testGetToolTipText_codeFoldingEnabledButNotOverACollapsedFold() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
+		Assertions.assertNull(fi.getToolTipText(e));
+	}
+
+
+	@Test
+	void testGetToolTipText_codeFoldingEnabledAndHoverOverCollapsedFold() {
+
+		RSyntaxTextArea textArea = createTextArea("{\n  println(\"hi\");\n}\n");
+
+		// FoldIndicator needs a parent Gutter to calculate where to display
+		// the tool tip, but Gutter doesn't expose its child FoldIndicator
+		// via its API.  So here we really hack things to get around this.
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Gutter hackyGutter = new Gutter(textArea);
+		hackyGutter.add(fi);
+
+		// Collapse the top-level fold, and create a synthetic mouse-over
+		// event over its fold indicataor.
+		textArea.getFoldManager().getFold(0).setCollapsed(true);
+		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
+
+		// HTML-ified version of the text above
+		String expected = "<html><nobr><font face=\"Menlo\" color=\"#ff0000\">{" +
+			"</font><br><font face=\"Menlo\"> &nbsp;</font>" +
+			"<font face=\"Menlo\" color=\"black\">println</font>" +
+			"<font face=\"Menlo\" color=\"#ff0000\">(</font>" +
+			"<font face=\"Menlo\" color=\"#dc009c\">&#34;hi&#34;</font>" +
+			"<font face=\"Menlo\" color=\"#ff0000\">)</font>" +
+			"<font face=\"Menlo\" color=\"black\">;</font><br>" +
+			"<font face=\"Menlo\" color=\"#ff0000\">}</font><br>";
+		Assertions.assertEquals(expected, fi.getToolTipText(e));
 	}
 
 
@@ -109,5 +212,13 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		textArea.getFoldManager().getFold(0).getChild(0).setCollapsed(true);
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.paintComponent(createTestGraphics());
+	}
+
+
+	@Test
+	void testSetFoldIcons() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		fi.setFoldIcons(new EmptyTestIcon(), new EmptyTestIcon());
 	}
 }

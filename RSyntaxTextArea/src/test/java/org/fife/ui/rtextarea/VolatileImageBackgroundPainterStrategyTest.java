@@ -10,7 +10,9 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 
 
 /**
@@ -32,14 +34,29 @@ class VolatileImageBackgroundPainterStrategyTest extends AbstractRSyntaxTextArea
 
 
 	@Test
-	void testPaintImage_withImage() {
+	void testPaintImage_withConcreteImage() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		BufferedImageBackgroundPainterStrategy strategy = new BufferedImageBackgroundPainterStrategy(textArea);
+		VolatileImageBackgroundPainterStrategy strategy = new VolatileImageBackgroundPainterStrategy(textArea);
 
 		BufferedImage image = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
 		strategy.setImage(image);
 
-		strategy.paintImage(createTestGraphics(), 0, 0);
+		Rectangle bounds = new Rectangle(0, 0, 80, 80);
+		strategy.paint(createTestGraphics(), bounds);
+	}
+
+
+	@Test
+	void testPaintImage_withImageFromUrl() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		VolatileImageBackgroundPainterStrategy strategy = new VolatileImageBackgroundPainterStrategy(textArea);
+
+		URL url = getClass().getResource("example-image.png");
+		strategy.setImage(url);
+
+		Rectangle bounds = new Rectangle(0, 0, 80, 80);
+		strategy.paint(createTestGraphics(), bounds);
 	}
 }
