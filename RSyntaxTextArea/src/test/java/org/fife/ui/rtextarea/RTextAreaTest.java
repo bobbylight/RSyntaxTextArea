@@ -41,6 +41,7 @@ class RTextAreaTest {
 		if (origIconGroup != null) {
 			RTextArea.setIconGroup(origIconGroup);
 		}
+		RTextArea.loadMacro(null);
 	}
 
 
