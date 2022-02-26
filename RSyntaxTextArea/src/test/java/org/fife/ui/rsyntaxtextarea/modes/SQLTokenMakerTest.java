@@ -261,16 +261,19 @@ class SQLTokenMakerTest extends AbstractTokenMakerTest {
 	void testMultiLineComments() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
-			"/* Hello world */"
+			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testMultiLineComments_continuedFromPreviousLine() {
+	void testMultiLineComments_fromPreviousLine() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, TokenTypes.COMMENT_MULTILINE,
-			" this is a continued comment */"
+			" this is a continued comment */",
+			"continued from prior line unterminated"
 		);
 	}
 

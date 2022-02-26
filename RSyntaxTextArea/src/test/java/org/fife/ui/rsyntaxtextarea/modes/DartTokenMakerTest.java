@@ -404,13 +404,14 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"/* Hello world unterminated",
-			"/* Hello world */"
+			"/* Hello world */",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testMultiLineComments_continuedFromPreviousLine() {
+	void testMultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			DartTokenMaker.INTERNAL_IN_JS_MLC,
 			"continued from a previous ine and unterminated",

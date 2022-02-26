@@ -779,13 +779,14 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* Unterminated"
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testTS_MultiLineComment_fromPreviousLine() {
+	void testTS_MultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TS_MLC_PREV_TOKEN_TYPE,
 			" this is continued from a prior line */",

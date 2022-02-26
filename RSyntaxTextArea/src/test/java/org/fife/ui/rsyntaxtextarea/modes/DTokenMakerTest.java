@@ -357,12 +357,32 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		};
 
 		for (String code : mlcLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	void testMultiLineComments_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			"continued from a prior line unterminated",
+			"continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.COMMENT_MULTILINE, 0);
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 

@@ -342,7 +342,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* unterminated"
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -406,7 +407,9 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testCss_propertyBlock_property_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -486,7 +489,9 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testCss_propertyBlock_value_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -1318,13 +1323,14 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* Unterminated"
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_MLC_PREV_TOKEN_TYPE,
 			" this is continued from a prior line */",

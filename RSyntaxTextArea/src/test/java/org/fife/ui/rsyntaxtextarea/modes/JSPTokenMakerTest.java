@@ -309,7 +309,8 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* unterminated"
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -373,7 +374,9 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	void testCss_propertyBlock_property_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -453,7 +456,9 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	void testCss_propertyBlock_value_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -1464,12 +1469,32 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		};
 
 		for (String code : mlcLiterals) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
+			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
+		}
+
+	}
+
+
+	@Test
+	void testJava_MultiLineComments_fromPreviousLine() {
+
+		String[] mlcLiterals = {
+			"continued from a prior line unterminated",
+			"continued from a prior line */",
+		};
+
+		for (String code : mlcLiterals) {
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_MLC, 0);
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
@@ -1856,13 +1881,14 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* Unterminated"
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_MLC_PREV_TOKEN_TYPE,
 			" this is continued from a prior line */",

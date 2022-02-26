@@ -858,16 +858,19 @@ class KotlinTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
-			"/* Hello world */"
+			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testMultiLineComments_continuedFromPreviousLine() {
+	void testMultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			TokenTypes.COMMENT_MULTILINE,
-			"continued from a previous line */"
+			"continued from a previous line */",
+			"continued from a previous line unterminated"
 		);
 	}
 

@@ -6690,7 +6690,7 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specifying we're in Java multiline comment.
 	 */
-	private static final int INTERNAL_IN_JAVA_MLC			= -(6<<11);
+	static final int INTERNAL_IN_JAVA_MLC			= -(6<<11);
 
 	/**
 	 * The state previous CSS-related state we were in before going into a CSS

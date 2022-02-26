@@ -332,7 +332,9 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testCss_multiLineComment() {
 
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
-			"/* Hello world */"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -395,7 +397,9 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testCss_propertyBlock_property_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_PROPERTY_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 
@@ -513,7 +517,9 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testCss_propertyBlock_value_multiLineComment() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			CSS_VALUE_PREV_TOKEN_TYPE,
-			"/* Hello world*/"
+			"/* Hello world */",
+			"/* unterminated",
+			"/**/"
 		);
 	}
 

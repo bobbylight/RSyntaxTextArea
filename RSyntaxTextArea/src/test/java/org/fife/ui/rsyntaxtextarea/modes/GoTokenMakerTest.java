@@ -310,6 +310,8 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		};
 
 		for (String code : mlcLiterals) {

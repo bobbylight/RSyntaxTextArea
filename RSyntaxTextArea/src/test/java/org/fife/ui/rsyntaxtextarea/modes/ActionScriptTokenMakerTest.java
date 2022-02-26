@@ -380,6 +380,8 @@ class ActionScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		};
 
 		for (String code : mlcLiterals) {
@@ -393,10 +395,11 @@ class ActionScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComments_fromPreviousLine() {
 
 		String[] mlcLiterals = {
-			" this is continued from a prior line */",
+			"continued from a prior line unterminated",
+			"continued from a prior line */",
 		};
 
 		for (String code : mlcLiterals) {

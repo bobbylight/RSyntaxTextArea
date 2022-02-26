@@ -206,6 +206,8 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		String[] mlcLiterals = {
 			"/* Hello world */",
+			"/* Hello world unterminated",
+			"/**/"
 		};
 
 		for (String code : mlcLiterals) {
@@ -215,6 +217,16 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testMultiLineComments_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			TokenTypes.COMMENT_MULTILINE,
+			"continued from a previous line */",
+			"continued from a previous line unterminated"
+		);
 	}
 
 

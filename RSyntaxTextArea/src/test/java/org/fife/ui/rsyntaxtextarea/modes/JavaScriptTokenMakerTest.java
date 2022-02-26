@@ -800,13 +800,14 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
-			"/* Unterminated"
+			"/* Hello world unterminated",
+			"/**/"
 		);
 	}
 
 
 	@Test
-	void testJS_MultiLineComment_fromPreviousLine() {
+	void testJS_MultiLineComments_fromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			JS_MLC_PREV_TOKEN_TYPE,
 			" this is continued from a prior line */",
