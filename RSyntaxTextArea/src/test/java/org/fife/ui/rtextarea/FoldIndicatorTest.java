@@ -181,16 +181,17 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		textArea.getFoldManager().getFold(0).setCollapsed(true);
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
 
-		// HTML-ified version of the text above
-		String expected = "<html><nobr><font face=\"Menlo\" color=\"#ff0000\">{" +
-			"</font><br><font face=\"Menlo\"> &nbsp;</font>" +
-			"<font face=\"Menlo\" color=\"black\">println</font>" +
-			"<font face=\"Menlo\" color=\"#ff0000\">(</font>" +
-			"<font face=\"Menlo\" color=\"#dc009c\">&#34;hi&#34;</font>" +
-			"<font face=\"Menlo\" color=\"#ff0000\">)</font>" +
-			"<font face=\"Menlo\" color=\"black\">;</font><br>" +
-			"<font face=\"Menlo\" color=\"#ff0000\">}</font><br>";
-		Assertions.assertEquals(expected, fi.getToolTipText(e));
+		// HTML-ified version of the text above. No specific font since it
+		// varies depending on the OS
+		String expected = "<html><nobr><font face=\"\\w+\" color=\"#ff0000\">\\{" +
+			"</font><br><font face=\"\\w+\"> &nbsp;</font>" +
+			"<font face=\"\\w+\" color=\"black\">println</font>" +
+			"<font face=\"\\w+\" color=\"#ff0000\">\\(</font>" +
+			"<font face=\"\\w+\" color=\"#dc009c\">&#34;hi&#34;</font>" +
+			"<font face=\"\\w+\" color=\"#ff0000\">\\)</font>" +
+			"<font face=\"\\w+\" color=\"black\">;</font><br>" +
+			"<font face=\"\\w+\" color=\"#ff0000\">\\}</font><br>";
+		Assertions.assertTrue(fi.getToolTipText(e).matches(expected));
 	}
 
 
