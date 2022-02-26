@@ -647,7 +647,9 @@ public class TokenImpl implements Token {
 
 	@Override
 	public boolean isComment() {
-		return getType()>=Token.COMMENT_EOL && getType()<=Token.COMMENT_MARKUP;
+		int type = getType();
+		return (type >= TokenTypes.COMMENT_EOL && type <= TokenTypes.COMMENT_MARKUP) ||
+			type == TokenTypes.MARKUP_COMMENT;
 	}
 
 
@@ -695,7 +697,7 @@ public class TokenImpl implements Token {
 
 	@Override
 	public boolean isSingleChar(int type, char ch) {
-		return this.getType()==type && isSingleChar(ch);
+		return getType()==type && isSingleChar(ch);
 	}
 
 
