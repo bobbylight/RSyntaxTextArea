@@ -690,10 +690,13 @@ public class SyntaxView extends View implements TabExpander,
 		int heightAbove = clip.y - alloc.y;
 		int linesAbove = Math.max(0, heightAbove / lineHeight);
 
+		// Top and bottom spacing around font if line height > font size
+		int verticalSpacing = (lineHeight - host.getActualLineHeight()) / 2;
+
 		FoldManager fm = host.getFoldManager();
 		linesAbove += fm.getHiddenLineCountAbove(linesAbove, true);
 		Rectangle lineArea = lineToRect(a, linesAbove);
-		int y = lineArea.y + ascent;
+		int y = lineArea.y + verticalSpacing + ascent;
 		int x = lineArea.x;
 		Element map = getElement();
 		int lineCount = map.getElementCount();
@@ -745,8 +748,8 @@ public class SyntaxView extends View implements TabExpander,
 				Color c = RSyntaxUtilities.getFoldedLineBottomColor(host);
 				if (c!=null) {
 					g.setColor(c);
-					g.drawLine(x,y+lineHeight-ascent-1,
-							host.getWidth(),y+lineHeight-ascent-1);
+					int lineY = y - verticalSpacing - ascent + lineHeight - 1;
+					g.drawLine(x, lineY, host.getWidth(), lineY);
 				}
 
 				// Skip to next line to paint, taking extra care for lines with

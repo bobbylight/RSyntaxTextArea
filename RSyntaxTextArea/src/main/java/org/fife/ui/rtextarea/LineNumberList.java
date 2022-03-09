@@ -354,6 +354,9 @@ public class LineNumberList extends AbstractGutterComponent
 			return;
 		}
 
+		// Top and bottom spacing around font if line height > font size
+		int verticalSpacing = (cellHeight - textArea.getActualLineHeight()) / 2;
+
 		// Get where to start painting (top of the row), and where to paint
 		// the line number (drawString expects y==baseline).
 		// We need to be "scrolled up" just enough for the missing part of
@@ -365,7 +368,7 @@ public class LineNumberList extends AbstractGutterComponent
 		}
 		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
 		int actualTopY = topLine*cellHeight + textAreaInsets.top;
-		int y = actualTopY + ascent;
+		int y = actualTopY + verticalSpacing + ascent;
 
 		// Get the actual first line to paint, taking into account folding.
 		FoldManager fm = null;
@@ -688,9 +691,9 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Changes the height of the cells in the JList so that they are as tall as
-	 * font. This function should be called whenever the user changes the Font
-	 * of <code>textArea</code>.
+	 * Changes the height of the cells in this component so that they are as
+	 * tall as the font. This function should be called whenever the user
+	 * changes the Font of <code>textArea</code>.
 	 */
 	private void updateCellHeights() {
 		if (textArea!=null) {
@@ -706,8 +709,8 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
-	 * Changes the width of the cells in the JList so you can see every digit
-	 * of each.
+	 * Changes the width of the cells in this component so you can see every
+	 * digit of each.
 	 */
 	void updateCellWidths() {
 

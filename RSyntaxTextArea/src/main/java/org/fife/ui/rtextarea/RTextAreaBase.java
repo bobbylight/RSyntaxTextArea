@@ -49,6 +49,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY	= "RTA.currentLineHighlightColor";
 	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY	= "RTA.currentLineHighlightFade";
 	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY		= "RTA.currentLineHighlight";
+	public static final String LINE_HEIGHT_MULTIPLIER_PROPERTY		= "RTA.lineHeightMultiplier";
 	public static final String ROUNDED_SELECTION_PROPERTY			= "RTA.roundedSelection";
 
 	private boolean tabsEmulatedWithSpaces;		// If true, tabs will be expanded to spaces.
@@ -61,6 +62,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	private int marginSizeInChars;			// How many 'm' widths the margin line is over.
 	private boolean fadeCurrentLineHighlight;	// "Fade effect" for current line highlight.
 	private boolean roundedSelectionEdges;
+	private float lineHeightMultiplier;
 	private int previousCaretY;
 	int currentCaretY;							// Used to know when to rehighlight current line.
 
@@ -313,6 +315,21 @@ public abstract class RTextAreaBase extends JTextArea {
 
 
 	/**
+	 * Returns the actual height of a line of text in this editor.  This
+	 * is essentially the font height.  There may be additional space
+	 * between lines; to get the actual, full height of a line, see
+	 * {@link #getLineHeight()}.
+	 *
+	 * @return The height of a line of text, not including any extra
+	 *         spacing.
+	 * @see #getLineHeight()
+	 */
+	public int getActualLineHeight() {
+		return getRowHeight();
+	}
+
+
+	/**
 	 * Returns the <code>java.awt.Color</code> used as the background color for
 	 * this text area.  If a <code>java.awt.Image</code> image is currently
 	 * being used instead, <code>null</code> is returned.
@@ -560,11 +577,32 @@ public abstract class RTextAreaBase extends JTextArea {
 
 	/**
 	 * Returns the height of a line of text in this text area.
+	 * This may be larger than the height of the font if extra
+	 * spacing is requested between lines.<p>
+	 * This is equal to the font's height times the line height
+	 * multiplier.
 	 *
 	 * @return The height of a line of text.
+	 * @see #getLineHeightMultiplier()
+	 * @see #getActualLineHeight()
 	 */
 	public int getLineHeight() {
-		return getRowHeight();
+		return (int)(getActualLineHeight() * lineHeightMultiplier);
+	}
+
+
+	/**
+	 * Returns a multiplier used to determine a line's height.
+	 * This is multiplied by the font height to determine how
+	 * tall each line of text is.  This can be used to add
+	 * extra whitespace between each line.
+	 *
+	 * @return The line height multiplier.
+	 * @see #setLineHeightMultiplier(float)
+	 * #see #getLineHeight()
+	 */
+	public float getLineHeightMultiplier() {
+		return lineHeightMultiplier;
 	}
 
 
@@ -659,6 +697,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		enableEvents(AWTEvent.COMPONENT_EVENT_MASK|AWTEvent.KEY_EVENT_MASK);
 
 		// Defaults for various properties.
+		lineHeightMultiplier = 1;
 		setHighlightCurrentLine(true);
 		setCurrentLineHighlightColor(getDefaultCurrentLineHighlightColor());
 		setMarginLineEnabled(false);
@@ -1003,6 +1042,35 @@ try {
 			firePropertyChange(HIGHLIGHT_CURRENT_LINE_PROPERTY,
 							!highlight, highlight);
 			repaint(); // Repaint entire width of line.
+		}
+	}
+
+
+	/**
+	 * Sets the line height multiplier.
+	 * This is multiplied by the font height to determine how
+	 * tall each line of text is.  This can be used to add
+	 * extra whitespace between each line.
+	 *
+	 * @param multiplier The new multiplier value.  This
+	 *        should be between {@code 0.9} and {code 3},
+	 *        inclusive.
+	 * @see #getLineHeightMultiplier()
+	 * @see #getLineHeight()
+	 */
+	public void setLineHeightMultiplier(float multiplier) {
+
+		if (multiplier < 0.9 || multiplier > 3) {
+			throw new IllegalArgumentException("Invalid multiplier: " +
+				multiplier);
+		}
+
+		if (multiplier != lineHeightMultiplier) {
+			float old = lineHeightMultiplier;
+			lineHeightMultiplier = multiplier;
+			firePropertyChange(LINE_HEIGHT_MULTIPLIER_PROPERTY, old,
+				multiplier);
+			repaint();
 		}
 	}
 

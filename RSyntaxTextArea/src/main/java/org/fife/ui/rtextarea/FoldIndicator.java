@@ -399,7 +399,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		int topLine = (visibleRect.y-textAreaInsets.top)/cellHeight;
 		int y = topLine*cellHeight +
 			(cellHeight-collapsedFoldIcon.getIconHeight())/2;
-		y += textAreaInsets.top;
+		y += textAreaInsets.top - 1;
 
 		// Get the first and last lines to paint.
 		FoldManager fm = rsta.getFoldManager();
@@ -431,7 +431,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 					if (!fold.isCollapsed()) {
 						g.setColor(getForeground());
 						int w2 = width - WIDTH / 2;
-						g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
+						g.drawLine(w2,y, w2,y+cellHeight/2);
 						paintingOutlineLine = true;
 					}
 					if (mouseOverFoldIcon) {

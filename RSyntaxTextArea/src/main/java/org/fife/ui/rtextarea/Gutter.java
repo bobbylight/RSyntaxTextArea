@@ -1070,10 +1070,12 @@ public class Gutter extends JPanel {
 
 			String name = e.getPropertyName();
 
-			// If they change the text area's font, we need to update cell
-			// heights to match the font's height.
+			// If they change the text area's font, or any other property
+			// related to line height, we need to update cell heights to
+			// match the font's height.
 			if ("font".equals(name) ||
-					RSyntaxTextArea.SYNTAX_SCHEME_PROPERTY.equals(name)) {
+					RSyntaxTextArea.SYNTAX_SCHEME_PROPERTY.equals(name) ||
+					RTextArea.LINE_HEIGHT_MULTIPLIER_PROPERTY.equals(name)) {
 				for (int i=0; i<getComponentCount(); i++) {
 					AbstractGutterComponent agc =
 								(AbstractGutterComponent)getComponent(i);

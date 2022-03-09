@@ -1017,6 +1017,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Overridden to return account for all fonts being used
+	 * when determining the line height.
+	 *
+	 * @return The line height.
+	 */
+	@Override
+	public int getActualLineHeight() {
+		return lineHeight;
+	}
+
+
+	/**
 	 * Returns whether bracket matching should be animated.
 	 *
 	 * @return Whether bracket matching should be animated.
@@ -1330,17 +1342,6 @@ private boolean fractionalFontMetricsEnabled;
 			}
 		}
 		return getDocument().getLength();
-	}
-
-
-	/**
-	 * Returns the height to use for a line of text in this text area.
-	 *
-	 * @return The height of a line of text in this text area.
-	 */
-	@Override
-	public int getLineHeight() {
-		return lineHeight;
 	}
 
 
