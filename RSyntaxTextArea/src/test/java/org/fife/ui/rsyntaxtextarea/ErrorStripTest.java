@@ -6,6 +6,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
+import org.fife.ui.rtextarea.SmartHighlightPainter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,13 +25,21 @@ import java.awt.event.MouseEvent;
 @ExtendWith(SwingRunnerExtension.class)
 class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
+	private RSyntaxTextArea textArea;
 	private ErrorStrip strip;
 
 
 	@BeforeEach
 	void setUp() {
 
-		RSyntaxTextArea textArea = createTextArea();
+		textArea = createTextArea();
+
+		// Hack to highlight some "marked occurrence" tokens for coverage
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		Token t = doc.iterator().next(); // Get open curly brace
+		RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)textArea.getHighlighter();
+		SmartHighlightPainter p = new SmartHighlightPainter();
+		new DefaultOccurrenceMarker().markOccurrences(doc, t, h, p);
 
 		// Force reparsing by instance, not by index, to avoid the
 		// code folding parser
@@ -101,17 +110,28 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testGetToolTipText() {
+	void testGetToolTipText_happyPath() {
 		MouseEvent e = new MouseEvent(strip, 0, 0, 0, 1, 1, 1, false);
 		Assertions.assertEquals("Line: 1", strip.getToolTipText(e));
 	}
 
 
 	@Test
-	void testPaintComponent() {
+	void testGetToolTipText_invalidMouseEvent() {
+		MouseEvent e = new MouseEvent(strip, 0, 0, 0, -1, Integer.MAX_VALUE, 1,
+			false);
+		Assertions.assertNull(strip.getToolTipText(e));
+	}
 
+
+	@Test
+	void testPaint() {
+
+		strip.addNotify();
+		strip.setSize(strip.getPreferredSize());
+		strip.doLayout();
 		Graphics g = createTestGraphics();
-		strip.paintComponent(g);
+		strip.paint(g);
 	}
 
 
@@ -138,7 +158,10 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 			DefaultParseResult result = new DefaultParseResult(this);
 
+			// Note some notices on the same line
 			result.addNotice(new DefaultParserNotice(this, "test notice", 1));
+			result.addNotice(new DefaultParserNotice(this, "second notice", 1));
+			result.addNotice(new DefaultParserNotice(this, "third notice", 2));
 			return result;
 		}
 	}

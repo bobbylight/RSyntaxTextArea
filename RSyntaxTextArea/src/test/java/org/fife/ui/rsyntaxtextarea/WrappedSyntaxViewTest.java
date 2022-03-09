@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.event.DocumentEvent;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.View;
+import javax.swing.text.*;
 import java.awt.*;
 
 
@@ -26,14 +23,43 @@ import java.awt.*;
 @ExtendWith(SwingRunnerExtension.class)
 class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
+	private static final String LONG_CODE = "{\n" +
+		"  for if while if for if while if for if while do if while for very long line for if {\n" +
+		"    if (willBeCollapsed) {\n" +
+		"       willBeCollapsedAndHidden();\n" +
+		"    }\n" +
+		"    while (nestedConditional) {\n" +
+		"\n" + // Purposely empty line
+		"      doSomething();\n" +
+		"    }\n" +
+		"  }\n" +
+		"}";
+
+
+	private static RSyntaxTextArea createWrappingTextArea() {
+		return createWrappingTextArea(true);
+	}
+
+
+	private static RSyntaxTextArea createWrappingTextArea(boolean wrapStyleWord) {
+
+		RSyntaxTextArea textArea = createTextArea(LONG_CODE);
+
+		// Collapse the "if (willBeCollapsed)" conditional block
+		textArea.getFoldManager().getFold(0).getChild(0).getChild(0).
+			setCollapsed(true);
+
+		textArea.setBounds(0, 0, 80, 800); // Make taller
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(wrapStyleWord);
+		textArea.addNotify();
+		return textArea;
+	}
+
 
 	private static void testDocumentEvent_happyPath(DocumentEvent.EventType eventType) {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
-
+		RSyntaxTextArea textArea = createWrappingTextArea();
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 
@@ -80,10 +106,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetChildAllocation_notAllocatedYet() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
@@ -97,10 +120,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetMaximumSpan_happyPath() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
@@ -112,10 +132,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetMinimumSpan_happyPath() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
@@ -127,10 +144,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetPreferredSpan_xAxis_happyPath() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
@@ -142,10 +156,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetPreferredSpan_yAxis_happyPath() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
@@ -155,16 +166,118 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testModelToView_3Arg_happyPath() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
+			getRootView(textArea).getView(0);
+
+		Shape s = view.modelToView(8, textArea.getBounds(), Position.Bias.Forward);
+		Assertions.assertNotNull(s);
+	}
+
+
+	@Test
+	void testModelToView_3Arg_error_invalidPosition() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
+			getRootView(textArea).getView(0);
+
+		int offs = Integer.MAX_VALUE;
+		Assertions.assertThrows(BadLocationException.class, () -> {
+			view.modelToView(offs, textArea.getBounds(), Position.Bias.Backward);
+		});
+	}
+
+
+	@Test
+	void testModelToView_5Arg_happyPath() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
+			getRootView(textArea).getView(0);
+
+		Shape s = view.modelToView(8, Position.Bias.Forward,
+			12, Position.Bias.Forward, textArea.getBounds());
+		Assertions.assertNotNull(s);
+	}
+
+
+	@Test
 	void testNextTabStop_zero() {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);
 		Assertions.assertEquals(0d, view.nextTabStop(0, 0), 0.001);
+	}
+
+
+	@Test
+	void testPaint_noSelection() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+
+		textArea.paint(createTestGraphics(1000, 1000));
+	}
+
+
+	@Test
+	void testPaint_noSelection_wrapStyleWordFalse() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea(false);
+
+		textArea.paint(createTestGraphics(1000, 1000));
+	}
+
+
+	@Test
+	void testPaint_selection_exactlyOneToken() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+
+		// Create a multi-line selection that includes empty lines
+		// and starts in the middle of a token
+		int selStart = LONG_CODE.indexOf("nestedConditional");
+		int selEnd = selStart + "nestedConditional".length();
+		textArea.setCaretPosition(selStart);
+		textArea.moveCaretPosition(selEnd);
+
+		textArea.paint(createTestGraphics(1000, 1000));
+	}
+
+
+	@Test
+	void testPaint_selection_startsInMiddleOfTokenAndSpansMultipleLines() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea();
+
+		// Create a multi-line selection that includes empty lines
+		// and starts in the middle of a token
+		int selStart = LONG_CODE.indexOf("nestedConditional") + 2;
+		int selEnd = LONG_CODE.indexOf("}", selStart);
+		textArea.setCaretPosition(selStart);
+		textArea.moveCaretPosition(selEnd);
+
+		textArea.paint(createTestGraphics(1000, 1000));
+	}
+
+
+	@Test
+	void testPaint_selection_wrapStyleWordFalse_startsInMiddleOfTokenAndSpansMultipleLines() {
+
+		RSyntaxTextArea textArea = createWrappingTextArea(false);
+
+		// Create a multi-line selection that includes empty lines
+		// and starts in the middle of a token
+		int selStart = LONG_CODE.indexOf("nestedConditional") + 2;
+		int selEnd = LONG_CODE.indexOf("}", selStart);
+		textArea.setCaretPosition(selStart);
+		textArea.moveCaretPosition(selEnd);
+
+		textArea.paint(createTestGraphics(1000, 1000));
 	}
 
 
@@ -177,10 +290,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testYForLine_happyPath() throws BadLocationException {
 
-		RSyntaxTextArea textArea = createTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.addNotify();
+		RSyntaxTextArea textArea = createWrappingTextArea();
 
 		WrappedSyntaxView view = (WrappedSyntaxView)textArea.getUI().
 			getRootView(textArea).getView(0);

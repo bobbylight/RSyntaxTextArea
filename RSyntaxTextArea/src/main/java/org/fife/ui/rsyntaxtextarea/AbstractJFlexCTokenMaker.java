@@ -164,9 +164,9 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 		 * and needs to be closed.  While not foolproof, this is usually good
 		 * enough of a sign.
 		 *
-		 * @param textArea
-		 * @param line
-		 * @param offs
+		 * @param textArea The text area being examined.
+		 * @param line The line being examined.
+		 * @param offs The offset being examined.
 		 * @return Whether a comment appears to be nested inside this one.
 		 */
 		private boolean appearsNested(RSyntaxTextArea textArea,
@@ -208,10 +208,10 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 		private void insertBreakInMLC(ActionEvent e, RSyntaxTextArea textArea,
 										int line) {
 
-			Matcher m = null;
-			int start = -1;
-			int end = -1;
-			String text = null;
+			Matcher m;
+			int start;
+			int end;
+			String text;
 			try {
 				start = textArea.getLineStartOffset(line);
 				end = textArea.getLineEndOffset(line);

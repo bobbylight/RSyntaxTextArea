@@ -70,7 +70,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 
 
 	/**
-	 * Constructor.  This constructor only exists to support persistance
+	 * Constructor.  This constructor only exists to support persistence
 	 * through serialization.
 	 */
 	public StaticCodeTemplate() {
@@ -218,7 +218,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 											IOException  {
 		in.defaultReadObject();
 		// "Resetting" before and after text to the same values will replace
-		// nulls with empty srings, and set transient "first*Newline" values.
+		// nulls with empty strings, and set transient "first*Newline" values.
 		setBeforeCaretText(this.beforeCaret);
 		setAfterCaretText(this.afterCaret);
 	}

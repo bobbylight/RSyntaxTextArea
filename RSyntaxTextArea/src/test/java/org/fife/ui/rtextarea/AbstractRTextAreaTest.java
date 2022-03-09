@@ -18,8 +18,14 @@ public abstract class AbstractRTextAreaTest {
 
 
 	protected static Graphics2D createTestGraphics() {
-		Graphics2D g = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB).createGraphics();
-		g.setClip(0, 0, 80, 80);
+		return createTestGraphics(80, 80);
+	}
+
+
+	protected static Graphics2D createTestGraphics(int width, int height) {
+		Graphics2D g = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB).
+			createGraphics();
+		g.setClip(0, 0, width, height);
 		return g;
 	}
 }

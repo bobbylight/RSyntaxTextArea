@@ -414,7 +414,7 @@ public class ErrorStrip extends JPanel {
 	private void addMarkersForRanges(List<DocumentRange> ranges,
 			Map<Integer, Marker> markerMap, Color color) {
 		for (DocumentRange range : ranges) {
-			int line = 0;
+			int line;
 			try {
 				line = textArea.getLineOfOffset(range.getStartOffset());
 			} catch (BadLocationException ble) { // Never happens

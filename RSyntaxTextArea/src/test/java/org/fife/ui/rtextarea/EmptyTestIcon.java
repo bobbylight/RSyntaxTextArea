@@ -13,7 +13,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-class EmptyTestIcon implements Icon {
+public class EmptyTestIcon implements Icon {
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
