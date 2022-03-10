@@ -63,7 +63,7 @@ class RegExReplaceInfo {
 	}
 
 	/**
-	 * Returns the string to replaced the matched text with.
+	 * Returns the string to replace the matched text with.
 	 *
 	 * @return The string to replace the matched text with.
 	 */

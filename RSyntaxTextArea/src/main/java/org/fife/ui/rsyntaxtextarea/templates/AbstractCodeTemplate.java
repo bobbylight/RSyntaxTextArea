@@ -49,7 +49,7 @@ public abstract class AbstractCodeTemplate implements CodeTemplate {
 	@Override
 	public Object clone() {
 		// This method can't be abstract as compilers don't like concrete
-		// subclassses calling super.clone() on  an abstract super.
+		// subclasses calling super.clone() on  an abstract super.
 		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {

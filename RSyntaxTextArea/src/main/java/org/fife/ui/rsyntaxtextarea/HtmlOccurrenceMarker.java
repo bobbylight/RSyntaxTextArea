@@ -148,7 +148,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 
 
 	/**
-	 * If the caret is inside of a tag, this method returns the token
+	 * If the caret is inside a tag, this method returns the token
 	 * representing the tag name; otherwise, <code>null</code> is returned.<p>
 	 *
 	 * Currently, this method only checks for tag names on the same line as

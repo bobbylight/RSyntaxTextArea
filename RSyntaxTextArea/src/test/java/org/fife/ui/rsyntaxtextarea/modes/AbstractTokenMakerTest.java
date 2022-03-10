@@ -145,7 +145,7 @@ abstract class AbstractTokenMakerTest {
 		for (int tokenType = 0; tokenType < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; tokenType++) {
 			Token token = new TokenImpl("{".toCharArray(), 0, 0, 0, tokenType, 0);
 			Assertions.assertFalse(tm.getShouldIndentNextLineAfter(token));
-		};
+		}
 	}
 
 

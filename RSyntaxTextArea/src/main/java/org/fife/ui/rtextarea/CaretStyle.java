@@ -10,7 +10,7 @@ package org.fife.ui.rtextarea;
 /**
  * Provides various ways to render a caret such as {@link ConfigurableCaret}..
  *
- * Currently supported renderings include:
+ * Supported renderings include:
  *
  * <ol>
  *    <li>As a vertical line (like <code>DefaultCaret</code>)</li>

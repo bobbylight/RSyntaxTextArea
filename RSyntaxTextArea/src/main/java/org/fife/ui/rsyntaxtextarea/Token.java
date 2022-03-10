@@ -425,12 +425,12 @@ public interface Token extends TokenTypes {
 
 
 	/**
-	 * Returns whether or not this token is "paintable;" i.e., whether or not
+	 * Returns whether this token is "paintable;" i.e., whether
 	 * the type of this token is one such that it has an associated syntax
 	 * style.  What this boils down to is whether the token type is greater
 	 * than <code>Token.NULL</code>.
 	 *
-	 * @return Whether or not this token is paintable.
+	 * @return Whether this token is paintable.
 	 */
 	boolean isPaintable();
 
@@ -459,7 +459,7 @@ public interface Token extends TokenTypes {
 
 
 	/**
-	 * Returns whether or not this token is whitespace.
+	 * Returns whether this token is whitespace.
 	 *
 	 * @return <code>true</code> iff this token is whitespace.
 	 * @see #isComment()

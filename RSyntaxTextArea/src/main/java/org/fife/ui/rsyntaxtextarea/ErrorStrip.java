@@ -430,7 +430,7 @@ public class ErrorStrip extends JPanel {
 				add(m);
 			}
 			else {
-				if (!m.containsMarkedOccurence()) {
+				if (!m.containsMarkedOccurrence()) {
 					m.addNotice(notice);
 				}
 			}
@@ -856,7 +856,7 @@ public class ErrorStrip extends JPanel {
 			notices.add(notice);
 		}
 
-		public boolean containsMarkedOccurence() {
+		public boolean containsMarkedOccurrence() {
 			boolean result = false;
 			for (ParserNotice notice : notices) {
 				if (notice instanceof MarkedOccurrenceNotice) {

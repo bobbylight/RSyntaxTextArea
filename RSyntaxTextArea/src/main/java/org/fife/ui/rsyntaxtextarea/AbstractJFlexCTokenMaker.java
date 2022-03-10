@@ -160,7 +160,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 		/**
 		 * Returns whether the MLC token containing <code>offs</code> appears
 		 * to have a "nested" comment (i.e., contains "<code>/*</code>"
-		 * somewhere inside of it).  This implies that it is likely a "new" MLC
+		 * somewhere inside it).  This implies that it is likely a "new" MLC
 		 * and needs to be closed.  While not foolproof, this is usually good
 		 * enough of a sign.
 		 *

@@ -282,7 +282,7 @@ public abstract class RTextAreaBase extends JTextArea {
 
 
 	/**
-	 * Returns the a real UI to install on this text component.  Subclasses
+	 * Returns a real UI to install on this text component.  Subclasses
 	 * can override this method to return an extended version of
 	 * <code>RTextAreaUI</code>.
 	 *
@@ -531,7 +531,7 @@ public abstract class RTextAreaBase extends JTextArea {
 
 
 	/**
-	 * Returns whether or not the current line is highlighted.
+	 * Returns whether the current line is highlighted.
 	 *
 	 * @return Whether or the current line is highlighted.
 	 * @see #setHighlightCurrentLine(boolean)
@@ -632,7 +632,7 @@ public abstract class RTextAreaBase extends JTextArea {
 
 
 	/**
-	 * Returns whether or not tabs are emulated with spaces (i.e., "soft"
+	 * Returns whether tabs are emulated with spaces (i.e., "soft"
 	 * tabs).
 	 *
 	 * @return <code>true</code> if tabs are emulated with spaces;
@@ -684,9 +684,9 @@ public abstract class RTextAreaBase extends JTextArea {
 
 
 	/**
-	 * Returns whether or not the margin line is being painted.
+	 * Returns whether the margin line is being painted.
 	 *
-	 * @return Whether or not the margin line is being painted.
+	 * @return Whether the margin line is being painted.
 	 * @see #setMarginLineEnabled
 	 */
 	public boolean isMarginLineEnabled() {
@@ -798,7 +798,7 @@ try {
 	/**
 	 * Overridden so we can tell when the text area is resized and update the
 	 * current-line highlight, if necessary (i.e., if it is enabled and if
-	 * lineWrap is enabled.
+	 * lineWrap is enabled).
 	 *
 	 * @param e The component event about to be sent to all registered
 	 *        <code>ComponentListener</code>s.
@@ -989,10 +989,10 @@ try {
 
 
 	/**
-	 * Sets whether or not the current line is highlighted.  This method
+	 * Sets whether the current line is highlighted.  This method
 	 * fires a property change of type {@link #HIGHLIGHT_CURRENT_LINE_PROPERTY}.
 	 *
-	 * @param highlight Whether or not to highlight the current line.
+	 * @param highlight Whether to highlight the current line.
 	 * @see #getHighlightCurrentLine()
 	 * @see #getCurrentLineHighlightColor
 	 * @see #setCurrentLineHighlightColor
@@ -1008,10 +1008,10 @@ try {
 
 
 	/**
-	 * Sets whether or not word wrap is enabled.  This is overridden so that
+	 * Sets whether word wrap is enabled.  This is overridden so that
 	 * the "current line highlight" gets updated if it needs to be.
 	 *
-	 * @param wrap Whether or not word wrap should be enabled.
+	 * @param wrap Whether word wrap should be enabled.
 	 */
 	@Override
 	public void setLineWrap(boolean wrap) {
@@ -1058,7 +1058,7 @@ try {
 	/**
 	 * Enables or disables the margin line.
 	 *
-	 * @param enabled Whether or not the margin line should be enabled.
+	 * @param enabled Whether the margin line should be enabled.
 	 * @see #isMarginLineEnabled
 	 */
 	public void setMarginLineEnabled(boolean enabled) {
@@ -1137,12 +1137,12 @@ try {
 
 
 	/**
-	 * Changes whether or not tabs should be emulated with spaces (i.e., soft
+	 * Changes whether tabs should be emulated with spaces (i.e., soft
 	 * tabs).  Note that this affects all tabs inserted AFTER this call, not
 	 * tabs already in the document.  For that, see
 	 * {@link #convertTabsToSpaces} and {@link #convertSpacesToTabs}.
 	 *
-	 * @param areEmulated Whether or not tabs should be emulated with spaces.
+	 * @param areEmulated Whether tabs should be emulated with spaces.
 	 * @see #convertSpacesToTabs
 	 * @see #convertTabsToSpaces
 	 * @see #getTabsEmulated

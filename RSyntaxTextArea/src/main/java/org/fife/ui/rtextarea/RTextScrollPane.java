@@ -174,7 +174,7 @@ public class RTextScrollPane extends JScrollPane {
 	/**
 	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
-	 * @return Whether or not line numbers are visible.
+	 * @return Whether line numbers are visible.
 	 * @see #setLineNumbersEnabled(boolean)
 	 */
 	public boolean getLineNumbersEnabled() {
@@ -245,9 +245,9 @@ public class RTextScrollPane extends JScrollPane {
 
 
 	/**
-	 * Toggles whether or not line numbers are visible.
+	 * Toggles whether line numbers are visible.
 	 *
-	 * @param enabled Whether or not line numbers should be visible.
+	 * @param enabled Whether line numbers should be visible.
 	 * @see #getLineNumbersEnabled()
 	 */
 	public void setLineNumbersEnabled(boolean enabled) {

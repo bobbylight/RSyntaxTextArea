@@ -1790,7 +1790,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				textArea.setSelectionStart(insertOffs);
 				int selEnd = insertOffs + text.length() - 1;
 				textArea.setSelectionEnd(selEnd);
-				if (movingLastLine) { // Remove the artifically-added newline
+				if (movingLastLine) { // Remove the artificially-added newline
 					doc.remove(doc.getLength() - 1, 1);
 				}
 

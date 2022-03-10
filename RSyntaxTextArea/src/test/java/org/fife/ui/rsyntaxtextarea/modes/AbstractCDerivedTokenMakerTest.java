@@ -13,8 +13,6 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.Segment;
-
 
 /**
  * Utility classes for unit tests for <code>TokenMaker</code> implementations.

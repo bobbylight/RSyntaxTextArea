@@ -58,7 +58,7 @@ public class TokenMap {
 	/**
 	 * Constructs a new token map.
 	 *
-	 * @param ignoreCase Whether or not this token map should ignore case
+	 * @param ignoreCase Whether this token map should ignore case
 	 *        when comparing tokens.
 	 */
 	public TokenMap(boolean ignoreCase) {
@@ -70,7 +70,7 @@ public class TokenMap {
 	 * Constructs a new token map.
 	 *
 	 * @param size The size of the token map.
-	 * @param ignoreCase Whether or not this token map should ignore case
+	 * @param ignoreCase Whether this token map should ignore case
 	 *        when comparing tokens.
 	 */
 	public TokenMap(int size, boolean ignoreCase) {
@@ -130,7 +130,7 @@ public class TokenMap {
 		int offset1;
 		int length;
 
-		/* We check whether or not to ignore case before doing any looping to
+		/* We check whether to ignore case before doing any looping to
 		 * minimize the number of extraneous comparisons we do.  This makes
 		 * for slightly redundant code, but it'll be a little more efficient.
 		 */
@@ -209,7 +209,7 @@ public class TokenMap {
 	 * This property is set in the constructor and cannot be changed, as this
 	 * is an intrinsic property of a particular programming language.
 	 *
-	 * @return Whether or not this token maker is ignoring case.
+	 * @return Whether this token maker is ignoring case.
 	 */
 	protected boolean isIgnoringCase() {
 		return ignoreCase;

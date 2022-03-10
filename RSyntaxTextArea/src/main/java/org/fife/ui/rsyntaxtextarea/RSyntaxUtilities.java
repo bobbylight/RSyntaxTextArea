@@ -670,7 +670,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 					break;
 				}
 				Caret c = (target != null) ? target.getCaret() : null;
-				// YECK! Ideally, the x location from the magic caret
+				// YUCK! Ideally, the x location from the magic caret
 				// position would be passed in.
 				Point mcp;
 				if (c != null) {
@@ -795,7 +795,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 	/**
 	 * Returns the flags necessary to create a {@link Pattern}.
 	 *
-	 * @param matchCase Whether the pattern should be case sensitive.
+	 * @param matchCase Whether the pattern should be case-sensitive.
 	 * @param others Any other flags.  This may be <code>0</code>.
 	 * @return The flags.
 	 */
@@ -1112,7 +1112,7 @@ return c.getLineStartOffset(line);
 	 * into consideration.  This is implemented in a 1.1 style coordinate
 	 * system where ints are used and 72dpi is assumed.<p>
 	 *
-	 * @param tokenList The token list list representing the text.
+	 * @param tokenList The token list representing the text.
 	 * @param textArea The text area in which this token list resides.
 	 * @param e The tab expander.  This value cannot be <code>null</code>.
 	 * @param x0 The x-pixel coordinate of the start of the token list.
@@ -1164,11 +1164,11 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns whether or not this character is a "bracket" to be matched by
+	 * Returns whether this character is a "bracket" to be matched by
 	 * such programming languages as C, C++, and Java.
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a "bracket" - one of '(', ')',
+	 * @return Whether the character is a "bracket" - one of '(', ')',
 	 *         '[', ']', '{', and '}'.
 	 */
 	public static boolean isBracket(char ch) {
@@ -1180,10 +1180,10 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns whether or not a character is a digit (0-9).
+	 * Returns whether a character is a digit (0-9).
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a digit.
+	 * @return Whether the character is a digit.
 	 */
 	public static boolean isDigit(char ch) {
 		// We do it this way as we'd need to do two conditions anyway (first
@@ -1194,11 +1194,11 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns whether or not this character is a hex character.  This method
+	 * Returns whether this character is a hex character.  This method
 	 * accepts both upper- and lower-case letters a-f.
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a hex character 0-9, a-f, or
+	 * @return Whether the character is a hex character 0-9, a-f, or
 	 *         A-F.
 	 */
 	public static boolean isHexCharacter(char ch) {
@@ -1214,7 +1214,7 @@ return c.getLineStartOffset(line);
 	 * operators are the same as Java operators.
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a Java operator.
+	 * @return Whether the character is a Java operator.
 	 */
 	public static boolean isJavaOperator(char ch) {
 		// We need the first condition as it could be that ch>255 (and thus
@@ -1228,7 +1228,7 @@ return c.getLineStartOffset(line);
 	 * Returns whether a character is a US-ASCII letter (A-Z or a-z).
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a US-ASCII letter.
+	 * @return Whether the character is a US-ASCII letter.
 	 */
 	public static boolean isLetter(char ch) {
 		// We need the first condition as it could be that ch>255 (and thus
@@ -1238,10 +1238,10 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns whether or not a character is a US-ASCII letter or a digit.
+	 * Returns whether a character is a US-ASCII letter or a digit.
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a US-ASCII letter or a digit.
+	 * @return Whether the character is a US-ASCII letter or a digit.
 	 */
 	public static boolean isLetterOrDigit(char ch) {
 		// We need the first condition as it could be that ch>255 (and thus
@@ -1266,7 +1266,7 @@ return c.getLineStartOffset(line);
 
 	/**
 	 * Returns whether the specified token is a single non-word char (e.g. not
-	 * in <code>[A-Za-z]</code>.  This is a HACK to work around the fact that
+	 * in <code>[A-Za-z]</code>).  This is a HACK to work around the fact that
 	 * many standard token makers return things like semicolons and periods as
 	 * {@link Token#IDENTIFIER}s just to make the syntax highlighting coloring
 	 * look a little better.
@@ -1291,12 +1291,12 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns whether or not a character is a whitespace character (either
+	 * Returns whether a character is a whitespace character (either
 	 * a space ' ' or tab '\t').  This checks for the Unicode character values
 	 * 0x0020 and 0x0009.
 	 *
 	 * @param ch The character to check.
-	 * @return Whether or not the character is a whitespace character.
+	 * @return Whether the character is a whitespace character.
 	 */
 	public static boolean isWhitespace(char ch) {
 		// We do it this way as we'd need to do two conditions anyway (first
@@ -1352,7 +1352,7 @@ return c.getLineStartOffset(line);
 
 	/**
 	 * Selects a range of text in a text component.  If the new selection is
-	 * outside of the previous viewable rectangle, then the view is centered
+	 * outside the previous viewable rectangle, then the view is centered
 	 * around the new selection.
 	 *
 	 * @param textArea The text component whose selection is to be centered.
@@ -1452,7 +1452,7 @@ return c.getLineStartOffset(line);
 	 * @return The lower-case version of the character.
 	 */
 	public static char toLowerCase(char ch) {
-		// We can logical OR with 32 because A-Z are 65-90 in the ASCII table
+		// We can logically OR with 32 because A-Z are 65-90 in the ASCII table
 		// and none of them have the 6th bit (32) set, and a-z are 97-122 in
 		// the ASCII table, which is 32 over from A-Z.
 		// We do it this way as we'd need to do two conditions anyway (first
@@ -1469,7 +1469,7 @@ return c.getLineStartOffset(line);
 	 * Creates a regular expression pattern that matches a "wildcard" pattern.
 	 *
 	 * @param wildcard The wildcard pattern.
-	 * @param matchCase Whether the pattern should be case sensitive.
+	 * @param matchCase Whether the pattern should be case-sensitive.
 	 * @param escapeStartChar Whether to escape a starting <code>'^'</code>
 	 *        character.
 	 * @return The pattern.

@@ -421,11 +421,11 @@ public class RTATextTransferHandler extends TransferHandler {
 		}
 
 		/**
-		 * Returns whether or not the specified data flavor is supported for
+		 * Returns whether the specified data flavor is supported for
 		 * this object.
 		 *
 		 * @param flavor the requested flavor for the data
-		 * @return boolean indicating whether or not the data flavor is supported
+		 * @return boolean indicating whether the data flavor is supported
 		 */
 		@Override
 		public boolean isDataFlavorSupported(DataFlavor flavor) {
@@ -439,11 +439,11 @@ public class RTATextTransferHandler extends TransferHandler {
 		}
 
 		/**
-		 * Returns whether or not the specified data flavor is an plain flavor that
+		 * Returns whether the specified data flavor is a plain flavor that
 		 * is supported.
 		 *
 		 * @param flavor the requested flavor for the data
-		 * @return boolean indicating whether or not the data flavor is supported
+		 * @return boolean indicating whether the data flavor is supported
 		 */
 		protected boolean isPlainFlavor(DataFlavor flavor) {
 			DataFlavor[] flavors = plainFlavors;
@@ -464,11 +464,11 @@ public class RTATextTransferHandler extends TransferHandler {
 		}
 
 		/**
-		 * Returns whether or not the specified data flavor is a String flavor that
+		 * Returns whether the specified data flavor is a String flavor that
 		 * is supported.
 		 *
 		 * @param flavor the requested flavor for the data
-		 * @return boolean indicating whether or not the data flavor is supported
+		 * @return boolean indicating whether the data flavor is supported
 		 */
 		protected boolean isStringFlavor(DataFlavor flavor) {
 			DataFlavor[] flavors = stringFlavors;

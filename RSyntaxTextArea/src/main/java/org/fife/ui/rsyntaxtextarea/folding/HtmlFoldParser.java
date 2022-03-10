@@ -204,7 +204,7 @@ public class HtmlFoldParser implements FoldParser {
 								// another line.
 							}
 
-							// Starting a MLC that ends on a later line...
+							// Starting an MLC that ends on a later line...
 							else if (t.startsWith(MLC_START) && !t.endsWith(MLC_END)) {
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.COMMENT, textArea, t.getOffset());

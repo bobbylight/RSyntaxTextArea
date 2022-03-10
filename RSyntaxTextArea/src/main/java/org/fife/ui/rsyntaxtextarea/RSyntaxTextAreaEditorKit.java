@@ -710,7 +710,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
-			// All we need to do is update all of the fonts in syntax
+			// All we need to do is update all the fonts in syntax
 			// schemes, then call setSyntaxHighlightingColorScheme with the
 			// same scheme already being used.  This relies on the fact that
 			// that method does not check whether the new scheme is different
@@ -757,7 +757,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			// If we updated at least one font, update the screen.  If
-			// all of the fonts were already the minimum size, beep.
+			// all the fonts were already the minimum size, beep.
 			if (changed) {
 				rsta.setSyntaxScheme(scheme);
 				// NOTE:  This is a hack to get an encompassing
@@ -1365,7 +1365,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
-			// All we need to do is update all of the fonts in syntax
+			// All we need to do is update all the fonts in syntax
 			// schemes, then call setSyntaxHighlightingColorScheme with the
 			// same scheme already being used.  This relies on the fact that
 			// that method does not check whether the new scheme is different
@@ -1412,7 +1412,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 
 			// If we updated at least one font, update the screen.  If
-			// all of the fonts were already the minimum size, beep.
+			// all the fonts were already the minimum size, beep.
 			if (changed) {
 				rsta.setSyntaxScheme(scheme);
 				// NOTE:  This is a hack to get an encompassing

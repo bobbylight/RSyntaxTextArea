@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * A fold parser that considers any contiguous group of lines without a blank
  * line to be a "block" of code.  Useful for languages that don't have the
- * concept of of code blocks, such as assembly languages.
+ * concept of code blocks, such as assembly languages.
  *
  * @author Robert Futrell
  * @version 1.0

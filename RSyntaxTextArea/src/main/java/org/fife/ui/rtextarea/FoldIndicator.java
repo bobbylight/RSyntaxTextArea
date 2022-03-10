@@ -492,7 +492,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		//   above the first visible y-coordinate as we're in line-wrapping
 		//   mode, but we always paint entire logical lines.
 		// - Paint that line's indicator, if appropriate.  Increment y to be
-		//   just below the are we just painted (i.e., the beginning of the
+		//   just below the line we just painted (i.e., the beginning of the
 		//   next logical line's view area).
 		// - Get the ending visual position for that line.  We can now loop
 		//   back, paint this line, and continue until our y-coordinate is

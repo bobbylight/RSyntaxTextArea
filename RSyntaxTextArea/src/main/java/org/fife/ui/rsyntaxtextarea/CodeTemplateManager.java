@@ -215,7 +215,7 @@ public class CodeTemplateManager {
 	/**
 	 * Saves all templates as XML files in the current template directory.
 	 *
-	 * @return Whether or not the save was successful.
+	 * @return Whether the save was successful.
 	 */
 	public synchronized boolean saveTemplates() {
 

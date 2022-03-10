@@ -76,7 +76,7 @@ public final class SearchEngine {
 			if (doMarkAll) {
 				// Force "mark all" event to be broadcast so listeners know to
 				// clear their mark-all markers.  The RSTA already cleared its
-				// highlights above, but cleraMarkAllHighlights() doesn't fire
+				// highlights above, but clearMarkAllHighlights() doesn't fire
 				// an event itself for performance reasons.
 				List<DocumentRange> emptyRangeList = Collections.emptyList();
 				((RTextArea)textArea).markAll(emptyRangeList);
@@ -286,7 +286,7 @@ public final class SearchEngine {
 	 *
 	 * If <code>replacement</code> is <code>null</code>, this method call is
 	 * assumed to be part of a "find" operation and points are returned.  If
-	 * if is non-<code>null</code>, it is assumed to be part of a "replace"
+	 * it is non-<code>null</code>, it is assumed to be part of a "replace"
 	 * operation and the <code>RegExReplaceInfo</code>s are returned.<p>
 	 *
 	 * @param m The matcher.
@@ -411,7 +411,7 @@ public final class SearchEngine {
 	 * @param searchIn The string to search in.
 	 * @param goForward Whether to search forward.  If <code>false</code>,
 	 *        search backward.
-	 * @param matchCase Whether or not to do a case-sensitive search for
+	 * @param matchCase Whether to do a case-sensitive search for
 	 *        <code>regEx</code>.
 	 * @param wholeWord If <code>true</code>, <code>regEx</code>
 	 *        occurrences embedded in longer words in <code>searchIn</code>
@@ -439,7 +439,7 @@ public final class SearchEngine {
 	 * @param searchIn The string to search in.
 	 * @param goForward Whether to search forward.  If <code>false</code>,
 	 *        search backward.
-	 * @param matchCase Whether or not to do a case-sensitive search for
+	 * @param matchCase Whether to do a case-sensitive search for
 	 *        <code>regEx</code>.
 	 * @param wholeWord If <code>true</code>, <code>regEx</code>
 	 *        occurrences embedded in longer words in <code>searchIn</code>
@@ -470,7 +470,7 @@ public final class SearchEngine {
 			regEx = "\\b" + regEx + "\\b";
 		}
 
-		// Make a pattern that takes into account whether or not to match case.
+		// Make a pattern that takes into account whether to match case.
 		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 		flags = RSyntaxUtilities.getPatternFlags(matchCase, flags);
 		Pattern pattern = null;
@@ -527,7 +527,7 @@ public final class SearchEngine {
 	private static RegExReplaceInfo getRegExReplaceInfo(CharSequence searchIn,
 										SearchContext context) {
 		// Can't pass null to getNextMatchPosRegExImpl or it'll think
-		// you're doing a "find" operation instead of "replace, and return a
+		// you're doing a "find" operation instead of "replace", and return a
 		// Point.
 		String replacement = context.getReplaceWith();
 		if (replacement==null) {

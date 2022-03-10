@@ -94,7 +94,7 @@ public class Style implements Cloneable {
 	 * @param fg The foreground color to use.
 	 * @param bg The background color to use.
 	 * @param font The font for this syntax scheme.
-	 * @param underline Whether or not to underline tokens with this style.
+	 * @param underline Whether to underline tokens with this style.
 	 */
 	public Style(Color fg, Color bg, Font font, boolean underline) {
 		foreground = fg;
@@ -107,7 +107,7 @@ public class Style implements Cloneable {
 
 
 	/**
-	 * Returns whether or not two (possibly <code>null</code>) objects are
+	 * Returns whether two (possibly <code>null</code>) objects are
 	 * equal.
 	 */
 	private boolean areEqual(Object o1, Object o2) {
@@ -139,10 +139,10 @@ public class Style implements Cloneable {
 
 
 	/**
-	 * Returns whether or not two syntax schemes are equal.
+	 * Returns whether two syntax schemes are equal.
 	 *
 	 * @param o2 The object with which to compare this syntax scheme.
-	 * @return Whether or not these two syntax schemes represent the same
+	 * @return Whether these two syntax schemes represent the same
 	 *         scheme.
 	 */
 	@Override

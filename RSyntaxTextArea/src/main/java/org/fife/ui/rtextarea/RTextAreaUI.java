@@ -20,7 +20,7 @@ import javax.swing.plaf.basic.*;
 
 /**
  * The UI used by instances of <code>RTextArea</code>.  This UI takes into
- * account all of the "extras" involved in an <code>RTextArea</code>, including
+ * account all the "extras" involved in an <code>RTextArea</code>, including
  * having a special caret (for insert and overwrite), background images,
  * highlighting the current line, etc.
  *
@@ -386,7 +386,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		// In BasicTextUI#createActionMap(), "editor.getActions()" is called,
 		// and the current editor's returned Actions are used to create the
 		// ActionMap, which is then cached and used in all future J/RTextAreas.
-		// Unfortunately, RTextArea actions don't worn in JTextAreas.
+		// Unfortunately, RTextArea actions don't work in JTextAreas.
 		//super.installKeyboardActions();
 
 		RTextArea textArea = getRTextArea();

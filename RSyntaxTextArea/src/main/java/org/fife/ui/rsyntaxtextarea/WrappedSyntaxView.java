@@ -1015,8 +1015,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	public void setSize(float width, float height) {
 		updateMetrics();
 		if ((int) width != getWidth()) {
-			// invalidate the view itself since the childrens
-			// desired widths will be based upon this views width.
+			// invalidate the view itself since the children's
+			// desired widths will be based upon this view's width.
 			preferenceChanged(null, true, true);
 			setWidthChangePending(true);
 		}
@@ -1153,8 +1153,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * Simple view of a line that wraps if it doesn't
 	 * fit within the horizontal space allocated.
 	 * This class tries to be lightweight by carrying little
-	 * state of it's own and sharing the state of the outer class
-	 * with it's siblings.
+	 * state of its own and sharing the state of the outer class
+	 * with its siblings.
 	 */
 	class WrappedLine extends View {
 

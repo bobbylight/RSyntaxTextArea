@@ -570,7 +570,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 *          <li><i>fg</i> and <i>bg</i> are the foreground and background
 	 *              colors for the scheme, and may be null (represented by
 	 *              <code>-</code>).
-	 *          <li><code>uline</code> is whether or not the font should be
+	 *          <li><code>uline</code> is whether the font should be
 	 *              underlined, and is either <code>t</code> or <code>f</code>.
 	 *          <li><code>style</code> is the <code>family,style,size</code>
 	 *              triplet described above.

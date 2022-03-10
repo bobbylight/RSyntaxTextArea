@@ -175,7 +175,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 
 
 	/**
-	 * Removes all of the highlights for a specific parser.
+	 * Removes all the highlights for a specific parser.
 	 *
 	 * @param parser The parser.
 	 */

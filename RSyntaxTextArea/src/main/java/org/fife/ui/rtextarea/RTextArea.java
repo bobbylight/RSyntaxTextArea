@@ -512,7 +512,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Returns the a real UI to install on this text area.
+	 * Returns a real UI to install on this text area.
 	 *
 	 * @return The UI.
 	 */
@@ -918,9 +918,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Returns whether or not a macro is being recorded.
+	 * Returns whether a macro is being recorded.
 	 *
-	 * @return Whether or not a macro is being recorded.
+	 * @return Whether a macro is being recorded.
 	 * @see #beginRecordingMacro()
 	 * @see #endRecordingMacro()
 	 */
@@ -1196,7 +1196,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				// Without this, in some cases we'll have to do two undos
 				// for one logical operation (for example, try editing a
 				// Java source file in an RSyntaxTextArea, and moving a line
-				// with text already on it down via Enter.  Without this
+				// with text already on it down via Enter).  Without this
 				// line, doing a single "undo" moves all later text up,
 				// but the first line moved down isn't there!  Doing a
 				// second undo puts it back.
@@ -1663,7 +1663,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * right-click popup menu's UI is updated.  The look and feel of an
 	 * <code>RTextArea</code> is independent of the Java Look and Feel, and so
 	 * this method does not change the text area itself.  Subclasses (such as
-	 * <code>RSyntaxTextArea</code> can call <code>setRTextAreaUI</code> if
+	 * <code>RSyntaxTextArea</code>) can call <code>setRTextAreaUI</code> if
 	 * they wish to install a new UI.
 	 *
 	 * @param ui This parameter is ignored.

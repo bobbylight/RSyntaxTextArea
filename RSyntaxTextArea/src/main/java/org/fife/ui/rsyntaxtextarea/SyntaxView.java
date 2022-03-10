@@ -313,7 +313,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * Provides a way to determine the next visually represented model
 	 * location that one might place a caret.  Some views may not be visible,
 	 * they might not be in the same order found in the model, or they just
-	 * might not allow access to some of the locations in the model.
+	 * might not allow access to some locations in the model.
 	 *
 	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region to render into

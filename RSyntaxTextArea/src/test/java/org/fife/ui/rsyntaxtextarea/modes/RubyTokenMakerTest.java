@@ -14,7 +14,6 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 

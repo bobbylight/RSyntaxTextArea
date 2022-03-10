@@ -536,7 +536,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		//   above the first visible y-coordinate as we're in line-wrapping
 		//   mode, but we always paint entire logical lines.
 		// - Paint that line's line number and highlight, if appropriate.
-		//   Increment y to be just below the are we just painted (i.e., the
+		//   Increment y to be just below the line we just painted (i.e., the
 		//   beginning of the next logical line's view area).
 		// - Get the ending visual position for that line.  We can now loop
 		//   back, paint this line, and continue until our y-coordinate is

@@ -32,7 +32,7 @@ import javax.swing.text.TextAction;
 public abstract class RecordableTextAction extends TextAction {
 
 	/**
-	 * Whether or not this text action should be recorded in a macro.
+	 * Whether this text action should be recorded in a macro.
 	 */
 	private boolean isRecordable;
 
@@ -200,10 +200,10 @@ public abstract class RecordableTextAction extends TextAction {
 	}
 
 	/**
-	 * Returns whether or not this action will be recorded and replayed in
+	 * Returns whether this action will be recorded and replayed in
 	 * a macro.
 	 *
-	 * @return Whether or not this action will be recorded and replayed.
+	 * @return Whether this action will be recorded and replayed.
 	 * @see #setRecordable(boolean)
 	 */
 	public boolean isRecordable() {
@@ -274,10 +274,10 @@ public abstract class RecordableTextAction extends TextAction {
 
 
 	/**
-	 * Sets whether or not this action will be recorded and replayed in
+	 * Sets whether this action will be recorded and replayed in
 	 * a macro.
 	 *
-	 * @param recordable Whether or not this action should be recorded
+	 * @param recordable Whether this action should be recorded
 	 *        and replayed.
 	 * @see #isRecordable()
 	 */

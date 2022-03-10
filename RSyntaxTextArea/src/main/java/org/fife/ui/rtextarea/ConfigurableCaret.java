@@ -32,7 +32,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 
 
 /**
- * The caret used by {@link RTextArea}.  This caret has all of the properties
+ * The caret used by {@link RTextArea}.  This caret has all the properties
  * that <code>javax.swing.text.DefaultCaret</code> does, as well as adding the
  * following niceties:
  *
@@ -65,7 +65,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	private CaretStyle style;
 
 	/**
-	 * The selection painter.  By default this paints selections with the
+	 * The selection painter.  By default, this paints selections with the
 	 * text area's selection color.
 	 */
 	private ChangeableHighlightPainter selectionPainter;
@@ -449,7 +449,7 @@ public class ConfigurableCaret extends DefaultCaret {
 				Rectangle r = mapper.modelToView(textArea, getDot());
 
 				// "Correct" the value of rect.width (takes into
-				// account caret being at EOL (and thus rect.width==1),
+				// account caret being at EOL (and thus rect.width==1)),
 				// etc.
 				// We do this even for LINE_STYLE because
 				// if they change from that caret to block/underline,

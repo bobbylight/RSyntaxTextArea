@@ -141,7 +141,7 @@ class SearchEngineTest {
 	/**
 	 * Tests <code>SearchEngine.find()</code> when searching backward.
 	 *
-	 * @param markAll Whether or not "mark all" should be enabled during the
+	 * @param markAll Whether "mark all" should be enabled during the
 	 *        test.
 	 */
 	private void testSearchEngineFindBackwardImpl(boolean markAll) {
@@ -1037,7 +1037,7 @@ class SearchEngineTest {
 		context.setReplaceWith("X");
 
 		// "o" chars to replace are everywhere - before and after
-		// the caret, and inside and outside of the range protected
+		// the caret, and inside and outside the range protected
 		// by a DocumentFilter.
 		textArea.setText(text);
 		textArea.setCaretPosition(20); // Somewhere in the middle

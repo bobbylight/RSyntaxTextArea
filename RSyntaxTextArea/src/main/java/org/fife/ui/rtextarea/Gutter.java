@@ -412,7 +412,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Returns <code>true</code> if the line numbers are enabled and visible.
 	 *
-	 * @return Whether or not line numbers are visible.
+	 * @return Whether line numbers are visible.
 	 */
 	public boolean getLineNumbersEnabled() {
 		for (int i=0; i<getComponentCount(); i++) {
@@ -439,7 +439,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Returns the additional spacing between the line number list and fold indicator.  By
 	 * default this is a small amount; if you want something larger, you can increase it.
-	 * Note this value takes effect whether or not both line numbers and the fold indicator
+	 * Note this value takes effect whether both line numbers and the fold indicator
 	 * are enabled, so use it only when both are enabled.
 	 *
 	 * @return The additional spacing.
@@ -808,9 +808,9 @@ public class Gutter extends JPanel {
 
 
 	/**
-	 * Toggles whether or not line numbers are visible.
+	 * Toggles whether line numbers are visible.
 	 *
-	 * @param enabled Whether or not line numbers should be visible.
+	 * @param enabled Whether line numbers should be visible.
 	 * @see #getLineNumbersEnabled()
 	 */
 	void setLineNumbersEnabled(boolean enabled) {
@@ -843,7 +843,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Sets additional spacing between the line number list and fold indicator.  By
 	 * default this is a small amount; if you want something larger, you can increase it.
-	 * Note this value takes effect whether or not both line numbers and the fold indicator
+	 * Note this value takes effect whether both line numbers and the fold indicator
 	 * are enabled, so use it only when both are enabled.
 	 *
 	 * @param spacing The additional spacing.  This should be {@code >= 0}.

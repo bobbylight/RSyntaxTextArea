@@ -40,7 +40,7 @@ public class ColorBackgroundPainterStrategy
 
 
 	/**
-	 * Returns whether or not the specified object is equivalent to
+	 * Returns whether the specified object is equivalent to
 	 * this one.
 	 *
 	 * @param o2 The object to which to compare.
@@ -84,7 +84,7 @@ public class ColorBackgroundPainterStrategy
 	 * Paints the background.
 	 *
 	 * @param g The graphics context.
-	 * @param bounds The bounds of the object whose backgrouns we're
+	 * @param bounds The bounds of the object whose background we're
 	 *        painting.
 	 */
 	@Override

@@ -726,7 +726,7 @@ public class TokenImpl implements Token {
 
 			fm = textArea.getFontMetricsForTokenType(token.getType());
 			if (fm == null) {
-				return rect; // Don't return null as things'll error.
+				return rect; // Don't return null as things will error.
 			}
 			char[] text = token.text;
 			int start = token.textOffset;

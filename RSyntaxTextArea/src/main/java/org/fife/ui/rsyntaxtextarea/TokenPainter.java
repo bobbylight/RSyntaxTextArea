@@ -50,7 +50,7 @@ interface TokenPainter {
 	 * @param e How to expand tabs.
 	 * @param clipStart The left boundary of the clip rectangle in which we're
 	 *        painting.  This optimizes painting by allowing us to not paint
-	 *        paint when this token is "to the left" of the clip rectangle.
+	 *        when this token is "to the left" of the clip rectangle.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
 	float paint(Token token, Graphics2D g, float x, float y,
@@ -68,7 +68,7 @@ interface TokenPainter {
 	 * @param e How to expand tabs.
 	 * @param clipStart The left boundary of the clip rectangle in which we're
 	 *        painting.  This optimizes painting by allowing us to not paint
-	 *        paint when this token is "to the left" of the clip rectangle.
+	 *        when this token is "to the left" of the clip rectangle.
 	 * @param paintBG Whether to paint the background.
 	 * @return The x-coordinate representing the end of the painted text.
 	 */
@@ -108,7 +108,7 @@ interface TokenPainter {
 	 * @param e How to expand tabs.
 	 * @param clipStart The left boundary of the clip rectangle in which we're
 	 *        painting.  This optimizes painting by allowing us to not paint
-	 *        paint when this token is "to the left" of the clip rectangle.
+	 *        when this token is "to the left" of the clip rectangle.
 	 * @param useSTC Whether to use the text area's "selected text color."
 	 * @return The x-coordinate representing the end of the painted text.
 	 */

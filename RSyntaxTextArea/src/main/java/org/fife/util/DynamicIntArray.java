@@ -291,9 +291,9 @@ public class DynamicIntArray implements Serializable {
 
 
 	/**
-	 * Returns whether or not this array object is empty.
+	 * Returns whether this array object is empty.
 	 *
-	 * @return Whether or not this array object contains no elements.
+	 * @return Whether this array object contains no elements.
 	 */
 	public boolean isEmpty() {
 		return size==0;
