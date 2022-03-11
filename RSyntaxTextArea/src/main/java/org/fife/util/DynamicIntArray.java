@@ -283,9 +283,7 @@ public class DynamicIntArray implements Serializable {
 		}
 		ensureCapacity(size+count);
 		System.arraycopy(data,offs, data,offs+count, size-offs);
-		if (value!=0) {
-			Arrays.fill(data, offs, offs+count, value);
-		}
+		Arrays.fill(data, offs, offs+count, value);
 		size += count;
 	}
 
