@@ -222,12 +222,11 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		// DefaultEditorKit).
 		ActionMap map = new ActionMapUIResource();
 		Action[] actions = textArea.getActions();
-		int n = actions.length;
 		for (Action a : actions) {
 			map.put(a.getValue(Action.NAME), a);
 		}
 
-		// Not sure if we need these; not sure they are ever called
+		// Not sure if we need these; not sure if they are ever called
 		// (check their NAMEs).
 		map.put(TransferHandler.getCutAction().getValue(Action.NAME),
 									TransferHandler.getCutAction());

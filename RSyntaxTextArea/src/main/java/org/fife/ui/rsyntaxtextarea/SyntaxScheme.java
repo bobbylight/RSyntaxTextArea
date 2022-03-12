@@ -238,7 +238,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		// Keep me fast.  Iterating over *all* syntax schemes contained is
 		// probably much slower than a "bad" hash code here.
 		int hashCode = 0;
-		int count = styles.length;
 		for (Style style : styles) {
 			if (style != null) {
 				hashCode ^= style.hashCode();

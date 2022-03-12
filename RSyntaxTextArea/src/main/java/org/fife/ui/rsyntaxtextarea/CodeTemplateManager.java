@@ -232,7 +232,6 @@ public class CodeTemplateManager {
 		if (oldXMLFiles==null) {
 			return false; // Either an IOException or it isn't a directory.
 		}
-		int count = oldXMLFiles.length;
 		for (File oldXMLFile : oldXMLFiles) {
 			/*boolean deleted = */
 			oldXMLFile.delete();

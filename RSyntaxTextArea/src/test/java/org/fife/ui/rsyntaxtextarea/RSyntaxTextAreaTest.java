@@ -729,16 +729,32 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testSyntaxEditingStyle_dontUpdateDocumentIfCalledViaSetDocument() {
 
-		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
+		// Unfortunately we can't use Mockito here because of its issues
+		// running in Java 17 (as of Mockito 4.4.0).
+		int[] stringOverloadCalled = { 0 };
+		int[] tokenMakerOverloadCalled = { 0 };
+
+		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE) {
+			@Override
+			public void setSyntaxStyle(TokenMaker tm) {
+				tokenMakerOverloadCalled[0]++;
+				super.setSyntaxStyle(tm);
+			}
+			@Override
+			public void setSyntaxStyle(String style) {
+				stringOverloadCalled[0]++;
+				super.setSyntaxStyle(style);
+			}
+		};
 		doc.setSyntaxStyle(new JavaTokenMaker());
-		RSyntaxDocument docSpy = Mockito.spy(doc);
-		RSyntaxTextArea textArea = new RSyntaxTextArea(docSpy);
+		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		// Verify the Document has its syntax style set only once, by the explicit
 		// call to the setSyntaxStyle(TokenMaker) overload.
-		// Verifying the string overload isn't called per GitHub issue 206.
-//		verify(docSpy, times(1)).setSyntaxStyle(any(TokenMaker.class));
-		verify(docSpy, times(0)).setSyntaxStyle(anyString());
+		// Verifying the string overload isn't called (after the initial call
+		// via its constructor) per GitHub issue 206.
+		Assertions.assertEquals(1, stringOverloadCalled[0]);
+		Assertions.assertEquals(1, tokenMakerOverloadCalled[0]);
 
 	}
 
