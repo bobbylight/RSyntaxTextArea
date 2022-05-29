@@ -739,7 +739,10 @@ public class LineNumberList extends AbstractGutterComponent
 					lineCount = lineCount/10;
 					count++;
 				} while (lineCount >= 10);
-				cellWidth += fontMetrics.charWidth('9')*(count+1) + 3;
+				// This was required since the current line number has a higher font size so the previous method can cause the first digit of the
+				// number to go out of bounds of the line number list.
+				// Maybe there is some better solution to this situation.
+				cellWidth += fontMetrics.charWidth('9')*(count+1) + (fontMetrics.charWidth('9') * (int)currentLineNumberFontIncreaseSize);
 			}
 		}
 
