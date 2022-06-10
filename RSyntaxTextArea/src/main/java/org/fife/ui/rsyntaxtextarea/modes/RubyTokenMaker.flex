@@ -358,8 +358,8 @@ DecimalLiteral				= ({BinaryIntLiteral}|{OctalLiteral}|{DecimalLiteral1}|{Decima
 HexLiteral					= ("0x"{HexDigit}([0-9a-zA-Z_]*{HexDigit})?)
 FloatLiteral				= ({NonzeroDigit}({DigitOrUnderscore}*{Digit})?[Ee][+-]?({Digit}({DigitOrUnderscore}*{Digit})?)?)
 
-Separator					= ([\(\)\{\}])
-Operator1					= ("::"|"."|"["|"]"|"-"|"+"|"!"|"~"|"*"|"/"|"%"|"<<"|">>"|"&"|"|"|"^")
+Separator					= ([\(\)\{\}\[\]])
+Operator1					= ("::"|"."|"-"|"+"|"!"|"~"|"*"|"/"|"%"|"<<"|">>"|"&"|"|"|"^")
 Operator2					= (">"|">="|"<"|"<="|"<=>"|"=="|"==="|"!="|"=~"|"!~"|"&&"|"||")
 Operator3					= (".."|"..."|"="|"+="|"-="|"*="|"/="|"%=")
 Operator					= ({Operator1}|{Operator2}|{Operator3})

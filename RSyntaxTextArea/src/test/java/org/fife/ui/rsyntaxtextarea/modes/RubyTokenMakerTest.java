@@ -366,7 +366,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 	void testOperators() {
 		assertAllTokensOfType(TokenTypes.OPERATOR,
 			"and", "or", "not",
-			"::", ".", "[", "]", "-", "+", "!", "~", "*", "/", "%", "<<", ">>", "&", "|", "^",
+			"::", ".", "-", "+", "!", "~", "*", "/", "%", "<<", ">>", "&", "|", "^",
 			">", ">=", "<", "<=", "<=>", "==", "===", "!=", "=~", "!~", "&&", "||",
 			"..", "...", "=", "+=", "-=", "*=", "/=", "%="
 		);
@@ -387,7 +387,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
-			"(", ")", "{", "}"
+			"(", ")", "{", "}", "[", "]"
 		);
 	}
 
