@@ -417,6 +417,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"module" |
 	"next" |
 	"nil" |
+	"private" |
+	"protected" |
+	"public" |
 	"redo" |
 	"rescue" |
 	"retry" |

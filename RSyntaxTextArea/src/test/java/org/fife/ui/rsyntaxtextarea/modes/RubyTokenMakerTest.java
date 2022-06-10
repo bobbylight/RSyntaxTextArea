@@ -69,7 +69,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testBacktickLiterals_continuedFromPirorLine() {
+	void testBacktickLiterals_continuedFromPriorLine() {
 		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
 			TokenTypes.LITERAL_BACKQUOTE,
 			"Hello world",
@@ -355,7 +355,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"alias", "BEGIN", "begin", "break", "case", "class", "def",
 			"defined", "do", "else", "elsif", "END", "end", "ensure", "for",
-			"if", "in", "module", "next", "nil", "redo", "rescue", "retry",
+			"if", "in", "module", "next", "nil", "private", "protected", "public", "redo", "rescue", "retry",
 			"return", "self", "super", "then", "undef", "unless", "until",
 			"when", "while", "yield"
 		);
