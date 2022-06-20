@@ -264,6 +264,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighbting proto files.
+	 */
+	String SYNTAX_STYLE_PROTO			= "text/proto";
+
+
+	/**
 	 * Style for highlighting properties files.
 	 */
 	String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";

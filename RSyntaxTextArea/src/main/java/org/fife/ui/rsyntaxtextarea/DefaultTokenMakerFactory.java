@@ -65,6 +65,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_NSIS,			pkg + "NSISTokenMaker");
 		putMapping(SYNTAX_STYLE_PERL,			pkg + "PerlTokenMaker");
 		putMapping(SYNTAX_STYLE_PHP,			pkg + "PHPTokenMaker");
+		putMapping(SYNTAX_STYLE_PROTO,			pkg + "ProtoTokenMaker");
 		putMapping(SYNTAX_STYLE_PROPERTIES_FILE,pkg + "PropertiesFileTokenMaker");
 		putMapping(SYNTAX_STYLE_PYTHON,			pkg + "PythonTokenMaker");
 		putMapping(SYNTAX_STYLE_RUBY,			pkg + "RubyTokenMaker");

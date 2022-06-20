@@ -60,6 +60,7 @@ class FoldParserManagerTest {
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_NSIS));
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PERL));
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PHP));
+		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PROTO));
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_PYTHON));
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_SCALA));
 		Assertions.assertNotNull(fpm.getFoldParser(SyntaxConstants.SYNTAX_STYLE_TYPESCRIPT));
