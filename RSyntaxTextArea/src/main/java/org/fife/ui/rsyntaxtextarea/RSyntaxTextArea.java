@@ -66,11 +66,11 @@ import org.fife.ui.rtextarea.*;
  *       <li>JavaScript
  *       <li>.jshintrc
  *       <li>JSP
+ *       <li>Kotlin
  *    </ul>
  *   </td>
  *   <td style="vertical-align: top">
  *    <ul>
- *       <li>Kotlin
  *       <li>LaTeX
  *       <li>Lisp
  *       <li>Lua
@@ -80,6 +80,7 @@ import org.fife.ui.rtextarea.*;
  *       <li>Perl
  *       <li>PHP
  *       <li>Properties files
+ *       <li>Protobuf files
  *       <li>Python
  *       <li>Ruby
  *       <li>SAS
@@ -112,7 +113,7 @@ import org.fife.ui.rtextarea.*;
  * bookmarks easily to your text area.
  *
  * @author Robert Futrell
- * @version 3.1.6
+ * @version 3.2.1
  * @see TextEditorPane
  */
 public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
