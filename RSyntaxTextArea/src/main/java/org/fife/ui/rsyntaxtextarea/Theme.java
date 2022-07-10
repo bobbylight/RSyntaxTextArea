@@ -890,7 +890,7 @@ public class Theme {
 					}
 
 					// RSTA delegates to baseFont if a scheme has no font
-					if (theme.scheme.getStyle(index).font == theme.baseFont) {
+					if (theme.baseFont.equals(theme.scheme.getStyle(index).font)) {
 						theme.scheme.getStyle(index).font = null;
 					}
 
