@@ -889,6 +889,11 @@ public class Theme {
 							orig.deriveFont(style);
 					}
 
+					// RSTA delegates to baseFont if a scheme has no font
+					if (theme.scheme.getStyle(index).font == theme.baseFont) {
+						theme.scheme.getStyle(index).font = null;
+					}
+
 					String ulineStr = attrs.getValue("underline");
 					if (ulineStr!=null) {
 						boolean uline = Boolean.parseBoolean(ulineStr);
