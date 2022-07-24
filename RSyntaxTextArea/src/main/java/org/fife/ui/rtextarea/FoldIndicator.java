@@ -647,6 +647,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	public void setFoldIconBackground(Color bg) {
 		foldIconBackground = bg;
+		repaint();
 	}
 
 

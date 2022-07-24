@@ -92,8 +92,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * Changes the "base font" for this syntax scheme.  This is called by
 	 * <code>RSyntaxTextArea</code> when its font changes via
 	 * <code>setFont()</code>.  This looks for tokens that use a derivative of
-	 * the text area's old font (but bolded and/or italicized) and make them
-	 * use the new font with those stylings instead.  This is desirable because
+	 * the text area's old font (but bolded and/or italicized) and makes them
+	 * use the new font with those styles instead.  This is desirable because
 	 * most programmers prefer a single font to be used in their text editor,
 	 * but might want bold (say for keywords) or italics.
 	 *
