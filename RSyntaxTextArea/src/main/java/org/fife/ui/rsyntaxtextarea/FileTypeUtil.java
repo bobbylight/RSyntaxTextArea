@@ -426,6 +426,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_PERL, "*.perl", "*.pl", "*.pm");
 		initFiltersImpl(map, SYNTAX_STYLE_PHP, "*.php");
 		initFiltersImpl(map, SYNTAX_STYLE_PROPERTIES_FILE, "*.properties");
+		initFiltersImpl(map, SYNTAX_STYLE_PROTO, "*.proto");
 		initFiltersImpl(map, SYNTAX_STYLE_PYTHON, "*.py");
 		initFiltersImpl(map, SYNTAX_STYLE_RUBY, "*.rb", "Vagrantfile");
 		initFiltersImpl(map, SYNTAX_STYLE_SAS, "*.sas");
