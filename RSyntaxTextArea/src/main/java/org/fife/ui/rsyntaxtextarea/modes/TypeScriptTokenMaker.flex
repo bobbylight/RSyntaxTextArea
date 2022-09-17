@@ -253,9 +253,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "//", null };
@@ -539,6 +536,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	// ECMA and TypeScript keywords
+	"async" |
+	"await" |
 	"break" |
 	"case" |
 	"catch" |
@@ -561,6 +560,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"instanceof" |
 	"module" |
 	"new" |
+	"of" |
 	"super" |
 	"switch" |
 	"this" |
@@ -570,7 +570,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"var" |
 	"void" |
 	"while" |
-	"with"						{ addToken(Token.RESERVED_WORD); }
+	"with" |
+	"yield"                    { addToken(Token.RESERVED_WORD); }
 	"return"					{ addToken(Token.RESERVED_WORD_2); }
 	
 	//e4X

@@ -273,9 +273,6 @@ import org.fife.ui.rsyntaxtextarea.*;
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String[] getLineCommentStartAndEnd(int languageIndex) {
         return new String[] { "//", null };
@@ -585,22 +582,43 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 
-	// ECMA 3+ keywords.
+	// Keywords
+	"async" |
+	"await" |
 	"break" |
+	"case" |
+	"catch"	|
+	"class"	|
+	"const"	|
 	"continue" |
+	"debugger" |
 	"delete" |
+	"do" |
 	"else" |
+	"export" |
+	"extends" |
+	"finally" |
 	"for" |
 	"function" |
 	"if" |
+	"import" |
 	"in" |
+	"instanceof" |
 	"new" |
+	"null" |
+	"of" |
+	"static" |
+	"super" |
+	"switch" |
 	"this" |
+	"throw" |
+	"try" |
 	"typeof" |
 	"var" |
 	"void" |
 	"while" |
-	"with"						{ addToken(Token.RESERVED_WORD); }
+	"with" |
+    "yield"                     { addToken(Token.RESERVED_WORD); }
 	"return"					{ addToken(Token.RESERVED_WORD_2); }
 	
 	//e4X
@@ -614,25 +632,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"abstract"					{ addToken(Token.RESERVED_WORD); }
 	"boolean"						{ addToken(Token.DATA_TYPE); }
 	"byte"						{ addToken(Token.DATA_TYPE); }
-	"case"						{ addToken(Token.RESERVED_WORD); }
-	"catch"						{ addToken(Token.RESERVED_WORD); }
 	"char"						{ addToken(Token.DATA_TYPE); }
-	"class"						{ addToken(Token.RESERVED_WORD); }
-	"const"						{ addToken(Token.RESERVED_WORD); }
-	"debugger"					{ addToken(Token.RESERVED_WORD); }
 	"default"						{ addToken(Token.RESERVED_WORD); }
-	"do"							{ addToken(Token.RESERVED_WORD); }
 	"double"						{ addToken(Token.DATA_TYPE); }
 	"enum"						{ addToken(Token.RESERVED_WORD); }
-	"export"						{ addToken(Token.RESERVED_WORD); }
-	"extends"						{ addToken(Token.RESERVED_WORD); }
 	"final"						{ addToken(Token.RESERVED_WORD); }
-	"finally"						{ addToken(Token.RESERVED_WORD); }
 	"float"						{ addToken(Token.DATA_TYPE); }
 	"goto"						{ addToken(Token.RESERVED_WORD); }
 	"implements"					{ addToken(Token.RESERVED_WORD); }
-	"import"						{ addToken(Token.RESERVED_WORD); }
-	"instanceof"					{ addToken(Token.RESERVED_WORD); }
 	"int"						{ addToken(Token.DATA_TYPE); }
 	"interface"					{ addToken(Token.RESERVED_WORD); }
 	"long"						{ addToken(Token.DATA_TYPE); }
@@ -642,16 +649,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"protected"					{ addToken(Token.RESERVED_WORD); }
 	"public"						{ addToken(Token.RESERVED_WORD); }
 	"short"						{ addToken(Token.DATA_TYPE); }
-	"static"						{ addToken(Token.RESERVED_WORD); }
-	"super"						{ addToken(Token.RESERVED_WORD); }
-	"switch"						{ addToken(Token.RESERVED_WORD); }
 	"synchronized"					{ addToken(Token.RESERVED_WORD); }
-	"throw"						{ addToken(Token.RESERVED_WORD); }
 	"throws"						{ addToken(Token.RESERVED_WORD); }
 	"transient"					{ addToken(Token.RESERVED_WORD); }
-	"try"						{ addToken(Token.RESERVED_WORD); }
 	"volatile"					{ addToken(Token.RESERVED_WORD); }
-	"null"						{ addToken(Token.RESERVED_WORD); }
 
 	// Literals.
 	"false" |

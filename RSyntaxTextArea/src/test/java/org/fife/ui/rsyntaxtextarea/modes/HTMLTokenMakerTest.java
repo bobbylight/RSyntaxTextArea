@@ -1168,6 +1168,10 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			// minor bug/performance thing
 			"// Hello world http://www.sas.com",
 			"// Hello world http://www.sas.com extra",
+			"// Hello world https://www.sas.com",
+			"// Hello world www.sas.com",
+			"// Hello world ftp://sas.com",
+			"// Hello world file://test.txt",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -1181,7 +1185,6 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			// Note: The 0-length token at the end of the first example is a
@@ -1221,11 +1224,11 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, JS_PREV_TOKEN_TYPE, 0);
 
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
+		String[] numbers = code.split(" +");
+		for (int i = 0; i < numbers.length; i++) {
+			Assertions.assertEquals(numbers[i], token.getLexeme());
 			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_FLOAT, token.getType());
-			if (i < keywords.length - 1) {
+			if (i < numbers.length - 1) {
 				token = token.getNextToken();
 				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
 				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
@@ -1303,10 +1306,11 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testJS_Keywords() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			JS_PREV_TOKEN_TYPE,
+			"async", "await",
 			"break", "case", "catch", "class", "const", "continue",
 			"debugger", "default", "delete", "do", "else", "export", "extends", "finally", "for", "function", "if",
-			"import", "in", "instanceof", "let", "new", "super", "switch",
-			"this", "throw", "try", "typeof", "void", "while", "with",
+			"import", "in", "instanceof", "let", "new", "of", "super", "switch",
+			"this", "throw", "try", "typeof", "void", "while", "with", "yield",
 			"NaN", "Infinity",
 			"let" // As of 1.7, which is our default version
 		);
