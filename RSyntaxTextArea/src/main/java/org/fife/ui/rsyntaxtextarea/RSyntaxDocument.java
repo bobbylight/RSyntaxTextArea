@@ -401,7 +401,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *        &gt;= 0.
 	 * @return A token list representing the specified line.
 	 */
-	public final Token getTokenListForLine(int line) {
+	public Token getTokenListForLine(int line) {
 
 		tokenRetrievalCount++;
 		if (line==lastLine && cachedTokenList!=null) {
