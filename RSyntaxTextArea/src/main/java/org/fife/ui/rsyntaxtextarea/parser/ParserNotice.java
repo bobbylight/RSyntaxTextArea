@@ -153,7 +153,7 @@ public interface ParserNotice extends Comparable<ParserNotice> {
 		 */
 		ERROR(0);
 
-		private int value;
+		private final int value;
 
 		Level(int value) {
 			this.value = value;

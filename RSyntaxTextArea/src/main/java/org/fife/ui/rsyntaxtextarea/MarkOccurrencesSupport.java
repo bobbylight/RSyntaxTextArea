@@ -130,8 +130,6 @@ class MarkOccurrencesSupport implements CaretListener, ActionListener {
 
 			} finally {
 				doc.readUnlock();
-				//time = System.currentTimeMillis() - time;
-				//System.out.println("MarkOccurrencesSupport took: " + time + " ms");
 			}
 
 		}

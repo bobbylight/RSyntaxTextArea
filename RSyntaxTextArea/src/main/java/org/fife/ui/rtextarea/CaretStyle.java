@@ -9,7 +9,7 @@ package org.fife.ui.rtextarea;
 
 /**
  * Provides various ways to render a caret such as {@link ConfigurableCaret}..
- *
+ * <p>
  * Supported renderings include:
  *
  * <ol>

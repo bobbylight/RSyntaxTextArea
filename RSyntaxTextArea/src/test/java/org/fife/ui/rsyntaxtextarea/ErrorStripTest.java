@@ -25,14 +25,13 @@ import java.awt.event.MouseEvent;
 @ExtendWith(SwingRunnerExtension.class)
 class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
-	private RSyntaxTextArea textArea;
 	private ErrorStrip strip;
 
 
 	@BeforeEach
 	void setUp() {
 
-		textArea = createTextArea();
+		RSyntaxTextArea textArea = createTextArea();
 
 		// Hack to highlight some "marked occurrence" tokens for coverage
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();

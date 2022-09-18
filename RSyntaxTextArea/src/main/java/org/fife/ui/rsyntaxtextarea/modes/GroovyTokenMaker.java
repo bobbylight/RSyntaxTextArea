@@ -5041,7 +5041,7 @@ public class GroovyTokenMaker extends AbstractJFlexCTokenMaker {
 	 * @param t The token to check, which may be <code>null</code>.
 	 * @return Whether a regular expression token may follow this one.
 	 */
-	private static final boolean regexCanFollow(Token t) {
+	private static boolean regexCanFollow(Token t) {
 		char ch;
 		return t==null ||
 				//t.isOperator() ||

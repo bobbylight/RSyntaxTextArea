@@ -715,8 +715,6 @@ public abstract class RTextAreaBase extends JTextArea {
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		//long startTime = System.currentTimeMillis();
-
 		backgroundPainter.paint(g, getVisibleRect());
 
 		// Paint the main part of the text area.
@@ -730,9 +728,6 @@ public abstract class RTextAreaBase extends JTextArea {
 				scratchGraphics.dispose();
 			}
 		}
-
-		//long endTime = System.currentTimeMillis();
-		//System.err.println(endTime-startTime);
 
 	}
 

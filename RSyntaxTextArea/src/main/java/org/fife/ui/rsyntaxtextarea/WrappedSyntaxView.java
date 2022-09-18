@@ -73,11 +73,6 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	private TokenImpl tempToken;
 	private TokenImpl lineCountTempToken;
 
-	// /**
-	//  * The end-of-line marker.
-	//  */
-	// private static final char[] eolMarker = { '.' };
-
 	/**
 	 * The width of this view cannot be below this amount, as if the width
 	 * is ever 0 (really a bug), we'll go into an infinite loop.

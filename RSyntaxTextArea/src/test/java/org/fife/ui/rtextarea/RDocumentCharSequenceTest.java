@@ -65,9 +65,7 @@ public class RDocumentCharSequenceTest {
 	@Test
 	void testCharAt_error_negativeIndex() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.charAt(-1);
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.charAt(-1));
 	}
 
 
