@@ -655,13 +655,17 @@ public class Gutter extends JPanel {
 
 	/**
 	 * Sets the icons to use to represent collapsed and expanded folds.
+	 * This method can be used for further customization after setting this
+	 * component's general appearance via
+	 * {@link #setFoldIndicatorStyle(FoldIndicatorStyle)}.
 	 *
 	 * @param collapsedIcon The collapsed fold icon.  This cannot be
 	 *        <code>null</code>.
 	 * @param expandedIcon The expanded fold icon.  This cannot be
 	 *        <code>null</code>.
+	 * @see #setFoldIndicatorStyle(FoldIndicatorStyle)
 	 */
-	public void setFoldIcons(Icon collapsedIcon, Icon expandedIcon) {
+	public void setFoldIcons(FoldIndicatorIcon collapsedIcon, FoldIndicatorIcon expandedIcon) {
 		if (foldIndicator!=null) {
 			foldIndicator.setFoldIcons(collapsedIcon, expandedIcon);
 		}
@@ -683,6 +687,24 @@ public class Gutter extends JPanel {
 				remove(foldIndicator);
 			}
 			revalidate();
+		}
+	}
+
+
+	/**
+	 * Toggles the presentation of the fold region of this component.
+	 * This method sets the icons used for fold regions to default values,
+	 * amongst other configuration. To further customize those icons,
+	 * see {@link #setFoldIcons(Icon, Icon)}.
+	 *
+	 * @param style The new presentation style.
+	 * @see #setFoldIcons(Icon, Icon)
+	 */
+	public void setFoldIndicatorStyle(FoldIndicatorStyle style) {
+		if (foldIndicator != null) {
+			foldIndicator.setStyle(style);
+			revalidate();
+			repaint();
 		}
 	}
 

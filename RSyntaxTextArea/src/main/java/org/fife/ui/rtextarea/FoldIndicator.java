@@ -9,20 +9,12 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.Icon;
-import javax.swing.JToolTip;
-import javax.swing.ToolTipManager;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
@@ -78,12 +70,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 	/**
 	 * The icon used for collapsed folds.
 	 */
-	private Icon collapsedFoldIcon;
+	private FoldIndicatorIcon collapsedFoldIcon;
 
 	/**
 	 * The icon used for expanded folds.
 	 */
-	private Icon expandedFoldIcon;
+	private FoldIndicatorIcon expandedFoldIcon;
 
 	/**
 	 * Used while painting; global flag to denote whether the mouse is over
@@ -104,6 +96,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private boolean showFoldRegionTips;
 
 	/**
+	 * Whether the range of lines covered by an expanded, armed fold icon
+	 * should be visually shown.
+	 */
+	private boolean showArmedFoldRange;
+
+	/**
 	 * Optional additional left margin.
 	 */
 	private int additionalLeftMargin;
@@ -122,11 +120,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * Listens for events in this component.
 	 */
 	private Listener listener;
-
-	/**
-	 * Width of this component.
-	 */
-	private static final int WIDTH = 12;
 
 
 	public FoldIndicator(RTextArea textArea) {
@@ -223,8 +216,21 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 	@Override
 	public Dimension getPreferredSize() {
+		int iconWidth = Math.max(expandedFoldIcon.getIconWidth(), collapsedFoldIcon.getIconWidth());
 		int h = textArea!=null ? textArea.getHeight() : 100; // Arbitrary
-		return new Dimension(WIDTH + additionalLeftMargin, h);
+		return new Dimension(iconWidth + 4 + additionalLeftMargin, h);
+	}
+
+
+	/**
+	 * Returns whether a line should be drawn to show the range of lines contained
+	 * in an expanded fold when it is armed (hovered over).
+	 *
+	 * @return Whether to show an armed fold's range.
+	 * @see #setShowArmedFoldRange(boolean)
+	 */
+	public boolean getShowArmedFoldRange() {
+		return showArmedFoldRange;
 	}
 
 
@@ -340,8 +346,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		super.init();
 		setForeground(DEFAULT_FOREGROUND);
 		setFoldIconBackground(DEFAULT_FOLD_BACKGROUND);
-		collapsedFoldIcon = new FoldIcon(true);
-		expandedFoldIcon = new FoldIcon(false);
+		setStyle(FoldIndicatorStyle.CLASSIC);
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
 		setShowCollapsedRegionToolTips(true);
@@ -406,15 +411,16 @@ public class FoldIndicator extends AbstractGutterComponent {
 		topLine += fm.getHiddenLineCountAbove(topLine, true);
 
 		int width = getWidth();
-		int x = width - 10;
 		int line = topLine;
-		boolean paintingOutlineLine = foldWithOutlineShowing!=null &&
-				foldWithOutlineShowing.containsLine(line);
+		boolean paintingOutlineLine = getShowArmedFoldRange() &&
+			foldWithOutlineShowing!=null &&
+			foldWithOutlineShowing.containsLine(line);
 
 		while (y<visibleRect.y+visibleRect.height) {
+
 			if (paintingOutlineLine) {
 				g.setColor(getForeground());
-				int w2 = width - WIDTH / 2;
+				int w2 = width / 2;
 				if (line==foldWithOutlineShowing.getEndLine()) {
 					int y2 = y+cellHeight/2;
 					g.drawLine(w2,y, w2,y2);
@@ -425,21 +431,25 @@ public class FoldIndicator extends AbstractGutterComponent {
 					g.drawLine(w2,y, w2,y+cellHeight);
 				}
 			}
+
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
 				if (fold==foldWithOutlineShowing) {
 					if (!fold.isCollapsed()) {
-						g.setColor(getForeground());
-						int w2 = width - WIDTH / 2;
-						g.drawLine(w2,y+cellHeight/2, w2,y+cellHeight);
-						paintingOutlineLine = true;
+						paintingOutlineLine = getShowArmedFoldRange();
+						if (paintingOutlineLine) {
+							g.setColor(getForeground());
+							int w2 = width / 2;
+							g.drawLine(w2, y + cellHeight / 2, w2, y + cellHeight);
+						}
 					}
 					if (mouseOverFoldIcon) {
 						paintFoldArmed = true;
 					}
 				}
 				if (fold.isCollapsed()) {
-					collapsedFoldIcon.paintIcon(this, g, x, y);
+					int x = (width - collapsedFoldIcon.getIconWidth()) / 2;
+					paintIcon(collapsedFoldIcon, g, x, y);
 					// Skip to next line to paint, taking extra care for lines with
 					// block ends and begins together, e.g. "} else {"
 					do {
@@ -455,7 +465,8 @@ public class FoldIndicator extends AbstractGutterComponent {
 					} while (fold!=null && fold.isCollapsed());
 				}
 				else {
-					expandedFoldIcon.paintIcon(this, g, x, y);
+					int x = (width - expandedFoldIcon.getIconWidth()) / 2;
+					paintIcon(expandedFoldIcon, g, x, y);
 				}
 				paintFoldArmed = false;
 			}
@@ -526,10 +537,10 @@ public class FoldIndicator extends AbstractGutterComponent {
 		y += (cellHeight-collapsedFoldIcon.getIconHeight())/2;
 
 		int visibleBottom = visibleRect.y + visibleRect.height;
-		int x = width - 10;
 		int line = topLine;
-		boolean paintingOutlineLine = foldWithOutlineShowing!=null &&
-				foldWithOutlineShowing.containsLine(line);
+		boolean paintingOutlineLine = getShowArmedFoldRange() &&
+			foldWithOutlineShowing!=null &&
+			foldWithOutlineShowing.containsLine(line);
 		int lineCount = root.getElementCount();
 
 		while (y<visibleBottom && line<lineCount) {
@@ -539,7 +550,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 			if (paintingOutlineLine) {
 				g.setColor(getForeground());
-				int w2 = width - WIDTH / 2;
+				int w2 = width / 2;
 				if (line==foldWithOutlineShowing.getEndLine()) {
 					int y2 = y + curLineH - cellHeight/2;
 					g.drawLine(w2,y, w2,y2);
@@ -550,27 +561,32 @@ public class FoldIndicator extends AbstractGutterComponent {
 					g.drawLine(w2,y, w2,y+curLineH);
 				}
 			}
+
 			Fold fold = fm.getFoldForLine(line);
 			if (fold!=null) {
 				if (fold==foldWithOutlineShowing) {
 					if (!fold.isCollapsed()) {
-						g.setColor(getForeground());
-						int w2 = width - WIDTH / 2;
-						g.drawLine(w2,y+cellHeight/2, w2,y+curLineH);
-						paintingOutlineLine = true;
+						paintingOutlineLine = getShowArmedFoldRange();
+						if (paintingOutlineLine) {
+							g.setColor(getForeground());
+							int w2 = width / 2;
+							g.drawLine(w2, y + cellHeight / 2, w2, y + curLineH);
+						}
 					}
 					if (mouseOverFoldIcon) {
 						paintFoldArmed = true;
 					}
 				}
 				if (fold.isCollapsed()) {
-					collapsedFoldIcon.paintIcon(this, g, x, y);
+					int x = (width - collapsedFoldIcon.getIconWidth()) / 2;
+					paintIcon(collapsedFoldIcon, g, x, y);
 					y += LineNumberList.getChildViewBounds(v, line,
 								visibleEditorRect).height;
 					line += fold.getLineCount() + 1;
 				}
 				else {
-					expandedFoldIcon.paintIcon(this, g, x, y);
+					int x = (width - expandedFoldIcon.getIconWidth()) / 2;
+					paintIcon(expandedFoldIcon, g, x, y);
 					y += curLineH;
 					line++;
 				}
@@ -582,6 +598,12 @@ public class FoldIndicator extends AbstractGutterComponent {
 			}
 		}
 
+	}
+
+
+	private void paintIcon(FoldIndicatorIcon icon, Graphics g, int x, int y) {
+		icon.setArmed(paintFoldArmed);
+		icon.paintIcon(this, g, x, y);
 	}
 
 
@@ -653,17 +675,35 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 	/**
 	 * Sets the icons to use to represent collapsed and expanded folds.
+	 * This method can be used for further customization after setting this
+	 * component's general appearance via {@link #setStyle(FoldIndicatorStyle)}.
 	 *
 	 * @param collapsedIcon The collapsed fold icon.  This cannot be
 	 *        <code>null</code>.
 	 * @param expandedIcon The expanded fold icon.  This cannot be
 	 *        <code>null</code>.
+	 * @see #setStyle(FoldIndicatorStyle)
 	 */
-	public void setFoldIcons(Icon collapsedIcon, Icon expandedIcon) {
+	public void setFoldIcons(FoldIndicatorIcon collapsedIcon, FoldIndicatorIcon expandedIcon) {
 		this.collapsedFoldIcon = collapsedIcon;
 		this.expandedFoldIcon = expandedIcon;
 		revalidate(); // Icons may be different sizes.
 		repaint();
+	}
+
+
+	/**
+	 * Toggles whether a line should be drawn to show the range of lines contained
+	 * in an expanded fold when it is armed (hovered over).
+	 *
+	 * @param show Whether to show an armed fold's range.
+	 * @see #getShowArmedFoldRange()
+	 */
+	public void setShowArmedFoldRange(boolean show) {
+		if (show != showArmedFoldRange) {
+			showArmedFoldRange = show;
+			repaint();
+		}
 	}
 
 
@@ -688,6 +728,31 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 
 	/**
+	 * Toggles the presentation of this component. This method sets the icons used
+	 * for fold regions to default values, amongst other configuration. To further
+	 * customize these icons, see {@link #setFoldIcons(FoldIndicatorIcon, FoldIndicatorIcon)}.
+	 *
+	 * @param style The new presentation style.
+	 * @see #setFoldIcons(FoldIndicatorIcon, FoldIndicatorIcon)
+	 */
+	void setStyle(FoldIndicatorStyle style) {
+
+		switch (style) {
+
+			case CLASSIC:
+				setFoldIcons(new PlusMinusFoldIcon(true), new PlusMinusFoldIcon(false));
+				setShowArmedFoldRange(true);
+				break;
+
+			case MODERN:
+				setFoldIcons(new ChevronFoldIcon(true), new ChevronFoldIcon(false));
+				setShowArmedFoldRange(false);
+				break;
+		}
+	}
+
+
+	/**
 	 * Overridden so we can track when code folding is enabled/disabled.
 	 */
 	@Override
@@ -701,46 +766,6 @@ public class FoldIndicator extends AbstractGutterComponent {
 			this.textArea.addPropertyChangeListener(
 					RSyntaxTextArea.CODE_FOLDING_PROPERTY, listener);
 		}
-	}
-
-
-	/**
-	 * The default +/- icon for expanding and collapsing folds.
-	 */
-	private class FoldIcon implements Icon {
-
-		private boolean collapsed;
-
-		FoldIcon(boolean collapsed) {
-			this.collapsed = collapsed;
-		}
-
-		@Override
-		public int getIconHeight() {
-			return 8;
-		}
-
-		@Override
-		public int getIconWidth() {
-			return 8;
-		}
-
-		@Override
-		public void paintIcon(Component c, Graphics g, int x, int y) {
-			Color bg = foldIconBackground;
-			if (paintFoldArmed && foldIconArmedBackground != null) {
-				bg = foldIconArmedBackground;
-			}
-			g.setColor(bg);
-			g.fillRect(x,y, 8,8);
-			g.setColor(getForeground());
-			g.drawRect(x,y, 8,8);
-			g.drawLine(x+2,y+4, x+2+4,y+4);
-			if (collapsed) {
-				g.drawLine(x+4,y+2, x+4,y+6);
-			}
-		}
-
 	}
 
 

@@ -17,7 +17,7 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextScrollPaneTest {
+class RTextScrollPaneTest {
 
 
 	@Test

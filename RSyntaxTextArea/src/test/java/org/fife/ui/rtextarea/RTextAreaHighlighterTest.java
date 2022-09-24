@@ -21,7 +21,7 @@ import java.util.List;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RTextAreaHighlighterTest extends AbstractRTextAreaTest {
+class RTextAreaHighlighterTest extends AbstractRTextAreaTest {
 
 	private RTextArea textArea;
 	private RTextAreaHighlighter h;

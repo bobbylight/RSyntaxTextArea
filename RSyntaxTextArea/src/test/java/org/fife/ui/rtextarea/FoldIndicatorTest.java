@@ -42,6 +42,14 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetPreferredSize() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Assertions.assertEquals(textArea.getHeight(), fi.getPreferredSize().height);
+	}
+
+
+	@Test
 	void testGetSetFoldIconBackground() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
@@ -60,14 +68,6 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertEquals(Color.RED, fi.getFoldIconArmedBackground());
 		fi.setFoldIconArmedBackground(Color.GREEN);
 		Assertions.assertEquals(Color.GREEN, fi.getFoldIconArmedBackground());
-	}
-
-
-	@Test
-	void testGetPreferredSize() {
-		RSyntaxTextArea textArea = createTextArea();
-		FoldIndicator fi = new FoldIndicator(textArea);
-		Assertions.assertEquals(textArea.getHeight(), fi.getPreferredSize().height);
 	}
 
 
@@ -177,7 +177,7 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		hackyGutter.add(fi);
 
 		// Collapse the top-level fold, and create a synthetic mouse-over
-		// event over its fold indicataor.
+		// event over its fold indicator.
 		textArea.getFoldManager().getFold(0).setCollapsed(true);
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
 
@@ -190,8 +190,17 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 			"<font face=\"\\w+\" color=\"#dc009c\">&#34;hi&#34;</font>" +
 			"<font face=\"\\w+\" color=\"#ff0000\">\\)</font>" +
 			"<font face=\"\\w+\" color=\"black\">;</font><br>" +
-			"<font face=\"\\w+\" color=\"#ff0000\">\\}</font><br>";
+			"<font face=\"\\w+\" color=\"#ff0000\">}</font><br>";
 		Assertions.assertTrue(fi.getToolTipText(e).matches(expected));
+	}
+
+
+	@Test
+	void testPaintComponent_classicLook() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		fi.setStyle(FoldIndicatorStyle.CLASSIC);
+		fi.paintComponent(createTestGraphics());
 	}
 
 
@@ -217,9 +226,18 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testPaintComponent_modernLook() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		fi.setStyle(FoldIndicatorStyle.MODERN);
+		fi.paintComponent(createTestGraphics());
+	}
+
+
+	@Test
 	void testSetFoldIcons() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		fi.setFoldIcons(new EmptyTestIcon(), new EmptyTestIcon());
+		fi.setFoldIcons(new EmptyTestFoldIndicatorIcon(true), new EmptyTestFoldIndicatorIcon(false));
 	}
 }

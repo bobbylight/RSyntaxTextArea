@@ -16,7 +16,7 @@ import javax.swing.text.BadLocationException;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RDocumentCharSequenceTest {
+class RDocumentCharSequenceTest {
 
 	private RDocument doc;
 

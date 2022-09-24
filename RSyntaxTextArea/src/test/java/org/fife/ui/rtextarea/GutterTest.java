@@ -569,7 +569,7 @@ class GutterTest extends AbstractRTextAreaTest {
 	void testSetFoldIcons() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon icon = new EmptyTestIcon();
+		EmptyTestFoldIndicatorIcon icon = new EmptyTestFoldIndicatorIcon(true);
 		gutter.setFoldIcons(icon, icon);
 	}
 
@@ -614,8 +614,8 @@ class GutterTest extends AbstractRTextAreaTest {
 	void testSetFoldIcons_Simple() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Icon collapsedIcon = new EmptyTestIcon();
-		Icon expandedIcon = new EmptyTestIcon();
+		EmptyTestFoldIndicatorIcon collapsedIcon = new EmptyTestFoldIndicatorIcon(true);
+		EmptyTestFoldIndicatorIcon expandedIcon = new EmptyTestFoldIndicatorIcon(false);
 		gutter.setFoldIcons(collapsedIcon, expandedIcon);
 		// Not much we can verify here
 	}
@@ -655,4 +655,6 @@ class GutterTest extends AbstractRTextAreaTest {
 		border.setEdges(2, 2, 2, 2);
 		Assertions.assertEquals(new Insets(2, 2, 2, 2), border.getBorderInsets());
 	}
+
+
 }

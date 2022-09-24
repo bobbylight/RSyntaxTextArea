@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -21,6 +22,7 @@ import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.*;
+import org.fife.ui.rtextarea.FoldIndicatorStyle;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -126,6 +128,16 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		mb.add(menu);
 
 		menu = new JMenu("View");
+		JMenu foldStyleSubMenu = new JMenu("Fold Region Style");
+		JRadioButtonMenuItem classicStyleItem = new JRadioButtonMenuItem(new FoldStyleAction(FoldIndicatorStyle.CLASSIC));
+		classicStyleItem.setSelected(true);
+		JRadioButtonMenuItem modernStyleItem = new JRadioButtonMenuItem(new FoldStyleAction(FoldIndicatorStyle.MODERN));
+		bg = new ButtonGroup();
+		bg.add(classicStyleItem);
+		bg.add(modernStyleItem);
+		foldStyleSubMenu.add(classicStyleItem);
+		foldStyleSubMenu.add(modernStyleItem);
+		menu.add(foldStyleSubMenu);
 		JCheckBoxMenuItem cbItem = new JCheckBoxMenuItem(new CodeFoldingAction());
 		cbItem.setSelected(true);
 		menu.add(cbItem);
@@ -371,6 +383,27 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			textArea.setCodeFoldingEnabled(!textArea.isCodeFoldingEnabled());
+		}
+
+	}
+
+	/**
+	 * Changes the appearance of the fold indicator region of the gutter.
+	 */
+	private class FoldStyleAction extends AbstractAction {
+
+		private final FoldIndicatorStyle style;
+
+		FoldStyleAction(FoldIndicatorStyle style) {
+			this.style = style;
+			String name = style.name().charAt(0) +
+				style.name().substring(1).toLowerCase(Locale.getDefault());
+			putValue(NAME, name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			scrollPane.getGutter().setFoldIndicatorStyle(style);
 		}
 
 	}
