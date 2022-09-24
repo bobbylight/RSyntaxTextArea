@@ -695,10 +695,10 @@ public class Gutter extends JPanel {
 	 * Toggles the presentation of the fold region of this component.
 	 * This method sets the icons used for fold regions to default values,
 	 * amongst other configuration. To further customize those icons,
-	 * see {@link #setFoldIcons(Icon, Icon)}.
+	 * see {@link #setFoldIcons(FoldIndicatorIcon, FoldIndicatorIcon)}.
 	 *
 	 * @param style The new presentation style.
-	 * @see #setFoldIcons(Icon, Icon)
+	 * @see #setFoldIcons(FoldIndicatorIcon, FoldIndicatorIcon)
 	 */
 	public void setFoldIndicatorStyle(FoldIndicatorStyle style) {
 		if (foldIndicator != null) {

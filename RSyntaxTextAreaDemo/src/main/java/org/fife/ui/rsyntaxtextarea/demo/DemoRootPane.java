@@ -129,7 +129,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		menu = new JMenu("View");
 		JMenu foldStyleSubMenu = new JMenu("Fold Region Style");
-		JRadioButtonMenuItem classicStyleItem = new JRadioButtonMenuItem(new FoldStyleAction(FoldIndicatorStyle.CLASSIC));
+		JRadioButtonMenuItem classicStyleItem = new JRadioButtonMenuItem(
+			new FoldStyleAction(FoldIndicatorStyle.CLASSIC));
 		classicStyleItem.setSelected(true);
 		JRadioButtonMenuItem modernStyleItem = new JRadioButtonMenuItem(new FoldStyleAction(FoldIndicatorStyle.MODERN));
 		bg = new ButtonGroup();
