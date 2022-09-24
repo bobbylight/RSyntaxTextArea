@@ -130,6 +130,12 @@ public class Gutter extends JPanel {
 	private FoldIndicator foldIndicator;
 
 	/**
+	 * Whether this gutter, or any child components, are armed. Used
+	 * internally for e.g. the fold indicator's appearance.
+	 */
+	private boolean armed;
+
+	/**
 	 * Listens for events in our text area.
 	 */
 	private transient TextAreaListener listener;
@@ -169,22 +175,6 @@ public class Gutter extends JPanel {
 		setBackground(bg!=null ? bg : Color.WHITE);
 
 	}
-
-
-	private boolean armed;
-	public boolean isArmed() {
-		return armed;
-	}
-
-	public void setArmed(boolean armed) {
-		if (armed != this.armed) {
-			this.armed = armed;
-			if (foldIndicator != null) {
-				foldIndicator.repaint();
-			}
-		}
-	}
-
 
 
 	/**
@@ -494,6 +484,18 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns whether this gutter is "armed", that is, any child components
+	 * are armed. This is used by the internal API and should not be called.
+	 *
+	 * @return Whether the gutter is armed.
+	 * @see #setArmed(boolean)
+	 */
+	public boolean isArmed() {
+		return armed;
+	}
+
+
+	/**
 	 * Returns whether the fold indicator is enabled.
 	 *
 	 * @return Whether the fold indicator is enabled.
@@ -584,6 +586,23 @@ public class Gutter extends JPanel {
 	 */
 	private void setActiveLineRange(int startLine, int endLine) {
 		iconArea.setActiveLineRange(startLine, endLine);
+	}
+
+
+	/**
+	 * Toggles whether this gutter is "armed", that is, any child components
+	 * are armed. This is used by the internal API and should not be called.
+	 *
+	 * @param armed Whether the gutter is armed.
+	 * @see #isArmed()
+	 */
+	void setArmed(boolean armed) {
+		if (armed != this.armed) {
+			this.armed = armed;
+			if (foldIndicator != null) {
+				foldIndicator.repaint();
+			}
+		}
 	}
 
 

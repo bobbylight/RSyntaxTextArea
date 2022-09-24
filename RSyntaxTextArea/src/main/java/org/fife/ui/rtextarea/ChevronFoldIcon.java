@@ -10,6 +10,10 @@ import java.awt.geom.Path2D;
 
 /**
  * A fold icon represented by a chevron.
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ * @see PlusMinusFoldIcon
  */
 class ChevronFoldIcon extends FoldIndicatorIcon {
 

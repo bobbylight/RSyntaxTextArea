@@ -8,6 +8,10 @@ import java.awt.*;
 
 /**
  * The default +/- icon for expanding and collapsing folds.
+ *
+ * @author Robert Futrell
+ * @version 1.0
+ * @see ChevronFoldIcon
  */
 class PlusMinusFoldIcon extends FoldIndicatorIcon {
 
