@@ -171,6 +171,22 @@ public class Gutter extends JPanel {
 	}
 
 
+	private boolean armed;
+	public boolean isArmed() {
+		return armed;
+	}
+
+	public void setArmed(boolean armed) {
+		if (armed != this.armed) {
+			this.armed = armed;
+			if (foldIndicator != null) {
+				foldIndicator.repaint();
+			}
+		}
+	}
+
+
+
 	/**
 	 * Adds an icon that tracks an offset in the document, and is displayed
 	 * adjacent to the line numbers.  This is useful for marking things such
@@ -338,6 +354,17 @@ public class Gutter extends JPanel {
 	 */
 	public Color getCurrentLineNumberColor() {
 		return currentLineNumberColor;
+	}
+
+
+	/**
+	 * Returns the strategy to use for rendering expanded folds.
+	 *
+	 * @return The strategy to use for rendering expanded folds.
+	 * @see #setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy)
+	 */
+	public ExpandedFoldRenderStrategy getExpandedFoldRenderStrategy() {
+		return foldIndicator.getExpandedFoldRenderStrategy();
 	}
 
 
@@ -650,6 +677,17 @@ public class Gutter extends JPanel {
 				lineNumberList.setCurrentLineNumberColor(color);
 			}
 		}
+	}
+
+
+	/**
+	 * Sets the strategy to use for rendering expanded folds.
+	 *
+	 * @param strategy The strategy to use. This cannot be {@code null}.
+	 * @see #getExpandedFoldRenderStrategy()
+	 */
+	public void setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy strategy) {
+		foldIndicator.setExpandedFoldRenderStrategy(strategy);
 	}
 
 

@@ -107,6 +107,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 	private int additionalLeftMargin;
 
 	/**
+	 * The strategy to use when rendering expanded folds.
+	 */
+	private ExpandedFoldRenderStrategy expandedFoldRenderStrategy;
+
+	/**
 	 * The color used to paint fold outlines.
 	 */
 	public static final Color DEFAULT_FOREGROUND = Color.GRAY;
@@ -188,6 +193,17 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 
 	/**
+	 * Returns the strategy to use for rendering expanded folds.
+	 *
+	 * @return The strategy to use for rendering expanded folds.
+	 * @see #setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy)
+	 */
+	public ExpandedFoldRenderStrategy getExpandedFoldRenderStrategy() {
+		return expandedFoldRenderStrategy;
+	}
+
+
+	/**
 	 * Returns the color to use for the "background" of armed fold icons.  This
 	 * is ignored if custom icons are used.
 	 *
@@ -211,6 +227,16 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	public Color getFoldIconBackground() {
 		return foldIconBackground;
+	}
+
+
+	/**
+	 * Returns whether to paint expanded folds.
+	 *
+	 * @return Whether to paint expanded folds.
+	 */
+	private boolean getPaintExpandedFolds() {
+		return expandedFoldRenderStrategy == ExpandedFoldRenderStrategy.ALWAYS || getGutter().isArmed();
 	}
 
 
@@ -350,6 +376,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
 		setShowCollapsedRegionToolTips(true);
+		setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ALWAYS);
 	}
 
 
@@ -464,7 +491,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 						fold = fm.getFoldForLine(line);
 					} while (fold!=null && fold.isCollapsed());
 				}
-				else {
+				else if (getPaintExpandedFolds()) {
 					int x = (width - expandedFoldIcon.getIconWidth()) / 2;
 					paintIcon(expandedFoldIcon, g, x, y);
 				}
@@ -585,8 +612,10 @@ public class FoldIndicator extends AbstractGutterComponent {
 					line += fold.getLineCount() + 1;
 				}
 				else {
-					int x = (width - expandedFoldIcon.getIconWidth()) / 2;
-					paintIcon(expandedFoldIcon, g, x, y);
+					if (getPaintExpandedFolds()) {
+						int x = (width - expandedFoldIcon.getIconWidth()) / 2;
+						paintIcon(expandedFoldIcon, g, x, y);
+					}
 					y += curLineH;
 					line++;
 				}
@@ -642,6 +671,20 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		this.additionalLeftMargin = leftMargin;
 		revalidate();
+	}
+
+
+	/**
+	 * Sets the strategy to use for rendering expanded folds.
+	 *
+	 * @param strategy The strategy to use. This cannot be {@code null}.
+	 * @see #getExpandedFoldRenderStrategy()
+	 */
+	public void setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy strategy) {
+		if (strategy == null) {
+			throw new NullPointerException("strategy cannot be null");
+		}
+		expandedFoldRenderStrategy = strategy;
 	}
 
 
@@ -742,11 +785,13 @@ public class FoldIndicator extends AbstractGutterComponent {
 			case CLASSIC:
 				setFoldIcons(new PlusMinusFoldIcon(true), new PlusMinusFoldIcon(false));
 				setShowArmedFoldRange(true);
+				setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ALWAYS);
 				break;
 
 			case MODERN:
 				setFoldIcons(new ChevronFoldIcon(true), new ChevronFoldIcon(false));
 				setShowArmedFoldRange(false);
+				setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ON_HOVER);
 				break;
 		}
 	}

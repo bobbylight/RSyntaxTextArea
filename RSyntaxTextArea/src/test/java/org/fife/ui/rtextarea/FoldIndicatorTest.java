@@ -92,6 +92,16 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetSetExpandedFoldRenderStrategy() {
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+		Assertions.assertEquals(ExpandedFoldRenderStrategy.ALWAYS, fi.getExpandedFoldRenderStrategy());
+		fi.setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ON_HOVER);
+		Assertions.assertEquals(ExpandedFoldRenderStrategy.ON_HOVER, fi.getExpandedFoldRenderStrategy());
+	}
+
+
+	@Test
 	void testGetSetShowCollapsedRegionToolTips() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
@@ -134,7 +144,7 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 		hackyGutter.add(fi);
 
 		// Collapse the top-level fold, and create a synthetic mouse-over
-		// event over its fold indicataor.
+		// event over its fold indicator.
 		textArea.getFoldManager().getFold(0).setCollapsed(true);
 		MouseEvent e = new MouseEvent(textArea, 0, 0, 0, 3, 3, 0, false);
 
@@ -227,9 +237,17 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testPaintComponent_modernLook() {
+
 		RSyntaxTextArea textArea = createTextArea();
+
+		// FoldIndicator needs a parent Gutter to calculate where to display
+		// the tool tip, but Gutter doesn't expose its child FoldIndicator
+		// via its API.  So here we really hack things to get around this.
 		FoldIndicator fi = new FoldIndicator(textArea);
 		fi.setStyle(FoldIndicatorStyle.MODERN);
+		Gutter hackyGutter = new Gutter(textArea);
+		hackyGutter.add(fi);
+
 		fi.paintComponent(createTestGraphics());
 	}
 
