@@ -287,9 +287,9 @@ class GutterTest extends AbstractRTextAreaTest {
 	void testGetSetExpandedFoldRenderStrategy() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
-		Assertions.assertEquals(ExpandedFoldRenderStrategy.ALWAYS, gutter.getExpandedFoldRenderStrategy());
-		gutter.setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ON_HOVER);
 		Assertions.assertEquals(ExpandedFoldRenderStrategy.ON_HOVER, gutter.getExpandedFoldRenderStrategy());
+		gutter.setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ALWAYS);
+		Assertions.assertEquals(ExpandedFoldRenderStrategy.ALWAYS, gutter.getExpandedFoldRenderStrategy());
 	}
 
 

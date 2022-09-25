@@ -95,9 +95,9 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 	void testGetSetExpandedFoldRenderStrategy() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		Assertions.assertEquals(ExpandedFoldRenderStrategy.ALWAYS, fi.getExpandedFoldRenderStrategy());
-		fi.setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ON_HOVER);
 		Assertions.assertEquals(ExpandedFoldRenderStrategy.ON_HOVER, fi.getExpandedFoldRenderStrategy());
+		fi.setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ALWAYS);
+		Assertions.assertEquals(ExpandedFoldRenderStrategy.ALWAYS, fi.getExpandedFoldRenderStrategy());
 	}
 
 

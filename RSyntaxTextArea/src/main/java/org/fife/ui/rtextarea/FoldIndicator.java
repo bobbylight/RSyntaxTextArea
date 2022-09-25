@@ -10,6 +10,8 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -122,9 +124,28 @@ public class FoldIndicator extends AbstractGutterComponent {
 	public static final Color DEFAULT_FOLD_BACKGROUND = Color.WHITE;
 
 	/**
+	 * The alpha used for "collapsed" fold icons.
+	 */
+	private float collapsedFoldIconAlpha;
+
+	/**
+	 * Used to update the collapsed fold icons' alpha value on a timer.
+	 */
+	private AlphaRunnable alphaRunnable;
+
+	/**
+	 * The timer used to update collapsed fold icons' alpha.
+	 */
+	private Timer timer;
+
+	/**
 	 * Listens for events in this component.
 	 */
 	private Listener listener;
+
+	private static final int COLLAPSED_FOLD_ALPHA_DELAY_MILLIS = 16;
+
+	private static final float ALPHA_DELTA = 0.1f;
 
 
 	public FoldIndicator(RTextArea textArea) {
@@ -236,7 +257,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * @return Whether to paint expanded folds.
 	 */
 	private boolean getPaintExpandedFolds() {
-		return expandedFoldRenderStrategy == ExpandedFoldRenderStrategy.ALWAYS || getGutter().isArmed();
+		return expandedFoldRenderStrategy == ExpandedFoldRenderStrategy.ALWAYS || collapsedFoldIconAlpha > 0;
 	}
 
 
@@ -357,6 +378,19 @@ public class FoldIndicator extends AbstractGutterComponent {
 	}
 
 
+	void gutterArmedUpdate(boolean armed) {
+		if (expandedFoldRenderStrategy == ExpandedFoldRenderStrategy.ON_HOVER) {
+			alphaRunnable.delta = armed ? ALPHA_DELTA : -ALPHA_DELTA;
+			timer.restart();
+		}
+		else {
+			collapsedFoldIconAlpha = 1;
+			timer.stop();
+			repaint();
+		}
+	}
+
+
 	@Override
 	void handleDocumentEvent(DocumentEvent e) {
 		int newLineCount = textArea.getLineCount();
@@ -372,11 +406,13 @@ public class FoldIndicator extends AbstractGutterComponent {
 		super.init();
 		setForeground(DEFAULT_FOREGROUND);
 		setFoldIconBackground(DEFAULT_FOLD_BACKGROUND);
-		setStyle(FoldIndicatorStyle.CLASSIC);
+		setStyle(FoldIndicatorStyle.MODERN);
 		listener = new Listener(this);
 		visibleRect = new Rectangle();
 		setShowCollapsedRegionToolTips(true);
-		setExpandedFoldRenderStrategy(ExpandedFoldRenderStrategy.ALWAYS);
+		alphaRunnable = new AlphaRunnable();
+		timer = new Timer(COLLAPSED_FOLD_ALPHA_DELAY_MILLIS, alphaRunnable);
+		timer.setRepeats(true);
 	}
 
 
@@ -476,7 +512,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				}
 				if (fold.isCollapsed()) {
 					int x = (width - collapsedFoldIcon.getIconWidth()) / 2;
-					paintIcon(collapsedFoldIcon, g, x, y);
+					paintIcon(collapsedFoldIcon, g, x, y, true);
 					// Skip to next line to paint, taking extra care for lines with
 					// block ends and begins together, e.g. "} else {"
 					do {
@@ -493,7 +529,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				}
 				else if (getPaintExpandedFolds()) {
 					int x = (width - expandedFoldIcon.getIconWidth()) / 2;
-					paintIcon(expandedFoldIcon, g, x, y);
+					paintIcon(expandedFoldIcon, g, x, y, false);
 				}
 				paintFoldArmed = false;
 			}
@@ -606,7 +642,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				}
 				if (fold.isCollapsed()) {
 					int x = (width - collapsedFoldIcon.getIconWidth()) / 2;
-					paintIcon(collapsedFoldIcon, g, x, y);
+					paintIcon(collapsedFoldIcon, g, x, y, true);
 					y += LineNumberList.getChildViewBounds(v, line,
 								visibleEditorRect).height;
 					line += fold.getLineCount() + 1;
@@ -614,7 +650,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 				else {
 					if (getPaintExpandedFolds()) {
 						int x = (width - expandedFoldIcon.getIconWidth()) / 2;
-						paintIcon(expandedFoldIcon, g, x, y);
+						paintIcon(expandedFoldIcon, g, x, y, false);
 					}
 					y += curLineH;
 					line++;
@@ -630,9 +666,26 @@ public class FoldIndicator extends AbstractGutterComponent {
 	}
 
 
-	private void paintIcon(FoldIndicatorIcon icon, Graphics g, int x, int y) {
-		icon.setArmed(paintFoldArmed);
-		icon.paintIcon(this, g, x, y);
+	private void paintIcon(FoldIndicatorIcon icon, Graphics g, int x, int y, boolean collapsed) {
+
+		Graphics2D g2d = (Graphics2D)g;
+		Composite orig = g2d.getComposite();
+
+		if (!collapsed) {
+			if (collapsedFoldIconAlpha == 0) {
+				return;
+			}
+			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, collapsedFoldIconAlpha);
+			g2d.setComposite(ac);
+		}
+		try {
+			icon.setArmed(paintFoldArmed);
+			icon.paintIcon(this, g, x, y);
+		} finally {
+			if (!collapsed) {
+				g2d.setComposite(orig);
+			}
+		}
 	}
 
 
@@ -674,6 +727,15 @@ public class FoldIndicator extends AbstractGutterComponent {
 	}
 
 
+	private void setCollapsedFoldIconAlpha(float collapsedFoldIconAlpha) {
+		collapsedFoldIconAlpha = Math.max(0, Math.min(collapsedFoldIconAlpha, 1));
+		if (collapsedFoldIconAlpha != this.collapsedFoldIconAlpha) {
+			this.collapsedFoldIconAlpha = collapsedFoldIconAlpha;
+			repaint();
+		}
+	}
+
+
 	/**
 	 * Sets the strategy to use for rendering expanded folds.
 	 *
@@ -685,6 +747,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 			throw new NullPointerException("strategy cannot be null");
 		}
 		expandedFoldRenderStrategy = strategy;
+		collapsedFoldIconAlpha = strategy == ExpandedFoldRenderStrategy.ALWAYS ? 1 : 0;
 	}
 
 
@@ -810,6 +873,24 @@ public class FoldIndicator extends AbstractGutterComponent {
 		if (this.textArea!=null) {
 			this.textArea.addPropertyChangeListener(
 					RSyntaxTextArea.CODE_FOLDING_PROPERTY, listener);
+		}
+	}
+
+
+	/**
+	 * Updates the alpha used for this component's "collapsed" fold icons, if
+	 * necessary.
+	 */
+	private class AlphaRunnable implements ActionListener {
+
+		private float delta;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			setCollapsedFoldIconAlpha(collapsedFoldIconAlpha + delta);
+			if (collapsedFoldIconAlpha == 0 || collapsedFoldIconAlpha == 1) {
+				timer.stop();
+			}
 		}
 	}
 

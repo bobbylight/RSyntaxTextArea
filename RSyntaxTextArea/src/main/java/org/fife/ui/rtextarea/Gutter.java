@@ -600,7 +600,7 @@ public class Gutter extends JPanel {
 		if (armed != this.armed) {
 			this.armed = armed;
 			if (foldIndicator != null) {
-				foldIndicator.repaint();
+				foldIndicator.gutterArmedUpdate(armed);
 			}
 		}
 	}
