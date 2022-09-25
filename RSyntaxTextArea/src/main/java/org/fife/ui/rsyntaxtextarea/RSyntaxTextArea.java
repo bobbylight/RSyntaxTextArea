@@ -910,7 +910,13 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	protected void fireHyperlinkUpdate(HyperlinkEvent.EventType type) {
 
-		HyperlinkEvent e = null;
+		// Fix #443: Don't lazily create the event as LinkGenerators may
+		// handle the click themselves. We want such handling to occur
+		// even if no HyperlinkListeners are attached.
+		HyperlinkEvent e = createHyperlinkEvent(type);
+		if (e == null) {
+			return; // No linkable text under caret, or handled by LinkGenerator
+		}
 
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -918,15 +924,7 @@ private boolean fractionalFontMetricsEnabled;
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-
 			if (listeners[i]==HyperlinkListener.class) {
-
-				if (e == null) {
-					e = createHyperlinkEvent(type);
-					if (e == null) {
-						return; // No linkable text under the caret
-					}
-				}
 				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
 			}
 		}
