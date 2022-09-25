@@ -47,6 +47,12 @@ class ChevronFoldIcon extends FoldIndicatorIcon {
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 
+		FoldIndicator fi = (FoldIndicator)c;
+		Color fg = c.getForeground();
+		if (isArmed() && fi.getArmedForeground() != null) {
+			fg = fi.getArmedForeground();
+		}
+
 		int width = getIconWidth();
 		int height = getIconHeight();
 		Graphics2D g2d = (Graphics2D)g.create();
@@ -55,7 +61,7 @@ class ChevronFoldIcon extends FoldIndicatorIcon {
 
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			g2d.setColor(c.getForeground());
+			g2d.setColor(fg);
 			g2d.translate(x, y);
 			if (!isCollapsed()) {
 				g2d.rotate(Math.toRadians(90), width / 2f, height / 2f);

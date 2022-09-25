@@ -31,14 +31,23 @@ class PlusMinusFoldIcon extends FoldIndicatorIcon {
 
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
+
 		FoldIndicator fi = (FoldIndicator)c;
+		Color fg = fi.getForeground();
 		Color bg = fi.getFoldIconBackground();
-		if (isArmed() && fi.getFoldIconArmedBackground() != null) {
-			bg = fi.getFoldIconArmedBackground();
+		if (isArmed()) {
+			if (fi.getArmedForeground() != null) {
+				fg = fi.getArmedForeground();
+			}
+			if (fi.getFoldIconArmedBackground() != null) {
+				bg = fi.getFoldIconArmedBackground();
+			}
 		}
+
 		g.setColor(bg);
 		g.fillRect(x, y, 8, 8);
-		g.setColor(fi.getForeground());
+
+		g.setColor(fg);
 		g.drawRect(x, y, 8, 8);
 		g.drawLine(x + 2, y + 4, x + 2 + 4, y + 4);
 		if (isCollapsed()) {

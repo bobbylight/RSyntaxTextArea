@@ -370,6 +370,19 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns the foreground color of the fold indicator for armed
+	 * folds.
+	 *
+	 * @return The foreground color of the fold indicator for armed
+	 *         folds.
+	 * @see #setFoldIndicatorArmedForeground(Color)
+	 */
+	public Color getFoldIndicatorArmedForeground() {
+		return foldIndicator.getArmedForeground();
+	}
+
+
+	/**
 	 * Returns the foreground color of the fold indicator.
 	 *
 	 * @return The foreground color of the fold indicator.
@@ -778,6 +791,21 @@ public class Gutter extends JPanel {
 			bg = FoldIndicator.DEFAULT_FOLD_BACKGROUND;
 		}
 		foldIndicator.setFoldIconBackground(bg);
+	}
+
+
+	/**
+	 * Sets the foreground color used by the fold indicator for
+	 * armed folds.
+	 *
+	 * @param fg The new armed fold indicator foreground.
+	 * @see #getFoldIndicatorArmedForeground()
+	 */
+	public void setFoldIndicatorArmedForeground(Color fg) {
+		if (fg==null) {
+			fg = FoldIndicator.DEFAULT_FOREGROUND;
+		}
+		foldIndicator.setArmedForeground(fg);
 	}
 
 

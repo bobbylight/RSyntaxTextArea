@@ -24,7 +24,7 @@
     <!-- Gutter styling. -->
     <gutterBorder color="81969A"/>
     <lineNumbers fg="81969A" currentFG="F9F9F9"/>
-    <foldIndicator fg="6A8088" iconBg="2f383c" iconArmedBg="3f484c"/>
+    <foldIndicator fg="6A8088" armedFg="a9b7c6" iconBg="2f383c" iconArmedBg="3f484c"/>
     <iconRowHeader activeLineRange="878787"/>
 
     <!-- Syntax tokens. -->

@@ -57,6 +57,13 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	private Fold foldWithOutlineShowing;
 
+
+	/**
+	 * The color used for the foreground of armed folds.
+	 */
+	private Color armedForeground;
+
+
 	/**
 	 * The color to use for fold icon backgrounds, if the default icons
 	 * are used.
@@ -210,6 +217,17 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		return fold;
 
+	}
+
+
+	/**
+	 * Returns the foreground color used for armed folds.
+	 *
+	 * @return The foreground color used for armed folds.
+	 * @see #setArmedForeground(Color)
+	 */
+	public Color getArmedForeground() {
+		return armedForeground;
 	}
 
 
@@ -724,6 +742,20 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		this.additionalLeftMargin = leftMargin;
 		revalidate();
+	}
+
+
+	/**
+	 * Sets the foreground color used for armed folds.
+	 *
+	 * @param fg The new armed fold foreground.
+	 * @see #getArmedForeground()
+	 */
+	public void setArmedForeground(Color fg) {
+		if (fg==null) {
+			fg = FoldIndicator.DEFAULT_FOREGROUND;
+		}
+		armedForeground = fg;
 	}
 
 

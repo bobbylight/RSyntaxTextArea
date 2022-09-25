@@ -71,6 +71,7 @@
       fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator
       fg          CDATA #REQUIRED
+      armedFg     CDATA #IMPLIED
       iconBg      CDATA #REQUIRED
       iconArmedBg CDATA #IMPLIED>
 <!ATTLIST iconRowHeader

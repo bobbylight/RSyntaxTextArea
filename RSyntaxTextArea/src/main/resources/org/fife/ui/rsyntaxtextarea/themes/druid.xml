@@ -29,7 +29,7 @@
    <!-- Gutter styling. -->
    <gutterBorder color="325232"/>
    <lineNumbers fg="66aa66"/>
-   <foldIndicator fg="325232" iconBg="001c00"/>
+   <foldIndicator fg="325232" armedFg="66aaa66" iconBg="001c00"/>
    <iconRowHeader activeLineRange="3399ff"/>
    
    <!-- Syntax tokens. -->

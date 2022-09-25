@@ -321,6 +321,7 @@ class ThemeTest {
 		gutter.setLineNumberColor(Color.orange);
 		gutter.setCurrentLineNumberColor(Color.orange);
 		gutter.setLineNumberFont(font);
+		gutter.setFoldIndicatorArmedForeground(Color.orange);
 		gutter.setFoldIndicatorForeground(Color.orange);
 		gutter.setFoldBackground(Color.orange);
 		gutter.setArmedFoldBackground(Color.orange);

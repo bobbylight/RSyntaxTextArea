@@ -105,6 +105,7 @@ public class Theme {
 	public String lineNumberFont;
 	public int lineNumberFontSize;
 	public Color foldIndicatorFG;
+	public Color foldIndicatorArmedFG;
 	public Color foldBG;
 	public Color armedFoldBG;
 
@@ -171,6 +172,7 @@ public class Theme {
 			lineNumberFont = gutter.getLineNumberFont().getFamily();
 			lineNumberFontSize = gutter.getLineNumberFont().getSize();
 			foldIndicatorFG = gutter.getFoldIndicatorForeground();
+			foldIndicatorArmedFG = gutter.getFoldIndicatorArmedForeground();
 			foldBG = gutter.getFoldBackground();
 			armedFoldBG = gutter.getArmedFoldBackground();
 		}
@@ -227,6 +229,7 @@ public class Theme {
 			Font font = getFont(fontName, Font.PLAIN, fontSize);
 			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
+			gutter.setFoldIndicatorArmedForeground(foldIndicatorArmedFG);
 			gutter.setFoldBackground(foldBG);
 			gutter.setArmedFoldBackground(armedFoldBG);
 		}
@@ -473,8 +476,13 @@ public class Theme {
 
 			elem = doc.createElement("foldIndicator");
 			elem.setAttribute("fg", colorToString(foldIndicatorFG));
+			if (foldIndicatorArmedFG != null) {
+				elem.setAttribute("armedFg", colorToString(foldIndicatorArmedFG));
+			}
 			elem.setAttribute("iconBg", colorToString(foldBG));
-			elem.setAttribute("iconArmedBg", colorToString(armedFoldBG));
+			if (armedFoldBG != null) {
+				elem.setAttribute("iconArmedBg", colorToString(armedFoldBG));
+			}
 			root.appendChild(elem);
 
 			elem = doc.createElement("iconRowHeader");
@@ -714,6 +722,11 @@ public class Theme {
 			else if ("foldIndicator".equals(qName)) {
 				String color = attrs.getValue("fg");
 				theme.foldIndicatorFG = stringToColor(color);
+				color = attrs.getValue("armedFg");
+				// This field must have a value for downstream consumers to
+				// function properly, so default to regular FG if not armed
+				// variant isn't specified
+				theme.foldIndicatorArmedFG = stringToColor(color);
 				color = attrs.getValue("iconBg");
 				theme.foldBG = stringToColor(color);
 				color = attrs.getValue("iconArmedBg");

@@ -316,6 +316,28 @@ class GutterTest extends AbstractRTextAreaTest {
 
 
 	@Test
+	void testGetSetFoldIndicatorArmedForeground() {
+
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+
+		Color color = Color.red;
+		gutter.setFoldIndicatorArmedForeground(color);
+		Assertions.assertEquals(color, gutter.getFoldIndicatorArmedForeground());
+
+		color = Color.green;
+		gutter.setFoldIndicatorArmedForeground(color);
+		Assertions.assertEquals(color, gutter.getFoldIndicatorArmedForeground());
+
+		// Sets to default - not a public value, but also not Color.green.
+		gutter.setFoldIndicatorArmedForeground(null);
+		Assertions.assertNotNull(gutter.getFoldIndicatorArmedForeground());
+		Assertions.assertNotEquals(color, gutter.getFoldIndicatorArmedForeground());
+
+	}
+
+
+	@Test
 	void testGetSetFoldIndicatorForeground() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);

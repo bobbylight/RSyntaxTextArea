@@ -92,6 +92,28 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetSetArmedForeground() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		FoldIndicator fi = new FoldIndicator(textArea);
+
+		Color color = Color.red;
+		fi.setArmedForeground(color);
+		Assertions.assertEquals(color, fi.getArmedForeground());
+
+		color = Color.green;
+		fi.setArmedForeground(color);
+		Assertions.assertEquals(color, fi.getArmedForeground());
+
+		// Sets to default - not a public value, but also not Color.green.
+		fi.setArmedForeground(null);
+		Assertions.assertNotNull(fi.getArmedForeground());
+		Assertions.assertNotEquals(color, fi.getArmedForeground());
+
+	}
+
+
+	@Test
 	void testGetSetExpandedFoldRenderStrategy() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
