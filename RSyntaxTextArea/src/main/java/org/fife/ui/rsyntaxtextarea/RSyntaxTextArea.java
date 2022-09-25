@@ -2021,7 +2021,8 @@ private boolean fractionalFontMetricsEnabled;
 		setClearWhitespaceLinesEnabled(true);
 
 		setHyperlinksEnabled(true);
-		setLinkScanningMask(InputEvent.CTRL_DOWN_MASK);
+		int mask = isOSX() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+		setLinkScanningMask(mask);
 		setHyperlinkForeground(Color.BLUE);
 		isScanningForLinks = false;
 		setUseFocusableTips(true);
