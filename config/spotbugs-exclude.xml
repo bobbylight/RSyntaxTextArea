@@ -8,6 +8,7 @@
 
         <Not>
             <Or>
+                <Bug pattern="SA_FIELD_SELF_ASSIGNMENT" />
                 <Bug pattern="SF_SWITCH_FALLTHROUGH" />
                 <Bug pattern="SF_SWITCH_NO_DEFAULT" />
                 <Bug pattern="DLS_DEAD_LOCAL_STORE" />
