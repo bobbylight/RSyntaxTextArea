@@ -538,6 +538,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
 
 	/* Preprocessor directives */
+	/* Special-case <includes> for uniform appearance with "string" includes "*/
+	"#include <"[A-Za-z0-9_.]+">"        {
+	                                        int start = zzStartRead;
+	                                        addToken(start, start+7, TokenTypes.PREPROCESSOR);
+	                                        addToken(start+8, start+8, TokenTypes.WHITESPACE);
+	                                        addToken(start+9, zzMarkedPos - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+	                                    }
 	"#"{WhiteSpace}*{PreprocessorWord}	{ addToken(Token.PREPROCESSOR); }
 
 	/* String/Character Literals. */

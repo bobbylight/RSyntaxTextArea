@@ -577,6 +577,41 @@ class CPlusPlusTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testPreprocessorWords() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"#define",
+			"#elif",
+			"#else",
+			"#endif",
+			"#error",
+			"#if",
+			"#ifdef",
+			"#ifndef",
+			"#include",
+			"#line",
+			"#pragma",
+			"#undef"
+		);
+	}
+
+
+	@Test
+	void testPreprocessor_renderIncludesAsStrings() {
+
+		String code = "#include <something.h>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+		Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "#include"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "<something.h>"));
+	}
+
+
+	@Test
 	void testSeparators() {
 
 		String code = "( ) [ ] { }";
@@ -621,4 +656,18 @@ class CPlusPlusTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
+	@Test
+	void testTrigraph() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			"??=",
+			"??(",
+			"??)",
+			"??/",
+			"??'",
+			"??<",
+			"??>",
+			"??!",
+			"??-"
+		);
+	}
 }
