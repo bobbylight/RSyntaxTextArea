@@ -395,15 +395,8 @@ class RSyntaxDocumentTest {
 		t = t.getNextToken();
 		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
 		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '<'));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "stdio"));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '.'));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.IDENTIFIER, 'h'));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.OPERATOR, '>'));
+		// Note CTokenMaker uses the "string" token type for included files
+		Assertions.assertTrue(t.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "<stdio.h>"));
 		t = t.getNextToken();
 		Assertions.assertEquals(new TokenImpl(), t); // Null token
 
