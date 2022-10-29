@@ -273,7 +273,7 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testJS_DocComments_URL() {
 
 		String[] docCommentLiterals = {
-			"/** Hello world http://www.sas.com */",
+			"/** Hello world https://www.sas.com */",
 			"/** Hello world https://www.sas.com */",
 			"/** Hello world www.sas.com */",
 			"/** Hello world ftp://sas.com */",
@@ -377,7 +377,7 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, ";"));
 
 		// Comment with URL
-		e4x = "var foo = <!-- http://www.google.com -->;";
+		e4x = "var foo = <!-- https://www.google.com -->;";
 		seg = createSegment(e4x);
 		tm = createTokenMaker();
 		token = tm.getTokenList(seg, TS_PREV_TOKEN_TYPE, 0);
@@ -396,7 +396,7 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- "));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "https://www.google.com"));
 		token = token.getNextToken();
 		Assertions.assertFalse(token.isHyperlink());
 		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));
@@ -623,8 +623,8 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
-			"// Hello world http://www.sas.com",
-			"// Hello world http://www.sas.com extra",
+			"// Hello world https://www.sas.com",
+			"// Hello world https://www.sas.com extra",
 			"// Hello world https://www.sas.com",
 			"// Hello world www.sas.com",
 			"// Hello world ftp://sas.com",
@@ -805,7 +805,7 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] mlcLiterals = {
 			"/* Hello world file://test.txt */",
 			"/* Hello world ftp://ftp.google.com */",
-			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
 			"/* Hello world https://www.google.com */",
 			"/* Hello world www.google.com */"
 		};

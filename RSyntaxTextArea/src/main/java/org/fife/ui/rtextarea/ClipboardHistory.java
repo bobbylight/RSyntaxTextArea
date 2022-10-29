@@ -19,8 +19,8 @@ import java.util.List;
  *
  * Note that this class does not listen for all events on the system clipboard,
  * because that functionality is pretty fragile.  See
- * <a href="http://stackoverflow.com/questions/5484927/listen-to-clipboard-changes-check-ownership">
- * http://stackoverflow.com/questions/5484927/listen-to-clipboard-changes-check-ownership</a>
+ * <a href="https://stackoverflow.com/questions/5484927/listen-to-clipboard-changes-check-ownership">
+ * https://stackoverflow.com/questions/5484927/listen-to-clipboard-changes-check-ownership</a>
  * for more information.
  *
  * @author Robert Futrell

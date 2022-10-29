@@ -541,7 +541,7 @@ public class Theme {
 
 			DOMSource source = new DOMSource(doc);
 			// Use a writer instead of OutputStream to allow pretty printing.
-			// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6337981
+			// See https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6337981
 			StreamResult result = new StreamResult(new PrintWriter(
 				new UnicodeWriter(bout, "UTF-8")));
 			TransformerFactory transFac = TransformerFactory.newInstance();

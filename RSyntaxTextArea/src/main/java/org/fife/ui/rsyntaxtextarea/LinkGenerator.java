@@ -1,10 +1,6 @@
 /*
  * 02/16/2012
  *
- * Copyright (C) 2013 Robert Futrell
- * robert_futrell at users.sourceforge.net
- * http://fifesoft.com/rsyntaxtextarea
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
@@ -15,7 +11,7 @@ package org.fife.ui.rsyntaxtextarea;
  * Generates hyperlinks in a document.  If one of these is installed on an
  * <code>RSyntaxTextArea</code> it is queried when the mouse is moved and
  * hyperlinks are enabled.  If the user is not hovering over a "real" hyperlink
- * (e.g. "http://www.google.com"), the link generator is asked if a text region
+ * (e.g. "https://www.google.com"), the link generator is asked if a text region
  * at the mouse position should be considered a hyperlink.  If so, a result
  * object is returned, describing exactly what region of text is the link, and
  * where it goes to.<p>

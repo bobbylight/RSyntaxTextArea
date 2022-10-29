@@ -364,7 +364,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] comments = {
 			"/* Hello world file://test.txt */",
 			"/* Hello world ftp://ftp.google.com */",
-			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
 			"/* Hello world https://www.google.com */",
 			"/* Hello world www.google.com */"
 		};
@@ -839,7 +839,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] urls = {
 			"file://test.txt",
 			"ftp://ftp.google.com",
-			"http://www.google.com",
+			"https://www.google.com",
 			"https://www.google.com",
 			"www.google.com"
 		};
@@ -1166,8 +1166,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
-			"// Hello world http://www.sas.com",
-			"// Hello world http://www.sas.com extra",
+			"// Hello world https://www.sas.com",
+			"// Hello world https://www.sas.com extra",
 			"// Hello world https://www.sas.com",
 			"// Hello world www.sas.com",
 			"// Hello world ftp://sas.com",
@@ -1348,7 +1348,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] mlcLiterals = {
 			"/* Hello world file://test.txt */",
 			"/* Hello world ftp://ftp.google.com */",
-			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
 			"/* Hello world https://www.google.com */",
 			"/* Hello world www.google.com */"
 		};

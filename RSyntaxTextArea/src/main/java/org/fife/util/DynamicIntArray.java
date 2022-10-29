@@ -377,7 +377,7 @@ public class DynamicIntArray implements Serializable {
 	 * not usually make any expensive method calls (since their callers will
 	 * usually not pass illegal arguments to them).
 	 *
-	 * See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5103956">
+	 * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5103956">
 	 * this Sun bug report</a> for more information.
 	 *
 	 * @param index The invalid index.
@@ -395,7 +395,7 @@ public class DynamicIntArray implements Serializable {
 	 * inlined, as well as not usually make any expensive method calls (since
 	 * their callers will usually not pass illegal arguments to them).
 	 *
-	 * See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5103956">
+	 * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5103956">
 	 * this Sun bug report</a> for more information.
 	 *
 	 * @param index The invalid index.
@@ -413,7 +413,7 @@ public class DynamicIntArray implements Serializable {
 	 * inlined, as well as not usually make any expensive method calls (since
 	 * their callers will usually not pass illegal arguments to them).
 	 *
-	 * See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5103956">
+	 * See <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5103956">
 	 * this Sun bug report</a> for more information.
 	 *
 	 * @param fromIndex The from-index.

@@ -286,7 +286,7 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] eolCommentLiterals = {
 			"// Hello world file://test.txt",
 			"// Hello world ftp://ftp.google.com",
-			"// Hello world http://www.google.com",
+			"// Hello world https://www.google.com",
 			"// Hello world https://www.google.com",
 			"// Hello world www.google.com"
 		};
@@ -354,7 +354,7 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] comments = {
 			"/* Hello world file://test.txt */",
 			"/* Hello world ftp://ftp.google.com */",
-			"/* Hello world http://www.google.com */",
+			"/* Hello world https://www.google.com */",
 			"/* Hello world https://www.google.com */",
 			"/* Hello world www.google.com */"
 		};
@@ -433,7 +433,7 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] eolCommentLiterals = {
 			"// Hello world file://test.txt",
 			"// Hello world ftp://ftp.google.com",
-			"// Hello world http://www.google.com",
+			"// Hello world https://www.google.com",
 			"// Hello world https://www.google.com",
 			"// Hello world www.google.com"
 		};
@@ -569,7 +569,7 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] eolCommentLiterals = {
 			"// Hello world file://test.txt",
 			"// Hello world ftp://ftp.google.com",
-			"// Hello world http://www.google.com",
+			"// Hello world https://www.google.com",
 			"// Hello world https://www.google.com",
 			"// Hello world www.google.com"
 		};

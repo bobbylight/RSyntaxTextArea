@@ -100,7 +100,7 @@ class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 		String[] urls = {
 			"file://test.txt",
 			"ftp://ftp.google.com",
-			"http://www.google.com",
+			"https://www.google.com",
 			"https://www.google.com",
 			"www.google.com"
 		};

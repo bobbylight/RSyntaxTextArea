@@ -121,7 +121,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 		String[] docCommentLiterals = {
 			"file://test.txt",
 			"ftp://ftp.google.com",
-			"http://www.google.com",
+			"https://www.google.com",
 			"https://www.google.com",
 			"www.google.com"
 		};

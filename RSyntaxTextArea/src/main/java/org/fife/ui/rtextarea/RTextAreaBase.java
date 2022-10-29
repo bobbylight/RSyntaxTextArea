@@ -700,8 +700,6 @@ public abstract class RTextAreaBase extends JTextArea {
 	 * @return Whether the OS we're running on is OS X.
 	 */
 	public static boolean isOSX() {
-		// Recommended at:
-		// http://developer.apple.com/mac/library/technotes/tn2002/tn2110.html
 		String osName = System.getProperty("os.name").toLowerCase();
 		return osName.startsWith("mac os x");
 	}

@@ -69,7 +69,7 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testMxml_comment_URL() {
 
-		String code = "<!-- Hello world http://www.google.com -->";
+		String code = "<!-- Hello world https://www.google.com -->";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
@@ -78,7 +78,7 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "<!-- Hello world "), "Bad MARKUP_COMMENT: " + token);
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "http://www.google.com"));
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, "https://www.google.com"));
 		token = token.getNextToken();
 		Assertions.assertFalse(token.isHyperlink());
 		Assertions.assertTrue(token.is(TokenTypes.MARKUP_COMMENT, " -->"));

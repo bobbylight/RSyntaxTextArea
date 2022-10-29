@@ -78,7 +78,7 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testCss_comment_URL() {
 
-		String code = "/* Hello world http://www.google.com */";
+		String code = "/* Hello world https://www.google.com */";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, CSS_PREV_TOKEN_TYPE, 0);
@@ -87,7 +87,7 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "/* Hello world "));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isHyperlink());
-		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "http://www.google.com"));
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, "https://www.google.com"));
 		token = token.getNextToken();
 		Assertions.assertFalse(token.isHyperlink());
 		Assertions.assertTrue(token.is(TokenTypes.COMMENT_MULTILINE, " */"));
@@ -230,7 +230,7 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testLess_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world http://www.sas.com",
+			"// Hello world https://www.sas.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -244,7 +244,7 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
 
 		}
 

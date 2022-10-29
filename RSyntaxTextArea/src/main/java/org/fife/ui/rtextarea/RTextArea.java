@@ -1114,7 +1114,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		s.defaultReadObject();
 
 		// UndoManagers cannot be serialized without Exceptions.  See
-		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4275892
+		// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4275892
 		undoManager = createUndoManager();
 		getDocument().addUndoableEditListener(undoManager);
 
@@ -1712,7 +1712,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	private void writeObject(ObjectOutputStream s) throws IOException {
 
 		// UndoManagers cannot be serialized without Exceptions.  See
-		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4275892
+		// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4275892
 		getDocument().removeUndoableEditListener(undoManager);
 		s.defaultWriteObject();
 		getDocument().addUndoableEditListener(undoManager);

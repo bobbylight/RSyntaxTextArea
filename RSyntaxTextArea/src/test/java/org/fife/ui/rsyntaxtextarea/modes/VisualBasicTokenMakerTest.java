@@ -97,7 +97,7 @@ class VisualBasicTokenMakerTest extends AbstractTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"' Hello world http://www.sas.com",
+			"' Hello world https://www.sas.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -111,7 +111,7 @@ class VisualBasicTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
 
 		}
 

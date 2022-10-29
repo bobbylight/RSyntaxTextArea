@@ -41,7 +41,7 @@ import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
  * while <em>not</em> on the EDT could cause problems.<p>
  *
  * For more flexible boilerplate code insertion, consider using the
- * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+ * <a href="https://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
  * TemplateCompletion class</a> in the
  * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
  * add-on library</a>.

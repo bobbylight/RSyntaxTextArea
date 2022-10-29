@@ -1721,7 +1721,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * of <code>RSyntaxTextArea</code>.<p>
 	 *
 	 * For more flexible boilerplate code insertion, consider using the
-	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+	 * <a href="https://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
 	 * TemplateCompletion class</a> in the
 	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
 	 * add-on library</a>.
@@ -2273,7 +2273,8 @@ private boolean fractionalFontMetricsEnabled;
 	 * Note that basic users of <code>RSyntaxTextArea</code> will not call this
 	 * method directly; rather, it is usually called by instances of
 	 * <code>LanguageSupport</code> in the <code>RSTALanguageSupport</code>
-	 * library.  See <a href="http://fifesoft.com">http://fifesoft.com</a>
+	 * library.  See <a href="https://github.com/bobbylight/RSTALanguageSupport">
+	 * https://github.com/bobbylight/RSTALanguageSupport</a>
 	 * for more information about this library.
 	 *
 	 * @param min The "minimum" line in the active line range, or
@@ -3084,7 +3085,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * uniformity among all text areas in an application.<p>
 	 *
 	 * For more flexible boilerplate code insertion, consider using the
-	 * <a href="http://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
+	 * <a href="https://javadoc.fifesoft.com/autocomplete/org/fife/ui/autocomplete/TemplateCompletion.html">
 	 * TemplateCompletion class</a> in the
 	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
 	 * add-on library</a>.

@@ -2078,7 +2078,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				if(offs >= curPara.getEndOffset() &&
 							oldOffs != curPara.getEndOffset() - 1) {
 					// we should first move to the end of current paragraph
-					// http://bugs.sun.com/view_bug.do?bug_id=4278839
+					// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4278839
 					offs = curPara.getEndOffset() - 1;
 				}
 			} catch (BadLocationException ble) {

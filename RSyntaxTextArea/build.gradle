@@ -80,7 +80,7 @@ publishing {
                         'Features include syntax highlighting for 40+ languages, code folding, code completion, ' +
                         'regex find and replace, macros, code templates, undo/redo, line numbering and bracket ' +
                         'matching.'
-                url = 'http://www.fifesoft.com/rsyntaxtextarea/'
+                url = 'https://github.com/bobbylight/rsyntaxtextarea'
                 inceptionYear = '2003'
                 packaging = 'jar'
                 licenses {

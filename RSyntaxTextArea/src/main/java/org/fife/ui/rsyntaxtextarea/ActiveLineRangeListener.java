@@ -20,7 +20,8 @@ import java.util.EventListener;
  * events and respond accordingly.<p>
  *
  * See the <code>RSTALanguageSupport</code> project at
- * <a href="http://fifesoft.com">http://fifesoft.com</a> for some
+ * <a href="https://github.com/bobbylight/RSTALanguageSupport">
+ * https://github.com/bobbylight/RSTALanguageSupport</a> for some
  * <code>LanguageSupport</code> implementations that may broadcast these
  * events.  Note that if an RSTA/LanguageSupport does not support broadcasting
  * these events, the listener will simply never receive any notifications.

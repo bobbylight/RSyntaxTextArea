@@ -127,7 +127,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world http://www.sas.com",
+			"// Hello world https://www.sas.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -141,7 +141,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
 
 		}
 
@@ -393,7 +393,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world http://www.sas.com */",
+			"/* Hello world https://www.sas.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -407,7 +407,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("http://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
