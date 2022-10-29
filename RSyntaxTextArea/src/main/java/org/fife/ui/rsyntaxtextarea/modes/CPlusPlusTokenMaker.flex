@@ -572,12 +572,26 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* Preprocessor directives */
 	/* Special-case <includes> for uniform appearance with "string" includes "*/
-	"#include <"[A-Za-z0-9_.]+">"        {
-	                                        int start = zzStartRead;
-	                                        addToken(start, start+7, TokenTypes.PREPROCESSOR);
-	                                        addToken(start+8, start+8, TokenTypes.WHITESPACE);
-	                                        addToken(start+9, zzMarkedPos - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
-	                                    }
+	"#"{WhiteSpace}*"include"{WhiteSpace}*"<"[A-Za-z0-9_./-]+">" {
+                                                     // It's allowed, but discouraged, to have spaces after the '#'
+                                                     int start = zzStartRead;
+                                                     int end = start + 1;
+                                                     while (Character.isWhitespace(zzBuffer[end])) {
+                                                         end++;
+                                                     }
+                                                     end += "include".length() - 1;
+                                                     addToken(start, end, TokenTypes.PREPROCESSOR);
+
+                                                     // Arbitrary space between the #include and the header.
+                                                     // Bounds check isn't necessary since our regex was matched.
+                                                     start = end = end + 1;
+                                                     while (Character.isWhitespace(zzBuffer[end + 1])) {
+                                                         end++;
+                                                     }
+                                                     addToken(start, end, TokenTypes.WHITESPACE);
+
+                                                     addToken(end + 1, zzMarkedPos - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+                                                 }
 	"#"{WhiteSpace}*{PreprocessorWord}	{ addToken(Token.PREPROCESSOR); }
 
 	/* String/Character Literals. */

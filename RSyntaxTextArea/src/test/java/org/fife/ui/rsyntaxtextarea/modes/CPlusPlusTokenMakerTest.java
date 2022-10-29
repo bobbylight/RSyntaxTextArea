@@ -588,6 +588,10 @@ class CPlusPlusTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"#ifdef",
 			"#ifndef",
 			"#include",
+			"# include",
+			"#  include",
+			"#\tinclude",
+			"#\finclude",
 			"#line",
 			"#pragma",
 			"#undef"
@@ -598,16 +602,28 @@ class CPlusPlusTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testPreprocessor_renderIncludesAsStrings() {
 
-		String code = "#include <something.h>";
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		String[] codeSnippets = {
+			"#include <something.h>",
+			"#include <sys/types.h>",
+			"#include <gnu/libc-version.h>",
+			"#include  <gnu/libc-version.h>",
+			"#include\t<gnu/libc-version.h>",
+			"#include\f  \t <gnu/libc-version.h>",
+		};
 
-		Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "#include"));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.isSingleChar(TokenTypes.WHITESPACE, ' '));
-		t = t.getNextToken();
-		Assertions.assertTrue(t.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "<something.h>"));
+		for (String code: codeSnippets) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token t = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+			Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "#include"));
+			t = t.getNextToken();
+			Assertions.assertTrue(t.isWhitespace());
+			t = t.getNextToken();
+			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, t.getType(), "Failed for " + code);
+			Assertions.assertTrue(t.getLexeme().endsWith(">")); // Assert it's the entire included file
+		}
 	}
 
 
