@@ -680,7 +680,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The document.
 	 */
 	@Override
-	protected Document createDefaultModel() {
+	protected RSyntaxDocument createDefaultModel() {
 		return new RSyntaxDocument(SYNTAX_STYLE_NONE);
 	}
 
