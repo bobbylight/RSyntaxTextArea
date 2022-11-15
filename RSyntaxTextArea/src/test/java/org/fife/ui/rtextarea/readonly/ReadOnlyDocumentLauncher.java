@@ -5,21 +5,24 @@ import org.fife.ui.rsyntaxtextarea.TextEditorPane;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.SYNTAX_STYLE_XML;
 
 public class ReadOnlyDocumentLauncher {
+
+	private static final Logger LOGGER = Logger.getLogger(ReadOnlyDocumentLauncher.class.getName());
+	private static TextEditorPane textArea = new TextEditorPane();
 
 	public static void main(String[] args) throws IOException {
 		TestApp testApp = new TestApp();
@@ -28,18 +31,28 @@ public class ReadOnlyDocumentLauncher {
 
 	private static class TestApp {
 
+		private File documentFile;
+		boolean createBom = true;
+		Charset selectedCharset = StandardCharsets.UTF_8;
+
+		JTextField fileContentField = new JTextField("abcd");
+		JTextField fileRowsField = new JTextField(String.valueOf(20));
+		JTextField tailField = new JTextField(String.valueOf(0));
+
+		JLabel statusLabel = new JLabel(" ");
+
 		public void show() throws IOException {
 			JFrame frame = buildAndDisplayGui();
 			frame.setVisible(true);
 		}
 
-		private JFrame buildAndDisplayGui() throws IOException {
+		private JFrame buildAndDisplayGui() {
 			JFrame frame = new JFrame("Test Frame");
 			frame.setMinimumSize(new Dimension(400, 400));
 			frame.setMaximumSize(new Dimension(400, 400));
 			frame.setResizable(false);
 
-			buildContent(frame);
+			frame.setContentPane(createPanel());
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.pack();
 			frame.setLocationRelativeTo(null);
@@ -49,100 +62,123 @@ public class ReadOnlyDocumentLauncher {
 			return frame;
 		}
 
-		private void buildContent(JFrame frame) throws IOException {
-//			File documentFile = File.createTempFile("ReadOnlyDocumentLauncher", ".txt");
-//			documentFile.deleteOnExit();
-//			Charset charset = StandardCharsets.UTF_8;
-//			FileBuilderTestUtil.writeTestFileWithAsciiChars(documentFile.toPath(), charset, "\n", 1024);
-//
-			TextEditorPane textArea = new TextEditorPane();
-//
-//			textArea.loadLocalFileInReadOnlyDocument(documentFile, charset);
-			textArea.setSyntaxEditingStyle(SYNTAX_STYLE_XML);
-			RTextScrollPane scrollPane = new RTextScrollPane(textArea, true);
-			frame.getContentPane().add(scrollPane);
-			JMenuBar menubar = new JMenuBar();
+		private JComponent createPanel() {
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(createConfigurationPanel(), BorderLayout.EAST);
+			panel.add(createEditorPanel(), BorderLayout.CENTER);
+			return panel;
+		}
 
-			AbstractAction abstractAction = new AbstractAction("Tail") {
+		private JComponent createConfigurationPanel() {
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			JCheckBox bomCheckbox = new JCheckBox(new AbstractAction("Add BOM") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//Path filePath = Path.of("C:\\Users\\mmatessi\\Desktop\\scriptWithHeader.js");
-					Path filePath = Path.of("C:\\Users\\mmatessi\\Desktop\\scriptWithHeaderUTF16.js");
+					createBom = ((JCheckBox) e.getSource()).isSelected();
+				}
+			});
+			bomCheckbox.setSelected(createBom);
+			panel.add(bomCheckbox);
 
+			panel.add(createCharsetPanel());
 
-					try{
-						Charset charset1 = StandardCharsets.UTF_16;
-						ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, charset1, 71).readStructure();
-						ReadOnlyContent content = new ReadOnlyContent(filePath, charset1, fileStructure);
-						ReadOnlyDocument document = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
-						textArea.loadDocument(FileLocation.create(filePath.toFile()), document, charset1);
-					} catch( IOException ex ){
-						throw new RuntimeException(ex);
-					}
+			panel.add(new JLabel("File content"));
+			panel.add(fileContentField);
+
+			panel.add(new JLabel("Rows"));
+			panel.add(fileRowsField);
+
+			panel.add(new JLabel("Skip chars"));
+			panel.add(tailField);
+
+			JButton createFileButton = new JButton(new AbstractAction("Write file") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					createFile();
+				}
+			});
+			panel.add(createFileButton);
+
+			JButton readFileButton = new JButton(new AbstractAction("Read file") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					readFile();
+				}
+			});
+			panel.add(readFileButton);
+
+			panel.add(statusLabel);
+
+			return panel;
+		}
+
+		private JPanel createCharsetPanel() {
+			ButtonGroup charsetGroup = new ButtonGroup();
+			JPanel panel = new JPanel();
+			BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+			panel.setLayout(layout);
+
+			panel.add(new JLabel("Charset"));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.US_ASCII));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.ISO_8859_1));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.UTF_8));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.UTF_16BE));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.UTF_16LE));
+			panel.add(createCharsetRadioButton(charsetGroup, StandardCharsets.UTF_16));
+			panel.add(createCharsetRadioButton(charsetGroup, null));
+
+			return panel;
+
+		}
+
+		private JRadioButton createCharsetRadioButton(ButtonGroup charsetGroup, Charset charset) {
+			JRadioButton radioButton = new JRadioButton(createRadioButtonAction(charset));
+			radioButton.setSelected(charset == selectedCharset);
+			charsetGroup.add(radioButton);
+			return radioButton;
+		}
+
+		private Action createRadioButtonAction(Charset charset) {
+			String name = charset == null ? "not defined" : charset.displayName();
+			return new AbstractAction(name) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					selectedCharset = charset;
 				}
 			};
-			menubar.add(new JMenuItem(abstractAction));
-
-
-			menubar.add(creteFileChooserAction(frame, (selectedFile) -> textArea.load(FileLocation.create(selectedFile)), "Open editable document"));
-			menubar.add(creteFileChooserAction(frame, file -> {
-
-				JProgressBar progressBar = new JProgressBar();
-				progressBar.setIndeterminate(true);
-				JDialog progressDialog = new JDialog(frame);
-				progressDialog.add(progressBar);
-				progressDialog.setSize(400, 400);
-				progressDialog.setVisible(true);
-				SwingWorker<Object, Object> swingWorker = new SwingWorker<>() {
-					@Override
-					protected ReadOnlyDocument doInBackground() throws IOException {
-						ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(file.toPath(), StandardCharsets.UTF_8).readStructure();
-						ReadOnlyContent content = new ReadOnlyContent(file.toPath(), StandardCharsets.UTF_8, fileStructure);
-						ReadOnlyDocument tokens = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
-						textArea.loadDocument(FileLocation.create(file), tokens, StandardCharsets.UTF_8);
-						return null;
-					}
-
-					@Override
-					protected void done() {
-						progressDialog.dispose();
-					}
-				};
-
-				swingWorker.execute();
-
-			}, "Open read only document"));
-
-			frame.setJMenuBar(menubar);
 		}
-	}
 
-	private static JMenuItem creteFileChooserAction(JFrame frame, LoadFileAction fileAction, String label) {
-		return new JMenuItem(new AbstractAction(label) {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onActionPerformed(frame, fileAction);
-			}
-		});
-	}
-
-	private static void onActionPerformed(JFrame frame, LoadFileAction fileAction) {
-		final JFileChooser fc = new JFileChooser();
-		if( fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION ){
-			File selectedFile = fc.getSelectedFile();
+		private void createFile() {
 			try{
-				fileAction.onFileSelected(selectedFile);
-			} catch( Exception ex ){
-				throw new RuntimeException(ex);
+				documentFile = File.createTempFile("ReadOnlyDocumentLauncher", ".txt");
+				documentFile.deleteOnExit();
+				FileBuilderTestUtil.writeTestFile(documentFile.toPath(), selectedCharset, "\n", fileContentField.getText(), Integer.parseInt(fileRowsField.getText()), createBom);
+				statusLabel.setText("File saved");
+				LOGGER.log(Level.INFO, "File saved: " + documentFile.getAbsolutePath());
+			} catch( IOException e ){
+				statusLabel.setText("Save file failed");
+				LOGGER.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
-	}
 
-	@FunctionalInterface
-	private interface LoadFileAction {
+		private void readFile() {
+			try{
+				Path filePath = documentFile.toPath();
+				ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, selectedCharset, Integer.parseInt(tailField.getText())).readStructure();
+				ReadOnlyContent content = new ReadOnlyContent(filePath, selectedCharset, fileStructure);
+				ReadOnlyDocument document = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
+				textArea.loadDocument(FileLocation.create(filePath.toFile()), document, selectedCharset);
+				statusLabel.setText("File loaded");
+			} catch( IOException e ){
+				statusLabel.setText("Load file failed");
+				LOGGER.log(Level.WARNING, e.getMessage(), e);
+			}
+		}
 
-		void onFileSelected(File file) throws IOException, ExecutionException, InterruptedException;
-
+		private JComponent createEditorPanel() {
+			return new RTextScrollPane(textArea, true);
+		}
 	}
 
 }
