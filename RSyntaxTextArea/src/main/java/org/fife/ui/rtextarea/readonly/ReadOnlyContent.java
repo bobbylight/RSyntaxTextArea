@@ -1,12 +1,12 @@
 package org.fife.ui.rtextarea.readonly;
 
+import org.fife.io.UnicodeReader;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
 import javax.swing.undo.UndoableEdit;
-import java.io.BufferedReader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	private final List<Integer> offsets;
 	private final int bufferSize;
 	private final int fileSize;
+	private final int tailOffset;
 	private final char[] buffer;
 	private final int charsCount;
 
@@ -29,6 +30,7 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 		this.filePath = filePath;
 		this.charset = charset;
 		fileSize = (int) fileStructure.getFileSize();
+		this.tailOffset = fileStructure.getTailOffset();
 		bufferSize = Math.min(fileSize, MAX_BUFFER_SIZE);
 		buffer = new char[bufferSize];
 		offsets = fileStructure.getOffsets();
@@ -60,7 +62,7 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	public String getString(int charsOffset, int amountCharsToRead) throws BadLocationException {
 		int endReadOffset = charsOffset + amountCharsToRead;
 
-		if( endReadOffset >= length() ){
+		if( endReadOffset > length() ){
 			throw new BadLocationException("Unable to get String. The requested end offset exceed the document length: ", charsOffset + amountCharsToRead);
 		}
 
@@ -88,7 +90,9 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	}
 
 	private void read(int startReadOffset, int charsToRead) throws BadLocationException {
-		try( BufferedReader bufferedReader = Files.newBufferedReader(filePath, charset); ){
+
+		try( UnicodeReader bufferedReader = new UnicodeReader(filePath.toFile(), charset); ){
+			bufferedReader.skip(tailOffset);
 			bufferedReader.skip(startReadOffset);
 			bufferedReader.read(buffer, 0, charsToRead);
 		} catch( Exception e ){
@@ -135,13 +139,12 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	public int getElementIndex(int offset) {
 		if( offsets.isEmpty() ) return 0;
 
-		for( int i = 0; i < offsets.size(); i++ ){
+		for( int i = 0; i < offsets.size() - 1; i++ ){
 			if( offset < offsets.get(i + 1) ){
 				return i;
 			}
 		}
-		return 0;
-
+		return offsets.size() - 1;
 	}
 
 	private static class ReadOnlyBadLocationException extends BadLocationException {

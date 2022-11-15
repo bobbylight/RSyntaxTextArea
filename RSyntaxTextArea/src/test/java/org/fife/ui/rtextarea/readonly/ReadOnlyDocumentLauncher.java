@@ -7,10 +7,14 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.SYNTAX_STYLE_XML;
@@ -46,18 +50,39 @@ public class ReadOnlyDocumentLauncher {
 		}
 
 		private void buildContent(JFrame frame) throws IOException {
-			File documentFile = File.createTempFile("ReadOnlyDocumentLauncher", ".txt");
-			documentFile.deleteOnExit();
-			Charset charset = StandardCharsets.UTF_8;
-			FileBuilderTestUtil.writeTestFileWithAsciiChars(documentFile.toPath(), charset, "\n", 1024);
-
+//			File documentFile = File.createTempFile("ReadOnlyDocumentLauncher", ".txt");
+//			documentFile.deleteOnExit();
+//			Charset charset = StandardCharsets.UTF_8;
+//			FileBuilderTestUtil.writeTestFileWithAsciiChars(documentFile.toPath(), charset, "\n", 1024);
+//
 			TextEditorPane textArea = new TextEditorPane();
-
-			textArea.loadLocalFileInReadOnlyDocument(documentFile, charset);
+//
+//			textArea.loadLocalFileInReadOnlyDocument(documentFile, charset);
 			textArea.setSyntaxEditingStyle(SYNTAX_STYLE_XML);
 			RTextScrollPane scrollPane = new RTextScrollPane(textArea, true);
 			frame.getContentPane().add(scrollPane);
 			JMenuBar menubar = new JMenuBar();
+
+			AbstractAction abstractAction = new AbstractAction("Tail") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					//Path filePath = Path.of("C:\\Users\\mmatessi\\Desktop\\scriptWithHeader.js");
+					Path filePath = Path.of("C:\\Users\\mmatessi\\Desktop\\scriptWithHeaderUTF16.js");
+
+
+					try{
+						Charset charset1 = StandardCharsets.UTF_16;
+						ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, charset1, 71).readStructure();
+						ReadOnlyContent content = new ReadOnlyContent(filePath, charset1, fileStructure);
+						ReadOnlyDocument document = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
+						textArea.loadDocument(FileLocation.create(filePath.toFile()), document, charset1);
+					} catch( IOException ex ){
+						throw new RuntimeException(ex);
+					}
+				}
+			};
+			menubar.add(new JMenuItem(abstractAction));
+
 
 			menubar.add(creteFileChooserAction(frame, (selectedFile) -> textArea.load(FileLocation.create(selectedFile)), "Open editable document"));
 			menubar.add(creteFileChooserAction(frame, file -> {

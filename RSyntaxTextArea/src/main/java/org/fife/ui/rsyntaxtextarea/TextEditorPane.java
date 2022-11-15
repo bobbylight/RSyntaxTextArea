@@ -517,7 +517,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	private RSyntaxDocument createLazyLoadDocument(FileLocation fileLocation, Charset charSet) throws IOException {
 		if( !fileLocation.isLocalAndExists() ){
-			throw new FileNotFoundException("ReadOnlyDucument supports only files from local file system");
+			throw new FileNotFoundException("ReadOnlyDocument supports only files from local file system");
 		}
 		Path filePath = Path.of(fileLocation.getFileFullPath());
 		ReadOnlyFileStructureParser fileStructureParser = new ReadOnlyFileStructureParser(filePath, charSet);
