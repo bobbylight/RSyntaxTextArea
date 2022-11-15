@@ -25,7 +25,8 @@ class ReadOnlyContentWithEmptyFileTest {
 		Files.createFile(filePath);
 		Charset charset = StandardCharsets.UTF_16;
 		expectedContent = new GapContent();
-		readOnlyContent = new ReadOnlyContent(filePath.toFile(), charset);
+		ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, charset).readStructure();
+		readOnlyContent = new ReadOnlyContent(filePath, charset, fileStructure);
 	}
 
 	@Test

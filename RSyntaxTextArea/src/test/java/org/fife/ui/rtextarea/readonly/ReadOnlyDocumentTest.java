@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.text.Element;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,7 +21,7 @@ class ReadOnlyDocumentTest {
 	private static ReadOnlyDocument readOnlyDocument;
 
 	@BeforeAll
-	static void beforeAll(@TempDir Path tempDir) {
+	static void beforeAll(@TempDir Path tempDir) throws IOException {
 		expectedDocument = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
 
 		Charset charset;
@@ -37,7 +38,9 @@ class ReadOnlyDocumentTest {
 			throw new RuntimeException(e);
 		}
 
-		readOnlyDocument = new ReadOnlyDocument(null, "", new ReadOnlyContent(filePath.toFile(), charset));
+		ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, charset).readStructure();
+		ReadOnlyContent content = new ReadOnlyContent(filePath, charset, fileStructure);
+		readOnlyDocument = new ReadOnlyDocument(null, "", content);
 	}
 
 	@Test

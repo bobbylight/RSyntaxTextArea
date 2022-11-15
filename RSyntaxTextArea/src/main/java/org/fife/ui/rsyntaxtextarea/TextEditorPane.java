@@ -14,6 +14,8 @@ import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.fife.ui.rtextarea.readonly.ReadOnlyContent;
 import org.fife.ui.rtextarea.readonly.ReadOnlyDocument;
+import org.fife.ui.rtextarea.readonly.ReadOnlyFileStructure;
+import org.fife.ui.rtextarea.readonly.ReadOnlyFileStructureParser;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -22,6 +24,7 @@ import javax.swing.text.Document;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Path;
 
 /**
  * An extension of {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextArea}
@@ -516,7 +519,11 @@ public class TextEditorPane extends RSyntaxTextArea implements
 		if( !fileLocation.isLocalAndExists() ){
 			throw new FileNotFoundException("ReadOnlyDucument supports only files from local file system");
 		}
-		return new ReadOnlyDocument(getTokenMarkerFactory(), getSyntaxEditingStyle(), new ReadOnlyContent(new File(fileLocation.getFileFullPath()), charSet));
+		Path filePath = Path.of(fileLocation.getFileFullPath());
+		ReadOnlyFileStructureParser fileStructureParser = new ReadOnlyFileStructureParser(filePath, charSet);
+		ReadOnlyFileStructure readOnlyFileStructure = fileStructureParser.readStructure();
+		ReadOnlyContent content = new ReadOnlyContent(filePath, charSet, readOnlyFileStructure);
+		return new ReadOnlyDocument(getTokenMarkerFactory(), getSyntaxEditingStyle(), content);
 	}
 
 	public void loadDocument(FileLocation fileLocation, RSyntaxDocument doc, Charset charSet) {

@@ -6,6 +6,7 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 import javax.swing.text.Element;
 
+//This document is useful to read a huge files, like Log Files
 public class ReadOnlyDocument extends RSyntaxDocument {
 
 	private ReadOnlyRootElement readOnlyRootElement;

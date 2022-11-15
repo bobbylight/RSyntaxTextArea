@@ -5,39 +5,34 @@ import javax.swing.text.Position;
 import javax.swing.text.Segment;
 import javax.swing.undo.UndoableEdit;
 import java.io.BufferedReader;
-import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ReadOnlyContent implements ReadOnlyContentInterface {
-
-	private static final Logger LOGGER = Logger.getLogger(ReadOnlyContent.class.getName());
 
 	private static final int MAX_BUFFER_SIZE = 1024 * 1024; //1 MB
 	private static final int NOT_INITIALIZED_BUFFER_OFFSET = -1;
 
-	private final File file;
+	private final Path filePath;
 	private final Charset charset;
 	private final List<Integer> offsets;
 	private final int bufferSize;
 	private final int fileSize;
 	private final char[] buffer;
-
-	private int charsCount = -1;
+	private final int charsCount;
 
 	private int startBufferOffset = NOT_INITIALIZED_BUFFER_OFFSET;
 
-
-	public ReadOnlyContent(File file, Charset charset) {
-		this.file = file;
+	public ReadOnlyContent(Path filePath, Charset charset, ReadOnlyFileStructure fileStructure) {
+		this.filePath = filePath;
 		this.charset = charset;
-		fileSize = (int) file.length();
+		fileSize = (int) fileStructure.getFileSize();
 		bufferSize = Math.min(fileSize, MAX_BUFFER_SIZE);
 		buffer = new char[bufferSize];
-		offsets = FileOffsetLineDiscover.getOffsets(file.toPath(), charset);
+		offsets = fileStructure.getOffsets();
+		charsCount = fileStructure.getCharsCount();
 	}
 
 
@@ -48,9 +43,6 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 
 	@Override
 	public int length() {
-		if( charsCount == -1 ){
-			charsCount = getCharsCount();
-		}
 		return charsCount;
 	}
 
@@ -96,13 +88,9 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	}
 
 	private void read(int startReadOffset, int charsToRead) throws BadLocationException {
-		try( BufferedReader bufferedReader = Files.newBufferedReader(file.toPath(), charset); ){
+		try( BufferedReader bufferedReader = Files.newBufferedReader(filePath, charset); ){
 			bufferedReader.skip(startReadOffset);
-			int foundCharsCount = bufferedReader.read(buffer, 0, charsToRead);
-
-			if( charsToRead != foundCharsCount ){
-				throw new BadLocationException("Not all required chars are available", startReadOffset);
-			}
+			bufferedReader.read(buffer, 0, charsToRead);
 		} catch( Exception e ){
 			throw new ReadOnlyBadLocationException("Unable to read file", startReadOffset, e);
 		}
@@ -118,11 +106,11 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 	}
 
 	@Override
-	public char charAt(int offset) {
+	public char charAt(int offset) throws BadLocationException {
 		try{
 			return getString(offset, 1).charAt(0);
 		} catch( BadLocationException e ){
-			throw new RuntimeException(e);
+			throw new ReadOnlyBadLocationException("Invalid offset", offset, e);
 		}
 	}
 
@@ -145,31 +133,15 @@ public class ReadOnlyContent implements ReadOnlyContentInterface {
 
 	@Override
 	public int getElementIndex(int offset) {
-		if (offsets.isEmpty()) return 0;
+		if( offsets.isEmpty() ) return 0;
 
 		for( int i = 0; i < offsets.size(); i++ ){
-			if (offset < offsets.get(i+1)) {
+			if( offset < offsets.get(i + 1) ){
 				return i;
 			}
 		}
 		return 0;
 
-	}
-
-	private int getCharsCount() {
-		try( BufferedReader bufferedReader = Files.newBufferedReader(file.toPath(), charset); ){
-			char[] charBuffer = new char[1024 * 1024];
-			int count = 2;
-			int readChars = 0;
-			while( readChars >= 0 ){
-				readChars = bufferedReader.read(charBuffer);
-				count += readChars;
-			}
-			return count;
-		} catch( Exception e ){
-			LOGGER.log(Level.WARNING, "Unable to read chars count", e);
-			return 0;
-		}
 	}
 
 	private static class ReadOnlyBadLocationException extends BadLocationException {

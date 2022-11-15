@@ -28,7 +28,8 @@ class ReadOnlyContentTest {
 		expectedContent = new GapContent();
 		String readString = Files.readString(filePath, charset);
 		expectedContent.insertString(0, readString);
-		readOnlyContent = new ReadOnlyContent(filePath.toFile(), charset);
+		ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, charset).readStructure();
+		readOnlyContent = new ReadOnlyContent(filePath, charset, fileStructure);
 	}
 
 	@Test
@@ -56,7 +57,7 @@ class ReadOnlyContentTest {
 	void testGetStringThrowsExceptionWhenOffsetExceedLength() {
 		int length = expectedContent.length();
 		testGetStringThrowsException(length, 1);
-		testGetStringThrowsException(length-1, 2);
+		testGetStringThrowsException(length - 1, 2);
 	}
 
 	@Test
@@ -80,8 +81,8 @@ class ReadOnlyContentTest {
 	}
 
 	private void testGetStringThrowsException(int where, int len) {
-		assertThrows(BadLocationException.class, ()->  expectedContent.getString(where, len));
-		assertThrows(BadLocationException.class, ()->  readOnlyContent.getString(where, len));
+		assertThrows(BadLocationException.class, () -> expectedContent.getString(where, len));
+		assertThrows(BadLocationException.class, () -> readOnlyContent.getString(where, len));
 	}
 
 

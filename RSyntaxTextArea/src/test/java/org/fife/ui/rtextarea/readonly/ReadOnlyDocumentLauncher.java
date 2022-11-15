@@ -3,16 +3,10 @@ package org.fife.ui.rtextarea.readonly;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rsyntaxtextarea.TextEditorPane;
 import org.fife.ui.rtextarea.RTextScrollPane;
-import org.fife.ui.rtextarea.SmartHighlightPainter;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Highlighter;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -72,12 +66,14 @@ public class ReadOnlyDocumentLauncher {
 				progressBar.setIndeterminate(true);
 				JDialog progressDialog = new JDialog(frame);
 				progressDialog.add(progressBar);
-				progressDialog.setSize(400,400);
+				progressDialog.setSize(400, 400);
 				progressDialog.setVisible(true);
 				SwingWorker<Object, Object> swingWorker = new SwingWorker<>() {
 					@Override
-					protected ReadOnlyDocument doInBackground() {
-						ReadOnlyDocument tokens = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, new ReadOnlyContent(file, StandardCharsets.UTF_8));
+					protected ReadOnlyDocument doInBackground() throws IOException {
+						ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(file.toPath(), StandardCharsets.UTF_8).readStructure();
+						ReadOnlyContent content = new ReadOnlyContent(file.toPath(), StandardCharsets.UTF_8, fileStructure);
+						ReadOnlyDocument tokens = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
 						textArea.loadDocument(FileLocation.create(file), tokens, StandardCharsets.UTF_8);
 						return null;
 					}
@@ -118,7 +114,7 @@ public class ReadOnlyDocumentLauncher {
 	}
 
 	@FunctionalInterface
-	private interface LoadFileAction  {
+	private interface LoadFileAction {
 
 		void onFileSelected(File file) throws IOException, ExecutionException, InterruptedException;
 

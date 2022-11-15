@@ -1,32 +1,21 @@
 package org.fife.ui.rtextarea.readonly;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 class FileOffsetLineDiscover {
 
-	private static final Logger LOGGER  = Logger.getLogger(FileOffsetLineDiscover.class.getName());
+	int lastOffset = 0;
 
-	private FileOffsetLineDiscover() {
-	}
+	private final List<Integer> lfOffsets = new ArrayList<>();
+	private final Set<Integer> crOffsets = new HashSet<>();
 
-	public static List<Integer> getOffsets(Path filePath, Charset charset) {
-
-		List<Integer> lfOffsets = new ArrayList<>();
-		Set<Integer> crOffsets = new HashSet<>();
+	public List<Integer> getOffsets() {
 
 		List<Integer> lineOffsets = new ArrayList<>();
-
 		lineOffsets.add(0);
-
-		readFile(filePath, charset, lfOffsets, crOffsets);
 
 		for( Integer newLineIndex : lfOffsets ){
 
@@ -53,27 +42,15 @@ class FileOffsetLineDiscover {
 		return lineOffsets;
 	}
 
-
-	private static void readFile(Path filePath, Charset fixedSizeCharset, Collection<Integer> newLines, Collection<Integer> carrigeRetrun) {
-		try( BufferedReader bufferedReader = Files.newBufferedReader(filePath, fixedSizeCharset); ){
-			int offset = 0;
-			char character;
-			int readValue;
-			while( true ){
-				readValue = bufferedReader.read();
-				if( readValue == -1 ) return;
-				offset++;
-				character = (char) readValue;
-				if( character == '\n' ){
-					newLines.add(offset);
-				} else if( character == '\r' ){
-					carrigeRetrun.add(offset);
-				}
-
-
+	public void onBufferRead(char[] charBuffer, int readChars) {
+		for( int i = 0; i < readChars; i++ ){
+			lastOffset++;
+			char character = charBuffer[i];
+			if( character == '\n' ){
+				lfOffsets.add(lastOffset);
+			} else if( character == '\r' ){
+				crOffsets.add(lastOffset);
 			}
-		} catch( IOException e ){
-			LOGGER.log(Level.WARNING, "Unable to read line offsets from file", e);
 		}
 	}
 }
