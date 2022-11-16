@@ -1,5 +1,6 @@
 package org.fife.ui.rtextarea.readonly;
 
+import org.fife.io.UnicodeReader;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rsyntaxtextarea.TextEditorPane;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,24 +40,22 @@ public class ReadOnlyDocumentLauncher {
 		JTextField tailField = new JTextField(String.valueOf(0));
 
 		JLabel statusLabel = new JLabel(" ");
+		private JProgressBar progressBar = new JProgressBar();
 
-		public void show() throws IOException {
+		public void show() {
 			JFrame frame = buildAndDisplayGui();
 			frame.setVisible(true);
 		}
 
 		private JFrame buildAndDisplayGui() {
 			JFrame frame = new JFrame("Test Frame");
-			frame.setMinimumSize(new Dimension(400, 400));
-			frame.setMaximumSize(new Dimension(400, 400));
+			frame.setMinimumSize(new Dimension(640, 480));
 			frame.setResizable(false);
 
 			frame.setContentPane(createPanel());
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.pack();
 			frame.setLocationRelativeTo(null);
-			frame.setMinimumSize(new Dimension(400, 400));
-			frame.setSize(new Dimension(400, 400));
 			frame.setResizable(true);
 			return frame;
 		}
@@ -103,12 +101,17 @@ public class ReadOnlyDocumentLauncher {
 			JButton readFileButton = new JButton(new AbstractAction("Read file") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					readFile();
+					createReadDocumentWorker().execute();
 				}
 			});
 			panel.add(readFileButton);
 
 			panel.add(statusLabel);
+
+			panel.add(progressBar);
+//			progressBar.setEnabled(false);
+			progressBar.setIndeterminate(false);
+
 
 			return panel;
 		}
@@ -132,6 +135,7 @@ public class ReadOnlyDocumentLauncher {
 
 		}
 
+
 		private JRadioButton createCharsetRadioButton(ButtonGroup charsetGroup, Charset charset) {
 			JRadioButton radioButton = new JRadioButton(createRadioButtonAction(charset));
 			radioButton.setSelected(charset == selectedCharset);
@@ -140,11 +144,18 @@ public class ReadOnlyDocumentLauncher {
 		}
 
 		private Action createRadioButtonAction(Charset charset) {
-			String name = charset == null ? "not defined" : charset.displayName();
+			String name = charset == null ? "From BOM" : charset.displayName();
 			return new AbstractAction(name) {
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					selectedCharset = charset;
+				public void actionPerformed(ActionEvent event) {
+					if( charset == null ){
+						try( UnicodeReader reader = new UnicodeReader(documentFile) ){
+							selectedCharset = Charset.forName(reader.getEncoding());
+						} catch( IOException e ){
+							LOGGER.log(Level.WARNING, e.getMessage(), e);
+						}
+
+					} else selectedCharset = charset;
 				}
 			};
 		}
@@ -162,23 +173,40 @@ public class ReadOnlyDocumentLauncher {
 			}
 		}
 
-		private void readFile() {
-			try{
-				Path filePath = documentFile.toPath();
-				ReadOnlyFileStructure fileStructure = new ReadOnlyFileStructureParser(filePath, selectedCharset, Integer.parseInt(tailField.getText())).readStructure();
-				ReadOnlyContent content = new ReadOnlyContent(filePath, selectedCharset, fileStructure);
-				ReadOnlyDocument document = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
-				textArea.loadDocument(FileLocation.create(filePath.toFile()), document, selectedCharset);
-				statusLabel.setText("File loaded");
-			} catch( IOException e ){
-				statusLabel.setText("Load file failed");
-				LOGGER.log(Level.WARNING, e.getMessage(), e);
-			}
-		}
-
 		private JComponent createEditorPanel() {
 			return new RTextScrollPane(textArea, true);
 		}
+
+
+		private SwingWorker<Object, Object> createReadDocumentWorker() {
+			return new SwingWorker<>() {
+				@Override
+				protected ReadOnlyDocument doInBackground() throws Exception {
+					progressBar.setIndeterminate(true);
+
+					Path filePath = documentFile.toPath();
+					ReadOnlyFileStructureParser structureParser = new ReadOnlyFileStructureParser(filePath, selectedCharset, Integer.parseInt(tailField.getText()));
+					ReadOnlyFileStructure fileStructure = structureParser.readStructure();
+					ReadOnlyContent content = new ReadOnlyContent(filePath, selectedCharset, fileStructure);
+					ReadOnlyDocument document = new ReadOnlyDocument(null, SYNTAX_STYLE_XML, content);
+					textArea.loadDocument(FileLocation.create(documentFile), document, selectedCharset);
+
+					return document;
+				}
+
+				@Override
+				protected void done() {
+					try{
+						statusLabel.setText("File loaded");
+					} catch( Exception e ){
+						LOGGER.log(Level.WARNING, e.getMessage(), e);
+						statusLabel.setText("Load file failed");
+					}
+					progressBar.setIndeterminate(false);
+				}
+			};
+		}
+
 	}
 
 }
