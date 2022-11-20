@@ -162,13 +162,6 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testCss_getCurlyBracesDenoteCodeBlocks() {
-		TokenMaker tm = createTokenMaker();
-		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
-	}
-
-
-	@Test
 	protected void testCss_getLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
 		Assertions.assertEquals("/*", startAndEnd[0]);

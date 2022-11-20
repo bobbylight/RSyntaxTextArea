@@ -28,6 +28,14 @@ class SQLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Override
+	protected void testCommon_getCurlyBracesDenoteCodeBlocks() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
+	}
+
+
+	@Test
 	void testCharLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'",

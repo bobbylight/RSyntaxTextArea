@@ -24,19 +24,24 @@ abstract class AbstractCDerivedTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	/**
-	 * Overridden to verify that indentation of the next line is done after curly braces
-	 * and open parens.
+	 * Overridden to assert {@code true} for the default language index. If
+	 * subclasses have additional sub-languages, they should override this method.
 	 */
 	@Test
 	@Override
-	public void testCommon_getShouldIndentNextLineAfter() {
+	protected void testCommon_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
-		Token[] indentAfter = {
-			new TokenImpl("{".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, 0),
-			new TokenImpl("(".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, 0),
-		};
-		for (Token token : indentAfter) {
-			Assertions.assertTrue(tm.getShouldIndentNextLineAfter(token));
-		}
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
+	}
+
+
+	/**
+	 * Overridden to verify that indentation of the next line is done after curly braces
+	 * and open parens for the default language index.
+	 */
+	@Test
+	@Override
+	protected void testCommon_getShouldIndentNextLineAfter() {
+		testCommonHelper_getShouldIndentNextLineAfterCurliesAndParensForLanguageIndex(0);
 	}
 }

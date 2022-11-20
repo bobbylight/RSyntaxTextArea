@@ -124,6 +124,21 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	@Override
+	protected void testCommon_getCurlyBracesDenoteCodeBlocks() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertFalse(tm.getCurlyBracesDenoteCodeBlocks(
+			PHPTokenMaker.LANG_INDEX_DEFAULT));
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
+			PHPTokenMaker.LANG_INDEX_CSS));
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
+			PHPTokenMaker.LANG_INDEX_JS));
+		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
+			PHPTokenMaker.LANG_INDEX_PHP));
+	}
+
+
+	@Test
+	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(PHPTokenMaker.LANG_INDEX_DEFAULT);
@@ -1606,13 +1621,6 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 			"and \\'he\\' said so'",
 			"continuation from a prior line"
 		);
-	}
-
-
-	@Test
-	void testCss_getCurlyBracesDenoteCodeBlocks() {
-		TokenMaker tm = createTokenMaker();
-		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(PHPTokenMaker.LANG_INDEX_CSS));
 	}
 
 
