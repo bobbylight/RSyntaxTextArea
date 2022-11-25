@@ -82,6 +82,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
+	public static final String rstaOpenParenAction			= "RSTA.openParenAction";
+	public static final String rstaOpenSquareBracketAction	= "RSTA.openSquareBracketAction";
+	public static final String rstaOpenCurlyAction			= "RSTA.openCurlyAction";
+	public static final String rstaDoubleQuoteAction		= "RSTA.doubleQuoteAction";
+	public static final String rstaSingleQuoteAction		= "RSTA.singleQuoteAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
@@ -114,8 +119,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new EndWordAction(endWordAction, true),
 		new ExpandAllFoldsAction(),
 		new GoToMatchingBracketAction(),
-		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
+		new InsertBreakAction(),
+		new InsertPairedCharacterAction(rstaOpenParenAction, '(', ')'),
+		new InsertPairedCharacterAction(rstaOpenSquareBracketAction, '[', ']'),
+		new InsertPairedCharacterAction(rstaOpenCurlyAction, '{', '}'),
+		new InsertPairedCharacterAction(rstaDoubleQuoteAction, '"', '"'),
+		new InsertPairedCharacterAction(rstaSingleQuoteAction, '\'', '\''),
 		new InsertTabAction(),
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
@@ -321,6 +331,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
@@ -1629,6 +1644,63 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			}
 
+		}
+
+	}
+
+
+	/**
+	 * If there is no selection, a character is inserted. If there is a selection,
+	 * it is wrapped by the character and its pair. Useful for e.g. quotes, parens,
+	 * etc.
+	 */
+	public static class InsertPairedCharacterAction extends DefaultKeyTypedAction {
+
+		private static final long serialVersionUID = 1L;
+
+		private final char ch;
+		private final char pairedCh;
+
+		public InsertPairedCharacterAction(String actionName, char ch, char pairedCh) {
+			super(actionName);
+			this.ch = ch;
+			this.pairedCh = pairedCh;
+		}
+
+		@Override
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
+			boolean noSelection = sta.getSelectionStart() == sta.getSelectionEnd();
+
+			if (noSelection || !sta.getInsertPairedCharacters()) {
+				// Default action can be unique across OS's
+				super.actionPerformedImpl(e, textArea);
+			}
+			else {
+				wrapSelection(textArea);
+			}
+		}
+
+		private void wrapSelection(RTextArea textArea) {
+
+			int selStart = textArea.getSelectionStart();
+			int selEnd = textArea.getSelectionEnd();
+
+			textArea.beginAtomicEdit();
+			try {
+				textArea.insert(String.valueOf(ch), selStart);
+				textArea.insert(String.valueOf(pairedCh), selEnd + 1);
+				// Remove the auto-increase from insertion
+				textArea.setSelectionEnd(selEnd + 1);
+			} finally {
+				textArea.endAtomicEdit();
+			}
 		}
 
 	}

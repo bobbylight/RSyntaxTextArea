@@ -846,8 +846,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		private Action delegate;
 
 		public DefaultKeyTypedAction() {
-			super(DefaultEditorKit.defaultKeyTypedAction, null, null, null,
-					null);
+			this(DefaultEditorKit.defaultKeyTypedAction);
+		}
+
+		protected DefaultKeyTypedAction(String name) {
+			super(name, null, null, null, null);
 			delegate = new DefaultEditorKit.DefaultKeyTypedAction();
 		}
 
@@ -864,7 +867,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		@Override
 		public final String getMacroID() {
-			return DefaultEditorKit.defaultKeyTypedAction;
+			return getName();
 		}
 
 	}

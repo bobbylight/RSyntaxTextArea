@@ -7,6 +7,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.fife.ui.rtextarea.RecordableTextAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,32 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextAreaTest {
+
+	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		RTextArea textArea = new RTextArea("hello world");
+		textArea.setCaretPosition(textArea.getText().indexOf(' '));
+		textArea.setEditable(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.InsertBreakAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("hello world", textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_notEnabled() {
+
+		RTextArea textArea = new RTextArea("hello world");
+		textArea.setCaretPosition(textArea.getText().indexOf(' '));
+		textArea.setEnabled(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.InsertBreakAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("hello world", textArea.getText());
+	}
 
 	@Test
 	void testActionPerformedImpl_closingCurlyBraceAdded() {

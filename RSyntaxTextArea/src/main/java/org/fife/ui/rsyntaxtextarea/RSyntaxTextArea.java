@@ -131,6 +131,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY			= "RSTA.fractionalFontMetrics";
 	public static final String HIGHLIGHT_SECONDARY_LANGUAGES_PROPERTY	= "RSTA.highlightSecondaryLanguages";
 	public static final String HYPERLINKS_ENABLED_PROPERTY				= "RSTA.hyperlinksEnabled";
+	public static final String INSERT_PAIRED_CHARS_PROPERTY				= "RSTA.insertPairedChars";
 	public static final String MARK_OCCURRENCES_PROPERTY				= "RSTA.markOccurrences";
 	public static final String MARKED_OCCURRENCES_CHANGED_PROPERTY		= "RSTA.markedOccurrencesChanged";
 	public static final String PAINT_MATCHED_BRACKET_PAIR_PROPERTY		= "RSTA.paintMatchedBracketPair";
@@ -322,6 +323,7 @@ private boolean fractionalFontMetricsEnabled;
 
 	private Color[] secondaryLanguageBackgrounds;
 
+	private boolean insertPairedCharacters;
 
 	/**
 	 * Constructor.
@@ -1312,6 +1314,35 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Returns whether paired characters should be inserted when there is
+	 * a selection. For example, If the following text is selected:
+	 * <p>
+	 *     {@code something}
+	 * </p>
+	 * And the double quote character, {@code "}, is typed, the selection
+	 * will be replaced with:
+	 * <p>
+	 *     {@code "something"}
+	 * </p>
+	 * If enabled, this occurs for the following characters:
+	 * <ul>
+	 *     <li>{@code "}</li>
+	 *     <li>{@code '}</li>
+	 *     <li>{@code [}</li>
+	 *     <li>{@code (}</li>
+	 *     <li>{@code &#123;}</li>
+	 * </ul>
+	 *
+	 * @return Whether to insert paired characters if a relevant key is typed
+	 *         while there is a selection.
+	 * @see #setInsertPairedCharacters(boolean)
+	 */
+	public boolean getInsertPairedCharacters() {
+		return insertPairedCharacters;
+	}
+
+
+	/**
 	 * Returns the last visible offset in this text area.  This may not be the
 	 * length of the document if code folding is enabled.
 	 *
@@ -2011,6 +2042,7 @@ private boolean fractionalFontMetricsEnabled;
 		setTabLineColor(null);
 		setMarkOccurrencesColor(MarkOccurrencesSupport.DEFAULT_COLOR);
 		setMarkOccurrencesDelay(MarkOccurrencesSupport.DEFAULT_DELAY_MS);
+		setInsertPairedCharacters(true);
 
 		foldManager = new DefaultFoldManager(this);
 
@@ -2675,6 +2707,39 @@ private boolean fractionalFontMetricsEnabled;
 			this.hyperlinksEnabled = enabled;
 			repaint();
 			firePropertyChange(HYPERLINKS_ENABLED_PROPERTY, !enabled, enabled);
+		}
+	}
+
+
+	/**
+	 * Toggles whether paired characters should be inserted when there is
+	 * a selection. For example, If the following text is selected:
+	 * <p>
+	 *     {@code something}
+	 * </p>
+	 * And the double quote character, {@code "}, is typed, the selection
+	 * can be replaced with:
+	 * <p>
+	 *     {@code "something"}
+	 * </p>
+	 * If enabled, this occurs for the following characters:
+	 * <ul>
+	 *     <li>{@code "}</li>
+	 *     <li>{@code '}</li>
+	 *     <li>{@code [}</li>
+	 *     <li>{@code (}</li>
+	 *     <li>{@code &#123;}</li>
+	 * </ul>
+	 *
+	 * @param insertPairedCharacters Whether to insert paired characters if a
+	 *        relevant key is typed while there is a selection.
+	 * @see #getInsertPairedCharacters()
+	 */
+	public void setInsertPairedCharacters(boolean insertPairedCharacters) {
+		if (this.insertPairedCharacters != insertPairedCharacters) {
+			this.insertPairedCharacters = insertPairedCharacters;
+			firePropertyChange(INSERT_PAIRED_CHARS_PROPERTY,
+				!insertPairedCharacters, insertPairedCharacters);
 		}
 	}
 

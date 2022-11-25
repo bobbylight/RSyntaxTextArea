@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.RTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,44 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaCloseCurlyBraceActionTest extends AbstractRSyntaxTextAreaTest {
+
+	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		RSyntaxTextArea textArea = createTextArea();
+
+		// Remove the final closing curly
+		textArea.setSelectionStart(textArea.getDocument().getLength() - 2);
+		textArea.setSelectionEnd(textArea.getDocument().getLength());
+		textArea.replaceSelection("\n\n     ");
+		String expected = textArea.getText();
+		textArea.setEditable(false);
+
+		RSyntaxTextAreaEditorKit.CloseCurlyBraceAction a = new RSyntaxTextAreaEditorKit.CloseCurlyBraceAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
+		a.actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(expected, textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_notEnabled() {
+
+		RSyntaxTextArea textArea = createTextArea();
+
+		// Remove the final closing curly
+		textArea.setSelectionStart(textArea.getDocument().getLength() - 2);
+		textArea.setSelectionEnd(textArea.getDocument().getLength());
+		textArea.replaceSelection("\n\n     ");
+		String expected = textArea.getText();
+		textArea.setEnabled(false);
+
+		RSyntaxTextAreaEditorKit.CloseCurlyBraceAction a = new RSyntaxTextAreaEditorKit.CloseCurlyBraceAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
+		a.actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(expected, textArea.getText());
+	}
 
 	@Test
 	void testActionPerformedImpl_closeCurlyBrace() {

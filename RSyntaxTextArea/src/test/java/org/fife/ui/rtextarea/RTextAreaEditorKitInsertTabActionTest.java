@@ -24,6 +24,20 @@ class RTextAreaEditorKitInsertTabActionTest {
 
 
 	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		RTextArea textArea = new RTextArea("hello world");
+		textArea.setCaretPosition(textArea.getText().indexOf(' '));
+		textArea.setEditable(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("hello world", textArea.getText());
+	}
+
+
+	@Test
 	void testActionPerformedImpl_notEnabled() {
 
 		RTextArea textArea = new RTextArea("hello world");
