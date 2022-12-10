@@ -52,4 +52,145 @@ class TokenImplTest {
 	}
 
 
+	@Test
+	void testIs_1arg_charArray_differentLengths() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is("while".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_1arg_charArray_sameLengthsButDifferent() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is("foo".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_1arg_charArray_same() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertTrue(token.is("for".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_2arg_charArray_differentLengths() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.IDENTIFIER, "while".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_2arg_charArray_sameLengthsButDifferent() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.IDENTIFIER, "foo".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_2arg_charArray_sameLexemeButDifferentType() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.RESERVED_WORD, "for".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_2arg_charArray_same() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertTrue(token.is(token.getType(), "for".toCharArray()));
+	}
+
+
+	@Test
+	void testIs_2arg_string_differentLengths() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.IDENTIFIER, "while"));
+	}
+
+
+	@Test
+	void testIs_2arg_string_sameLengthsButDifferent() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.IDENTIFIER, "foo"));
+	}
+
+
+	@Test
+	void testIs_2arg_string_sameLexemeButDifferentType() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.is(TokenTypes.RESERVED_WORD, "for"));
+	}
+
+
+	@Test
+	void testIs_2arg_string_same() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertTrue(token.is(token.getType(), "for"));
+	}
+
+
+	@Test
+	void testIsComment_true() {
+
+		char[] ch = "for".toCharArray();
+
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.COMMENT_EOL, 0);
+		Assertions.assertTrue(token.isComment());
+
+		token = new TokenImpl(ch, 0, 2, 0, TokenTypes.COMMENT_MULTILINE, 0);
+		Assertions.assertTrue(token.isComment());
+
+		token = new TokenImpl(ch, 0, 2, 0, TokenTypes.COMMENT_DOCUMENTATION, 0);
+		Assertions.assertTrue(token.isComment());
+
+		token = new TokenImpl(ch, 0, 2, 0, TokenTypes.COMMENT_KEYWORD, 0);
+		Assertions.assertTrue(token.isComment());
+
+		token = new TokenImpl(ch, 0, 2, 0, TokenTypes.COMMENT_MARKUP, 0);
+		Assertions.assertTrue(token.isComment());
+
+		token = new TokenImpl(ch, 0, 2, 0, TokenTypes.MARKUP_COMMENT, 0);
+		Assertions.assertTrue(token.isComment());
+	}
+
+
+	@Test
+	void testComment_false() {
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.RESERVED_WORD, 0);
+		Assertions.assertFalse(token.isComment());
+	}
 }
