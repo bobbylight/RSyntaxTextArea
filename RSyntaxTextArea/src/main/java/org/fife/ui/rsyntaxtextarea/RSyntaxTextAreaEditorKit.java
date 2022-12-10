@@ -71,6 +71,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String rstaBacktickAction			= "RSTA.BacktickAction";
 	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
 	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
 	public static final String rstaCollapseAllFoldsAction	= "RSTA.CollapseAllFoldsAction";
@@ -79,15 +80,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaCopyAsStyledTextAction   = "RSTA.CopyAsStyledTextAction";
 	public static final String rstaCutAsStyledTextAction   = "RSTA.CutAsStyledTextAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
+	public static final String rstaDoubleQuoteAction		= "RSTA.DoubleQuoteAction";
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
-	public static final String rstaOpenParenAction			= "RSTA.openParenAction";
-	public static final String rstaOpenSquareBracketAction	= "RSTA.openSquareBracketAction";
-	public static final String rstaOpenCurlyAction			= "RSTA.openCurlyAction";
-	public static final String rstaDoubleQuoteAction		= "RSTA.doubleQuoteAction";
-	public static final String rstaSingleQuoteAction		= "RSTA.singleQuoteAction";
+	public static final String rstaOpenParenAction			= "RSTA.OpenParenAction";
+	public static final String rstaOpenSquareBracketAction	= "RSTA.OpenSquareBracketAction";
+	public static final String rstaOpenCurlyAction			= "RSTA.OpenCurlyAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
+	public static final String rstaSingleQuoteAction		= "RSTA.SingleQuoteAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
 
@@ -124,8 +125,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new InsertPairedCharacterAction(rstaOpenParenAction, '(', ')'),
 		new InsertPairedCharacterAction(rstaOpenSquareBracketAction, '[', ']'),
 		new InsertPairedCharacterAction(rstaOpenCurlyAction, '{', '}'),
-		new InsertPairedCharacterAction(rstaDoubleQuoteAction, '"', '"'),
-		new InsertPairedCharacterAction(rstaSingleQuoteAction, '\'', '\''),
+		new InsertQuoteAction(rstaDoubleQuoteAction, InsertQuoteAction.QuoteType.DOUBLE_QUOTE),
+		new InsertQuoteAction(rstaSingleQuoteAction, InsertQuoteAction.QuoteType.SINGLE_QUOTE),
+		new InsertQuoteAction(rstaBacktickAction, InsertQuoteAction.QuoteType.BACKTICK),
 		new InsertTabAction(),
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
@@ -1697,6 +1699,114 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
+	}
+
+
+	/**
+	 * Inserts a quote character. If the current language supports string literals with this
+	 * quote character, the following additional logic occurs:
+	 * <ul>
+	 *     <li>If the caret is not in a string literal or comment, both the opening and closing
+	 *         quotes are entered</li>
+	 *     <li>If the caret is at the end (the closing quote) of a valid quoted literal, the
+	 *         existing closing quote character is overwritten, rather than a new quote
+	 *         character being entered</li>
+	 * </ul>
+	 * This feature is meant to simplify the common case of typing single-line strings.
+	 */
+	public static class InsertQuoteAction extends InsertPairedCharacterAction {
+
+		public enum QuoteType {
+			DOUBLE_QUOTE('"', TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, TokenTypes.ERROR_STRING_DOUBLE),
+			SINGLE_QUOTE('\'', TokenTypes.LITERAL_CHAR, TokenTypes.ERROR_CHAR),
+			BACKTICK('`', TokenTypes.LITERAL_BACKQUOTE, -1);
+
+			private final char ch;
+			private final int validTokenType;
+			private final int invalidTokenType;
+
+			QuoteType(char ch, int validTokenType, int invalidTokenType) {
+				this.ch = ch;
+				this.validTokenType = validTokenType;
+				this.invalidTokenType = invalidTokenType;
+			}
+		}
+
+		private final QuoteType quoteType;
+		private final String stringifiedQuoteTypeCh;
+
+		public InsertQuoteAction(String actionName, QuoteType quoteType) {
+			super(actionName, quoteType.ch, quoteType.ch);
+			this.quoteType = quoteType;
+			stringifiedQuoteTypeCh = String.valueOf(quoteType.ch);
+		}
+
+		@Override
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+
+			if (!rsta.getInsertPairedCharacters() ||
+				textArea.getSelectionStart() != textArea.getSelectionEnd() ||
+				textArea.getTextMode() == RTextArea.OVERWRITE_MODE) {
+				super.actionPerformedImpl(e, textArea);
+				return;
+			}
+
+			int offs = rsta.getCaretPosition();
+			Token t = RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(rsta, offs);
+			int tokenType = t != null ? t.getType() : TokenTypes.NULL;
+			boolean isComment = t != null && t.isComment();
+
+			if (tokenType == quoteType.validTokenType) {
+				if (offs == t.getEndOffset() - 1) {
+					textArea.moveCaretPosition(offs + 1); // Force a replacement to ensure undo is contiguous
+					textArea.replaceSelection(stringifiedQuoteTypeCh);
+					textArea.setCaretPosition(offs + 1);
+				}
+				else {
+					super.actionPerformedImpl(e, textArea);
+				}
+			}
+			else if (isComment || tokenType == quoteType.invalidTokenType) {
+				// We could be smarter here for invalid quoted literals - if we knew whether the language
+				// used '\' as an escape character, and the caret is NOT between a '\' and the closing
+				// quote, we could then assume it's an invalid string due to e.g. a bad escape char, and
+				// overwrite the closing quote. But for now we're just doing nothing in this case
+				super.actionPerformedImpl(e, textArea); // Just insert the character
+			}
+			else {
+				insertEmptyQuoteLiteral(rsta);
+			}
+		}
+
+		private void insertEmptyQuoteLiteral(RSyntaxTextArea textArea) {
+
+			textArea.beginAtomicEdit();
+
+			try {
+
+				textArea.replaceSelection(stringifiedQuoteTypeCh);
+
+				// Check whether the starting quote started a string literal. If it did,
+				// enter the closing quote. This is done to sniff out language tht don't
+				// support string literals.
+				int caretPos = textArea.getCaretPosition();
+				Token t = RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(textArea, caretPos);
+				int tokenType = t != null ? t.getType() : TokenTypes.NULL;
+				if (tokenType == quoteType.validTokenType || tokenType == quoteType.invalidTokenType) {
+					textArea.replaceSelection(stringifiedQuoteTypeCh);
+					textArea.setCaretPosition(textArea.getCaretPosition() - 1);
+				}
+			} finally {
+				textArea.endAtomicEdit();
+			}
+		}
 	}
 
 

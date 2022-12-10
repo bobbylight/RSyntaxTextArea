@@ -48,6 +48,7 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke('{'),							RSyntaxTextAreaEditorKit.rstaOpenCurlyAction);
 		put(KeyStroke.getKeyStroke('\''),							RSyntaxTextAreaEditorKit.rstaSingleQuoteAction);
 		put(KeyStroke.getKeyStroke('"'),							RSyntaxTextAreaEditorKit.rstaDoubleQuoteAction);
+		put(KeyStroke.getKeyStroke('`'),							RSyntaxTextAreaEditorKit.rstaBacktickAction);
 
 		put(KeyStroke.getKeyStroke('/'), 							RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 		int os = RSyntaxUtilities.getOS();
