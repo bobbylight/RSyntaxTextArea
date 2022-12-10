@@ -176,7 +176,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 
 			while (line<textArea.getLineCount()) {
 				Token t = textArea.getTokenListForLine(line);
-				int i = 0;
+				int i;
 				// If examining the first line, start at offs.
 				if (line++==firstLine) {
 					t = RSyntaxUtilities.getTokenAtOffset(t, offs);
@@ -265,7 +265,7 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 				textArea.replaceSelection("\n" + header);
 				if (nested) {
 					dot = textArea.getCaretPosition(); // Has changed
-					textArea.insert("\n" + leadingWS + " */", dot);
+					textArea.insert("\n" + leadingWS + (firstMlcLine ? " " : "") + "*/", dot);
 					textArea.setCaretPosition(dot);
 				}
 

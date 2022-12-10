@@ -1533,77 +1533,71 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		protected void handleInsertBreak(RSyntaxTextArea textArea,
 										boolean noSelection) {
-			// If we're auto-indenting...
-			if (noSelection && textArea.isAutoIndentEnabled()) {
-				insertNewlineWithAutoIndent(textArea);
+
+			if (noSelection) {
+				try {
+					handleInsertBreakWithoutSelection(textArea);
+				} catch (BadLocationException ble) { // Never happens
+					textArea.replaceSelection("\n");
+					ble.printStackTrace();
+				}
 			}
 			else {
 				textArea.replaceSelection("\n");
-				if (noSelection) {
-					possiblyCloseCurlyBrace(textArea, null);
-				}
 			}
 		}
 
-		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {
+		private void handleInsertBreakWithoutSelection(RSyntaxTextArea textArea)
+				throws BadLocationException {
 
-			try {
+			int caretPos = textArea.getCaretPosition();
+			Document doc = textArea.getDocument();
+			Element map = doc.getDefaultRootElement();
+			int lineNum = map.getElementIndex(caretPos);
+			Element line = map.getElement(lineNum);
+			int start = line.getStartOffset();
+			int end = line.getEndOffset()-1; // Why always "-1"?
+			int len = end-start;
+			String s = doc.getText(start, len);
+			int caretOffsInLine = caretPos - start;
 
-				int caretPos = sta.getCaretPosition();
-				Document doc = sta.getDocument();
-				Element map = doc.getDefaultRootElement();
-				int lineNum = map.getElementIndex(caretPos);
-				Element line = map.getElement(lineNum);
-				int start = line.getStartOffset();
-				int end = line.getEndOffset()-1; // Why always "-1"?
-				int len = end-start;
-				String s = doc.getText(start, len);
-
-				// endWS is the end of the leading whitespace of the
-				// current line.
-				String leadingWS = RSyntaxUtilities.getLeadingWhitespace(s);
-				StringBuilder sb = new StringBuilder("\n");
+			StringBuilder sb = new StringBuilder("\n");
+			String leadingWS = null;
+			if (textArea.isAutoIndentEnabled()) {
+				leadingWS = RSyntaxUtilities.getLeadingWhitespace(s, caretOffsInLine);
 				sb.append(leadingWS);
-
-				// If there is only whitespace between the caret and
-				// the EOL, pressing Enter auto-indents the new line to
-				// the same place as the previous line.
-				int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
-				if (nonWhitespacePos==-1) {
-					if (leadingWS.length()==len &&
-							sta.isClearWhitespaceLinesEnabled()) {
-						// If the line was nothing but whitespace, select it
-						// so its contents get removed.
-						sta.setSelectionStart(start);
-						sta.setSelectionEnd(end);
-					}
-					sta.replaceSelection(sb.toString());
-				}
-
-				// If there is non-whitespace between the caret and the
-				// EOL, pressing Enter takes that text to the next line
-				// and auto-indents it to the same place as the last
-				// line.
-				else {
-					sb.append(s.substring(nonWhitespacePos));
-					sta.replaceRange(sb.toString(), caretPos, end);
-					sta.setCaretPosition(caretPos + leadingWS.length()+1);
-				}
-
-				// Must do it after everything else, as the "smart indent"
-				// calculation depends on the previous line's state
-				// AFTER the Enter press (stuff may have been moved down).
-				if (sta.getShouldIndentNextLine(lineNum)) {
-					sta.replaceSelection("\t");
-				}
-
-				possiblyCloseCurlyBrace(sta, leadingWS);
-
-			} catch (BadLocationException ble) { // Never happens
-				sta.replaceSelection("\n");
-				ble.printStackTrace();
 			}
 
+			// If the text remaining on the line would be all whitespace,
+			// remove it if necessary
+			if (textArea.isClearWhitespaceLinesEnabled() && isAllWhitespace(s, 0, caretOffsInLine)) {
+				// Select all text on the line before the caret so it gets removed
+				textArea.setCaretPosition(start);
+			}
+
+			// Find any non-whitespace text after the caret. If there is any, it gets put
+			// onto the next line. Whitespace between the caret and that text gets removed.
+			int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
+			textArea.moveCaretPosition(nonWhitespacePos > -1 ? nonWhitespacePos : end);
+			textArea.replaceSelection(sb.toString());
+
+			// Must do it after everything else, as the "smart indent"
+			// calculation depends on the previous line's state
+			// AFTER the Enter press (stuff may have been moved down).
+			if (textArea.getShouldIndentNextLine(lineNum)) {
+				textArea.replaceSelection("\t");
+			}
+
+			possiblyCloseCurlyBrace(textArea, leadingWS);
+		}
+
+		private static boolean isAllWhitespace(String str, int from, int to) {
+			for (int i = from; i < to; i++) {
+				if (!Character.isWhitespace(str.charAt(i))) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		private void possiblyCloseCurlyBrace(RSyntaxTextArea textArea,

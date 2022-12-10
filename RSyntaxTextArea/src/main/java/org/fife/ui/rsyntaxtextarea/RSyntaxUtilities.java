@@ -251,11 +251,25 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 *
 	 * @param text The String to check.
 	 * @return The leading whitespace.
+	 * @see #getLeadingWhitespace(String, int)
 	 * @see #getLeadingWhitespace(Document, int)
 	 */
 	public static String getLeadingWhitespace(String text) {
+		return getLeadingWhitespace(text, Integer.MAX_VALUE);
+	}
+
+
+	/**
+	 * Returns the leading whitespace of a string.
+	 *
+	 * @param text The String to check.
+	 * @param upTo Stops checking at the specified offset.
+	 * @return The leading whitespace.
+	 * @see #getLeadingWhitespace(String)
+	 */
+	public static String getLeadingWhitespace(String text, int upTo) {
 		int count = 0;
-		int len = text.length();
+		int len = Math.min(text.length(), upTo);
 		while (count<len && RSyntaxUtilities.isWhitespace(text.charAt(count))) {
 			count++;
 		}
