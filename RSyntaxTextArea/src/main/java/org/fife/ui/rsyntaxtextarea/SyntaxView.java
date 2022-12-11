@@ -431,9 +431,6 @@ public class SyntaxView extends View implements TabExpander,
 				return document.getTokenListForLine(line);
 			}
 		}
-		//		int line = map.getElementIndex(offset) - 1;
-		//		if (line>=0)
-		//			return document.getTokenListForLine(line);
 		return null;
 	}
 

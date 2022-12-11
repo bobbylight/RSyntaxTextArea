@@ -841,7 +841,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 		TokenOrientedView tov = (TokenOrientedView)e;
 		Token token = tov.getTokenListForPhysicalLineAbove(offs);
 		if (token==null) {
-			return -1;
+			return 0;
 		}
 		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be >0 ??
@@ -875,7 +875,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 		TokenOrientedView tov = (TokenOrientedView)e;
 		Token token = tov.getTokenListForPhysicalLineBelow(offs);
 		if (token==null) {
-			return -1;
+			return c.getDocument().getLength();
 		}
 		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be > c.getLineCount()-1 ??
