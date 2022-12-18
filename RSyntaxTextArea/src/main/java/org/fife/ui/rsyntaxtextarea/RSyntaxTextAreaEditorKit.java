@@ -1716,6 +1716,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	public static class InsertQuoteAction extends InsertPairedCharacterAction {
 
+		/**
+		 * The type of quote to insert.
+		 */
 		public enum QuoteType {
 			DOUBLE_QUOTE('"', TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, TokenTypes.ERROR_STRING_DOUBLE),
 			SINGLE_QUOTE('\'', TokenTypes.LITERAL_CHAR, TokenTypes.ERROR_CHAR),
