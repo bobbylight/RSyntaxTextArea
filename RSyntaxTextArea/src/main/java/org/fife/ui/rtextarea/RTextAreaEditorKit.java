@@ -1165,6 +1165,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 				int dot = textArea.getCaretPosition();
 				if (dot == 0) {
+					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 					return;
 				}
 
@@ -1195,8 +1196,6 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 						wordStart = BreakIterator.DONE;
 					}
 					if (wordStart==BreakIterator.DONE) {
-						UIManager.getLookAndFeel().provideErrorFeedback(
-								textArea);
 						break;
 					}
 					int end = getWordEnd(textArea, wordStart);
@@ -1205,7 +1204,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 					if (word.startsWith(lastPrefix)) {
 						textArea.replaceRange(word, lastWordStart, dot);
 						lastDot = textArea.getCaretPosition(); // Maybe shifted
-						break;
+						return;
 					}
 				}
 
@@ -1213,6 +1212,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				ble.printStackTrace();
 			}
 
+			// if we get here, no natch was found
+			UIManager.getLookAndFeel().provideErrorFeedback(
+				textArea);
 		}
 
 		@Override
