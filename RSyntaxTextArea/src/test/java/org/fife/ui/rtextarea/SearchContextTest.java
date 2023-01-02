@@ -94,6 +94,47 @@ class SearchContextTest {
 
 
 	@Test
+	void testGetSetMatchCase() {
+		SearchContext sc = new SearchContext();
+		Assertions.assertFalse(sc.getMatchCase());
+		sc.setMatchCase(true);
+		Assertions.assertTrue(sc.getMatchCase());
+		sc.setMatchCase(true); // conditional testing
+		Assertions.assertTrue(sc.getMatchCase());
+	}
+
+
+	@Test
+	void testGetSetSearchFor() {
+		SearchContext sc = new SearchContext();
+		Assertions.assertNull(sc.getSearchFor());
+		sc.setSearchFor("foo");
+		Assertions.assertEquals("foo", sc.getSearchFor());
+		sc.setSearchFor("foo"); // conditional testing
+		Assertions.assertEquals("foo", sc.getSearchFor());
+	}
+
+
+	@Test
+	void testGetSetSearchSelectionOnly() {
+		SearchContext sc = new SearchContext();
+		// Can't test any other value as true currently isn't supported
+		Assertions.assertFalse(sc.getSearchSelectionOnly());
+	}
+
+
+	@Test
+	void testGetSetSearchWrap() {
+		SearchContext sc = new SearchContext();
+		Assertions.assertFalse(sc.getSearchWrap());
+		sc.setSearchWrap(true);
+		Assertions.assertTrue(sc.getSearchWrap());
+		sc.setSearchWrap(true); // conditional testing
+		Assertions.assertTrue(sc.getSearchWrap());
+	}
+
+
+	@Test
 	void testRemovePropertyChangeListener() {
 		TestPropertyChangeListener pcl = new TestPropertyChangeListener();
 		SearchContext sc = new SearchContext();
