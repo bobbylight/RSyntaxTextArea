@@ -4,7 +4,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Unit tests for the {@code FileTypeUtil} class.
@@ -340,5 +340,25 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 		// With backup extension
 		file = new File("test.unusual.orig");
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, util.guessContentType(file, filters, false));
+	}
+
+
+	@Test
+	void testStripBackupExtensions_null() {
+		Assertions.assertNull(FileTypeUtil.stripBackupExtensions(null));
+	}
+
+
+	@Test
+	void testStripBackupExtensions_hasBackupExtension() {
+		Assertions.assertEquals("test.js", FileTypeUtil.stripBackupExtensions("test.js.bak"));
+		Assertions.assertEquals("test.js", FileTypeUtil.stripBackupExtensions("test.js.old"));
+		Assertions.assertEquals("test.js", FileTypeUtil.stripBackupExtensions("test.js.orig"));
+	}
+
+
+	@Test
+	void testStripBackupExtensions_noBackupExtension() {
+		Assertions.assertEquals("test.js", FileTypeUtil.stripBackupExtensions("test.js"));
 	}
 }
