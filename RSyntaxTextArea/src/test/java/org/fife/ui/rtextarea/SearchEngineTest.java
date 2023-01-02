@@ -16,13 +16,14 @@ import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
 
 /**
  * Some very basic unit tests for the {@link SearchEngine} used by
@@ -101,30 +102,52 @@ class SearchEngineTest {
 	}
 
 
-	@BeforeEach
-	void setUp() throws Exception {
+	@BeforeAll
+	static void setUpOnce() throws Exception {
 
-		// setUp() is called once per test, each with a new instantiation of
-		// SearchEngineTest, so check a static variable to ensure that
-		// initialization is only done once.
-
-		if (text == null || text.length() <= 0) {
-
-			StringBuilder sb = new StringBuilder();
-			InputStream in = SearchEngineTest.class.
-					getResourceAsStream("SearchEngineTest.txt");
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-				String s;
-				while ((s = br.readLine()) != null) {
-					sb.append(s).append("\n");
-				}
+		StringBuilder sb = new StringBuilder();
+		InputStream in = SearchEngineTest.class.
+				getResourceAsStream("SearchEngineTest.txt");
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+			String s;
+			while ((s = br.readLine()) != null) {
+				sb.append(s).append("\n");
 			}
-
-			// Strip off last newline
-			text = sb.substring(0, sb.length()-1);
-
 		}
 
+		// Strip off last newline
+		text = sb.substring(0, sb.length()-1);
+
+	}
+
+
+	@Test
+	void testSearchEngineFindEmptyDocument() {
+
+		testSearchEngineFindEmptyDocumentImpl(false, false, false);
+		testSearchEngineFindEmptyDocumentImpl(false, true, false);
+		testSearchEngineFindEmptyDocumentImpl(false, true, true);
+		testSearchEngineFindEmptyDocumentImpl(false, false, true);
+
+		testSearchEngineFindEmptyDocumentImpl(true, false, false);
+		testSearchEngineFindEmptyDocumentImpl(true, true, false);
+		testSearchEngineFindEmptyDocumentImpl(true, true, true);
+		testSearchEngineFindEmptyDocumentImpl(true, false, true);
+	}
+
+
+	private void testSearchEngineFindEmptyDocumentImpl(boolean forward, boolean regex,
+									   boolean wholeWord) {
+		textArea.setText(null);
+
+		SearchContext context = new SearchContext();
+		context.setSearchFor("test");
+		context.setSearchForward(forward);
+		context.setRegularExpression(regex);
+		context.setWholeWord(wholeWord);
+		context.setSearchWrap(true);
+
+		assertFalse(findImpl(context));
 	}
 
 
@@ -460,19 +483,11 @@ class SearchEngineTest {
 	 */
 	@Test
 	void testSearchEngineFindWrap() {
-		testSearchEngineWrapImpl();
-	}
 
-	/**
-	 * Tests <code>SearchEngine.find()</code> when searching the entire document.
-	 *
-	 */
-	private void testSearchEngineWrapImpl() {
 		textArea.setText(text);
-
 		SearchContext context = new SearchContext();
 
-		// Search for "Chuck", non matching case.
+		// Search for "Chuck", non-matching case.
 		context.setSearchForward(false);
 		context.setSearchFor("Chuck");
 		context.setSearchWrap(false);
@@ -491,7 +506,7 @@ class SearchEngineTest {
 		assertTrue(found);
 		assertTrue(result.isWrapped());
 
-		// Search for "Chuck", non matching case.
+		// Search for "Chuck", non-matching case.
 		context.setSearchForward(true);
 		context.setSearchFor("wood");
 		context.setSearchWrap(false);
@@ -664,7 +679,7 @@ class SearchEngineTest {
 	 *
 	 * @param forward Whether to test searching forward or backward.
 	 */
-	private void testSearchEngineReplace(boolean forward) {
+	private void testSearchEngineReplaceImpl(boolean forward) {
 
 		int offs = forward ? 0 : text.length();
 		SearchContext context = new SearchContext();
@@ -811,7 +826,7 @@ class SearchEngineTest {
 	 */
 	@Test
 	void testSearchEngineReplaceBackward() {
-		testSearchEngineReplace(false);
+		testSearchEngineReplaceImpl(false);
 	}
 
 	/**
@@ -833,7 +848,56 @@ class SearchEngineTest {
 	 */
 	@Test
 	void testSearchEngineReplaceForward() {
-		testSearchEngineReplace(true);
+		testSearchEngineReplaceImpl(true);
+	}
+
+
+	/**
+	 * Tests <code>SearchEngine.replace()</code> when searching with wrap.
+	 */
+	@Test
+	void testSearchEngineReplaceWrap() {
+
+		textArea.setText("oneoneone");
+		SearchContext context = new SearchContext();
+
+		// Replace the second instance of "one"
+		context.setSearchForward(true);
+		context.setSearchFor("one");
+		context.setReplaceWith("two");
+		context.setSearchWrap(true);
+		textArea.setCaretPosition(1);
+		boolean found = replaceImpl(context);
+		assertTrue(found);
+		assertFalse(result.isWrapped());
+		assertEquals("onetwoone", textArea.getText());
+		// The next match is selected
+		assertEquals(6, textArea.getSelectionStart());
+		assertEquals(9, textArea.getSelectionEnd());
+
+		// Replace the third/last instance of "one"
+		found = replaceImpl(context);
+		assertTrue(found);
+		assertTrue(result.isWrapped());
+		assertEquals("onetwotwo", textArea.getText());
+		// The first match is selected (wrap)
+		assertEquals(0, textArea.getSelectionStart());
+		assertEquals(3, textArea.getSelectionEnd());
+
+		// Replace the first/only remaining instance of "one"
+		found = replaceImpl(context);
+		assertTrue(found);
+		assertFalse(result.isWrapped());
+		assertEquals("twotwotwo", textArea.getText());
+		assertEquals(3, textArea.getSelectionStart());
+		assertEquals(3, textArea.getSelectionEnd());
+
+		// No change if no more matches
+		found = replaceImpl(context);
+		assertFalse(found);
+		assertEquals("twotwotwo", textArea.getText());
+		assertEquals(3, textArea.getSelectionStart());
+		assertEquals(3, textArea.getSelectionEnd());
 	}
 
 
