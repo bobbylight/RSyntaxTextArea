@@ -38,7 +38,7 @@ class TokenIteratorTest {
 	@Test
 	void testBasicIteration() throws Exception {
 
-		RSyntaxDocument doc = null;
+		RSyntaxDocument doc;
 
 		// A well-formed Java document.
 		doc = loadResource("TokenIteratorTest_JavaBasic.txt",

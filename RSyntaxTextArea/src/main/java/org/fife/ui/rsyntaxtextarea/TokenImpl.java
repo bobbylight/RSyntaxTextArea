@@ -464,7 +464,7 @@ public class TokenImpl implements Token {
 		float stableX = x0; // Cached ending x-coord. of last tab or token.
 		TokenImpl token = this;
 		int last = getOffset();
-		FontMetrics fm = null;
+		FontMetrics fm;
 
 		while (token != null && token.isPaintable()) {
 
@@ -719,7 +719,7 @@ public class TokenImpl implements Token {
 
 		int stableX = x0; // Cached ending x-coord. of last tab or token.
 		TokenImpl token = this;
-		FontMetrics fm = null;
+		FontMetrics fm;
 		Segment s = new Segment();
 
 		while (token != null && token.isPaintable()) {

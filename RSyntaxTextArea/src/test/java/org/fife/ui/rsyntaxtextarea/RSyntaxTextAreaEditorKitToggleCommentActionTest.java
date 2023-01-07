@@ -5,7 +5,6 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
-import org.fife.ui.rtextarea.RTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -187,7 +187,7 @@ public final class SearchEngine {
 			// Regex matches can have varying widths.  The returned point's
 			// x- and y-values represent the start and end indices of the
 			// match in findIn.
-			Point regExPos = null;
+			Point regExPos;
 			int start = 0;
 			do {
 				regExPos = getNextMatchPosRegEx(text, findIn.substring(start),

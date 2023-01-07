@@ -533,7 +533,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			int newPos = 0;
+			int newPos;
 
 			try {
 
@@ -1305,7 +1305,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			int offs = textArea.getCaretPosition();
-			int endOffs = 0;
+			int endOffs;
 			try {
 				if (textArea.getLineWrap()) {
 					// Must check per character, since one logical line may be

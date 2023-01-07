@@ -110,7 +110,7 @@ public class MatchedBracketPopup extends JWindow {
 
 	private String getText(int offsToRender) {
 
-		int line = 0;
+		int line;
 		try {
 			line = textArea.getLineOfOffset(offsToRender);
 		} catch (BadLocationException ble) {

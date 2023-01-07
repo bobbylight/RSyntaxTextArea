@@ -448,7 +448,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		// Use StyleContext to get a composite font for better Asian language
 		// support; see Sun bug S282887.
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		Font font = null;
+		Font font;
 
 		if (isOSX()) {
 			// Snow Leopard (1.6) uses Menlo as default monospaced font,

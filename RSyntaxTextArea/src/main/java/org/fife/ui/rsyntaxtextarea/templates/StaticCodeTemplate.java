@@ -149,7 +149,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 		if (firstNewline==-1) {
 			return text;
 		}
-		int pos = 0;
+		int pos;
 		int old = firstNewline+1;
 		StringBuilder sb = new StringBuilder(text.substring(0, old));
 		sb.append(indent);
