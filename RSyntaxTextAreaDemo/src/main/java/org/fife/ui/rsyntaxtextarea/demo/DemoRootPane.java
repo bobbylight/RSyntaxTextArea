@@ -44,8 +44,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	DemoRootPane() {
 		textArea = createTextArea();
-		setText("JavaExample.txt");
-		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
+		setText("TextExample.txt");
+		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_NONE);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
 		gutter.setBookmarkingEnabled(true);
@@ -124,6 +124,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("Ruby", "RubyExample.txt", SYNTAX_STYLE_RUBY, bg, menu);
 		addSyntaxItem("Rust", "RustExample.txt", SYNTAX_STYLE_RUST, bg, menu);
 		addSyntaxItem("SQL",  "SQLExample.txt", SYNTAX_STYLE_SQL, bg, menu);
+		addSyntaxItem("Text",  "testCaret.txt", SYNTAX_STYLE_NONE, bg, menu);
 		addSyntaxItem("TypeScript", "TypeScriptExample.txt", SYNTAX_STYLE_TYPESCRIPT, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);
 		addSyntaxItem("YAML", "YamlExample.txt", SYNTAX_STYLE_YAML, bg, menu);
