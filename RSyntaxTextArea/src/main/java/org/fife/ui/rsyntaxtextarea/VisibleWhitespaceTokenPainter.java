@@ -9,6 +9,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.util.SwingUtils;
+
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -77,7 +79,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 				case '\t':
 
 					// Fill in background.
-					nextX = x+fm.charsWidth(text, flushIndex,flushLen);
+					nextX = x + SwingUtils.charsWidth(fm, text, flushIndex,flushLen);
 					float nextTabStop = e.nextTabStop(nextX, 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextTabStop-x,height, g,
@@ -101,15 +103,15 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 					// NOTE:  There is a little bit of a "fudge factor"
 					// here when "smooth text" is enabled, as "width"
 					// below may well not be the width given to the space
-					// by fm.charsWidth() (it depends on how it places the
+					// by charsWidth(fm, ) (it depends on how it places the
 					// space with respect to the preceding character).
 					// But, we assume the approximation is close enough for
 					// our drawing a dot for the space.
 
 					// "flushLen+1" ensures text is aligned correctly (or,
 					// aligned the same as in getWidth()).
-					nextX = x+fm.charsWidth(text, flushIndex,flushLen+1);
-					int width = fm.charWidth(' ');
+					nextX = x + SwingUtils.charsWidth(fm, text, flushIndex,flushLen+1);
+					float width = SwingUtils.charWidth(fm, ' ');
 
 					// Paint background.
 					if (bg!=null) {
@@ -141,7 +143,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 			}
 		}
 
-		nextX = x+fm.charsWidth(text, flushIndex,flushLen);
+		nextX = x + SwingUtils.charsWidth(fm, text, flushIndex,flushLen);
 
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {
