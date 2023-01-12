@@ -15,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.text.TabExpander;
 
+import org.fife.util.SwingUtils;
 
 /**
  * Standard implementation of a token painter.
@@ -111,14 +112,14 @@ class DefaultTokenPainter implements TokenPainter {
 			switch (text[i]) {
 				case '\t':
 					nextX = e.nextTabStop(
-						x + fm.charsWidth(text, flushIndex,flushLen), 0);
+						x + SwingUtils.charsWidth(fm, text, flushIndex, flushLen), 0);
 					if (bg!=null) {
 						paintBackground(x,y, nextX-x,fm.getHeight(),
 									g, fm.getAscent(), host, bg);
 					}
 					if (flushLen > 0) {
 						g.setColor(fg);
-						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+						SwingUtils.drawChars(g, x, y, text, flushIndex, flushLen);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
@@ -130,7 +131,7 @@ class DefaultTokenPainter implements TokenPainter {
 			}
 		}
 
-		nextX = x+fm.charsWidth(text, flushIndex,flushLen);
+		nextX = x + SwingUtils.charsWidth(fm, text, flushIndex, flushLen);
 		java.awt.Rectangle r = host.getMatchRectangle();
 
 		if (flushLen>0 && nextX>=clipStart) {
@@ -143,7 +144,7 @@ class DefaultTokenPainter implements TokenPainter {
 				}
 			}
 			g.setColor(fg);
-			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+			SwingUtils.drawChars(g, x, y, text, flushIndex, flushLen);
 		}
 
 		if (host.getUnderlineForToken(token)) {
