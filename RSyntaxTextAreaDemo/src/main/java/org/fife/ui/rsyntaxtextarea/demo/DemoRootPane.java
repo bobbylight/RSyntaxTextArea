@@ -45,6 +45,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		textArea = createTextArea();
 		setText("TextExample1.txt");
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_NONE);
+		textArea.setTabSize(4);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
 		gutter.setBookmarkingEnabled(true);
