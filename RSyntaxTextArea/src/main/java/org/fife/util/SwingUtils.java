@@ -14,7 +14,7 @@ public class SwingUtils {
 	}
 
 	public static float charWidth(FontMetrics fm, char c) {
-		return charsWidth(fm, new char[]{c}, 1, 0);
+		return charsWidth(fm, new char[]{c}, 0, 1);
 	}
 
 	public static float charsWidth(FontMetrics fm, char[] text, int offset, int length) {
