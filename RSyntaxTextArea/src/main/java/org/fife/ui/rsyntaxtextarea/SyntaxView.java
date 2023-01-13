@@ -15,6 +15,7 @@ import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -55,7 +56,7 @@ public class SyntaxView extends View implements TabExpander,
 	private Element longLine;
 	private float longLineWidth;
 
-	private int tabSize;
+	private float tabSize;
 	private int tabBase;
 
 	/**
@@ -107,7 +108,7 @@ public class SyntaxView extends View implements TabExpander,
 		Component c = getContainer();
 		font = c.getFont();
 		metrics = c.getFontMetrics(font);
-		tabSize = getTabSize() * metrics.charWidth(' ');
+		tabSize = (float) getTabSize() * SwingUtils.charWidth(metrics, ' ');
 		Element lines = getElement();
 		int n = lines.getElementCount();
 		for (int i=0; i<n; i++) {
@@ -699,10 +700,10 @@ public class SyntaxView extends View implements TabExpander,
 	 */
 	@Override
 	public float nextTabStop(float x, int tabOffset) {
-		if (tabSize == 0) {
+		if (tabSize < 1f) {
 			return x;
 		}
-		int tabCount = (((int)x) - tabBase) / tabSize;
+		int tabCount = (int) ((x - tabBase) / tabSize);
 		return tabBase + ((tabCount + 1f) * tabSize);
 	}
 
