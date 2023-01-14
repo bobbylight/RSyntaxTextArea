@@ -74,6 +74,9 @@ abstract class AbstractTokenMakerTest {
 
 			Assertions.assertEquals(expectedType, t.getType(),
 				"Token has unexpected type: orig=" + token + ", actual=" + t);
+			// The assertion below doesn't work as some tests have trailing '\n' chars
+			//Assertions.assertEquals(token, t.getLexeme(),
+			//	"Token has unexpected lexeme: expected='" + token + "', actual=" + t);
 
 			// The token array passed to this method is supposed to be single tokens.
 			// The next token should denote it's the end of a line, and what the next
@@ -86,7 +89,7 @@ abstract class AbstractTokenMakerTest {
 						!t.getNextToken().isPaintable() ||
 						// 3. The next token is a token type to continue, e.g. string or MLC
 						t.getNextToken().length() == 0,
-					"Next token does not denote end-of-line: " + t.getNextToken());
+					"Next token does not denote end-of-line! lexeme: " + t.getLexeme() + ", next: " + t.getNextToken());
 			}
 		}
 
