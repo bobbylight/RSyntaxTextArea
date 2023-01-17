@@ -8,10 +8,13 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.util.SwingUtils;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
@@ -598,7 +601,7 @@ public class TokenImpl implements Token {
 			// point to get the widths for, so we don't check for w>0 (mini-
 			// optimization).
 			w = endBefore - currentStart;
-			width += fm.charsWidth(text, currentStart, w);
+			width += SwingUtils.charsWidth(fm, text, currentStart, w);
 		}
 		return width - x0;
 	}
@@ -714,10 +717,10 @@ public class TokenImpl implements Token {
 
 
 	@Override
-	public Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
-			int pos, int x0, Rectangle rect) {
+	public Rectangle2D listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
+			int pos, float x0, Rectangle2D rect) {
 
-		int stableX = x0; // Cached ending x-coord. of last tab or token.
+		float stableX = x0; // Cached ending x-coord. of last tab or token.
 		TokenImpl token = this;
 		FontMetrics fm;
 		Segment s = new Segment();
@@ -743,16 +746,16 @@ public class TokenImpl implements Token {
 				// Must use this (actually fm.charWidth()), and not
 				// fm.charsWidth() for returned value to match up with where
 				// text is actually painted on OS X!
-				int w = Utilities.getTabbedTextWidth(s, fm, stableX, e,
-						token.getOffset());
-				rect.x = stableX + w;
+				float w = Utilities.getTabbedTextWidth(s, fm, stableX, e,
+					token.getOffset());
+				SwingUtils.setX(rect, stableX + w);
 				end = token.documentToToken(pos);
 
 				if (text[end] == '\t') {
-					rect.width = fm.charWidth(' ');
+					SwingUtils.setWidth(rect, SwingUtils.charWidth(fm, ' '));
 				}
 				else {
-					rect.width = fm.charWidth(text[end]);
+					SwingUtils.setWidth(rect, SwingUtils.charWidth(fm, text[end]));
 				}
 
 				return rect;
@@ -777,8 +780,8 @@ public class TokenImpl implements Token {
 		// a width of 1 (so selection highlights don't extend way past line's
 		// text). A ConfigurableCaret will know to paint itself with a larger
 		// width.
-		rect.x = stableX;
-		rect.width = 1;
+		SwingUtils.setX(rect, stableX);
+		SwingUtils.setWidth(rect, 1);
 		return rect;
 
 	}
