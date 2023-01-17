@@ -490,7 +490,7 @@ public class TokenImpl implements Token {
 					start = i + 1; // Do charsWidth() from next char.
 				}
 				else {
-					nextX = stableX + fm.charsWidth(text, start, i - start + 1);
+					nextX = stableX + SwingUtils.charsWidth(fm, text, start, i - start + 1);
 				}
 				if (x >= currX && x < nextX) {
 					if ((x - currX) < (nextX - x)) {
