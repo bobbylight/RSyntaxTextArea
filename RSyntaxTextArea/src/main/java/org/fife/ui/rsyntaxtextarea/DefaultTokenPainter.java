@@ -112,8 +112,8 @@ public class DefaultTokenPainter implements TokenPainter {
 							Color color) {
 		g.setColor(color);
 		bgRect.setRect(x,y-fontAscent, width,height);
-		//g.fill(bgRect);
-		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
+		g.fill(bgRect);
+//		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
 	}
 
 

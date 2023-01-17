@@ -10,6 +10,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -336,10 +337,10 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * @throws IllegalArgumentException If <code>p0</code> and <code>p1</code>
 	 *         are not on the same line.
 	 */
-	public static Rectangle getLineWidthUpTo(RSyntaxTextArea textArea,
+	public static Rectangle2D getLineWidthUpTo(RSyntaxTextArea textArea,
 								Segment s, int p0, int p1,
-								TabExpander e, Rectangle rect,
-								int x0)
+								TabExpander e, Rectangle2D rect,
+								float x0)
 								throws BadLocationException {
 
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
