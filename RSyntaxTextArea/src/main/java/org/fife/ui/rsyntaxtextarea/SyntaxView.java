@@ -657,7 +657,7 @@ public class SyntaxView extends View implements TabExpander,
 			return x;
 		}
 		int ntabs = (int) ((x - tabBase) / tabSize);
-		return tabBase + ((ntabs + 1f) * tabSize);
+		return 1 + tabBase + ((ntabs + 1f) * tabSize);  // offset to prevent next tab from occurring on the same pixel as the preceding character ends
 	}
 
 
