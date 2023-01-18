@@ -173,7 +173,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 		// other than Token.WHITESPACE for spaces (such as Token.IDENTIFIER).
 		// This also allows us to paint tab lines for MLC's.
 		if (host.getPaintTabLines() && origX==host.getMargin().left) {// && isWhitespace()) {
-			paintTabLines(token, origX, (int)y, (int)nextX, g, e, host);
+			paintTabLines(token, origX, y, nextX, g, e, host);
 		}
 
 		return nextX;
