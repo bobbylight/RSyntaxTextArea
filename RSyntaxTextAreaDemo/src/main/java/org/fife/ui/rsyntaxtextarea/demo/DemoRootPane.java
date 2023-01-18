@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -181,6 +179,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		cbItem.setSelected(true);
 		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new TabLinesAction());
+		menu.add(cbItem);
+		cbItem = new JCheckBoxMenuItem(new WhitespaceVisibleAction());
 		menu.add(cbItem);
 		mb.add(menu);
 
@@ -599,6 +599,24 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	}
 
+	/**
+	 * Toggles line number visibility.
+	 */
+	private class WhitespaceVisibleAction extends AbstractAction {
+
+		private boolean selected;
+
+		WhitespaceVisibleAction() {
+			putValue(NAME, "Whitespace");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selected = !selected;
+			textArea.setWhitespaceVisible(selected);
+		}
+
+	}
 	/**
 	 * Toggles word wrap.
 	 */
