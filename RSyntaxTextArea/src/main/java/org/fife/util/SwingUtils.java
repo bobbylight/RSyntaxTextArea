@@ -1,6 +1,7 @@
 package org.fife.util;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -13,6 +14,10 @@ public class SwingUtils {
 
 	public static void drawChars(Graphics2D g, float x, float y, char[] text, int index, int length) {
 		g.drawString(new String(text, index, length), x, y);
+	}
+
+	public static void drawLine(Graphics2D g, double x1, double y1, double x2, double y2) {
+		g.draw(new Line2D.Double(x1, y1, x2, y2));
 	}
 
 	public static float charWidth(FontMetrics fm, char c) {

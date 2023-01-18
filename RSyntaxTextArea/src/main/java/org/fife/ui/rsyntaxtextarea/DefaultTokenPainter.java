@@ -124,7 +124,7 @@ public class DefaultTokenPainter implements TokenPainter {
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean selected, boolean useSTC) {
 
-		int origX = (int)x;
+		float origX = x;
 		int textOffs = token.getTextOffset();
 		char[] text = token.getTextArray();
 		int end = textOffs + token.length();
@@ -178,15 +178,15 @@ public class DefaultTokenPainter implements TokenPainter {
 
 		if (host.getUnderlineForToken(token)) {
 			g.setColor(fg);
-			int y2 = (int)(y+1);
-			g.drawLine(origX,y2, (int)nextX,y2);
+			float y2 = y+1;
+			SwingUtils.drawLine(g, origX,y2, nextX,y2);
 		}
 
 		// Don't check if it's whitespace - some TokenMakers may return types
 		// other than Token.WHITESPACE for spaces (such as Token.IDENTIFIER).
 		// This also allows us to paint tab lines for MLC's.
 		if (host.getPaintTabLines() && origX==host.getMargin().left) {// && isWhitespace()) {
-			paintTabLines(token, origX, (int)y, (int)nextX, g, e, host);
+			paintTabLines(token, origX, y, nextX, g, e, host);
 		}
 
 		return nextX;
@@ -224,7 +224,7 @@ public class DefaultTokenPainter implements TokenPainter {
 	 * @param e Used to expand tabs.
 	 * @param host The text area.
 	 */
-	protected void paintTabLines(Token token, int x, int y, int endX,
+	protected void paintTabLines(Token token, float x, float y, float endX,
 				Graphics2D g, TabExpander e, RSyntaxTextArea host) {
 
 		// We allow tab lines to be painted in more than just Token.WHITESPACE,
@@ -243,7 +243,7 @@ public class DefaultTokenPainter implements TokenPainter {
 				return;
 			}
 			//endX = x + (int)getWidthUpTo(offs, host, e, x);
-			endX = (int)token.getWidthUpTo(offs, host, e, 0);
+			endX = token.getWidthUpTo(offs, host, e, 0);
 		}
 
 		// Get the length of a tab.
@@ -260,13 +260,13 @@ public class DefaultTokenPainter implements TokenPainter {
 		// of a tab as it may be different per-token-type.  We could keep a
 		// per-token-type cache, but we'd have to clear it whenever they
 		// modified token styles.
-		int tabW = fm.charsWidth(tabBuf, 0, tabSize);
+		float tabW = SwingUtils.charsWidth(fm, tabBuf, 0, tabSize);
 
 		// Draw any tab lines.  Here we're assuming that "x" is the left
 		// margin of the editor.
 		g.setColor(host.getTabLineColor());
-		int x0 = x + tabW;
-		int y0 = y - fm.getAscent();
+		float x0 = x + tabW;
+		int y0 = (int) (y - fm.getAscent());
 		if ((y0&1)>0) {
 			// Only paint on even y-pixels to prevent doubling up between lines
 			y0++;
@@ -278,10 +278,10 @@ public class DefaultTokenPainter implements TokenPainter {
 			endX++;
 		}
 		while (x0<endX) {
-			int y1 = y0;
-			int y2 = y0 + host.getLineHeight();
+			float y1 = y0;
+			float y2 = y0 + host.getLineHeight();
 			while (y1<y2) {
-				g.drawLine(x0, y1, x0, y1);
+				SwingUtils.drawLine(g, x0, y1, x0, y1);
 				y1 += 2;
 			}
 			x0 += tabW;

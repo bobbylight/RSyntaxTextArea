@@ -513,18 +513,15 @@ public class ConfigurableCaret extends DefaultCaret {
 						if (textAreaBg==null) {
 							textAreaBg = Color.white;
 						}
-						g.setXORMode(textAreaBg);
-						double underlineY = r.getY() + r.getHeight();
-						Line2D.Double underline = new Line2D.Double(r.getX(), underlineY, r.getX() + r.getWidth() - 1.0f, underlineY);
-						g2d.draw(underline);
+						g2d.setXORMode(textAreaBg);
+						SwingUtils.drawLine(g2d, r.getX(), r.getY() + r.getHeight(), r.getX() + r.getWidth() - 1.0f, r.getY() + r.getHeight());
 						break;
 
 					// Draw a vertical line.
 					default:
 					case VERTICAL_LINE_STYLE:
 						double lineY = r.getY() + 1.0f;
-						Line2D.Double verticalLine = new Line2D.Double(r.getX(), lineY, r.getX(), lineY+r.getHeight());
-						g2d.draw(verticalLine);
+						SwingUtils.drawLine(g2d, r.getX(), lineY, r.getX(), lineY+r.getHeight());
 						break;
 
 					// A thicker vertical line.
@@ -533,8 +530,8 @@ public class ConfigurableCaret extends DefaultCaret {
 						double thickLineX2 = r.getX()+0.8f;  // Add < 1 to avoid double thin lines in fractional scaling
 						double thickLineY = r.getY()+1.0f;
 						double thickLineHeight = thickLineY+r.getHeight();
-						g2d.draw(new Line2D.Double(thickLineX1, thickLineY, thickLineX1, thickLineHeight));
-						g2d.draw(new Line2D.Double(thickLineX2, thickLineY, thickLineX2, thickLineHeight));
+						SwingUtils.drawLine(g2d, thickLineX1, thickLineY, thickLineX1, thickLineHeight);
+						SwingUtils.drawLine(g2d, thickLineX2, thickLineY, thickLineX2, thickLineHeight);
 						break;
 
 				} // End of switch (style).
