@@ -232,11 +232,12 @@ class DefaultTokenPainter implements TokenPainter {
 		// per-token-type cache, but we'd have to clear it whenever they
 		// modified token styles.
 		float tabW = SwingUtils.charsWidth(fm, tabBuf, 0, tabSize);
+		float tabOffset = tabW / tabSize / 3; // offset 1/3 to ensure that each tab position is covered by a character also in fractional scaling
 
 		// Draw any tab lines.  Here we're assuming that "x" is the left
 		// margin of the editor.
 		g.setColor(host.getTabLineColor());
-		float x0 = x + tabW;
+		float x0 = x + tabW + tabOffset;
 		int y0 = (int) (y - fm.getAscent());
 		if ((y0&1)>0) {
 			// Only paint on even y-pixels to prevent doubling up between lines
