@@ -14,6 +14,7 @@ import org.fife.util.SwingUtils;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import javax.swing.text.TabExpander;
 
 
@@ -56,7 +57,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean selected, boolean useSTC) {
 
-		int origX = (int)x;
+		float origX = x;
 		int textOffs = token.getTextOffset();
 		char[] text = token.getTextArray();
 		int end = textOffs + token.length();
@@ -89,7 +90,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// Paint chars cached before the tab.
 					if (flushLen > 0) {
-						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+						SwingUtils.drawChars(g, x, y, text, flushIndex, flushLen);
 						flushLen = 0;
 					}
 					flushIndex = i + 1;
@@ -122,7 +123,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// Paint chars before space.
 					if (flushLen>0) {
-						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+						SwingUtils.drawChars(g, x, y, text, flushIndex, flushLen);
 						flushLen = 0;
 					}
 
@@ -151,13 +152,13 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 							ascent, host, bg);
 			}
 			g.setColor(fg);
-			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+			SwingUtils.drawChars(g, x, y, text, flushIndex, flushLen);
 		}
 
 		if (host.getUnderlineForToken(token)) {
 			g.setColor(fg);
-			int y2 = (int)(y+1);
-			g.drawLine(origX,y2, (int)nextX,y2);
+			float y2 = y+1;
+			SwingUtils.drawLine(g, origX,y2, nextX,y2);
 		}
 
 		// Don't check if it's whitespace - some TokenMakers may return types
@@ -186,9 +187,9 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 	 */
 	protected void paintSpaceText(Graphics2D g, float x, float y, int ascent,
 								  int width, int height) {
-		int dotX = (int)(x - width/2f);
-		int dotY = (int)(y - ascent + height/2f);
-		g.drawLine(dotX, dotY, dotX, dotY);
+		float dotX = x - width/2f; // "2.0f" for FindBugs
+		float dotY = y - ascent + height/2f; // Ditto
+		SwingUtils.drawLine(g, dotX, dotY, dotX, dotY);
 	}
 
 
@@ -205,12 +206,12 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 	 */
 	protected void paintTabText(Graphics2D g, float x, float y,
 						float nextTabStop, int ascent, int height) {
-		int x2 = (int)nextTabStop - 3;
-		if (x2 >= (int)x) {
-			int halfHeight = height / 2;
-			int ymid = (int) y - ascent + halfHeight;
-			g.drawLine((int) x, ymid, x2, ymid);
-		}
+		float halfHeight = height / 2;
+		float quarterHeight = halfHeight / 2;
+		float ymid = (int)y - ascent + halfHeight;
+		SwingUtils.drawLine(g, x,ymid, nextTabStop,ymid);
+		SwingUtils.drawLine(g, nextTabStop,ymid, nextTabStop-4,ymid-quarterHeight);
+		SwingUtils.drawLine(g, nextTabStop,ymid, nextTabStop-4,ymid+quarterHeight);
 	}
 
 }
