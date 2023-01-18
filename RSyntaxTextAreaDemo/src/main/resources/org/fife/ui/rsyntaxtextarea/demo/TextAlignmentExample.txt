@@ -20,6 +20,17 @@ TabSize=4, separators: ' ', '.' and '\t'
 ^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	
 With tab size 4, the '^abc' strings should occur on every other stop since the string fills exactly one tab stop.
 
+Tablines:
+a
+    b
+        c
+            d
+            	e
+            de	
+        cde
+    bcde
+abcde
+
 Strings:
 0_12345_678910_1112131415_1617181920_2122232425_2627282930_3132333435_3637383940_4142434445_46474849
 0_12345_678910_1112131415_1617181920_2122232425_2627282930_3132333435_3637383940_4142434445_46474849
