@@ -1276,7 +1276,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			Rectangle2D alloc = a.getBounds2D();
 			RSyntaxTextArea textArea = (RSyntaxTextArea)getContainer();
 			SwingUtils.setHeight(alloc, textArea.getLineHeight());//metrics.getHeight();
-			SwingUtils.setWidth(alloc, 1);
+			SwingUtils.setWidth(alloc, 1.0f);
 			int p0 = getStartOffset();
 			int p1 = getEndOffset();
 			int testP = (b == Position.Bias.Forward) ? pos :
