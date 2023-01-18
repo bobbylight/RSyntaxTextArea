@@ -200,6 +200,9 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new ToggleKerningAction());
 		menu.add(cbItem);
+		cbItem = new JCheckBoxMenuItem(new TabLinesAction());
+		menu.add(cbItem);
+		cbItem = new JCheckBoxMenuItem(new WhitespaceVisibleAction());
 		cbItem = new JCheckBoxMenuItem(new ToggleLigatureSupportAction());
 		menu.add(cbItem);
 		mb.add(menu);
