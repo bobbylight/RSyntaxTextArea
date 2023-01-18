@@ -13,7 +13,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
@@ -512,6 +511,10 @@ public class ConfigurableCaret extends DefaultCaret {
 						if (textAreaBg==null) {
 							textAreaBg = Color.white;
 						}
+						g.setXORMode(textAreaBg);
+						double underlineY = r.getY() + r.getHeight();
+						Line2D.Double underline = new Line2D.Double(r.getX(), underlineY, r.getX() + r.getWidth() - 1.0f, underlineY);
+						g2d.draw(underline);
 						g2d.setXORMode(textAreaBg);
 						SwingUtils.drawLine(g2d, r.getX(), r.getY()+r.getHeight(),
 												 r.getX()+r.getWidth()-1.0f, r.getY()+r.getHeight());
