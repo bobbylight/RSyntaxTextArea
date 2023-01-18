@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -245,6 +247,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		textArea.setMarkOccurrences(true);
 		textArea.setCodeFoldingEnabled(true);
 		textArea.setClearWhitespaceLinesEnabled(false);
+		addPropertyChangeListener(evt->textArea.onGraphicsChange());
 
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
