@@ -3303,6 +3303,20 @@ private boolean fractionalFontMetricsEnabled;
 	}
 
 	/**
+	 * Update affected settings when the graphic properties change (screen resolution, scaling, etc).
+	 * Expect owner to listen to property changes on the container and call this methiod when necessary.
+	 * <p/>
+	 * Example:<br/>
+	 * <code>addPropertyChangeListener(evt->textArea.onGraphicsChange());</code>
+	 */
+	public void onGraphicsChange() {
+		Graphics graphics = getGraphics();
+		if (graphics != null) {
+			refreshFontMetrics(getGraphics2D(graphics));
+		}
+	}
+
+	/**
 	 * Renders the text on the line containing the "matched bracket" after a
 	 * delay.
 	 */
