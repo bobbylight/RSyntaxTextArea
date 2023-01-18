@@ -45,7 +45,6 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	DemoRootPane() {
 		textArea = createTextArea();
-		setText("TextExample1.txt");
 		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_NONE);
 		textArea.setTabSize(4);
 		scrollPane = new RTextScrollPane(textArea, true);
@@ -125,12 +124,11 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("Python",  "PythonExample.txt", SYNTAX_STYLE_PYTHON, bg, menu);
 		addSyntaxItem("Ruby", "RubyExample.txt", SYNTAX_STYLE_RUBY, bg, menu);
 		addSyntaxItem("SQL",  "SQLExample.txt", SYNTAX_STYLE_SQL, bg, menu);
-		addSyntaxItem("Text1",  "TextExample1.txt", SYNTAX_STYLE_NONE, bg, menu);
-		addSyntaxItem("Text2",  "TextExample2.txt", SYNTAX_STYLE_NONE, bg, menu);
+		addSyntaxItem("Text",  "TextExample.txt", SYNTAX_STYLE_NONE, bg, menu);
+		addSyntaxItem("Text Alignment",  "TextAlignmentExample.txt", SYNTAX_STYLE_NONE, bg, menu);
 		addSyntaxItem("TypeScript", "TypeScriptExample.txt", SYNTAX_STYLE_TYPESCRIPT, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);
 		addSyntaxItem("YAML", "YamlExample.txt", SYNTAX_STYLE_YAML, bg, menu);
-		menu.getItem(2).setSelected(true);
 		mb.add(menu);
 
 		menu = new JMenu("View");
