@@ -5,8 +5,6 @@
 
 Select Word:
 123456789.123456789.
-123456789.123456789.
-Double-click or click-drag mouse to select the last "word" (1-9) on the first row and drag the editor between screens, one scaled and one unscaled.
 
 iowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOWiowIOW
 iWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiW
@@ -14,7 +12,7 @@ iWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiWiW
 ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy
  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 
-tabSize=4, separators: ' ', '.' and '\t'
+TabSize=4, separators: ' ', '.' and '\t'
 ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   
 ^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...^...
 ^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	
@@ -22,6 +20,7 @@ tabSize=4, separators: ' ', '.' and '\t'
 ^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^a	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^ab	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abc	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	^abcd	
 With tab size 4, the '^abc' strings should occur on every other stop since the string fills exactly one tab stop.
 
+Strings:
 0_12345_678910_1112131415_1617181920_2122232425_2627282930_3132333435_3637383940_4142434445_46474849
 0_12345_678910_1112131415_1617181920_2122232425_2627282930_3132333435_3637383940_4142434445_46474849
 0_12345_678910_1112131415_1617181920_2122232425_2627282930_3132333435_3637383940_4142434445_46474849
@@ -53,7 +52,7 @@ With tab size 4, the '^abc' strings should occur on every other stop since the s
 0 12345 678910 1112131415 1617181920 2122232425 2627282930 3132333435 3637383940 4142434445 46474849
 0 12345 678910 1112131415 1617181920 2122232425 2627282930 3132333435 3637383940 4142434445 46474849
 
-Testing separators:
+Separators:
 0 12345 678910 1112131415 1617181920 2122232425 2627282930 3132333435 3637383940 4142434445 46474849
 0!12345!678910!1112131415!1617181920!2122232425!2627282930!3132333435!3637383940!4142434445!46474849
 0"12345"678910"1112131415"1617181920"2122232425"2627282930"3132333435"3637383940"4142434445"46474849
