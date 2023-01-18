@@ -8,17 +8,13 @@
  */
 package org.fife.ui.rtextarea;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.HeadlessException;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
@@ -29,6 +25,7 @@ import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -437,6 +434,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 */
 	@Override
 	public void paint(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
 
 		// If the cursor is currently visible...
 		if (isVisible() || alwaysVisible) {
@@ -446,7 +444,7 @@ public class ConfigurableCaret extends DefaultCaret {
 				RTextArea textArea = getTextArea();
 				g.setColor(textArea.getCaretColor());
 				TextUI mapper = textArea.getUI();
-				Rectangle r = mapper.modelToView(textArea, getDot());
+				Rectangle2D r = mapper.modelToView2D(textArea, getDot(), Position.Bias.Forward);
 
 				// "Correct" the value of rect.width (takes into
 				// account caret being at EOL (and thus rect.width==1)),
@@ -465,8 +463,8 @@ public class ConfigurableCaret extends DefaultCaret {
 				// appears to stop blinking because the wrong line range gets
 				// damaged.  This check keeps us in sync.
 				if (width>0 && height>0 &&
-						!contains(r.x, r.y, r.width, r.height)) {
-					Rectangle clip = g.getClipBounds();
+						!contains(r.getX(), r.getY(), r.getWidth(), r.getHeight())) {
+					Rectangle2D clip = g.getClip().getBounds2D();
 					if (clip != null && !clip.contains(this)) {
 						// Clip doesn't contain the old location, force it
 						// to be repainted lest we leave a caret around.
@@ -475,12 +473,13 @@ public class ConfigurableCaret extends DefaultCaret {
 					// This will potentially cause a repaint of something
 					// we're already repainting, but without changing the
 					// semantics of damage we can't really get around this.
-					damage(r);
+					// TODO verify that this does not cause any problems on a fractionally scaled screen
+					damage(new Rectangle((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight()));
 				}
 
 				// Need to subtract 2 from height, otherwise
 				// the caret will expand too far vertically.
-				r.height -= 2;
+				SwingUtils.setHeight(r, (float) (r.getHeight()-2.0f));
 
 				switch (style) {
 
@@ -492,13 +491,14 @@ public class ConfigurableCaret extends DefaultCaret {
 						}
 						g.setXORMode(textAreaBg);
 						// fills x==r.x to x==(r.x+(r.width)-1), inclusive.
-						g.fillRect(r.x,r.y, r.width,r.height);
+						g2d.fill(r);
 						break;
 
 					// Draw a rectangular border.
 					case BLOCK_BORDER_STYLE:
 						// fills x==r.x to x==(r.x+(r.width-1)), inclusive.
-						g.drawRect(r.x,r.y, r.width-1,r.height);
+						SwingUtils.setWidth(r, (float) r.getWidth()-1.0f);
+						g2d.draw(r);
 						break;
 
 					// Draw an "underline" below the current position.
@@ -508,23 +508,27 @@ public class ConfigurableCaret extends DefaultCaret {
 							textAreaBg = Color.white;
 						}
 						g.setXORMode(textAreaBg);
-						int y = r.y + r.height;
-						g.drawLine(r.x,y, r.x+r.width-1,y);
+						double underlineY = r.getY() + r.getHeight();
+						Line2D.Double underline = new Line2D.Double(r.getX(), underlineY, r.getX() + r.getWidth() - 1.0f, underlineY);
+						g2d.draw(underline);
 						break;
 
 					// Draw a vertical line.
 					default:
 					case VERTICAL_LINE_STYLE:
-						int lineY = r.y + 1;
-						g.drawLine(r.x,lineY, r.x,lineY+r.height);
+						double lineY = r.getY() + 1.0f;
+						Line2D.Double verticalLine = new Line2D.Double(r.getX(), lineY, r.getX(), lineY+r.getHeight());
+						g2d.draw(verticalLine);
 						break;
 
 					// A thicker vertical line.
 					case THICK_VERTICAL_LINE_STYLE:
-						lineY = r.y + 1;
-						g.drawLine(r.x,lineY, r.x,lineY+r.height);
-						r.x++;
-						g.drawLine(r.x,lineY, r.x,lineY+r.height);
+						double thickLineX1 = r.getX();
+						double thickLineX2 = r.getX()+0.8f;  // Add < 1 to avoid double thin lines in fractional scaling
+						double thickLineY = r.getY()+1.0f;
+						double thickLineHeight = thickLineY+r.getHeight();
+						g2d.draw(new Line2D.Double(thickLineX1, thickLineY, thickLineX1, thickLineHeight));
+						g2d.draw(new Line2D.Double(thickLineX2, thickLineY, thickLineX2, thickLineHeight));
 						break;
 
 				} // End of switch (style).
@@ -645,12 +649,12 @@ public class ConfigurableCaret extends DefaultCaret {
 	 *        <code>View</code>'s <code>modelToView</code>
 	 *        method for the caret position.
 	 */
-	private void validateWidth(Rectangle rect) {
+	private void validateWidth(Rectangle2D rect) {
 
 		// If the width value > 1, we assume the View is
 		// a "smart" view that returned the proper width.
 		// So only worry about this stuff if width <= 1.
-		if (rect!=null && rect.width<=1) {
+		if (rect!=null && !(rect.getWidth()>1.0f)) {
 
 			// The width is either 1 (most likely, we're using a "dumb" view
 			// like those in javax.swing.text) or 0 (most likely, we're using
@@ -667,20 +671,20 @@ public class ConfigurableCaret extends DefaultCaret {
 				textArea.getDocument().getText(getDot(),1, seg);
 				Font font = textArea.getFont();
 				FontMetrics fm = textArea.getFontMetrics(font);
-				rect.width = fm.charWidth(seg.array[seg.offset]);
+				SwingUtils.setWidth(rect, SwingUtils.charWidth(fm, seg.array[seg.offset]));
 
 				// This width being returned 0 likely means that it is an
 				// unprintable character (which is almost 100% to be a
 				// newline char, i.e., we're at the end of a line).  So,
 				// just use the width of a space.
-				if (rect.width==0) {
-					rect.width = fm.charWidth(' ');
+				if (rect.getWidth()<0.1f) {
+					SwingUtils.setWidth(rect, SwingUtils.charWidth(fm, ' '));
 				}
 
 			} catch (BadLocationException ble) {
 				// This shouldn't ever happen.
 				ble.printStackTrace();
-				rect.width = 8;
+				SwingUtils.setWidth(rect, 8);
 			}
 
 		} // End of if (rect!=null && rect.width<=1).
