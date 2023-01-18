@@ -591,7 +591,7 @@ public class TokenImpl implements Token {
 					// for here, so we check before calling.
 					w = i - currentStart;
 					if (w > 0) {
-						width += fm.charsWidth(text, currentStart, w);
+						width += SwingUtils.charsWidth(fm, text, currentStart, w);
 					}
 					currentStart = i + 1;
 					width = e.nextTabStop(width, 0);
