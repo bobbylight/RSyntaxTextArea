@@ -30,17 +30,17 @@ public class SwingUtils {
 	}
 
 	/** Convenience method */
-	public static void setHeight(Rectangle2D r, float height) {
+	public static void setHeight(Rectangle2D r, double height) {
 		r.setRect(r.getX(), r.getY(), r.getWidth(), height);
 	}
 
 	/** Convenience method */
-	public static void setWidth(Rectangle2D r, float width) {
+	public static void setWidth(Rectangle2D r, double width) {
 		r.setRect(r.getX(), r.getY(), width, r.getHeight());
 	}
 
 	/** Convenience method */
-	public static void setX(Rectangle2D r, float x) {
+	public static void setX(Rectangle2D r, double x) {
 		r.setRect(x, r.getY(), r.getWidth(), r.getHeight());
 	}
 }

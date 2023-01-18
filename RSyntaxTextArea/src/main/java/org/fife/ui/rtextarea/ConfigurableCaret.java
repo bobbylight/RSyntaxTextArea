@@ -485,7 +485,7 @@ public class ConfigurableCaret extends DefaultCaret {
 
 				// Need to subtract 2 from height, otherwise
 				// the caret will expand too far vertically.
-				SwingUtils.setHeight(r, (float) (r.getHeight()-2.0f));
+				SwingUtils.setHeight(r, (r.getHeight()-2.0f));
 
 				switch (style) {
 
@@ -503,7 +503,7 @@ public class ConfigurableCaret extends DefaultCaret {
 					// Draw a rectangular border.
 					case BLOCK_BORDER_STYLE:
 						// fills x==r.x to x==(r.x+(r.width-1)), inclusive.
-						SwingUtils.setWidth(r, (float) r.getWidth()-1.0f);
+						SwingUtils.setWidth(r, r.getWidth()-1.0f);
 						g2d.draw(r);
 						break;
 
