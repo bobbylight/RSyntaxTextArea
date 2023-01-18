@@ -186,6 +186,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new TabLinesAction());
 		menu.add(cbItem);
+		cbItem = new JCheckBoxMenuItem(new WhitespaceVisibleAction());
+		menu.add(cbItem);
 		mb.add(menu);
 
 		menu = new JMenu("Font");
@@ -683,6 +685,24 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	}
 
+	/**
+	 * Toggles line number visibility.
+	 */
+	private class WhitespaceVisibleAction extends AbstractAction {
+
+		private boolean selected;
+
+		WhitespaceVisibleAction() {
+			putValue(NAME, "Whitespace");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selected = !selected;
+			textArea.setWhitespaceVisible(selected);
+		}
+
+	}
 	/**
 	 * Toggles word wrap.
 	 */
