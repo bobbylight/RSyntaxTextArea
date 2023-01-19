@@ -8,6 +8,8 @@
  */
 package org.fife.ui.rtextarea;
 
+import org.fife.util.SwingUtils;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -586,7 +588,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 *         into the document.
 	 */
 	public int yForLineContaining(int offs) throws BadLocationException {
-		Rectangle r = modelToView(textArea, offs);
+		Rectangle r = SwingUtils.getBounds(textArea, offs);
 		return r!=null ? r.y : -1;
 	}
 

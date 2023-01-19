@@ -552,7 +552,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
-		int topPosition = textArea.viewToModel(
+		int topPosition = textArea.viewToModel2D(
 								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 
@@ -858,7 +858,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @throws BadLocationException ble If an error occurs.
 	 */
 	private int viewToModelLine(Point p) throws BadLocationException {
-		int offs = textArea.viewToModel(p);
+		int offs = textArea.viewToModel2D(p);
 		return offs>-1 ? textArea.getLineOfOffset(offs) : -1;
 	}
 

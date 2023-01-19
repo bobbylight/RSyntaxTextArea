@@ -35,6 +35,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -696,7 +697,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 				}
 				int x;
 				if (mcp == null) {
-					Rectangle loc = target.modelToView(pos);
+					Rectangle loc = SwingUtils.getBounds(target, pos);
 					x = (loc == null) ? 0 : loc.x;
 				}
 				else {
@@ -1464,12 +1465,12 @@ return c.getLineStartOffset(line);
 
 		Rectangle r;
 		try {
-			r = textArea.modelToView(start);
+			r = SwingUtils.getBounds(textArea, start);
 			if (r==null) { // Not yet visible; i.e. JUnit tests
 				return;
 			}
 			if (end!=start) {
-				r = r.union(textArea.modelToView(end));
+				r = r.union(SwingUtils.getBounds(textArea, end));
 			}
 		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
