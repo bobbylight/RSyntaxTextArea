@@ -138,6 +138,27 @@ class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextA
 	}
 
 	@Test
+	void test_noSelection_default_caretInMiddleOfLineOtherThanFirst() {
+
+		String origContent = "  zero\n  one two three\nfour five six";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setAutoIndentEnabled(true); // default
+		textArea.setClearWhitespaceLinesEnabled(true); // default
+
+		textArea.setCaretPosition(origContent.indexOf("two"));
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertBreakAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.insertBreakAction);
+		a.actionPerformedImpl(e, textArea);
+
+		// The current line is preserved, and the new line is indented
+		// at the same level as that line
+		String expectedResultContent = "  zero\n  one \n  two three\nfour five six";
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent.indexOf("two"), textArea.getCaretPosition());
+	}
+
+	@Test
 	void test_noSelection_defaults_allWSLine_caretAtEnd_allWSLineCleared() {
 
 		String origContent = "public void foo() {\n\t";
@@ -284,6 +305,27 @@ class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextA
 		String expectedResultContent = origContent + "\n";
 		Assertions.assertEquals(expectedResultContent, textArea.getText());
 		Assertions.assertEquals(origContent.length() + "\n".length(), textArea.getCaretPosition());
+	}
+
+	@Test
+	void test_noSelection_autoIndentDisabled_caretInMiddleOfLineOtherThanFirst() {
+
+		String origContent = "  zero\n  one two three\nfour five six";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setAutoIndentEnabled(false);
+		textArea.setClearWhitespaceLinesEnabled(true); // default
+
+		textArea.setCaretPosition(origContent.indexOf("two"));
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertBreakAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.insertBreakAction);
+		a.actionPerformedImpl(e, textArea);
+
+		// The current line is preserved, and the new line is not indented
+		// at the same level as that line
+		String expectedResultContent = "  zero\n  one \ntwo three\nfour five six";
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent.indexOf("two"), textArea.getCaretPosition());
 	}
 
 	@Test
@@ -535,6 +577,27 @@ class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextA
 		String expectedResultContent = "    we\nare";
 		Assertions.assertEquals(expectedResultContent, textArea.getText());
 		Assertions.assertEquals(expectedResultContent.length() - "are".length(), textArea.getCaretPosition());
+	}
+
+	@Test
+	void test_noSelection_autoIndentDisabled_clearWSLinesDisabled_caretInMiddleOfLineOtherThanFirst() {
+
+		String origContent = "  zero\n  one two three\nfour five six";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setAutoIndentEnabled(false);
+		textArea.setClearWhitespaceLinesEnabled(false);
+
+		textArea.setCaretPosition(origContent.indexOf("two"));
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertBreakAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.insertBreakAction);
+		a.actionPerformedImpl(e, textArea);
+
+		// The current line is preserved, and the new line is indented
+		// at the same level as that line
+		String expectedResultContent = "  zero\n  one \ntwo three\nfour five six";
+		Assertions.assertEquals(expectedResultContent, textArea.getText());
+		Assertions.assertEquals(expectedResultContent.indexOf("two"), textArea.getCaretPosition());
 	}
 
 	@Test

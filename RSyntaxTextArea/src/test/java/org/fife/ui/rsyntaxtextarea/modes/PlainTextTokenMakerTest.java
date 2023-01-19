@@ -76,7 +76,8 @@ class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
 			"foo",
 			"foo999",
 			"912",
-			"FooBar"
+			"FooBar",
+			"unn\u00f6tig"
 		);
 	}
 

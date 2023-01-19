@@ -1537,11 +1537,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 										boolean noSelection) {
 
 			if (noSelection) {
+				textArea.beginAtomicEdit();
 				try {
 					handleInsertBreakWithoutSelection(textArea);
 				} catch (BadLocationException ble) { // Never happens
 					textArea.replaceSelection("\n");
 					ble.printStackTrace();
+				} finally {
+					textArea.endAtomicEdit();
 				}
 			}
 			else {
@@ -1580,7 +1583,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// Find any non-whitespace text after the caret. If there is any, it gets put
 			// onto the next line. Whitespace between the caret and that text gets removed.
 			int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
-			textArea.moveCaretPosition(nonWhitespacePos > -1 ? nonWhitespacePos : end);
+			//textArea.moveCaretPosition(start + (nonWhitespacePos > -1 ? nonWhitespacePos : end));
+			textArea.moveCaretPosition(nonWhitespacePos > -1 ? start + nonWhitespacePos : end);
 			textArea.replaceSelection(sb.toString());
 
 			// Must do it after everything else, as the "smart indent"
