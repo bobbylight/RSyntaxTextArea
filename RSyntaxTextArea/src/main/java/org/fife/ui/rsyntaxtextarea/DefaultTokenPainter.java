@@ -113,7 +113,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		g.setColor(color);
 		bgRect.setRect(x,y-fontAscent, width,height);
 		g.fill(bgRect);
-//		g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
+		// g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
 	}
 
 
@@ -261,7 +261,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		// per-token-type cache, but we'd have to clear it whenever they
 		// modified token styles.
 		float tabW = SwingUtils.charsWidth(fm, tabBuf, 0, tabSize);
-		float tabOffset = tabW / tabSize / 3; // offset 1/3 to ensure that each tab position is covered by a character also in fractional scaling
+		float tabOffset = tabW / tabSize / 3; // ensure each tab is contained by following token in fractional scaling
 
 		// Draw any tab lines.  Here we're assuming that "x" is the left
 		// margin of the editor.
