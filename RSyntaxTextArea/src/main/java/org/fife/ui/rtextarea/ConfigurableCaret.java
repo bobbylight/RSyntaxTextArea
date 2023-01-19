@@ -13,7 +13,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.Action;
@@ -514,7 +513,8 @@ public class ConfigurableCaret extends DefaultCaret {
 							textAreaBg = Color.white;
 						}
 						g2d.setXORMode(textAreaBg);
-						SwingUtils.drawLine(g2d, r.getX(), r.getY() + r.getHeight(), r.getX() + r.getWidth() - 1.0f, r.getY() + r.getHeight());
+						SwingUtils.drawLine(g2d, r.getX(), r.getY()+r.getHeight(),
+												 r.getX()+r.getWidth()-1.0f, r.getY()+r.getHeight());
 						break;
 
 					// Draw a vertical line.

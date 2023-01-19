@@ -13,7 +13,6 @@ import org.fife.util.SwingUtils;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.text.Segment;
