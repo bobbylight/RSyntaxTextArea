@@ -116,7 +116,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 * Adjusts the caret location based on the MouseEvent.
 	 */
 	private void adjustCaret(MouseEvent e) {
-		if ((e.getModifiers()&ActionEvent.SHIFT_MASK)!=0 && getDot()!=-1) {
+		if ((e.getModifiersEx()&ActionEvent.SHIFT_MASK)!=0 && getDot()!=-1) {
 			moveCaret(e);
 		}
 		else {
@@ -335,7 +335,7 @@ public class ConfigurableCaret extends DefaultCaret {
 					(SelectionType.WORD == selectionType || SelectionType.LINE == selectionType)) {
 
 			JTextComponent tc = getComponent();
-			int offs = tc.viewToModel(e.getPoint());
+			int offs = tc.viewToModel2D(e.getPoint());
 			if (offs < 0) {
 				return;
 			}
@@ -399,7 +399,7 @@ public class ConfigurableCaret extends DefaultCaret {
 				JTextComponent tc = getComponent();
 				Action a = tc.getActionMap().get(RTextAreaEditorKit.selectLineAction);
 				a.actionPerformed(new ActionEvent(tc, ActionEvent.ACTION_PERFORMED,
-					null, e.getWhen(), e.getModifiers()));
+					null, e.getWhen(), e.getModifiersEx()));
 			}
 
 			if (SelectionType.WORD == selectionType || SelectionType.LINE == selectionType) {

@@ -8,6 +8,8 @@
  */
 package org.fife.ui.rtextarea;
 
+import org.fife.util.SwingUtils;
+
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
@@ -744,7 +746,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		// line can span multiple physical lines.
 		if (getLineWrap()) {
 			try {
-				Rectangle temp = modelToView(dot);
+				Rectangle temp = SwingUtils.getBounds(this, dot);
 				if (temp!=null) {
 					currentCaretY = temp.y;
 				}
@@ -766,7 +768,7 @@ public abstract class RTextAreaBase extends JTextArea {
 //			}
 // Modified for code folding requirements
 try {
-	Rectangle temp = modelToView(dot);
+	Rectangle temp = SwingUtils.getBounds(this, dot);
 	if (temp!=null) {
 		currentCaretY = temp.y;
 	}
