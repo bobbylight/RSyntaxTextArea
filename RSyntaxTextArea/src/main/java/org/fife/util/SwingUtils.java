@@ -6,6 +6,8 @@
  */
 package org.fife.util;
 
+import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -111,5 +113,19 @@ public final class SwingUtils {
 	public static void setWidth(Rectangle2D r, double width) {
 		r.setRect(r.getX(), r.getY(), width, r.getHeight());
 	}
+
+	/**
+	 * Convenience method to convert {@link Rectangle2D} to {@link Rectangle} observing <code>null</code> returns.
+	 *
+	 * @param c the text component
+	 * @param pos the position (0 or positive)
+	 * @return Rectangle or <code>null</code>
+	 * @throws BadLocationException if the given position does not represent a valid location in the associated document
+	 */
+	public static Rectangle getBounds(JTextComponent c, int pos) throws BadLocationException {
+		Rectangle2D rectangle2D = c.modelToView2D(pos);
+		return rectangle2D==null ? null : rectangle2D.getBounds();
+	}
+
 
 }
