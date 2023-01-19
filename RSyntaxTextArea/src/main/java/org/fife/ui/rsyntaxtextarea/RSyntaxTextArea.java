@@ -3384,7 +3384,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * Expect owner to listen to property changes on the container and call this methiod when necessary.
 	 * <p/>
 	 * Example:<br/>
-	 * <code>addPropertyChangeListener(evt->textArea.onGraphicsChange());</code>
+	 * <code>addPropertyChangeListener(evt-&gt;textArea.onGraphicsChange());</code>
 	 */
 	public void onGraphicsChange() {
 		Graphics graphics = getGraphics();
