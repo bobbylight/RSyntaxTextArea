@@ -55,6 +55,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		//errorStrip.setBackground(java.awt.Color.blue);
 		getContentPane().add(errorStrip, BorderLayout.LINE_END);
 		setJMenuBar(createMenuBar());
+		getContentPane().add(createFontControls(), BorderLayout.SOUTH);
 	}
 
 
@@ -213,9 +214,54 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		mb.add(menu);
 
 		return mb;
-
 	}
 
+	private Component createFontControls() {
+		JPanel panel = new JPanel();
+
+		JSpinner tabSize = new JSpinner();
+		tabSize.setModel(new SpinnerNumberModel(4, 1, 72, -1));
+		tabSize.addChangeListener(e -> textArea.setTabSize((Integer) tabSize.getValue()));
+
+		JSpinner fontSize = new JSpinner();
+		fontSize.setModel(new SpinnerNumberModel(12, 2, 72, -1));
+		fontSize.addChangeListener(e -> textArea.setFont(deriveFont(textArea.getFont(), fontSize)));
+
+		JCheckBox mono = new JCheckBox("Monospaced");
+		mono.setSelected(false);
+
+		JComboBox<Font> fontCombo = new JComboBox<>();
+		fontCombo.addItemListener(e -> textArea.setFont(deriveFont((Font) e.getItem(), fontSize)));
+		fontCombo.setRenderer((list, font, index, isSelected, cellHasFocus) -> new JLabel(font.getFontName()));
+		fillFontCombo(fontCombo, mono.isSelected());
+		mono.addItemListener(evt->fillFontCombo(fontCombo, mono.isSelected()));
+
+		panel.add(new JLabel("Tab Size:"));
+		panel.add(tabSize);
+		panel.add(mono);
+		panel.add(fontCombo);
+		panel.add(fontSize);
+
+		return panel;
+	}
+
+	private Font deriveFont(Font item, JSpinner fontSize) {
+		return item.deriveFont(1.0f*(int) fontSize.getValue());
+	}
+
+	private void fillFontCombo(JComboBox<Font> fontCombo, boolean onlyMonospaced) {
+		Font appFont = new JLabel().getFont();
+		String[] fontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+		fontCombo.removeAllItems();
+		for (String name : fontFamilyNames) {
+			Font font = new Font(name, Font.PLAIN, appFont.getSize());
+			if (!onlyMonospaced || RSyntaxUtilities.isMonospaced(getFontMetrics(font))) {
+				fontCombo.addItem(font);
+			}
+		}
+		fontCombo.setSelectedItem(appFont);
+	}
 
 	/**
 	 * Creates the text area for this application.
