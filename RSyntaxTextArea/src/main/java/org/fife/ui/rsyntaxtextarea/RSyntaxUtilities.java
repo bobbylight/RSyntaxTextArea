@@ -1604,5 +1604,33 @@ return c.getLineStartOffset(line);
 
 	}
 
+	/**
+	 * Does the supplied metrics represent a monospaced font, ie a font where all characters are equally wide?
+	 *
+	 * @param fontMetrics the metrics to use for checking character widths
+	 * @return boolean
+	 */
+	public static boolean isMonospaced(FontMetrics fontMetrics) {
+		boolean isMonospaced = true;
+		int firstCharacterWidth = 0;
+		boolean hasFirstCharacterWidth = false;
+		for (int cp = 0; cp < 128; cp++) {
+			if (Character.isValidCodePoint(cp) &&  (Character.isLetter(cp) || Character.isDigit(cp))) {
+				char character = (char) cp;
+				int characterWidth = fontMetrics.charWidth(character);
+				if (hasFirstCharacterWidth) {
+					if (characterWidth != firstCharacterWidth) {
+						isMonospaced = false;
+						break;
+					}
+				}
+				else {
+					firstCharacterWidth = characterWidth;
+					hasFirstCharacterWidth = true;
+				}
+			}
+		}
+		return isMonospaced;
+	}
 
 }
