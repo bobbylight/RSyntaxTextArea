@@ -9,6 +9,7 @@ package org.fife.util;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.font.TextLayout;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
@@ -31,7 +32,28 @@ public final class SwingUtils {
 	 * @param length the number of characters to read from the array
 	 */
 	public static void drawChars(Graphics2D g, float x, float y, char[] chars, int beginIndex, int length) {
-		g.drawString(new String(chars, beginIndex, length), x, y);
+		String string = new String(chars, beginIndex, length);
+		if (needsTextLayout(chars, beginIndex, length)) {
+			TextLayout layout = new TextLayout(string, g.getFont(), g.getFontRenderContext());
+			layout.draw(g, x, y);
+		} else {
+			g.drawString(string, x, y);
+		}
+	}
+
+	/**
+	 * Check the intrinsic details of <code>SwingUtilities2.drawString(...)</code>,
+	 * <code>SwingUtilities2.stringWidth(...)</code>, and <code>FontUtils.isComplexText(...)</code>.
+	 *
+	 * @param chars the text to analyze
+	 * @param beginIndex where to start
+	 * @param length the number of characters to check
+	 */
+	private static boolean needsTextLayout( char[] chars, int beginIndex, int length) {
+		// this is just a guess based on visual observations when running fractionally scaled fonts on Windows
+		// it certainly breaks at 70k
+		int criticalLength = 1000;
+		return length > criticalLength || Font.textRequiresLayout(chars, beginIndex, beginIndex + length) ;
 	}
 
 	/**
