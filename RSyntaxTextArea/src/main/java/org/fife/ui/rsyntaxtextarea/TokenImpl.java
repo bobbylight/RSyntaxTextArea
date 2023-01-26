@@ -537,7 +537,7 @@ public class TokenImpl implements Token {
 				x = e.nextTabStop(x, 0);
 			}
 			else {
-				x += fm.charWidth(text[i]);
+				x += SwingUtils.charWidth(fm, text[i]);
 			}
 			if (x>endBeforeX) {
 				// If not even the first character fits into the space, go
