@@ -191,23 +191,6 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addThemeItem("Visual Studio", "vs.xml", bg, menu);
 		mb.add(menu);
 
-		JComboBox<Font> fontCombo = new JComboBox<>();
-		fontCombo.addItemListener(e -> textArea.setFont((Font) e.getItem()));
-		fontCombo.setRenderer((list, font, index, isSelected, cellHasFocus) -> new JLabel(font.getFontName()));
-		String[] fontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-		String longestFontName = "";
-		for (String name : fontFamilyNames) {
-			Font font = new Font(name, Font.PLAIN, 12);
-			fontCombo.addItem(font);
-			if (name.length()>longestFontName.length()) {
-				longestFontName = name;
-			}
-		}
-		Font appFont = new JLabel().getFont();
-		int fontWidth = getFontMetrics(appFont).stringWidth(longestFontName);
-		fontCombo.setMaximumSize(new Dimension(fontWidth, appFont.getSize() * 40));
-		mb.add(fontCombo);
-
 		menu = new JMenu("Help");
 		JMenuItem item = new JMenuItem(new AboutAction());
 		menu.add(item);
