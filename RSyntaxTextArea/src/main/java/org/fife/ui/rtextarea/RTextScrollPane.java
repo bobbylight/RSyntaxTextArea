@@ -265,7 +265,7 @@ public class RTextScrollPane extends JScrollPane {
 	@Override
 	public void setViewportView(Component view) {
 
-		RTextArea rtaCandidate = null;
+		RTextArea rtaCandidate;
 
 		if (!(view instanceof RTextArea)) {
 			rtaCandidate = getFirstRTextAreaDescendant(view);

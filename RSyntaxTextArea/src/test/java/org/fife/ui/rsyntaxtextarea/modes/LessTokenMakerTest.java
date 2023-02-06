@@ -96,13 +96,6 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testCss_getCurlyBracesDenoteCodeBlocks() {
-		TokenMaker tm = createTokenMaker();
-		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(0));
-	}
-
-
-	@Test
 	void testCss_happyPath_simpleSelector() {
 
 		String code = "body { padding: 0; }";

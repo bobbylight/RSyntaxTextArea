@@ -72,7 +72,7 @@ public final class SearchEngine {
 		boolean doMarkAll = textArea instanceof RTextArea && context.getMarkAll();
 
 		String text = context.getSearchFor();
-		if (text == null || text.length() == 0 || textArea.getDocument().getLength() == 0) {
+		if (text == null || text.isEmpty() || textArea.getDocument().getLength() == 0) {
 			if (doMarkAll) {
 				// Force "mark all" event to be broadcast so listeners know to
 				// clear their mark-all markers.  The RSTA already cleared its
@@ -94,7 +94,7 @@ public final class SearchEngine {
 						Math.min(c.getDot(), c.getMark());
 
 		String findIn = getFindInText(textArea, start, forward);
-		if (!context.getSearchWrap() && (findIn == null || findIn.length() == 0)) {
+		if (!context.getSearchWrap() && (findIn == null || findIn.isEmpty())) {
 			return new SearchResult();
 		}
 
@@ -123,7 +123,7 @@ public final class SearchEngine {
 
 			findIn = getFindInText(textArea, start, forward);
 
-			if (findIn == null || findIn.length() == 0) {
+			if (findIn == null || findIn.isEmpty()) {
 				SearchResult emptyResult = new SearchResult();
 				emptyResult.setWrapped(true);
 				return emptyResult;
@@ -187,7 +187,7 @@ public final class SearchEngine {
 			// Regex matches can have varying widths.  The returned point's
 			// x- and y-values represent the start and end indices of the
 			// match in findIn.
-			Point regExPos = null;
+			Point regExPos;
 			int start = 0;
 			do {
 				regExPos = getNextMatchPosRegEx(text, findIn.substring(start),
@@ -227,8 +227,8 @@ public final class SearchEngine {
 	private static CharSequence getFindInCharSequence(RTextArea textArea,
 			int start, boolean forward) {
 		RDocument doc = (RDocument)textArea.getDocument();
-		int csStart = 0;
-		int csEnd = 0;
+		int csStart;
+		int csEnd;
 		if (forward) {
 			csStart = start;
 			csEnd = doc.getLength();
@@ -340,44 +340,16 @@ public final class SearchEngine {
 
 		// Make our variables lower case if we're ignoring case.
 		if (!matchCase) {
-			return getNextMatchPosImpl(searchFor.toLowerCase(),
-								searchIn.toLowerCase(), forward,
-								matchCase, wholeWord);
+			searchFor = searchFor.toLowerCase();
+			searchIn = searchIn.toLowerCase();
 		}
-
-		return getNextMatchPosImpl(searchFor, searchIn, forward,
-								matchCase, wholeWord);
-
-	}
-
-
-	/**
-	 * Actually does the work of matching; assumes searchFor and searchIn
-	 * are already upper/lower-cased appropriately.<br>
-	 * The reason this method is here is to attempt to speed up
-	 * <code>FindInFilesDialog</code>; since it repeatedly calls
-	 * this method instead of <code>getNextMatchPos</code>, it gets better
-	 * performance as it no longer has to allocate a lower-cased string for
-	 * every call.
-	 *
-	 * @param searchFor The string to search for.
-	 * @param searchIn The string to search in.
-	 * @param goForward Whether the search is forward or backward.
-	 * @param matchCase Whether the search is case-sensitive.
-	 * @param wholeWord Whether only whole words should be matched.
-	 * @return The location of the next match, or <code>-1</code> if no
-	 *         match was found.
-	 */
-	private static int getNextMatchPosImpl(String searchFor,
-								String searchIn, boolean goForward,
-								boolean matchCase, boolean wholeWord) {
 
 		if (wholeWord) {
 			int len = searchFor.length();
-			int temp = goForward ? 0 : searchIn.length();
-			int tempChange = goForward ? 1 : -1;
+			int temp = forward ? 0 : searchIn.length();
+			int tempChange = forward ? 1 : -1;
 			while (true) {
-				if (goForward) {
+				if (forward) {
 					temp = searchIn.indexOf(searchFor, temp);
 				}
 				else {
@@ -396,7 +368,7 @@ public final class SearchEngine {
 			}
 		}
 		else {
-			return goForward ? searchIn.indexOf(searchFor) :
+			return forward ? searchIn.indexOf(searchFor) :
 							searchIn.lastIndexOf(searchFor);
 		}
 
@@ -473,7 +445,7 @@ public final class SearchEngine {
 		// Make a pattern that takes into account whether to match case.
 		int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 		flags = RSyntaxUtilities.getPatternFlags(matchCase, flags);
-		Pattern pattern = null;
+		Pattern pattern;
 		try {
 			pattern = Pattern.compile(regEx, flags);
 		} catch (PatternSyntaxException pse) {
@@ -901,7 +873,7 @@ public final class SearchEngine {
 		}
 
 		String toFind = context.getSearchFor();
-		if (toFind==null || toFind.length()==0) {
+		if (toFind==null || toFind.isEmpty()) {
 			return new SearchResult();
 		}
 
@@ -940,6 +912,7 @@ public final class SearchEngine {
 				DocumentRange range;
 				if (next.wasFound()) {
 					range = next.getMatchRange();
+					res.setWrapped(next.isWrapped());
 				}
 				else {
 					range = new DocumentRange(dot, dot);
@@ -983,7 +956,7 @@ public final class SearchEngine {
 
 		context.setSearchForward(true); // Replace all always searches forward
 		String toFind = context.getSearchFor();
-		if (toFind==null || toFind.length()==0) {
+		if (toFind==null || toFind.isEmpty()) {
 			return new SearchResult();
 		}
 

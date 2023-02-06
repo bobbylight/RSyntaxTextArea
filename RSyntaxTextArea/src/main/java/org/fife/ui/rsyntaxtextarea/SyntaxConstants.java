@@ -143,6 +143,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Handlebars files.
+	 */
+	String SYNTAX_STYLE_HANDLEBARS		= "text/handlebars";
+
+
+	/**
 	 * Style for highlighting hosts files.
 	 */
 	String SYNTAX_STYLE_HOSTS			= "text/hosts";

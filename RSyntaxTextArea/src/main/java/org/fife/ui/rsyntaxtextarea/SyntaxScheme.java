@@ -666,7 +666,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 				if (field.getType()==int.class) {
 
-					int index = 0;
+					int index;
 					try {
 						index = field.getInt(scheme);
 					} catch (IllegalArgumentException | IllegalAccessException e) {

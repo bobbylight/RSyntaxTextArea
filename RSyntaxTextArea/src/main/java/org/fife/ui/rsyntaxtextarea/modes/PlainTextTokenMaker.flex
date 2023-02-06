@@ -200,9 +200,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 %}
 
-LetterOrDigit	= ([a-zA-Z0-9])
+LetterOrDigit	= ([[:letter:][:digit:]])
 Identifier		= ({LetterOrDigit}+)
-Separator		= ([^a-zA-Z0-9 \t\n])
+Separator		= ([^[:letter:][:digit:] \t\n])
 WhiteSpace		= ([ \t]+)
 LineTerminator	= ([\n])
 

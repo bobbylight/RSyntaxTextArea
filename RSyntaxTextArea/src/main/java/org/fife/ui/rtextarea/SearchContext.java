@@ -119,8 +119,7 @@ public class SearchContext implements Cloneable, Serializable {
 	@Override
 	public SearchContext clone() {
 		try {
-			SearchContext context = null;
-			context = (SearchContext)super.clone();
+			SearchContext context = (SearchContext)super.clone();
 			// Don't copy over listeners
 			context.support = new PropertyChangeSupport(context);
 			return context;

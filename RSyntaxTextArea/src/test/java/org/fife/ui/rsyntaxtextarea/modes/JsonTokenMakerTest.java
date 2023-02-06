@@ -46,9 +46,11 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
 		}
 	}
+
+
 	@Test
 	@Override
-	public void testCommon_getShouldIndentNextLineAfter() {
+	protected void testCommon_getShouldIndentNextLineAfter() {
 		TokenMaker tm = createTokenMaker();
 		Token[] indentAfter = {
 			new TokenImpl("{".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, 0),

@@ -74,6 +74,9 @@ abstract class AbstractTokenMakerTest {
 
 			Assertions.assertEquals(expectedType, t.getType(),
 				"Token has unexpected type: orig=" + token + ", actual=" + t);
+			// The assertion below doesn't work as some tests have trailing '\n' chars
+			//Assertions.assertEquals(token, t.getLexeme(),
+			//	"Token has unexpected lexeme: expected='" + token + "', actual=" + t);
 
 			// The token array passed to this method is supposed to be single tokens.
 			// The next token should denote it's the end of a line, and what the next
@@ -86,7 +89,7 @@ abstract class AbstractTokenMakerTest {
 						!t.getNextToken().isPaintable() ||
 						// 3. The next token is a token type to continue, e.g. string or MLC
 						t.getNextToken().length() == 0,
-					"Next token does not denote end-of-line: " + t.getNextToken());
+					"Next token does not denote end-of-line! lexeme: " + t.getLexeme() + ", next: " + t.getNextToken());
 			}
 		}
 
@@ -113,6 +116,18 @@ abstract class AbstractTokenMakerTest {
 
 
 	/**
+	 * Verifies whether curly braces denote code blocks for the default language of
+	 * this token maker. The default implementation checks for {@code false};
+	 * subclasses should override appropriately.
+	 */
+	@Test
+	protected void testCommon_getCurlyBracesDenoteCodeBlocks() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertFalse(tm.getCurlyBracesDenoteCodeBlocks(0));
+	}
+
+
+	/**
 	 * Verifies whether the line comment delimiters returned by this token maker are
 	 * correct for the primary language.
 	 */
@@ -134,10 +149,21 @@ abstract class AbstractTokenMakerTest {
 
 
 	/**
+	 * Verifies whether the line comment delimiters returned by this token maker are
+	 * correct for the primary language.
+	 */
+	@Test
+	void testCommon_GetOccurrenceMarker() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertNotNull(tm.getOccurrenceMarker());
+	}
+
+
+	/**
 	 * Verifies the {@code getShouldIndentNextLineAfter()} method.
 	 */
 	@Test
-	public void testCommon_getShouldIndentNextLineAfter() {
+	protected void testCommon_getShouldIndentNextLineAfter() {
 
 		// NOTE: This is a pretty sorry test, but it's hard to test "no token implies indent the next
 		// line," which is the default behavior.
@@ -145,6 +171,24 @@ abstract class AbstractTokenMakerTest {
 		for (int tokenType = 0; tokenType < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; tokenType++) {
 			Token token = new TokenImpl("{".toCharArray(), 0, 0, 0, tokenType, 0);
 			Assertions.assertFalse(tm.getShouldIndentNextLineAfter(token));
+		}
+	}
+
+
+	/**
+	 * Helper method for {@link #testCommon_getShouldIndentNextLineAfter()} to verify that indentation of
+	 * the next ine is done after curly braces and open parens for a specific language index.
+	 *
+	 * @param languageIndex The language index to check.
+	 */
+	protected void testCommonHelper_getShouldIndentNextLineAfterCurliesAndParensForLanguageIndex(int languageIndex) {
+		TokenMaker tm = createTokenMaker();
+		Token[] indentAfter = {
+			new TokenImpl("{".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, languageIndex),
+			new TokenImpl("(".toCharArray(), 0, 0, 0, TokenTypes.SEPARATOR, languageIndex),
+		};
+		for (Token token : indentAfter) {
+			Assertions.assertTrue(tm.getShouldIndentNextLineAfter(token));
 		}
 	}
 

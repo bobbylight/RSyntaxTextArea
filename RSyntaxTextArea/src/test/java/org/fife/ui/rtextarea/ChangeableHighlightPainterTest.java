@@ -34,6 +34,24 @@ class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetSetAlpha_negative() {
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
+		Assertions.assertEquals(1f, painter.getAlpha(), 0.00001);
+		painter.setAlpha(-1f);
+		Assertions.assertEquals(0, painter.getAlpha(), 0.00001);
+	}
+
+
+	@Test
+	void testGetSetAlpha_greaterThanOne() {
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
+		Assertions.assertEquals(1f, painter.getAlpha(), 0.00001);
+		painter.setAlpha(2f);
+		Assertions.assertEquals(1f, painter.getAlpha(), 0.00001);
+	}
+
+
+	@Test
 	void testGetSetPaint() {
 		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
 		Assertions.assertNull(painter.getPaint());

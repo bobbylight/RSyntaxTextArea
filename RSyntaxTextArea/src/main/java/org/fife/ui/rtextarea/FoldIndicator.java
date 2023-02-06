@@ -359,7 +359,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 			FoldManager fm = rsta.getFoldManager();
 			int pos = rsta.viewToModel(new Point(0, e.getY()));
 			if (pos>=0) { // Not -1
-				int line = 0;
+				int line;
 				try {
 					line = rsta.getLineOfOffset(pos);
 				} catch (BadLocationException ble) {

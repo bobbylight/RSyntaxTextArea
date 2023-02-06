@@ -23,6 +23,38 @@ class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSyntaxTex
 
 
 	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		String code = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
+			code);
+		textArea.setCaretPosition(8);
+		textArea.setEditable(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(code, textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_notEnabled() {
+
+		String code = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
+			code);
+		textArea.setCaretPosition(8);
+		textArea.setEnabled(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(code, textArea.getText());
+	}
+
+
+	@Test
 	void testActionPerformedImpl_singleLine_addComment() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,

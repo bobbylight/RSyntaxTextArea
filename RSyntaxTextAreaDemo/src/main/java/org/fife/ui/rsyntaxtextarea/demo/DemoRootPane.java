@@ -104,6 +104,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);
 		addSyntaxItem("Dockerfile", "DockerfileExample.txt", SYNTAX_STYLE_DOCKERFILE, bg, menu);
 		addSyntaxItem("Go", "GoExample.txt", SYNTAX_STYLE_GO, bg, menu);
+		addSyntaxItem("Handlebars", "HandlebarsExample.txt", SYNTAX_STYLE_HANDLEBARS, bg, menu);
 		addSyntaxItem("Hosts", "HostsExample.txt", SYNTAX_STYLE_HOSTS, bg, menu);
 		addSyntaxItem("HTML", "HtmlExample.txt", SYNTAX_STYLE_HTML, bg, menu);
 		addSyntaxItem("INI", "IniExample.txt", SYNTAX_STYLE_INI, bg, menu);
@@ -307,7 +308,6 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		public void actionPerformed(ActionEvent e) {
 			JOptionPane.showMessageDialog(DemoRootPane.this,
 					"<html><b>RSyntaxTextArea</b> - A Swing syntax highlighting text component" +
-					"<br>Version 3.2.1" +
 					"<br>Licensed under a modified BSD license",
 					"About RSyntaxTextArea",
 					JOptionPane.INFORMATION_MESSAGE);

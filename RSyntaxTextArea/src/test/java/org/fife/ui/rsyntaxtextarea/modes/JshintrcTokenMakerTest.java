@@ -46,6 +46,8 @@ class JshintrcTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
 		}
 	}
+
+
 	@Test
 	@Override
 	public void testCommon_getShouldIndentNextLineAfter() {

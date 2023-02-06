@@ -533,7 +533,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			int newPos = 0;
+			int newPos;
 
 			try {
 
@@ -846,8 +846,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 		private Action delegate;
 
 		public DefaultKeyTypedAction() {
-			super(DefaultEditorKit.defaultKeyTypedAction, null, null, null,
-					null);
+			this(DefaultEditorKit.defaultKeyTypedAction);
+		}
+
+		protected DefaultKeyTypedAction(String name) {
+			super(name, null, null, null, null);
 			delegate = new DefaultEditorKit.DefaultKeyTypedAction();
 		}
 
@@ -864,7 +867,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		@Override
 		public final String getMacroID() {
-			return DefaultEditorKit.defaultKeyTypedAction;
+			return getName();
 		}
 
 	}
@@ -1162,6 +1165,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 				int dot = textArea.getCaretPosition();
 				if (dot == 0) {
+					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 					return;
 				}
 
@@ -1192,8 +1196,6 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 						wordStart = BreakIterator.DONE;
 					}
 					if (wordStart==BreakIterator.DONE) {
-						UIManager.getLookAndFeel().provideErrorFeedback(
-								textArea);
 						break;
 					}
 					int end = getWordEnd(textArea, wordStart);
@@ -1202,7 +1204,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 					if (word.startsWith(lastPrefix)) {
 						textArea.replaceRange(word, lastWordStart, dot);
 						lastDot = textArea.getCaretPosition(); // Maybe shifted
-						break;
+						return;
 					}
 				}
 
@@ -1210,6 +1212,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 				ble.printStackTrace();
 			}
 
+			// if we get here, no natch was found
+			UIManager.getLookAndFeel().provideErrorFeedback(
+				textArea);
 		}
 
 		@Override
@@ -1300,7 +1305,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			int offs = textArea.getCaretPosition();
-			int endOffs = 0;
+			int endOffs;
 			try {
 				if (textArea.getLineWrap()) {
 					// Must check per character, since one logical line may be

@@ -403,9 +403,8 @@ public class ChangeableHighlightPainter
 	 * @see #getAlpha
 	 */
 	public void setAlpha(float alpha) {
-		this.alpha = alpha;
 		this.alpha = Math.max(alpha, 0.0f);
-		this.alpha = Math.min(1.0f, alpha);
+		this.alpha = Math.min(1.0f, this.alpha);
 		alphaComposite = null; // So it is recreated with new alpha.
 	}
 

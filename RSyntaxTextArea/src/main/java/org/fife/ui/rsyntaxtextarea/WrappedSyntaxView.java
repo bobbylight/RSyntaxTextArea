@@ -617,7 +617,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	@Override
 	public float getPreferredSpan(int axis) {
 		updateMetrics();
-		float span = 0;
+		float span;
 		if (axis==View.X_AXIS) { // Add EOL marker
 			span = super.getPreferredSpan(axis);
 			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics

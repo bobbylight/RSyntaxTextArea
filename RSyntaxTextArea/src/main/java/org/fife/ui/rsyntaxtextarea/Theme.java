@@ -830,7 +830,7 @@ public class Theme {
 			else if ("style".equals(qName)) {
 
 				String type = attrs.getValue("token");
-				Field field = null;
+				Field field;
 				try {
 					field = Token.class.getField(type);
 				} catch (RuntimeException re) {
@@ -842,7 +842,7 @@ public class Theme {
 
 				if (field.getType()==int.class) {
 
-					int index = 0;
+					int index;
 					try {
 						index = field.getInt(theme.scheme);
 					} catch (IllegalArgumentException | IllegalAccessException e) {

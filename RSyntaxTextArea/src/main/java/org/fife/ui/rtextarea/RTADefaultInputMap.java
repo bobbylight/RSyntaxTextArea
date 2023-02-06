@@ -112,7 +112,7 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_J, defaultMod),			RTextAreaEditorKit.rtaJoinLinesAction);
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, shift),		DefaultEditorKit.deletePrevCharAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, defaultMod),	RTextAreaEditorKit.rtaDeletePrevWordAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, moveByWordMod),	RTextAreaEditorKit.rtaDeletePrevWordAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   0),				DefaultEditorKit.insertTabAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),				DefaultEditorKit.insertBreakAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, shift),			DefaultEditorKit.insertBreakAction);

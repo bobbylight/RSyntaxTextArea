@@ -1,0 +1,32 @@
+{{> header}}
+
+{{#each records }}
+  {{#if valid}}
+    <div class="valid">
+  {{else}}
+    <div class="invalid">
+  {{/if}}
+
+  {{! This is a comment for a raw block }}
+  {{{raw}}}
+
+  {{outer-helper (inner-helper 'abc') 'def'}}
+
+  {{!-- This is another comment, this one for a sub-expression --}}
+  {{#if (equal user.status "busy")}}
+    <h4>{{name}} is busy.</h4>
+  {{else}}
+    <h4>{{name}} is not busy.</h4>
+  {{/if}}
+{{/each}}
+
+{{! Whitespace control }}
+{{#each nav ~}}
+  <a href="{{url}}">
+    {{~#if test}}
+      {{~title}}
+    {{~^~}}
+      Empty
+    {{~/if~}}
+  </a>
+{{~/each}}

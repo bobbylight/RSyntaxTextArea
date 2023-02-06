@@ -24,6 +24,20 @@ class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAre
 
 
 	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		textArea.setEditable(false);
+		String origContent = textArea.getText();
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(origContent, textArea.getText()); // Unchanged
+	}
+
+
+	@Test
 	void testActionPerformedImpl_notEnabled() {
 
 		RSyntaxTextArea textArea = createTextArea();

@@ -251,11 +251,25 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 *
 	 * @param text The String to check.
 	 * @return The leading whitespace.
+	 * @see #getLeadingWhitespace(String, int)
 	 * @see #getLeadingWhitespace(Document, int)
 	 */
 	public static String getLeadingWhitespace(String text) {
+		return getLeadingWhitespace(text, Integer.MAX_VALUE);
+	}
+
+
+	/**
+	 * Returns the leading whitespace of a string.
+	 *
+	 * @param text The String to check.
+	 * @param upTo Stops checking at the specified offset.
+	 * @return The leading whitespace.
+	 * @see #getLeadingWhitespace(String)
+	 */
+	public static String getLeadingWhitespace(String text, int upTo) {
 		int count = 0;
-		int len = text.length();
+		int len = Math.min(text.length(), upTo);
 		while (count<len && RSyntaxUtilities.isWhitespace(text.charAt(count))) {
 			count++;
 		}
@@ -827,7 +841,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 		TokenOrientedView tov = (TokenOrientedView)e;
 		Token token = tov.getTokenListForPhysicalLineAbove(offs);
 		if (token==null) {
-			return -1;
+			return 0;
 		}
 		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be >0 ??
@@ -861,7 +875,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 		TokenOrientedView tov = (TokenOrientedView)e;
 		Token token = tov.getTokenListForPhysicalLineBelow(offs);
 		if (token==null) {
-			return -1;
+			return c.getDocument().getLength();
 		}
 		else if (token.getType()==Token.NULL) {
 			int line = c.getLineOfOffset(offs);	// Sure to be > c.getLineCount()-1 ??
@@ -950,11 +964,30 @@ return c.getLineStartOffset(line);
 	 * @return The token, or <code>null</code> if the offset is not valid.
 	 * @see #getTokenAtOffset(RSyntaxDocument, int)
 	 * @see #getTokenAtOffset(Token, int)
+	 * @see #getTokenAtOffsetOrLastTokenIfEndOfLine(RSyntaxTextArea, int)
 	 */
-	public static Token getTokenAtOffset(RSyntaxTextArea textArea,
-			int offset) {
+	public static Token getTokenAtOffset(RSyntaxTextArea textArea, int offset) {
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 		return RSyntaxUtilities.getTokenAtOffset(doc, offset);
+	}
+
+
+	/**
+	 * Returns the token at the specified offset. If the offset
+	 * is at the very end of a line, the "last" token in that line is returned
+	 * instead (which may be {@code null} if the line is empty).
+	 *
+	 * @param textArea The text area.
+	 * @param offset The offset at which to get the token.
+	 * @return The token at <code>offset</code>, or <code>null</code> if
+	 *         the offset is invalid or there is no token at that offset.
+	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
+	 * @see #getTokenAtOffset(RSyntaxDocument, int)
+	 * @see #getTokenAtOffset(Token, int)
+	 */
+	public static Token getTokenAtOffsetOrLastTokenIfEndOfLine(RSyntaxTextArea textArea, int offset) {
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		return RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(doc, offset);
 	}
 
 
@@ -966,13 +999,32 @@ return c.getLineStartOffset(line);
 	 * @return The token, or <code>null</code> if the offset is not valid.
 	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
 	 * @see #getTokenAtOffset(Token, int)
+	 * @see #getTokenAtOffsetOrLastTokenIfEndOfLine(RSyntaxDocument, int)
 	 */
-	public static Token getTokenAtOffset(RSyntaxDocument doc,
-			int offset) {
+	public static Token getTokenAtOffset(RSyntaxDocument doc, int offset) {
 		Element root = doc.getDefaultRootElement();
 		int lineIndex = root.getElementIndex(offset);
 		Token t = doc.getTokenListForLine(lineIndex);
 		return RSyntaxUtilities.getTokenAtOffset(t, offset);
+	}
+
+
+	/**
+	 * Returns the token at the specified offset.
+	 *
+	 * @param doc The document.
+	 * @param offset The offset of the token.
+	 * @return The token, or <code>null</code> if the offset is not valid or
+	 *         there is no token at that offset.
+	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
+	 * @see #getTokenAtOffset(RSyntaxDocument, int)
+	 * @see #getTokenAtOffset(Token, int)
+	 */
+	public static Token getTokenAtOffsetOrLastTokenIfEndOfLine(RSyntaxDocument doc, int offset) {
+		Element root = doc.getDefaultRootElement();
+		int lineIndex = root.getElementIndex(offset);
+		Token t = doc.getTokenListForLine(lineIndex);
+		return RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(t, offset);
 	}
 
 
@@ -988,10 +1040,38 @@ return c.getLineStartOffset(line);
 	 *         none of the tokens are at that offset.
 	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
 	 * @see #getTokenAtOffset(RSyntaxDocument, int)
+	 * @see #getTokenAtOffsetOrLastTokenIfEndOfLine(Token, int)
 	 */
 	public static Token getTokenAtOffset(Token tokenList, int offset) {
 		for (Token t=tokenList; t!=null && t.isPaintable(); t=t.getNextToken()){
 			if (t.containsPosition(offset)) {
+				return t;
+			}
+		}
+		return null;
+	}
+
+
+	/**
+	 * Returns the token at the specified index, or <code>null</code> if
+	 * the given offset isn't in this token list's range. If the offset
+	 * is at the very end of the token list, the "last" token is returned
+	 * (which may be {@code null} if the token list is empty).<br>
+	 * Note that this method does NOT check to see if <code>tokenList</code>
+	 * is null; callers should check for themselves.
+	 *
+	 * @param tokenList The list of tokens in which to search.
+	 * @param offset The offset at which to get the token.
+	 * @return The token at <code>offset</code>, or <code>null</code> if
+	 *         none of the tokens are at that offset.
+	 * @see #getTokenAtOffset(RSyntaxTextArea, int)
+	 * @see #getTokenAtOffset(RSyntaxDocument, int)
+	 * @see #getTokenAtOffset(Token, int)
+	 */
+	public static Token getTokenAtOffsetOrLastTokenIfEndOfLine(Token tokenList, int offset) {
+		for (Token t=tokenList; t!=null && t.isPaintable(); t=t.getNextToken()){
+			if (t.containsPosition(offset) ||
+					(offset == t.getEndOffset() && (t.getNextToken() == null || !t.getNextToken().isPaintable()))) {
 				return t;
 			}
 		}

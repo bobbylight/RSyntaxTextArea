@@ -130,7 +130,7 @@ public class CurlyFoldParser implements FoldParser {
 
 							if (importStartLine>-1) {
 								if (lastSeenImportLine>importStartLine) {
-									Fold fold = null;
+									Fold fold;
 									// Any imports found *should* be a top-level fold,
 									// but we're extra lenient here and allow groups
 									// of them anywhere to keep our parser better-behaved
@@ -193,7 +193,7 @@ public class CurlyFoldParser implements FoldParser {
 
 							if (importStartLine>-1) {
 								if (lastSeenImportLine>importStartLine) {
-									Fold fold = null;
+									Fold fold;
 									// Any imports found *should* be a top-level fold,
 									// but we're extra lenient here and allow groups
 									// of them anywhere to keep our parser better-behaved

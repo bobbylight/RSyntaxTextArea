@@ -4,13 +4,16 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-
+import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import java.awt.*;
+
 
 /**
  * Unit tests for the {@code SyntaxView} class.
@@ -18,7 +21,42 @@ import java.awt.*;
  * @author Robert Futrell
  * @version 1.0
  */
+@ExtendWith(SwingRunnerExtension.class)
 class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
+
+
+	@Test
+	void testGetNextVisualPositionFrom_north_onFirstLine() throws BadLocationException {
+
+		String content = "This is the text";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE, content);
+		textArea.setCaretPosition(content.indexOf("is"));
+
+		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
+		Position.Bias[] biasRet = new Position.Bias[1];
+
+		// Pressing the up arrow on the top line moves the caret to offset 0
+		int actual = view.getNextVisualPositionFrom(textArea.getCaretPosition(),
+			Position.Bias.Backward, textArea.getBounds(), SwingConstants.NORTH, biasRet);
+		Assertions.assertEquals(0, actual);
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_south_onLastLine() throws BadLocationException {
+
+		String content = "This is the text";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_NONE, content);
+		textArea.setCaretPosition(content.indexOf("is"));
+
+		SyntaxView view = (SyntaxView)textArea.getUI().getRootView(textArea).getView(0);
+		Position.Bias[] biasRet = new Position.Bias[1];
+
+		// Pressing the up arrow on the top line moves the caret to offset 0
+		int actual = view.getNextVisualPositionFrom(textArea.getCaretPosition(),
+			Position.Bias.Forward, textArea.getBounds(), SwingConstants.SOUTH, biasRet);
+		Assertions.assertEquals(content.length(), actual);
+	}
 
 
 	@Test
@@ -150,7 +188,13 @@ class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	void testPaint_foldedFolds() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		textArea.getFoldManager().getFold(0).setCollapsed(true);
-		textArea.paintImmediately(textArea.getVisibleRect());
+		// Fold one child fold so there is a mix of expanded and collapsed folds,
+		// and there is > 1 line at all
+		textArea.getFoldManager().getFold(0).getChild(0).setCollapsed(true);
+		textArea.setCaretPosition(1);
+		textArea.moveCaretPosition(textArea.getDocument().getLength() - 1);
+
+		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
+		view.paint(createTestGraphics(), textArea.getVisibleRect());
 	}
 }

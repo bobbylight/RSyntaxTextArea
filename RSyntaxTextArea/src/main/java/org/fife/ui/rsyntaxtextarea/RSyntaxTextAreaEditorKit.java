@@ -71,6 +71,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String rstaBacktickAction			= "RSTA.BacktickAction";
 	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
 	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
 	public static final String rstaCollapseAllFoldsAction	= "RSTA.CollapseAllFoldsAction";
@@ -79,10 +80,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	public static final String rstaCopyAsStyledTextAction   = "RSTA.CopyAsStyledTextAction";
 	public static final String rstaCutAsStyledTextAction   = "RSTA.CutAsStyledTextAction";
 	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
+	public static final String rstaDoubleQuoteAction		= "RSTA.DoubleQuoteAction";
 	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
 	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
 	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
+	public static final String rstaOpenParenAction			= "RSTA.OpenParenAction";
+	public static final String rstaOpenSquareBracketAction	= "RSTA.OpenSquareBracketAction";
+	public static final String rstaOpenCurlyAction			= "RSTA.OpenCurlyAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
+	public static final String rstaSingleQuoteAction		= "RSTA.SingleQuoteAction";
 	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
 	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
 
@@ -114,8 +120,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		new EndWordAction(endWordAction, true),
 		new ExpandAllFoldsAction(),
 		new GoToMatchingBracketAction(),
-		new InsertBreakAction(),
 		//new IncreaseFontSizeAction(),
+		new InsertBreakAction(),
+		new InsertPairedCharacterAction(rstaOpenParenAction, '(', ')'),
+		new InsertPairedCharacterAction(rstaOpenSquareBracketAction, '[', ']'),
+		new InsertPairedCharacterAction(rstaOpenCurlyAction, '{', '}'),
+		new InsertQuoteAction(rstaDoubleQuoteAction, InsertQuoteAction.QuoteType.DOUBLE_QUOTE),
+		new InsertQuoteAction(rstaSingleQuoteAction, InsertQuoteAction.QuoteType.SINGLE_QUOTE),
+		new InsertQuoteAction(rstaBacktickAction, InsertQuoteAction.QuoteType.BACKTICK),
 		new InsertTabAction(),
 		new NextWordAction(nextWordAction, false),
 		new NextWordAction(selectionNextWordAction, true),
@@ -321,6 +333,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
 
 			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
@@ -1518,77 +1535,75 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		protected void handleInsertBreak(RSyntaxTextArea textArea,
 										boolean noSelection) {
-			// If we're auto-indenting...
-			if (noSelection && textArea.isAutoIndentEnabled()) {
-				insertNewlineWithAutoIndent(textArea);
+
+			if (noSelection) {
+				textArea.beginAtomicEdit();
+				try {
+					handleInsertBreakWithoutSelection(textArea);
+				} catch (BadLocationException ble) { // Never happens
+					textArea.replaceSelection("\n");
+					ble.printStackTrace();
+				} finally {
+					textArea.endAtomicEdit();
+				}
 			}
 			else {
 				textArea.replaceSelection("\n");
-				if (noSelection) {
-					possiblyCloseCurlyBrace(textArea, null);
-				}
 			}
 		}
 
-		private void insertNewlineWithAutoIndent(RSyntaxTextArea sta) {
+		private void handleInsertBreakWithoutSelection(RSyntaxTextArea textArea)
+				throws BadLocationException {
 
-			try {
+			int caretPos = textArea.getCaretPosition();
+			Document doc = textArea.getDocument();
+			Element map = doc.getDefaultRootElement();
+			int lineNum = map.getElementIndex(caretPos);
+			Element line = map.getElement(lineNum);
+			int start = line.getStartOffset();
+			int end = line.getEndOffset()-1; // Why always "-1"?
+			int len = end-start;
+			String s = doc.getText(start, len);
+			int caretOffsInLine = caretPos - start;
 
-				int caretPos = sta.getCaretPosition();
-				Document doc = sta.getDocument();
-				Element map = doc.getDefaultRootElement();
-				int lineNum = map.getElementIndex(caretPos);
-				Element line = map.getElement(lineNum);
-				int start = line.getStartOffset();
-				int end = line.getEndOffset()-1; // Why always "-1"?
-				int len = end-start;
-				String s = doc.getText(start, len);
-
-				// endWS is the end of the leading whitespace of the
-				// current line.
-				String leadingWS = RSyntaxUtilities.getLeadingWhitespace(s);
-				StringBuilder sb = new StringBuilder("\n");
+			StringBuilder sb = new StringBuilder("\n");
+			String leadingWS = null;
+			if (textArea.isAutoIndentEnabled()) {
+				leadingWS = RSyntaxUtilities.getLeadingWhitespace(s, caretOffsInLine);
 				sb.append(leadingWS);
-
-				// If there is only whitespace between the caret and
-				// the EOL, pressing Enter auto-indents the new line to
-				// the same place as the previous line.
-				int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
-				if (nonWhitespacePos==-1) {
-					if (leadingWS.length()==len &&
-							sta.isClearWhitespaceLinesEnabled()) {
-						// If the line was nothing but whitespace, select it
-						// so its contents get removed.
-						sta.setSelectionStart(start);
-						sta.setSelectionEnd(end);
-					}
-					sta.replaceSelection(sb.toString());
-				}
-
-				// If there is non-whitespace between the caret and the
-				// EOL, pressing Enter takes that text to the next line
-				// and auto-indents it to the same place as the last
-				// line.
-				else {
-					sb.append(s.substring(nonWhitespacePos));
-					sta.replaceRange(sb.toString(), caretPos, end);
-					sta.setCaretPosition(caretPos + leadingWS.length()+1);
-				}
-
-				// Must do it after everything else, as the "smart indent"
-				// calculation depends on the previous line's state
-				// AFTER the Enter press (stuff may have been moved down).
-				if (sta.getShouldIndentNextLine(lineNum)) {
-					sta.replaceSelection("\t");
-				}
-
-				possiblyCloseCurlyBrace(sta, leadingWS);
-
-			} catch (BadLocationException ble) { // Never happens
-				sta.replaceSelection("\n");
-				ble.printStackTrace();
 			}
 
+			// If the text remaining on the line would be all whitespace,
+			// remove it if necessary
+			if (textArea.isClearWhitespaceLinesEnabled() && isAllWhitespace(s, 0, caretOffsInLine)) {
+				// Select all text on the line before the caret so it gets removed
+				textArea.setCaretPosition(start);
+			}
+
+			// Find any non-whitespace text after the caret. If there is any, it gets put
+			// onto the next line. Whitespace between the caret and that text gets removed.
+			int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
+			//textArea.moveCaretPosition(start + (nonWhitespacePos > -1 ? nonWhitespacePos : end));
+			textArea.moveCaretPosition(nonWhitespacePos > -1 ? start + nonWhitespacePos : end);
+			textArea.replaceSelection(sb.toString());
+
+			// Must do it after everything else, as the "smart indent"
+			// calculation depends on the previous line's state
+			// AFTER the Enter press (stuff may have been moved down).
+			if (textArea.getShouldIndentNextLine(lineNum)) {
+				textArea.replaceSelection("\t");
+			}
+
+			possiblyCloseCurlyBrace(textArea, leadingWS);
+		}
+
+		private static boolean isAllWhitespace(String str, int from, int to) {
+			for (int i = from; i < to; i++) {
+				if (!Character.isWhitespace(str.charAt(i))) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		private void possiblyCloseCurlyBrace(RSyntaxTextArea textArea,
@@ -1631,6 +1646,174 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		}
 
+	}
+
+
+	/**
+	 * If there is no selection, a character is inserted. If there is a selection,
+	 * it is wrapped by the character and its pair. Useful for e.g. quotes, parens,
+	 * etc.
+	 */
+	public static class InsertPairedCharacterAction extends DefaultKeyTypedAction {
+
+		private static final long serialVersionUID = 1L;
+
+		private final char ch;
+		private final char pairedCh;
+
+		public InsertPairedCharacterAction(String actionName, char ch, char pairedCh) {
+			super(actionName);
+			this.ch = ch;
+			this.pairedCh = pairedCh;
+		}
+
+		@Override
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
+			boolean noSelection = sta.getSelectionStart() == sta.getSelectionEnd();
+
+			if (noSelection || !sta.getInsertPairedCharacters()) {
+				// Default action can be unique across OS's
+				super.actionPerformedImpl(e, textArea);
+			}
+			else {
+				wrapSelection(textArea);
+			}
+		}
+
+		private void wrapSelection(RTextArea textArea) {
+
+			int selStart = textArea.getSelectionStart();
+			int selEnd = textArea.getSelectionEnd();
+
+			textArea.beginAtomicEdit();
+			try {
+				textArea.insert(String.valueOf(ch), selStart);
+				textArea.insert(String.valueOf(pairedCh), selEnd + 1);
+				// Remove the auto-increase from insertion
+				textArea.setSelectionEnd(selEnd + 1);
+			} finally {
+				textArea.endAtomicEdit();
+			}
+		}
+
+	}
+
+
+	/**
+	 * Inserts a quote character. If the current language supports string literals with this
+	 * quote character, the following additional logic occurs:
+	 * <ul>
+	 *     <li>If the caret is not in a string literal or comment, both the opening and closing
+	 *         quotes are entered</li>
+	 *     <li>If the caret is at the end (the closing quote) of a valid quoted literal, the
+	 *         existing closing quote character is overwritten, rather than a new quote
+	 *         character being entered</li>
+	 * </ul>
+	 * This feature is meant to simplify the common case of typing single-line strings.
+	 */
+	public static class InsertQuoteAction extends InsertPairedCharacterAction {
+
+		/**
+		 * The type of quote to insert.
+		 */
+		public enum QuoteType {
+			DOUBLE_QUOTE('"', TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, TokenTypes.ERROR_STRING_DOUBLE),
+			SINGLE_QUOTE('\'', TokenTypes.LITERAL_CHAR, TokenTypes.ERROR_CHAR),
+			BACKTICK('`', TokenTypes.LITERAL_BACKQUOTE, -1);
+
+			private final char ch;
+			private final int validTokenType;
+			private final int invalidTokenType;
+
+			QuoteType(char ch, int validTokenType, int invalidTokenType) {
+				this.ch = ch;
+				this.validTokenType = validTokenType;
+				this.invalidTokenType = invalidTokenType;
+			}
+		}
+
+		private final QuoteType quoteType;
+		private final String stringifiedQuoteTypeCh;
+
+		public InsertQuoteAction(String actionName, QuoteType quoteType) {
+			super(actionName, quoteType.ch, quoteType.ch);
+			this.quoteType = quoteType;
+			stringifiedQuoteTypeCh = String.valueOf(quoteType.ch);
+		}
+
+		@Override
+		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
+
+			if (!textArea.isEditable() || !textArea.isEnabled()) {
+				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
+				return;
+			}
+
+			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+
+			if (!rsta.getInsertPairedCharacters() ||
+				textArea.getSelectionStart() != textArea.getSelectionEnd() ||
+				textArea.getTextMode() == RTextArea.OVERWRITE_MODE) {
+				super.actionPerformedImpl(e, textArea);
+				return;
+			}
+
+			int offs = rsta.getCaretPosition();
+			Token t = RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(rsta, offs);
+			int tokenType = t != null ? t.getType() : TokenTypes.NULL;
+			boolean isComment = t != null && t.isComment();
+
+			if (tokenType == quoteType.validTokenType) {
+				if (offs == t.getEndOffset() - 1) {
+					textArea.moveCaretPosition(offs + 1); // Force a replacement to ensure undo is contiguous
+					textArea.replaceSelection(stringifiedQuoteTypeCh);
+					textArea.setCaretPosition(offs + 1);
+				}
+				else {
+					super.actionPerformedImpl(e, textArea);
+				}
+			}
+			else if (isComment || tokenType == quoteType.invalidTokenType) {
+				// We could be smarter here for invalid quoted literals - if we knew whether the language
+				// used '\' as an escape character, and the caret is NOT between a '\' and the closing
+				// quote, we could then assume it's an invalid string due to e.g. a bad escape char, and
+				// overwrite the closing quote. But for now we're just doing nothing in this case
+				super.actionPerformedImpl(e, textArea); // Just insert the character
+			}
+			else {
+				insertEmptyQuoteLiteral(rsta);
+			}
+		}
+
+		private void insertEmptyQuoteLiteral(RSyntaxTextArea textArea) {
+
+			textArea.beginAtomicEdit();
+
+			try {
+
+				textArea.replaceSelection(stringifiedQuoteTypeCh);
+
+				// Check whether the starting quote started a string literal. If it did,
+				// enter the closing quote. This is done to sniff out language tht don't
+				// support string literals.
+				int caretPos = textArea.getCaretPosition();
+				Token t = RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(textArea, caretPos);
+				int tokenType = t != null ? t.getType() : TokenTypes.NULL;
+				if (tokenType == quoteType.validTokenType || tokenType == quoteType.invalidTokenType) {
+					textArea.replaceSelection(stringifiedQuoteTypeCh);
+					textArea.setCaretPosition(textArea.getCaretPosition() - 1);
+				}
+			} finally {
+				textArea.endAtomicEdit();
+			}
+		}
 	}
 
 

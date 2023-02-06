@@ -42,9 +42,15 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		int defaultShift = defaultMod|shift;
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,   shift),				RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
-		put(KeyStroke.getKeyStroke('}'),									RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
+		put(KeyStroke.getKeyStroke('}'),							RSyntaxTextAreaEditorKit.rstaCloseCurlyBraceAction);
+		put(KeyStroke.getKeyStroke('('),							RSyntaxTextAreaEditorKit.rstaOpenParenAction);
+		put(KeyStroke.getKeyStroke('['),							RSyntaxTextAreaEditorKit.rstaOpenSquareBracketAction);
+		put(KeyStroke.getKeyStroke('{'),							RSyntaxTextAreaEditorKit.rstaOpenCurlyAction);
+		put(KeyStroke.getKeyStroke('\''),							RSyntaxTextAreaEditorKit.rstaSingleQuoteAction);
+		put(KeyStroke.getKeyStroke('"'),							RSyntaxTextAreaEditorKit.rstaDoubleQuoteAction);
+		put(KeyStroke.getKeyStroke('`'),							RSyntaxTextAreaEditorKit.rstaBacktickAction);
 
-		put(KeyStroke.getKeyStroke('/'), 									RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
+		put(KeyStroke.getKeyStroke('/'), 							RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
 		int os = RSyntaxUtilities.getOS();
 		if (os==RSyntaxUtilities.OS_WINDOWS || os==RSyntaxUtilities.OS_MAC_OSX) {
 			// *nix causes trouble with CloseMarkupTagAction and ToggleCommentAction.

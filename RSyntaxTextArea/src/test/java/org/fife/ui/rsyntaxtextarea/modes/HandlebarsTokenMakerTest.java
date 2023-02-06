@@ -6,22 +6,22 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import javax.swing.text.Segment;
-
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.Segment;
+
 
 /**
- * Unit tests for the {@link HTMLTokenMaker} class.
+ * Unit tests for the {@link HandlebarsTokenMaker} class.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-class HTMLTokenMakerTest extends AbstractTokenMakerTest {
+class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -29,7 +29,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * copy and paste tests from this class into others, such as HTML, PHP, and
 	 * JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS;
+	private static final int CSS_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS;
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -37,7 +37,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * is only here so we can copy and paste tests from this class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_MLC_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS_MLC;
+	private static final int CSS_MLC_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS_MLC;
 
 	/**
 	 * The last token type on the previous line for this token maker to start
@@ -45,7 +45,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * is only here so we can copy and paste tests from this class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_PROPERTY_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS_PROPERTY;
+	private static final int CSS_PROPERTY_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS_PROPERTY;
 
 	/**
 	 * The last token type on the previous line for this token maker to start
@@ -53,7 +53,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * is only here so we can copy and paste tests from this class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_VALUE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS_VALUE;
+	private static final int CSS_VALUE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS_VALUE;
 
 	/**
 	 * The last token type on the previous line for this token maker to start
@@ -61,7 +61,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * is only here so we can copy and paste tests from this class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_STRING_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS_STRING;
+	private static final int CSS_STRING_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS_STRING;
 
 	/**
 	 * The last token type on the previous line for this token maker to start
@@ -69,25 +69,25 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * is only here so we can copy and paste tests from this class into others,
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as possible.
 	 */
-	private static final int CSS_CHAR_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_CSS_CHAR;
+	private static final int CSS_CHAR_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_CSS_CHAR;
 
-	private static final int HTML_ATTR_DOUBLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_DOUBLE;
+	private static final int HTML_ATTR_DOUBLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_DOUBLE;
 
-	private static final int HTML_ATTR_SINGLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_SINGLE;
+	private static final int HTML_ATTR_SINGLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_SINGLE;
 
-	private static final int HTML_ATTR_SCRIPT_DOUBLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT;
+	private static final int HTML_ATTR_SCRIPT_DOUBLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT;
 
-	private static final int HTML_ATTR_SCRIPT_SINGLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT;
+	private static final int HTML_ATTR_SCRIPT_SINGLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT;
 
-	private static final int HTML_ATTR_STYLE_DOUBLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE;
+	private static final int HTML_ATTR_STYLE_DOUBLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_STYLE;
 
-	private static final int HTML_ATTR_STYLE_SINGLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE;
+	private static final int HTML_ATTR_STYLE_SINGLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_STYLE;
 
-	private static final int HTML_INTAG_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_INTAG;
+	private static final int HTML_INTAG_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_INTAG;
 
-	private static final int HTML_INTAG_SCRIPT_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_INTAG_SCRIPT;
+	private static final int HTML_INTAG_SCRIPT_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_INTAG_SCRIPT;
 
-	private static final int HTML_INTAG_STYLE_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_INTAG_STYLE;
+	private static final int HTML_INTAG_STYLE_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_INTAG_STYLE;
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -96,22 +96,27 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 * such as HTML, PHP, and JSP token maker tests, with as little change as
 	 * possible.
 	 */
-	private static final int JS_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS;
+	private static final int JS_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS;
 
-	private static final int JS_MLC_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_MLC;
+	private static final int JS_MLC_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_MLC;
 
-	private static final int JS_INVALID_STRING_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_STRING_INVALID;
+	private static final int JS_INVALID_STRING_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_STRING_INVALID;
 
-	private static final int JS_VALID_STRING_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_STRING_VALID;
+	private static final int JS_VALID_STRING_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_STRING_VALID;
 
-	private static final int JS_INVALID_CHAR_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_CHAR_INVALID;
+	private static final int JS_INVALID_CHAR_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_CHAR_INVALID;
 
-	private static final int JS_VALID_CHAR_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_CHAR_VALID;
+	private static final int JS_VALID_CHAR_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_CHAR_VALID;
 
-	private static final int JS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID;
+	private static final int JS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID;
 
-	private static final int JS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HTMLTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID;
+	private static final int JS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID;
 
+	private static final int HB_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_HB;
+
+	private static final int HB_MLC_1_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_HB_MLC_1;
+
+	private static final int HB_MLC_2_PREV_TOKEN_TYPE = HandlebarsTokenMaker.INTERNAL_IN_HB_MLC_2;
 
 	/**
 	 * Returns a new instance of the <code>TokenMaker</code> to test.
@@ -120,7 +125,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	 */
 	@Override
 	protected TokenMaker createTokenMaker() {
-		return new HTMLTokenMaker();
+		return new HandlebarsTokenMaker();
 	}
 
 
@@ -129,11 +134,13 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	protected void testCommon_getCurlyBracesDenoteCodeBlocks() {
 		TokenMaker tm = createTokenMaker();
 		Assertions.assertFalse(tm.getCurlyBracesDenoteCodeBlocks(
-			HTMLTokenMaker.LANG_INDEX_DEFAULT));
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT));
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
-			HTMLTokenMaker.LANG_INDEX_CSS));
+			HandlebarsTokenMaker.LANG_INDEX_CSS));
 		Assertions.assertTrue(tm.getCurlyBracesDenoteCodeBlocks(
-			HTMLTokenMaker.LANG_INDEX_JS));
+			HandlebarsTokenMaker.LANG_INDEX_JS));
+		Assertions.assertFalse(tm.getCurlyBracesDenoteCodeBlocks(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS));
 	}
 
 
@@ -141,7 +148,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
-			HTMLTokenMaker.LANG_INDEX_DEFAULT);
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT);
 		Assertions.assertEquals("<!--", startAndEnd[0]);
 		Assertions.assertEquals("-->", startAndEnd[1]);
 	}
@@ -150,7 +157,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testCommon_getLineCommentStartAndEnd_css() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
-			HTMLTokenMaker.LANG_INDEX_CSS);
+			HandlebarsTokenMaker.LANG_INDEX_CSS);
 		Assertions.assertEquals("/*", startAndEnd[0]);
 		Assertions.assertEquals("*/", startAndEnd[1]);
 	}
@@ -159,21 +166,30 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testCommon_getLineCommentStartAndEnd_js() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
-			HTMLTokenMaker.LANG_INDEX_JS);
+			HandlebarsTokenMaker.LANG_INDEX_JS);
 		Assertions.assertEquals("//", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
 	@Test
+	void testCommon_getLineCommentStartAndEnd_handlebars() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS);
+		Assertions.assertEquals("{{!--", startAndEnd[0]);
+		Assertions.assertEquals("--}}", startAndEnd[1]);
+	}
+
+
+	@Test
 	void testCommon_getSetCloseCompleteTags() {
-		HTMLTokenMaker tm = (HTMLTokenMaker)createTokenMaker();
+		HandlebarsTokenMaker tm = (HandlebarsTokenMaker)createTokenMaker();
 		Assertions.assertFalse(tm.getCompleteCloseTags());
 		try {
-			HTMLTokenMaker.setCompleteCloseTags(true);
+			HandlebarsTokenMaker.setCompleteCloseTags(true);
 			Assertions.assertTrue(tm.getCompleteCloseTags());
 		} finally {
-			HTMLTokenMaker.setCompleteCloseTags(false);
+			HandlebarsTokenMaker.setCompleteCloseTags(false);
 		}
 	}
 
@@ -188,6 +204,16 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			boolean expected = i == TokenTypes.MARKUP_TAG_NAME;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+
+
+	@Test
+	@Override
+	protected void testCommon_getShouldIndentNextLineAfter() {
+		testCommonHelper_getShouldIndentNextLineAfterCurliesAndParensForLanguageIndex(
+			HandlebarsTokenMaker.LANG_INDEX_CSS);
+		testCommonHelper_getShouldIndentNextLineAfterCurliesAndParensForLanguageIndex(
+			HandlebarsTokenMaker.LANG_INDEX_JS);
 	}
 
 
@@ -310,7 +336,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testCss_isIdentifierChar() {
 
 		TokenMaker tm = createTokenMaker();
-		int langIndex = HTMLTokenMaker.LANG_INDEX_CSS;
+		int langIndex = HandlebarsTokenMaker.LANG_INDEX_CSS;
 
 		for (int ch = 'A'; ch <= 'Z'; ch++) {
 			Assertions.assertTrue(tm.isIdentifierChar(langIndex, (char)ch));
@@ -564,7 +590,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String code = "background-image: url(\"test.png\");";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_CSS_PROPERTY, 0);
+		Token token = tm.getTokenList(segment, HandlebarsTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
 		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
@@ -585,7 +611,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		code = "background-image: url('test.png');";
 		segment = createSegment(code);
 		tm = createTokenMaker();
-		token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_CSS_PROPERTY, 0);
+		token = tm.getTokenList(segment, HandlebarsTokenMaker.INTERNAL_CSS_PROPERTY, 0);
 
 		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "background-image"));
 		token = token.getNextToken();
@@ -699,6 +725,281 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testHandlebars_blockEnd_twoCurliesBlock() {
+
+		// Because of the internal state tracking the number of curlies, we need
+		// separate setup for each scenario
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("{{}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}"));
+
+		t = tm.getTokenList(createSegment("{{}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}"));
+
+		t = tm.getTokenList(createSegment("{{}}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}}"));
+	}
+
+
+	@Test
+	void testHandlebars_blockEnd_threeCurliesBlock() {
+
+		// Because of the internal state tracking the number of curlies, we need
+		// separate setup for each scenario
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("{{{}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}}"));
+
+		t = tm.getTokenList(createSegment("{{{}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}}"));
+
+		t = tm.getTokenList(createSegment("{{{}}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}}"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}"));
+	}
+
+
+	@Test
+	void testHandlebars_blockEnd_fourCurliesBlock() {
+
+		// Because of the internal state tracking the number of curlies, we need
+		// separate setup for each scenario
+
+		TokenMaker tm = createTokenMaker();
+
+		Token t = tm.getTokenList(createSegment("{{{{}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}}"));
+
+		t = tm.getTokenList(createSegment("{{{{}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.IDENTIFIER, "}}}"));
+
+		t = tm.getTokenList(createSegment("{{{{}}}}"), 0, 0);
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "{{{{"));
+		t = t.getNextToken();
+		Assertions.assertTrue(t.is(TokenTypes.SEPARATOR, "}}}}"));
+	}
+
+
+	@Test
+	void testHandlebars_blockStart() {
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			"{{",
+			"{{{",
+			"{{{{"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_booleanLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			HB_PREV_TOKEN_TYPE,
+			"true",
+			"false"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_comments_type1() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"{{! This is a comment }}",
+			"{{! This is an unterminated comment",
+			"{{!"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_comments_type1_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			HB_MLC_1_PREV_TOKEN_TYPE,
+			"continued from a previous line and unterminated",
+			"continued from a previous line}}"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_comments_type2() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"{{!-- This is a comment --}}",
+			"{{!-- This is a comment with }} embedded curlies --}}",
+			"{{!-- This is an unterminated comment",
+			"{{!--"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_comments_type2_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			HB_MLC_2_PREV_TOKEN_TYPE,
+			"continued from a previous line and unterminated",
+			"continued from a previous line and unterminated with }} embedded curlies",
+			"continued from a previous line--}}"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_functions() {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			HB_PREV_TOKEN_TYPE,
+			"#if",
+			"#unless",
+			"#each",
+			"#with",
+			"/if",
+			"/unless",
+			"/each",
+			"/with",
+			"lookup",
+			"log"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_identifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			HB_PREV_TOKEN_TYPE,
+			"foo",
+			"snake_case"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_keywords() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			HB_PREV_TOKEN_TYPE,
+			"else",
+			"null",
+			"undefined"
+		);
+	}
+
+	@Test
+	void testHandlebars_numericLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_FLOAT,
+			HB_PREV_TOKEN_TYPE,
+			"0",
+			"42",
+			"3.987",
+			"-42",
+			"-3.987"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_operators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			HB_PREV_TOKEN_TYPE,
+			"!",
+			"%",
+			"&",
+			"*",
+			"+",
+			",",
+			".",
+			"/",
+			";",
+			"<",
+			"=",
+			">",
+			"@",
+			"`",
+			"|",
+			"^",
+			"~"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_separators() {
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			HB_PREV_TOKEN_TYPE,
+			"{",
+			"}",
+			"[",
+			"]",
+			"(",
+			")"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_strings_doubleQuotes() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			HB_PREV_TOKEN_TYPE,
+			"\"This is a string\"",
+			"\"This is a \\\"string\\\" with escapes\""
+		);
+	}
+
+
+	@Test
+	void testHandlebars_strings_doubleQuotes_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			HB_PREV_TOKEN_TYPE,
+			"\"Terminated with \\iinvalid escape\"",
+			"\"Unterminated string",
+			"\"Unterminated with \\iinvalid escape"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_strings_singleQuotes() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			HB_PREV_TOKEN_TYPE,
+			"'This is a string'",
+			"'This is a \\'string\\' with escapes'"
+		);
+	}
+
+
+	@Test
+	void testHandlebars_strings_singleQuotes_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			HB_PREV_TOKEN_TYPE,
+			"'Terminated with \\iinvalid escape'",
+			"'Unterminated string",
+			"'Unterminated with \\iinvalid escape"
+		);
+	}
+
+
+	@Test
 	void testHtml_attribute_doubleQuote() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
 			HTML_INTAG_PREV_TOKEN_TYPE,
@@ -721,7 +1022,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testHtml_attribute_singleQuote() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
-			HTMLTokenMaker.INTERNAL_INTAG,
+			HandlebarsTokenMaker.INTERNAL_INTAG,
 			"'attribute value'",
 			"'unclosed attribute value"
 		);
@@ -761,7 +1062,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testHtml_attributeScriptTag_singleQuote() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
-			HTMLTokenMaker.INTERNAL_INTAG_SCRIPT,
+			HandlebarsTokenMaker.INTERNAL_INTAG_SCRIPT,
 			"'attribute value'",
 			"'unclosed attribute value"
 		);
@@ -978,8 +1279,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTag_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG, 0);
-		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG, token.getType());
+		Token token = tm.getTokenList(segment, HandlebarsTokenMaker.INTERNAL_INTAG, 0);
+		Assertions.assertEquals(HandlebarsTokenMaker.INTERNAL_INTAG, token.getType());
 	}
 
 
@@ -987,8 +1288,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTagScript_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
-		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
+		Token token = tm.getTokenList(segment, HandlebarsTokenMaker.INTERNAL_INTAG_SCRIPT, 0);
+		Assertions.assertEquals(HandlebarsTokenMaker.INTERNAL_INTAG_SCRIPT, token.getType());
 	}
 
 
@@ -996,8 +1297,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 	void testHtml_inTagStyle_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, HTMLTokenMaker.INTERNAL_INTAG_STYLE, 0);
-		Assertions.assertEquals(HTMLTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
+		Token token = tm.getTokenList(segment, HandlebarsTokenMaker.INTERNAL_INTAG_STYLE, 0);
+		Assertions.assertEquals(HandlebarsTokenMaker.INTERNAL_INTAG_STYLE, token.getType());
 	}
 
 
