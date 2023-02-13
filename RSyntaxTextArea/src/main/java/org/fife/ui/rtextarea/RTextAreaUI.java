@@ -169,7 +169,6 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	@Override
 	protected Caret createCaret() {
 		Caret caret = new ConfigurableCaret();
-		caret.setBlinkRate(500);
 		return caret;
 	}
 
