@@ -676,6 +676,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
+			// TODO: Refactor popup menu logic so RTextArea doesn't get RSyntaxTextArea's
+			// cut and copy actions
+			if (!(textArea instanceof RSyntaxTextArea)) {
+				handleActionPerformedPlainText(textArea);
+				return;
+			}
+
 			if (cutAction && (!textArea.isEditable() || !textArea.isEnabled())) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				return;
@@ -692,6 +699,16 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					ble.printStackTrace();
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				}
+			}
+			textArea.requestFocusInWindow();
+		}
+
+		private void handleActionPerformedPlainText(RTextArea textArea) {
+			if (cutAction) {
+				textArea.cut();
+			}
+			else {
+				textArea.copy();
 			}
 			textArea.requestFocusInWindow();
 		}

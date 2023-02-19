@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.RTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import java.awt.event.ActionEvent;
  * @version 1.0
  */
 @ExtendWith(SwingRunnerExtension.class)
-class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
+class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testActionPerformedImpl_copyAsStyledText() throws Exception {
@@ -53,11 +54,74 @@ class RSyntaxTextAreaEditorKitCopyAsStyledTextActionTest extends AbstractRSyntax
 	}
 
 	@Test
+	void testActionPerformedImpl_copyAsStyledText_rTextArea() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
+		RTextArea textArea = new RTextArea(
+			"/*\n" +
+				"* comment\n" +
+				"*/\n" +
+				"public void foo() {\n" +
+				"  /* comment\n" +
+				"     two */\n" +
+				"}");
+
+		textArea.setCaretPosition(5);
+		textArea.moveCaretPosition(8);
+
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+
+		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
+			getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent);
+	}
+
+	@Test
 	void testActionPerformedImpl_cutAsStyledText() throws Exception {
 
 		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
+			"/*\n" +
+				"* comment\n" +
+				"*/\n" +
+				"public void foo() {\n" +
+				"  /* comment\n" +
+				"     two */\n" +
+				"}");
+
+		textArea.setCaretPosition(5);
+		textArea.moveCaretPosition(8);
+
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+
+		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
+			getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent);
+
+
+		String expected = 	"/*\n" +
+			"* ment\n" +
+			"*/\n" +
+			"public void foo() {\n" +
+			"  /* comment\n" +
+			"     two */\n" +
+			"}";
+
+		Assertions.assertEquals(expected, textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_cutAsStyledText_rTextArea() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
+		RTextArea textArea = new RTextArea(
 			"/*\n" +
 				"* comment\n" +
 				"*/\n" +
