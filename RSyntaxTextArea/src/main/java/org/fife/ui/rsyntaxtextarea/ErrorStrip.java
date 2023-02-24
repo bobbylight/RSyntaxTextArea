@@ -328,7 +328,7 @@ public class ErrorStrip extends JPanel {
 		int lineHeight = textArea.getLineHeight();
 		int linesPerVisibleRect = h / lineHeight;
 
-		return (int)(((line-1)/(Math.max(lineCount, linesPerVisibleRect) -1)) * (h-2));
+		return Math.round((h-1) * line / Math.max(lineCount, linesPerVisibleRect));
 	}
 
 
