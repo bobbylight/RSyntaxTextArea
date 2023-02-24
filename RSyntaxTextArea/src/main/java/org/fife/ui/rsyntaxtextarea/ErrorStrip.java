@@ -686,6 +686,7 @@ public class ErrorStrip extends JPanel {
 				try {
 					int offs = textArea.getLineStartOffset(line);
 					textArea.setCaretPosition(offs);
+					RSyntaxUtilities.selectAndPossiblyCenter(textArea, new DocumentRange(offs, offs), false);
 				} catch (BadLocationException ble) { // Never happens
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				}
