@@ -648,22 +648,11 @@ public class ErrorStrip extends JPanel {
 	private class Listener extends MouseAdapter
 					implements PropertyChangeListener, CaretListener {
 
-		private Rectangle visibleRect = new Rectangle();
-
 		@Override
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
-				textArea.computeVisibleRect(visibleRect);
-				int h = visibleRect.height;
-
-				int lineHeight = textArea.getLineHeight();
-				int linesPerVisibleRect = h / lineHeight;
-				int lineCount = textArea.getLineCount();
-
 				int line = textArea.getCaretLineNumber();
-				float percent = line / (float)(Math.max(linesPerVisibleRect, lineCount)-1);
-
-				caretLineY = (int)(visibleRect.height*percent);
+				caretLineY = lineToY(line);
 				if (caretLineY!=lastLineY) {
 					repaint(0,lastLineY, getWidth(), 2); // Erase old position
 					repaint(0,caretLineY, getWidth(), 2);
