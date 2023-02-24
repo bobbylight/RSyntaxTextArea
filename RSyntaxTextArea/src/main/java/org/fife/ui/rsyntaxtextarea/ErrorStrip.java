@@ -579,7 +579,7 @@ public class ErrorStrip extends JPanel {
 
 		if (y<h) {
 			float at = y/(float)h;
-			line = Math.round((Math.min(lineCount, linesPerVisibleRect)-1)*at);
+			line = Math.round((Math.max(lineCount, linesPerVisibleRect)-1)*at);
 		}
 		return line;
 	}
