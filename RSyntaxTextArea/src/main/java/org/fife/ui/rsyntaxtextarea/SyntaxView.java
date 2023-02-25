@@ -319,8 +319,8 @@ public class SyntaxView extends View implements TabExpander,
 	 * @param a the allocated region to render into
 	 * @param direction the direction from the current position that can
 	 *        be thought of as the arrow keys typically found on a keyboard.
-	 *        This may be SwingConstants.WEST, SwingConstants.EAST,
-	 *        SwingConstants.NORTH, or SwingConstants.SOUTH.
+	 *        This may be {@code SwingConstants.WEST}, {@code SwingConstants.EAST},
+	 *        {@code SwingConstants.NORTH}, or {@code SwingConstants.SOUTH}.
 	 * @return the location within the model that best represents the next
 	 *         location visual position.
 	 * @exception BadLocationException If the offset specified is invalid.
@@ -341,7 +341,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
 	 * @return   the span the view would like to be rendered into &gt;= 0.
-	 *           Typically the view is told to render into the span
+	 *           Typically, the view is told to render into the span
 	 *           that is returned, although there is no guarantee.
 	 *           The parent may choose to resize or break the view.
 	 * @exception IllegalArgumentException for an invalid axis
@@ -653,8 +653,8 @@ public class SyntaxView extends View implements TabExpander,
 		if (tabSize == 0) {
 			return x;
 		}
-		int ntabs = (((int)x) - tabBase) / tabSize;
-		return tabBase + ((ntabs + 1f) * tabSize);
+		int tabCount = (((int)x) - tabBase) / tabSize;
+		return tabBase + ((tabCount + 1f) * tabSize);
 	}
 
 
@@ -868,7 +868,7 @@ public class SyntaxView extends View implements TabExpander,
 				// longest line.
 				Element e = map.getElement(line);
 				if (e == longLine) {
-					// We must recalculate longest line's width here
+					// We must recalculate the longest line's width here
 					// because it has gotten longer.
 					longLineWidth = getLineWidth(line);
 					preferenceChanged(null, true, false);
@@ -983,7 +983,7 @@ public class SyntaxView extends View implements TabExpander,
 
 
 	@Override
-	public int yForLine(Rectangle alloc, int line) throws BadLocationException {
+	public int yForLine(Rectangle alloc, int line) {
 
 		//Rectangle lineArea = lineToRect(alloc, lineIndex);
 		updateMetrics();

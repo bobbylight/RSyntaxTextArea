@@ -128,7 +128,7 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_K, defaultMod|shift),	RTextAreaEditorKit.rtaPrevOccurrenceAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_K, defaultMod),			RTextAreaEditorKit.rtaNextOccurrenceAction);
 
-		// Shortcuts specific to macOS
+		// Shortcuts specific to macOS.
 		// macOS keyboard shortcuts documentation: https://support.apple.com/en-us/HT201236
 		if (isOSX) {
 

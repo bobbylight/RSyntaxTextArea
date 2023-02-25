@@ -683,7 +683,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	/**
 	 * Returns the macro currently stored in this <code>RTextArea</code>.
-	 * Since macros are shared, all <code>RTextArea</code>s in the currently-
+	 * Since macros are shared, all <code>RTextArea</code>s in the currently
 	 * running application are using this macro.
 	 *
 	 * @return The current macro, or <code>null</code> if no macro has been

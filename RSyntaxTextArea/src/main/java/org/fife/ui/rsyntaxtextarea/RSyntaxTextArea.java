@@ -978,14 +978,14 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Forces the given {@link Parser} to re-parse the content of this text
+	 * Forces the given {@link Parser} to reparse the content of this text
 	 * area.  This should only be called on the EDT.<p>
 	 *
 	 * This method can be useful when a <code>Parser</code> can be configured
 	 * as to what notices it returns.  For example, if a Java language parser
 	 * can be configured to set whether no serialVersionUID is a warning,
 	 * error, or ignored, this method can be called after changing the expected
-	 * notice type to have the document re-parsed.
+	 * notice type to have the document reparsed.
 	 *
 	 * @param parser The index of the <code>Parser</code> to re-run.
 	 * @see #getParser(int)
@@ -996,11 +996,11 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Forces re-parsing with a specific parser.  Note that if this parser is
+	 * Forces reparsing with a specific parser.  Note that if this parser is
 	 * not installed on this text area, nothing will happen.  This method
 	 * should only be called on the EDT.
 	 *
-	 * @param parser The parser that should re-parse this text area's contents.
+	 * @param parser The parser that should reparse this text area's contents.
 	 *        This should be installed on this text area.
 	 * @return Whether the parser was installed on this text area.
 	 * @see #forceReparsing(int)

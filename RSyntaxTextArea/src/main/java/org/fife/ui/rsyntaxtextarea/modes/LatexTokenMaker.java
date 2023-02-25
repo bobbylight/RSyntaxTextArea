@@ -385,7 +385,6 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
 	private boolean zzRefill() {
 		return zzCurrentPos>=s.offset+s.count;

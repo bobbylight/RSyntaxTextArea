@@ -37,7 +37,7 @@ public class UnicodeWriter extends Writer {
 	/**
 	 * If this system property evaluates to "<code>true</code>", ignoring
 	 * case, files written out as UTF-8 will have a BOM written for them.
-	 * Otherwise (even if the property is not set), UTF-8 files will not
+	 * Otherwise, (even if the property is not set), UTF-8 files will not
 	 * have a BOM written (which is typical, older builds of Windows Notepad
 	 * are the outlier here).
 	 */

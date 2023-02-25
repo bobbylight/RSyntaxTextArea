@@ -166,7 +166,7 @@ public class RUndoManager extends UndoManager {
 		}
 
 		// This happens when this UndoableEdit didn't occur at the
-		// character just after the previous undlabeledit.  Since an
+		// character just after the previous undoable edit.  Since an
 		// undo has already occurred, there is no need to update our
 		// actions here either.
 		compoundEdit.end();

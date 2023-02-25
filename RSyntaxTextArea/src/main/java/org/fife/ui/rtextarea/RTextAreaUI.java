@@ -168,8 +168,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	@Override
 	protected Caret createCaret() {
-		Caret caret = new ConfigurableCaret();
-		return caret;
+		return new ConfigurableCaret();
 	}
 
 

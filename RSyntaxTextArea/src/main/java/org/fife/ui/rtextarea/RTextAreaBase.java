@@ -1097,7 +1097,7 @@ try {
 			Caret c = getCaret();
 			if (c instanceof ConfigurableCaret) {
 				((ConfigurableCaret)c).setRoundedSelectionEdges(rounded);
-				if (c.getDot()!=c.getMark()) { // e.g., there's is a selection
+				if (c.getDot()!=c.getMark()) { // e.g., there's a selection
 					repaint();
 				}
 			}

@@ -363,14 +363,12 @@ public class RTATextTransferHandler extends TransferHandler {
 		 * of the object returned is defined by the representation class of the flavor.
 		 *
 		 * @param flavor the requested flavor for the data
-		 * @throws IOException if the data is no longer available
-		 *         in the requested flavor.
 		 * @throws UnsupportedFlavorException if the requested data flavor is
 		 *         not supported.
 		 * @see DataFlavor#getRepresentationClass
 		 */
 		@Override
-		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
 			if (isPlainFlavor(flavor)) {
 				String data = getPlainData();
 				data = (data == null) ? "" : data;

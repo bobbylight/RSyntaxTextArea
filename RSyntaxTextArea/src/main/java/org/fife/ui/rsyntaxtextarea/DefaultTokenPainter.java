@@ -131,7 +131,7 @@ class DefaultTokenPainter implements TokenPainter {
 		}
 
 		nextX = x+fm.charsWidth(text, flushIndex,flushLen);
-java.awt.Rectangle r = host.getMatchRectangle();
+		java.awt.Rectangle r = host.getMatchRectangle();
 
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {

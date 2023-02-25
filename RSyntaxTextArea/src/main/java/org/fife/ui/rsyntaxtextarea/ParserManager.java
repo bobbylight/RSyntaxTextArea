@@ -316,14 +316,14 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
-	 * Forces the given {@link Parser} to re-parse the content of this text
+	 * Forces the given {@link Parser} to reparse the content of this text
 	 * area.<p>
 	 *
 	 * This method can be useful when a <code>Parser</code> can be configured
 	 * as to what notices it returns.  For example, if a Java language parser
 	 * can be configured to set whether no serialVersionUID is a warning,
 	 * error, or ignored, this method can be called after changing the expected
-	 * notice type to have the document re-parsed.
+	 * notice type to have the document reparsed.
 	 *
 	 * @param parser The index of the <code>Parser</code> to re-run.
 	 * @see #getParser(int)
@@ -350,7 +350,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 	/**
 	 * Returns the delay between the last "concurrent" edit and when the
-	 * document is re-parsed.
+	 * document is reparsed.
 	 *
 	 * @return The delay, in milliseconds.
 	 * @see #setDelay(int)
@@ -478,7 +478,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	public void insertUpdate(DocumentEvent e) {
 
 		// Keep track of the first and last offset modified.  Some parsers are
-		// smart and will only re-parse this section of the file.
+		// smart and will only reparse this section of the file.
 		try {
 			int offs = e.getOffset();
 			if (firstOffsetModded==null || offs<firstOffsetModded.getOffset()) {
@@ -685,9 +685,9 @@ class ParserManager implements DocumentListener, ActionListener,
 	public void removeUpdate(DocumentEvent e) {
 
 		// Keep track of the first and last offset modified.  Some parsers are
-		// smart and will only re-parse this section of the file.  Note that
+		// smart and will only reparse this section of the file.  Note that
 		// for removals, only the line at the removal start needs to be
-		// re-parsed.
+		// reparsed.
 		try {
 			int offs = e.getOffset();
 			if (firstOffsetModded==null || offs<firstOffsetModded.getOffset()) {
@@ -718,7 +718,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 	/**
 	 * Sets the delay between the last "concurrent" edit and when the document
-	 * is re-parsed.
+	 * is reparsed.
 	 *
 	 * @param millis The new delay, in milliseconds.  This must be greater
 	 *        than <code>0</code>.

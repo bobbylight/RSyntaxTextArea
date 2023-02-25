@@ -1,7 +1,7 @@
 /*
  * 07/31/2009
  *
- * ExtendedHyeprlinkListener.java - A hyperlink event from a FocusableTip.
+ * ExtendedHyperlinkListener.java - A hyperlink event from a FocusableTip.
  *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.

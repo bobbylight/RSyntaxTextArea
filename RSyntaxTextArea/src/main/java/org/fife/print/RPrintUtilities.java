@@ -426,7 +426,7 @@ public abstract class RPrintUtilities {
 				startingOffset = 0;			// Start at the first character in the new document line.
 			}
 
-			// If it won't fit on a printed line by itself (i.e., it needs to be wrapped)...
+			// If it doesn't fit on a printed line by itself (i.e., it needs to be wrapped)...
 			else {
 
 				// Loop while the current line is too long to fit on a printed line.
@@ -547,8 +547,8 @@ public abstract class RPrintUtilities {
 				return x;
 			}
 			int tabSizeInPixels = tabSizeInSpaces * fm.charWidth(' ');
-			int ntabs = (((int) x) - xOffset) / tabSizeInPixels;
-			return xOffset + ((ntabs + 1f) * tabSizeInPixels);
+			int tabCount = (((int) x) - xOffset) / tabSizeInPixels;
+			return xOffset + ((tabCount + 1f) * tabSizeInPixels);
 		}
 
 	}

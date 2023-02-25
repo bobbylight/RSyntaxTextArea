@@ -766,7 +766,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						}
 						else if (oldSize>MINIMUM_SIZE) {
 							// Can't shrink by full decreaseAmount, but
-							// can shrink a little bit.
+							// can shrink a little.
 							ss.font = font.deriveFont(MINIMUM_SIZE);
 							changed = true;
 						}
@@ -785,7 +785,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 			else if (oldSize>MINIMUM_SIZE) {
 				// Can't shrink by full decreaseAmount, but
-				// can shrink a little bit.
+				// can shrink a little.
 				rsta.setFont(font.deriveFont(MINIMUM_SIZE));
 				changed = true;
 			}
@@ -1129,7 +1129,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int wordStart = offs;
 			while (wordStart >= start) {
 				char ch = doc.charAt(wordStart);
-				// Ignore newlines so we work when caret is at end of line
+				// Ignore newlines, so we work when caret is at end of line
 				if (!isIdentifierChar(ch) && ch != '\n') {
 					break;
 				}
@@ -1421,7 +1421,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						}
 						else if (oldSize<MAXIMUM_SIZE) {
 							// Can't grow by full increaseAmount, but
-							// can grow a little bit.
+							// can grow a little.
 							ss.font = font.deriveFont(MAXIMUM_SIZE);
 							changed = true;
 						}
@@ -1440,7 +1440,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 			else if (oldSize<MAXIMUM_SIZE) {
 				// Can't grow by full increaseAmount, but
-				// can grow a little bit.
+				// can grow a little.
 				rsta.setFont(font.deriveFont(MAXIMUM_SIZE));
 				changed = true;
 			}

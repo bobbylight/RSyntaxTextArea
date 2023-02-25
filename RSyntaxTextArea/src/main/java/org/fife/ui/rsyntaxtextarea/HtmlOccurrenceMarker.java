@@ -38,7 +38,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 *
 	 * @return The set of HTML tags that require a closing tag.
 	 */
-	public static final Set<String> getRequiredClosingTags() {
+	public static Set<String> getRequiredClosingTags() {
 		final String[] tags = {
 			"html",
 			"head",
@@ -157,7 +157,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	 *         specified occurrence marker identifies tokens other than
 	 *         tag names, these other element types may be returned.
 	 */
-	public static final Token getTagNameTokenForCaretOffset(
+	public static Token getTagNameTokenForCaretOffset(
 			RSyntaxTextArea textArea, OccurrenceMarker occurrenceMarker) {
 
 		// Get the tag name token.

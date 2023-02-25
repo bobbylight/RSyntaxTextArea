@@ -36,7 +36,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
  * those two methods.<p>
  *
  * Note also that this class may impose somewhat of a performance penalty on
- * large source files, since it re-parses the entire document each time folds
+ * large source files, since it reparses the entire document each time folds
  * are reevaluated.
  *
  * @author Robert Futrell
