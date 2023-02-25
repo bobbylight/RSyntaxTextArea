@@ -322,8 +322,12 @@ public class ErrorStrip extends JPanel {
 	 * @return The y-offset.
 	 * @see #yToLine(int)
 	 */
-	private int lineToY(int line) {
-		int h = textArea.getVisibleRect().height;
+	private int lineToY(int line, Rectangle r) {
+		if (r == null) {
+			r = new Rectangle();
+		}
+		textArea.computeVisibleRect(r);
+		int h = r.height;
 		float lineCount = textArea.getLineCount();
 		int lineHeight = textArea.getLineHeight();
 		int linesPerVisibleRect = h / lineHeight;
@@ -567,7 +571,7 @@ public class ErrorStrip extends JPanel {
 	 *
 	 * @param y The y-offset.
 	 * @return The line.
-	 * @see #lineToY(int)
+	 * @see #lineToY(int, Rectangle)
 	 */
 	private int yToLine(int y) {
 		int line = -1;
@@ -648,11 +652,13 @@ public class ErrorStrip extends JPanel {
 	private class Listener extends MouseAdapter
 					implements PropertyChangeListener, CaretListener {
 
+		private final Rectangle r = new Rectangle();
+
 		@Override
 		public void caretUpdate(CaretEvent e) {
 			if (getFollowCaret()) {
 				int line = textArea.getCaretLineNumber();
-				caretLineY = lineToY(line);
+				caretLineY = lineToY(line, r);
 				if (caretLineY!=lastLineY) {
 					repaint(0,lastLineY, getWidth(), 2); // Erase old position
 					repaint(0,caretLineY, getWidth(), 2);
@@ -934,7 +940,7 @@ public class ErrorStrip extends JPanel {
 
 		public void updateLocation() {
 			int line = notices.get(0).getLine();
-			int y = lineToY(line);
+			int y = lineToY(line - 1, null); // ParserNotices are 1-based
 			setLocation(2, y);
 		}
 
