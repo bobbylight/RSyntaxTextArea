@@ -920,7 +920,7 @@ public class Gutter extends JPanel {
 	 * @param enabled Whether line numbers should be visible.
 	 * @see #getLineNumbersEnabled()
 	 */
-	void setLineNumbersEnabled(boolean enabled) {
+	public void setLineNumbersEnabled(boolean enabled) {
 		if (lineNumberList!=null) {
 			if (enabled) {
 				add(lineNumberList);
