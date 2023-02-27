@@ -830,7 +830,7 @@ public class Gutter extends JPanel {
 	 * @param enabled Whether the icon row header is enabled.
 	 * @see #isIconRowHeaderEnabled()
 	 */
-	void setIconRowHeaderEnabled(boolean enabled) {
+	public void setIconRowHeaderEnabled(boolean enabled) {
 		if (iconArea!=null) {
 			if (enabled) {
 				add(iconArea, BorderLayout.LINE_START);
@@ -972,7 +972,7 @@ public class Gutter extends JPanel {
 	 *
 	 * @param textArea The text area.
 	 */
-	void setTextArea(RTextArea textArea) {
+	public void setTextArea(RTextArea textArea) {
 
 		if (this.textArea!=null) {
 			listener.uninstall();
