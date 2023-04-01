@@ -752,6 +752,10 @@ public final class SearchEngine {
 		else {
 			// Force a repaint of "mark all" highlights so ErrorStrips can
 			// get updated
+			// Force "mark all" event to be broadcast so listeners like
+			// ErrorStrip know to clear their mark-all markers. Note that
+			// clearMarkAllHighlights() doesn't fire an event itself for
+			// performance reasons.
 			List<DocumentRange> empty = Collections.emptyList();
 			textArea.markAll(empty);
 		}

@@ -360,7 +360,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Clears any "mark all" highlights, if any.
+	 * Clears any "mark all" highlights, if any. As {@link SearchEngine} handles
+	 * "mark all" highlights itself, the programmer doesn't usually need to call
+	 * this directly. One use case to do so might be doing custom highlighting of
+	 * specific text in the text area.
 	 *
 	 * @see #markAll(List)
 	 * @see #getMarkAllHighlightColor()
@@ -942,9 +945,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Marks all ranges specified with the "mark all" highlighter.  Typically,
-	 * this method is called indirectly from {@link SearchEngine} when doing
-	 * a fine or replace operation.<p>
+	 * Marks all ranges specified with the "mark all" highlighter. As
+	 * {@link SearchEngine} handles "mark all" highlights itself, the programmer
+	 * doesn't usually need to call this directly. One use case to do so might
+	 * be doing custom highlighting of specific text in the text area.<p>
 	 *
 	 * This method fires a property change event of type
 	 * {@link #MARK_ALL_OCCURRENCES_CHANGED_PROPERTY}.
@@ -959,9 +963,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public void markAll(List<DocumentRange> ranges) {
 
 		RTextAreaHighlighter h = (RTextAreaHighlighter)getHighlighter();
-		if (/*toMark!=null && !toMark.equals(markedWord) && */h!=null) {
+		if (h!=null) {
 
-			//markedWord = toMark;
 			if (ranges!=null) {
 				for (DocumentRange range : ranges) {
 					try {
