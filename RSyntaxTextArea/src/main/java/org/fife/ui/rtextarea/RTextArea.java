@@ -366,7 +366,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #getMarkAllHighlightColor()
 	 * @see #setMarkAllHighlightColor(Color)
 	 */
-	void clearMarkAllHighlights() {
+	public void clearMarkAllHighlights() {
 		((RTextAreaHighlighter)getHighlighter()).clearMarkAllHighlights();
 		//markedWord = null;
 		repaint();
@@ -956,7 +956,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #getMarkAllHighlightColor()
 	 * @see #setMarkAllHighlightColor(Color)
 	 */
-	void markAll(List<DocumentRange> ranges) {
+	public void markAll(List<DocumentRange> ranges) {
 
 		RTextAreaHighlighter h = (RTextAreaHighlighter)getHighlighter();
 		if (/*toMark!=null && !toMark.equals(markedWord) && */h!=null) {
