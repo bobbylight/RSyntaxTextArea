@@ -682,6 +682,15 @@ public class PythonTokenMaker extends AbstractJFlexTokenMaker {
 		return new String[] { "#", null };
 	}
 
+	@Override
+	public boolean getShouldIndentNextLineAfter(Token t) {
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
+			return ch==':' || ch=='\\';
+		}
+		return false;
+	}
+
 
 	/**
 	 * Returns the first token in the linked list of tokens generated
