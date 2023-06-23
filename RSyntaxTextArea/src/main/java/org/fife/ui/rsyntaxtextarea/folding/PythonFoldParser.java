@@ -50,7 +50,15 @@ public class PythonFoldParser implements FoldParser {
 					currentNextFoldStart = t.getOffset() + leadingWhiteSpaceCount;
 				}
 
+				// need to create a fold of some sort
 				else if (leadingWhiteSpaceCount > currentLeadingWhiteSpaceCount) {
+
+					// look forward if it is a line continuation
+					while (tokenHasLineContinuation(t) && (line < lineCount)) {
+						line ++;
+						t = textArea.getTokenListForLine(line);
+						//currentNextFoldStart = t.getOffset();
+					}
 
 					if (currentFold != null) {
 						currentFold = currentFold.createChild(FoldType.CODE,
@@ -80,10 +88,8 @@ public class PythonFoldParser implements FoldParser {
 					int endOffs = t.getEndOffset() - 1;
 
 					boolean foundBlock = false;
-					while (!foldStartLeadingWhiteSpaceCounts.isEmpty() &&
+					while (currentFold != null && !foldStartLeadingWhiteSpaceCounts.isEmpty() &&
 							foldStartLeadingWhiteSpaceCounts.peek() >= leadingWhiteSpaceCount) {
-						// IntelliJ can't tell, but it's not possible for currentFold to be
-						// null here
 						currentFold.setEndOffset(endOffs);
 						currentFold = currentFold.getParent();
 						foldStartLeadingWhiteSpaceCounts.pop();
@@ -106,6 +112,15 @@ public class PythonFoldParser implements FoldParser {
 		return folds;
 	}
 
+	private static 	boolean tokenHasLineContinuation(Token t) {
+		char ch = 'a';
+		t = t.getLastNonCommentNonWhitespaceToken();
+		if (t!=null && t.length()==1) {
+			ch = t.charAt(0);
+		}
+		return ch=='\\';
+	}
+
 	private static int getLeadingWhiteSpaceCount(Token t, int tabSize) {
 
 		// Lines continuing a multi-line string or char don't count
@@ -118,7 +133,7 @@ public class PythonFoldParser implements FoldParser {
 		int count = 0;
 		while (t != null && t.isPaintable()) {
 			if (!t.isWhitespace()) {
-				// Note Python doesn't nave multi-line comments so we don't
+				// Note Python doesn't nave multi-line comments, so we don't
 				// have to worry about MLD's
 				return t.getType() == TokenTypes.COMMENT_EOL ? -1 : count;
 			}
