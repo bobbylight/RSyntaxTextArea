@@ -215,7 +215,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * @param fontHeight The height of the font being used.
 	 * @param y The y-coordinate at which to begin painting.
 	 */
-	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r,
+	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r, Rectangle clip,
 						View view, int fontHeight, int y, int line) {
 
 		float x = r.x;
@@ -249,11 +249,17 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			int p = calculateBreakPosition(p0, token, x);
 			x = r.x;
 
-			h.paintLayeredHighlights(g, p0,p, r, host, this);
+			/* NB: for text drawing y is the baseline */
+			final boolean paintThisLine = (y >= clip.getMinY());
+			if (paintThisLine) {
+				h.paintLayeredHighlights(g, p0,p, r, host, this);
+			}
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
-				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
-				x = painter.paint(token, g, x,y, host, this, 0, paintBG);
+				if (paintThisLine) {
+					boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+					x = painter.paint(token, g, x,y, host, this, 0, paintBG);
+				}
 				token = token.getNextToken();
 			}
 
@@ -262,18 +268,27 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
 						tokenOffset, token.getType());
 				tempToken.setLanguageIndex(token.getLanguageIndex());
-				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
-				painter.paint(tempToken, g, x,y, host, this, 0, paintBG);
+				if (paintThisLine) {
+					boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+					painter.paint(tempToken, g, x,y, host, this, 0, paintBG);
+				}
 				tempToken.copyFrom(token);
 				tempToken.makeStartAt(p);
 				token = new TokenImpl(tempToken);
 			}
 
-			// Paint parser (e.g. squiggle underline) highlights after
-			// text and selection
-			h.paintParserHighlights(g, p0,p, r, host, this);
+			if (paintThisLine) {
+				// Paint parser (e.g. squiggle underline) highlights after
+				// text and selection
+				h.paintParserHighlights(g, p0,p, r, host, this);
+			}
 
 			p0 = (p==p0) ? p1 : p;
+
+			if (y > clip.getMaxY()) {
+				break;
+			}
+
 			y += fontHeight;
 
 		} // End of while (token!=null && token.isPaintable()).
@@ -926,7 +941,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				View view = getView(i);
 				if (selStart==selEnd || startOffset>=selEnd ||
 						endOffset<selStart) {
-					drawView(painter, g2d, alloc, view, fontHeight,
+					drawView(painter, g2d, alloc, clip, view, fontHeight,
 							tempRect.y+ascent, i);
 				}
 				else {
