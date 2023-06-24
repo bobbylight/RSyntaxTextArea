@@ -1163,8 +1163,12 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		 * to improve the performance when wrapping long lines.
 		 */
 		private transient TreeMap<Integer, Integer> posToHeightLookup;
+		private transient TreeMap<Integer, Integer> heightToPosLookup;
 
-		private transient int posToHeightLookupWidth;
+		/**
+		 * The width used when the lookup tables were calculated, so they can be reset when the width changes.
+		 */
+		private transient int widthForLookups;
 
 		WrappedLine(Element elem) {
 			super(elem);
@@ -1301,7 +1305,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			/* Use lookup table to improve performance */
 			if (posToHeightLookup != null) {
-				if (posToHeightLookupWidth == width) {
+				if (widthForLookups == width) {
 					Entry<Integer, Integer> floorEntry = posToHeightLookup.floorEntry(pos - 1);
 					if (floorEntry != null) {
 						p0 = floorEntry.getKey();
@@ -1352,7 +1356,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				if (loops > 10) {
 					if (posToHeightLookup == null) {
 						posToHeightLookup = new TreeMap<>();
-						posToHeightLookupWidth = width;
+						widthForLookups = width;
 					}
 					posToHeightLookup.put(p0, alloc.y);
 				}
@@ -1413,6 +1417,23 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				int line = map.getElementIndex(p0);
 				Token tlist = doc.getTokenListForLine(line);
 
+				final int width = getWidth();
+
+				/* Use lookup table to improve performance */
+				if (heightToPosLookup != null) {
+					if (widthForLookups == width) {
+						Entry<Integer, Integer> floorEntry = heightToPosLookup.floorEntry((int) fy);
+						if (floorEntry != null) {
+							alloc.y = floorEntry.getKey();
+							p0 = floorEntry.getValue();
+						}
+					} else {
+						heightToPosLookup = null;
+					}
+				}
+
+				int loops = 0;
+
 				// Look at each physical line-chunk of this logical line.
 				while (p0<p1) {
 
@@ -1461,6 +1482,15 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					p0 = (p == p0) ? p1 : p;
 					alloc.y += alloc.height;
 
+					loops++;
+
+					if (loops > 10) {
+						if (heightToPosLookup == null) {
+							heightToPosLookup = new TreeMap<>();
+							widthForLookups = width;
+						}
+						heightToPosLookup.put(alloc.y, p0);
+					}
 				} // End of while (p0<p1).
 
 				return getEndOffset() - 1;
