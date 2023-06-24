@@ -570,6 +570,10 @@ public class TokenImpl implements Token {
 		return getWidthUpTo(textCount, textArea, e, x0);
 	}
 
+	@Override
+	public float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0, float maxWidth) {
+		return getWidthUpTo(textCount, textArea, e, x0, maxWidth);
+	}
 
 	@Override
 	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
@@ -594,6 +598,50 @@ public class TokenImpl implements Token {
 					width = e.nextTabStop(width, 0);
 				}
 			}
+			// Most (non-whitespace) tokens will have characters at this
+			// point to get the widths for, so we don't check for w>0 (mini-
+			// optimization).
+			w = endBefore - currentStart;
+			width += fm.charsWidth(text, currentStart, w);
+		}
+		return width - x0;
+	}
+
+	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
+			TabExpander e, float x0, float maxWidth) {
+		float width = x0;
+		FontMetrics fm = textArea.getFontMetricsForTokenType(getType());
+		if (fm != null) {
+			int w;
+			int currentStart = textOffset;
+			final int endBefore = textOffset + numChars;
+			for (int i = currentStart; i < endBefore; i++) {
+				if (text[i] == '\t') {
+					// Since TokenMaker implementations usually group all
+					// adjacent whitespace into a single token, there
+					// aren't usually any characters to compute a width
+					// for here, so we check before calling.
+					w = i - currentStart;
+					if (w > 0) {
+						width += fm.charsWidth(text, currentStart, w);
+					}
+					currentStart = i + 1;
+					width = e.nextTabStop(width, 0);
+
+					if (width - x0 >= maxWidth) {
+						return maxWidth;
+					}
+				} else if ((i - currentStart) > 50) {
+					w = i - currentStart + 1;
+					width += fm.charsWidth(text, currentStart, w);
+					currentStart = i + 1;
+
+					if (width - x0 >= maxWidth) {
+						return maxWidth;
+					}
+				}
+			}
+
 			// Most (non-whitespace) tokens will have characters at this
 			// point to get the widths for, so we don't check for w>0 (mini-
 			// optimization).

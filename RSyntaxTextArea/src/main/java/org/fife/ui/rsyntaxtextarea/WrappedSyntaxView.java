@@ -126,7 +126,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			// FIXME:  Replace the code below with the commented-out line below.  This will
 			// allow long tokens to be broken at embedded spaces (such as MLC's).  But it
 			// currently throws BadLocationExceptions sometimes...
-			float tokenWidth = t.getWidth(textArea, this, x0);
+			float tokenWidth = t.getWidth(textArea, this, x0, currentWidth + 1);
 			if (tokenWidth>currentWidth) {
 				// If the current token alone is too long for this line,
 				// break at a character boundary.
@@ -1196,7 +1196,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				//System.err.println("... ... " + p0 + ", " + p1);
 				nlines += 1;
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
-						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken, false, 0);
 				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
@@ -1316,7 +1316,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			int loops = 0;
 			while (p0 < p1) {
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
-						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken, true, width + 1);
 				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
@@ -1418,7 +1418,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					// lines so they start at the beginning of a physical
 					// line.
 					TokenSubList subList = TokenUtils.getSubTokenList(tlist, p0,
-							WrappedSyntaxView.this, textArea, alloc.x, lineCountTempToken);
+							WrappedSyntaxView.this, textArea, alloc.x, lineCountTempToken, false, 0);
 					tlist = subList!=null ? subList.tokenList : null;
 					int p = calculateBreakPosition(p0, tlist, alloc.x);
 

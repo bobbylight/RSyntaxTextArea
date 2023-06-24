@@ -371,7 +371,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 		// token types, etc.), and get the x-location (in pixels) of the
 		// beginning of this new token list.
 		TokenSubList subList = TokenUtils.getSubTokenList(t, p0, e, textArea,
-				0, TEMP_TOKEN);
+				0, TEMP_TOKEN, false, 0);
 		t = subList.tokenList;
 
 		rect = t.listOffsetToView(textArea, e, p1, x0, rect);
