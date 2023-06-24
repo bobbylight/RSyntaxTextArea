@@ -1287,8 +1287,6 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			alloc.width = 1;
 			int p0 = getStartOffset();
 			int p1 = getEndOffset();
-			int testP = (b == Position.Bias.Forward) ? pos :
-											Math.max(p0, pos - 1);
 
 			// Get the token list for this line so we don't have to keep
 			// recomputing it if this logical line spans multiple physical
@@ -1301,9 +1299,10 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			final int width = getWidth();
 
+			/* Use lookup table to improve performance */
 			if (posToHeightLookup != null) {
 				if (posToHeightLookupWidth == width) {
-					Entry<Integer, Integer> floorEntry = posToHeightLookup.floorEntry(pos);
+					Entry<Integer, Integer> floorEntry = posToHeightLookup.floorEntry(pos - 1);
 					if (floorEntry != null) {
 						p0 = floorEntry.getKey();
 						alloc.y = floorEntry.getValue();
@@ -1312,6 +1311,9 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					posToHeightLookup = null;
 				}
 			}
+
+			int testP = (b == Position.Bias.Forward) ? pos :
+											Math.max(p0, pos - 1);
 
 			int loops = 0;
 			while (p0 < p1) {
