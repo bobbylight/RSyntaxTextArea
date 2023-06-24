@@ -18,6 +18,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -1156,6 +1158,14 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		private int nlines;
 		private boolean widthChangePending;
 
+		/**
+		 * A temporary lookup for a character position at the start of a line to the y offset of that line,
+		 * to improve the performance when wrapping long lines.
+		 */
+		private transient TreeMap<Integer, Integer> posToHeightLookup;
+
+		private transient int posToHeightLookupWidth;
+
 		WrappedLine(Element elem) {
 			super(elem);
 		}
@@ -1289,6 +1299,21 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			Token tokenList = doc.getTokenListForLine(line);
 			float x0 = alloc.x;//0;
 
+			final int width = getWidth();
+
+			if (posToHeightLookup != null) {
+				if (posToHeightLookupWidth == width) {
+					Entry<Integer, Integer> floorEntry = posToHeightLookup.floorEntry(pos);
+					if (floorEntry != null) {
+						p0 = floorEntry.getKey();
+						alloc.y = floorEntry.getValue();
+					}
+				} else {
+					posToHeightLookup = null;
+				}
+			}
+
+			int loops = 0;
 			while (p0 < p1) {
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
 						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
@@ -1320,7 +1345,15 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				p0 = (p == p0) ? p1 : p;
 				//System.err.println("... ... Incrementing y");
 				alloc.y += alloc.height;
+				loops++;
 
+				if (loops > 10) {
+					if (posToHeightLookup == null) {
+						posToHeightLookup = new TreeMap<>();
+						posToHeightLookupWidth = width;
+					}
+					posToHeightLookup.put(p0, alloc.y);
+				}
 			}
 
 			throw new BadLocationException(null, pos);
