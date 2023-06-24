@@ -19,6 +19,7 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import javax.swing.event.DocumentEvent;
@@ -1162,8 +1163,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		 * A temporary lookup for a character position at the start of a line to the y offset of that line,
 		 * to improve the performance when wrapping long lines.
 		 */
-		private transient TreeMap<Integer, Integer> posToHeightLookup;
-		private transient TreeMap<Integer, Integer> heightToPosLookup;
+		private transient NavigableMap<Integer, Integer> posToHeightLookup;
+		private transient NavigableMap<Integer, Integer> heightToPosLookup;
 
 		/**
 		 * The width used when the lookup tables were calculated, so they can be reset when the width changes.

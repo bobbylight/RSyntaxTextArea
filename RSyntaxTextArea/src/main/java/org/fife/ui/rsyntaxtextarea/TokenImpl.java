@@ -607,6 +607,7 @@ public class TokenImpl implements Token {
 		return width - x0;
 	}
 
+	@Override
 	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0, float maxWidth) {
 		float width = x0;
