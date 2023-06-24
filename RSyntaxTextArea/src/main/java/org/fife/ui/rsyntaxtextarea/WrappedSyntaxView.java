@@ -1043,7 +1043,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	@Override
 	public void setSize(float width, float height) {
 		updateMetrics();
-		if ((int) width != getWidth()) {
+		if (Math.abs((int) width - getWidth()) > 1) {
 			// invalidate the view itself since the children's
 			// desired widths will be based upon this view's width.
 			preferenceChanged(null, true, true);
