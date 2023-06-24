@@ -285,6 +285,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			p0 = (p==p0) ? p1 : p;
 
+			/* NB: y is the baseline, so we check it before we add fontHeight */
 			if (y > clip.getMaxY()) {
 				break;
 			}
@@ -319,7 +320,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * @param selEnd The end of the selection.
 	 */
 	protected void drawViewWithSelection(TokenPainter painter, Graphics2D g,
-				Rectangle r, View view, int fontHeight, int y, int selStart,
+				Rectangle r, Rectangle clip, View view, int fontHeight, int y, int selStart,
 				int selEnd) {
 
 		float x = r.x;
@@ -354,66 +355,71 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			int p = calculateBreakPosition(p0, token, x);
 			x = r.x;
 
-			h.paintLayeredHighlights(g, p0,p, r, host, this);
+			/* NB: for text drawing y is the baseline */
+			final boolean paintThisLine = (y >= clip.getMinY());
+
+			if (paintThisLine) {
+				h.paintLayeredHighlights(g, p0,p, r, host, this);
+			}
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
+				if (paintThisLine) {
+					// Selection starts in this token
+					if (token.containsPosition(selStart)) {
 
-				// Selection starts in this token
-				if (token.containsPosition(selStart)) {
 
+						if (selStart>token.getOffset()) {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selStart - tempToken.getOffset();
+							x = painter.paint(tempToken,g,x,y,host, this);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(selStart);
+							// Clone required since token and tempToken must be
+							// different tokens for else statement below
+							token = new TokenImpl(tempToken);
+						}
 
-					if (selStart>token.getOffset()) {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.getOffset();
-						x = painter.paint(tempToken,g,x,y,host, this);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(selStart);
-						// Clone required since token and tempToken must be
-						// different tokens for else statement below
-						token = new TokenImpl(tempToken);
+						int selCount = Math.min(token.length(), selEnd-token.getOffset());
+						if (selCount==token.length()) {
+							x = painter.paintSelected(token, g, x,y, host, this,
+									useSTC);
+						}
+						else {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selCount;
+							x = painter.paintSelected(tempToken, g, x,y, host, this,
+									useSTC);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(token.getOffset() + selCount);
+							token = tempToken;
+							x = painter.paint(token, g, x,y, host, this);
+						}
+
 					}
 
-					int selCount = Math.min(token.length(), selEnd-token.getOffset());
-					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this,
-								useSTC);
-					}
-					else {
+					// Selection ends in this token
+					else if (token.containsPosition(selEnd)) {
 						tempToken.copyFrom(token);
-						tempToken.textCount = selCount;
+						tempToken.textCount = selEnd - tempToken.getOffset();
 						x = painter.paintSelected(tempToken, g, x,y, host, this,
 								useSTC);
 						tempToken.textCount = token.length();
-						tempToken.makeStartAt(token.getOffset() + selCount);
+						tempToken.makeStartAt(selEnd);
 						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
-				}
+					// This token is entirely selected
+					else if (token.getOffset()>=selStart &&
+							token.getEndOffset()<=selEnd) {
+						x = painter.paintSelected(token, g, x,y, host, this,useSTC);
+					}
 
-				// Selection ends in this token
-				else if (token.containsPosition(selEnd)) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this,
-							useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selEnd);
-					token = tempToken;
-					x = painter.paint(token, g, x,y, host, this);
+					// This token is entirely unselected
+					else {
+						x = painter.paint(token, g, x,y, host, this);
+					}
 				}
-
-				// This token is entirely selected
-				else if (token.getOffset()>=selStart &&
-						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
-				}
-
-				// This token is entirely unselected
-				else {
-					x = painter.paint(token, g, x,y, host, this);
-				}
-
 				token = token.getNextToken();
 
 			}
@@ -427,59 +433,61 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 						tokenOffset, token.getType(), token.getLanguageIndex());
 				token.setLanguageIndex(token.getLanguageIndex());
 
-				// Selection starts in this token
-				if (token.containsPosition(selStart)) {
+				if (paintThisLine) {
+					// Selection starts in this token
+					if (token.containsPosition(selStart)) {
 
-					if (selStart>token.getOffset()) {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.getOffset();
-						x = painter.paint(tempToken,g,x,y,host, this);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(selStart);
-						// Clone required since token and tempToken must be
-						// different tokens for else statement below
-						token = new TokenImpl(tempToken);
+						if (selStart>token.getOffset()) {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selStart - tempToken.getOffset();
+							x = painter.paint(tempToken,g,x,y,host, this);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(selStart);
+							// Clone required since token and tempToken must be
+							// different tokens for else statement below
+							token = new TokenImpl(tempToken);
+						}
+
+						int selCount = Math.min(token.length(), selEnd-token.getOffset());
+						if (selCount==token.length()) {
+							x = painter.paintSelected(token, g, x,y, host, this,
+									useSTC);
+						}
+						else {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selCount;
+							x = painter.paintSelected(tempToken, g, x,y, host,
+									this, useSTC);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(token.getOffset() + selCount);
+							token = tempToken;
+							x = painter.paint(token, g, x,y, host, this);
+						}
+
 					}
 
-					int selCount = Math.min(token.length(), selEnd-token.getOffset());
-					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this,
+					// Selection ends in this token
+					else if (token.containsPosition(selEnd)) {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selEnd - tempToken.getOffset();
+						x = painter.paintSelected(tempToken, g, x,y, host, this,
 								useSTC);
-					}
-					else {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selCount;
-						x = painter.paintSelected(tempToken, g, x,y, host,
-								this, useSTC);
 						tempToken.textCount = token.length();
-						tempToken.makeStartAt(token.getOffset() + selCount);
+						tempToken.makeStartAt(selEnd);
 						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
-				}
+					// This token is entirely selected
+					else if (token.getOffset()>=selStart &&
+							token.getEndOffset()<=selEnd) {
+						x = painter.paintSelected(token, g, x,y, host, this,useSTC);
+					}
 
-				// Selection ends in this token
-				else if (token.containsPosition(selEnd)) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this,
-							useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selEnd);
-					token = tempToken;
-					x = painter.paint(token, g, x,y, host, this);
-				}
-
-				// This token is entirely selected
-				else if (token.getOffset()>=selStart &&
-						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
-				}
-
-				// This token is entirely unselected
-				else {
-					x = painter.paint(token, g, x,y, host, this);
+					// This token is entirely unselected
+					else {
+						x = painter.paint(token, g, x,y, host, this);
+					}
 				}
 
 				token = new TokenImpl(orig);
@@ -487,11 +495,19 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			}
 
-			// Paint parser (e.g. squiggle underline) highlights after
-			// text and selection
-			h.paintParserHighlights(g, p0,p, r, host, this);
+			if (paintThisLine) {
+				// Paint parser (e.g. squiggle underline) highlights after
+				// text and selection
+				h.paintParserHighlights(g, p0,p, r, host, this);
+			}
 
 			p0 = (p==p0) ? p1 : p;
+
+			/* NB: y is the baseline, so we check it before we add fontHeight */
+			if (y > clip.getMaxY()) {
+				break;
+			}
+
 			y += fontHeight;
 
 		} // End of while (token!=null && token.isPaintable()).
@@ -946,7 +962,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				}
 				else {
 					//System.out.println("Drawing line with selection: " + i);
-					drawViewWithSelection(painter, g2d, alloc, view, fontHeight,
+					drawViewWithSelection(painter, g2d, alloc, clip, view, fontHeight,
 							tempRect.y+ascent, selStart, selEnd);
 				}
 			}
