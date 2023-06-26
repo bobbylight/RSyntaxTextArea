@@ -55,7 +55,10 @@ public class DefaultFoldManager implements FoldManager {
 	private Parser rstaParser;
 	private FoldParser foldParser;
 	private List<Fold> folds;
-	private Map<Integer, Fold> foldsPerLine;
+	/**
+	 * A {@link Map} from line number to {@link Fold}.
+	 */
+	private Map<Integer, Fold> foldsByLine;
 	private boolean codeFoldingEnabled;
 	private PropertyChangeSupport support;
 	private Listener l;
@@ -74,7 +77,7 @@ public class DefaultFoldManager implements FoldManager {
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
 		textArea.addPropertyChangeListener("document", l);
 		folds = new ArrayList<>();
-		foldsPerLine = new HashMap<>();
+		foldsByLine = new HashMap<>();
 		updateFoldParser();
 	}
 
@@ -88,7 +91,7 @@ public class DefaultFoldManager implements FoldManager {
 	@Override
 	public void clear() {
 		folds.clear();
-		foldsPerLine.clear();
+		foldsByLine.clear();
 	}
 
 
@@ -168,12 +171,12 @@ public class DefaultFoldManager implements FoldManager {
 
 	@Override
 	public Fold getFoldForLine(int line) {
-		if (foldsPerLine.containsKey(line)) {
-			return foldsPerLine.get(line);
+		if (foldsByLine.containsKey(line)) {
+			return foldsByLine.get(line);
 		}
 
 		Fold result = getFoldForLineImpl(null, folds, line);
-		foldsPerLine.put(line, result);
+		foldsByLine.put(line, result);
 		return result;
 	}
 
@@ -472,7 +475,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 				keepFoldStates(newFolds, folds);
 			}
 			folds = newFolds;
-			foldsPerLine = new HashMap<>();
+			foldsByLine = new HashMap<>();
 
 			// Let folks (gutter, etc.) know that folds have been updated.
 			support.firePropertyChange(PROPERTY_FOLDS_UPDATED, null, folds);
@@ -481,7 +484,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 		}
 		else {
 			folds.clear();
-			foldsPerLine.clear();
+			foldsByLine.clear();
 		}
 
 	}
@@ -508,7 +511,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 			}
 			else {
 				folds = Collections.emptyList();
-				foldsPerLine = new HashMap<>();
+				foldsByLine = new HashMap<>();
 				textArea.repaint();
 				support.firePropertyChange(PROPERTY_FOLDS_UPDATED, null, null);
 			}
@@ -519,7 +522,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	@Override
 	public void setFolds(List<Fold> folds) {
 		this.folds = folds;
-		this.foldsPerLine = new HashMap<>();
+		this.foldsByLine = new HashMap<>();
 	}
 
 
