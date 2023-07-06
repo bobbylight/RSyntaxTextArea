@@ -408,8 +408,10 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 				else { // line>startLine && line<=endLine
 					if (midFold.isCollapsed()) {
 						return true;
-					} else {
+					} else if (midFold.getCollapsedLineCount() != 0) {
 						return isLineHiddenImpl(midFold, midFold.getChildren(), line);
+					} else {
+						return false;
 					}
 				}
 			}
