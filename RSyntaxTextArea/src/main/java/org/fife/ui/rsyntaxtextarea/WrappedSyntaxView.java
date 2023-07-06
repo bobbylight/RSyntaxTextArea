@@ -1533,6 +1533,10 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 		private void handleDocumentEvent(DocumentEvent e, Shape a,
 											ViewFactory f) {
+			/* Clear lookup tables */
+			posToHeightLookup = null;
+			heightToPosLookup = null;
+
 			int n = calculateLineCount();
 			if (this.nlines != n) {
 				this.nlines = n;
