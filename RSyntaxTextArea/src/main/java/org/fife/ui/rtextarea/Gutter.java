@@ -825,7 +825,12 @@ public class Gutter extends JPanel {
 
 	/**
 	 * Toggles whether the icon row header (used for breakpoints, bookmarks,
-	 * etc.) is enabled.
+	 * etc.) is enabled.<p>
+	 *
+	 * Most clients do not need to call this method directly. This is usually
+	 * handled by `RTextScrollPane` directly. Calling this directly may
+	 * require the caller to ensure this `gutter` is visible and sized
+	 * properly in its parent container.
 	 *
 	 * @param enabled Whether the icon row header is enabled.
 	 * @see #isIconRowHeaderEnabled()
@@ -915,7 +920,12 @@ public class Gutter extends JPanel {
 
 
 	/**
-	 * Toggles whether line numbers are visible.
+	 * Toggles whether line numbers are visible.<p>
+	 *
+	 * Most clients do not need to call this method directly. This is usually
+	 * handled by `RTextScrollPane` directly. Calling this directly may
+	 * require the caller to ensure this `gutter` is visible and sized
+	 * properly in its parent container.
 	 *
 	 * @param enabled Whether line numbers should be visible.
 	 * @see #getLineNumbersEnabled()
@@ -968,7 +978,10 @@ public class Gutter extends JPanel {
 
 	/**
 	 * Sets the text area being displayed.  This will clear any tracking
-	 * icons currently displayed.
+	 * icons currently displayed.<p>
+	 *
+	 * Most clients do not need to call this method directly. This is
+	 * usually handled by `RTextScrollPane` directly.
 	 *
 	 * @param textArea The text area.
 	 */
