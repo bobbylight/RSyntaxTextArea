@@ -113,12 +113,8 @@ public class PythonFoldParser implements FoldParser {
 	}
 
 	private static 	boolean tokenHasLineContinuation(Token t) {
-		char ch = 'a';
 		t = t.getLastNonCommentNonWhitespaceToken();
-		if (t!=null && t.length()==1) {
-			ch = t.charAt(0);
-		}
-		return ch=='\\';
+		return t!= null && t.isSingleChar('\\');
 	}
 
 	private static int getLeadingWhiteSpaceCount(Token t, int tabSize) {

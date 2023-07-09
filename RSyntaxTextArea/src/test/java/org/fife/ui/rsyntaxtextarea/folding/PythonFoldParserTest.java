@@ -23,37 +23,35 @@ class PythonFoldParserTest {
 	@Test
 	void testGetFold_happyPath() {
 
-		String code = """
-			#!/usr/bin/env python
-
-			import getopt, sys, urllib, time
-			def main():
-
-			    status = 0
-
-			# input arguments
-
-			    try:
-			    opts, args = getopt.getopt(sys.argv[1:],"h:iq",
-			                   ["help","invid=","quarter="])
-			    except getopt.GetoptError:
-			    usage()
-			    tree = False
-			    for o, a in opts:
-			    if o in ("-h", "--help"):
-			        usage()
-
-			    kepid, invid, kepmag, mode, start, stop, release = GetMetaData(invid,quarter)
-
-			# convert Gregorian date to Julian date
-
-			def Greg2JD(year, month, day):
-
-			    if (month < 3) \\
-			and true:
-			        y = float(year) - 1.0
-			        m = float(month) + 12.0
-			""";
+		String code = "#!/usr/bin/env python\n" +
+			"\n" +
+			"import getopt, sys, urllib, time\n" +
+			"def main():\n" +
+			"\n" +
+			"    status = 0\n" +
+			"\n" +
+			"# input arguments\n" +
+			"\n" +
+			"    try:\n" +
+			"    opts, args = getopt.getopt(sys.argv[1:],\"h:iq\",\n" +
+			"                   [\"help\",\"invid=\",\"quarter=\"])\n" +
+			"    except getopt.GetoptError:\n" +
+			"    usage()\n" +
+			"    tree = False\n" +
+			"    for o, a in opts:\n" +
+			"    if o in (\"-h\", \"--help\"):\n" +
+			"        usage()\n" +
+			"\n" +
+			"    kepid, invid, kepmag, mode, start, stop, release = GetMetaData(invid,quarter)\n" +
+			"\n" +
+			"# convert Gregorian date to Julian date\n" +
+			"\n" +
+			"def Greg2JD(year, month, day):\n" +
+			"\n" +
+			"    if (month < 3) \\\\ \n" +
+			"and true:\n" +
+			"        y = float(year) - 1.0\n" +
+			"        m = float(month) + 12.0\n";
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_PYTHON);

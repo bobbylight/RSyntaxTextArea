@@ -90,6 +90,16 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
 	}
 
 
+	@Override
+	public boolean getShouldIndentNextLineAfter(Token t) {
+		if (t!=null && t.length()==1) {
+			char ch = t.charAt(0);
+			return ch==':' || ch=='\\';
+		}
+		return false;
+	}
+
+
 	/**
 	 * Returns the first token in the linked list of tokens generated
 	 * from <code>text</code>.  This method must be implemented by
