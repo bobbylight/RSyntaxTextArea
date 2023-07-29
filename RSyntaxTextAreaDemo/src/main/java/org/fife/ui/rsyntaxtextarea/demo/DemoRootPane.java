@@ -22,9 +22,7 @@ import javax.swing.event.HyperlinkListener;
 //import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.*;
-import org.fife.ui.rtextarea.FoldIndicatorStyle;
-import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.*;
 
 
 /**
@@ -140,6 +138,18 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		foldStyleSubMenu.add(classicStyleItem);
 		foldStyleSubMenu.add(modernStyleItem);
 		menu.add(foldStyleSubMenu);
+		JMenu lineNumberFormatSubMenu = new JMenu("Line Number Format");
+		JRadioButtonMenuItem normalStyleItem = new JRadioButtonMenuItem(
+			new LineNumberFormatAction("Normal", LineNumberList.DEFAULT_LINE_NUMBER_FORMATTER));
+		JRadioButtonMenuItem hinduArabicStyleItem = new JRadioButtonMenuItem(
+			new LineNumberFormatAction("Hindu-Arabic", new HinduArabicLineNumberFormatter()));
+		normalStyleItem.setSelected(true);
+		bg = new ButtonGroup();
+		bg.add(normalStyleItem);
+		bg.add(hinduArabicStyleItem);
+		lineNumberFormatSubMenu.add(normalStyleItem);
+		lineNumberFormatSubMenu.add(hinduArabicStyleItem);
+		menu.add(lineNumberFormatSubMenu);
 		JCheckBoxMenuItem cbItem = new JCheckBoxMenuItem(new CodeFoldingAction());
 		cbItem.setSelected(true);
 		menu.add(cbItem);
@@ -410,6 +420,25 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 	}
 
 	/**
+	 * Changes how line numbers are displayed.
+	 */
+	private class LineNumberFormatAction extends AbstractAction {
+
+		private final LineNumberFormatter formatter;
+
+		LineNumberFormatAction(String name, LineNumberFormatter formatter) {
+			this.formatter = formatter;
+			putValue(NAME, name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			scrollPane.getGutter().setLineNumberFormatter(formatter);
+		}
+
+	}
+
+	/**
 	 * Changes the look and feel of the demo application.
 	 */
 	private class LookAndFeelAction extends AbstractAction {
@@ -559,6 +588,36 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 			textArea.setLineWrap(!textArea.getLineWrap());
 		}
 
+	}
+
+	/**
+	 * Formats line numbers into Hindu-Arabic numerals.
+	 */
+	private static class HinduArabicLineNumberFormatter implements LineNumberFormatter {
+		private static final String[] NUMERALS = {
+			"٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"
+		};
+
+		@Override
+		public String format(int lineNumber) {
+			if (lineNumber == 0) {
+				return NUMERALS[0];
+			}
+
+			StringBuilder sb = new StringBuilder();
+			while (lineNumber > 0) {
+				int digit = lineNumber % 10;
+				sb.insert(0, NUMERALS[digit]);
+				lineNumber /= 10;
+			}
+
+			return sb.toString();
+		}
+
+		@Override
+		public int getMaxLength(int maxLineNumber) {
+			return String.valueOf(maxLineNumber).length();
+		}
 	}
 
 
