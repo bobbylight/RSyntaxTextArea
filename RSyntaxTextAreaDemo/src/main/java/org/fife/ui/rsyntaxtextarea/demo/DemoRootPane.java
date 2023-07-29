@@ -21,7 +21,11 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.fife.ui.rsyntaxtextarea.*;
-import org.fife.ui.rtextarea.*;
+import org.fife.ui.rtextarea.FoldIndicatorStyle;
+import org.fife.ui.rtextarea.Gutter;
+import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.LineNumberFormatter;
+import org.fife.ui.rtextarea.LineNumberList;
 
 
 /**
