@@ -679,7 +679,7 @@ public class LineNumberList extends AbstractGutterComponent
 
 	/**
 	 * Sets a custom line number formatter. Can be called when other number
-	 * formats are needed like arabic-indic numerals.
+	 * formats are needed like hindu-arabic numerals.
 	 *
 	 * @param formatter The new line number formatter
 	 * @see #getLineNumberFormatter()
