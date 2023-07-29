@@ -87,6 +87,11 @@ public class LineNumberList extends AbstractGutterComponent
 	 */
 	private Color currentLineNumberColor;
 
+	/**
+	 * The Increase Required from the base font size of the current line number.
+	 */
+	private float currentLineNumberFontIncreaseSize = 2f;
+
 	public static final Color DEFAULT_LINE_NUMBER_COLOR = Color.GRAY;
 
 
@@ -387,6 +392,8 @@ public class LineNumberList extends AbstractGutterComponent
 
 		// Paint line numbers
 		boolean ltr = getComponentOrientation().isLeftToRight();
+		Font baseFont = g.getFont();
+		Font currentLineNumberFont = baseFont.deriveFont(Font.BOLD).deriveFont(baseFont.getSize() + currentLineNumberFontIncreaseSize); // Forcing Bold Style on the current line number
 		if (ltr) {
 			FontMetrics metrics = g.getFontMetrics();
 			int rhs = getWidth() - rhsBorderWidth;
@@ -397,12 +404,16 @@ public class LineNumberList extends AbstractGutterComponent
 				if (currentLine + 1 == line + getLineNumberingStartIndex() - 1) {
 					Color color = currentLineNumberColor != null ? currentLineNumberColor :
 						getForeground();
+					g.setFont(currentLineNumberFont);
 					g.setColor(color);
+					// Calculating the shift width required in Left to Right View Mode since the current line number font will have a greater size than the base font.
+					g.drawString(number, rhs - width - (g.getFontMetrics().stringWidth(number) - g.getFontMetrics(baseFont).stringWidth(number)), y);
 				}
 				else {
+					g.setFont(baseFont);
 					g.setColor(getForeground());
+					g.drawString(number, rhs-width, y);
 				}
-				g.drawString(number, rhs-width,y);
 				y += cellHeight;
 				if (fm!=null) {
 					Fold fold = fm.getFoldForLine(line-1);
@@ -430,11 +441,13 @@ public class LineNumberList extends AbstractGutterComponent
 					Color color = currentLineNumberColor != null ? currentLineNumberColor :
 						getForeground();
 					g.setColor(color);
+					// Calculating the shift width required in Right to Left View Mode since the current line number font will have a greater size than the base font.
+					g.drawString(number, rhsBorderWidth + (g.getFontMetrics().stringWidth(number) - g.getFontMetrics(baseFont).stringWidth(number)), y);
 				}
 				else {
 					g.setColor(getForeground());
+					g.drawString(number, rhsBorderWidth, y);
 				}
-				g.drawString(number, rhsBorderWidth, y);
 				y += cellHeight;
 				if (fm!=null) {
 					Fold fold = fm.getFoldForLine(line-1);
@@ -726,7 +739,10 @@ public class LineNumberList extends AbstractGutterComponent
 					lineCount = lineCount/10;
 					count++;
 				} while (lineCount >= 10);
-				cellWidth += fontMetrics.charWidth('9')*(count+1) + 3;
+				// This was required since the current line number has a higher font size so the previous method can cause the first digit of the
+				// number to go out of bounds of the line number list.
+				// Maybe there is some better solution to this situation.
+				cellWidth += fontMetrics.charWidth('9')*(count+1) + (fontMetrics.charWidth('9') * (int)currentLineNumberFontIncreaseSize);
 			}
 		}
 
