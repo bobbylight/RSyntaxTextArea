@@ -103,6 +103,11 @@ public class Gutter extends JPanel {
 	private int lineNumberingStartIndex;
 
 	/**
+	 * Formats line numbers into a string to be displayed.
+	 */
+	private LineNumberFormatter lineNumberFormatter;
+
+	/**
 	 * The font used to render line numbers.
 	 */
 	private Font lineNumberFont;
@@ -152,6 +157,7 @@ public class Gutter extends JPanel {
 		lineNumberColor = LineNumberList.DEFAULT_LINE_NUMBER_COLOR;
 		lineNumberFont = RTextArea.getDefaultFont();
 		lineNumberingStartIndex = 1;
+		lineNumberFormatter = LineNumberList.DEFAULT_LINE_NUMBER_FORMATTER;
 		iconRowHeaderInheritsGutterBackground = false;
 
 		setTextArea(textArea);
@@ -436,6 +442,17 @@ public class Gutter extends JPanel {
 	 */
 	public int getLineNumberingStartIndex() {
 		return lineNumberingStartIndex;
+	}
+
+	/**
+	 * Returns the line number formatter. The default value is
+	 * {@link LineNumberList#DEFAULT_LINE_NUMBER_FORMATTER}
+	 *
+	 * @return The formatter
+	 * @see #setLineNumberFormatter(LineNumberFormatter)
+	 */
+	public LineNumberFormatter getLineNumberFormatter() {
+		return lineNumberFormatter;
 	}
 
 
@@ -920,6 +937,21 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Sets a custom line number formatter. Can be called when other number
+	 * formats are needed like arabic-indic numerals.
+	 *
+	 * @param formatter The new line number formatter
+	 * @see #getLineNumberFormatter()
+	 */
+	public void setLineNumberFormatter(LineNumberFormatter formatter) {
+		if (formatter != lineNumberFormatter) {
+			lineNumberFormatter = formatter;
+			lineNumberList.setLineNumberFormatter(formatter);
+		}
+	}
+
+
+	/**
 	 * Toggles whether line numbers are visible.<p>
 	 *
 	 * Most clients do not need to call this method directly. This is usually
@@ -1004,6 +1036,8 @@ public class Gutter extends JPanel {
 					getCurrentLineNumberColor());
 				lineNumberList.setLineNumberingStartIndex(
 						getLineNumberingStartIndex());
+				lineNumberList.setLineNumberFormatter(
+					getLineNumberFormatter());
 			}
 			else {
 				lineNumberList.setTextArea(textArea);

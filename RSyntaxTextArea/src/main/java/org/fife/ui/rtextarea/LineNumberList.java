@@ -83,12 +83,18 @@ public class LineNumberList extends AbstractGutterComponent
 	private int lineNumberingStartIndex;
 
 	/**
+	 * Formats line numbers into a string to be displayed.
+	 */
+	private LineNumberFormatter lineNumberFormatter = DEFAULT_LINE_NUMBER_FORMATTER;
+
+	/**
 	 * The color of current line number.
 	 */
 	private Color currentLineNumberColor;
 
 	public static final Color DEFAULT_LINE_NUMBER_COLOR = Color.GRAY;
 
+	public static final LineNumberFormatter DEFAULT_LINE_NUMBER_FORMATTER = new SimpleLineNumberFormatter();
 
 	/**
 	 * Constructs a new <code>LineNumberList</code> using default values for
@@ -194,6 +200,18 @@ public class LineNumberList extends AbstractGutterComponent
 	 */
 	public int getLineNumberingStartIndex() {
 		return lineNumberingStartIndex;
+	}
+
+
+	/**
+	 * Returns the line number formatter. The default value is
+	 * {@link LineNumberList#DEFAULT_LINE_NUMBER_FORMATTER}
+	 *
+	 * @return The formatter
+	 * @see #setLineNumberFormatter(LineNumberFormatter)
+	 */
+	public LineNumberFormatter getLineNumberFormatter() {
+		return lineNumberFormatter;
 	}
 
 
@@ -392,7 +410,7 @@ public class LineNumberList extends AbstractGutterComponent
 			int rhs = getWidth() - rhsBorderWidth;
 			int line = topLine + 1; // TODO: Simplify me
 			while (y<visibleRect.y+visibleRect.height+ascent && line<=textArea.getLineCount()) {
-				String number = Integer.toString(line + getLineNumberingStartIndex() - 1);
+				String number = getLineNumberFormatter().format(line + getLineNumberingStartIndex() - 1);
 				int width = metrics.stringWidth(number);
 				if (currentLine + 1 == line + getLineNumberingStartIndex() - 1) {
 					Color color = currentLineNumberColor != null ? currentLineNumberColor :
@@ -660,6 +678,22 @@ public class LineNumberList extends AbstractGutterComponent
 
 
 	/**
+	 * Sets a custom line number formatter. Can be called when other number
+	 * formats are needed like arabic-indic numerals.
+	 *
+	 * @param formatter The new line number formatter
+	 * @see #getLineNumberFormatter()
+	 */
+	public void setLineNumberFormatter(LineNumberFormatter formatter) {
+		if (formatter != lineNumberFormatter) {
+			lineNumberFormatter = formatter;
+			updateCellWidths();
+			repaint();
+		}
+	}
+
+
+	/**
 	 * Sets the text area being displayed.
 	 *
 	 * @param textArea The text area.
@@ -719,13 +753,11 @@ public class LineNumberList extends AbstractGutterComponent
 			Font font = getFont();
 			if (font!=null) {
 				FontMetrics fontMetrics = getFontMetrics(font);
-				int count = 0;
 				int lineCount = textArea.getLineCount() +
 						getLineNumberingStartIndex() - 1;
-				do {
-					lineCount = lineCount/10;
-					count++;
-				} while (lineCount >= 10);
+				LineNumberFormatter formatter = getLineNumberFormatter() == null?
+					DEFAULT_LINE_NUMBER_FORMATTER: getLineNumberFormatter();
+				int count = formatter.getMaxLength(lineCount);
 				cellWidth += fontMetrics.charWidth('9')*(count+1) + 3;
 			}
 		}
@@ -814,6 +846,25 @@ public class LineNumberList extends AbstractGutterComponent
 			}
 		}
 
+	}
+
+
+	private static class SimpleLineNumberFormatter implements LineNumberFormatter {
+		@Override
+		public String format(int lineNumber) {
+			return Integer.toString(lineNumber);
+		}
+
+		@Override
+		public int getMaxLength(int maxLineNumber) {
+			int count = 0;
+			do {
+				maxLineNumber = maxLineNumber /10;
+				count++;
+			} while (maxLineNumber >= 10);
+
+			return count;
+		}
 	}
 
 
