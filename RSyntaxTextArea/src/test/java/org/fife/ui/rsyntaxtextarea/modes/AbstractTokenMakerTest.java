@@ -177,7 +177,7 @@ abstract class AbstractTokenMakerTest {
 
 	/**
 	 * Helper method for {@link #testCommon_getShouldIndentNextLineAfter()} to verify that indentation of
-	 * the next ine is done after curly braces and open parens for a specific language index.
+	 * the next line is done after curly braces and open parens for a specific language index.
 	 *
 	 * @param languageIndex The language index to check.
 	 */

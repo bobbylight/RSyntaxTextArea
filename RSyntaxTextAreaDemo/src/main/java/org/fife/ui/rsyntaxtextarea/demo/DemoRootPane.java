@@ -4,7 +4,7 @@
  */
 package org.fife.ui.rsyntaxtextarea.demo;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -19,7 +19,6 @@ import java.util.Locale;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-//import javax.swing.text.StyleConstants;
 
 import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.FoldIndicatorStyle;
