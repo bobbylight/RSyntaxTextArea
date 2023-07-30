@@ -1,6 +1,6 @@
 import static org.gradle.api.JavaVersion.*
 
-['jacoco', 'biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
+['base', 'jacoco', 'biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
 
 // We require building with JDK 8 or later.  We turn off doclint since our
 // generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
@@ -11,7 +11,9 @@ allprojects {
 	}
 }
 
-archivesBaseName = 'rsyntaxtextarea'
+base {
+    archivesName = 'rsyntaxtextarea'
+}
 ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 
 jacocoTestReport {
@@ -21,23 +23,21 @@ jacocoTestReport {
 	}
 }
 
-ext.sharedManifest = manifest {
-	attributes('Specification-Title': 'RSyntaxTextArea',
-		'Automatic-Module-Name': 'org.fife.RSyntaxTextArea', // jdk 9+ module name
-		'Specification-Version': version,
-		'Implementation-Title': 'org.fife.ui',
-		'Implementation-Version': version,
-		'Bundle-License': 'BSD-3-Clause',
-		// Not sure why Require-Capability is not being added by the osgi plugin...
-		'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
-}
-
 java {
     withSourcesJar()
     withJavadocJar()
 }
 jar {
-	manifest { from sharedManifest }
+    manifest {
+        attributes('Specification-Title': 'RSyntaxTextArea',
+                'Automatic-Module-Name': 'org.fife.RSyntaxTextArea', // jdk 9+ module name
+                'Specification-Version': version,
+                'Implementation-Title': 'org.fife.ui',
+                'Implementation-Version': version,
+                'Bundle-License': 'BSD-3-Clause',
+                // Not sure why Require-Capability is not being added by the osgi plugin...
+                'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
+    }
 }
 test {
     testLogging {
