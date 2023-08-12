@@ -448,7 +448,7 @@ public class Gutter extends JPanel {
 	 * Returns the line number formatter. The default value is
 	 * {@link LineNumberList#DEFAULT_LINE_NUMBER_FORMATTER}
 	 *
-	 * @return The formatter
+	 * @return The formatter.
 	 * @see #setLineNumberFormatter(LineNumberFormatter)
 	 */
 	public LineNumberFormatter getLineNumberFormatter() {
@@ -940,7 +940,7 @@ public class Gutter extends JPanel {
 	 * Sets a custom line number formatter. Can be called when other number
 	 * formats are needed like hindu-arabic numerals.
 	 *
-	 * @param formatter The new line number formatter
+	 * @param formatter The new line number formatter.
 	 * @see #getLineNumberFormatter()
 	 */
 	public void setLineNumberFormatter(LineNumberFormatter formatter) {

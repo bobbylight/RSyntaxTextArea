@@ -11,7 +11,9 @@ package org.fife.ui.rtextarea;
 /**
  * Formats line numbers into a comprehensible String to be
  * displayed to the user.
- * */
+ *
+ * @author Mino260806
+ */
 public interface LineNumberFormatter {
 	/**
 	 * Formats the given line number into a String.

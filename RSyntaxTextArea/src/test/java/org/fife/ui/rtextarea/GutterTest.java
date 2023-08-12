@@ -420,6 +420,29 @@ class GutterTest extends AbstractRTextAreaTest {
 
 
 	@Test
+	void testGetSetLineNumberFormatter() {
+
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
+
+		LineNumberFormatter testFormatter = new LineNumberFormatter() {
+			@Override
+			public String format(int lineNumber) {
+				return "test";
+			}
+
+			@Override
+			public int getMaxLength(int maxLineNumber) {
+				return 100;
+			}
+		};
+		gutter.setLineNumberFormatter(testFormatter);
+
+		Assertions.assertEquals(testFormatter, gutter.getLineNumberFormatter());
+	}
+
+
+	@Test
 	void testGetSetLineNumbersEnabled() {
 
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
