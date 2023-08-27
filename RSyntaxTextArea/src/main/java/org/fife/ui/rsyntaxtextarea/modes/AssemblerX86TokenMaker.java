@@ -1438,9 +1438,6 @@ public class AssemblerX86TokenMaker extends AbstractJFlexTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { ";", null };

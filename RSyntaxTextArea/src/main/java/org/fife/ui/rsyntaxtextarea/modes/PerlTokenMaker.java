@@ -1472,18 +1472,12 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return super.getMarkOccurrencesOfTokenType(type) || type==Token.VARIABLE;

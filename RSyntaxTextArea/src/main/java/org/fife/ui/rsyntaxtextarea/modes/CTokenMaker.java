@@ -1630,9 +1630,6 @@ public class CTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "//", null };

@@ -1569,9 +1569,6 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "//", null };

@@ -150,18 +150,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return super.getMarkOccurrencesOfTokenType(type) || type==Token.VARIABLE;
 	}

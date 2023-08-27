@@ -350,9 +350,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OccurrenceMarker createOccurrenceMarker() {
 		return new HtmlOccurrenceMarker();
@@ -380,9 +377,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		switch (languageIndex) {
@@ -397,9 +391,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.FUNCTION || type==Token.VARIABLE ||

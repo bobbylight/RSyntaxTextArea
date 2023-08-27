@@ -6801,9 +6801,6 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OccurrenceMarker createOccurrenceMarker() {
 		return new HtmlOccurrenceMarker();
@@ -6830,9 +6827,6 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		switch (languageIndex) {
@@ -6846,9 +6840,6 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
 		return type==Token.FUNCTION || type==Token.VARIABLE ||

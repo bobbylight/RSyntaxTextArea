@@ -68,9 +68,6 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "rem ", null };

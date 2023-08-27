@@ -194,9 +194,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected OccurrenceMarker createOccurrenceMarker() {
 		return new XmlOccurrenceMarker();
 	}

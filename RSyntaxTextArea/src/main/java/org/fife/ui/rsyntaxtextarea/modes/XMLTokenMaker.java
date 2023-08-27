@@ -420,9 +420,6 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected OccurrenceMarker createOccurrenceMarker() {
 		return new XmlOccurrenceMarker();

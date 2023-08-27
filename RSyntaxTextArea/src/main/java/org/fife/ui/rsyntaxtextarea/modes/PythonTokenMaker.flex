@@ -81,9 +81,6 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };

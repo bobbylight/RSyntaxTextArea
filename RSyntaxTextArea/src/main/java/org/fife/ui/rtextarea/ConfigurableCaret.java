@@ -276,11 +276,10 @@ public class ConfigurableCaret extends DefaultCaret {
 
 
 	/**
-	 * Called when the mouse is clicked.  If the click was generated from
-	 * button1, a double click selects a word, and a triple click the
-	 * current line.
+	 * Called when the mouse is clicked. Implements pasting the system
+	 * selection when the middle mouse button is clicked.
 	 *
-	 * @param e the mouse event
+	 * @param e The mouse event.
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -371,7 +370,14 @@ public class ConfigurableCaret extends DefaultCaret {
 	}
 
 	/**
-	 * Overridden to also focus the text component on right mouse clicks.
+	 * Called when the mouse is clicked in the editor. Implements the following
+	 * behaviors:
+	 * <ul>
+	 *     <li>Select-by-word on double-click</li>
+	 *     <li>Select-buy-line on triple-click</li>
+	 *     <li>Focus the editor on right-clicks (e.g. when popup menu is
+	 *         shown)</li>
+	 * </ul>
 	 *
 	 * @param e The mouse event.
 	 */
