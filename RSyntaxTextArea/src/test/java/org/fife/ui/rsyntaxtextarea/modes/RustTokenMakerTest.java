@@ -1,12 +1,8 @@
 /*
- * 03/12/2015
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea.modes;
-
-import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
@@ -14,19 +10,21 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.Segment;
+
 
 /**
- * Unit tests for the {@link JavaTokenMaker} class.
+ * Unit tests for the {@link RustTokenMaker} class.
  *
  * @author Robert Futrell
  * @version 1.0
  */
-class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
+class RustTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
-		return new JavaTokenMaker();
+		return new RustTokenMaker();
 	}
 
 
@@ -51,32 +49,6 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testAnnotations() {
-
-		String code = "@Test @Foo @Foo_Bar_Bas @Number7";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.ANNOTATION, token.getType(), "Unexpected token type for token: " + token);
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		Assertions.assertEquals(TokenTypes.NULL, token.getType());
-
-	}
-
-
-	@Test
 	void testBinaryLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
 			"0b0",
@@ -96,6 +68,67 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
 			"true",
 			"false"
+		);
+	}
+
+
+	@Test
+	void testByteStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"b\"unterminated string",
+			"b\"\"",
+			"b\"hi\"",
+			"b\"\\xFE\"",
+			"b\"\\\"\""
+		);
+	}
+
+
+	@Test
+	void testByteStringLiterals_validEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"b\"\\xFE\\n\\r\\t\\\\\\0\\'\\\"\""
+		);
+	}
+
+
+	@Test
+	void testByteStringLiteral_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"b\"string with an invalid \\x latin-1 escape in it\"",
+			"b\"string with an invalid \\u Unicode escape in it\"",
+			"b\"even valid \\u00fe Unicode escapes are not allowed in byte strings\""
+		);
+	}
+
+
+	@Test
+	void testByteStringLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			RustTokenMaker.INTERNAL_IN_BYTE_STRING_INVALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testByteStringLiteral_valid_continuedFromPriorLine_continueToBeValid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			RustTokenMaker.INTERNAL_IN_BYTE_STRING_VALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testByteStringLiteral_valid_continuedFromPriorLine_newlyInvalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			RustTokenMaker.INTERNAL_IN_BYTE_STRING_VALID,
+			"string with an invalid \\x latin-1 escape in it\"",
+			"string with an invalid \\u Unicode escape in it\"",
+			"even valid \\u00fe Unicode escapes are not allowed in byte strings\""
 		);
 	}
 
@@ -132,376 +165,26 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testClassNames_java_lang() {
-
-		assertAllTokensOfType(TokenTypes.FUNCTION,
-			"Appendable",
-			"AutoCloseable",
-			"CharSequence",
-			"Cloneable",
-			"Comparable",
-			"Iterable",
-			"ProcessHandle",
-			"ProcessHandle.Info",
-			"Readable",
-			"Runnable",
-			"StackWalker.StackFrame",
-			"System.Logger",
-			"Thread.UncaughtExceptionHandler",
-
-			"Boolean",
-			"Byte",
-			"Character",
-			"Character.Subset",
-			"Character.UnicodeBlock",
-			"Class",
-			"ClassLoader",
-			"ClassValue",
-			"Compiler",
-			"Double",
-			"Enum",
-			"Enum.EnumDesc",
-			"Float",
-			"InheritableThreadLocal",
-			"Integer",
-			"Long",
-			"Math",
-			"Module",
-			"ModuleLayer",
-			"ModuleLayer.Controller",
-			"Number",
-			"Object",
-			"Package",
-			"Process",
-			"ProcessBuilder",
-			"ProcessBuilder.Redirect",
-			"Record",
-			"Runtime",
-			"RuntimePermission",
-			"Runtime.Version",
-			"SecurityManager",
-			"Short",
-			"StackTraceElement",
-			"StackWalker",
-			"StrictMath",
-			"String",
-			"StringBuffer",
-			"StringBuilder",
-			"System",
-			"Thread",
-			"ThreadGroup",
-			"ThreadLocal",
-			"Throwable",
-			"Void",
-			"Character.UnicodeScript",
-			"ProcessBuilder.Redirect.Type",
-			"Thread.State",
-			"ArithmeticException",
-			"ArrayIndexOutOfBoundsException",
-			"ArrayStoreException",
-			"ClassCastException",
-			"ClassNotFoundException",
-			"CloneNotSupportedException",
-			"EnumConstantNotPresentException",
-			"Exception",
-			"IllegalAccessException",
-			"IllegalArgumentException",
-			"IllegalMonitorStateException",
-			"IllegalStateException",
-			"IllegalThreadStateException",
-			"IndexOutOfBoundsException",
-			"InstantiationException",
-			"InterruptedException",
-			"NegativeArraySizeException",
-			"NoSuchFieldException",
-			"NoSuchMethodException",
-			"NullPointerException",
-			"NumberFormatException",
-			"RuntimeException",
-			"SecurityException",
-			"StringIndexOutOfBoundsException",
-			"TypeNotPresentException",
-			"UnsupportedOperationException",
-			"AbstractMethodError",
-			"AssertionError",
-			"BootstrapMethodError",
-			"ClassCircularityError",
-			"ClassFormatError",
-			"Error",
-			"ExceptionInInitializerError",
-			"IllegalAccessError",
-			"IncompatibleClassChangeError",
-			"InstantiationError",
-			"InternalError",
-			"LinkageError",
-			"NoClassDefFoundError",
-			"NoSuchFieldError",
-			"NoSuchMethodError",
-			"OutOfMemoryError",
-			"StackOverflowError",
-			"ThreadDeath",
-			"UnknownError",
-			"UnsatisfiedLinkError",
-			"UnsupportedClassVersionError",
-			"VerifyError",
-			"VirtualMachineError",
-
-			"Deprecated",
-			"FunctionalInterface",
-			"Override",
-			"SafeVarargs",
-			"SuppressWarnings"
-		);
-	}
-
-
-	@Test
-	void testClassNames_java_io() {
-
-		assertAllTokensOfType(TokenTypes.FUNCTION,
-			"Closeable",
-			"DataInput",
-			"DataOutput",
-			"Externalizable",
-			"FileFilter",
-			"FilenameFilter",
-			"Flushable",
-			"ObjectInput",
-			"ObjectInputFilter",
-			"ObjectInputFilter.FilterInfo",
-			"ObjectInputValidation",
-			"ObjectOutput",
-			"ObjectStreamConstants",
-			"Serializable",
-
-			"BufferedInputStream",
-			"BufferedOutputStream",
-			"BufferedReader",
-			"BufferedWriter",
-			"ByteArrayInputStream",
-			"ByteArrayOutputStream",
-			"CharArrayReader",
-			"CharArrayWriter",
-			"Console",
-			"DataInputStream",
-			"DataOutputStream",
-			"File",
-			"FileDescriptor",
-			"FileInputStream",
-			"FileOutputStream",
-			"FilePermission",
-			"FileReader",
-			"FileWriter",
-			"FilterInputStream",
-			"FilterOutputStream",
-			"FilterReader",
-			"FilterWriter",
-			"InputStream",
-			"InputStreamReader",
-			"LineNumberInputStream",
-			"LineNumberReader",
-			"ObjectInputStream",
-			"ObjectInputStream.GetField",
-			"ObjectOutputStream",
-			"ObjectOutputStream.PutField",
-			"ObjectStreamClass",
-			"ObjectStreamField",
-			"OutputStream",
-			"OutputStreamWriter",
-			"PipedInputStream",
-			"PipedOutputStream",
-			"PipedReader",
-			"PipedWriter",
-			"PrintStream",
-			"PrintWriter",
-			"PushbackInputStream",
-			"PushbackReader",
-			"RandomAccessFile",
-			"Reader",
-			"SequenceInputStream",
-			"SerializablePermission",
-			"StreamTokenizer",
-			"StringBufferInputStream",
-			"StringReader",
-			"StringWriter",
-			"Writer",
-
-			"CharConversionException",
-			"EOFException",
-			"FileNotFoundException",
-			"InterruptedIOException",
-			"InvalidClassException",
-			"InvalidObjectException",
-			"IOException",
-			"NotActiveException",
-			"NotSerializableException",
-			"ObjectStreamException",
-			"OptionalDataException",
-			"StreamCorruptedException",
-			"SyncFailedException",
-			"UncheckedIOException",
-			"UnsupportedEncodingException",
-			"UTFDataFormatException",
-			"WriteAbortedException",
-
-			"IOError",
-
-			"Serial"
-		);
-	}
-
-
-	@Test
-	void testClassNames_java_util() {
-
-		assertAllTokensOfType(TokenTypes.FUNCTION,
-			"Collection",
-			"Comparator",
-			"Deque",
-			"Enumeration",
-			"EventListener",
-			"Formattable",
-			"Iterator",
-			"List",
-			"ListIterator",
-			"Map",
-			"Map.Entry",
-			"NavigableMap",
-			"NavigableSet",
-			"Observer",
-			"PrimitiveIterator",
-			"PrimitiveIterator.OfDouble",
-			"PrimitiveIterator.OfInt",
-			"PrimitiveIterator.OfLong",
-			"Queue",
-			"RandomAccess",
-			"Set",
-			"SortedMap",
-			"SortedSet",
-			"Spliterator",
-			"Spliterator.OfDouble",
-			"Spliterator.OfInt",
-			"Spliterator.OfLong",
-			"Spliterator.OfPrimitive",
-
-			"AbstractCollection",
-			"AbstractList",
-			"AbstractMap",
-			"AbstractMap.SimpleEntry",
-			"AbstractMap.SimpleImmutableEntry",
-			"AbstractQueue",
-			"AbstractSequentialList",
-			"AbstractSet",
-			"ArrayDeque",
-			"ArrayList",
-			"Arrays",
-			"Base64",
-			"Base64.Decoder",
-			"Base64.Encoder",
-			"BitSet",
-			"Calendar",
-			"Calendar.Builder",
-			"Collections",
-			"Currency",
-			"Date",
-			"Dictionary",
-			"DoubleSummaryStatistics",
-			"EnumMap",
-			"EnumSet",
-			"EventListenerProxy",
-			"EventObject",
-			"FormattableFlags",
-			"Formatter",
-			"GregorianCalendar",
-			"HashMap",
-			"HashSet",
-			"Hashtable",
-			"IdentityHashMap",
-			"IntSummaryStatistics",
-			"LinkedHashMap",
-			"LinkedHashSet",
-			"LinkedList",
-			"ListResourceBundle",
-			"Locale",
-			"Locale.Builder",
-			"Locale.LanguageRange",
-			"LongSummaryStatistics",
-			"Objects",
-			"Observable",
-			"Optional",
-			"OptionalDouble",
-			"OptionalInt",
-			"OptionalLong",
-			"PriorityQueue",
-			"Properties",
-			"PropertyPermission",
-			"PropertyResourceBundle",
-			"Random",
-			"ResourceBundle",
-			"ResourceBundle.Control",
-			"Scanner",
-			"ServiceLoader",
-			"SimpleTimeZone",
-			"Spliterators",
-			"Spliterators.AbstractDoubleSpliterator",
-			"Spliterators.AbstractIntSpliterator",
-			"Spliterators.AbstractLongSpliterator",
-			"Spliterators.AbstractSpliterator",
-			"SpliteratorRandom",
-			"Stack",
-			"StringJoiner",
-			"StringTokenizer",
-			"Timer",
-			"TimerTask",
-			"TimeZone",
-			"TreeMap",
-			"TreeSet",
-			"UUID",
-			"Vector",
-			"WeakHashMap",
-
-			"Formatter.BigDecimalLayoutForm",
-			"Locale.Category",
-			"Locale.FilteringMode",
-
-			"ConcurrentModificationException",
-			"DuplicateFormatFlagsException",
-			"EmptyStackException",
-			"FormatFlagsConversionMismatchException",
-			"FormatterClosedException",
-			"IllegalFormatCodePointException",
-			"IllegalFormatConversionException",
-			"IllegalFormatException",
-			"IllegalFormatFlagsException",
-			"IllegalFormatPrecisionException",
-			"IllegalFormatWidthException",
-			"IllformedLocaleException",
-			"InputMismatchException",
-			"InvalidPropertiesFormatException",
-			"MissingFormatArgumentException",
-			"MissingFormatWidthException",
-			"MissingResourceException",
-			"NoSuchElementException",
-			"TooManyListenersException",
-			"UnknownFormatConversionException",
-			"UnknownFormatFlagsException",
-
-			"ServiceConfigurationError"
-		);
-	}
-
-
-	@Test
 	void testDataTypes() {
 		assertAllTokensOfType(TokenTypes.DATA_TYPE,
-			"boolean",
-			"byte",
-			"char",
-			"double",
-			"float",
-			"int",
-			"long",
-			"short"
+			"i8",
+				"u8",
+				"i16",
+				"u16",
+				"i32",
+				"u32",
+				"i64",
+				"u64",
+				"i128",
+				"u128",
+				"isize",
+				"usize",
+				"f32",
+				"f64",
+				"bool",
+				"char",
+				"str",
+				"tup"
 		);
 	}
 
@@ -517,60 +200,9 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testDocComments_continuedFromPreviousLine() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			TokenTypes.COMMENT_DOCUMENTATION,
-			"continued from a previous line */"
+			"continued from a previous line */",
+			"continued from a previous line but still unterminated"
 		);
-	}
-
-
-	@Test
-	void testDocComments_keywords() {
-		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
-			TokenTypes.COMMENT_DOCUMENTATION,
-
-				// current block tags
-				"@author",
-				"@deprecated",
-				"@exception",
-				"@param",
-				"@return",
-				"@see",
-				"@serial",
-				"@serialData",
-				"@serialField",
-				"@since",
-				"@throws",
-				"@version",
-
-				// proposed doc tags
-				"@category",
-				"@example",
-				"@tutorial",
-				"@index",
-				"@exclude",
-				"@todo",
-				"@internal",
-				"@obsolete",
-				"@threadsafety",
-
-				// inline tag
-				"{@code }",
-				"{@docRoot }",
-				"{@inheritDoc }",
-				"{@link }",
-				"{@linkplain }",
-				"{@literal }",
-				"{@value }"
-		);
-	}
-
-
-	@Test
-	void testDocComments_markup() {
-		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
-			TokenTypes.COMMENT_DOCUMENTATION,
-			false,
-			"<code>",
-			"</code>");
 	}
 
 
@@ -634,7 +266,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world https://www.sas.com",
+			"// Hello world https://www.google.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -648,7 +280,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 		}
 
@@ -694,6 +326,23 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
+	}
+
+
+	@Test
+	void testGetClosestStandardTokenTypeForInternalType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Assertions.assertEquals(
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(RustTokenMaker.INTERNAL_IN_STRING_INVALID));
+		Assertions.assertEquals(
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(RustTokenMaker.INTERNAL_IN_STRING_VALID));
+		Assertions.assertEquals(
+			TokenTypes.RESERVED_WORD,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.RESERVED_WORD));
 	}
 
 
@@ -771,65 +420,58 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testKeywords() {
-
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			"_",
 			"abstract",
-			"assert",
+			"alignof",
+			"as",
+			"become",
+			"box",
 			"break",
-			"case",
-			"catch",
-			"class",
 			"const",
 			"continue",
-			"default",
+			"crate",
 			"do",
+			"dyn",
 			"else",
 			"enum",
-			"exports",
-			"extends",
+			"extern",
 			"final",
-			"finally",
+			"fn",
 			"for",
-			"goto",
 			"if",
-			"implements",
-			"import",
-			"instanceof",
-			"interface",
-			"module",
-			"native",
-			"new",
-			"non-sealed",
-			"null",
-			"open",
-			"opens",
-			"package",
-			"permits",
-			"private",
-			"protected",
-			"provides",
-			"public",
-			"record",
-			"requires",
-			"sealed",
+			"impl",
+			"in",
+			"let",
+			"loop",
+			"macro",
+			"match",
+			"mod",
+			"move",
+			"mut",
+			"offsetof",
+			"override",
+			"priv",
+			"proc",
+			"pub",
+			"pure",
+			"ref",
+			"self",
+			"sizeof",
 			"static",
-			"strictfp",
+			"struct",
 			"super",
-			"switch",
-			"synchronized",
-			"this",
-			"throw",
-			"throws",
-			"to",
-			"transient",
-			"transitive",
-			"try",
-			"uses",
-			"void",
-			"volatile",
+			"trait",
+			"type",
+			"typeof",
+			"union",
+			"unsafe",
+			"unsized",
+			"use",
+			"virtual",
+			"where",
 			"while",
-			"with"
+			"yield"
 		);
 	}
 
@@ -837,8 +479,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testKeywords_exitingMethod() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
-			"return",
-			"yield"
+			"return"
 		);
 	}
 
@@ -867,7 +508,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world https://www.sas.com */",
+			"/* Hello world https://www.google.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -881,7 +522,7 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -954,6 +595,148 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testRawByteStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"r\"unterminated string",
+			"br\"terminated string\"",
+			"br\"", // empty string
+			"br\"hi\"",
+			"br#\"one pound sign\"#",
+			"br##\"two pound signs\"##",
+			"br###\"three pound signs\"###",
+			"br\"\\\"", // escapes have no meaning
+			"br\"string with an invalid \\x latin-1 escape in it\"",
+			"br\"string with an invalid \\u Unicode escape in it\""
+		);
+	}
+
+
+	@Test
+	void testRawByteStringLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			RustTokenMaker.INTERNAL_IN_RAW_BYTE_STRING_INVALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testRawByteStringLiteral_error_continuedFromPriorLine_withPoundSigns() {
+		for (int poundCount = 1; poundCount < 5; poundCount++) {
+
+			StringBuilder pounds = new StringBuilder();
+			for (int i = 0; i < poundCount; i++) {
+				pounds.append('#');
+			}
+
+			assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+				RustTokenMaker.INTERNAL_IN_RAW_BYTE_STRING_INVALID,
+				"continued from a prior line and closed" + pounds + "\""
+			);
+		}
+	}
+
+
+	@Test
+	void testRawByteStringLiteral_valid_continuedFromPriorLine_continueToBeValid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			RustTokenMaker.INTERNAL_IN_RAW_BYTE_STRING_VALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testRawByteStringLiteral_valid_continuedFromPriorLine_continueToBeValid_withPoundSigns() {
+		for (int poundCount = 1; poundCount < 5; poundCount++) {
+
+			StringBuilder pounds = new StringBuilder();
+			for (int i = 0; i < poundCount; i++) {
+				pounds.append('#');
+			}
+
+			assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+				RustTokenMaker.INTERNAL_IN_RAW_BYTE_STRING_VALID,
+				"continued from a prior line and closed" + pounds + "\""
+			);
+		}
+	}
+
+
+	@Test
+	void testRawStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"r\"unterminated string",
+			"r\"terminated string\"",
+			"r\"", // empty string
+			"r\"hi\"",
+			"r#\"one pound sign\"#",
+			"r##\"two pound signs\"##",
+			"r###\"three pound signs\"###",
+			"r\"\\\"", // escapes have no meaning
+			"r\"string with an invalid \\x latin-1 escape in it\"",
+			"r\"string with an invalid \\u Unicode escape in it\""
+		);
+	}
+
+
+	@Test
+	void testRawStringLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			RustTokenMaker.INTERNAL_IN_RAW_STRING_INVALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testRawStringLiteral_error_continuedFromPriorLine_withPoundSigns() {
+		for (int poundCount = 1; poundCount < 5; poundCount++) {
+
+			StringBuilder pounds = new StringBuilder();
+			for (int i = 0; i < poundCount; i++) {
+				pounds.append('#');
+			}
+
+			assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+				RustTokenMaker.INTERNAL_IN_RAW_STRING_INVALID - poundCount,
+				"continued from a prior line and closed" + pounds + "\""
+			);
+		}
+	}
+
+
+	@Test
+	void testRawStringLiteral_valid_continuedFromPriorLine_continueToBeValid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			RustTokenMaker.INTERNAL_IN_RAW_STRING_VALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
+		);
+	}
+
+
+	@Test
+	void testRawStringLiteral_valid_continuedFromPriorLine_continueToBeValid_withPoundSigns() {
+		for (int poundCount = 1; poundCount < 5; poundCount++) {
+
+			StringBuilder pounds = new StringBuilder();
+			for (int i = 0; i < poundCount; i++) {
+				pounds.append('#');
+			}
+
+			assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+				RustTokenMaker.INTERNAL_IN_RAW_STRING_VALID,
+				"continued from a prior line and closed" + pounds + "\""
+			);
+		}
+	}
+
+
+	@Test
 	void testSeparators() {
 		assertAllTokensOfType(TokenTypes.SEPARATOR,
 			"(",
@@ -969,8 +752,10 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testStringLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"unterminated string",
 			"\"\"",
 			"\"hi\"",
+			"\"\\xFE\"",
 			"\"\\u00fe\"",
 			"\"\\\"\""
 		);
@@ -988,53 +773,28 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testStringLiteral_error() {
 		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
-			"\"unterminated string",
-			"\"string with an invalid \\x escape in it\""
+			"\"string with an invalid \\x latin-1 escape in it\"",
+			"\"string with an invalid \\u Unicode escape in it\""
 		);
 	}
 
 
 	@Test
-	void testTextBlock_allOnOneLine() {
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			"\"\"\"this is a text block\"\"\""
+	void testStringLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			RustTokenMaker.INTERNAL_IN_STRING_INVALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
 		);
 	}
 
 
 	@Test
-	void testTextBlock_continuingToAnotherLine() {
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			"\"\"\"this is a text block"
-		);
-	}
-
-
-	@Test
-	void testTextBlock_continuedFromAnotherLine() {
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			"continued from another line and unterminated",
-			"continued from another line and terminated\"\"\""
-		);
-	}
-
-
-	@Test
-	void testTextBlock_notContinuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			"\"\"\"this is a \\\"\"\" text block\"\"\"",
-			"\"\"\"this is a \\\"\"\" text block"
-		);
-	}
-
-
-	@Test
-	void testTextBlock_continuedFromAnotherLineWithEmbeddedEscapedTextBlockTerminators() {
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
-			"continued from another \\\"\"\" line and unterminated",
-			"continued from another \\\"\"\" line and terminated\"\"\""
+	void testStringLiteral_valid_continuedFromPriorLine() {
+			assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			RustTokenMaker.INTERNAL_IN_STRING_VALID,
+			"continued from a prior line and still unclosed",
+			"continued from a prior line and closed\""
 		);
 	}
 

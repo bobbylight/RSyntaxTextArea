@@ -70,6 +70,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_PROPERTIES_FILE,pkg + "PropertiesFileTokenMaker");
 		putMapping(SYNTAX_STYLE_PYTHON,			pkg + "PythonTokenMaker");
 		putMapping(SYNTAX_STYLE_RUBY,			pkg + "RubyTokenMaker");
+		putMapping(SYNTAX_STYLE_RUST,			pkg + "RustTokenMaker");
 		putMapping(SYNTAX_STYLE_SAS,			pkg + "SASTokenMaker");
 		putMapping(SYNTAX_STYLE_SCALA,			pkg + "ScalaTokenMaker");
 		putMapping(SYNTAX_STYLE_SQL,			pkg + "SQLTokenMaker");

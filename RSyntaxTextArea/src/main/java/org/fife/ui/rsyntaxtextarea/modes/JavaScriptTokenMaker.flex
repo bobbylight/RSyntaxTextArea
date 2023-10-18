@@ -241,7 +241,7 @@ import org.fife.ui.rsyntaxtextarea.*;
      * Returns the closest {@link TokenTypes} "standard" token type for a given
      * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).
      */
-     @Override
+    @Override
     public int getClosestStandardTokenTypeForInternalType(int type) {
         switch (type) {
             case INTERNAL_IN_JS_MLC:

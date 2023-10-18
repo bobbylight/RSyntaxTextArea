@@ -323,6 +323,30 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testDocComments_URL_onlyUrlRegionIsHyperlinked() {
+
+		String text = "The URL https://www.google.com is the place";
+		Segment segment = createSegment(text);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, JS_DOC_COMMENT_PREV_TOKEN_TYPE, 0);
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals("The URL ", token.getLexeme());
+
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals("https://www.google.com", token.getLexeme());
+
+		token = token.getNextToken();
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals(" is the place", token.getLexeme());
+	}
+
+
+	@Test
 	void testJS_e4x() {
 
 		JavaScriptTokenMaker.setE4xSupported(true);

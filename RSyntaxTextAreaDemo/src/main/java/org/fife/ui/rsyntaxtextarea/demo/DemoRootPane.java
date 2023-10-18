@@ -122,6 +122,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("Proto", "ProtoExample.txt", SYNTAX_STYLE_PROTO, bg, menu);
 		addSyntaxItem("Python",  "PythonExample.txt", SYNTAX_STYLE_PYTHON, bg, menu);
 		addSyntaxItem("Ruby", "RubyExample.txt", SYNTAX_STYLE_RUBY, bg, menu);
+		addSyntaxItem("Rust", "RustExample.txt", SYNTAX_STYLE_RUST, bg, menu);
 		addSyntaxItem("SQL",  "SQLExample.txt", SYNTAX_STYLE_SQL, bg, menu);
 		addSyntaxItem("TypeScript", "TypeScriptExample.txt", SYNTAX_STYLE_TYPESCRIPT, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);

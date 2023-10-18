@@ -294,6 +294,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting Ruby.
+	 */
+	String SYNTAX_STYLE_RUST			= "text/rust";
+
+
+	/**
 	 * Style for highlighting SAS keywords.
 	 */
 	String SYNTAX_STYLE_SAS			= "text/sas";
