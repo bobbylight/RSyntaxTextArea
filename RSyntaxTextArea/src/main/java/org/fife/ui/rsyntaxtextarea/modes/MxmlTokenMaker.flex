@@ -687,7 +687,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"String" |
 	"uint" |
 	"Vector" |
-	"void" |
 	"XML" |
 	"XMLNode" |
 	"XMLSocket"			{ addToken(Token.DATA_TYPE); }
@@ -704,7 +703,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"gotoAndPlay" |
 	"gotoAndStop" |
 	"#include" |
-	"int" |
 	"isFinite" |
 	"isNaN" |
 	"loadMovie" |
@@ -715,7 +713,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"newline" |
 	"nextFrame" |
 	"nextScene" |
-	"Number" |
 	"parseFloat" |
 	"parseInt" |
 	"play" |
@@ -733,9 +730,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"stop" |
 	"stopAllSounds" |
 	"stopDrag" |
-	"String" |
 	"targetPath" |
-	"tellTarget" |
 	"toggleHighQuality" |
 	"trace" |
 	"unescape" |
