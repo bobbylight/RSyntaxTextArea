@@ -288,7 +288,7 @@ public class LineNumberList extends AbstractGutterComponent
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (mouseDragStartOffset>-1) {
-			int pos = textArea.viewToModel(new Point(0, e.getY()));
+			int pos = textArea.viewToModel2D(new Point(0, e.getY()));
 			if (pos>=0) { // Not -1
 				textArea.setCaretPosition(mouseDragStartOffset);
 				textArea.moveCaretPosition(pos);
@@ -318,7 +318,7 @@ public class LineNumberList extends AbstractGutterComponent
 			return;
 		}
 		if (e.getButton()==MouseEvent.BUTTON1) {
-			int pos = textArea.viewToModel(new Point(0, e.getY()));
+			int pos = textArea.viewToModel2D(new Point(0, e.getY()));
 			if (pos>=0) { // Not -1
 				textArea.setCaretPosition(pos);
 			}
@@ -516,7 +516,7 @@ public class LineNumberList extends AbstractGutterComponent
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
-		int topPosition = textArea.viewToModel(
+		int topPosition = textArea.viewToModel2D(
 								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 		FoldManager fm = null;

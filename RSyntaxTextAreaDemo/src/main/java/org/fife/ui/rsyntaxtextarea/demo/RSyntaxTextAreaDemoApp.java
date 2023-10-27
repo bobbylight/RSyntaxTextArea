@@ -1,6 +1,6 @@
 package org.fife.ui.rsyntaxtextarea.demo;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import javax.swing.*;
 
 
@@ -30,7 +30,10 @@ public final class RSyntaxTextAreaDemoApp extends JFrame {
 				e.printStackTrace(); // Never happens
 			}
 			Toolkit.getDefaultToolkit().setDynamicLayout(true);
-			new RSyntaxTextAreaDemoApp().setVisible(true);
+			RSyntaxTextAreaDemoApp app = new RSyntaxTextAreaDemoApp();
+			app.setLocationRelativeTo(null);
+			app.setSize(new Dimension(1200, 800));
+			app.setVisible(true);
 		});
 	}
 

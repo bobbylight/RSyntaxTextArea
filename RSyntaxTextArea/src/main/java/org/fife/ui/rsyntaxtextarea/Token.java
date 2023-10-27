@@ -8,9 +8,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.awt.Rectangle;
-
 import javax.swing.text.TabExpander;
+import java.awt.geom.Rectangle2D;
 
 
 /**
@@ -492,8 +491,8 @@ public interface Token extends TokenTypes {
 	 *        object is reused to keep from frequent memory allocations.
 	 * @return The bounding box for the specified position in the model.
 	 */
-	Rectangle listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
-			int pos, int x0, Rectangle rect);
+	Rectangle2D listOffsetToView(RSyntaxTextArea textArea, TabExpander e,
+			int pos, float x0, Rectangle2D rect);
 
 
 	/**
