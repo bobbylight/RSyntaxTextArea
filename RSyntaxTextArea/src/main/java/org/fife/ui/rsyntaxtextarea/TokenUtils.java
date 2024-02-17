@@ -62,7 +62,7 @@ public final class TokenUtils {
 									TabExpander e,
 									final RSyntaxTextArea textArea,
 									float x0) {
-		return getSubTokenList(tokenList, pos, e, textArea, x0, null);
+		return getSubTokenList(tokenList, pos, e, textArea, x0, null, true, Float.MAX_VALUE);
 	}
 
 
@@ -100,6 +100,8 @@ public final class TokenUtils {
 	 * @param tempToken A temporary token to use  when creating the token list
 	 *        result.  This may be <code>null</code> but callers can pass in
 	 *        a "buffer" token for performance if desired.
+	 * @param careAboutWidth whether we need to know the width or the result or not
+	 * @param maxWidth the maximum width we care about measuring, if we care about width
 	 * @return Information about the "sub" token list.  This will be
 	 *         <code>null</code> if <code>pos</code> was not a valid offset
 	 *         into the token list.
@@ -109,7 +111,10 @@ public final class TokenUtils {
 									TabExpander e,
 									final RSyntaxTextArea textArea,
 									float x0,
-									TokenImpl tempToken) {
+									TokenImpl tempToken,
+									boolean careAboutWidth,
+									float maxWidth) {
+
 
 		if (tempToken==null) {
 			tempToken = new TokenImpl();
@@ -119,7 +124,9 @@ public final class TokenUtils {
 		// Loop through the token list until you find the one that contains
 		// pos.  Remember the cumulative width of all of these tokens.
 		while (t!=null && t.isPaintable() && !t.containsPosition(pos)) {
-			x0 += t.getWidth(textArea, e, x0);
+			if (careAboutWidth) {
+				x0 += t.getWidth(textArea, e, x0, maxWidth);
+			}
 			t = t.getNextToken();
 		}
 
@@ -129,7 +136,9 @@ public final class TokenUtils {
 			if (t.getOffset()!=pos) {
 				// Number of chars between p0 and token start.
 				int difference = pos - t.getOffset();
-				x0 += t.getWidthUpTo(t.length()-difference+1, textArea, e, x0);
+				if (careAboutWidth) {
+					x0 += t.getWidthUpTo(t.length()-difference+1, textArea, e, x0, maxWidth);
+				}
 				tempToken.copyFrom(t);
 				tempToken.makeStartAt(pos);
 

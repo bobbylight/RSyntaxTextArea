@@ -18,6 +18,9 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
@@ -124,7 +127,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			// FIXME:  Replace the code below with the commented-out line below.  This will
 			// allow long tokens to be broken at embedded spaces (such as MLC's).  But it
 			// currently throws BadLocationExceptions sometimes...
-			float tokenWidth = t.getWidth(textArea, this, x0);
+			float tokenWidth = t.getWidth(textArea, this, x0, currentWidth + 1);
 			if (tokenWidth>currentWidth) {
 				// If the current token alone is too long for this line,
 				// break at a character boundary.
@@ -212,7 +215,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * @param fontHeight The height of the font being used.
 	 * @param y The y-coordinate at which to begin painting.
 	 */
-	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r,
+	protected void drawView(TokenPainter painter, Graphics2D g, Rectangle r, Rectangle clip,
 						View view, int fontHeight, int y, int line) {
 
 		float x = r.x;
@@ -246,11 +249,17 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			int p = calculateBreakPosition(p0, token, x);
 			x = r.x;
 
-			h.paintLayeredHighlights(g, p0,p, r, host, this);
+			/* NB: for text drawing y is the baseline */
+			final boolean paintThisLine = (y >= clip.getMinY());
+			if (paintThisLine) {
+				h.paintLayeredHighlights(g, p0,p, r, host, this);
+			}
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
-				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
-				x = painter.paint(token, g, x,y, host, this, 0, paintBG);
+				if (paintThisLine) {
+					boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+					x = painter.paint(token, g, x,y, host, this, 0, paintBG);
+				}
 				token = token.getNextToken();
 			}
 
@@ -259,18 +268,28 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				tempToken.set(drawSeg.array, tokenOffset-start, p-1-start,
 						tokenOffset, token.getType());
 				tempToken.setLanguageIndex(token.getLanguageIndex());
-				boolean paintBG = host.getPaintTokenBackgrounds(line, y);
-				painter.paint(tempToken, g, x,y, host, this, 0, paintBG);
+				if (paintThisLine) {
+					boolean paintBG = host.getPaintTokenBackgrounds(line, y);
+					painter.paint(tempToken, g, x,y, host, this, 0, paintBG);
+				}
 				tempToken.copyFrom(token);
 				tempToken.makeStartAt(p);
 				token = new TokenImpl(tempToken);
 			}
 
-			// Paint parser (e.g. squiggle underline) highlights after
-			// text and selection
-			h.paintParserHighlights(g, p0,p, r, host, this);
+			if (paintThisLine) {
+				// Paint parser (e.g. squiggle underline) highlights after
+				// text and selection
+				h.paintParserHighlights(g, p0,p, r, host, this);
+			}
 
 			p0 = (p==p0) ? p1 : p;
+
+			/* NB: y is the baseline, so we check it before we add fontHeight */
+			if (y > clip.getMaxY()) {
+				break;
+			}
+
 			y += fontHeight;
 
 		} // End of while (token!=null && token.isPaintable()).
@@ -301,7 +320,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * @param selEnd The end of the selection.
 	 */
 	protected void drawViewWithSelection(TokenPainter painter, Graphics2D g,
-				Rectangle r, View view, int fontHeight, int y, int selStart,
+				Rectangle r, Rectangle clip, View view, int fontHeight, int y, int selStart,
 				int selEnd) {
 
 		float x = r.x;
@@ -336,66 +355,71 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			int p = calculateBreakPosition(p0, token, x);
 			x = r.x;
 
-			h.paintLayeredHighlights(g, p0,p, r, host, this);
+			/* NB: for text drawing y is the baseline */
+			final boolean paintThisLine = (y >= clip.getMinY());
+
+			if (paintThisLine) {
+				h.paintLayeredHighlights(g, p0,p, r, host, this);
+			}
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
+				if (paintThisLine) {
+					// Selection starts in this token
+					if (token.containsPosition(selStart)) {
 
-				// Selection starts in this token
-				if (token.containsPosition(selStart)) {
 
+						if (selStart>token.getOffset()) {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selStart - tempToken.getOffset();
+							x = painter.paint(tempToken,g,x,y,host, this);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(selStart);
+							// Clone required since token and tempToken must be
+							// different tokens for else statement below
+							token = new TokenImpl(tempToken);
+						}
 
-					if (selStart>token.getOffset()) {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.getOffset();
-						x = painter.paint(tempToken,g,x,y,host, this);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(selStart);
-						// Clone required since token and tempToken must be
-						// different tokens for else statement below
-						token = new TokenImpl(tempToken);
+						int selCount = Math.min(token.length(), selEnd-token.getOffset());
+						if (selCount==token.length()) {
+							x = painter.paintSelected(token, g, x,y, host, this,
+									useSTC);
+						}
+						else {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selCount;
+							x = painter.paintSelected(tempToken, g, x,y, host, this,
+									useSTC);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(token.getOffset() + selCount);
+							token = tempToken;
+							x = painter.paint(token, g, x,y, host, this);
+						}
+
 					}
 
-					int selCount = Math.min(token.length(), selEnd-token.getOffset());
-					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this,
-								useSTC);
-					}
-					else {
+					// Selection ends in this token
+					else if (token.containsPosition(selEnd)) {
 						tempToken.copyFrom(token);
-						tempToken.textCount = selCount;
+						tempToken.textCount = selEnd - tempToken.getOffset();
 						x = painter.paintSelected(tempToken, g, x,y, host, this,
 								useSTC);
 						tempToken.textCount = token.length();
-						tempToken.makeStartAt(token.getOffset() + selCount);
+						tempToken.makeStartAt(selEnd);
 						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
-				}
+					// This token is entirely selected
+					else if (token.getOffset()>=selStart &&
+							token.getEndOffset()<=selEnd) {
+						x = painter.paintSelected(token, g, x,y, host, this,useSTC);
+					}
 
-				// Selection ends in this token
-				else if (token.containsPosition(selEnd)) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this,
-							useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selEnd);
-					token = tempToken;
-					x = painter.paint(token, g, x,y, host, this);
+					// This token is entirely unselected
+					else {
+						x = painter.paint(token, g, x,y, host, this);
+					}
 				}
-
-				// This token is entirely selected
-				else if (token.getOffset()>=selStart &&
-						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
-				}
-
-				// This token is entirely unselected
-				else {
-					x = painter.paint(token, g, x,y, host, this);
-				}
-
 				token = token.getNextToken();
 
 			}
@@ -409,59 +433,61 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 						tokenOffset, token.getType(), token.getLanguageIndex());
 				token.setLanguageIndex(token.getLanguageIndex());
 
-				// Selection starts in this token
-				if (token.containsPosition(selStart)) {
+				if (paintThisLine) {
+					// Selection starts in this token
+					if (token.containsPosition(selStart)) {
 
-					if (selStart>token.getOffset()) {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.getOffset();
-						x = painter.paint(tempToken,g,x,y,host, this);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(selStart);
-						// Clone required since token and tempToken must be
-						// different tokens for else statement below
-						token = new TokenImpl(tempToken);
+						if (selStart>token.getOffset()) {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selStart - tempToken.getOffset();
+							x = painter.paint(tempToken,g,x,y,host, this);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(selStart);
+							// Clone required since token and tempToken must be
+							// different tokens for else statement below
+							token = new TokenImpl(tempToken);
+						}
+
+						int selCount = Math.min(token.length(), selEnd-token.getOffset());
+						if (selCount==token.length()) {
+							x = painter.paintSelected(token, g, x,y, host, this,
+									useSTC);
+						}
+						else {
+							tempToken.copyFrom(token);
+							tempToken.textCount = selCount;
+							x = painter.paintSelected(tempToken, g, x,y, host,
+									this, useSTC);
+							tempToken.textCount = token.length();
+							tempToken.makeStartAt(token.getOffset() + selCount);
+							token = tempToken;
+							x = painter.paint(token, g, x,y, host, this);
+						}
+
 					}
 
-					int selCount = Math.min(token.length(), selEnd-token.getOffset());
-					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this,
+					// Selection ends in this token
+					else if (token.containsPosition(selEnd)) {
+						tempToken.copyFrom(token);
+						tempToken.textCount = selEnd - tempToken.getOffset();
+						x = painter.paintSelected(tempToken, g, x,y, host, this,
 								useSTC);
-					}
-					else {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selCount;
-						x = painter.paintSelected(tempToken, g, x,y, host,
-								this, useSTC);
 						tempToken.textCount = token.length();
-						tempToken.makeStartAt(token.getOffset() + selCount);
+						tempToken.makeStartAt(selEnd);
 						token = tempToken;
 						x = painter.paint(token, g, x,y, host, this);
 					}
 
-				}
+					// This token is entirely selected
+					else if (token.getOffset()>=selStart &&
+							token.getEndOffset()<=selEnd) {
+						x = painter.paintSelected(token, g, x,y, host, this,useSTC);
+					}
 
-				// Selection ends in this token
-				else if (token.containsPosition(selEnd)) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this,
-							useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selEnd);
-					token = tempToken;
-					x = painter.paint(token, g, x,y, host, this);
-				}
-
-				// This token is entirely selected
-				else if (token.getOffset()>=selStart &&
-						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
-				}
-
-				// This token is entirely unselected
-				else {
-					x = painter.paint(token, g, x,y, host, this);
+					// This token is entirely unselected
+					else {
+						x = painter.paint(token, g, x,y, host, this);
+					}
 				}
 
 				token = new TokenImpl(orig);
@@ -469,11 +495,19 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			}
 
-			// Paint parser (e.g. squiggle underline) highlights after
-			// text and selection
-			h.paintParserHighlights(g, p0,p, r, host, this);
+			if (paintThisLine) {
+				// Paint parser (e.g. squiggle underline) highlights after
+				// text and selection
+				h.paintParserHighlights(g, p0,p, r, host, this);
+			}
 
 			p0 = (p==p0) ? p1 : p;
+
+			/* NB: y is the baseline, so we check it before we add fontHeight */
+			if (y > clip.getMaxY()) {
+				break;
+			}
+
 			y += fontHeight;
 
 		} // End of while (token!=null && token.isPaintable()).
@@ -923,12 +957,12 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				View view = getView(i);
 				if (selStart==selEnd || startOffset>=selEnd ||
 						endOffset<selStart) {
-					drawView(painter, g2d, alloc, view, fontHeight,
+					drawView(painter, g2d, alloc, clip, view, fontHeight,
 							tempRect.y+ascent, i);
 				}
 				else {
 					//System.out.println("Drawing line with selection: " + i);
-					drawViewWithSelection(painter, g2d, alloc, view, fontHeight,
+					drawViewWithSelection(painter, g2d, alloc, clip, view, fontHeight,
 							tempRect.y+ascent, selStart, selEnd);
 				}
 			}
@@ -1009,7 +1043,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	@Override
 	public void setSize(float width, float height) {
 		updateMetrics();
-		if ((int) width != getWidth()) {
+		if (Math.abs((int) width - getWidth()) > 1) {
 			// invalidate the view itself since the children's
 			// desired widths will be based upon this view's width.
 			preferenceChanged(null, true, true);
@@ -1156,6 +1190,18 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		private int nlines;
 		private boolean widthChangePending;
 
+		/**
+		 * A temporary lookup for a character position at the start of a line to the y offset of that line,
+		 * to improve the performance when wrapping long lines.
+		 */
+		private transient NavigableMap<Integer, Integer> posToHeightLookup;
+		private transient NavigableMap<Integer, Integer> heightToPosLookup;
+
+		/**
+		 * The width used when the lookup tables were calculated, so they can be reset when the width changes.
+		 */
+		private transient int widthForLookups;
+
 		WrappedLine(Element elem) {
 			super(elem);
 		}
@@ -1186,7 +1232,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				//System.err.println("... ... " + p0 + ", " + p1);
 				nlines += 1;
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
-						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken, false, 0);
 				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
@@ -1277,8 +1323,6 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			alloc.width = 1;
 			int p0 = getStartOffset();
 			int p1 = getEndOffset();
-			int testP = (b == Position.Bias.Forward) ? pos :
-											Math.max(p0, pos - 1);
 
 			// Get the token list for this line so we don't have to keep
 			// recomputing it if this logical line spans multiple physical
@@ -1289,9 +1333,28 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			Token tokenList = doc.getTokenListForLine(line);
 			float x0 = alloc.x;//0;
 
+			final int width = getWidth();
+
+			/* Use lookup table to improve performance */
+			if (posToHeightLookup != null) {
+				if (widthForLookups == width) {
+					Entry<Integer, Integer> floorEntry = posToHeightLookup.floorEntry(pos - 1);
+					if (floorEntry != null) {
+						p0 = floorEntry.getKey();
+						alloc.y = floorEntry.getValue();
+					}
+				} else {
+					posToHeightLookup = null;
+				}
+			}
+
+			int testP = (b == Position.Bias.Forward) ? pos :
+											Math.max(p0, pos - 1);
+
+			int loops = 0;
 			while (p0 < p1) {
 				TokenSubList subList = TokenUtils.getSubTokenList(tokenList, p0,
-						WrappedSyntaxView.this, textArea, x0, lineCountTempToken);
+						WrappedSyntaxView.this, textArea, x0, lineCountTempToken, true, width + 1);
 				x0 = subList!=null ? subList.x : x0;
 				tokenList = subList!=null ? subList.tokenList : null;
 				int p = calculateBreakPosition(p0, tokenList, x0);
@@ -1320,7 +1383,15 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				p0 = (p == p0) ? p1 : p;
 				//System.err.println("... ... Incrementing y");
 				alloc.y += alloc.height;
+				loops++;
 
+				if (loops > 10) {
+					if (posToHeightLookup == null) {
+						posToHeightLookup = new TreeMap<>();
+						widthForLookups = width;
+					}
+					posToHeightLookup.put(p0, alloc.y);
+				}
 			}
 
 			throw new BadLocationException(null, pos);
@@ -1378,6 +1449,23 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				int line = map.getElementIndex(p0);
 				Token tlist = doc.getTokenListForLine(line);
 
+				final int width = getWidth();
+
+				/* Use lookup table to improve performance */
+				if (heightToPosLookup != null) {
+					if (widthForLookups == width) {
+						Entry<Integer, Integer> floorEntry = heightToPosLookup.floorEntry((int) fy);
+						if (floorEntry != null) {
+							alloc.y = floorEntry.getKey();
+							p0 = floorEntry.getValue();
+						}
+					} else {
+						heightToPosLookup = null;
+					}
+				}
+
+				int loops = 0;
+
 				// Look at each physical line-chunk of this logical line.
 				while (p0<p1) {
 
@@ -1385,7 +1473,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					// lines so they start at the beginning of a physical
 					// line.
 					TokenSubList subList = TokenUtils.getSubTokenList(tlist, p0,
-							WrappedSyntaxView.this, textArea, alloc.x, lineCountTempToken);
+							WrappedSyntaxView.this, textArea, alloc.x, lineCountTempToken, false, 0);
 					tlist = subList!=null ? subList.tokenList : null;
 					int p = calculateBreakPosition(p0, tlist, alloc.x);
 
@@ -1426,6 +1514,15 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					p0 = (p == p0) ? p1 : p;
 					alloc.y += alloc.height;
 
+					loops++;
+
+					if (loops > 10) {
+						if (heightToPosLookup == null) {
+							heightToPosLookup = new TreeMap<>();
+							widthForLookups = width;
+						}
+						heightToPosLookup.put(alloc.y, p0);
+					}
 				} // End of while (p0<p1).
 
 				return getEndOffset() - 1;
@@ -1436,6 +1533,10 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 		private void handleDocumentEvent(DocumentEvent e, Shape a,
 											ViewFactory f) {
+			/* Clear lookup tables */
+			posToHeightLookup = null;
+			heightToPosLookup = null;
+
 			int n = calculateLineCount();
 			if (this.nlines != n) {
 				this.nlines = n;

@@ -11,7 +11,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -53,6 +55,10 @@ public class DefaultFoldManager implements FoldManager {
 	private Parser rstaParser;
 	private FoldParser foldParser;
 	private List<Fold> folds;
+	/**
+	 * A {@link Map} from line number to {@link Fold}.
+	 */
+	private Map<Integer, Fold> foldsByLine;
 	private boolean codeFoldingEnabled;
 	private PropertyChangeSupport support;
 	private Listener l;
@@ -71,6 +77,7 @@ public class DefaultFoldManager implements FoldManager {
 		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, l);
 		textArea.addPropertyChangeListener("document", l);
 		folds = new ArrayList<>();
+		foldsByLine = new HashMap<>();
 		updateFoldParser();
 	}
 
@@ -84,6 +91,7 @@ public class DefaultFoldManager implements FoldManager {
 	@Override
 	public void clear() {
 		folds.clear();
+		foldsByLine.clear();
 	}
 
 
@@ -163,7 +171,13 @@ public class DefaultFoldManager implements FoldManager {
 
 	@Override
 	public Fold getFoldForLine(int line) {
-		return getFoldForLineImpl(null, folds, line);
+		if (foldsByLine.containsKey(line)) {
+			return foldsByLine.get(line);
+		}
+
+		Fold result = getFoldForLineImpl(null, folds, line);
+		foldsByLine.put(line, result);
+		return result;
 	}
 
 
@@ -364,33 +378,46 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 
 	@Override
 	public boolean isLineHidden(int line) {
-		for (Fold fold : folds) {
-			if (fold.containsLine(line)) {
-				if (fold.isCollapsed()) {
-					return true;
-				}
-				else {
-					return isLineHiddenImpl(fold, line);
-				}
-			}
-		}
-		return false;
+		return isLineHiddenImpl(null, folds, line);
 	}
 
+	private boolean isLineHiddenImpl(Fold parent, List<Fold> folds, int line) {
+		if (folds == null) {
+			return false;
+		}
 
-	private boolean isLineHiddenImpl(Fold parent, int line) {
-		for (int i=0; i<parent.getChildCount(); i++) {
-			Fold child = parent.getChild(i);
-			if (child.containsLine(line)) {
-				if (child.isCollapsed()) {
-					return true;
+		int low = 0;
+		int high = folds.size() - 1;
+
+		while (low <= high) {
+			int mid = (low + high) >> 1;
+			Fold midFold = folds.get(mid);
+			int startLine = midFold.getStartLine();
+			if (line==startLine) {
+				/* The first line of a fold is never hidden */
+				return false;
+			}
+			else if (line<startLine) {
+				high = mid - 1;
+			}
+			else {
+				int endLine = midFold.getEndLine();
+				if (line>endLine) {
+					low = mid + 1;
 				}
-				else {
-					return isLineHiddenImpl(child, line);
+				else { // line>startLine && line<=endLine
+					if (midFold.isCollapsed()) {
+						return true;
+					} else if (midFold.getCollapsedLineCount() != 0) {
+						return isLineHiddenImpl(midFold, midFold.getChildren(), line);
+					} else {
+						return false;
+					}
 				}
 			}
 		}
-		return false;
+
+		return false; // No fold for this line
 	}
 
 
@@ -450,6 +477,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 				keepFoldStates(newFolds, folds);
 			}
 			folds = newFolds;
+			foldsByLine = new HashMap<>();
 
 			// Let folks (gutter, etc.) know that folds have been updated.
 			support.firePropertyChange(PROPERTY_FOLDS_UPDATED, null, folds);
@@ -458,6 +486,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 		}
 		else {
 			folds.clear();
+			foldsByLine.clear();
 		}
 
 	}
@@ -484,6 +513,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 			}
 			else {
 				folds = Collections.emptyList();
+				foldsByLine = new HashMap<>();
 				textArea.repaint();
 				support.firePropertyChange(PROPERTY_FOLDS_UPDATED, null, null);
 			}
@@ -494,6 +524,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	@Override
 	public void setFolds(List<Fold> folds) {
 		this.folds = folds;
+		this.foldsByLine = new HashMap<>();
 	}
 
 

@@ -301,6 +301,19 @@ public interface Token extends TokenTypes {
 	 */
 	float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0);
 
+	/**
+	 * Returns the width of this token given the specified parameters.
+	 *
+	 * @param textArea The text area in which the token is being painted.
+	 * @param e Describes how to expand tabs.  This parameter cannot be
+	 *        <code>null</code>.
+	 * @param x0 The pixel-location at which the token begins.  This is needed
+	 *        because of tabs.
+	 * @param maxWidth the maximum width we care about measuring
+	 * @return The width of the token, in pixels.
+	 * @see #getWidthUpTo
+	 */
+	float getWidth(RSyntaxTextArea textArea, TabExpander e, float x0, float maxWidth);
 
 	/**
 	 * Returns the width of a specified number of characters in this token.
@@ -317,6 +330,23 @@ public interface Token extends TokenTypes {
 	 */
 	float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0);
+
+	/**
+	 * Returns the width of a specified number of characters in this token.
+	 * For example, for the token "while", specifying a value of <code>3</code>
+	 * here returns the width of the "whi" portion of the token.
+	 *
+	 * @param numChars The number of characters for which to get the width.
+	 * @param textArea The text area in which the token is being painted.
+	 * @param e How to expand tabs.  This value cannot be <code>null</code>.
+	 * @param x0 The pixel-location at which this token begins.  This is needed
+	 *        because of tabs.
+	 * @param maxWidth the maximum width we care about measuring
+	 * @return The width of the specified number of characters in this token.
+	 * @see #getWidth
+	 */
+	float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
+			TabExpander e, float x0, float maxWidth);
 
 
 	/**
