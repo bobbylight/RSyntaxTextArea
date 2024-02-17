@@ -21,8 +21,9 @@ import javax.swing.text.TabExpander;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see VisibleWhitespaceTokenPainter
  */
-class DefaultTokenPainter implements TokenPainter {
+public class DefaultTokenPainter implements TokenPainter {
 
 	/**
 	 * Rectangle used for filling token backgrounds.

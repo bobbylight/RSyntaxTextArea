@@ -44,8 +44,9 @@ import javax.swing.text.TabExpander;
  *
  * @author Robert Futrell
  * @version 1.0
+ * @see DefaultTokenPainter
  */
-class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
+public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 
 	@Override
@@ -77,9 +78,9 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 					// Fill in background.
 					nextX = x+fm.charsWidth(text, flushIndex,flushLen);
-					float nextNextX = e.nextTabStop(nextX, 0);
+					float nextTabStop = e.nextTabStop(nextX, 0);
 					if (bg!=null) {
-						paintBackground(x,y, nextNextX-x,height, g,
+						paintBackground(x,y, nextTabStop-x,height, g,
 										ascent, host, bg);
 					}
 					g.setColor(fg);
@@ -91,15 +92,8 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 					}
 					flushIndex = i + 1;
 
-					// Draw an arrow representing the tab.
-					int halfHeight = height / 2;
-					int quarterHeight = halfHeight / 2;
-					int ymid = (int)y - ascent + halfHeight;
-					g.drawLine((int)nextX,ymid, (int)nextNextX,ymid);
-					g.drawLine((int)nextNextX,ymid, (int)nextNextX-4,ymid-quarterHeight);
-					g.drawLine((int)nextNextX,ymid, (int)nextNextX-4,ymid+quarterHeight);
-
-					x = nextNextX;
+					paintTabText(g, nextX, y, nextTabStop, ascent, height);
+					x = nextTabStop;
 					break;
 
 				case ' ':
@@ -130,10 +124,7 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 						flushLen = 0;
 					}
 
-					// Paint a dot representing the space.
-					int dotX = (int)(nextX - width/2f); // "2.0f" for FindBugs
-					int dotY = (int)(y - ascent + height/2f); // Ditto
-					g.drawLine(dotX, dotY, dotX, dotY);
+					paintSpaceText(g, nextX, y, ascent, width, height);
 					flushIndex = i + 1;
 					x = nextX;
 					break;
@@ -178,5 +169,46 @@ class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 
 	}
 
+
+	/**
+	 * Draws the textual indication of a space, i.e. a single dot. The
+	 * background has already been filled in properly, and the foreground
+	 * color properly set.
+	 *
+	 * @param g The graphics context.
+	 * @param x The x-value at which to paint.
+	 * @param y The y-value of the current line.
+	 * @param ascent The ascent of the current font.
+	 * @param width The width of the space character.
+	 * @param height The height of the current line of text being painted.
+	 */
+	protected void paintSpaceText(Graphics2D g, float x, float y, int ascent,
+								  int width, int height) {
+		int dotX = (int)(x - width/2f);
+		int dotY = (int)(y - ascent + height/2f);
+		g.drawLine(dotX, dotY, dotX, dotY);
+	}
+
+
+	/**
+	 * Draws the text representing a tab. The background has already been
+	 * filled in if necessary, and the foreground color properly set.
+	 *
+	 * @param g The graphics context.
+	 * @param x The x-value at which to paint.
+	 * @param y The y-value of the current line.
+	 * @param nextTabStop Where the next tab stop would start.
+	 * @param ascent The ascent of the current font.
+	 * @param height The height of the line of text being painted.
+	 */
+	protected void paintTabText(Graphics2D g, float x, float y,
+						float nextTabStop, int ascent, int height) {
+		int x2 = (int)nextTabStop - 3;
+		if (x2 >= (int)x) {
+			int halfHeight = height / 2;
+			int ymid = (int) y - ascent + halfHeight;
+			g.drawLine((int) x, ymid, x2, ymid);
+		}
+	}
 
 }

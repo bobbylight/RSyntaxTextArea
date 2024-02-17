@@ -83,6 +83,7 @@ import org.fife.ui.rtextarea.*;
  *       <li>Protobuf files
  *       <li>Python
  *       <li>Ruby
+ *       <li>Rust
  *       <li>SAS
  *       <li>Scala
  *       <li>SQL
@@ -323,6 +324,9 @@ private boolean fractionalFontMetricsEnabled;
 	private Color[] secondaryLanguageBackgrounds;
 
 	private boolean insertPairedCharacters;
+
+	private TokenPainterFactory tokenPainterFactory;
+
 
 	/**
 	 * Constructor.
@@ -794,6 +798,17 @@ private boolean fractionalFontMetricsEnabled;
 	@Override
 	protected RTextAreaUI createRTextAreaUI() {
 		return new RSyntaxTextAreaUI(this);
+	}
+
+
+	/**
+	 * Called whenever whitespace visibility changes. Returns the
+	 * token painter to use for this text area.
+	 *
+	 * @return The token painter to use.
+	 */
+	protected TokenPainter createTokenPainter() {
+		return tokenPainterFactory.getTokenPainter(this);
 	}
 
 
@@ -2018,7 +2033,8 @@ private boolean fractionalFontMetricsEnabled;
 		super.init();
 		metricsNeverRefreshed = true;
 
-		tokenPainter = new DefaultTokenPainter();
+		tokenPainterFactory = new DefaultTokenPainterFactory();
+		tokenPainter = tokenPainterFactory.getTokenPainter(this);
 
 		// NOTE: Our actions are created here instead of in a static block
 		// so they are only created when the first RTextArea is instantiated,
@@ -3191,6 +3207,18 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
+	 * Sets the token painter factory to use.
+	 *
+	 * @param tpf The new token painter factory. This should not
+	 *        be {@code null}.
+	 */
+	public void setTokenPainterFactory(TokenPainterFactory tpf) {
+		tokenPainterFactory = tpf;
+		tokenPainter = createTokenPainter();
+	}
+
+
+	/**
 	 * Sets whether "focusable" tool tips are used instead of standard ones.
 	 * Focusable tool tips are tool tips that the user can click on,
 	 * resize, copy from, and clink links in.  This method fires a property
@@ -3238,8 +3266,7 @@ private boolean fractionalFontMetricsEnabled;
 	public void setWhitespaceVisible(boolean visible) {
 		if (whitespaceVisible!=visible) {
 			this.whitespaceVisible = visible;
-			tokenPainter = visible ? new VisibleWhitespaceTokenPainter() :
-					new DefaultTokenPainter();
+			tokenPainter = createTokenPainter();
 			repaint();
 			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY, !visible, visible);
 		}
