@@ -9,21 +9,22 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-
 import org.fife.io.UnicodeReader;
 import org.fife.io.UnicodeWriter;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
+import org.fife.ui.rtextarea.readonly.ReadOnlyContent;
+import org.fife.ui.rtextarea.readonly.ReadOnlyDocument;
+import org.fife.ui.rtextarea.readonly.ReadOnlyFileStructure;
+import org.fife.ui.rtextarea.readonly.ReadOnlyFileStructureParser;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Path;
 
 /**
  * An extension of {@link org.fife.ui.rsyntaxtextarea.RSyntaxTextArea}
@@ -456,10 +457,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @see #save()
 	 * @see #saveAs(FileLocation)
 	 */
-	public void load(FileLocation loc, Charset defaultEnc) throws IOException {
-		load(loc, defaultEnc == null ? null : defaultEnc.name());
+	public void load(FileLocation loc, String defaultEnc) throws IOException {
+		load(loc, defaultEnc == null ? Charset.defaultCharset() : Charset.forName(defaultEnc));
 	}
-
 
 	/**
 	 * Loads the specified file in this editor.  This method fires a property
@@ -467,7 +467,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 *
 	 * @param loc The location of the file to load.  This cannot be
 	 *        <code>null</code>.
-	 * @param defaultEnc The encoding to use when loading/saving the file.
+	 * @param defaultCharset The encoding to use when loading/saving the file.
 	 *        This encoding will only be used if the file is not Unicode.
 	 *        If this value is <code>null</code>, the system default encoding
 	 *        is used.
@@ -477,41 +477,73 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @see #save()
 	 * @see #saveAs(FileLocation)
 	 */
-	public void load(FileLocation loc, String defaultEnc) throws IOException {
+	public void load(FileLocation loc, Charset defaultCharset) throws IOException {
+		Charset fileLocationCharset = getFileLocationCharset(loc, defaultCharset);
+		RSyntaxDocument doc = createEditableDocument(loc, fileLocationCharset);
+		loadDocument(loc, doc, defaultCharset);
+	}
 
+	public void loadLocalFileInReadOnlyDocument(File file, Charset defaultCharset) throws IOException {
+		FileLocation fileLocation = FileLocation.create(file);
+		Charset fileLocationCharset = getFileLocationCharset(fileLocation, defaultCharset);
+		RSyntaxDocument doc = createLazyLoadDocument(fileLocation, fileLocationCharset);
+		loadDocument(fileLocation, doc, defaultCharset);
+	}
+
+	private Charset getFileLocationCharset(FileLocation fileLocation, Charset defaultCharset) throws IOException {
+		try( InputStream is = fileLocation.getInputStream() ){
+			UnicodeReader ur = new UnicodeReader(is, defaultCharset);
+			defaultCharset = Charset.forName(ur.getEncoding());
+		}
+		return defaultCharset;
+	}
+
+	private RSyntaxDocument createEditableDocument(FileLocation loc, Charset charset) throws IOException {
+		RSyntaxDocument doc = createDefaultModel();
 		// For new local files, just go with it.
-		if (loc.isLocal() && !loc.isLocalAndExists()) {
-			this.charSet = defaultEnc!=null ? defaultEnc : getDefaultEncoding();
-			this.loc = loc;
-			setText(null);
-			discardAllEdits();
-			setDirty(false);
-			return;
+		if( !loc.isLocal() || loc.isLocalAndExists() ){
+			try( InputStreamReader r = new InputStreamReader(loc.getInputStream(), charset) ){
+				RTextAreaEditorKit kit = (RTextAreaEditorKit) getUI().getEditorKit(this);
+				try{
+					// NOTE:  Resets the "line separator" property.
+					kit.read(r, doc, 0);
+				} catch( BadLocationException e ){
+					throw new IOException(e.getMessage());
+				}
+			}
 		}
+		return doc;
+	}
 
-		// Old local files and remote files, load 'em up.  UnicodeReader will
-		// check for BOMs and handle them correctly in all cases, then pass
-		// rest of stream down to InputStreamReader.
-		UnicodeReader ur = new UnicodeReader(loc.getInputStream(), defaultEnc);
-
-		// Remove listener so dirty flag doesn't get set when loading a file.
-		Document doc = getDocument();
-		doc.removeDocumentListener(this);
-		try (BufferedReader r = new BufferedReader(ur)) {
-			read(r, null);
-		} finally {
-			doc.addDocumentListener(this);
+	private RSyntaxDocument createLazyLoadDocument(FileLocation fileLocation, Charset charSet) throws IOException {
+		if( !fileLocation.isLocalAndExists() ){
+			throw new FileNotFoundException("ReadOnlyDocument supports only files from local file system");
 		}
+		Path filePath = Path.of(fileLocation.getFileFullPath());
+		ReadOnlyFileStructureParser fileStructureParser = new ReadOnlyFileStructureParser(filePath, charSet);
+		ReadOnlyFileStructure readOnlyFileStructure = fileStructureParser.readStructure();
+		ReadOnlyContent content = new ReadOnlyContent(filePath, charSet, readOnlyFileStructure);
+		return new ReadOnlyDocument(getTokenMarkerFactory(), getSyntaxEditingStyle(), content);
+	}
 
-		// No IOException thrown, so we can finally change the location.
-		charSet = ur.getEncoding();
-		String old = getFileFullPath();
-		this.loc = loc;
+	public void loadDocument(FileLocation fileLocation, RSyntaxDocument doc, Charset charSet) {
+		this.charSet = charSet.name();
+		String oldFileFullPath = getFileFullPath();
+		setDocument(doc);
+		this.loc = fileLocation;
 		setDirty(false);
 		setCaretPosition(0);
 		discardAllEdits();
-		firePropertyChange(FULL_PATH_PROPERTY, old, getFileFullPath());
+		firePropertyChange(FULL_PATH_PROPERTY, oldFileFullPath, getFileFullPath());
+		setReadOnly(isReadOnly() && doc.isEditable());
+	}
 
+	public TokenMakerFactory getTokenMarkerFactory() {
+		Document document = getDocument();
+		if( document instanceof RSyntaxDocument ){
+			return ((RSyntaxDocument) document).getTokenMakerFactory();
+		}
+		return null;
 	}
 
 
@@ -701,7 +733,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	/**
 	 * Sets the line separator sequence to use when this file is saved (e.g.
 	 * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
-	 *
+	 * <p>
 	 * Besides parameter checking, this method is preferred over
 	 * <code>getDocument().putProperty()</code> because can set the editor's
 	 * dirty flag when the line separator is changed.
