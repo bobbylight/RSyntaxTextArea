@@ -93,15 +93,16 @@ public final class SearchEngine {
 		int start = forward ? Math.max(c.getDot(), c.getMark()) :
 						Math.min(c.getDot(), c.getMark());
 
-		String findIn = getFindInText(textArea, start, forward);
-		if (!context.getSearchWrap() && (findIn == null || findIn.isEmpty())) {
-			return new SearchResult();
-		}
 
 		int markAllCount = 0;
 		if (doMarkAll) {
 			markAllCount = markAllImpl((RTextArea)textArea, context).
 					getMarkedCount();
+		}
+
+		String findIn = getFindInText(textArea, start, forward);
+		if (!context.getSearchWrap() && (findIn == null || findIn.isEmpty())) {
+			return new SearchResult();
 		}
 
 		SearchResult result = SearchEngine.findImpl(findIn == null ? "" : findIn, context);
