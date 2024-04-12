@@ -125,11 +125,11 @@ public class ErrorStrip extends JPanel {
 	private Color caretMarkerColor;
 
 
-    /**
-     * Whether to draw the caret marker before or after the parser markers.
-     */
-    private boolean paintCaretMarkerOnTop;
-    
+	/**
+	 * Whether to draw the caret marker before or after the parser markers.
+	 */
+	private boolean paintCaretMarkerOnTop;
+
 	/**
 	 * Where we paint the caret marker.
 	 */
@@ -170,7 +170,7 @@ public class ErrorStrip extends JPanel {
 		setFollowCaret(true);
 		setCaretMarkerColor(getDefaultCaretMarkerColor());
 		setMarkerToolTipProvider(null); // Install default
-        setCaretMarkerOnTop(false);
+		setCaretMarkerOnTop(false);
 	}
 
 
@@ -240,33 +240,33 @@ public class ErrorStrip extends JPanel {
 	public Color getCaretMarkerColor() {
 		return caretMarkerColor;
 	}
-    
-    /**
-     * Sets whether to paint the caret marker, if enabled, over the markers
-     * for parser notices. The default is to paint the caret marker under
-     * notices.
-     * 
-     * @param paintOver If true, paint the caret marker over other markers.
-     * @see #isCaretMarkerOnTop() 
-     */
-    public void setCaretMarkerOnTop(boolean paintOver) {
-        if (paintOver != paintCaretMarkerOnTop) {
-            paintCaretMarkerOnTop = paintOver;
-            listener.caretUpdate(null);  // Force repaint
-        }
-    }
 
-    /**
-     * Returns whether the caret marker is painted overtop of any other
-     * markers.
-     * 
-     * @return True is the caret marker is drawn overtop of other markers,
-     *      false otherwise.
-     * @see #setCaretMarkerOnTop(boolean) 
-     */    
-    public boolean isCaretMarkerOnTop() {
-        return paintCaretMarkerOnTop;
-    }
+	/**
+	 * Sets whether to paint the caret marker, if enabled, over the markers
+	 * for parser notices. The default is to paint the caret marker under
+	 * notices.
+	 *
+	 * @param paintOver If true, paint the caret marker over other markers.
+	 * @see #isCaretMarkerOnTop()
+	 */
+	public void setCaretMarkerOnTop(boolean paintOver) {
+		if (paintOver != paintCaretMarkerOnTop) {
+			paintCaretMarkerOnTop = paintOver;
+			listener.caretUpdate(null);  // Force repaint
+		}
+	}
+
+	/**
+	 * Returns whether the caret marker is painted overtop of any other
+	 * markers.
+	 *
+	 * @return True is the caret marker is drawn overtop of other markers,
+	 *      false otherwise.
+	 * @see #setCaretMarkerOnTop(boolean)
+	 */
+	public boolean isCaretMarkerOnTop() {
+		return paintCaretMarkerOnTop;
+	}
 
 
 	/**
@@ -371,88 +371,88 @@ public class ErrorStrip extends JPanel {
 		return Math.round((h-1) * line / Math.max(lineCount, linesPerVisibleRect));
 	}
 
-    /**
-     * Overridden to (possibly) draw the caret's position.
-     *
-     * @param g The graphics context.
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (!paintCaretMarkerOnTop) {
-            paintCaretMarker((Graphics2D) g, caretLineY);            
-        }
-    }    
+	/**
+	 * Overridden to (possibly) draw the caret's position.
+	 *
+	 * @param g The graphics context.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (!paintCaretMarkerOnTop) {
+			paintCaretMarker((Graphics2D) g, caretLineY);
+		}
+	}
 
-    /**
-     * Overridden to (possibly) draw the caret's position.
-     *
-     * @param g The graphics context.
-     */
-    @Override
-    protected void paintChildren(Graphics g) {
-        super.paintChildren(g);
-        if (paintCaretMarkerOnTop) {
-            paintCaretMarker((Graphics2D) g, caretLineY);
-        }
-    }
-    
-    /**
-     * Sets up for painting the caret, then delegates painting to
-     * {@link #paintCaretMarker(java.awt.Graphics2D, int, int)}.
-     */
-    private void paintCaretMarker(Graphics2D g, int caretLineY) {
-        if (caretLineY > -1) {
-            AffineTransform oldTransform = g.getTransform();
-            try {
-                g.translate(0, caretLineY - MARKER_HEIGHT/2);
-                g.setColor(getCaretMarkerColor());
-                paintCaretMarker(g, getWidth(), MARKER_HEIGHT);
-            } finally {
-                g.setTransform(oldTransform);
-            }
-        }
-    }
-    
-    /**
-     * Paints the caret marker.
-     * Can be overridden to customize how the marker is drawn.
-     * All drawing must be kept within the rectangle
-     * (0, 0, width, height).
-     * 
-     * @param g the graphics context to paint with
-     * @param width the width of the painting area
-     * @param height the height of the painting area
-     */
-    protected void paintCaretMarker(Graphics2D g, int width, int height) {
-        final int y0 = height / 2 + (height & 1);
-        g.fillRect(0, y0, width, 2);
-    }
-    
-    /**
-     * Paints the marker for a parser notice.
-     * Can be overridden to customize how the marker is drawn.
-     * All drawing must be kept within the rectangle
-     * (0, 0, width, height).
-     * 
-     * @param g the graphics context
-     * @param notice the notice to paint
-     * @param width the width of the painting area
-     * @param height the height of the painting area
-     */
-    protected void paintParserNoticeMarker(Graphics2D g, ParserNotice notice, int width, int height) {
-        Color borderColor = notice.getColor();
-        if (borderColor==null) {
-            borderColor = Color.DARK_GRAY;
-        }
-        Color fillColor = getBrighterColor(borderColor);
+	/**
+	 * Overridden to (possibly) draw the caret's position.
+	 *
+	 * @param g The graphics context.
+	 */
+	@Override
+	protected void paintChildren(Graphics g) {
+		super.paintChildren(g);
+		if (paintCaretMarkerOnTop) {
+			paintCaretMarker((Graphics2D) g, caretLineY);
+		}
+	}
 
-        g.setColor(fillColor);
-        g.fillRect(0,0, width,height);
+	/**
+	 * Sets up for painting the caret, then delegates painting to
+	 * {@link #paintCaretMarker(java.awt.Graphics2D, int, int)}.
+	 */
+	private void paintCaretMarker(Graphics2D g, int caretLineY) {
+		if (caretLineY > -1) {
+			AffineTransform oldTransform = g.getTransform();
+			try {
+				g.translate(0, caretLineY - MARKER_HEIGHT/2);
+				g.setColor(getCaretMarkerColor());
+				paintCaretMarker(g, getWidth(), MARKER_HEIGHT);
+			} finally {
+				g.setTransform(oldTransform);
+			}
+		}
+	}
 
-        g.setColor(borderColor);
-        g.drawRect(0,0, width-1,height-1);
-    }
+	/**
+	 * Paints the caret marker.
+	 * Can be overridden to customize how the marker is drawn.
+	 * All drawing must be kept within the rectangle
+	 * (0, 0, width, height).
+	 *
+	 * @param g the graphics context to paint with
+	 * @param width the width of the painting area
+	 * @param height the height of the painting area
+	 */
+	protected void paintCaretMarker(Graphics2D g, int width, int height) {
+		final int y0 = height / 2 + (height & 1);
+		g.fillRect(0, y0, width, 2);
+	}
+
+	/**
+	 * Paints the marker for a parser notice.
+	 * Can be overridden to customize how the marker is drawn.
+	 * All drawing must be kept within the rectangle
+	 * (0, 0, width, height).
+	 *
+	 * @param g the graphics context
+	 * @param notice the notice to paint
+	 * @param width the width of the painting area
+	 * @param height the height of the painting area
+	 */
+	protected void paintParserNoticeMarker(Graphics2D g, ParserNotice notice, int width, int height) {
+		Color borderColor = notice.getColor();
+		if (borderColor==null) {
+			borderColor = Color.DARK_GRAY;
+		}
+		Color fillColor = getBrighterColor(borderColor);
+
+		g.setColor(fillColor);
+		g.fillRect(0,0, width,height);
+
+		g.setColor(borderColor);
+		g.drawRect(0,0, width-1,height-1);
+	}
 
 
 	/**
@@ -764,11 +764,11 @@ public class ErrorStrip extends JPanel {
 				int line = textArea.getCaretLineNumber();
 				caretLineY = lineToY(line, r);
 				if (caretLineY!=lastLineY) {
-                    // Extend caret position to repaint rectangle around it
-                    final int dyRectTop = MARKER_HEIGHT/2 + 1;
-                    final int rectHeight = MARKER_HEIGHT + 3;
-                    
-                    // Erase old position
+					// Extend caret position to repaint rectangle around it
+					final int dyRectTop = MARKER_HEIGHT/2 + 1;
+					final int rectHeight = MARKER_HEIGHT + 3;
+
+					// Erase old position
 					repaint(0,lastLineY - dyRectTop, getWidth(), rectHeight);
 					repaint(0,caretLineY - dyRectTop, getWidth(), rectHeight);
 					lastLineY = caretLineY;
@@ -941,8 +941,8 @@ public class ErrorStrip extends JPanel {
 
 	}
 
-    /** The height of markers and the cursor painting area. Must be odd. */
-    private static final int MARKER_HEIGHT = 5;
+	/** The height of markers and the cursor painting area. Must be odd. */
+	private static final int MARKER_HEIGHT = 5;
 
 	/**
 	 * A "marker" in this error strip, representing one or more notices.
@@ -1022,10 +1022,10 @@ public class ErrorStrip extends JPanel {
 		protected void paintComponent(Graphics g) {
 			final ParserNotice notice = getHighestPriorityNotice();
 			if (notice != null) {
-                paintParserNoticeMarker(
-                        (Graphics2D) g, notice,
-                        getWidth(), getHeight()
-                );
+				paintParserNoticeMarker(
+						(Graphics2D) g, notice,
+						getWidth(), getHeight()
+				);
 			}
 		}
 
