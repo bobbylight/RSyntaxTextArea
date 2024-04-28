@@ -381,4 +381,14 @@ class ClojureTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
+	@Test
+	void testCharacters() {
+		String[] chars = {
+			"\\\"",
+			"\\a",
+			"\\s",
+			"\\d",
+		};
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR, chars);
+	}
 }
