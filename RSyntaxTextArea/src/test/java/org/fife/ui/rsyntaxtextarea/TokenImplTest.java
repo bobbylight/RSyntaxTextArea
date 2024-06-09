@@ -20,6 +20,71 @@ class TokenImplTest {
 
 
 	@Test
+	void testEndsWith_charAt_happyPath() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertNotEquals('a', token.charAt(0));
+		Assertions.assertEquals('f', token.charAt(0));
+		Assertions.assertEquals('o', token.charAt(1));
+		Assertions.assertEquals('r', token.charAt(2));
+	}
+
+
+	@Test
+	void testEndsWith_char_happyPath() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.endsWith('a'));
+		Assertions.assertTrue(token.endsWith('r'));
+	}
+
+
+	@Test
+	void testEndsWith_char_nullToken() {
+		Assertions.assertFalse(new TokenImpl().endsWith('a'));
+	}
+
+
+	@Test
+	void testEndsWith_charArray_happyPath() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.endsWith("xxx".toCharArray()));
+		Assertions.assertFalse(token.endsWith("afor".toCharArray()));
+
+		Assertions.assertTrue(token.endsWith("r".toCharArray()));
+		Assertions.assertTrue(token.endsWith("or".toCharArray()));
+		Assertions.assertTrue(token.endsWith("for".toCharArray()));
+	}
+
+
+	@Test
+	void testEndsWith_charArray_null() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertFalse(token.endsWith(null));
+	}
+
+
+	@Test
+	void testEndsWith_charArray_emptyArray() {
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		Assertions.assertTrue(token.endsWith("".toCharArray()));
+	}
+
+
+	@Test
 	void testGetHTMLRepresentation_happyPath() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
@@ -188,7 +253,7 @@ class TokenImplTest {
 
 
 	@Test
-	void testComment_false() {
+	void testIsComment_false() {
 		char[] ch = "for".toCharArray();
 		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.RESERVED_WORD, 0);
 		Assertions.assertFalse(token.isComment());

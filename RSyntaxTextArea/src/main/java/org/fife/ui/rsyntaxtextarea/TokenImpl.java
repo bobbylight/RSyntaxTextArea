@@ -319,6 +319,12 @@ public class TokenImpl implements Token {
 
 
 	@Override
+	public boolean endsWith(char ch) {
+		return textCount > 0 && text[textOffset + textCount - 1] == ch;
+	}
+
+
+	@Override
 	public boolean endsWith(char[] ch) {
 		if (ch==null || ch.length>textCount) {
 			return false;

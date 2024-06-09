@@ -113,10 +113,22 @@ public interface Token extends TokenTypes {
 
 
 	/**
+	 * Returns whether this token's lexeme ends with the specified character.
+	 *
+	 * @param ch The character.
+	 * @return Whether this token's lexeme ends with the specified character.
+	 * @see #endsWith(char[]) 
+	 * @see #startsWith(char[])
+	 */
+	boolean endsWith(char ch);
+	
+	
+	/**
 	 * Returns whether this token's lexeme ends with the specified characters.
 	 *
 	 * @param ch The characters.
 	 * @return Whether this token's lexeme ends with the specified characters.
+	 * @see #endsWith(char) 
 	 * @see #startsWith(char[])
 	 */
 	boolean endsWith(char[] ch);

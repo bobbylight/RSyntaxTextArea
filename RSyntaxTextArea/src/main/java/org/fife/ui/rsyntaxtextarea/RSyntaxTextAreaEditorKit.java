@@ -1788,7 +1788,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			boolean isComment = t != null && t.isComment();
 
 			if (tokenType == quoteType.validTokenType) {
-				if (offs == t.getEndOffset() - 1) {
+				// Ensure you're overwriting the quote char to support TokenMakers that
+				// render unterminated strings as "valid" strings
+				if (t != null && offs == t.getEndOffset() - 1 && t.endsWith(quoteType.ch)) {
 					textArea.moveCaretPosition(offs + 1); // Force a replacement to ensure undo is contiguous
 					textArea.replaceSelection(stringifiedQuoteTypeCh);
 					textArea.setCaretPosition(offs + 1);
