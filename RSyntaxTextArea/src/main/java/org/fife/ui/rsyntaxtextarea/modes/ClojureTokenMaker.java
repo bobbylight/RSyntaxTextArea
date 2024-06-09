@@ -65,9 +65,6 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
 
-  /** initial size of the lookahead buffer */
-  private static final int ZZ_BUFFERSIZE = 16384;
-
   /** lexical states */
   public static final int EOL_COMMENT = 2;
   public static final int STRING = 1;
@@ -1789,13 +1786,10 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
 
   /** this buffer contains the current text to be matched and is
       the source of the yytext() string */
-  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+  private char zzBuffer[];
 
   /** the textposition at the last accepting state */
   private int zzMarkedPos;
-
-  /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
 
   /** the current text position in the buffer */
   private int zzCurrentPos;
@@ -1806,23 +1800,6 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
   /** endRead marks the last character in the buffer, that has been read
       from input */
   private int zzEndRead;
-
-  /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
-
-  /** the number of characters up to the start of the matched text */
-  private int yychar;
-
-  /**
-   * the number of characters from the last newline up to the start of the
-   * matched text
-   */
-  private int yycolumn;
-
-  /**
-   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-   */
-  private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
@@ -1909,6 +1886,7 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -1982,7 +1960,6 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
 		zzCurrentPos = zzMarkedPos = s.offset;
 		zzLexicalState = YYINITIAL;
 		zzReader = reader;
-		zzAtBOL  = true;
 		zzAtEOF  = false;
 	}
 
@@ -2053,6 +2030,7 @@ public class ClojureTokenMaker extends AbstractJFlexTokenMaker {
    *
    * @param newState the new lexical state
    */
+  @Override
   public final void yybegin(int newState) {
     zzLexicalState = newState;
   }
