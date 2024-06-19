@@ -38,7 +38,7 @@ jobs:
         working-directory: ./ #optional
 
     - name: Submit coverage data to codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       if: matrix.java == '8'
       with:
         file: ./RSyntaxTextArea/build/reports/jacoco/test/jacocoTestReport.xml
