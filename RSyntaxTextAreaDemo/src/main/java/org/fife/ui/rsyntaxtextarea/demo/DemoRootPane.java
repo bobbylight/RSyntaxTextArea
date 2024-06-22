@@ -21,7 +21,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.fife.ui.rsyntaxtextarea.*;
-import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.FoldIndicatorStyle;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -53,17 +52,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		URL url = getClass().getResource("bookmark.png");
 		gutter.setBookmarkIcon(new ImageIcon(url));
 		getContentPane().add(scrollPane);
-		ErrorStrip errorStrip = new ErrorStrip(textArea) {
-			protected void paintParserNoticeMarker(Graphics2D g, ParserNotice notice, int width, int height) {
-				GradientPaint paint = new GradientPaint(
-					0, 0, Color.RED,
-					width, height, Color.GREEN);
-
-				g.setPaint(paint);
-				g.fillOval(0, 0, width, height);
-//				g.fillRect(0,0, width,height);
-			}
-		};
+		ErrorStrip errorStrip = new ErrorStrip(textArea);
 		//errorStrip.setBackground(java.awt.Color.blue);
 		getContentPane().add(errorStrip, BorderLayout.LINE_END);
 		setJMenuBar(createMenuBar());
