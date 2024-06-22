@@ -225,6 +225,8 @@ public class FocusableTip {
 
 	/**
 	 * Disposes of the focusable tip currently displayed, if any.
+	 *
+	 * @return Whether the window wsa open, and thus closed and disposed.
 	 */
 	public boolean possiblyDisposeOfTipWindow() {
 		if (tipWindow != null) {
