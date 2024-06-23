@@ -25,6 +25,21 @@ public interface TokenPainter {
 
 
 	/**
+	 * Computes how much horizontal space a token, or part of a token, takes.
+	 *
+	 * @param token The token to examine.
+	 * @param charCount The number of characters in the token to measure..
+	 *        Should be less than or equal to its length.
+	 * @param x The x-offset at which painting would start.
+	 * @param host The parent text area.
+	 * @param e The tab expander.
+	 * @return The length of the text.
+	 */
+	float nextX(Token token, int charCount, float x,
+					 RSyntaxTextArea host, TabExpander e);
+
+
+	/**
 	 * Paints this token.
 	 *
 	 * @param token The token to render.

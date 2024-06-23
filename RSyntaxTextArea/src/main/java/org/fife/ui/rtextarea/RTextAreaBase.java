@@ -21,6 +21,10 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextAttribute;
+import java.text.AttributedCharacterIterator;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -462,15 +466,23 @@ public abstract class RTextAreaBase extends JTextArea {
 			}
 		}
 		else {
-			// Consolas added in Vista, used by VS2010+.
-			font = sc.getFont("Consolas", Font.PLAIN, 13);
-			if (!"Consolas".equals(font.getFamily())) {
-				font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
+			// Cascadia Code was added in later Windows 10/11, default in VS
+			// and VS Code. Consolas was added in Vista, used in older VS.
+			font = sc.getFont("Cascadia Code", Font.PLAIN, 13);
+			if (!"Cascadia Code".equals(font.getFamily())) {
+				font = sc.getFont("Consolas", Font.PLAIN, 13);
+				if (!"Consolas".equals(font.getFamily())) {
+					font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
+				}
 			}
 		}
 
-		//System.out.println(font.getFamily() + ", " + font.getName());
-		return font;
+		System.out.println("fontFamily: " + font.getFamily());
+		// TODO: Make these options configurable via an API, not always on
+		Map<TextAttribute, Object> attrs = new HashMap<>();
+		attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+		attrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
+		return font.deriveFont(attrs);
 
 	}
 

@@ -218,50 +218,34 @@ public class SyntaxView extends View implements TabExpander,
 
 		while (token!=null && token.isPaintable() && nextX<clipEnd) {
 
-			// Selection starts in this token
-			if (token.containsPosition(selStart)) {
+			// Selection starts or ends in this token
+			if (token.containsPosition(selStart) || token.containsPosition(selEnd)) {
 
-				if (selStart>token.getOffset()) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selStart - tempToken.getOffset();
-					nextX = painter.paint(tempToken,g,nextX,y,host, this, clipStart);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selStart);
-					// Clone required since token and tempToken must be
-					// different tokens for else statement below
-					token = new TokenImpl(tempToken);
+				// Paint the entire token, unselected, so the unselected parts look good
+				if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
+					painter.paint(token, g, nextX, y, host, this, clipStart);
 				}
-
-				int tokenLen = token.length();
-				int selCount = Math.min(tokenLen, selEnd-token.getOffset());
-				if (selCount==tokenLen) {
-					nextX = painter.paintSelected(token, g, nextX,y, host,
-											this, clipStart, useSTC);
+// ligatures: ## <> => ++ ~~ <= >= <=> ->>
+//ligatures: ## <> => ++ ~~ <= >= <=> ->>
+				// Figure out where the selection starts and ends
+				float selStartX = nextX;
+				if (selStart > token.getOffset()) {
+					int charCount = selStart - token.getOffset();
+					selStartX = painter.nextX(token, charCount, nextX, host, this);
 				}
-				else {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selCount;
-					nextX = painter.paintSelected(tempToken, g, nextX,y, host,
-							this, clipStart, useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(token.getOffset() + selCount);
-					token = tempToken;
-					nextX = painter.paint(token, g, nextX,y, host, this,
-											clipStart);
-				}
+				int tokenSelectionEndCharOffs = Math.min(token.getEndOffset(), selEnd) - token.getOffset();
+				float selEndX = painter.nextX(token, tokenSelectionEndCharOffs, nextX, host, this);
 
-			}
+				// Create a clip region to only paint this token's selection
+				Rectangle origClip = g.getClipBounds();
+				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
+				System.out.println("Clip bounds: " + g.getClipBounds());
 
-			// Selection ends in this token
-			else if (token.containsPosition(selEnd)) {
-				tempToken.copyFrom(token);
-				tempToken.textCount = selEnd - tempToken.getOffset();
-				nextX = painter.paintSelected(tempToken, g, nextX,y, host, this,
-						clipStart, useSTC);
-				tempToken.textCount = token.length();
-				tempToken.makeStartAt(selEnd);
-				token = tempToken;
-				nextX = painter.paint(token, g, nextX,y, host, this, clipStart);
+				// Render the entire token, selected, and let the clip region do its magic
+				nextX = painter.paintSelected(token, g, nextX, y, host, this, clipStart, useSTC);
+
+				// Restore the clip
+				g.setClip(origClip);
 			}
 
 			// This token is entirely selected
@@ -727,7 +711,6 @@ public class SyntaxView extends View implements TabExpander,
 				drawLine(painter, token, g2d, x,y, line);
 			}
 			else {
-				//System.out.println("Drawing line with selection: " + line);
 				drawLineWithSelection(painter,token,g2d, x,y, selStart, selEnd);
 			}
 
