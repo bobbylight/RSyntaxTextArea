@@ -14,6 +14,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.text.TabExpander;
+import javax.swing.text.Utilities;
 
 
 /**
@@ -40,6 +41,34 @@ public class DefaultTokenPainter implements TokenPainter {
 
 	DefaultTokenPainter() {
 		bgRect = new Rectangle2D.Float();
+	}
+
+
+	@Override
+	public float nextX(Token token, int charCount, float x,
+							RSyntaxTextArea host, TabExpander e) {
+
+		int textOffs = token.getTextOffset();
+		char[] text = token.getTextArray();
+		int end = textOffs + charCount;
+		int flushLen = 0;
+		int flushIndex = textOffs;
+		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
+
+		for (int i=textOffs; i<end; i++) {
+            if (text[i] == '\t') {
+                x = e.nextTabStop(
+                        x + fm.charsWidth(text, flushIndex, flushLen), 0);
+                flushLen = 0;
+                flushIndex = i + 1;
+            }
+            else {
+                flushLen++;
+            }
+		}
+
+		return x + fm.charsWidth(text, flushIndex, flushLen);
+
 	}
 
 

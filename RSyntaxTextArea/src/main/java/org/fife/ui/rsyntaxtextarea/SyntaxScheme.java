@@ -12,9 +12,11 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import javax.swing.text.StyleContext;
 
@@ -106,8 +108,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 				if (style.font.getFamily().equals(old.getFamily()) &&
 					style.font.getSize() == old.getSize()) {
 					int s = style.font.getStyle(); // Keep bold or italic
-					StyleContext sc = StyleContext.getDefaultStyleContext();
-					style.font = sc.getFont(font.getFamily(), s, font.getSize());
+					style.font = getFont(font.getFamily(), s, font.getSize(),
+						font.getAttributes());
 				}
 			}
 		}
@@ -171,6 +173,29 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		}
 		return true;
 
+	}
+
+
+	/**
+	 * Returns the specified font.
+	 *
+	 * @param family The font family.
+	 * @param style The style of font.
+	 * @param size The size of the font.
+	 * @param attrs Optional text attributes.
+	 * @return The font.
+	 */
+	private static Font getFont(String family, int style, int size,
+								Map<TextAttribute, ?> attrs) {
+		// Use StyleContext to get a composite font for Asian glyphs.
+		// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
+		// That bug seems to be hidden now, see 6289072 instead.
+		StyleContext sc = StyleContext.getDefaultStyleContext();
+		Font font = sc.getFont(family, style, size);
+		if (attrs != null) {
+			font = font.deriveFont(attrs);
+		}
+		return font;
 	}
 
 
@@ -328,10 +353,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 						tokenCount + ", found " + tokens.length);
 				}
 
-				// Use StyleContext to create fonts to get composite fonts for
-				// Asian glyphs.
-				StyleContext sc = StyleContext.getDefaultStyleContext();
-
 				// Loop through each token style.  Format:
 				// "index,(fg|-),(bg|-),(t|f),((font,style,size)|(-,,))"
 				for (int i=0; i<tokenTypeCount; i++) {
@@ -365,9 +386,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					Font font = null;
 					String family = tokens[pos+4];
 					if (!"-".equals(family)) {
-						font = sc.getFont(family,
+						font = getFont(family,
 							Integer.parseInt(tokens[pos+5]),	// style
-							Integer.parseInt(tokens[pos+6]));	// size
+							Integer.parseInt(tokens[pos+6]),	// size
+							RSyntaxTextArea.getDefaultFont().getAttributes());
 					}
 					scheme.styles[i] = new Style(fg, bg, font, underline);
 
@@ -440,13 +462,10 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		Font commentFont = baseFont;
 		Font keywordFont = baseFont;
 		if (fontStyles) {
-			// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
-			// That bug seems to be hidden now, see 6289072 instead.
-			StyleContext sc = StyleContext.getDefaultStyleContext();
-			Font boldFont = sc.getFont(baseFont.getFamily(), Font.BOLD,
-					baseFont.getSize());
-			Font italicFont = sc.getFont(baseFont.getFamily(), Font.ITALIC,
-					baseFont.getSize());
+			Font boldFont = getFont(baseFont.getFamily(), Font.BOLD,
+					baseFont.getSize(), baseFont.getAttributes());
+			Font italicFont = getFont(baseFont.getFamily(), Font.ITALIC,
+					baseFont.getSize(), baseFont.getAttributes());
 			commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
 			keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
 		}
