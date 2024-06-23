@@ -79,7 +79,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * If this system property is set to <code>true</code>, debug messages
 	 * will be printed to stdout to help diagnose parsing issues.
 	 */
-	private static final String PROPERTY_DEBUG_PARSING = "rsta.debugParsing";
+	static final String PROPERTY_DEBUG_PARSING = "rsta.debugParsing";
 
 	/**
 	 * Whether to print debug messages while running parsers.
