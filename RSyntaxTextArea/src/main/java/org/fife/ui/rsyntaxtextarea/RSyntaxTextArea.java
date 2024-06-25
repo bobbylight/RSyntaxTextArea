@@ -1198,6 +1198,17 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/**
 	 * Returns the font for tokens of the specified type.
 	 *
+	 * @param token the token.
+	 * @return The font to use for that token type.
+	 * @see #getFontMetricsForTokenType(int)
+	 */
+	public Font getFontForToken(Token token) {
+		return getFontForTokenType(token.getType());
+	}
+
+	/**
+	 * Returns the font for tokens of the specified type.
+	 *
 	 * @param type The type of token.
 	 * @return The font to use for that token type.
 	 * @see #getFontMetricsForTokenType(int)
@@ -1207,6 +1218,16 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		return f!=null ? f : getFont();
 	}
 
+	/**
+	 * Returns the font metrics for the given token.
+	 *
+	 * @param token the Token
+	 * @return The font metrics to use for that tokenx.
+	 * @see #getFontForTokenType(int)
+	 */
+	public FontMetrics getFontMetricsForToken(Token token) {
+		return getFontMetricsForTokenType(token.getType());
+	}
 
 	/**
 	 * Returns the font metrics for tokens of the specified type.
@@ -1790,7 +1811,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 				if (t.length() == 1 && t.charAt(0) == '\n') {
 					gen.appendNewline();
 				} else {
-					Font font = getFontForTokenType(t.getType());
+					Font font = getFontForToken(t);
 					Color bg = getBackgroundForToken(t);
 					boolean underline = getUnderlineForToken(t);
 					// Small optimization - don't print fg color if this
