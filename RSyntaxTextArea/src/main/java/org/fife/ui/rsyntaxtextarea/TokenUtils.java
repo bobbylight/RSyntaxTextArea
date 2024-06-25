@@ -234,7 +234,7 @@ public final class TokenUtils {
 
 		StringBuilder style = new StringBuilder();
 
-		Font font = textArea.getFontForTokenType(token.getType());
+		Font font = textArea.getFontForToken(token);
 		if (font.isBold()) {
 			style.append("font-weight: bold;");
 		}

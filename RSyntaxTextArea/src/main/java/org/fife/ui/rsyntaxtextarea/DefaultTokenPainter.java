@@ -105,8 +105,8 @@ public class DefaultTokenPainter implements TokenPainter {
 		Color fg = useSTC ? host.getSelectedTextColor() :
 			host.getForegroundForToken(token);
 		Color bg = selected ? null : host.getBackgroundForToken(token);
-		g.setFont(host.getFontForTokenType(token.getType()));
-		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
+		g.setFont(host.getFontForToken(token));
+		FontMetrics fm = host.getFontMetricsForToken(token);
 
 		for (int i=textOffs; i<end; i++) {
 			switch (text[i]) {
@@ -218,7 +218,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		}
 
 		// Get the length of a tab.
-		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
+		FontMetrics fm = host.getFontMetricsForToken(token);
 		int tabSize = host.getTabSize();
 		if (tabBuf==null || tabBuf.length<tabSize) {
 			tabBuf = new char[tabSize];
