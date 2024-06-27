@@ -102,7 +102,7 @@ public final class SearchEngine {
 
 		String findIn = getFindInText(textArea, start, forward);
 		if (!context.getSearchWrap() && (findIn == null || findIn.isEmpty())) {
-			return new SearchResult();
+			return new SearchResult(null, 0, markAllCount);
 		}
 
 		SearchResult result = SearchEngine.findImpl(findIn == null ? "" : findIn, context);
