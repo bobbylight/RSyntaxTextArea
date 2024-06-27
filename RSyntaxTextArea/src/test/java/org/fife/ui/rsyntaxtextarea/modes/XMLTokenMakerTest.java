@@ -31,6 +31,27 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testXML_closingTag_tagNames() {
+		String[] openingTags = {
+			"</foo",
+			"</value123",
+			"</cszčšž",
+			"</xmlns:cszčšž"
+		};
+
+		for (String code : openingTags) {
+			Segment seg = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+			Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+			Assertions.assertEquals(code.substring(2), token.getLexeme());
+		}
+	}
+
+
+	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
@@ -51,6 +72,23 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testXML_cdata() {
+		assertAllTokensOfType(TokenTypes.MARKUP_CDATA_DELIMITER,
+			"<![CDATA["
+		);
+	}
+
+
+	@Test
+	void testXML_cdata_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_CDATA,
+			TokenTypes.MARKUP_CDATA,
+			"continuing to next line"
+		);
+	}
+
+
+	@Test
 	void testXML_comment() {
 
 		String[] commentLiterals = {
@@ -64,6 +102,16 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testXML_comment_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			XMLTokenMaker.INTERNAL_IN_XML_COMMENT,
+			"continued to next line",
+			"ends on this line -->"
+		);
 	}
 
 
@@ -94,6 +142,7 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
 			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+			"<!DOCTYPE note [ xxx ]>",
 		};
 
 		for (String code : doctypes) {
@@ -103,6 +152,26 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testXML_doctype_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
+			XMLTokenMaker.INTERNAL_DTD,
+			"continued from prior line unterminated",
+			"continued from prior line>"
+		);
+	}
+
+
+	@Test
+	void testXML_doctypeInternal_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
+			XMLTokenMaker.INTERNAL_DTD_INTERNAL,
+			"continued from prior line unterminated",
+			"continued from prior line]>"
+		);
 	}
 
 
@@ -120,6 +189,18 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.MARKUP_ENTITY_REFERENCE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testXML_getSetCompleteCloseTags() {
+		try {
+			Assertions.assertTrue(XMLTokenMaker.getCompleteCloseMarkupTags());
+			XMLTokenMaker.setCompleteCloseTags(false);
+			Assertions.assertFalse(XMLTokenMaker.getCompleteCloseMarkupTags());
+		} finally {
+			XMLTokenMaker.setCompleteCloseTags(true);
+		}
 	}
 
 
@@ -157,6 +238,81 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testXML_inAttrDouble() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			XMLTokenMaker.INTERNAL_ATTR_DOUBLE,
+			"continued to next line",
+			"ends on this line\""
+		);
+	}
+
+
+	@Test
+	void testXML_inAttrSingle() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			XMLTokenMaker.INTERNAL_ATTR_SINGLE,
+			"continued to next line",
+			"ends on this line'"
+		);
+	}
+
+
+	@Test
+	void testXML_inProcessingInstruction() {
+		assertAllTokensOfType(TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
+			TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
+			"continued to next line",
+			"ends on this line ?>"
+		);
+	}
+
+
+	@Test
+	void testXML_inTag_attributeNames() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
+			XMLTokenMaker.INTERNAL_INTAG,
+			"foo",
+			"value123",
+			"cszčšž",
+			"xmlns:cszčšž"
+		);
+	}
+
+
+	@Test
+	void testXML_inTagScript_attributeNames() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
+			XMLTokenMaker.INTERNAL_INTAG,
+			"foo",
+			"value123",
+			"cszčšž",
+			"xmlns:cszčšž"
+		);
+	}
+
+
+	@Test
+	void testXML_openingTag_tagNames() {
+		String[] openingTags = {
+			"<foo",
+			"<value123",
+			"<cszčšž",
+			"<xmlns:cszčšž"
+		};
+
+		for (String code : openingTags) {
+			Segment seg = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+			Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
+			Assertions.assertEquals(code.substring(1), token.getLexeme());
+		}
+	}
+
+
+	@Test
 	void testXML_processingInstructions() {
 
 		String[] doctypes = {
@@ -173,6 +329,4 @@ class XMLTokenMakerTest extends AbstractTokenMakerTest {
 		}
 
 	}
-
-
 }

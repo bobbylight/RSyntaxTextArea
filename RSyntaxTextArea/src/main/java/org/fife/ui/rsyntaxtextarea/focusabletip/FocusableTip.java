@@ -218,10 +218,17 @@ public class FocusableTip {
 	}
 
 
+	public boolean isVisible() {
+		return tipWindow != null && tipWindow.isVisible();
+	}
+
+
 	/**
 	 * Disposes of the focusable tip currently displayed, if any.
+	 *
+	 * @return Whether the window wsa open, and thus closed and disposed.
 	 */
-	public void possiblyDisposeOfTipWindow() {
+	public boolean possiblyDisposeOfTipWindow() {
 		if (tipWindow != null) {
 			tipWindow.dispose();
 			tipWindow = null;
@@ -229,7 +236,9 @@ public class FocusableTip {
 			tipVisibleBounds.setBounds(-1, -1, 0, 0);
 			lastText = null;
 			textArea.requestFocus();
+			return true;
 		}
+		return false;
 	}
 
 
@@ -277,7 +286,7 @@ public class FocusableTip {
 	 */
 	public void toolTipRequested(MouseEvent e, String text) {
 
-		if (text==null || text.length()==0) {
+		if (text==null || text.isEmpty()) {
 			possiblyDisposeOfTipWindow();
 			lastText = text;
 			return;

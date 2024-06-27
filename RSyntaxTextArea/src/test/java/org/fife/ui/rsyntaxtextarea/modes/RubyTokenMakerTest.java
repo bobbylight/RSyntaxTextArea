@@ -454,7 +454,7 @@ class RubyTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testStringLiterals_continuedFromPirorLine() {
+	void testStringLiterals_continuedFromPriorLine() {
 
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,

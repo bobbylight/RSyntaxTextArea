@@ -102,6 +102,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("6502 Assembler", "Assembler6502.txt", SYNTAX_STYLE_ASSEMBLER_6502, bg, menu);
 		addSyntaxItem("ActionScript", "ActionScriptExample.txt", SYNTAX_STYLE_ACTIONSCRIPT, bg, menu);
 		addSyntaxItem("C",    "CExample.txt", SYNTAX_STYLE_C, bg, menu);
+		addSyntaxItem("C#",    "CSharpExample.txt", SYNTAX_STYLE_CSHARP, bg, menu);
+		addSyntaxItem("Clojure",  "ClojureExample.txt", SYNTAX_STYLE_CLOJURE, bg, menu);
 		addSyntaxItem("CSS",  "CssExample.txt", SYNTAX_STYLE_CSS, bg, menu);
 		addSyntaxItem("Dockerfile", "DockerfileExample.txt", SYNTAX_STYLE_DOCKERFILE, bg, menu);
 		addSyntaxItem("Go", "GoExample.txt", SYNTAX_STYLE_GO, bg, menu);

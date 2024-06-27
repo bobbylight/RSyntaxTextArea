@@ -196,6 +196,64 @@ class RSyntaxTextAreaEditorKitInsertQuoteActionTest extends AbstractRSyntaxTextA
 	}
 
 	@Test
+	void testActionPerformedImpl_enabled_insertMode_inString_middle_languageWithOnlyValidStrings() {
+
+		String origContent = "one \"word here";
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_PERL, origContent);
+		textArea.setCaretPosition(origContent.indexOf("rd"));
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertQuoteAction("test",
+			RSyntaxTextAreaEditorKit.InsertQuoteAction.QuoteType.DOUBLE_QUOTE);
+		ActionEvent e = createActionEvent(textArea, "\"");
+		a.actionPerformedImpl(e, textArea);
+
+		// A closing quote is inserted
+		Assertions.assertEquals("one \"wo\"rd here", textArea.getText());
+		Assertions.assertEquals("one \"wo\"".length(), textArea.getCaretPosition());
+	}
+
+	/**
+	 * See <a href="https://github.com/bobbylight/RSyntaxTextArea/issues/539">issue 539</a>.
+	 */
+	@Test
+	void testActionPerformedImpl_enabled_insertMode_inString_beforeLastChar_languageWithOnlyValidStrings() {
+
+		String origContent = "one \"word here";
+
+		// Caret just before the last char, "e"
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_PERL, origContent);
+		textArea.setCaretPosition(origContent.length() - 1);
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertQuoteAction("test",
+			RSyntaxTextAreaEditorKit.InsertQuoteAction.QuoteType.DOUBLE_QUOTE);
+		ActionEvent e = createActionEvent(textArea, "\"");
+		a.actionPerformedImpl(e, textArea);
+
+		// A closing quote is inserted, trailing "e" pushed forward
+		Assertions.assertEquals("one \"word her\"e", textArea.getText());
+		Assertions.assertEquals(textArea.getText().length() - 1, textArea.getCaretPosition());
+	}
+
+	@Test
+	void testActionPerformedImpl_enabled_insertMode_inString_afterLastChar_languageWithOnlyValidStrings() {
+
+		String origContent = "one \"word here";
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_PERL, origContent);
+		textArea.setCaretPosition(origContent.length());
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertQuoteAction("test",
+			RSyntaxTextAreaEditorKit.InsertQuoteAction.QuoteType.DOUBLE_QUOTE);
+		ActionEvent e = createActionEvent(textArea, "\"");
+		a.actionPerformedImpl(e, textArea);
+
+		// A closing quote is inserted after all text
+		Assertions.assertEquals("one \"word here\"", textArea.getText());
+		Assertions.assertEquals(textArea.getText().length(), textArea.getCaretPosition());
+	}
+
+	@Test
 	void testActionPerformedImpl_enabled_insertMode_inString_atEndQuote() {
 
 		String origContent = "one \"word\" here";

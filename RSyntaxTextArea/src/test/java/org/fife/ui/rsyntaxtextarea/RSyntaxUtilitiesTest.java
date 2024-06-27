@@ -11,10 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.Position;
-import javax.swing.text.View;
+import javax.swing.text.*;
 import java.awt.*;
 
 
@@ -221,6 +218,47 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetPreviousImportantToken_error_negativeLine() {
+		RSyntaxTextArea textArea = createTextArea("line one");
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		Assertions.assertNull(RSyntaxUtilities.getPreviousImportantToken(doc, -1));
+	}
+
+
+	@Test
+	void testGetPreviousImportantToken_happyPath() {
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C, "foo // comment");
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+
+		Token actual = RSyntaxUtilities.getPreviousImportantToken(doc, 0);
+		Assertions.assertTrue(actual != null && actual.is(TokenTypes.IDENTIFIER, "foo"));
+	}
+
+
+	@Test
+	void testGetPreviousImportantToken_goesToPriorLine() {
+
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C, "foo // comment\n");
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+
+		Token actual = RSyntaxUtilities.getPreviousImportantToken(doc, 1);
+		Assertions.assertTrue(actual != null && actual.is(TokenTypes.IDENTIFIER, "foo"));
+	}
+
+
+	@Test
+	void testGetPreviousImportantTokenFromOffs_goesToPriorLine() {
+
+		RSyntaxTextArea textArea = createTextArea("line one\n   ");
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+
+		Token actual = RSyntaxUtilities.getPreviousImportantTokenFromOffs(doc, doc.getLength());
+		Assertions.assertTrue(actual != null && actual.is(TokenTypes.IDENTIFIER, "one"));
+	}
+
+
+	@Test
 	void testGetPreviousImportantTokenFromOffs_skipWhitespaceOnSameLine() {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
@@ -291,6 +329,27 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetTokenAtOffsetOrLastTokenIfEndOfLine_tokenListArg_invalidOffset() {
+
+		RSyntaxTextArea textArea = createTextArea("line one");
+		Token t = textArea.getTokenListForLine(0);
+
+		Assertions.assertNull(
+			RSyntaxUtilities.getTokenAtOffsetOrLastTokenIfEndOfLine(t, 100));
+	}
+
+
+	@Test
+	void testGetTokenListWidthUpTo_happyPath() {
+		RSyntaxTextArea textArea = createTextArea("line one");
+		Token t = textArea.getTokenListForLine(0);
+		TabExpander tabExpander = new SyntaxView(textArea.getDocument().getDefaultRootElement());
+		float width = RSyntaxUtilities.getTokenListWidthUpTo(t, textArea, tabExpander, 0, 5);
+		Assertions.assertTrue(width > 0);
+	}
+
+
+	@Test
 	void testGetWordEnd() throws BadLocationException {
 
 		RSyntaxTextArea textArea = createTextArea("line one");
@@ -319,6 +378,41 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testIsHexCharacter() {
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('0'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('1'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('2'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('3'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('4'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('6'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('7'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('8'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('9'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('a'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('b'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('c'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('d'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('e'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('f'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('A'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('B'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('C'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('D'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('E'));
+		Assertions.assertTrue(RSyntaxUtilities.isHexCharacter('F'));
+
+		Assertions.assertFalse(RSyntaxUtilities.isHexCharacter('Q'));
+	}
+
+
+	@Test
+	void testIsJavaOperator() {
+		Assertions.assertTrue(RSyntaxUtilities.isJavaOperator('+'));
+		Assertions.assertFalse(RSyntaxUtilities.isJavaOperator('s'));
+	}
+
+
+	@Test
 	void testIsOSCaseSensitive() {
 		int os = RSyntaxUtilities.getOS();
 		boolean expected = !(os == RSyntaxUtilities.OS_MAC_OSX ||
@@ -336,6 +430,37 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testSelectAndPossiblyCenter() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		for (int i = 0; i < 200; i++) {
+			textArea.append("line " + i + "\n");
+		}
+
+		int length = textArea.getDocument().getLength();
+		DocumentRange range = new DocumentRange(length / 2, length / 2 + 5);
+		RSyntaxUtilities.selectAndPossiblyCenter(textArea, range, true);
+
+		Assertions.assertEquals(length / 2, textArea.getSelectionStart());
+		Assertions.assertEquals(length / 2 + 5, textArea.getSelectionEnd());
+	}
+
+
+	@Test
+	void testToLowerCase_upperCaseUsAsciiLetters() {
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertEquals(ch | 0x20, RSyntaxUtilities.toLowerCase((char)ch));
+		}
+	}
+
+
+	@Test
+	void testToLowerCase_nonUpperCaseUsAsciiLetters() {
+		Assertions.assertEquals('9', RSyntaxUtilities.toLowerCase('9'));
+	}
+
+
+	@Test
 	void testWildcardToPattern() {
 
 		Assertions.assertEquals(".*",
@@ -346,5 +471,26 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 		Assertions.assertEquals("foobar\\.\\$tmp",
 			RSyntaxUtilities.wildcardToPattern("foobar.$tmp", false, false).pattern());
+	}
+
+
+	@Test
+	void testWildcardToPattern_startCaret_noEscape() {
+		Assertions.assertEquals("^foo",
+			RSyntaxUtilities.wildcardToPattern("^foo", false, false).pattern());
+	}
+
+
+	@Test
+	void testWildcardToPattern_startCaret_escape() {
+		Assertions.assertEquals("\\^foo",
+			RSyntaxUtilities.wildcardToPattern("^foo", false, true).pattern());
+	}
+
+
+	@Test
+	void testWildcardToPattern_nonStartCaret() {
+		Assertions.assertEquals("foo\\^bar",
+			RSyntaxUtilities.wildcardToPattern("foo^bar", false, false).pattern());
 	}
 }

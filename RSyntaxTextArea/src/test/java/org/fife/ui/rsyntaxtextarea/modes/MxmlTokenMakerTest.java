@@ -72,7 +72,8 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
 			MxmlTokenMaker.INTERNAL_IN_AS,
 			"'c",
-			"'\\uff07"
+			"'\\uff07",
+			"'\\ufffx'"
 		);
 	}
 
@@ -125,6 +126,24 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testMxml_actionScript_endTag() {
+
+		String code = "</body>";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, 0, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "body"));
+
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+	}
+
+
+	@Test
 	void testMxml_actionScript_eolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
 			MxmlTokenMaker.INTERNAL_IN_AS,
@@ -136,7 +155,7 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 	void testMxml_actionScript_eolComments_url() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world https://www.google.com",
+			"// Hello world https://www.google.com trailing text",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -152,6 +171,8 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
 			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
+			token = token.getNextToken();
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, " trailing text"));
 		}
 
 	}
@@ -599,6 +620,7 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
 			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+			"<!DOCTYPE note [ xxx ]>",
 		};
 
 		for (String code : doctypes) {
@@ -612,10 +634,32 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testMXML_doctype_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
+			TokenTypes.MARKUP_DTD,
+			"continued from prior line unterminated",
+			"continued from prior line>"
+		);
+	}
+
+
+	@Test
 	void testMxml_entityReferences() {
 		assertAllTokensOfType(TokenTypes.MARKUP_ENTITY_REFERENCE,
 			"&nbsp;", "&lt;", "&gt;", "&#4012"
 			);
+	}
+
+
+	@Test
+	void testXML_getSetCompleteCloseTags() {
+		try {
+			Assertions.assertTrue(MxmlTokenMaker.getCompleteCloseMarkupTags());
+			MxmlTokenMaker.setCompleteCloseTags(false);
+			Assertions.assertFalse(MxmlTokenMaker.getCompleteCloseMarkupTags());
+		} finally {
+			MxmlTokenMaker.setCompleteCloseTags(true);
+		}
 	}
 
 
@@ -649,6 +693,80 @@ class MxmlTokenMakerTest extends AbstractTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>'));
 
+	}
+
+
+	@Test
+	void testMXML_inAttrDouble() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MxmlTokenMaker.INTERNAL_ATTR_DOUBLE,
+			"continued to next line",
+			"ends on this line\""
+		);
+	}
+
+
+	@Test
+	void testMXML_inAttrDouble_scriptTag() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MxmlTokenMaker.INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT,
+			"continued to next line",
+			"ends on this line\""
+		);
+	}
+
+
+	@Test
+	void testMXML_inAttrSingle() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MxmlTokenMaker.INTERNAL_ATTR_SINGLE,
+			"continued to next line",
+			"ends on this line'"
+		);
+	}
+
+
+	@Test
+	void testMXML_inAttrSingle_scriptTag() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MxmlTokenMaker.INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT,
+			"continued to next line",
+			"ends on this line'"
+		);
+	}
+
+
+	@Test
+	void testMXML_inProcessingInstruction() {
+		assertAllTokensOfType(TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
+			TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
+			"continued to next line",
+			"ends on this line ?>"
+		);
+	}
+
+
+	@Test
+	void testMXML_inTag_attributeNames() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
+			MxmlTokenMaker.INTERNAL_INTAG,
+			"foo",
+			"value123",
+			"cszčšž",
+			"xmlns:cszčšž"
+		);
+	}
+
+
+	@Test
+	void testMXML_inTagScript_attributeNames() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
+			MxmlTokenMaker.INTERNAL_INTAG_SCRIPT,
+			"foo",
+			"value123",
+			"cszčšž",
+			"xmlns:cszčšž"
+		);
 	}
 
 

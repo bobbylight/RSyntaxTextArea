@@ -306,7 +306,7 @@ OperatorOrPunctuator					= ({OOPHelper1}|{OOPHelper2}|{OOPHelper3}|{OOPHelper4}|
 /* NOTE:  We distinguish between operators and separators (punctuators), but */
 /* the C# spec doesn't, so the stuff below isn't in the spec.                */
 Separator								= ([\{\}\[\]\(\)])
-Separator2							= ([,;])
+Separator2							= ([,;.])
 
 /* C.1.10 - Pre-processing Directives. */
 /* NOTE:  We don't do ALL of the PP stuff here as it's unnecessary  */

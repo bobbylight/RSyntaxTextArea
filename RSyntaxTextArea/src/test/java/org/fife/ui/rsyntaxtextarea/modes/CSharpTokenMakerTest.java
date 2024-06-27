@@ -1,4 +1,4 @@
-/*
+	/*
  * 06/05/2016
  *
  * This library is distributed under a modified BSD license.  See the included
@@ -190,6 +190,17 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
+	}
+
+
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"Foobar",
+			",",
+			".",
+			";"
+		);
 	}
 
 

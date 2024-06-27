@@ -58,7 +58,6 @@ class TipWindow extends JWindow implements ActionListener {
 
 	private FocusableTip ft;
 	private JEditorPane textArea;
-	private String text;
 	private transient TipListener tipListener;
 	private transient HyperlinkListener userHyperlinkListener;
 
@@ -82,13 +81,12 @@ class TipWindow extends JWindow implements ActionListener {
 				!msg.substring(0,6).equalsIgnoreCase("<html>")) {
 			msg = "<html>" + HtmlUtil.escapeForHtml(msg, "<br>", false);
 		}
-		this.text = msg;
 		tipListener = new TipListener();
 
 		JPanel cp = new JPanel(new BorderLayout());
 		cp.setBorder(getToolTipBorder());
 		cp.setBackground(TipUtil.getToolTipBackground());
-		textArea = new JEditorPane("text/html", text);
+		textArea = new JEditorPane("text/html", msg);
 		TipUtil.tweakTipEditorPane(textArea);
 		if (ft.getImageBase()!=null) { // Base URL for images
 			((HTMLDocument)textArea.getDocument()).setBase(ft.getImageBase());
@@ -253,11 +251,6 @@ class TipWindow extends JWindow implements ActionListener {
 			return BorderFactory.createLineBorder(color);
 		}
 		return BorderFactory.createEmptyBorder();
-	}
-
-
-	public String getText() {
-		return text;
 	}
 
 

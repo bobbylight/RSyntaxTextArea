@@ -60,8 +60,8 @@ publishing {
             url = isReleaseVersion ? releasesRepoUrl : snapshotsRepoUrl
             credentials { // Credentials usually kept in user's .gradle/gradle.properties
                 // We must defensively check for these properties so CI builds work
-                username = project.hasProperty('ossrhUsername') ? ossrhUsername : 'unknown'
-                password = project.hasProperty('ossrhPassword') ? ossrhPassword : 'unknown'
+                username = project.hasProperty('ossrhToken') ? ossrhToken : 'unknown'
+                password = project.hasProperty('ossrhTokenPassword') ? ossrhTokenPassword : 'unknown'
             }
         }
     }
