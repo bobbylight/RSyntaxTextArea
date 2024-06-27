@@ -474,7 +474,7 @@ public class TokenImpl implements Token {
 
 		while (token != null && token.isPaintable()) {
 
-			fm = textArea.getFontMetricsForTokenType(token.getType());
+			fm = textArea.getFontMetricsForToken(token);
 			char[] text = token.text;
 			int start = token.textOffset;
 			int end = start + token.textCount;
@@ -525,7 +525,7 @@ public class TokenImpl implements Token {
 	public int getOffsetBeforeX(RSyntaxTextArea textArea, TabExpander e,
 							float startX, float endBeforeX) {
 
-		FontMetrics fm = textArea.getFontMetricsForTokenType(getType());
+	        FontMetrics fm = textArea.getFontMetricsForToken(this);
 		int i = textOffset;
 		int stop = i + textCount;
 		float x = startX;
@@ -581,7 +581,7 @@ public class TokenImpl implements Token {
 	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0) {
 		float width = x0;
-		FontMetrics fm = textArea.getFontMetricsForTokenType(getType());
+		FontMetrics fm = textArea.getFontMetricsForToken(this);
 		if (fm != null) {
 			int w;
 			int currentStart = textOffset;
@@ -730,7 +730,7 @@ public class TokenImpl implements Token {
 
 		while (token != null && token.isPaintable()) {
 
-			fm = textArea.getFontMetricsForTokenType(token.getType());
+			fm = textArea.getFontMetricsForToken(token);
 			if (fm == null) {
 				return rect; // Don't return null as things will error.
 			}
