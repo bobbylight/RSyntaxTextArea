@@ -16,9 +16,8 @@ import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.text.StyleContext;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -99,17 +98,16 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 	 * most programmers prefer a single font to be used in their text editor,
 	 * but might want bold (say for keywords) or italics.
 	 *
-	 * @param old The old font of the text area.
-	 * @param font The new font of the text area.
+	 * @param oldFont The old font of the text area.
+	 * @param newFont The new font of the text area.
 	 */
-	void changeBaseFont(Font old, Font font) {
+	void changeBaseFont(Font oldFont, Font newFont) {
 		for (Style style : styles) {
 			if (style != null && style.font != null) {
-				if (style.font.getFamily().equals(old.getFamily()) &&
-					style.font.getSize() == old.getSize()) {
-					int s = style.font.getStyle(); // Keep bold or italic
-					style.font = getFont(font.getFamily(), s, font.getSize(),
-						font.getAttributes());
+				if (style.font.getFamily().equals(oldFont.getFamily()) &&
+					style.font.getSize() == oldFont.getSize()) {
+					int styleFontStyle = style.font.getStyle(); // Keep bold or italic
+					style.font = newFont.deriveFont(styleFontStyle);
 				}
 			}
 		}
@@ -173,29 +171,6 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		}
 		return true;
 
-	}
-
-
-	/**
-	 * Returns the specified font.
-	 *
-	 * @param family The font family.
-	 * @param style The style of font.
-	 * @param size The size of the font.
-	 * @param attrs Optional text attributes.
-	 * @return The font.
-	 */
-	private static Font getFont(String family, int style, int size,
-								Map<TextAttribute, ?> attrs) {
-		// Use StyleContext to get a composite font for Asian glyphs.
-		// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
-		// That bug seems to be hidden now, see 6289072 instead.
-		StyleContext sc = StyleContext.getDefaultStyleContext();
-		Font font = sc.getFont(family, style, size);
-		if (attrs != null) {
-			font = font.deriveFont(attrs);
-		}
-		return font;
 	}
 
 
@@ -386,10 +361,14 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					Font font = null;
 					String family = tokens[pos+4];
 					if (!"-".equals(family)) {
-						font = getFont(family,
-							Integer.parseInt(tokens[pos+5]),	// style
-							Integer.parseInt(tokens[pos+6]),	// size
-							RSyntaxTextArea.getDefaultFont().getAttributes());
+						int style= Integer.parseInt(tokens[pos+5]);
+						int size = Integer.parseInt(tokens[pos+6]);
+						font = new Font(family, style, size);
+						Map<TextAttribute, Object> attrs = new HashMap<>(font.getAttributes());
+						attrs.putAll(RSyntaxTextArea.getDefaultFont().getAttributes());
+						// Need to re-derive on style and size since those values were
+						// possibly overwritten with the default font's values above
+						font = font.deriveFont(attrs).deriveFont(style, size);
 					}
 					scheme.styles[i] = new Style(fg, bg, font, underline);
 
@@ -462,12 +441,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		Font commentFont = baseFont;
 		Font keywordFont = baseFont;
 		if (fontStyles) {
-			Font boldFont = getFont(baseFont.getFamily(), Font.BOLD,
-					baseFont.getSize(), baseFont.getAttributes());
-			Font italicFont = getFont(baseFont.getFamily(), Font.ITALIC,
-					baseFont.getSize(), baseFont.getAttributes());
-			commentFont = italicFont;//baseFont.deriveFont(Font.ITALIC);
-			keywordFont = boldFont;//baseFont.deriveFont(Font.BOLD);
+			commentFont = baseFont.deriveFont(Font.ITALIC);
+			keywordFont = baseFont.deriveFont(Font.BOLD);
 		}
 
 		styles[COMMENT_EOL]				= new Style(comment, null, commentFont);

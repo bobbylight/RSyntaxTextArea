@@ -22,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
-import java.text.AttributedCharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,6 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
-import javax.swing.text.StyleContext;
 
 
 /**
@@ -449,30 +447,27 @@ public abstract class RTextAreaBase extends JTextArea {
 	 */
 	public static Font getDefaultFont() {
 
-		// Use StyleContext to get a composite font for better Asian language
-		// support; see Sun bug S282887.
-		StyleContext sc = StyleContext.getDefaultStyleContext();
 		Font font;
 
 		if (isOSX()) {
 			// Snow Leopard (1.6) uses Menlo as default monospaced font,
 			// pre-Snow Leopard used Monaco.
-			font = sc.getFont("Menlo", Font.PLAIN, 12);
+			font = new Font("Menlo", Font.PLAIN, 12);
 			if (!"Menlo".equals(font.getFamily())) {
-				font = sc.getFont("Monaco", Font.PLAIN, 12);
+				font = new Font("Monaco", Font.PLAIN, 12);
 				if (!"Monaco".equals(font.getFamily())) { // Shouldn't happen
-					font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
+					font = new Font(Font.MONOSPACED, Font.PLAIN, 13);
 				}
 			}
 		}
 		else {
 			// Cascadia Code was added in later Windows 10/11, default in VS
 			// and VS Code. Consolas was added in Vista, used in older VS.
-			font = sc.getFont("Cascadia Code", Font.PLAIN, 13);
+			font = new Font("Cascadia Code", Font.PLAIN, 13);
 			if (!"Cascadia Code".equals(font.getFamily())) {
-				font = sc.getFont("Consolas", Font.PLAIN, 13);
+				font = new Font("Consolas", Font.PLAIN, 13);
 				if (!"Consolas".equals(font.getFamily())) {
-					font = sc.getFont(Font.MONOSPACED, Font.PLAIN, 13);
+					font = new Font(Font.MONOSPACED, Font.PLAIN, 13);
 				}
 			}
 		}
@@ -482,8 +477,8 @@ public abstract class RTextAreaBase extends JTextArea {
 		Map<TextAttribute, Object> attrs = new HashMap<>();
 		attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
 		attrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
-		return font.deriveFont(attrs);
-
+		font = font.deriveFont(attrs);
+		return font;
 	}
 
 
