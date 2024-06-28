@@ -11,7 +11,6 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.font.TextAttribute;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -19,11 +18,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
-import javax.swing.text.StyleContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -228,7 +225,9 @@ public class Theme {
 				baseFont.getFamily();
 			int fontSize = lineNumberFontSize>0 ? lineNumberFontSize :
 				baseFont.getSize();
-			Font font = getFont(fontName, Font.PLAIN, fontSize, baseFont.getAttributes());
+			Font font = new Font(fontName, baseFont.getStyle(), baseFont.getSize())
+				.deriveFont(baseFont.getAttributes())
+				.deriveFont(fontSize); // May have been overridden by baseFont attributes above
 			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldIndicatorArmedForeground(foldIndicatorArmedFG);
@@ -313,29 +312,6 @@ public class Theme {
 			}
 		}
 		return c;
-	}
-
-
-	/**
-	 * Returns the specified font.
-	 *
-	 * @param family The font family.
-	 * @param style The style of font.
-	 * @param size The size of the font.
-	 * @param attrs Optional text attributes.
-	 * @return The font.
-	 */
-	private static Font getFont(String family, int style, int size,
-								Map<TextAttribute, ?> attrs) {
-		// Use StyleContext to get a composite font for Asian glyphs.
-		// WORKAROUND for Sun JRE bug 6282887 (Asian font bug in 1.4/1.5)
-		// That bug seems to be hidden now, see 6289072 instead.
-		StyleContext sc = StyleContext.getDefaultStyleContext();
-		Font font = sc.getFont(family, style, size);
-		if (attrs != null) {
-			font = font.deriveFont(attrs);
-		}
-		return font;
 	}
 
 
@@ -703,7 +679,11 @@ public class Theme {
 				}
 				String family = attrs.getValue("family");
 				if (family!=null) {
-					theme.baseFont = getFont(family, Font.PLAIN, size, theme.baseFont.getAttributes());
+					theme.baseFont = new Font(family, Font.PLAIN, size).
+						deriveFont(theme.baseFont.getAttributes()).
+						// Have to reapply the new size since the base font's
+						// attributes may have overridden it above
+						deriveFont(size * 1f);
 				}
 				else if (sizeStr!=null) {
 					// No family specified, keep original family
@@ -871,8 +851,8 @@ public class Theme {
 					Font font = theme.baseFont;
 					String familyName = attrs.getValue("fontFamily");
 					if (familyName!=null) {
-						font = getFont(familyName, font.getStyle(),
-								font.getSize(), font.getAttributes());
+						font = new Font(familyName, font.getStyle(), font.getSize()).
+							deriveFont(theme.baseFont.getAttributes());
 					}
 					String sizeStr = attrs.getValue("fontSize");
 					if (sizeStr!=null) {
