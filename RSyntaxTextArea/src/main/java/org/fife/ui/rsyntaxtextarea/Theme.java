@@ -11,6 +11,7 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.font.TextAttribute;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
@@ -221,13 +224,14 @@ public class Theme {
 			gutter.setIconRowHeaderInheritsGutterBackground(iconRowHeaderInheritsGutterBG);
 			gutter.setLineNumberColor(lineNumberColor);
 			gutter.setCurrentLineNumberColor(currentLineNumberColor);
-			String fontName = lineNumberFont!=null ? lineNumberFont :
+			String lineNumberFontFamily = lineNumberFont!=null ? lineNumberFont :
 				baseFont.getFamily();
-			int fontSize = lineNumberFontSize>0 ? lineNumberFontSize :
+			int lineNumberFontSize = this.lineNumberFontSize >0 ? this.lineNumberFontSize :
 				baseFont.getSize();
-			Font font = new Font(fontName, baseFont.getStyle(), baseFont.getSize())
-				.deriveFont(baseFont.getAttributes())
-				.deriveFont(fontSize); // May have been overridden by baseFont attributes above
+			Map<TextAttribute, Object> lineNumberFontAttrs = new HashMap<>();
+			lineNumberFontAttrs.put(TextAttribute.FAMILY, lineNumberFontFamily);
+			lineNumberFontAttrs.put(TextAttribute.SIZE, lineNumberFontSize);
+			Font font = baseFont.deriveFont(lineNumberFontAttrs);
 			gutter.setLineNumberFont(font);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldIndicatorArmedForeground(foldIndicatorArmedFG);
@@ -679,11 +683,11 @@ public class Theme {
 				}
 				String family = attrs.getValue("family");
 				if (family!=null) {
-					theme.baseFont = new Font(family, Font.PLAIN, size).
-						deriveFont(theme.baseFont.getAttributes()).
-						// Have to reapply the new size since the base font's
-						// attributes may have overridden it above
-						deriveFont(size * 1f);
+					Map<TextAttribute, Object> newFontAttrs = new HashMap<>();
+					newFontAttrs.put(TextAttribute.FAMILY, family);
+					newFontAttrs.put(TextAttribute.SIZE, size);
+					theme.baseFont = theme.baseFont
+						.deriveFont(newFontAttrs);
 				}
 				else if (sizeStr!=null) {
 					// No family specified, keep original family
@@ -851,8 +855,9 @@ public class Theme {
 					Font font = theme.baseFont;
 					String familyName = attrs.getValue("fontFamily");
 					if (familyName!=null) {
-						font = new Font(familyName, font.getStyle(), font.getSize()).
-							deriveFont(theme.baseFont.getAttributes());
+						Map<TextAttribute, Object> newAttrs = new HashMap<>();
+						newAttrs.put(TextAttribute.FAMILY, familyName);
+						font = theme.baseFont.deriveFont(newAttrs);
 					}
 					String sizeStr = attrs.getValue("fontSize");
 					if (sizeStr!=null) {
