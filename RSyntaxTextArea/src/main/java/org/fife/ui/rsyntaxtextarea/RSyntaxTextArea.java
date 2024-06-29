@@ -317,9 +317,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Whether a popup showing matched bracket lines when they're off-screen. */
 	private boolean showMatchedBracketPopup;
 
-private int lineHeight;		// Height of a line of text; same for default, bold & italic.
-private int maxAscent;
-private boolean fractionalFontMetricsEnabled;
+	private int lineHeight;		// Height of a line of text; same for default, bold & italic.
+	private int maxAscent;
+	private boolean fractionalFontMetricsEnabled;
 
 	private Color[] secondaryLanguageBackgrounds;
 
@@ -2641,6 +2641,7 @@ private boolean fractionalFontMetricsEnabled;
 			}
 			firePropertyChange(FRACTIONAL_FONTMETRICS_PROPERTY,
 											!enabled, enabled);
+			repaint();
 		}
 	}
 
