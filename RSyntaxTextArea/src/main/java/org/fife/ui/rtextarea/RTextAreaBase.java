@@ -21,9 +21,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -474,10 +471,10 @@ public abstract class RTextAreaBase extends JTextArea {
 
 		System.out.println("fontFamily: " + font.getFamily());
 		// TODO: Make these options configurable via an API, not always on
-		Map<TextAttribute, Object> attrs = new HashMap<>();
-		attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
-		attrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
-		font = font.deriveFont(attrs);
+		// Map<TextAttribute, Object> attrs = new HashMap<>();
+		// attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+		// attrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
+		// font = font.deriveFont(attrs);
 		return font;
 	}
 

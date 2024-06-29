@@ -215,14 +215,14 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 
 		// HTML-ified version of the text above. No specific font since it
 		// varies depending on the OS
-		String expected = "<html><nobr><font face=\"\\w+\" color=\"#ff0000\">\\{" +
-			"</font><br><font face=\"\\w+\"> &nbsp;</font>" +
-			"<font face=\"\\w+\" color=\"black\">println</font>" +
-			"<font face=\"\\w+\" color=\"#ff0000\">\\(</font>" +
-			"<font face=\"\\w+\" color=\"#dc009c\">&#34;hi&#34;</font>" +
-			"<font face=\"\\w+\" color=\"#ff0000\">\\)</font>" +
-			"<font face=\"\\w+\" color=\"black\">;</font><br>" +
-			"<font face=\"\\w+\" color=\"#ff0000\">}</font><br>";
+		String expected = "<html><nobr><font face=\"[\\w ]+\" color=\"#ff0000\">\\{" +
+			"</font><br><font face=\"[\\w ]+\"> &nbsp;</font>" +
+			"<font face=\"[\\w ]+\" color=\"black\">println</font>" +
+			"<font face=\"[\\w ]+\" color=\"#ff0000\">\\(</font>" +
+			"<font face=\"[\\w ]+\" color=\"#dc009c\">&#34;hi&#34;</font>" +
+			"<font face=\"[\\w ]+\" color=\"#ff0000\">\\)</font>" +
+			"<font face=\"[\\w ]+\" color=\"black\">;</font><br>" +
+			"<font face=\"[\\w ]+\" color=\"#ff0000\">}</font><br>";
 		Assertions.assertTrue(fi.getToolTipText(e).matches(expected));
 	}
 

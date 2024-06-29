@@ -101,7 +101,7 @@ class HtmlUtilTest {
 		textArea.setText("package foo;\npublic class Foobar {}");
 
 		// We can't do an exact string comparison due to differing default fonts on different OS's
-		String expectedRegex = "<pre style=\"font-family: '\\w+', courier; background: #ffffff\">" +
+		String expectedRegex = "<pre style=\"font-family: '[\\w ]+', courier; background: #ffffff\">" +
 			"<span style=\"color: #000000;\">age</span><span style=\"color: #808080;\"> </span>" +
 			"<span style=\"color: #000000;\">foo</span><span style=\"color: #000000;\">;</span><br>" +
 			"<span style=\"color: #000000;\">public</span>" +
@@ -111,7 +111,7 @@ class HtmlUtilTest {
 			"<span style=\"color: #000000;\">\\{</span><span style=\"color: #000000;\">}</span></pre>";
 
 		String actual = HtmlUtil.getTextAsHtml(textArea, 4, textArea.getDocument().getLength());
-		Assertions.assertTrue(actual.matches(expectedRegex));
+		Assertions.assertTrue(actual.matches(expectedRegex), "Expected content not found in: " + actual);
 	}
 
 	@Test
@@ -122,7 +122,7 @@ class HtmlUtilTest {
 		Image image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
 		textArea.setBackgroundImage(image);
 		// We can't do an exact string comparison due to differing default fonts on different OS's
-		String expectedRegex = "<pre style=\"font-family: '\\w+', courier;\">.*" +
+		String expectedRegex = "<pre style=\"font-family: '[\\w ]+', courier;\">.*" +
 			"<span style=\"color: #000000;\">ag</span></pre>";
 
 		String actual = HtmlUtil.getTextAsHtml(textArea, 4, 6);
