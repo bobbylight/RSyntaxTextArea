@@ -469,12 +469,6 @@ public abstract class RTextAreaBase extends JTextArea {
 			}
 		}
 
-		System.out.println("fontFamily: " + font.getFamily());
-		// TODO: Make these options configurable via an API, not always on
-		// Map<TextAttribute, Object> attrs = new HashMap<>();
-		// attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
-		// attrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
-		// font = font.deriveFont(attrs);
 		return font;
 	}
 
