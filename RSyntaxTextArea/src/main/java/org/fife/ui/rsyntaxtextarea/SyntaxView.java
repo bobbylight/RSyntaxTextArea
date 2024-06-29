@@ -225,8 +225,8 @@ public class SyntaxView extends View implements TabExpander,
 				if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
 					painter.paint(token, g, nextX, y, host, this, clipStart);
 				}
-// ligatures: ## <> => ++ ~~ <= >= <=> ->>
-//ligatures: ## <> => ++ ~~ <= >= <=> ->>
+				// ligatures: ## <> => ++ ~~ <= >= <=> ->>
+				// ligatures: ## <> => ++ ~~ <= >= <=> ->>
 				// Figure out where the selection starts and ends
 				float selStartX = nextX;
 				if (selStart > token.getOffset()) {
