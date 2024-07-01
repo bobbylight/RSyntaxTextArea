@@ -242,7 +242,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().
 			getData(DataFlavor.fragmentHtmlFlavor);
-		Assertions.assertTrue(clipboardContent.contains(expectedPortion));
+		Assertions.assertTrue(clipboardContent.contains(expectedPortion),
+			"Expected markup not found in clipboard contents: " + clipboardContent);
 	}
 
 

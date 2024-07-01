@@ -6,6 +6,8 @@ package com.mycompany.demo;
  * @author Your Name
  * http://www.example.com
  */
+// ligatures: ## <> => ++ ~~ <= >= <=> ->>
+   ligatures: ## <> => ++ ~~ <= >= <=> ->>
 public class ExampleCode {
 
    private int value;
