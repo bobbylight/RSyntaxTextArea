@@ -283,7 +283,6 @@ public class DefaultTokenPainter implements TokenPainter {
 				g.drawLine(x0, y1, x0, y1);
 				y1 += 2;
 			}
-			//g.drawLine(x0,y0, x0,y0+host.getLineHeight());
 			x0 += tabW;
 		}
 
