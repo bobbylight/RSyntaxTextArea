@@ -340,49 +340,33 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
 
-				// Selection starts in this token
-				if (token.containsPosition(selStart)) {
+				// Selection starts or ends in this token
+				if (token.containsPosition(selStart) || token.containsPosition(selEnd)) {
 
-
-					if (selStart>token.getOffset()) {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selStart - tempToken.getOffset();
-						x = painter.paint(tempToken,g,x,y,host, this);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(selStart);
-						// Clone required since token and tempToken must be
-						// different tokens for else statement below
-						token = new TokenImpl(tempToken);
+					// Paint the entire token, unselected, so the unselected parts look good
+					if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
+						painter.paint(token, g, x, y, host, this);
 					}
 
-					int selCount = Math.min(token.length(), selEnd-token.getOffset());
-					if (selCount==token.length()) {
-						x = painter.paintSelected(token, g, x,y, host, this,
-								useSTC);
+					// Figure out where the selection starts and ends
+					float selStartX = x;
+					if (selStart > token.getOffset()) {
+						int charCount = selStart - token.getOffset();
+						selStartX = painter.nextX(token, charCount, x, host, this);
 					}
-					else {
-						tempToken.copyFrom(token);
-						tempToken.textCount = selCount;
-						x = painter.paintSelected(tempToken, g, x,y, host, this,
-								useSTC);
-						tempToken.textCount = token.length();
-						tempToken.makeStartAt(token.getOffset() + selCount);
-						token = tempToken;
-						x = painter.paint(token, g, x,y, host, this);
-					}
+					int tokenSelectionEndCharOffs = Math.min(token.getEndOffset(), selEnd) - token.getOffset();
+					float selEndX = painter.nextX(token, tokenSelectionEndCharOffs, x, host, this);
 
-				}
+					// Create a clip region to only paint this token's selection
+					Rectangle origClip = g.getClipBounds();
+					g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
 
-				// Selection ends in this token
-				else if (token.containsPosition(selEnd)) {
-					tempToken.copyFrom(token);
-					tempToken.textCount = selEnd - tempToken.getOffset();
-					x = painter.paintSelected(tempToken, g, x,y, host, this,
-							useSTC);
-					tempToken.textCount = token.length();
-					tempToken.makeStartAt(selEnd);
-					token = tempToken;
-					x = painter.paint(token, g, x,y, host, this);
+					// Render the entire token, selected, and let the clip region do its magic.
+					// This is done to ensure partially-selected ligatures render properly.
+					x = painter.paintSelected(token, g, x, y, host, this, useSTC);
+
+					// Restore the clip
+					g.setClip(origClip);
 				}
 
 				// This token is entirely selected
