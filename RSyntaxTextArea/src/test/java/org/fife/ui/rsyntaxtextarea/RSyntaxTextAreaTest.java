@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.DefaultHighlighter;
 
 
 /**
@@ -53,7 +54,7 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testFoo() {
+	void testGetSetText() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setText("test");
 		Assertions.assertEquals("test", textArea.getText());
@@ -294,6 +295,34 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetSetSecondaryLanguageBackground() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		for (int i = 0; i < textArea.getSecondaryLanguageCount(); i++) {
+			Assertions.assertNotEquals(Color.BLACK, textArea.getSecondaryLanguageBackground(i + 1));
+			textArea.setSecondaryLanguageBackground(i + 1, Color.BLACK);
+			Assertions.assertEquals(Color.BLACK, textArea.getSecondaryLanguageBackground(i + 1));
+		}
+	}
+
+
+	@Test
+	void testGetSetHighlighter_null() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setHighlighter(null);
+		Assertions.assertInstanceOf(RSyntaxTextAreaHighlighter.class, textArea.getHighlighter());
+	}
+
+
+	@Test
+	void testGetSetHighlighter_invalidTypeThrows() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			textArea.setHighlighter(new DefaultHighlighter());
+		});
+	}
+
+
+	@Test
 	void testCopyAsStyledText_themeArg_string_happyPath() throws Exception {
 
 		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
@@ -497,11 +526,48 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testHyperlinksEnabled() {
+	void testHyperlinkForeground_null() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Assertions.assertThrows(NullPointerException.class, () -> {
+			textArea.setHyperlinkForeground(null);
+		});
+	}
+
+
+	@Test
+	void testHyperlinksEnabled() {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Object[] newValue = new Object[1];
+
+		textArea.addPropertyChangeListener(RSyntaxTextArea.HYPERLINKS_ENABLED_PROPERTY,
+			e -> newValue[0] = e.getNewValue());
 		Assertions.assertTrue(textArea.getHyperlinksEnabled());
+
 		textArea.setHyperlinksEnabled(false);
 		Assertions.assertFalse(textArea.getHyperlinksEnabled());
+		Assertions.assertEquals(Boolean.FALSE, newValue[0]);
+
+		textArea.setHyperlinksEnabled(true);
+		Assertions.assertTrue(textArea.getHyperlinksEnabled());
+		Assertions.assertEquals(Boolean.TRUE, newValue[0]);
+	}
+
+
+	@Test
+	void testHyperlinksEnabled_calledWithExistingValue() {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Object[] newValue = new Object[1];
+
+		textArea.addPropertyChangeListener(RSyntaxTextArea.HYPERLINKS_ENABLED_PROPERTY,
+			e -> newValue[0] = e.getNewValue());
+		Assertions.assertTrue(textArea.getHyperlinksEnabled());
+
+		// Nothing changes if new value == old value
+		textArea.setHyperlinksEnabled(true);
+		Assertions.assertTrue(textArea.getHyperlinksEnabled());
+		Assertions.assertNull(newValue[0]);
 	}
 
 
@@ -519,6 +585,7 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testMarkOccurrencesColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setMarkOccurrences(true);
 		textArea.setMarkOccurrencesColor(Color.pink);
 		Assertions.assertEquals(Color.pink, textArea.getMarkOccurrencesColor());
 	}
@@ -527,6 +594,7 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testMarkOccurrencesDelay() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setMarkOccurrences(true);
 		textArea.setMarkOccurrencesDelay(5432);
 		Assertions.assertEquals(5432, textArea.getMarkOccurrencesDelay());
 	}
@@ -773,7 +841,7 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testParserDelay() {
-		RSyntaxTextArea textArea = createTextArea();
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setParserDelay(6789);
 		Assertions.assertEquals(6789, textArea.getParserDelay());
 	}
@@ -805,6 +873,28 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 		} finally {
 			RSyntaxTextArea.setTemplatesEnabled(false);
 		}
+	}
+
+
+	@Test
+	void testSetTemplateDirectory_nullDirPassedIn() {
+
+		RSyntaxTextArea.setTemplatesEnabled(true);
+
+		try {
+			Assertions.assertFalse(RSyntaxTextArea.setTemplateDirectory(null));
+		} finally {
+			RSyntaxTextArea.setTemplatesEnabled(false);
+		}
+	}
+
+
+	@Test
+	void testSetTokenPainterFactory() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		TokenPainter origPainter = textArea.getTokenPainter();
+		textArea.setTokenPainterFactory(textArea1 -> new DefaultTokenPainter());
+		Assertions.assertNotEquals(origPainter, textArea.getTokenPainter());
 	}
 
 
