@@ -8,11 +8,15 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.fife.ui.rtextarea.FontUtil;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.jupiter.api.Assertions;
@@ -383,6 +387,34 @@ class ThemeTest {
 		theme.apply(textArea1);
 		assertColorsMatchTheme1(textArea1, gutter1);
 
+	}
+
+
+	@Test
+	void testLoad_fromStream_withDefaultFont_preservesLigatureAttributes() throws Exception {
+
+		Font baseFont = FontUtil.createFont(Font.MONOSPACED, Font.PLAIN, 10);
+		Map<TextAttribute, Object> extraAttrs = new HashMap<>();
+		extraAttrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+		extraAttrs.put(TextAttribute.LIGATURES, TextAttribute.LIGATURES_ON);
+		baseFont = baseFont.deriveFont(extraAttrs);
+
+		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1.xml");
+		Theme theme = Theme.load(in, baseFont);
+		in.close();
+
+		Assertions.assertEquals(baseFont, theme.baseFont);
+
+		// All fonts in the scheme have its ligature properties, even if they're
+		// different families
+		for (int i = 0; i < theme.scheme.getStyleCount(); i++) {
+			Style style = theme.scheme.getStyle(i);
+			if (style.font != null) {
+				Map<TextAttribute, ?> attrs = style.font.getAttributes();
+				Assertions.assertEquals(TextAttribute.KERNING_ON, attrs.get(TextAttribute.KERNING));
+				Assertions.assertEquals(TextAttribute.LIGATURES_ON, attrs.get(TextAttribute.LIGATURES));
+			}
+		}
 	}
 
 
