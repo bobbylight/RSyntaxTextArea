@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.rtextarea.FontUtil;
 
 
 /**
@@ -426,7 +426,7 @@ public class RtfGenerator {
 	 * @return The monospaced font family to use.
 	 */
 	private static String getMonospacedFontFamily() {
-		String family = RTextArea.getDefaultFont().getFamily();
+		String family = FontUtil.getDefaultMonospacedFont().getFamily();
 		if (Font.MONOSPACED.equals(family)) {
 			family = "Courier";
 		}

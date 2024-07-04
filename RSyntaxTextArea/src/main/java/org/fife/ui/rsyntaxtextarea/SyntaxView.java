@@ -239,7 +239,6 @@ public class SyntaxView extends View implements TabExpander,
 				// Create a clip region to only paint this token's selection
 				Rectangle origClip = g.getClipBounds();
 				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
-				System.out.println("Clip bounds: " + g.getClipBounds());
 
 				// Render the entire token, selected, and let the clip region do its magic
 				nextX = painter.paintSelected(token, g, nextX, y, host, this, clipStart, useSTC);
