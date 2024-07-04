@@ -363,7 +363,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 					if (!"-".equals(family)) {
 						int style= Integer.parseInt(tokens[pos+5]);
 						int size = Integer.parseInt(tokens[pos+6]);
-						Map<TextAttribute, Object> fontFamilyAttrs = new HashMap<>(font.getAttributes());
+						Map<TextAttribute, Object> fontFamilyAttrs = new HashMap<>();
 						fontFamilyAttrs.put(TextAttribute.FAMILY, family);
 						font = RSyntaxTextArea.getDefaultFont()
 							.deriveFont(fontFamilyAttrs)

@@ -197,4 +197,28 @@ class SyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
 		view.paint(createTestGraphics(), textArea.getVisibleRect());
 	}
+
+
+	@Test
+	void testPaint_noSelection() {
+
+		RSyntaxTextArea textArea = createTextArea("one two three");
+		textArea.setEOLMarkersVisible(true);
+
+		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
+		view.paint(createTestGraphics(), textArea.getVisibleRect());
+	}
+
+
+	@Test
+	void testPaint_selection_selectionStartingInOneTokenAndEndingInAnother() {
+
+		RSyntaxTextArea textArea = createTextArea("one two three");
+		textArea.setCaretPosition(1);
+		textArea.moveCaretPosition(5); // Between 't' and 'w'
+		textArea.setEOLMarkersVisible(true);
+
+		SyntaxView view = (SyntaxView) textArea.getUI().getRootView(textArea).getView(0);
+		view.paint(createTestGraphics(), textArea.getVisibleRect());
+	}
 }
