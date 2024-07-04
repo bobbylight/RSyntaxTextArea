@@ -443,33 +443,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 * @return The default font.
 	 */
 	public static Font getDefaultFont() {
-
-		Font font;
-
-		if (isOSX()) {
-			// Snow Leopard (1.6) uses Menlo as default monospaced font,
-			// pre-Snow Leopard used Monaco.
-			font = FontUtil.createFont("Menlo", Font.PLAIN, 12);
-			if (!"Menlo".equals(font.getFamily())) {
-				font = FontUtil.createFont("Monaco", Font.PLAIN, 12);
-				if (!"Monaco".equals(font.getFamily())) { // Shouldn't happen
-					font = FontUtil.createFont(Font.MONOSPACED, Font.PLAIN, 13);
-				}
-			}
-		}
-		else {
-			// Cascadia Code was added in later Windows 10/11, default in VS
-			// and VS Code. Consolas was added in Vista, used in older VS.
-			font = FontUtil.createFont("Cascadia Code", Font.PLAIN, 13);
-			if (!"Cascadia Code".equals(font.getFamily())) {
-				font = FontUtil.createFont("Consolas", Font.PLAIN, 13);
-				if (!"Consolas".equals(font.getFamily())) {
-					font = FontUtil.createFont(Font.MONOSPACED, Font.PLAIN, 13);
-				}
-			}
-		}
-
-		return font;
+		return FontUtil.getDefaultMonospacedFont();
 	}
 
 

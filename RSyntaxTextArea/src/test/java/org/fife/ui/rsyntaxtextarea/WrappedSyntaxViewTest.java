@@ -217,18 +217,15 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testPaint_noSelection() {
-
 		RSyntaxTextArea textArea = createWrappingTextArea();
-
+		textArea.setEOLMarkersVisible(true);
 		textArea.paint(createTestGraphics(1000, 1000));
 	}
 
 
 	@Test
 	void testPaint_noSelection_wrapStyleWordFalse() {
-
 		RSyntaxTextArea textArea = createWrappingTextArea(false);
-
 		textArea.paint(createTestGraphics(1000, 1000));
 	}
 
