@@ -250,6 +250,7 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 	void testPaint_selection_startsInMiddleOfTokenAndSpansMultipleLines() {
 
 		RSyntaxTextArea textArea = createWrappingTextArea();
+		textArea.setEOLMarkersVisible(true);
 
 		// Create a multi-line selection that includes empty lines
 		// and starts in the middle of a token
