@@ -225,8 +225,7 @@ public class SyntaxView extends View implements TabExpander,
 				if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
 					painter.paint(token, g, nextX, y, host, this, clipStart);
 				}
-				// ligatures: ## <> => ++ ~~ <= >= <=> ->>
-				// ligatures: ## <> => ++ ~~ <= >= <=> ->>
+
 				// Figure out where the selection starts and ends
 				float selStartX = nextX;
 				if (selStart > token.getOffset()) {
@@ -240,7 +239,8 @@ public class SyntaxView extends View implements TabExpander,
 				Rectangle origClip = g.getClipBounds();
 				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
 
-				// Render the entire token, selected, and let the clip region do its magic
+				// Render the entire token, selected, and let the clip region do its magic.
+				// This is done to ensure partially-selected ligatures render properly.
 				nextX = painter.paintSelected(token, g, nextX, y, host, this, clipStart, useSTC);
 
 				// Restore the clip
