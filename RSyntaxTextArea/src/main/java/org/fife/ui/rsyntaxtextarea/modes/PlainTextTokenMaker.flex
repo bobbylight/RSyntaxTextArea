@@ -178,7 +178,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) {
+	public final void yyreset(Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
