@@ -130,7 +130,7 @@ public class TaskTagParser extends AbstractParser {
 	 * @see #getTaskPattern()
 	 */
 	public void setTaskPattern(String pattern) {
-		if (pattern==null || pattern.length()==0) {
+		if (pattern==null || pattern.isEmpty()) {
 			taskPattern = null;
 		}
 		else {

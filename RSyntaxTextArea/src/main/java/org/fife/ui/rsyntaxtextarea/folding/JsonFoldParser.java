@@ -149,7 +149,7 @@ public class JsonFoldParser implements FoldParser {
 	 * @return Whether the value was found on top of the stack.
 	 */
 	private static boolean popOffTop(Stack<Object> stack, Object value) {
-		if (stack.size()>0 && stack.peek()==value) {
+		if (!stack.isEmpty() && stack.peek()==value) {
 			stack.pop();
 			return true;
 		}

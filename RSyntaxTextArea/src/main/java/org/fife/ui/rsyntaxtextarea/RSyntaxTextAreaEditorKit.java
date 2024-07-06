@@ -1150,7 +1150,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 */
 		@Override
 		protected boolean isAcceptablePrefix(String prefix) {
-			return prefix.length() > 0 &&
+			return !prefix.isEmpty() &&
 				isIdentifierChar(prefix.charAt(prefix.length()-1));
 		}
 

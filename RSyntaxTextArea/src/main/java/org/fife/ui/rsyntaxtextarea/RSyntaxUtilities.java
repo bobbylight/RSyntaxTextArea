@@ -1099,7 +1099,7 @@ return c.getLineStartOffset(line);
 		}
 
 		String s = doc.getText(offs, lineEnd-offs-1);
-		if (s!=null && s.length()>0) { // Should always be true
+		if (s!=null && !s.isEmpty()) { // Should always be true
 			int i = 0;
 			int count = s.length();
 			char ch = s.charAt(i);
@@ -1144,7 +1144,7 @@ return c.getLineStartOffset(line);
 
 		int endOffs = Math.min(offs+1, doc.getLength());
 		String s = doc.getText(lineStart, endOffs-lineStart);
-		if(s != null && s.length() > 0) {
+		if(s != null && !s.isEmpty()) {
 			int i = s.length() - 1;
 			char ch = s.charAt(i);
 			if (Character.isWhitespace(ch)) {

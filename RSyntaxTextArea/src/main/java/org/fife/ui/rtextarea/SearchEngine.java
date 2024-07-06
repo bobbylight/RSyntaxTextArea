@@ -707,7 +707,7 @@ public final class SearchEngine {
 		int markAllCount = 0;
 
 		// context.getMarkAll()==false => clear "mark all" highlights
-		if (context.getMarkAll() && toMark!=null && toMark.length()>0
+		if (context.getMarkAll() && toMark!=null && !toMark.isEmpty()
 				/*&& !toMark.equals(markedWord)*/) {
 
 			List<DocumentRange> highlights = new ArrayList<>();

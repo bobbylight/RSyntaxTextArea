@@ -355,7 +355,7 @@ public class Macro {
 				Element actionElement = doc.createElement(ACTION);
 				actionElement.setAttribute(ID, record.id);
 				if (record.actionCommand!=null &&
-						record.actionCommand.length()>0) {
+					!record.actionCommand.isEmpty()) {
 					// Remove illegal characters.  I'm no XML expert, but
 					// I'm not sure what I'm doing wrong.  If we don't
 					// strip out chars with Unicode value < 32, our

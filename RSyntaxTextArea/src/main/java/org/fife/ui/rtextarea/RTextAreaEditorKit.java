@@ -1248,7 +1248,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		 *         of the text area's current content.
 		 */
 		protected boolean isAcceptablePrefix(String prefix) {
-			return prefix.length() > 0 &&
+			return !prefix.isEmpty() &&
 				Character.isLetter(prefix.charAt(prefix.length()-1));
 		}
 
@@ -1937,9 +1937,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			String selectedText = textArea.getSelectedText();
-			if (selectedText == null || selectedText.length() == 0) {
+			if (selectedText == null || selectedText.isEmpty()) {
 				selectedText = RTextArea.getSelectedOccurrenceText();
-				if (selectedText == null || selectedText.length() == 0) {
+				if (selectedText == null || selectedText.isEmpty()) {
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 					return;
 				}
@@ -2256,9 +2256,9 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 			String selectedText = textArea.getSelectedText();
-			if (selectedText == null || selectedText.length() == 0) {
+			if (selectedText == null || selectedText.isEmpty()) {
 				selectedText = RTextArea.getSelectedOccurrenceText();
-				if (selectedText == null || selectedText.length() == 0) {
+				if (selectedText == null || selectedText.isEmpty()) {
 					UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 					return;
 				}

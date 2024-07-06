@@ -232,7 +232,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		removeParserNotices(res);
 
 		List<ParserNotice> notices = res.getNotices();
-		if (notices.size()>0) { // Guaranteed non-null
+		if (!notices.isEmpty()) { // Guaranteed non-null
 
 			RSyntaxTextAreaHighlighter h = (RSyntaxTextAreaHighlighter)
 													textArea.getHighlighter();
@@ -449,7 +449,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @param e The document event.
 	 */
 	public void handleDocumentEvent(DocumentEvent e) {
-		if (running && parsers.size()>0) {
+		if (running && !parsers.isEmpty()) {
 			timer.restart();
 		}
 	}

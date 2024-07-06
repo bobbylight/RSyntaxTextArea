@@ -665,7 +665,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @see #addOffsetTrackingIcon(int, Icon)
 	 */
 	public void removeAllTrackingIcons() {
-		if (trackingIcons!=null && trackingIcons.size()>0) {
+		if (trackingIcons!=null && !trackingIcons.isEmpty()) {
 			trackingIcons.clear();
 			repaint();
 		}
