@@ -1180,9 +1180,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 						return;
 					}
 					lastWordStart = dot - lastPrefix.length();
-//					searchOffs = lastWordStart;
-//searchOffs = getWordStart(textArea, lastWordStart);
-searchOffs = Math.max(lastWordStart - 1, 0);
+					searchOffs = Math.max(lastWordStart - 1, 0);
 				}
 
 				while (searchOffs > 0) {
@@ -2876,7 +2874,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 					}
 					if ((direction == -1 && y < initialY) ||
 						(direction == 1 && y > initialY)) {
-						// Only adjust if won't cause scrolling upward.
+						// Only adjust if it won't cause scrolling upward.
 						visible.y = y;
 					}
 				}

@@ -293,7 +293,7 @@ class ThemeTest {
 	private void initWithOddProperties(RSyntaxTextArea textArea,
 			Gutter gutter) {
 
-		Font font = new Font("Dialog", Font.PLAIN, 13);
+		Font font = new Font(Font.DIALOG, Font.PLAIN, 13);
 		textArea.setFont(font);
 		textArea.setSyntaxScheme(createSyntaxScheme(font, Color.orange));
 		textArea.setBackground(Color.orange);
@@ -333,19 +333,19 @@ class ThemeTest {
 	}
 
 
-/*
 	@Test
-	public void testConstructor_TextAreaArg() {
+	void testConstructor_textAreaArg() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea(
 				SyntaxConstants.SYNTAX_STYLE_JAVA);
-		Font font = new Font("Dialog", Font.PLAIN, 13);
+		Font font = new Font(Font.DIALOG, Font.PLAIN, 13);
 		textArea.setFont(font);
 
 		Theme theme = new Theme(textArea);
-
+		Assertions.assertEquals(textArea.getSyntaxScheme(), theme.scheme);
+		Assertions.assertEquals(textArea.getBackground(), theme.bgColor);
+		Assertions.assertEquals(textArea.getCaretColor(), theme.caretColor);
 	}
-*/
 
 
 	@Test

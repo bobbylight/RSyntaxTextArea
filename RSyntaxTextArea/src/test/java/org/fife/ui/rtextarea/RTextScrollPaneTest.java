@@ -118,8 +118,7 @@ class RTextScrollPaneTest {
 	@Test
 	void testSetViewportView_error_noTextArea() {
 		RTextScrollPane sp = new RTextScrollPane(new RTextArea());
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			sp.setViewportView(new JPanel());
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> sp.setViewportView(new JPanel()));
 	}
 }

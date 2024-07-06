@@ -71,8 +71,8 @@ public class ChangeableHighlightPainter
 	private float alpha;
 
 
-	private static final int ARCWIDTH				= 8;
-	private static final int ARCHEIGHT				= 8;
+	private static final int ARC_WIDTH = 8;
+	private static final int ARC_HEIGHT = 8;
 
 
 	/**
@@ -341,8 +341,8 @@ public class ChangeableHighlightPainter
 				Rectangle r = (shape instanceof Rectangle) ?
 								(Rectangle)shape : shape.getBounds();
 				if (roundedEdges) {
-					g2d.fillRoundRect(r.x,r.y, r.width,r.height, ARCWIDTH,
-													ARCHEIGHT);
+					g2d.fillRoundRect(r.x,r.y, r.width,r.height, ARC_WIDTH,
+						ARC_HEIGHT);
 				}
 				else {
 					g2d.fillRect(r.x, r.y, r.width, r.height);

@@ -223,8 +223,8 @@ class LineHighlightManager {
 	 * Comparator used when adding new highlights.  This is done here instead
 	 * of making <code>LineHighlightInfo</code> implement
 	 * <code>Comparable</code> as correctly implementing the latter prevents
-	 * two LHI's pointing to the same line from correctly being distinguished
-	 * from one another.  See:
+	 * two LineHighlightInfos pointing to the same line from correctly being
+	 * distinguished from one another.  See:
 	 * https://github.com/bobbylight/RSyntaxTextArea/issues/161
 	 */
 	private static class LineHighlightInfoComparator

@@ -17,17 +17,15 @@ import java.util.Stack;
 
 
 /**
- * Fold parser for YAML. Based on org.fife.ui.rsyntaxtextarea.folding.HtmlFoldParser.
- *
- * Fold is started by each line.
- * Each fold contains all following lines with indent higher than the current line.
+ * Fold parser for YAML. Folds are started by each line.
+ * Each fold contains all following lines with indent higher
+ * than the current line.
  */
 public class YamlFoldParser implements FoldParser {
 
 
     /**
      * Constructor.
-     *
      */
     public YamlFoldParser() {
     }

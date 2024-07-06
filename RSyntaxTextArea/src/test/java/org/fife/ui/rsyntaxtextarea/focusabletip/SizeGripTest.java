@@ -9,10 +9,7 @@ import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 
 
 /**

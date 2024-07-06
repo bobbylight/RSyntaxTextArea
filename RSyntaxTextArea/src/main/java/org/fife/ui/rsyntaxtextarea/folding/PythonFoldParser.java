@@ -130,7 +130,7 @@ public class PythonFoldParser implements FoldParser {
 		while (t != null && t.isPaintable()) {
 			if (!t.isWhitespace()) {
 				// Note Python doesn't nave multi-line comments, so we don't
-				// have to worry about MLD's
+				// have to worry about them
 				return t.getType() == TokenTypes.COMMENT_EOL ? -1 : count;
 			}
 			count += TokenUtils.getWhiteSpaceTokenLength(t, tabSize, count);

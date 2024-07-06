@@ -120,7 +120,7 @@ public class TaskTagParser extends AbstractParser {
 
 	/**
 	 * Sets the pattern of task identifiers.  You will usually want this to be
-	 * a list of words "or'ed" together, such as
+	 * a list of words strung together wit logical OR, such as:
 	 * "<code>TODO|FIXME|HACK|REMIND</code>".
 	 *
 	 * @param pattern The pattern.  A value of <code>null</code> or an
@@ -140,8 +140,8 @@ public class TaskTagParser extends AbstractParser {
 
 
 	/**
-	 * A parser notice that signifies a task.  This class is here so we can
-	 * treat tasks specially and show them in the
+	 * A parser notice that signifies a task.  This allows us to treat
+	 * tasks specially and show them in the
 	 * {@link org.fife.ui.rsyntaxtextarea.ErrorStrip} even though they are
 	 * <code>INFO</code>-level and marked as "don't show in editor."
 	 */

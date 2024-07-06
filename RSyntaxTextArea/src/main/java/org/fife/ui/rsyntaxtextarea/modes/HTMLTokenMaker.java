@@ -1856,7 +1856,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specific to HTMLTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG					= -3;
 

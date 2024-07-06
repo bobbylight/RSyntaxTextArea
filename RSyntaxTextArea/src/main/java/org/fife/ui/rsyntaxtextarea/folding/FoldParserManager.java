@@ -19,7 +19,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
  * Manages fold parsers.  Instances of <code>RSyntaxTextArea</code> call into
  * this class to retrieve fold parsers for whatever language they're editing.
  * Folks implementing custom languages can add a {@link FoldParser}
- * implementation for their language to this manager and it will be used by
+ * implementation for their language to this manager, and it will be used by
  * RSTA.
  *
  * @author Robert Futrell

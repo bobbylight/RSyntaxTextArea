@@ -1,8 +1,8 @@
 /*
  * 08/06/2004
  *
- * TokenOrientedView.java - An interface for the syntax-highlighting token-
- * oriented views for token-oriented methods.
+ * TokenOrientedView.java - An interface for the syntax-highlighting
+ * token-oriented views for token-oriented methods.
  *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.

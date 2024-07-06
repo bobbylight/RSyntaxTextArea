@@ -116,7 +116,7 @@ public class HtmlFoldParser implements FoldParser {
 
 		List<Fold> folds = new ArrayList<>();
 		Stack<String> tagNameStack = new Stack<>();
-		boolean inSublanguage = false;
+		boolean inSubLanguage = false;
 
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
@@ -144,7 +144,7 @@ public class HtmlFoldParser implements FoldParser {
 							else {
 								currentFold = currentFold.createChild(FoldType.CODE, t.getOffset());
 							}
-							inSublanguage = true;
+							inSubLanguage = true;
 						}
 
 						// ?> or %>
@@ -157,14 +157,14 @@ public class HtmlFoldParser implements FoldParser {
 								removeFold(currentFold, folds);
 							}
 							currentFold = parentFold;
-							inSublanguage = false;
+							inSubLanguage = false;
 							t = t.getNextToken();
 							continue;
 						}
 
 					}
 
-					if (!inSublanguage) {
+					if (!inSubLanguage) {
 
 						if (t.getType()==Token.COMMENT_MULTILINE) {
 
@@ -390,7 +390,7 @@ public class HtmlFoldParser implements FoldParser {
 		private Token closeToken;
 		private int line;
 
-		public void reset() {
+		void reset() {
 			closeToken = null;
 			line = -1;
 		}

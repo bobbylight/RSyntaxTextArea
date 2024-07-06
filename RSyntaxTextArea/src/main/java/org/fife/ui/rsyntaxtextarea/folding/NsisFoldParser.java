@@ -22,7 +22,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
  * A fold parser NSIS.<p>
  *
  * Note that this class may impose somewhat of a performance penalty on large
- * source files, since it reparses the entire document each time folds are
+ * source files, since it parses the entire document each time folds are
  * reevaluated.
  *
  * @author Robert Futrell
@@ -35,7 +35,7 @@ public class NsisFoldParser implements FoldParser {
 	private static final char[] KEYWORD_SECTION			= "Section".toCharArray();
 	private static final char[] KEYWORD_SECTION_END		= "SectionEnd".toCharArray();
 
-	protected static final char[] C_MLC_END = "*/".toCharArray();
+	private static final char[] C_MLC_END = "*/".toCharArray();
 
 
 	private static boolean foundEndKeyword(char[] keyword, Token t,

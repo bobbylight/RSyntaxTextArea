@@ -39,6 +39,9 @@ class NsisFoldParserTest {
 			"SectionEnd\n" +
 			"\n" +
 			"Function Hello\n" +
+			"  /*\n" +
+			"   * Another multi-line comment.\n" +
+			"   */\n" +
 			"  DetailPrint \"Hello world\"\n" +
 			"FunctionEnd";
 
@@ -69,6 +72,10 @@ class NsisFoldParserTest {
 		Assertions.assertEquals(code.indexOf("Function"), thirdFold.getStartOffset());
 		Assertions.assertEquals(code.indexOf("FunctionEnd"), thirdFold.getEndOffset());
 
-		Assertions.assertEquals(0, thirdFold.getChildCount());
+		Assertions.assertEquals(1, thirdFold.getChildCount());
+		Fold childCommentFold = thirdFold.getChild(0);
+		Assertions.assertEquals(FoldType.COMMENT, childCommentFold.getFoldType());
+
+		Assertions.assertFalse(childCommentFold.getHasChildFolds());
 	}
 }

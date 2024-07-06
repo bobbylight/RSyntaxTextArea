@@ -316,9 +316,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetSetHighlighter_invalidTypeThrows() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			textArea.setHighlighter(new DefaultHighlighter());
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> textArea.setHighlighter(new DefaultHighlighter()));
 	}
 
 
@@ -528,9 +527,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testHyperlinkForeground_null() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assertions.assertThrows(NullPointerException.class, () -> {
-			textArea.setHyperlinkForeground(null);
-		});
+		Assertions.assertThrows(NullPointerException.class,
+			() -> textArea.setHyperlinkForeground(null));
 	}
 
 

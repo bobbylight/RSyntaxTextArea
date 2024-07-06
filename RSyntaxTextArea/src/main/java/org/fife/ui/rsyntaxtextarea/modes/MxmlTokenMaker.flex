@@ -80,14 +80,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line with an unclosed XML tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG						= -3;
 
 	/**
 	 * Token type specific to this class; this signals that the user has
 	 * ended a line with an unclosed Script tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG_SCRIPT				= -4;
 

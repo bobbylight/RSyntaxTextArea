@@ -22,7 +22,7 @@ import javax.swing.ImageIcon;
  * This class encapsulates the location, properties, etc. of an icon set used
  * for an instance of <code>RTextArea</code>.  If the location of the icon
  * group is invalid in any way, any attempt to retrieve icons from an icon
- * group will return {@code null}.
+ * group will return {@code null}.<p>
  *
  * An icon group can logically refer to any set of icons.  You will primarily fetch
  * icons via the {@link #getIcon(String)} method, which fetches an icon at the

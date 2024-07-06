@@ -34,7 +34,7 @@ import javax.swing.text.Position;
  * drag-and-drop files into <code>RTextArea</code>s (i.e., the text will be
  * inserted into the text area).<p>
  *
- * The main reason this class is kept around is so we can subclass it.
+ * This is primarily kept around for subclassing.
  *
  * @author Robert Futrell
  * @version 0.1
@@ -112,14 +112,14 @@ public class RTATextTransferHandler extends TransferHandler {
 		int nch;
 		boolean lastWasCR = false;
 		int last;
-		StringBuilder sbuff = null;
+		StringBuilder sb = null;
 
 		// Read in a block at a time, mapping \r\n to \n, as well as single
 		// \r to \n.
 		while ((nch = in.read(buff, 0, buff.length)) != -1) {
 
-			if (sbuff == null) {
-				sbuff = new StringBuilder(nch);
+			if (sb == null) {
+				sb = new StringBuilder(nch);
 			}
 			last = 0;
 
@@ -129,7 +129,7 @@ public class RTATextTransferHandler extends TransferHandler {
 					case '\r':
 						if (lastWasCR) {
 							if (counter == 0) {
-								sbuff.append('\n');
+								sb.append('\n');
 							}
 							else {
 								buff[counter - 1] = '\n';
@@ -142,7 +142,7 @@ public class RTATextTransferHandler extends TransferHandler {
 					case '\n':
 						if (lastWasCR) {
 							if (counter > (last + 1)) {
-								sbuff.append(buff, last, counter - last - 1);
+								sb.append(buff, last, counter - last - 1);
 							}
 							// else nothing to do, can skip \r, next write will
 							// write \n
@@ -153,7 +153,7 @@ public class RTATextTransferHandler extends TransferHandler {
 					default:
 						if (lastWasCR) {
 							if (counter == 0) {
-								sbuff.append('\n');
+								sb.append('\n');
 							}
 							else {
 								buff[counter - 1] = '\n';
@@ -169,11 +169,11 @@ public class RTATextTransferHandler extends TransferHandler {
 			if (last < nch) {
 				if (lastWasCR) {
 					if (last < (nch - 1)) {
-						sbuff.append(buff, last, nch - last - 1);
+						sb.append(buff, last, nch - last - 1);
 					}
 				}
 				else {
-					sbuff.append(buff, last, nch - last);
+					sb.append(buff, last, nch - last);
 				}
 			}
 
@@ -184,9 +184,9 @@ public class RTATextTransferHandler extends TransferHandler {
 		}
 
 		if (lastWasCR) {
-			sbuff.append('\n');
+			sb.append('\n');
 		}
-		c.replaceSelection(sbuff != null ? sbuff.toString() : "");
+		c.replaceSelection(sb != null ? sb.toString() : "");
 
 	}
 

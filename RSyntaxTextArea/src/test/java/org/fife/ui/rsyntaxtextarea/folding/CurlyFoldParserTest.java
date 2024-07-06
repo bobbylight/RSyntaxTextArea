@@ -21,6 +21,53 @@ import java.util.List;
 class CurlyFoldParserTest {
 
 	@Test
+	void testGetFolds_java_importsBeforeClass() {
+
+		String code = "import java.io.*;\n" +
+			"import java.net.*;\n" +
+			"import javax.swing.*;\n" +
+			"public class Example {}\n";
+
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+
+		CurlyFoldParser parser = new CurlyFoldParser(true, true);
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(1, folds.size());
+		Fold importFold = folds.get(0);
+		Assertions.assertEquals(0, importFold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf(";"), importFold.getEndOffset());
+
+		Assertions.assertFalse(importFold.getHasChildFolds());
+	}
+
+	@Test
+	void testGetFolds_java_importsBeforeComment() {
+
+		String code = "import java.io.*;\n" +
+			"import java.net.*;\n" +
+			"import javax.swing.*;\n" +
+			"/* test comment */\n";
+
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+
+		CurlyFoldParser parser = new CurlyFoldParser(true, true);
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(1, folds.size());
+		Fold importFold = folds.get(0);
+		Assertions.assertEquals(0, importFold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf(";"), importFold.getEndOffset());
+
+		Assertions.assertFalse(importFold.getHasChildFolds());
+	}
+
+
+	@Test
 	void testGetFolds_notJava_happyPath() {
 
 		String code = "void foo() {\n" +

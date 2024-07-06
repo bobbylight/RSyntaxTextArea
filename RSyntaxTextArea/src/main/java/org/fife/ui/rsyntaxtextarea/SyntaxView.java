@@ -864,7 +864,7 @@ public class SyntaxView extends View implements TabExpander,
 			}
 			else if (changes.getType() == DocumentEvent.EventType.REMOVE) {
 				if (map.getElement(line) == longLine) {
-					// removed from longest line... recalc
+					// removed from the longest line... recalc
 					longLineWidth = -1; // Must do this!
 					calculateLongestLine();
 					preferenceChanged(null, true, false);

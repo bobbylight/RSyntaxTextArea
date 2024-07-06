@@ -50,14 +50,14 @@ class DocumentRangeTest {
 
 		DocumentRange range = new DocumentRange(5, 8);
 
-		Assertions.assertTrue(range.compareTo(null) == 1);
+		Assertions.assertEquals(1, range.compareTo(null));
 
 		DocumentRange range2 = new DocumentRange(4, 8);
 		Assertions.assertTrue(range.compareTo(range2) > 0);
 
 		range2 = new DocumentRange(5, 8);
-		Assertions.assertTrue(range.compareTo(range2) == 0);
-		Assertions.assertTrue(range.compareTo(range) == 0);
+		Assertions.assertEquals(0, range.compareTo(range2));
+		Assertions.assertEquals(0, range.compareTo(range));
 
 		range2 = new DocumentRange(6, 8);
 		Assertions.assertTrue(range.compareTo(range2) < 0);

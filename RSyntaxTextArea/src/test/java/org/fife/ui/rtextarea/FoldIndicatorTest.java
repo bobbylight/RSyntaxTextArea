@@ -85,9 +85,8 @@ class FoldIndicatorTest extends AbstractRSyntaxTextAreaTest {
 	void testGetSetAdditionalLeftMargin_error_negativeValue() {
 		RSyntaxTextArea textArea = createTextArea();
 		FoldIndicator fi = new FoldIndicator(textArea);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			fi.setAdditionalLeftMargin(-1);
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> fi.setAdditionalLeftMargin(-1));
 	}
 
 

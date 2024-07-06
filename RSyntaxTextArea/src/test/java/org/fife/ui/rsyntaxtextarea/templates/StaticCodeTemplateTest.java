@@ -80,9 +80,8 @@ class StaticCodeTemplateTest {
 	@Test
 	void testSetId_errorIfNull() {
 		StaticCodeTemplate template = new StaticCodeTemplate();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			template.setID(null);
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> template.setID(null));
 	}
 
 

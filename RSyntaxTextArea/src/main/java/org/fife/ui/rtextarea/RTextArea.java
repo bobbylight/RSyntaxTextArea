@@ -272,7 +272,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * Adds a line highlight.
 	 *
 	 * @param line The line to highlight.  This is zero-based.
-	 * @param color The color to highlight the line with.
+	 * @param color The color to use for the line highlight.
 	 * @return An opaque tag that can be used to remove the highlight later.
 	 * @throws BadLocationException If <code>line</code> is an invalid line
 	 *         number.
@@ -1031,8 +1031,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Method called when it's time to print this badboy (the old-school,
-	 * AWT way).
+	 * Method called when it's time to print this text area's content
+	 * (the old-school, AWT way).
 	 *
 	 * @param g The context into which the page is drawn.
 	 * @param pageFormat The size and orientation of the page being drawn.
@@ -1172,7 +1172,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Replaces text from the indicated start to end position with the
 	 * new text specified.  Does nothing if the model is null.  Simply
-	 * does a delete if the new string is null or empty.
+	 * does a delete operation if the new string is null or empty.
 	 * <p>
 	 * This method is thread safe, although most Swing methods
 	 * are not.<p>
@@ -1742,10 +1742,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			cutAction.setEnabled(enabled);
 			copyAction.setEnabled(enabled);
 			undoManager.updateActions(); // To reflect this text area.
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
 		}
 
 		@Override

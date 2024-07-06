@@ -28,7 +28,7 @@ public interface TokenPainter {
 	 * Computes how much horizontal space a token, or part of a token, takes.
 	 *
 	 * @param token The token to examine.
-	 * @param charCount The number of characters in the token to measure..
+	 * @param charCount The number of characters in the token to measure.
 	 *        Should be less than or equal to its length.
 	 * @param x The x-offset at which painting would start.
 	 * @param host The parent text area.

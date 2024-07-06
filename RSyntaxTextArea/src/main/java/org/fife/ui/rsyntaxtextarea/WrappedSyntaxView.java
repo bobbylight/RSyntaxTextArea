@@ -541,7 +541,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 *
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
 	 * @return  the span the view would like to be rendered into.
-	 *           Typically the view is told to render into the span
+	 *           Typically, the view is told to render into the span
 	 *           that is returned, although there is no guarantee.
 	 *           The parent may choose to resize or break the view.
 	 * @see View#getMaximumSpan
@@ -567,7 +567,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 *
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
 	 * @return  the span the view would like to be rendered into.
-	 *           Typically the view is told to render into the span
+	 *           Typically, the view is told to render into the span
 	 *           that is returned, although there is no guarantee.
 	 *           The parent may choose to resize or break the view.
 	 * @see View#getMinimumSpan
@@ -593,7 +593,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 *
 	 * @param axis may be either View.X_AXIS or View.Y_AXIS
 	 * @return  the span the view would like to be rendered into.
-	 *           Typically the view is told to render into the span
+	 *           Typically, the view is told to render into the span
 	 *           that is returned, although there is no guarantee.
 	 *           The parent may choose to resize or break the view.
 	 * @see View#getPreferredSpan
@@ -1199,7 +1199,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		 *
 		 * @param axis may be either X_AXIS or Y_AXIS
 		 * @return   the span the view would like to be rendered into.
-		 *           Typically the view is told to render into the span
+		 *           Typically, the view is told to render into the span
 		 *           that is returned, although there is no guarantee.
 		 *           The parent may choose to resize or break the view.
 		 * @see View#getPreferredSpan

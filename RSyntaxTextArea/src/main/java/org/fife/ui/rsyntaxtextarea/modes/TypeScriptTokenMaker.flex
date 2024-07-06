@@ -14,7 +14,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 /**
- * Scanner for TypeScript files.  Currently it is a clone of
+ * Scanner for TypeScript files.  Currently, it is a clone of
  * {@code JavaScriptTokenMaker}, but it should diverge over time to match
  * the added features of TypeScript.
  *

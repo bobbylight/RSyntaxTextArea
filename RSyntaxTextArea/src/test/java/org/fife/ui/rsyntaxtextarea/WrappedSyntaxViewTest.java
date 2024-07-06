@@ -185,9 +185,8 @@ class WrappedSyntaxViewTest extends AbstractRSyntaxTextAreaTest {
 			getRootView(textArea).getView(0);
 
 		int offs = Integer.MAX_VALUE;
-		Assertions.assertThrows(BadLocationException.class, () -> {
-			view.modelToView(offs, textArea.getBounds(), Position.Bias.Backward);
-		});
+		Assertions.assertThrows(BadLocationException.class, () ->
+			view.modelToView(offs, textArea.getBounds(), Position.Bias.Backward));
 	}
 
 

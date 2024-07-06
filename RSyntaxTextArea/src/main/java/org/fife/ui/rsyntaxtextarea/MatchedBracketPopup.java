@@ -49,7 +49,7 @@ public class MatchedBracketPopup extends JWindow {
 	 * matched bracket popups may render with the text area's background
 	 * color if necessary to facilitate contrast between their text content
 	 * (typically code) and their backgrounds.  This is necessary for
-	 * good looking popups when a text area's background may be drastically
+	 * good-looking popups when a text area's background may be drastically
 	 * different than the Look and Feel's tool tip color (e.g. dark editor
 	 * embedded in a "light" themed application, or vice versa).
 	 * If this is omitted or does NOT evaluate to {@code true},

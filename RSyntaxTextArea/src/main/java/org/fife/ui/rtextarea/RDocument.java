@@ -47,7 +47,7 @@ public class RDocument extends PlainDocument {
 	 */
 	private static class RGapContent extends GapContent {
 
-		public char charAt(int offset) throws BadLocationException {
+		protected char charAt(int offset) throws BadLocationException {
 			if (offset<0 || offset>=length()) {
 				throw new BadLocationException("Invalid offset", offset);
 			}

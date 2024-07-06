@@ -89,10 +89,6 @@ public abstract class RecordableTextAction extends TextAction {
 				// action like paste (e.g., paste would return Ctrl+V, but
 				// its action would be "paste-action").
 				String macroID = getMacroID();
-				//System.err.println(macroID);
-				//System.err.println("... " + (mod&ActionEvent.ALT_MASK));
-				//System.err.println("... " + (mod&ActionEvent.CTRL_MASK));
-				//System.err.println("... " + (mod&ActionEvent.META_MASK));
 				if (!DefaultEditorKit.defaultKeyTypedAction.equals(macroID) || (
 						(mod&ActionEvent.ALT_MASK)==0 &&
 						(mod&ActionEvent.CTRL_MASK)==0 &&

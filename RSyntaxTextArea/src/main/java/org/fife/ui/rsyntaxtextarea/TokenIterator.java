@@ -91,7 +91,7 @@ class TokenIterator implements Iterator<Token> {
 			loadTokenListForCurLine();
 		}
 		else if (token!=null && !token.isPaintable()) {
-			// Ends with a non-paintable token (not sure this ever happens)
+			// Ends with a non-paintable token (not sure whether this ever happens)
 			token = null;
 		}
 

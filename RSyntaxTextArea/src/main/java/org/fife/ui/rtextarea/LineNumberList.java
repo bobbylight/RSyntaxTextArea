@@ -497,7 +497,7 @@ public class LineNumberList extends AbstractGutterComponent
 		//   above the first visible y-coordinate as we're in line-wrapping
 		//   mode, but we always paint entire logical lines.
 		// - Paint that line's line number and highlight, if appropriate.
-		//   Increment y to be just below the are we just painted (i.e., the
+		//   Increment y to be just below the area we just painted (i.e., the
 		//   beginning of the next logical line's view area).
 		// - Get the ending visual position for that line.  We can now loop
 		//   back, paint this line, and continue until our y-coordinate is
@@ -579,8 +579,7 @@ public class LineNumberList extends AbstractGutterComponent
 				g.drawString(number, rhs-strWidth,y+ascent);
 			}
 			else {
-				int x = rhsBorderWidth;
-				g.drawString(number, x, y+ascent);
+				g.drawString(number, rhsBorderWidth, y+ascent);
 			}
 
 			// The next possible y-coordinate is just after the last line

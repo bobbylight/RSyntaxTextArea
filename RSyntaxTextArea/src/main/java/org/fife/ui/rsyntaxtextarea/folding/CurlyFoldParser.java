@@ -15,6 +15,7 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -36,7 +37,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
  * those two methods.<p>
  *
  * Note also that this class may impose somewhat of a performance penalty on
- * large source files, since it reparses the entire document each time folds
+ * large source files, since it parses the entire document each time folds
  * are reevaluated.
  *
  * @author Robert Futrell
@@ -62,7 +63,7 @@ public class CurlyFoldParser implements FoldParser {
 	/**
 	 * Ending of a multi-line comment in C, C++, Java, etc.
 	 */
-	protected static final char[] C_MLC_END = "*/".toCharArray();
+	private static final char[] C_MLC_END = "*/".toCharArray();
 
 
 	/**
@@ -273,8 +274,7 @@ public class CurlyFoldParser implements FoldParser {
 						}
 
 						else if (importStartLine>-1 &&
-								t.isIdentifier() &&//SEPARATOR &&
-								t.isSingleChar(';')) {
+								t.isSingleChar(TokenTypes.IDENTIFIER, ';')) { //SEPARATOR
 							importGroupEndOffs = t.getOffset();
 						}
 

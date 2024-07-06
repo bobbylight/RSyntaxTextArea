@@ -250,7 +250,7 @@ public final class TipUtil {
 		// All standard LookAndFeels, even Nimbus (!), define Label.font.
 		Font font = UIManager.getFont("Label.font");
 		if (font == null) { // Try to make a sensible default
-			font = new Font("SansSerif", Font.PLAIN, 12);
+			font = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
 		}
 		HTMLDocument doc = (HTMLDocument) textArea.getDocument();
 		setFont(doc, font, fg);
@@ -274,7 +274,7 @@ public final class TipUtil {
 	 * @param font The font to use.
 	 * @param fg The default foreground color.
 	 */
-	public static void setFont(HTMLDocument doc, Font font, Color fg) {
+	private static void setFont(HTMLDocument doc, Font font, Color fg) {
 		doc.getStyleSheet().addRule(
 				"body { font-family: " + font.getFamily() +
 						"; font-size: " + font.getSize() + "pt" +

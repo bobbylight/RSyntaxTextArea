@@ -56,9 +56,8 @@ class RTextAreaTest {
 	@Test
 	void testAddLineHighlight_errorOnInvalidLine() {
 		RTextArea textArea = new RTextArea();
-		Assertions.assertThrows(BadLocationException.class, () -> {
-			textArea.addLineHighlight(1, Color.BLUE);
-		});
+		Assertions.assertThrows(BadLocationException.class,
+			() -> textArea.addLineHighlight(1, Color.BLUE));
 	}
 
 
@@ -89,7 +88,7 @@ class RTextAreaTest {
 	@Test
 	void testCreateDefaultModel() {
 		RTextArea textArea = new RTextArea();
-		Assertions.assertTrue(textArea.createDefaultModel() instanceof RDocument);
+		Assertions.assertInstanceOf(RDocument.class, textArea.createDefaultModel());
 	}
 
 
@@ -246,9 +245,8 @@ class RTextAreaTest {
 	@Test
 	void testReplaceRange_error_endBeforeStart() {
 		RTextArea textArea = new RTextArea();
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			textArea.replaceRange("replacement", 2, 1);
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> textArea.replaceRange("replacement", 2, 1));
 	}
 
 

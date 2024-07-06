@@ -24341,7 +24341,7 @@ public class PHPTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specific to PHPTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	static final int INTERNAL_INTAG					= -3;
 

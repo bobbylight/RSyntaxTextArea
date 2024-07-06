@@ -358,7 +358,7 @@ public class FocusableTip {
 			possiblyDisposeOfTipWindow();
 		}
 
-		public void install(JTextArea textArea) {
+		protected void install(JTextArea textArea) {
 			textArea.addCaretListener(this);
 			textArea.addComponentListener(this);
 			textArea.addFocusListener(this);
@@ -401,7 +401,7 @@ public class FocusableTip {
 			}
 		}
 
-		public void uninstall() {
+		protected void uninstall() {
 			textArea.removeCaretListener(this);
 			textArea.removeComponentListener(this);
 			textArea.removeFocusListener(this);

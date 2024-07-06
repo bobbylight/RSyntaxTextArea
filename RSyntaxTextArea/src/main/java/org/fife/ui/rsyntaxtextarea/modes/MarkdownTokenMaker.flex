@@ -79,70 +79,70 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed HTML tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG					= -3;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "***" bold/italic tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_BOLDITALIC1         = -4;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "___" bold/italic tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_BOLDITALIC2         = -5;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "**" bold tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_BOLD1         = -6;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "__" bold tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_BOLD2         = -7;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "*" italic tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_ITALIC1         = -8;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "_" italic tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_ITALIC2         = -9;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "`" code tag; thus a new line is
-	 * beginning still inside of the tag.
+	 * beginning still inside the tag.
 	 */
     public static final int INTERNAL_IN_CODE         = -10;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "```" code block; thus a new line is
-	 * beginning still inside of the block.
+	 * beginning still inside the block.
 	 */
     public static final int INTERNAL_IN_SYNTAX_HIGHLIGHTING     = -11;
 
 	/**
 	 * Token type specific to MarkdownTokenMaker; this signals that the user has
 	 * ended a line with an unclosed "~~" strikethrough section; thus a new line
-	 * is beginning still inside of the block.
+	 * is beginning still inside the block.
 	 */
     public static final int INTERNAL_IN_STRIKETHROUGH     = -12;
 

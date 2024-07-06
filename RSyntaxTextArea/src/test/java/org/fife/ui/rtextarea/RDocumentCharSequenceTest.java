@@ -72,9 +72,7 @@ class RDocumentCharSequenceTest {
 	@Test
 	void testCharAt_error_indexTooLarge() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.charAt(CONTENT.length());
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.charAt(CONTENT.length()));
 	}
 
 
@@ -96,35 +94,27 @@ class RDocumentCharSequenceTest {
 	@Test
 	void testSubSequence_error_startLessThanZero() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.subSequence(-1, 4);
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.subSequence(-1, 4));
 	}
 
 
 	@Test
 	void testSubSequence_error_endLessThanZero() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.subSequence(1, -3);
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.subSequence(1, -3));
 	}
 
 
 	@Test
 	void testSubSequence_error_endGreaterThaanLength() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.subSequence(1, 9999);
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.subSequence(1, 9999));
 	}
 
 
 	@Test
 	void testSubSequence_error_startGreaterThanEnd() {
 		RDocumentCharSequence cs = new RDocumentCharSequence(doc, 2);
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			cs.subSequence(5, 4);
-		});
+		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> cs.subSequence(5, 4));
 	}
 }

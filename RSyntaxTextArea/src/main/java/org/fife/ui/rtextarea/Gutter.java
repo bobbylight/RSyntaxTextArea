@@ -1204,7 +1204,7 @@ public class Gutter extends JPanel {
 			handleDocumentEvent(e);
 		}
 
-		public void install(RTextArea textArea) {
+		protected void install(RTextArea textArea) {
 			if (installed) {
 				uninstall();
 			}
@@ -1269,7 +1269,7 @@ public class Gutter extends JPanel {
 			handleDocumentEvent(e);
 		}
 
-		public void uninstall() {
+		protected void uninstall() {
 			if (installed) {
 				textArea.removeComponentListener(this);
 				textArea.getDocument().removeDocumentListener(this);

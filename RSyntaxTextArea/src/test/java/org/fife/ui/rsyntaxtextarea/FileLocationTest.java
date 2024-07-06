@@ -26,7 +26,7 @@ class FileLocationTest {
 	void testCreate_StringArg_FileName() {
 		String url = "test.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertInstanceOf(FileFileLocation.class, loc);
 		Assertions.assertTrue(loc.isLocal());
 		Assertions.assertFalse(loc.isRemote());
 	}
@@ -37,7 +37,7 @@ class FileLocationTest {
 		String url = File.separatorChar == '/' ?
 				"file:///test.txt" : "file:///C:/test.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertInstanceOf(FileFileLocation.class, loc);
 		Assertions.assertTrue(loc.isLocal());
 		Assertions.assertFalse(loc.isRemote());
 	}
@@ -47,7 +47,7 @@ class FileLocationTest {
 	void testCreate_StringArg_FtpUrl() {
 		String url = "ftp://ftp.microsoft.com/deskapps/readme.txt";
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertInstanceOf(URLFileLocation.class, loc);
 		Assertions.assertFalse(loc.isLocal());
 		Assertions.assertTrue(loc.isRemote());
 	}
@@ -57,7 +57,7 @@ class FileLocationTest {
 	void testCreate_StringArg_HttpUrl() {
 		String url = "http://google.com";
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertInstanceOf(URLFileLocation.class, loc);
 		Assertions.assertFalse(loc.isLocal());
 		Assertions.assertTrue(loc.isRemote());
 	}
@@ -67,7 +67,7 @@ class FileLocationTest {
 	void testCreate_StringArg_HttpsUrl() {
 		String url = "https://google.com";
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertInstanceOf(URLFileLocation.class, loc);
 		Assertions.assertFalse(loc.isLocal());
 		Assertions.assertTrue(loc.isRemote());
 	}
@@ -78,7 +78,7 @@ class FileLocationTest {
 		File file = new File(File.separatorChar == '/' ?
 				"test.txt" : "C:/test.txt");
 		FileLocation loc = FileLocation.create(file);
-		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertInstanceOf(FileFileLocation.class, loc);
 		Assertions.assertTrue(loc.isLocal());
 		Assertions.assertFalse(loc.isRemote());
 	}
@@ -88,7 +88,7 @@ class FileLocationTest {
 	void testCreate_UrlArg_HttpsUrl() throws Exception {
 		URL url = new URL("https://google.com");
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof URLFileLocation);
+		Assertions.assertInstanceOf(URLFileLocation.class, loc);
 		Assertions.assertFalse(loc.isLocal());
 		Assertions.assertTrue(loc.isRemote());
 	}
@@ -98,7 +98,7 @@ class FileLocationTest {
 	void testCreate_UrlArg_FileUrl() throws Exception {
 		URL url = new URL("file:///test.txt");
 		FileLocation loc = FileLocation.create(url);
-		Assertions.assertTrue(loc instanceof FileFileLocation);
+		Assertions.assertInstanceOf(FileFileLocation.class, loc);
 		Assertions.assertTrue(loc.isLocal());
 		Assertions.assertFalse(loc.isRemote());
 	}

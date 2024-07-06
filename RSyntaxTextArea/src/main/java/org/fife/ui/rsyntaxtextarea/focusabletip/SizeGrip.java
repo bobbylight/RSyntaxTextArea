@@ -117,7 +117,7 @@ class SizeGrip extends JPanel {
 	 *
 	 * @param ltr Whether the current component orientation is LTR.
 	 */
-	protected void possiblyFixCursor(boolean ltr) {
+	private void possiblyFixCursor(boolean ltr) {
 		int cursor = Cursor.NE_RESIZE_CURSOR;
 		if (ltr) {
 			cursor = Cursor.NW_RESIZE_CURSOR;

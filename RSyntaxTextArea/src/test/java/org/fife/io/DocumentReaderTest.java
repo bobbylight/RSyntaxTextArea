@@ -279,7 +279,7 @@ class DocumentReaderTest {
 		DocumentReader r = new DocumentReader(doc);
 
 		Assertions.assertEquals('0', r.read());
-		r.skip(6);
+		Assertions.assertEquals(6, r.skip(6));
 		Assertions.assertEquals('7', r.read());
 		Assertions.assertEquals('8', r.read());
 		Assertions.assertEquals('9', r.read());

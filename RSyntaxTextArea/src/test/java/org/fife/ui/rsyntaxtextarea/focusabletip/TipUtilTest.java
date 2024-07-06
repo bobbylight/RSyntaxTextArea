@@ -90,7 +90,7 @@ class TipUtilTest {
 		textArea.setBackground(Color.RED);
 
 		Border actual = TipUtil.getToolTipBorder(textArea);
-		Assertions.assertTrue(actual instanceof LineBorder);
+		Assertions.assertInstanceOf(LineBorder.class, actual);
 		Border expected = BorderFactory.createLineBorder(Color.RED.brighter());
 		Assertions.assertEquals(Color.RED.brighter(), ((LineBorder)actual).getLineColor());
 

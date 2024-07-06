@@ -171,9 +171,7 @@ class TipWindow extends JWindow implements ActionListener {
 
 	/**
 	 * Workaround for JEditorPane not returning its proper preferred size
-	 * when rendering HTML until after layout already done.  See
-	 * http://forums.sun.com/thread.jspa?forumID=57&threadID=574810 for a
-	 * discussion.
+	 * when rendering HTML until after layout already done.
 	 */
 	void fixSize() {
 
@@ -290,15 +288,12 @@ class TipWindow extends JWindow implements ActionListener {
 				public void mouseDragged(MouseEvent e) {
 					Point p = e.getPoint();
 					SwingUtilities.convertPointToScreen(p, panel);
-					if (lastPoint==null) {
-						lastPoint = p;
-					}
-					else {
+					if (lastPoint != null) {
 						int dx = p.x - lastPoint.x;
 						int dy = p.y - lastPoint.y;
-						setLocation(getX()+dx, getY()+dy);
-						lastPoint = p;
+						setLocation(getX() + dx, getY() + dy);
 					}
+					lastPoint = p;
 				}
 				@Override
 				public void mousePressed(MouseEvent e) {

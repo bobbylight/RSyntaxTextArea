@@ -59,7 +59,7 @@ class TokenMakerFactoryTest {
 
 		TokenMakerFactory tmf = new TestTokenMakerFactory();
 		TokenMakerFactory.setDefaultInstance(tmf);
-		Assertions.assertTrue(TokenMakerFactory.getDefaultInstance() instanceof TestTokenMakerFactory);
+		Assertions.assertInstanceOf(TestTokenMakerFactory.class, TokenMakerFactory.getDefaultInstance());
 	}
 
 

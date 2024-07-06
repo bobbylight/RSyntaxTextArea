@@ -34,9 +34,8 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testDeistall_rTextAreaRequired() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			new ConfigurableCaret().deinstall(new JTextArea());
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> new ConfigurableCaret().deinstall(new JTextArea()));
 	}
 
 
@@ -106,9 +105,8 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testInstall_rTextAreaRequired() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			new ConfigurableCaret().install(new JTextArea());
-		});
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> new ConfigurableCaret().install(new JTextArea()));
 	}
 
 

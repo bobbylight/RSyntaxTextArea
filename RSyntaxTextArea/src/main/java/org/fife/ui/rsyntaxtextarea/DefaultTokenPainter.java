@@ -215,7 +215,7 @@ public class DefaultTokenPainter implements TokenPainter {
 	 *
 	 * @param token The token to render.
 	 * @param x The starting x-offset of this token.  It is assumed that this
-	 *        is the left margin of the text area (may be non-zero due to
+	 *        is the left margin of the text area (might be non-zero due to
 	 *        insets), since tab lines are only painted for leading whitespace.
 	 * @param y The baseline where this token was painted.
 	 * @param endX The ending x-offset of this token.

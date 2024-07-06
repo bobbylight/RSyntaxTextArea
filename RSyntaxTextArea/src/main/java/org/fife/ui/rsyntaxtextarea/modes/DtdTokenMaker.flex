@@ -64,7 +64,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	/**
 	 * Token type specific to XMLTokenMaker denoting a line ending with an
-	 * unclosed XML tag; thus a new line is beginning still inside of the tag.
+	 * unclosed XML tag; thus a new line is beginning still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG_START					= -1;
 

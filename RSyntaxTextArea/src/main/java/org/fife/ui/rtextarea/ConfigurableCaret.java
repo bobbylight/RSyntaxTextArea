@@ -287,11 +287,11 @@ public class ConfigurableCaret extends DefaultCaret {
 		if (!e.isConsumed()) {
 
 			RTextArea textArea = getTextArea();
-			int nclicks = e.getClickCount();
+			int clickCount = e.getClickCount();
 
 			if (SwingUtilities.isMiddleMouseButton(e) &&
 					getPasteOnMiddleMouseClick()) {
-				if (nclicks == 1 && textArea.isEditable() && textArea.isEnabled()) {
+				if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
 					// Paste the system selection, if it exists (e.g., on UNIX
 					// platforms, the user can select text, the middle-mouse click
 					// to paste it; this doesn't work on Windows).  If the system

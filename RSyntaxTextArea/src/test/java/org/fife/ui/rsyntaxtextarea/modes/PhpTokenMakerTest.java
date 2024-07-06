@@ -226,7 +226,7 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	void testPhp_CreateOccurrenceMarker() {
 		PHPTokenMaker tm = (PHPTokenMaker)createTokenMaker();
-		Assertions.assertTrue(tm.createOccurrenceMarker() instanceof HtmlOccurrenceMarker);
+		Assertions.assertInstanceOf(HtmlOccurrenceMarker.class, tm.createOccurrenceMarker());
 	}
 
 

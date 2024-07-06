@@ -213,7 +213,7 @@ public class Macro {
 		 * <?xml version="1.0" encoding="UTF-8" ?>
 		 * <macro>
 		 *    <macroName>test</macroName>
-		 *    <action id="default-typed">abcdefg</action>
+		 *    <action id="default-typed">test-action-id</action>
 		 *    [<action id=...>...</action>]
 		 *    ...
 		 * </macro>
@@ -329,7 +329,7 @@ public class Macro {
 		 * <?xml version="1.0" encoding="UTF-8" ?>
 		 * <macro>
 		 *    <macroName>test</macroName>
-		 *    <action id="default-typed">abcdefg</action>
+		 *    <action id="default-typed">test-action-id</action>
 		 *    [<action id=...>...</action>]
 		 *    ...
 		 * </macro>

@@ -266,7 +266,7 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
 	/**
 	 * Token type specific to BBCodeTokenMaker; this signals that the user has
 	 * ended a line with an unclosed tag; thus a new line is beginning
-	 * still inside of the tag.
+	 * still inside the tag.
 	 */
 	public static final int INTERNAL_INTAG					= -1;
 
