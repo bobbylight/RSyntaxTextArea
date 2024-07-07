@@ -122,7 +122,7 @@ public class DefaultTokenPainter implements TokenPainter {
 	protected float paintImpl(Token token, Graphics2D g, float x, float y,
 			RSyntaxTextArea host, TabExpander e, float clipStart,
 			boolean selected, boolean useSTC) {
-
+System.out.println("... painting token '" + token.getLexeme() + "' at (" + x + ", " + y + ") - selected=" + selected + ", clipBounds=" + g.getClipBounds());
 		int origX = (int)x;
 		int textOffs = token.getTextOffset();
 		char[] text = token.getTextArray();
@@ -133,6 +133,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		Color fg = useSTC ? host.getSelectedTextColor() :
 			host.getForegroundForToken(token);
 		Color bg = selected ? null : host.getBackgroundForToken(token);
+		System.out.println("... ... fg: " + fg);
 		g.setFont(host.getFontForToken(token));
 		FontMetrics fm = host.getFontMetricsForToken(token);
 
@@ -173,6 +174,10 @@ public class DefaultTokenPainter implements TokenPainter {
 			}
 			g.setColor(fg);
 			g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
+			System.out.println("... ... drew '" + new String(text, flushIndex, flushLen) + "' at: (" + x + ", " + y + ")");
+		}
+		else {
+			System.out.println("... ... didn't draw '" + new String(text, flushIndex, flushLen) + "' due to flushLen=" + flushLen + " or nextX < clipStart: (" + nextX + " < " + clipStart + ")");
 		}
 
 		if (host.getUnderlineForToken(token)) {

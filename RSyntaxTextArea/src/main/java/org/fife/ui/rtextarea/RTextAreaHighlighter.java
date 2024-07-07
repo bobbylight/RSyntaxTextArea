@@ -338,6 +338,17 @@ public class RTextAreaHighlighter extends BasicHighlighter {
 								g, p0, p1, viewBounds, editor, view));
 		}
 
+		@Override
+		public String toString() {
+			return "[LayeredHighlightInfo: " +
+				"x = " + x +
+				", y = " + y +
+				", width = " + width +
+				", height = " + height +
+				", p0 = " + getStartOffset() +
+				", p1 = " + getEndOffset() +
+				"]";
+		}
 	}
 
 
