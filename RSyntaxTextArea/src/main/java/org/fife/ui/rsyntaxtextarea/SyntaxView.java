@@ -232,28 +232,18 @@ public class SyntaxView extends View implements TabExpander,
 
 				// And the end of the selection is somewhere in the token
 				if (token.containsPosition(selEnd)) {
-
-					float tokenX = x;
 					Rectangle origClip = g.getClipBounds();
 
 					// Render all selected chars
 					int selectedCharCount = Math.min(token.length(), selEnd - token.getOffset());
-					if (selectedCharCount > 0) {
-						float selEndX = painter.nextX(token, selectedCharCount, x, host, this);
-						g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
-
-						painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
-						x = selEndX;
-					}
+					float selEndX = painter.nextX(token, selectedCharCount, x, host, this);
+					g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
+					painter.paintSelected(token, g, x, y, host, this, clipStart, useSTC);
 
 					// Render any chars not selected
 					int unselectedCharCount = token.length() - selectedCharCount;
-					if (unselectedCharCount > 0) {
-						g.setClip((int)x, origClip.y, origClip.width - ((int)x - origClip.x), origClip.height);
-
-						x = painter.paint(token, g, tokenX, y, host, this, clipStart);
-						g.setClip(origClip);
-					} else Thread.dumpStack();
+					g.setClip((int)selEndX, origClip.y, origClip.width - (int)(selEndX - origClip.x), origClip.height);
+					x = painter.paint(token, g, x, y, host, this, clipStart);
 
 					g.setClip(origClip);
 				}
@@ -273,25 +263,19 @@ public class SyntaxView extends View implements TabExpander,
 
 				// Render all unselected chars
 				int unselectedCharCount = Math.min(token.length(), selStart - token.getOffset());
-				if (unselectedCharCount > 0) {
-					float selStartX = painter.nextX(token, unselectedCharCount, tokenX, host, this);
-					g.setClip((int)tokenX, origClip.y, (int)(selStartX - tokenX), origClip.height);
-					painter.paint(token, g, tokenX, y, host, this, clipStart);
-					x = selStartX;
-				} else Thread.dumpStack();
+				float selStartX = painter.nextX(token, unselectedCharCount, tokenX, host, this);
+				g.setClip((int)tokenX, origClip.y, (int)(selStartX - tokenX), origClip.height);
+				painter.paint(token, g, tokenX, y, host, this, clipStart);
 
 				// Render any chars selected
 				int selectedCharCount = Math.min(token.getEndOffset(), selEnd) - token.getOffset() - unselectedCharCount;
-				if (selectedCharCount > 0) {
-					float selEndX = painter.nextX(token, selectedCharCount + unselectedCharCount, tokenX, host, this);
-					g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
-					painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
-					x = selEndX;
-				} else Thread.dumpStack();
+				float selEndX = painter.nextX(token, selectedCharCount + unselectedCharCount, tokenX, host, this);
+				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
+				painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
+				x = selEndX;
 
 				// Render any trailing chars unselected
-				unselectedCharCount = token.getEndOffset() - Math.min(selEnd, token.getEndOffset());
-				if (unselectedCharCount > 0) {
+				if (token.getEndOffset() > selEnd) {
 					g.setClip((int)x, origClip.y, origClip.width - (int)(x - origClip.x), origClip.height);
 					x = painter.paint(token, g, tokenX, y, host, this, clipStart);
 				}
