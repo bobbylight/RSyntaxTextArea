@@ -83,7 +83,7 @@ public class SmartHighlightPainter extends ChangeableHighlightPainter {
 								JTextComponent c, View view) {
 
 		g.setColor((Color)getPaint());
-
+System.out.println("... SmartHighlightPainter: rendering: " + p0 + " - " + p1);
 		// This special case isn't needed for most standard Swing Views (which
 		// always return a width of 1 for modelToView() calls), but it is
 		// needed for RSTA views, which actually return the width of chars for

@@ -213,54 +213,93 @@ public class SyntaxView extends View implements TabExpander,
 	private float drawLineWithSelection(TokenPainter painter, Token token,
 			Graphics2D g, float x, float y, int selStart, int selEnd) {
 
-		float nextX = x;	// The x-value at the end of our text.
 		boolean useSTC = host.getUseSelectedTextColor();
 
-		while (token!=null && token.isPaintable() && nextX<clipEnd) {
+		while (token!=null && token.isPaintable() && x<clipEnd) {
 
-			// Selection starts or ends in this token
-			if (token.containsPosition(selStart) || token.containsPosition(selEnd)) {
+			// The token might be before or after the entire selection
+			if (selEnd <= token.getOffset() || selStart >= token.getEndOffset()) {
+				x = painter.paint(token, g, x,y, host, this, clipStart);
+			}
 
-				// Paint the entire token, unselected, so the unselected parts look good
-				if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
-					painter.paint(token, g, nextX, y, host, this, clipStart);
+			// If any part of a token is selected, we'll paint the entire thing multiple
+			// times, but with different clip regions. This is the only way to properly
+			// render partially-selected ligatures with e.g. our "system selection"
+			// (special selected text color).
+
+			// If the start of the token is selected
+			else if (selStart <= token.getOffset()) {
+
+				// And the end of the selection is somewhere in the token
+				if (token.containsPosition(selEnd)) {
+
+					float tokenX = x;
+					Rectangle origClip = g.getClipBounds();
+
+					// Render all selected chars
+					int selectedCharCount = Math.min(token.length(), selEnd - token.getOffset());
+					if (selectedCharCount > 0) {
+						float selEndX = painter.nextX(token, selectedCharCount, x, host, this);
+						g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
+
+						painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
+						x = selEndX;
+					}
+
+					// Render any chars not selected
+					int unselectedCharCount = token.length() - selectedCharCount;
+					if (unselectedCharCount > 0) {
+						g.setClip((int)x, origClip.y, origClip.width - ((int)x - origClip.x), origClip.height);
+
+						x = painter.paint(token, g, tokenX, y, host, this, clipStart);
+						g.setClip(origClip);
+					} else Thread.dumpStack();
+
+					g.setClip(origClip);
 				}
 
-				// Figure out where the selection starts and ends
-				float selStartX = nextX;
-				if (selStart > token.getOffset()) {
-					int charCount = selStart - token.getOffset();
-					selStartX = painter.nextX(token, charCount, nextX, host, this);
+				// Otherwise, the entire token is selected
+				else {
+					x = painter.paintSelected(token, g, x, y, host, this,
+						clipStart, useSTC);
 				}
-				int tokenSelectionEndCharOffs = Math.min(token.getEndOffset(), selEnd) - token.getOffset();
-				float selEndX = painter.nextX(token, tokenSelectionEndCharOffs, nextX, host, this);
+			}
 
-				// Create a clip region to only paint this token's selection
+			// The selection starts somewhere in this token
+			else {
+
+				float tokenX = x;
 				Rectangle origClip = g.getClipBounds();
-				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
 
-				// Render the entire token, selected, and let the clip region do its magic.
-				// This is done to ensure partially-selected ligatures render properly.
-				nextX = painter.paintSelected(token, g, nextX, y, host, this, clipStart, useSTC);
+				// Render all unselected chars
+				int unselectedCharCount = Math.min(token.length(), selStart - token.getOffset());
+				if (unselectedCharCount > 0) {
+					float selStartX = painter.nextX(token, unselectedCharCount, tokenX, host, this);
+					g.setClip((int)tokenX, origClip.y, (int)(selStartX - tokenX), origClip.height);
+					painter.paint(token, g, tokenX, y, host, this, clipStart);
+					x = selStartX;
+				} else Thread.dumpStack();
 
-				// Restore the clip
+				// Render any chars selected
+				int selectedCharCount = Math.min(token.getEndOffset(), selEnd) - token.getOffset() - unselectedCharCount;
+				if (selectedCharCount > 0) {
+					float selEndX = painter.nextX(token, selectedCharCount + unselectedCharCount, tokenX, host, this);
+					g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
+					painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
+					x = selEndX;
+				} else Thread.dumpStack();
+
+				// Render any trailing chars unselected
+				unselectedCharCount = token.getEndOffset() - Math.min(selEnd, token.getEndOffset());
+				if (unselectedCharCount > 0) {
+					g.setClip((int)x, origClip.y, origClip.width - (int)(x - origClip.x), origClip.height);
+					x = painter.paint(token, g, tokenX, y, host, this, clipStart);
+				}
+
 				g.setClip(origClip);
 			}
 
-			// This token is entirely selected
-			else if (token.getOffset()>=selStart &&
-					token.getEndOffset()<=selEnd) {
-				nextX = painter.paintSelected(token, g, nextX,y, host, this,
-						clipStart, useSTC);
-			}
-
-			// This token is entirely unselected
-			else {
-				nextX = painter.paint(token, g, nextX,y, host, this, clipStart);
-			}
-
 			token = token.getNextToken();
-
 		}
 
 		// NOTE: We should re-use code from Token (paintBackground()) here,
@@ -268,11 +307,11 @@ public class SyntaxView extends View implements TabExpander,
 		if (host.getEOLMarkersVisible()) {
 			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
 			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", nextX, y);
+			g.drawString("\u00B6", x, y);
 		}
 
 		// Return the x-coordinate at the end of the painted text.
-		return nextX;
+		return x;
 
 	}
 
