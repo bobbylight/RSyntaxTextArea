@@ -160,7 +160,7 @@
             <property name="max" value="300"/>
         </module>
         <module name="ParameterNumber">
-            <property name="max" value="9"/>
+            <property name="max" value="10"/>
             <!--<property name="ignoreOverriddenMethods" value="true"/>-->
         </module>
 
