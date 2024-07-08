@@ -37,6 +37,8 @@ import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 
+import static org.fife.ui.rsyntaxtextarea.SyntaxView.EOL_MARKER;
+
 
 /**
  * The view used by {@link RSyntaxTextArea} when word wrap is enabled.
@@ -275,14 +277,9 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 		} // End of while (token!=null && token.isPaintable()).
 
-		// NOTE: We should re-use code from Token (paintBackground()) here,
-		// but don't because I'm just too lazy.
 		if (host.getEOLMarkersVisible()) {
-			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
-			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", x, (float) y-fontHeight);
+			SyntaxView.drawEOLMarker(host, g, x, (float) y-fontHeight);
 		}
-
 	}
 
 
@@ -339,49 +336,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			h.paintLayeredHighlights(g, p0,p, r, host, this);
 
 			while (token!=null && token.isPaintable() && token.getEndOffset()-1<p) {//<=p) {
-
-				// Selection starts or ends in this token
-				if (token.containsPosition(selStart) || token.containsPosition(selEnd)) {
-
-					// Paint the entire token, unselected, so the unselected parts look good
-					if (selStart>token.getOffset() || selEnd < token.getEndOffset()) {
-						painter.paint(token, g, x, y, host, this);
-					}
-
-					// Figure out where the selection starts and ends
-					float selStartX = x;
-					if (selStart > token.getOffset()) {
-						int charCount = selStart - token.getOffset();
-						selStartX = painter.nextX(token, charCount, x, host, this);
-					}
-					int tokenSelectionEndCharOffs = Math.min(token.getEndOffset(), selEnd) - token.getOffset();
-					float selEndX = painter.nextX(token, tokenSelectionEndCharOffs, x, host, this);
-
-					// Create a clip region to only paint this token's selection
-					Rectangle origClip = g.getClipBounds();
-					g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
-
-					// Render the entire token, selected, and let the clip region do its magic.
-					// This is done to ensure partially-selected ligatures render properly.
-					x = painter.paintSelected(token, g, x, y, host, this, useSTC);
-
-					// Restore the clip
-					g.setClip(origClip);
-				}
-
-				// This token is entirely selected
-				else if (token.getOffset()>=selStart &&
-						token.getEndOffset()<=selEnd) {
-					x = painter.paintSelected(token, g, x,y, host, this,useSTC);
-				}
-
-				// This token is entirely unselected
-				else {
-					x = painter.paint(token, g, x,y, host, this);
-				}
-
+				x = SyntaxView.drawTokenWithSelection(painter, token, g, x, y, selStart, selEnd, host, this, 0);
 				token = token.getNextToken();
-
 			}
 
 			// If there's a token that's going to be split onto the next line
@@ -462,14 +418,9 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 		} // End of while (token!=null && token.isPaintable()).
 
-		// NOTE: We should re-use code from Token (paintBackground()) here,
-		// but don't because I'm just too lazy.
 		if (host.getEOLMarkersVisible()) {
-			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
-			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", x, (float) y-fontHeight);
+			SyntaxView.drawEOLMarker(host, g, x, (float) y-fontHeight);
 		}
-
 	}
 
 
@@ -532,6 +483,17 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 
 	/**
+	 * Returns the width of the EOL marker when it is rendered.
+	 *
+	 * @param textArea The text area being rendered.
+	 * @return The width of the EOL marker.
+	 */
+	private float getEOLMarkerWidth(RSyntaxTextArea textArea) {
+		return metrics.stringWidth(EOL_MARKER);
+	}
+
+
+	/**
 	 * Determines the maximum span for this view along an
 	 * axis.  This is implemented to provide the superclass
 	 * behavior after first making sure that the current font
@@ -551,7 +513,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		updateMetrics();
 		float span = super.getPreferredSpan(axis);
 		if (axis==View.X_AXIS) { // EOL marker
-			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+			span += getEOLMarkerWidth(host);
 		}
 		return span;
 	}
@@ -577,7 +539,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		updateMetrics();
 		float span = super.getPreferredSpan(axis);
 		if (axis==View.X_AXIS) { // EOL marker
-			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+			span += getEOLMarkerWidth(host);
 		}
 		return span;
 	}
@@ -604,7 +566,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		float span;
 		if (axis==View.X_AXIS) { // Add EOL marker
 			span = super.getPreferredSpan(axis);
-			span += metrics.charWidth('\u00b6'); // metrics set in updateMetrics
+			span += getEOLMarkerWidth(host);
 		}
 		else {
 			span = super.getPreferredSpan(axis);

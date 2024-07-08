@@ -78,6 +78,11 @@ public class SyntaxView extends View implements TabExpander,
 	 */
 	private TokenImpl tempToken;
 
+	/**
+	 * Used as the default rendered EOL marker.
+	 */
+	static final String EOL_MARKER = "\u00B6";
+
 
 	/**
 	 * Constructs a new <code>SyntaxView</code> wrapped around an element.
@@ -158,6 +163,21 @@ public class SyntaxView extends View implements TabExpander,
 
 
 	/**
+	 * Renders the EOL marker for this view.
+	 *
+	 * @param textArea The text area being rendered.
+	 * @param g The graphics context.
+	 * @param x The x-coordinate at which to render.
+	 * @param y The y-coordinate at which to render.
+	 */
+	static void drawEOLMarker(RSyntaxTextArea textArea, Graphics2D g, float x, float y) {
+		g.setColor(textArea.getForegroundForTokenType(Token.WHITESPACE));
+		g.setFont(textArea.getFontForTokenType(Token.WHITESPACE));
+		g.drawString(EOL_MARKER, x, y);
+	}
+
+
+	/**
 	 * Draws the passed-in text using syntax highlighting for the current
 	 * language.  It is assumed that the entire line is either not in a
 	 * selected region, or painting with a selection-foreground color is turned
@@ -182,17 +202,12 @@ public class SyntaxView extends View implements TabExpander,
 			token = token.getNextToken();
 		}
 
-		// NOTE: We should re-use code from Token (paintBackground()) here,
-		// but don't because I'm just too lazy.
 		if (host.getEOLMarkersVisible()) {
-			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
-			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", nextX, y);
+			drawEOLMarker(host, g, nextX, y);
 		}
 
 		// Return the x-coordinate at the end of the painted text.
 		return nextX;
-
 	}
 
 
@@ -213,90 +228,118 @@ public class SyntaxView extends View implements TabExpander,
 	private float drawLineWithSelection(TokenPainter painter, Token token,
 			Graphics2D g, float x, float y, int selStart, int selEnd) {
 
-		boolean useSTC = host.getUseSelectedTextColor();
-
 		while (token!=null && token.isPaintable() && x<clipEnd) {
-
-			// The token might be before or after the entire selection
-			if (selEnd <= token.getOffset() || selStart >= token.getEndOffset()) {
-				x = painter.paint(token, g, x,y, host, this, clipStart);
-			}
-
-			// If any part of a token is selected, we'll paint the entire thing multiple
-			// times, but with different clip regions. This is the only way to properly
-			// render partially-selected ligatures with e.g. our "system selection"
-			// (special selected text color).
-
-			// If the start of the token is selected
-			else if (selStart <= token.getOffset()) {
-
-				// And the end of the selection is somewhere in the token
-				if (token.containsPosition(selEnd)) {
-					Rectangle origClip = g.getClipBounds();
-
-					// Render all selected chars
-					int selectedCharCount = Math.min(token.length(), selEnd - token.getOffset());
-					float selEndX = painter.nextX(token, selectedCharCount, x, host, this);
-					g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
-					painter.paintSelected(token, g, x, y, host, this, clipStart, useSTC);
-
-					// Render any chars not selected
-					int unselectedCharCount = token.length() - selectedCharCount;
-					g.setClip((int)selEndX, origClip.y, origClip.width - (int)(selEndX - origClip.x), origClip.height);
-					x = painter.paint(token, g, x, y, host, this, clipStart);
-
-					g.setClip(origClip);
-				}
-
-				// Otherwise, the entire token is selected
-				else {
-					x = painter.paintSelected(token, g, x, y, host, this,
-						clipStart, useSTC);
-				}
-			}
-
-			// The selection starts somewhere in this token
-			else {
-
-				float tokenX = x;
-				Rectangle origClip = g.getClipBounds();
-
-				// Render all unselected chars
-				int unselectedCharCount = Math.min(token.length(), selStart - token.getOffset());
-				float selStartX = painter.nextX(token, unselectedCharCount, tokenX, host, this);
-				g.setClip((int)tokenX, origClip.y, (int)(selStartX - tokenX), origClip.height);
-				painter.paint(token, g, tokenX, y, host, this, clipStart);
-
-				// Render any chars selected
-				int selectedCharCount = Math.min(token.getEndOffset(), selEnd) - token.getOffset() - unselectedCharCount;
-				float selEndX = painter.nextX(token, selectedCharCount + unselectedCharCount, tokenX, host, this);
-				g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
-				painter.paintSelected(token, g, tokenX, y, host, this, clipStart, useSTC);
-				x = selEndX;
-
-				// Render any trailing chars unselected
-				if (token.getEndOffset() > selEnd) {
-					g.setClip((int)x, origClip.y, origClip.width - (int)(x - origClip.x), origClip.height);
-					x = painter.paint(token, g, tokenX, y, host, this, clipStart);
-				}
-
-				g.setClip(origClip);
-			}
-
+			x = drawTokenWithSelection(painter, token, g, x, y, selStart, selEnd, host, this, clipStart);
 			token = token.getNextToken();
 		}
 
-		// NOTE: We should re-use code from Token (paintBackground()) here,
-		// but don't because I'm just too lazy.
 		if (host.getEOLMarkersVisible()) {
-			g.setColor(host.getForegroundForTokenType(Token.WHITESPACE));
-			g.setFont(host.getFontForTokenType(Token.WHITESPACE));
-			g.drawString("\u00B6", x, y);
+			drawEOLMarker(host, g, x, y);
 		}
 
 		// Return the x-coordinate at the end of the painted text.
 		return x;
+	}
 
+
+	/**
+	 * Renders a token with some amount of it selected.
+	 *
+	 * @param painter The painter to render the tokens.
+	 * @param token The list of tokens to draw.
+	 * @param g The graphics context in which to draw.
+	 * @param x The x-coordinate at which to draw.
+	 * @param y The y-coordinate at which to draw.
+	 * @param selStart The start of the selection.
+	 * @param selEnd The end of the selection.
+	 * @param host The parent text area.
+	 * @param e The tab expander.
+	 * @param clipStart Whether to start clipping, or {@code 0} to clip nothing.
+	 * @return The x-coordinate representing the end of the painted text.
+	 */
+	public static float drawTokenWithSelection(TokenPainter painter, Token token,
+				Graphics2D g, float x, float y, int selStart, int selEnd,
+				RSyntaxTextArea host, TabExpander e, float clipStart) {
+
+		boolean useSTC = host.getUseSelectedTextColor();
+
+		// The token might be before or after the entire selection
+		if (selEnd <= token.getOffset() || selStart >= token.getEndOffset()) {
+			x = painter.paint(token, g, x,y, host, e, clipStart);
+		}
+
+		// If any part of a token is selected, we'll paint the entire thing multiple
+		// times, but with different clip regions. This is the only way to properly
+		// render partially-selected ligatures with e.g. our "system selection"
+		// (special selected text color).
+
+		// If the start of the token is selected
+		else if (selStart <= token.getOffset()) {
+
+			// And the end of the selection is somewhere in the token
+			if (token.containsPosition(selEnd)) {
+				Rectangle origClip = g.getClipBounds();
+
+				// Render all selected chars
+				int selectedCharCount = Math.min(token.length(), selEnd - token.getOffset());
+				float selEndX = painter.nextX(token, selectedCharCount, x, host, e);
+				g.setClip((int)x, origClip.y, (int)(selEndX - x), origClip.height);
+				painter.paintSelected(token, g, x, y, host, e, clipStart, useSTC);
+
+				// Render any chars not selected
+				g.setClip((int)selEndX, origClip.y, origClip.width - (int)(selEndX - origClip.x), origClip.height);
+				x = painter.paint(token, g, x, y, host, e, clipStart);
+
+				g.setClip(origClip);
+			}
+
+			// Otherwise, the entire token is selected
+			else {
+				x = painter.paintSelected(token, g, x, y, host, e,
+					clipStart, useSTC);
+			}
+		}
+
+		// The selection starts somewhere in this token
+		else {
+
+			float tokenX = x;
+			Rectangle origClip = g.getClipBounds();
+
+			// Render all unselected chars
+			int unselectedCharCount = Math.min(token.length(), selStart - token.getOffset());
+			float selStartX = painter.nextX(token, unselectedCharCount, tokenX, host, e);
+			g.setClip((int)tokenX, origClip.y, (int)(selStartX - tokenX), origClip.height);
+			painter.paint(token, g, tokenX, y, host, e, clipStart);
+
+			// Render any chars selected
+			int selectedCharCount = Math.min(token.getEndOffset(), selEnd) - token.getOffset() - unselectedCharCount;
+			float selEndX = painter.nextX(token, selectedCharCount + unselectedCharCount, tokenX, host, e);
+			g.setClip((int)selStartX, origClip.y, (int)(selEndX - selStartX), origClip.height);
+			painter.paintSelected(token, g, tokenX, y, host, e, clipStart, useSTC);
+			x = selEndX;
+
+			// Render any trailing chars unselected
+			if (token.getEndOffset() > selEnd) {
+				g.setClip((int)x, origClip.y, origClip.width - (int)(x - origClip.x), origClip.height);
+				x = painter.paint(token, g, tokenX, y, host, e, clipStart);
+			}
+
+			g.setClip(origClip);
+		}
+
+		return x;
+	}
+
+
+	/**
+	 * Returns the width of the EOL marker when it is rendered.
+	 *
+	 * @param textArea The text area being rendered.
+	 * @return The width of the EOL marker.
+	 */
+	private float getEOLMarkerWidth(RSyntaxTextArea textArea) {
+		return metrics.stringWidth(EOL_MARKER);
 	}
 
 
@@ -359,7 +402,7 @@ public class SyntaxView extends View implements TabExpander,
 			case View.X_AXIS:
 				float span = longLineWidth + getRhsCorrection(); // fudge factor
 				if (host.getEOLMarkersVisible()) {
-					span += metrics.charWidth('\u00B6');
+					span += getEOLMarkerWidth(host);
 				}
 				return span;
 			case View.Y_AXIS:
