@@ -424,7 +424,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			getText(startOffset,endOffset-startOffset, s);
 		} catch (BadLocationException ble) {
 			ble.printStackTrace();
-			return null;
+			return new TokenImpl();
 		}
 		int initialTokenType = line==0 ? Token.NULL :
 								getLastTokenTypeOnLine(line-1);
