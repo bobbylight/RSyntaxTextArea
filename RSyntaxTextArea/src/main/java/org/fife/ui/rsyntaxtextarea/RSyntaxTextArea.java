@@ -498,14 +498,27 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #createPopupMenu()
 	 */
 	protected void appendFoldingMenu(JPopupMenu popup) {
-		popup.addSeparator();
+		appendFoldingMenu(popup, popup.getComponentCount());
+	}
+
+
+	/**
+	 * Appends a submenu with code folding options to this text component's
+	 * popup menu.
+	 *
+	 * @param popup The popup menu to append to.
+	 * @param index The index where to append the context menu.
+	 * @see #createPopupMenu()
+	 */
+	protected void appendFoldingMenu(JPopupMenu popup, int index) {
+		popup.add(new JPopupMenu.Separator(), index);
 		ResourceBundle bundle = ResourceBundle.getBundle(MSG);
 		foldingMenu = new JMenu(bundle.getString("ContextMenu.Folding"));
 		foldingMenu.add(createPopupMenuItem(toggleCurrentFoldAction));
 		foldingMenu.add(createPopupMenuItem(collapseAllCommentFoldsAction));
 		foldingMenu.add(createPopupMenuItem(collapseAllFoldsAction));
 		foldingMenu.add(createPopupMenuItem(expandAllFoldsAction));
-		popup.add(foldingMenu);
+		popup.add(foldingMenu, index+1);
 
 	}
 
