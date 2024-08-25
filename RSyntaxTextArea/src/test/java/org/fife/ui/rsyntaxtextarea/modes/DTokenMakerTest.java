@@ -51,6 +51,50 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testAnnotations() {
+		assertAllTokensOfType(TokenTypes.ANNOTATION,
+			"@",
+			"@foo",
+			"@foobar123"
+		);
+	}
+
+
+	@Test
+	void testBackquoteLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			"`Some text`",
+			"`Some text unterminated"
+		);
+	}
+
+
+	@Test
+	void testBackquoteLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			TokenTypes.LITERAL_BACKQUOTE,
+			"Some text`",
+			"Some text unterminated"
+		);
+	}
+
+
+	@Test
+	void testBinaryLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0b0",
+			"0b1",
+			"0B0",
+			"0B1",
+			"0b010",
+			"0B010",
+			"0b0_10",
+			"0B0_10"
+		);
+	}
+
+
+	@Test
 	void testBooleanLiterals() {
 
 		String[] booleans = { "true", "false" };
@@ -107,6 +151,23 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testDocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			"/** Hello world */");
+	}
+
+
+	@Test
+	void testDocComments_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			TokenTypes.COMMENT_DOCUMENTATION,
+			"continued from a previous line",
+			"continued from a previous line */"
+		);
+	}
+
+
+	@Test
 	void testEolComments() {
 
 		String[] eolCommentLiterals = {
@@ -145,6 +206,26 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		}
 
+	}
+
+
+	@Test
+	void testErrorNumberFormat() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			"54for",
+			"0b10xxx"
+		);
+	}
+
+
+	@Test
+	void testErrorStringLiterals() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"",
+			"\"hi",
+			"\"\\\"",
+			"\"unterminated string"
+		);
 	}
 
 
@@ -191,6 +272,22 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testGetClosestStandardTokenTypeForInternalType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Assertions.assertEquals(
+			TokenTypes.COMMENT_MULTILINE,
+			tm.getClosestStandardTokenTypeForInternalType(DTokenMaker.INTERNAL_IN_NESTABLE_MLC));
+
+		// One without a mapping
+		Assertions.assertEquals(
+			TokenTypes.RESERVED_WORD,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.RESERVED_WORD));
+	}
+
+
+	@Test
 	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
@@ -221,6 +318,22 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
+	}
+
+
+	@Test
+	void testIntegerLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"0l",
+			"0L",
+			"42",
+			"42l",
+			"42L",
+			"123_456",
+			"123_456l",
+			"123456L"
+		);
 	}
 
 
@@ -393,7 +506,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world https://www.sas.com */",
+			"/* Hello world https://www.google.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -407,7 +520,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -415,6 +528,48 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		}
 
+	}
+
+
+	@Test
+	void testNestableMultiLineComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/+ Hello world +/",
+			"/+ 1 deep /+ 2 deep +/ back to 1 deep +/",
+			"/+ 1 deep /+ 2 deep /+ 3 deep +/ back to 2 deep +/ back to 1 deep +/"
+		);
+	}
+
+
+	@Test
+	void testNestableMultiLineComment_fromPriorLine_1deep() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			DTokenMaker.INTERNAL_IN_NESTABLE_MLC,
+			"continuing +/",
+			"continuing and unterminated"
+		);
+	}
+
+
+	@Test
+	void testNestableMultiLineComment_fromPriorLine_2deep() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			DTokenMaker.INTERNAL_IN_NESTABLE_MLC - 2,
+			"continuing 2-deep +/ continuing 1 deep +/",
+			"continuing 2-deep and unterminated",
+			"continuing 2-deep +/ continuing 1 deep and unterminated"
+		);
+	}
+
+
+	@Test
+	void testNestableMultiLineComment_fromPriorLine_3deep() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			DTokenMaker.INTERNAL_IN_NESTABLE_MLC - 3,
+			"continuing 3 deep +/ continuing 2 deep +/ continuing 1 deep +/",
+			"continuing 3 deep and unterminated",
+			"continuing 3 deep +/ continuing 2 deep +/ continuing 1 deep and unterminated"
+		);
 	}
 
 
@@ -476,18 +631,11 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testStringLiterals() {
-
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\\"\"",
-		};
-
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\\"\""
+		);
 	}
 
 

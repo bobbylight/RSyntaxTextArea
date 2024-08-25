@@ -431,7 +431,7 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
 		prevState = YYINITIAL;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case INTERNAL_INTAG_START:
 				state = INTAG_START;
@@ -453,7 +453,7 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
 					}
 					prevState = -initialTokenType&0xff;
 				}
-				else { // Shouldn't happen
+				else {
 					state = YYINITIAL;
 				}
 		}

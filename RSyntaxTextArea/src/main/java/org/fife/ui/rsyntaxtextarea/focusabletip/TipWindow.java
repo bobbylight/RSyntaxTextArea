@@ -17,8 +17,6 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -54,7 +52,7 @@ import org.fife.ui.rsyntaxtextarea.HtmlUtil;
  * @author Robert Futrell
  * @version 1.0
  */
-class TipWindow extends JWindow implements ActionListener {
+class TipWindow extends JWindow {
 
 	private FocusableTip ft;
 	private JEditorPane textArea;
@@ -130,9 +128,7 @@ class TipWindow extends JWindow implements ActionListener {
 	}
 
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
+	public void actionPerformed() {
 		if (!getFocusableWindowState()) {
 			setFocusableWindowState(true);
 			setBottomPanel();
@@ -145,11 +141,8 @@ class TipWindow extends JWindow implements ActionListener {
 				}
 			});
 			ft.removeListeners();
-			if (e==null) { // Didn't get here via our mouseover timer
-				requestFocus();
-			}
+			requestFocus();
 		}
-
 	}
 
 
@@ -249,6 +242,11 @@ class TipWindow extends JWindow implements ActionListener {
 			return BorderFactory.createLineBorder(color);
 		}
 		return BorderFactory.createEmptyBorder();
+	}
+
+
+	protected String getText() {
+		return textArea.getText();
 	}
 
 
@@ -375,7 +373,7 @@ class TipWindow extends JWindow implements ActionListener {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			actionPerformed(null); // Manually create "real" window
+			actionPerformed(); // Manually create "real" window
 		}
 
 		@Override

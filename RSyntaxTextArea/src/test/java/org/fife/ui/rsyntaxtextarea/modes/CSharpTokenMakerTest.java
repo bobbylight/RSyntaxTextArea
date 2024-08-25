@@ -95,6 +95,16 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testCharLiterals_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			"'too long'",
+			"'a", // unterminated
+			"'\\u00fg'" // invalid unicode escape
+		);
+	}
+
+
+	@Test
 	void testDataTypes() {
 
 		String code = "byte sbyte int uint short ushort long ulong float double char bool";
@@ -121,19 +131,60 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testDocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			"/// Hello world"
+		);
+	}
+
+
+	@Test
+	void testDocComments_tag() {
+
+		String code = "/// <some-tag>foo";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, "/// "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, "<some-tag>"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, "foo"));
+	}
+
+
+	@Test
+	void testDocComments_url() {
+
+		String code = "/// https://www.google.com foo";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, "/// "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, "https://www.google.com"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, " foo"));
+	}
+
+
+	@Test
 	void testEolComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"// Hello world"
+		);
+	}
 
-		String[] eolCommentLiterals = {
-			"// Hello world",
-		};
 
-		for (String code : eolCommentLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-		}
-
+	@Test
+	void testErrorNumberFormat() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			"54for",
+			"0b10xxx"
+		);
 	}
 
 
@@ -200,6 +251,25 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			",",
 			".",
 			";"
+		);
+	}
+
+
+	@Test
+	void testIdentifiers_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			"###"
+		);
+	}
+
+
+	@Test
+	void testIntegers() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"1",
+			"11111",
+			"1234567890"
 		);
 	}
 
@@ -329,6 +399,26 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testPreprocessors() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"#define foo",
+			"# define foo",
+			"   #define foo",
+			"#undef",
+			"#if",
+			"#elif",
+			"#else",
+			"#endif",
+			"#line",
+			"#error",
+			"#warning",
+			"#region",
+			"#endregion"
+		);
+	}
+
+
+	@Test
 	void testSeparators() {
 
 		String code = "( ) [ ] { }";
@@ -373,4 +463,32 @@ class CSharpTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
+	@Test
+	void testStringLiterals_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"unterminated string",
+			"\" string with invalid unicode \\u00fg escape\""
+		);
+	}
+
+
+	@Test
+	void testVerbatimStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"@\"foo\"",
+			"@\"foo with \\ single slash\"",
+			"@\"foo with \"\" an escaped double quote\"",
+			"@\"unterminated verbatim string"
+		);
+	}
+
+
+	@Test
+	void testVerbatimStringLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued and terminated\"",
+			"continued and still unterminated"
+		);
+	}
 }

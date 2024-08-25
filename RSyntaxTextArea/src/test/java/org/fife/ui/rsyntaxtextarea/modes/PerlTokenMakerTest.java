@@ -52,6 +52,38 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testBacktickLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			"``",
+			"`hi`",
+			"`\\u00fe`",
+			"`\\``"
+		);
+	}
+
+
+	@Test
+	void testBacktickLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			TokenTypes.LITERAL_BACKQUOTE,
+			"continued from prior line",
+			"continued from prior line\""
+		);
+	}
+
+
+	@Test
+	void testBacktickLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			"`",
+			"`hi there",
+			"`\\u00fe",
+			"`\\` unclosed"
+		);
+	}
+
+
+	@Test
 	void testCharLiterals() {
 
 		String[] chars = {
@@ -68,6 +100,27 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType(), "Invalid char literal: " + token);
 		}
 
+	}
+
+
+	@Test
+	void testCharLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued from prior line",
+			"continued from prior line'"
+		);
+	}
+
+
+	@Test
+	void testCharLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'",
+			"'hi there",
+			"'\\u00fe",
+			"'\\' unclosed"
+		);
 	}
 
 
@@ -129,6 +182,206 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	}
 
+
+	@Test
+	void testHeredoc_eot_doubleQuoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<\"EOT\"",
+			"<<\"EOT\" this  is heredoc",
+			"<<\"EOT\" this is heredoc EOT",
+			"<<\"EOT\" this is heredoc with escaped chars \\EEOT",
+			"<<\"EOT\" heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_eot_doubleQuoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			// State is reused here since it's identical in these two cases
+			PerlTokenMaker.INTERNAL_HEREDOC_EOT_UNQUOTED,
+			"more heredoc",
+			"more heredoc",
+			"more heredoc with escaped chars \\EEOT",
+			"more heredoc with $ dollar sign not part of variable",
+			"unterminated EOT",
+			"EOT"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_eot_singleQuoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<'EOT'",
+			"<<'EOT' this  is heredoc",
+			"<<'EOT' this is heredoc EOT",
+			"<<'EOT' this is heredoc with escaped chars \\EEOT",
+			"<<'EOT' heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_eot_singleQuoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			PerlTokenMaker.INTERNAL_HEREDOC_EOT_SINGLE_QUOTED,
+			"more heredoc",
+			"more heredoc",
+			"more heredoc with escaped chars \\EEOT",
+			"more heredoc with $ dollar sign not part of variable",
+			"unterminated EOT",
+			"EOT"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_eot_unquoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<EOT",
+			"<<EOT this  is heredoc",
+			"<<EOT this is heredoc EOT",
+			"<<EOT this is heredoc with escaped chars \\EEOT",
+			"<<EOT heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_eot_unquoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			PerlTokenMaker.INTERNAL_HEREDOC_EOT_UNQUOTED,
+			"more heredoc",
+			"more heredoc EOT",
+			"more heredoc with escaped chars \\EEOT",
+			"more heredoc with $ dollar sign not part of variable",
+			"EOT"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_doubleQuoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<\"EOF\"",
+			"<<\"EOF\" this  is heredoc",
+			"<<\"EOF\" this is heredoc EOF",
+			"<<\"EOF\" this is heredoc with escaped chars \\EEOF",
+			"<<\"EOF\" heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_doubleQuoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			// State is reused here since it's identical in these two cases
+			PerlTokenMaker.INTERNAL_HEREDOC_EOF_UNQUOTED,
+			"more heredoc",
+			"more heredoc",
+			"more heredoc with escaped chars \\EEOF",
+			"more heredoc with $ dollar sign not part of variable",
+			"unterminated EOF",
+			"EOF"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_singleQuoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<'EOF'",
+			"<<'EOF' this  is heredoc",
+			"<<'EOF' this is heredoc EOF",
+			"<<'EOF' this is heredoc with escaped chars \\EEOF",
+			"<<'EOF' heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_singleQuoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			PerlTokenMaker.INTERNAL_HEREDOC_EOF_SINGLE_QUOTED,
+			"more heredoc",
+			"more heredoc",
+			"more heredoc with escaped chars \\EEOF",
+			"more heredoc with $ dollar sign not part of variable",
+			"unterminated EOF",
+			"EOF"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_unquoted() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"<<EOF",
+			"<<EOF this  is heredoc",
+			"<<EOF this is heredoc EOF",
+			"<<EOF this is heredoc with escaped chars \\EEOF",
+			"<<EOF heredoc with $ dollar sign not part of variable"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_unquoted_fromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			PerlTokenMaker.INTERNAL_HEREDOC_EOF_UNQUOTED,
+			"more heredoc",
+			"more heredoc EOF",
+			"more heredoc with escaped chars \\EEOF",
+			"more heredoc with $ dollar sign not part of variable",
+			"EOF"
+		);
+	}
+
+
+	@Test
+	void testHeredoc_unqoutedAndDoubleQuote_withVariable() {
+
+		String[] eofStarts = { "<<EOF", "<<\"EOF\"", "<<EOT", "<<\"EOT\"" };
+		String[] variables = { "$foo", "@foo", "%foo", "${foo}", "$$foo", "@$foo", "%$foo" };
+		for (String eofStart : eofStarts) {
+			for (String variable : variables) {
+
+				String code = eofStart + " " + variable + " more heredoc";
+				Segment segment = createSegment(code);
+				TokenMaker tm = createTokenMaker();
+				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+				Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, eofStart + " "));
+				token = token.getNextToken();
+				Assertions.assertTrue(token.is(TokenTypes.VARIABLE, variable));
+				token = token.getNextToken();
+				Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, " more heredoc"));
+				Assertions.assertFalse(token.getNextToken().isPaintable());
+			}
+		}
+	}
+
+
+	@Test
+	void testHeredoc_singleQuote_variablesNotHighlighted() {
+
+		String[] eofStarts = { "<<'EOF'", "<<'EOT'" };
+		String[] variables = { "$foo", "@foo", "%foo", "${foo}", "$$foo", "@$foo", "%$foo" };
+		for (String eofStart : eofStarts) {
+			for (String variable : variables) {
+
+				String code = eofStart + " " + variable + " more heredoc";
+				Segment segment = createSegment(code);
+				TokenMaker tm = createTokenMaker();
+				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+
+				// All text is heredoc, no variables
+				Assertions.assertTrue(token.is(TokenTypes.PREPROCESSOR, code));
+				Assertions.assertFalse(token.getNextToken().isPaintable());
+			}
+		}
+	}
 
 /* TODO: Start highlighting these!
 	@Test
@@ -437,6 +690,155 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testPod() {
+		String[] podCommandsExceptCut = {
+			"pod", "head1", "head2", "head3", "head4", "over", "item", "back",
+			"begin", "end", "for", "encoding"
+		};
+
+		for (String podCommand : podCommandsExceptCut) {
+			String code = "=" + podCommand + " random other text";
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, "=" + podCommand));
+			token = token.getNextToken();
+			Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, " random other text"));
+			Assertions.assertFalse(token.getNextToken().isPaintable());
+		}
+	}
+
+
+	@Test
+	void testPod_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			PerlTokenMaker.INTERNAL_POD,
+			"foo bar",
+			"=cut"
+		);
+	}
+
+
+	@Test
+	void testPod_endsWithCut() {
+		String code = "=cut for";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, PerlTokenMaker.INTERNAL_POD, 0);
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_DOCUMENTATION, "=cut"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isSingleChar(TokenTypes.WHITESPACE, ' '));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "for"));
+		Assertions.assertFalse(token.getNextToken().isPaintable());
+	}
+
+
+	@Test
+	void testPreprocessor() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"#! This is text"
+		);
+	}
+
+
+	@Test
+	void testRegex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/",
+			"~/foo/",
+			"!~/foo/"
+		);
+	}
+
+
+	@Test
+	void testRegex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
+		);
+	}
+
+
+	@Test
+	void testRegex_startOfLine() {
+		assertAllTokensOfType(TokenTypes.REGEX,
+			"/foo/",
+			"/foo/msixpogcadlu",
+			"/foo/m",
+			"/foo/s",
+			"/foo/i",
+			"/foo/x",
+			"/foo/p",
+			"/foo/o",
+			"/foo/g",
+			"/foo/c",
+			"/foo/a",
+			"/foo/d",
+			"/foo/l",
+			"/foo/u",
+			"/foo(captured)/",
+			"/foo(?:captured)/",
+			"/foo\\/bar/",
+			"m/foo/msixpodualgc",
+			"m/foo/",
+			"m!foo!msixpodualgc",
+			"m!foo!",
+			"m|foo|msixpodualgc",
+			"m|foo|",
+			"m\\foo\\msixpodualgc",
+			"m\\foo\\",
+			"s/foo/bar/msixpodualgcer",
+			"s/foo/bar/",
+			"s!foo!bar!msixpodualgcer",
+			"s!foo!bar!",
+			"s|foo|bar|msixpodualgcer",
+			"s|foo|bar|",
+			"tr/foo/bar/cdsr",
+			"tr/foo/bar/",
+			"tr!foo!bar!cdsr",
+			"tr!foo!bar!",
+			"tr|foo|bar|cdsr",
+			"tr|foo|bar|",
+			"tr\\foo\\bar\\cdsr",
+			"tr\\foo\\bar\\",
+			"y/foo/bar/cdsr",
+			"y/foo/bar/",
+			"y!foo!bar!cdsr",
+			"y!foo!bar!",
+			"y|foo|bar|cdsr",
+			"y|foo|bar|",
+			"y\\foo\\bar\\cdsr",
+			"y\\foo\\bar\\",
+			"qr/foo/msixpodual",
+			"qr/foo/",
+			"qr!foo!msixpodual",
+			"qr!foo!",
+			"qr|foo|msixpodual",
+			"qr|foo|",
+			"qr\\foo\\msixpodual",
+			"qr\\foo\\"
+		);
+	}
+
+
+	@Test
 	void testSeparators() {
 
 		String code = "( ) [ ] { }";
@@ -466,18 +868,48 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"\\\"\""
+		);
+	}
 
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\\"\"",
-		};
 
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
+	@Test
+	void testStringLiterals_continuedFromPriorLine() {
 
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from prior line",
+			"continued from prior line\""
+		);
+	}
+
+
+	@Test
+	void testStringLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"",
+			"\"hi there",
+			"\"\\u00fe",
+			"\"\\\" unclosed"
+		);
+	}
+
+
+	@Test
+	void testVariables() {
+		assertAllTokensOfType(TokenTypes.VARIABLE,
+		"$foo",
+			"@foo",
+			"%foo",
+			"${foo}",
+			"$$foo",
+			"@$foo",
+			"%$foo"
+		);
 	}
 
 
