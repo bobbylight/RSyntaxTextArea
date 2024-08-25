@@ -6,7 +6,6 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
@@ -419,15 +418,5 @@ class ProtoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"\t  \n",
 			"\f"
 		);
-	}
-
-
-	@Test
-	void testYytest() {
-		Segment segment = createSegment("foo ");
-		TokenMaker tm = createTokenMaker();
-		tm.getTokenList(segment, TokenTypes.NULL, 0);
-		// We always parse entire lines so the next token is empty
-		Assertions.assertEquals("", ((AbstractJFlexTokenMaker)tm).yytext());
 	}
 }

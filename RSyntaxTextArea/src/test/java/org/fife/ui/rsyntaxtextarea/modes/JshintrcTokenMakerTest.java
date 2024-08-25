@@ -8,10 +8,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenImpl;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
-import org.fife.ui.rsyntaxtextarea.TokenTypes;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -59,6 +56,19 @@ class JshintrcTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		for (Token token : indentAfter) {
 			Assertions.assertTrue(tm.getShouldIndentNextLineAfter(token));
 		}
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_yycharat() {
+		Segment segment = createSegment("foobar");
+		TokenMaker tm = createTokenMaker();
+		tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () ->
+			// assertion needed to appease spotbugsTest
+			Assertions.assertEquals('\n', ((AbstractJFlexTokenMaker)tm).yycharat(0))
+		);
 	}
 
 

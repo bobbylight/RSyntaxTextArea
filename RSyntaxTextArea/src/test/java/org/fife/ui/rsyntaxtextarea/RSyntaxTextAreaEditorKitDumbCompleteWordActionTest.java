@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.event.ActionEvent;
+import java.text.BreakIterator;
 import javax.swing.ActionMap;
 
 import org.fife.ui.SwingRunnerExtension;
@@ -51,6 +52,23 @@ class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntax
 		ActionMap am = textArea.getActionMap();
 		return (DumbCompleteWordAction)am.get(
 				RTextAreaEditorKit.rtaDumbCompleteWordAction);
+	}
+
+
+	@Test
+	void testActionPerformed_offset0() {
+
+		RSyntaxDocument doc = new RSyntaxDocument(
+			SyntaxConstants.SYNTAX_STYLE_JAVA);
+		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
+		String origText = "aaa aaaa aaaaa";
+		textArea.setText(origText);
+		textArea.setCaretPosition(0);
+		DumbCompleteWordAction action = getDumbCompleteWordAction(textArea);
+
+		action.actionPerformed(createActionEvent(textArea));
+		Assertions.assertEquals(origText, textArea.getText());
+		Assertions.assertEquals(0, textArea.getCaretPosition());
 	}
 
 
@@ -260,4 +278,40 @@ class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntax
 	}
 
 
+	@Test
+	void testGetWordStart_offset0() throws Exception {
+
+		DumbCompleteWordAction action = new DumbCompleteWordAction();
+		RSyntaxDocument doc = new RSyntaxDocument(
+			SyntaxConstants.SYNTAX_STYLE_JAVA);
+		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
+
+		textArea.setText("aa aaa aaaa");
+		textArea.setCaretPosition(0);
+		Assertions.assertEquals(BreakIterator.DONE, action.getPreviousWord(textArea, 0));
+	}
+
+
+	@Test
+	void testIsAcceptablePrefix_emptyString() {
+		DumbCompleteWordAction action = new DumbCompleteWordAction();
+		Assertions.assertFalse(action.isAcceptablePrefix(""));
+	}
+
+
+	@Test
+	void testIsAcceptablePrefix_happyPath() {
+		DumbCompleteWordAction action = new DumbCompleteWordAction();
+		Assertions.assertTrue(action.isAcceptablePrefix("aa"));
+		Assertions.assertTrue(action.isAcceptablePrefix("aa123"));
+		Assertions.assertTrue(action.isAcceptablePrefix("aa_"));
+	}
+
+
+	@Test
+	void testIsAcceptablePrefix_trailingNonIdentifierChar() {
+		DumbCompleteWordAction action = new DumbCompleteWordAction();
+		Assertions.assertFalse(action.isAcceptablePrefix("aa/"));
+		Assertions.assertFalse(action.isAcceptablePrefix("aa-"));
+	}
 }

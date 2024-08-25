@@ -151,6 +151,8 @@ class LessTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
 		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
 		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
+
+		Assertions.assertFalse(tm.isIdentifierChar(0, '!'));
 	}
 
 

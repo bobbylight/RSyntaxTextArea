@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 
@@ -24,9 +26,23 @@ import java.awt.event.ActionEvent;
 class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	void testActionPerformedImpl_increaseFontSize() {
+	void testConstructor_5Arg() {
+		Action a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction(
+			"name", null, "desc", 1, null
+		);
+		Assertions.assertEquals("name", a.getValue(Action.NAME));
+		Assertions.assertNull(a.getValue(Action.LARGE_ICON_KEY));
+		Assertions.assertNull(a.getValue(Action.SMALL_ICON));
+		Assertions.assertEquals("desc", a.getValue(Action.SHORT_DESCRIPTION));
+		Assertions.assertEquals(1, a.getValue(Action.MNEMONIC_KEY));
+		Assertions.assertNull(a.getValue(Action.ACCELERATOR_KEY));
+	}
+
+	@Test
+	void testActionPerformedImpl_increaseFontSize_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
+		JScrollPane sp = new JScrollPane(textArea);
 
 		int origFontSize = 0;
 		for (Style style : textArea.getSyntaxScheme().getStyles()) {
@@ -49,6 +65,55 @@ class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntax
 			}
 		}
 		Assertions.assertTrue(newFontSize > origFontSize);
+	}
+
+	@Test
+	void testActionPerformedImpl_increaseFontSize_capsAtMaxSize() {
+
+		// This action change the font size in increments of 1f, so we start
+		// with a font size close enough to the cap to hit it
+		float maxSize = 40f;
+		RSyntaxTextArea textArea = createTextArea();
+		Font font = textArea.getFont();
+		textArea.setFont(font.deriveFont(maxSize - 0.5f));
+		float origFontSize = textArea.getFont().getSize2D();
+
+		RSyntaxTextAreaEditorKit.IncreaseFontSizeAction a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rtaIncreaseFontSizeAction);
+		a.actionPerformedImpl(e, textArea);
+
+		for (Style style : textArea.getSyntaxScheme().getStyles()) {
+			if (style.font != null) {
+				float newFontSize = style.font.getSize2D();
+				Assertions.assertEquals(maxSize, newFontSize, 0.0001f);
+			}
+		}
+		Assertions.assertEquals(maxSize, textArea.getFont().getSize2D(), 0.0001f);
+	}
+
+	@Test
+	void testActionPerformedImpl_increaseFontSize_alreadyLargerThanMaxSize() {
+
+		// This action change the font size in increments of 1f, so we start
+		// with a font size close enough to the cap to hit it
+		float maxSize = 40f;
+		RSyntaxTextArea textArea = createTextArea();
+		Font font = textArea.getFont();
+		textArea.setFont(font.deriveFont(maxSize + 1f));
+		float origFontSize = textArea.getFont().getSize2D();
+
+		RSyntaxTextAreaEditorKit.IncreaseFontSizeAction a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rtaIncreaseFontSizeAction);
+		a.actionPerformedImpl(e, textArea);
+
+		// Verify fonts remain unchanged in size
+		for (Style style : textArea.getSyntaxScheme().getStyles()) {
+			if (style.font != null) {
+				float newFontSize = style.font.getSize2D();
+				Assertions.assertEquals(origFontSize, newFontSize, 0.0001f);
+			}
+		}
+		Assertions.assertEquals(origFontSize, textArea.getFont().getSize2D(), 0.0001f);
 	}
 
 	@Test

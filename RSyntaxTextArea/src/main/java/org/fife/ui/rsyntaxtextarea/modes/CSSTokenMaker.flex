@@ -192,16 +192,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * Returns <code>true</code> since CSS uses curly braces.
-	 *
-	 * @return <code>true</code> always.
-	 */
-	public boolean getCurlyBracesDenoteCodeBlocks() {
-		return true;
-	}
-
-
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
         return new String[] { "/*", "*/" };
@@ -243,17 +233,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 		cssPrevState = YYINITIAL; // Shouldn't be necessary
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-				state = CSS_STRING;
-				break;
-			case Token.LITERAL_CHAR:
-				state = CSS_CHAR_LITERAL;
-				break;
-			case Token.COMMENT_MULTILINE:
-				state = CSS_C_STYLE_COMMENT;
-				break;
 			case INTERNAL_CSS_PROPERTY:
 				state = CSS_PROPERTY;
 				break;

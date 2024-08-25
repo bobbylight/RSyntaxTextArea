@@ -66,4 +66,37 @@ class RSyntaxTextAreaEditorKitEndWordActionTest extends AbstractRSyntaxTextAreaT
 	}
 
 
+	@Test
+	void testGetWordEnd_noSelection_atNonWordChar() {
+		EndWordAction action = new EndWordAction("endWordAction", false);
+		String TEXT = "!@#$%^&*()";
+		RSyntaxTextArea textArea = createTextArea(TEXT);
+		textArea.setCaretPosition(TEXT.indexOf('#'));
+		action.actionPerformed(createActionEvent(textArea));
+		Assertions.assertEquals(TEXT.indexOf('#'), textArea.getCaretPosition());
+	}
+
+
+	@Test
+	void testGetWordEnd_noSelection_endOfLine() {
+		EndWordAction action = new EndWordAction("endWordAction", false);
+		String TEXT = "111 111\n222 222";
+		RSyntaxTextArea textArea = createTextArea(TEXT);
+		textArea.setCaretPosition(TEXT.indexOf('\n'));
+		action.actionPerformed(createActionEvent(textArea));
+		Assertions.assertEquals("111 111".length(), textArea.getCaretPosition());
+	}
+
+
+	@Test
+	void testGetWordEnd_noSelection_startOfLineOtherThanFirst() {
+		EndWordAction action = new EndWordAction("endWordAction", false);
+		String TEXT = "111 111\n222 222";
+		RSyntaxTextArea textArea = createTextArea(TEXT);
+		textArea.setCaretPosition(TEXT.indexOf('\n') + 1);
+		action.actionPerformed(createActionEvent(textArea));
+		Assertions.assertEquals("111 111\n222".length(), textArea.getCaretPosition());
+	}
+
+
 }

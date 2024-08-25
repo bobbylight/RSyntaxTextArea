@@ -5,11 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.RecordableTextAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.event.ActionEvent;
 
 
 /**
@@ -24,95 +23,119 @@ class RSyntaxTextAreaEditorKitToggleCommentActionTest extends AbstractRSyntaxTex
 
 	@Test
 	void testActionPerformedImpl_notEditable() {
-
-		String code = "line 1\nline 2\nline 3";
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			code);
-		textArea.setCaretPosition(8);
+		RSyntaxTextArea textArea = createTextArea();
 		textArea.setEditable(false);
-
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
-
-		Assertions.assertEquals(code, textArea.getText());
+		String origText = textArea.getText();
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(origText, textArea.getText());
 	}
 
 
 	@Test
 	void testActionPerformedImpl_notEnabled() {
-
-		String code = "line 1\nline 2\nline 3";
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			code);
-		textArea.setCaretPosition(8);
+		RSyntaxTextArea textArea = createTextArea();
 		textArea.setEnabled(false);
-
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
-
-		Assertions.assertEquals(code, textArea.getText());
+		String origText = textArea.getText();
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(origText, textArea.getText());
 	}
 
 
 	@Test
-	void testActionPerformedImpl_singleLine_addComment() {
+	void testActionPerformedImpl_add_multiLine_endsAtStartOfLine() {
+		String text = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = createTextArea(text);
+		textArea.setCaretPosition(text.indexOf('1'));
+		textArea.moveCaretPosition(text.indexOf("line 3"));
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
 
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			"line 1\nline 2\nline 3");
-		textArea.setCaretPosition(8);
-
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
-
-		String expectedText = "line 1\n//line 2\nline 3";
-		Assertions.assertEquals(expectedText, textArea.getText());
+		// Final line is not commented out
+		String expected = "//line 1\n//line 2\nline 3";
+		Assertions.assertEquals(expected, textArea.getText());
 	}
 
 
 	@Test
-	void testActionPerformedImpl_singleLine_removeComment() {
-
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			"line 1\n//line 2\nline 3");
-		textArea.setCaretPosition(8);
-
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
-
-		String expectedText = "line 1\nline 2\nline 3";
-		Assertions.assertEquals(expectedText, textArea.getText());
+	void testActionPerformedImpl_add_multiLine_endsInMiddleOfLine() {
+		String text = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = createTextArea(text);
+		textArea.setCaretPosition(text.indexOf('1'));
+		textArea.moveCaretPosition(text.indexOf("ne 3"));
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		String expected = "//line 1\n//line 2\n//line 3";
+		Assertions.assertEquals(expected, textArea.getText());
 	}
 
 
 	@Test
-	void testActionPerformedImpl_multipleLines_addComment() {
-
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			"line 1\nline 2\nline 3");
-		textArea.setCaretPosition(2);
-		textArea.moveCaretPosition(8);
-
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
-
-		String expectedText = "//line 1\n//line 2\nline 3";
-		Assertions.assertEquals(expectedText, textArea.getText());
+	void testActionPerformedImpl_add_singleLine_startTokenOnly() {
+		String text = "this is code";
+		RSyntaxTextArea textArea = createTextArea(text);
+		textArea.setCaretPosition(0);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("//" + text, textArea.getText());
 	}
 
 
 	@Test
-	void testActionPerformedImpl_multipleLines_removeComment() {
+	void testActionPerformedImpl_add_singleLine_startAndEnd_missingEnd() {
+		String text = "<!-- this is code";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, text);
+		textArea.setCaretPosition(0);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
 
-		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C,
-			"//line 1\n//line 2\nline 3");
-		textArea.setCaretPosition(2);
-		textArea.moveCaretPosition(11);
+		// If the "end" token isn't there, we assume the whole thing needs to be commented out
+		Assertions.assertEquals("<!--" + text + "-->", textArea.getText());
+	}
 
-		ActionEvent e = new ActionEvent(textArea, 0, "command");
-		new RSyntaxTextAreaEditorKit.ToggleCommentAction().actionPerformedImpl(e, textArea);
 
-		String expectedText = "line 1\nline 2\nline 3";
-		Assertions.assertEquals(expectedText, textArea.getText());
+	@Test
+	void testActionPerformedImpl_add_singleLine_languageWithoutComments() {
+		String text = "this is code";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_BBCODE, text);
+		textArea.setCaretPosition(0);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(text, textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_remove_singleLine_caretAtStartOfLine() {
+		String text = "// this is code";
+		RSyntaxTextArea textArea = createTextArea(text);
+		textArea.setCaretPosition(0);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(" this is code", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_remove_singleLine_caretAtStartOfLine_startAndEnd() {
+		String text = "<!-- this is code -->";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_XML, text);
+		textArea.setCaretPosition(0);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(" this is code ", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_remove_singleLine_caretInMiddleOfLine() {
+		String text = "// this is code";
+		RSyntaxTextArea textArea = createTextArea(text);
+		textArea.setCaretPosition(text.indexOf("is"));
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.ToggleCommentAction();
+		a.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals(" this is code", textArea.getText());
 	}
 
 

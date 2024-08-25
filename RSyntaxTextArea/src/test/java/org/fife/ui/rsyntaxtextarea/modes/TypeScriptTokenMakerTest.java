@@ -80,6 +80,34 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testCommon_getClosestStandardTokenTypeForInternalType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_MLC));
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_COMMENT_DOCUMENTATION));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_STRING_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_STRING_VALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_CHAR_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_CHAR_VALID));
+
+		Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID));
+		Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE,
+			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID));
+
+		Assertions.assertEquals(TokenTypes.IDENTIFIER,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.IDENTIFIER));
+	}
+
+
+	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
@@ -530,6 +558,16 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testTS_e4x_priorLine_inComment() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			TypeScriptTokenMaker.INTERNAL_IN_E4X_COMMENT - TypeScriptTokenMaker.E4X,
+			"foo",
+			"foo -->"
+		);
+	}
+
+
+	@Test
 	void testTS_e4x_priorLine_intag() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
 			TS_E4X_INTAG_PREV_TOKEN_TYPE,
@@ -912,12 +950,44 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testTS_Regexes() {
+	void testTS_regex_startOfLine() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			TS_PREV_TOKEN_TYPE,
 			"/foobar/",
 			"/foobar/gim",
 			"/foo\\/bar\\/bas/g"
+		);
+	}
+
+
+	@Test
+	void testTS_regex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/"
+		);
+	}
+
+
+	@Test
+	void testTS_regex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
 		);
 	}
 
@@ -1012,6 +1082,20 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
 			"`My name is \\ubar and I " // Continued onto another line
 		);
+	}
+
+
+	@Test
+	void testTS_TemplateLiterals_invalid_unclosedExpression() {
+
+		String code = "`Hello ${unclosedName";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedName"));
 	}
 
 

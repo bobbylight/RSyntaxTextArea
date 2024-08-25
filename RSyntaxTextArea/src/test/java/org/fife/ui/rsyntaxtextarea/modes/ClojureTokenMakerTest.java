@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class ClojureTokenMakerTest extends AbstractTokenMakerTest {
+class ClojureTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

@@ -2159,16 +2159,6 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
 	static final int INTERNAL_IN_HB_MLC_2				= -(6<<11);
 
 	/**
-	 * Token type specifying we're in a Handlebars multiline string.
-	 */
-	static final int INTERNAL_IN_HB_STRING				= -(7<<11);
-
-	/**
-	 * Token type specifying we're in a Handlebars multiline char.
-	 */
-	static final int INTERNAL_IN_HB_CHAR				= -(8<<11);
-
-	/**
 	 * The state previous CSS-related state we were in before going into a CSS
 	 * string, multi-line comment, etc.
 	 */
@@ -2490,18 +2480,6 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
 						default: // Should never happen
                         case INTERNAL_IN_HB:
                             state = HB;
-                            languageIndex = LANG_INDEX_HANDLEBARS;
-                            hbInState = -initialTokenType&0xff;
-                            hbInLangIndex = (-initialTokenType&0x00ff0000)>>16;
-                            break;
-                        case INTERNAL_IN_HB_CHAR:
-                            state = HB_CHAR_LITERAL;
-                            languageIndex = LANG_INDEX_HANDLEBARS;
-                            hbInState = -initialTokenType&0xff;
-                            hbInLangIndex = (-initialTokenType&0x00ff0000)>>16;
-                            break;
-                        case INTERNAL_IN_HB_STRING:
-                            state = HB_STRING;
                             languageIndex = LANG_INDEX_HANDLEBARS;
                             hbInState = -initialTokenType&0xff;
                             hbInLangIndex = (-initialTokenType&0x00ff0000)>>16;

@@ -21,12 +21,47 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class HtaccessTokenMakerTest extends AbstractTokenMakerTest {
+class HtaccessTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new HtaccessTokenMaker();
+	}
+
+
+	@Test
+	void testAttributeValues_doubleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HtaccessTokenMaker.INTERNAL_ATTR_DOUBLE,
+			"continued and terminated\"",
+			"continued and unterminated"
+		);
+	}
+
+
+	@Test
+	void testAttributeValues_singleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HtaccessTokenMaker.INTERNAL_ATTR_SINGLE,
+			"continued and terminated'",
+			"continued and unterminated"
+		);
+	}
+
+
+	@Test
+	void testCloseTag() {
+		String code = "</foo>";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "</"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
 	}
 
 
@@ -42,7 +77,7 @@ class HtaccessTokenMakerTest extends AbstractTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"# Hello world https://www.sas.com",
+			"# Hello world https://www.google.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -56,7 +91,7 @@ class HtaccessTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 		}
 
@@ -232,4 +267,82 @@ class HtaccessTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo123"
+		);
+	}
+
+
+	@Test
+	void testInTag_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
+			HtaccessTokenMaker.INTERNAL_INTAG,
+			"foo",
+			"foo123"
+		);
+	}
+
+
+	@Test
+	void testInTag_singleAndDoubleQuoteAttributeValues() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			HtaccessTokenMaker.INTERNAL_INTAG,
+			"\"foo bar\"",
+			"'foo bar'"
+		);
+	}
+
+
+	@Test
+	void testOpenTag() {
+		String code = "<foo attr=\"val\">";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "attr"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"val\""));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+	}
+
+
+	@Test
+	void testStrings() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"string 1\"",
+			"\"string with \\n escapes\""
+		);
+	}
+
+
+	@Test
+	void testStrings_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"unclosed string"
+		);
+	}
+
+
+	@Test
+	void testWhitespace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"  ",
+			"  \t ",
+			"\t\t"
+		);
+	}
 }

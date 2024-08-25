@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 
@@ -23,6 +24,19 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyntaxTextAreaTest {
+
+	@Test
+	void testConstructor_5Arg() {
+		Action a = new RSyntaxTextAreaEditorKit.GoToMatchingBracketAction(
+			"name", null, "desc", 1, null
+		);
+		Assertions.assertEquals("name", a.getValue(Action.NAME));
+		Assertions.assertNull(a.getValue(Action.LARGE_ICON_KEY));
+		Assertions.assertNull(a.getValue(Action.SMALL_ICON));
+		Assertions.assertEquals("desc", a.getValue(Action.SHORT_DESCRIPTION));
+		Assertions.assertEquals(1, a.getValue(Action.MNEMONIC_KEY));
+		Assertions.assertNull(a.getValue(Action.ACCELERATOR_KEY));
+	}
 
 	@Test
 	void testActionPerformedImpl_goToMatchingBracket() {
@@ -42,6 +56,27 @@ class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyn
 
 		int expectedOffset = origContent.lastIndexOf('}') + 1;
 		Assertions.assertEquals(expectedOffset, textArea.getCaretPosition());
+	}
+
+	@Test
+	void testActionPerformedImpl_noMatchingBracket() {
+
+		// Missing the final closing bracket
+		String origContent = "public void foo() {\n" +
+			"  if (something) {\n" +
+			"    System.out.println(\"Hello world\");\n" +
+			"  }";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+
+		int firstCurlyOffs = origContent.indexOf('{');
+		textArea.setCaretPosition(firstCurlyOffs);
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.GoToMatchingBracketAction();
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
+		a.actionPerformedImpl(e, textArea);
+
+		// Verify the caret hasn't moved
+		Assertions.assertEquals(firstCurlyOffs, textArea.getCaretPosition());
 	}
 
 	@Test

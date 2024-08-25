@@ -1,8 +1,4 @@
 /*
- * 02/11/2009
- *
- * LineNumberList.java - Renders line numbers in an RTextScrollPane.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

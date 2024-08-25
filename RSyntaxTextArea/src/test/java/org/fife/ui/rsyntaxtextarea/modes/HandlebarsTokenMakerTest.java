@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea.modes;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
+class HandlebarsTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -218,6 +219,147 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testCommon_isIdentifierChar_css() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_CSS, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_CSS, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_CSS, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_CSS, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_CSS, '.'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_CSS, '%'));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_default() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_DEFAULT, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_DEFAULT, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT, '.'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_DEFAULT, '%'));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_handlebars() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(
+				HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, '.'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(
+			HandlebarsTokenMaker.LANG_INDEX_HANDLEBARS, '%'));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_js() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(HandlebarsTokenMaker.LANG_INDEX_JS, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(HandlebarsTokenMaker.LANG_INDEX_JS, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(HandlebarsTokenMaker.LANG_INDEX_JS, '_'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(HandlebarsTokenMaker.LANG_INDEX_JS, '%'));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_invalidLanguageIndex() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(99, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(99, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(99, '_'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(99, '%'));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_false_singleCharThatIsNotParenOrCurly() {
+		TokenMaker tm = createTokenMaker();
+		Segment code = createSegment("<");
+		TokenImpl t = new TokenImpl(code, 0, 0, 0, TokenTypes.OPERATOR,
+			HandlebarsTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(t));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_false_tokenMoreThanLength1() {
+		TokenMaker tm = createTokenMaker();
+		Segment code = createSegment("!=");
+		TokenImpl t = new TokenImpl(code, 0, 1, 0, TokenTypes.OPERATOR,
+			HandlebarsTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(t));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_null() {
+		TokenMaker tm = createTokenMaker();
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(null));
+	}
+
+
+	@Test
 	void testCss_atRule() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			CSS_PREV_TOKEN_TYPE,
@@ -345,6 +487,8 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '-'));
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '_'));
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '.'));
+
+		Assertions.assertFalse(tm.isIdentifierChar(0, '!'));
 	}
 
 
@@ -370,7 +514,6 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testCss_multiLineComment() {
-
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_PREV_TOKEN_TYPE,
 			"/* Hello world */",
 			"/* unterminated",
@@ -381,7 +524,6 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testCss_multiLineComment_continuedFromPreviousLine() {
-
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE, CSS_MLC_PREV_TOKEN_TYPE,
 			" world */",
 			"still unterminated"
@@ -1276,6 +1418,66 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testHtml_inTag_scriptTag_empty_startsJS() {
+		Segment segment = createSegment("<script>for");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "script"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "for"));
+	}
+
+
+	@Test
+	void testHtml_inTag_scriptTag_withAttrs_startsJS() {
+		Segment segment = createSegment("<script type=\"text/javascript\">for");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "script"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "type"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "="));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"text/javascript\""));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, ">"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.RESERVED_WORD, "for"));
+	}
+
+
+	@Test
+	void testHtml_inTag_tagName_validHtml5() {
+		Segment segment = createSegment("<html");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_NAME, "html"));
+	}
+
+
+	@Test
+	void testHtml_inTag_tagName_unknownTagName() {
+		Segment segment = createSegment("<unknown");
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "unknown"));
+	}
+
+
+	@Test
 	void testHtml_inTag_unterminatedOnThisLine() {
 		Segment segment = createSegment("");
 		TokenMaker tm = createTokenMaker();
@@ -1859,7 +2061,8 @@ class HandlebarsTokenMakerTest extends AbstractTokenMakerTest {
 			JS_PREV_TOKEN_TYPE,
 			"`\\xG7`", // Invalid hex/octal escape
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
-			"`My name is \\ubar and I " // Continued onto another line
+			"`My name is \\ubar and I ", // Continued onto another line
+			"`My name is \\ubar and I \\" // Continued onto another line, with superfluous '\'
 		);
 	}
 

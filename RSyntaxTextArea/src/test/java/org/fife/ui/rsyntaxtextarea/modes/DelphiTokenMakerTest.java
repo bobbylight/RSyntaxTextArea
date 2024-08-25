@@ -21,12 +21,59 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class DelphiTokenMakerTest extends AbstractTokenMakerTest {
+class DelphiTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override
 	protected TokenMaker createTokenMaker() {
 		return new DelphiTokenMaker();
+	}
+
+
+	@Test
+	void testBooleans() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			"true",
+			"false"
+		);
+	}
+
+
+	@Test
+	void testCompilerDirective1() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"{$Hello world }",
+			"{$unterminated comment"
+		);
+	}
+
+
+	@Test
+	void testCompilerDirective1_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			DelphiTokenMaker.INTERNAL_COMPILER_DIRECTIVE,
+			"continued from prior line }",
+			"continued from prior line and unterminated"
+		);
+	}
+
+
+	@Test
+	void testCompilerDirective2() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"(*$Hello world *)",
+			"(*$unterminated comment"
+		);
+	}
+
+
+	@Test
+	void testCompilerDirective2_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			DelphiTokenMaker.INTERNAL_COMPILER_DIRECTIVE2,
+			"continued from prior line *)",
+			"continued from prior line and unterminated"
+		);
 	}
 
 
@@ -86,7 +133,7 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"// Hello world https://www.sas.com",
+			"// Hello world https://www.google.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -100,10 +147,20 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 		}
 
+	}
+
+
+	@Test
+	void testEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"#123",
+			"#1",
+			"#9876543210"
+		);
 	}
 
 
@@ -250,6 +307,41 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo123"
+		);
+	}
+
+
+	@Test
+	void testIdentifiers_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			"###"
+		);
+	}
+
+
+	@Test
+	void testIntegers() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"44",
+			"0"
+		);
+	}
+
+
+	@Test
+	void testIntegers_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			"334#",
+			"0x08#"
+		);
+	}
+
+
+	@Test
 	void testKeywords() {
 
 		String[] words = {
@@ -335,18 +427,20 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testMultiLineComments() {
-
-		String[] mlcLiterals = {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"{Hello world }",
-		};
+			"{unterminated comment"
+		);
+	}
 
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
 
+	@Test
+	void testMultiLineComments_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			TokenTypes.COMMENT_MULTILINE,
+			"continued from prior line }",
+			"continued from prior line and unterminated"
+		);
 	}
 
 
@@ -354,7 +448,7 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"{ Hello world https://www.sas.com }",
+			"{ Hello world https://www.google.com }",
 		};
 
 		for (String code : mlcLiterals) {
@@ -368,7 +462,7 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -376,6 +470,25 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 
 		}
 
+	}
+
+
+	@Test
+	void testMultiLineComments2() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"(*Hello world *)",
+			"(*unterminated comment"
+		);
+	}
+
+
+	@Test
+	void testMultiLineComments2_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			DelphiTokenMaker.INTERNAL_MLC2,
+			"continued from prior line *)",
+			"continued from prior line and unterminated"
+		);
 	}
 
 
@@ -450,4 +563,10 @@ class DelphiTokenMakerTest extends AbstractTokenMakerTest {
 	}
 
 
+	@Test
+	void testStringLiterals_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"'Unterminated string"
+		);
+	}
 }
