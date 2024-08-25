@@ -23,7 +23,22 @@ class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyntaxText
 
 
 	@Test
-	void testActionPerformedImpl_noSelection() {
+	void testActionPerformedImpl_atOffset0() {
+
+		String origContent = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
+		textArea.setCaretPosition(0);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(0, textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_middleOfLine_noSelection_letters() {
 
 		String origContent = "line 1\nline 2\nline 3";
 		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
@@ -38,7 +53,22 @@ class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyntaxText
 
 
 	@Test
-	void testActionPerformedImpl_noSelection_nextLine() {
+	void testActionPerformedImpl_middleOfLine_noSelection_symbols() {
+
+		String origContent = "line 1\n@@@@ 2\nline 3";
+		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
+		textArea.setCaretPosition(origContent.indexOf('2'));
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(origContent.indexOf("@@@@ 2"), textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_middleOfLine_noSelection_nextLine() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("line 1\nline 2\nline 3");
 		textArea.setCaretPosition(textArea.getText().indexOf('\n'));
@@ -53,7 +83,7 @@ class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyntaxText
 
 
 	@Test
-	void testActionPerformedImpl_selection() {
+	void testActionPerformedImpl_middleOfLine_selection() {
 
 		String origContent = "line 1\nline 2\nline 3";
 		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
@@ -64,6 +94,56 @@ class RSyntaxTextAreaEditorKitPreviousWordActionTest extends AbstractRSyntaxText
 
 		Assertions.assertEquals(origContent.indexOf("line 2"), textArea.getCaretPosition());
 		Assertions.assertEquals("line ", textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_startOfLine_codeFolding_noSelection() {
+
+		String origContent = "{\n  exit(0);\n}";
+		RSyntaxTextArea textArea = createTextArea(origContent);
+		textArea.setCaretPosition(origContent.indexOf('\n') + 1);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
+
+		// End of the previous line
+		Assertions.assertEquals(origContent.indexOf('\n'), textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_startOfLine_codeFolding_noSelection_hiddenLinesAbove() {
+
+		// The caret is at the start of the last line. Lines immediately above it are collapsed.
+		String origContent = "{\n  {\n    foo;\n  }\n}";
+		RSyntaxTextArea textArea = createTextArea(origContent);
+		textArea.getFoldManager().getFold(0).getChild(0).setCollapsed(true);
+		textArea.setCaretPosition(origContent.lastIndexOf('\n') + 1);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
+
+		// End of the second line (where the collapsed section starts).
+		Assertions.assertEquals(origContent.indexOf("  {") + 3, textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_startOfLine_noCodeFolding_noSelection() {
+
+		String origContent = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
+		textArea.setCaretPosition(origContent.indexOf("line 2"));
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(e, textArea);
+
+		// End of the previous line
+		Assertions.assertEquals(origContent.indexOf("1") + 1, textArea.getCaretPosition());
+		Assertions.assertNull(textArea.getSelectedText());
 	}
 
 

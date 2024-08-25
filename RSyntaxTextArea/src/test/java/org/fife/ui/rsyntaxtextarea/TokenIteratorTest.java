@@ -85,6 +85,17 @@ class TokenIteratorTest {
 	}
 
 
+	@Test
+	void testRemove() {
+		Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+			RSyntaxDocument doc = loadResource("TokenIteratorTest_JavaBasic.txt",
+				SyntaxConstants.SYNTAX_STYLE_JAVA);
+			TokenIterator iter = new TokenIterator(doc);
+			iter.remove();
+		});
+	}
+
+
 	/**
 	 * Loads a text resource from the classpath into an instance of
 	 * {@link RSyntaxDocument}.

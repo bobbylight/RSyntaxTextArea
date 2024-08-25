@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.event.ActionEvent;
 
@@ -21,6 +22,13 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAreaTest {
+
+
+	@Test
+	void testConstructor_nameArg() {
+		Action a = new RSyntaxTextAreaEditorKit.InsertTabAction("foo");
+		Assertions.assertEquals("foo", a.getValue(Action.NAME));
+	}
 
 
 	@Test
@@ -66,7 +74,28 @@ class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAre
 
 
 	@Test
-	void testActionPerformedImpl_multiLineSelection() {
+	void testActionPerformedImpl_multiLineSelection_dotAtStartOfLine() {
+
+		String origContent = "int main() {\n" +
+			"\tprintf(\"Hello world\n\");\n" +
+			"}";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_C, origContent);
+		textArea.setCaretPosition(0);
+		textArea.moveCaretPosition(origContent.indexOf('\t'));
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
+
+		// End line does not get indented since the caret was at the start of it
+		String expectedContent = "\tint main() {\n" +
+			"\tprintf(\"Hello world\n\");\n" +
+			"}";
+		Assertions.assertEquals(expectedContent, textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_multiLineSelection_dotNotAtStartOfLine() {
 
 		String origContent = "int main() {\n" +
 			"\tprintf(\"Hello world\n\");\n" +
@@ -78,6 +107,7 @@ class RSyntaxTextAreaEditorKitInsertTabActionTest extends AbstractRSyntaxTextAre
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RSyntaxTextAreaEditorKit.InsertTabAction().actionPerformedImpl(e, textArea);
 
+		// End line gets indented since the caret was NOT at the start of it
 		String expectedContent = "\tint main() {\n" +
 			"\t\tprintf(\"Hello world\n\");\n" +
 			"}";

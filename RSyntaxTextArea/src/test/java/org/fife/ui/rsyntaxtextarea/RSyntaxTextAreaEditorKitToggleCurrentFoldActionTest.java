@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 
@@ -21,6 +22,19 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends AbstractRSyntaxTextAreaTest {
+
+	@Test
+	void testConstructor_5Arg() {
+		Action a = new RSyntaxTextAreaEditorKit.ToggleCurrentFoldAction(
+			"name", null, "desc", 1, null
+		);
+		Assertions.assertEquals("name", a.getValue(Action.NAME));
+		Assertions.assertNull(a.getValue(Action.LARGE_ICON_KEY));
+		Assertions.assertNull(a.getValue(Action.SMALL_ICON));
+		Assertions.assertEquals("desc", a.getValue(Action.SHORT_DESCRIPTION));
+		Assertions.assertEquals(1, a.getValue(Action.MNEMONIC_KEY));
+		Assertions.assertNull(a.getValue(Action.ACCELERATOR_KEY));
+	}
 
 
 	@Test
@@ -35,6 +49,20 @@ class RSyntaxTextAreaEditorKitToggleCurrentFoldActionTest extends AbstractRSynta
 		FoldManager foldManager = textArea.getFoldManager();
 		Assertions.assertEquals(1, foldManager.getFoldCount());
 		Assertions.assertTrue(foldManager.getFold(0).isCollapsed());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_noFoldsInDocument() {
+
+		RSyntaxTextArea textArea = createTextArea("this is code");
+		textArea.setCaretPosition(1);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.ToggleCurrentFoldAction().actionPerformedImpl(e, textArea);
+
+		FoldManager foldManager = textArea.getFoldManager();
+		Assertions.assertEquals(0, foldManager.getFoldCount());
 	}
 
 
