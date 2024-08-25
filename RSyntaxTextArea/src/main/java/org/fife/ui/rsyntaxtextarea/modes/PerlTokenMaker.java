@@ -1503,7 +1503,7 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -1538,7 +1538,7 @@ public class PerlTokenMaker extends AbstractJFlexCTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -1874,6 +1874,94 @@ public final void yybegin(int newState) {
           { addToken(Token.FUNCTION);
           }
         case 52: break;
+        case 30:
+          { addToken(Token.VARIABLE);
+          }
+        case 53: break;
+        case 1:
+          { addToken(Token.ERROR_IDENTIFIER);
+          }
+        case 54: break;
+        case 24:
+          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken;
+          }
+        case 55: break;
+        case 4:
+          { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken;
+          }
+        case 56: break;
+        case 29:
+          { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken;
+          }
+        case 57: break;
+        case 41:
+          { if (start==zzStartRead) { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+          }
+        case 58: break;
+        case 44:
+          { start = zzStartRead; yybegin(HEREDOC_EOF_SINGLE_QUOTED);
+          }
+        case 59: break;
+        case 45:
+          { start = zzStartRead; yybegin(HEREDOC_EOT_SINGLE_QUOTED);
+          }
+        case 60: break;
+        case 42:
+          { start = zzStartRead; yybegin(HEREDOC_EOF_UNQUOTED);
+          }
+        case 61: break;
+        case 13:
+          { /* Skip escaped chars. */
+          }
+        case 62: break;
+        case 37:
+          { addToken(Token.REGEX);
+          }
+        case 63: break;
+        case 18:
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
+          }
+        case 64: break;
+        case 28:
+          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          }
+        case 65: break;
+        case 21:
+          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken;
+          }
+        case 66: break;
+        case 6:
+          { addToken(Token.WHITESPACE);
+          }
+        case 67: break;
+        case 10:
+          { start = zzMarkedPos-1; yybegin(CHAR_LITERAL);
+          }
+        case 68: break;
+        case 3:
+          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          }
+        case 69: break;
+        case 33:
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos;
+          }
+        case 70: break;
+        case 20:
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+          }
+        case 71: break;
+        case 15:
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+          }
+        case 72: break;
+        case 16:
+          { /* Skip escaped single quotes only, but this should still work. */
+          }
+        case 73: break;
+        case 23:
+          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken;
+          }
+        case 74: break;
         case 36:
           { boolean highlightedAsRegex = false;
 					if (firstToken==null) {
@@ -1896,94 +1984,6 @@ public final void yybegin(int newState) {
 						addToken(zzStartRead, zzStartRead, Token.OPERATOR);
 						zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 					}
-          }
-        case 53: break;
-        case 30:
-          { addToken(Token.VARIABLE);
-          }
-        case 54: break;
-        case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
-          }
-        case 55: break;
-        case 24:
-          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken;
-          }
-        case 56: break;
-        case 4:
-          { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken;
-          }
-        case 57: break;
-        case 29:
-          { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken;
-          }
-        case 58: break;
-        case 41:
-          { if (start==zzStartRead) { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
-          }
-        case 59: break;
-        case 44:
-          { start = zzStartRead; yybegin(HEREDOC_EOF_SINGLE_QUOTED);
-          }
-        case 60: break;
-        case 45:
-          { start = zzStartRead; yybegin(HEREDOC_EOT_SINGLE_QUOTED);
-          }
-        case 61: break;
-        case 42:
-          { start = zzStartRead; yybegin(HEREDOC_EOF_UNQUOTED);
-          }
-        case 62: break;
-        case 13:
-          { /* Skip escaped chars. */
-          }
-        case 63: break;
-        case 37:
-          { addToken(Token.REGEX);
-          }
-        case 64: break;
-        case 18:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
-          }
-        case 65: break;
-        case 28:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
-          }
-        case 66: break;
-        case 21:
-          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken;
-          }
-        case 67: break;
-        case 6:
-          { addToken(Token.WHITESPACE);
-          }
-        case 68: break;
-        case 10:
-          { start = zzMarkedPos-1; yybegin(CHAR_LITERAL);
-          }
-        case 69: break;
-        case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
-          }
-        case 70: break;
-        case 33:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos;
-          }
-        case 71: break;
-        case 20:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
-          }
-        case 72: break;
-        case 15:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
-          }
-        case 73: break;
-        case 16:
-          { /* Skip escaped single quotes only, but this should still work. */
-          }
-        case 74: break;
-        case 23:
-          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken;
           }
         case 75: break;
         case 35:

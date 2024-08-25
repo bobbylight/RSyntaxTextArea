@@ -58,5 +58,17 @@ public abstract class AbstractJFlexTokenMaker extends TokenMakerBase {
 	}
 
 
+	public abstract char yycharat(int pos);
+
+
+	public abstract int yylength();
+
+
+	public abstract void yypushback(int count);
+
+
+	public abstract int yystate();
+
+
 	public abstract String yytext();
 }

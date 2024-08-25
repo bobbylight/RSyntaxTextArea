@@ -6,10 +6,13 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
+import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.text.Segment;
 
 
 /**
@@ -18,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class SASTokenMakerTest extends AbstractTokenMakerTest {
+class SASTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override
@@ -48,23 +51,81 @@ class SASTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testCharLiterals() {
-		String[] chars = {
+	void testChars() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
 			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
 			"'\\11'", "'\\22'", "'\\33'",
-			"'\\1'",
-		};
-		assertAllTokensOfType(TokenTypes.LITERAL_CHAR, chars);
+			"'\\1'"
+		);
+	}
+
+
+	@Test
+	void testChars_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"'",
+			"continued'",
+			"continued and still unterminated"
+		);
 	}
 
 
 	@Test
 	void testEolComments() {
-		String[] eolCommentLiterals = {
-			"* Hello world",
-		};
-		assertAllTokensOfType(TokenTypes.COMMENT_EOL, eolCommentLiterals);
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"* Hello world"
+		);
+	}
+
+
+	/**
+	 * Our lexer is unfortunately complex and needs this test case.
+	 */
+	@Test
+	void testEolComments_withLeadingWhitespace() {
+
+		String code = "  * this is a comment with leading whitespace";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, "  "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.COMMENT_EOL, "* this is a comment with leading whitespace"));
+	}
+
+
+	/**
+	 * Our lexer is unfortunately complex and needs this test case.
+	 */
+	@Test
+	void testEolComments_withLeadingWhitespace_dontMisidentifyLaterInLine() {
+
+		String code = "foo  * notComment";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "foo"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, "  "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.OPERATOR, "*"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "notComment"));
+	}
+
+
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo123"
+		);
 	}
 
 
@@ -361,6 +422,46 @@ class SASTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testMacroVariables() {
+		assertAllTokensOfType(TokenTypes.VARIABLE,
+			"&foo",
+			"&foo123"
+		);
+	}
+
+
+	@Test
+	void testMultiLineComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"/* Hello world unterminated",
+			"/* Hello world */",
+			"/**/"
+		);
+	}
+
+
+	@Test
+	void testMultiLineComments_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			TokenTypes.COMMENT_MULTILINE,
+			"continued from a previous ine and unterminated",
+			"continued from a previous line */"
+		);
+	}
+
+
+	@Test
+	void testOperators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			"+", "-", "/", "^", "|",
+			"=", "^=", "~=",
+			">", ">=",
+			"<", "<=",
+			"eq", "ne", "gt", "lt", "ge", "le", "in"
+		);
+	}
+
+	@Test
 	void testProcs() {
 
 		String[] procs = {
@@ -429,12 +530,35 @@ class SASTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testStringLiterals() {
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"",
-		};
-		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, stringLiterals);
+	void testStrings() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"unterminated string"
+		);
 	}
 
 
+	@Test
+	void testStrings_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"",
+			"continued text\"",
+			"still unterminated"
+		);
+	}
+
+
+	@Test
+	void testWhiteSpace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"   ",
+			"\t",
+			"\t\t",
+			"\t  "
+		);
+	}
 }

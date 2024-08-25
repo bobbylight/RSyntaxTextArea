@@ -23,7 +23,7 @@ import java.io.InputStream;
  * @author Robert Futrell
  * @version 1.0
  */
-class RubyTokenMakerTest extends AbstractTokenMakerTest {
+class RubyTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

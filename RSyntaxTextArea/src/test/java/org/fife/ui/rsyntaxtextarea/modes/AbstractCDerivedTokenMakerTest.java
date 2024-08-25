@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-abstract class AbstractCDerivedTokenMakerTest extends AbstractTokenMakerTest {
+abstract class AbstractCDerivedTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	/**

@@ -21,7 +21,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class CsvTokenMakerTest extends AbstractTokenMakerTest {
+class CsvTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

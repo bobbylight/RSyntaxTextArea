@@ -9,6 +9,7 @@ import org.fife.ui.rsyntaxtextarea.parser.*;
 import org.fife.ui.rtextarea.SmartHighlightPainter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -63,16 +64,42 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 	@Test
-	void testGetSetCaretMarkerColor() {
+	void testGetSetCaretMarkerColor_darkForeground() {
 		Assertions.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
 		strip.setCaretMarkerColor(Color.RED);
 		Assertions.assertEquals(Color.RED, strip.getCaretMarkerColor());
+	}
+
+	@Test
+	void testGetSetCaretMarkerColor_nullDoesNothing() {
+		Assertions.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
+		strip.setCaretMarkerColor(null);
+		Assertions.assertEquals(Color.BLACK, strip.getCaretMarkerColor());
+	}
+
+	@Test
+	@Disabled("Can't set up LookAndFeel where this will have light FG early enough")
+	void testGetSetCaretMarkerColor_lightForeground() {
+		strip.setForeground(Color.WHITE);
+		Assertions.assertEquals(createTextArea().getCaretColor(), strip.getCaretMarkerColor());
+		strip.setCaretMarkerColor(Color.RED);
+		Assertions.assertEquals(Color.RED, strip.getCaretMarkerColor());
+	}
+
+	@Test
+	void testGetSetCaretMarkerOnTop() {
+		Assertions.assertFalse(strip.isCaretMarkerOnTop());
+		strip.setCaretMarkerOnTop(true);
+		Assertions.assertTrue(strip.isCaretMarkerOnTop());
 	}
 
 
 	@Test
 	void testGetSetFollowCaret() {
 		Assertions.assertTrue(strip.getFollowCaret());
+		strip.setFollowCaret(false);
+		Assertions.assertFalse(strip.getFollowCaret());
+		// Repeating the same value does nothing
 		strip.setFollowCaret(false);
 		Assertions.assertFalse(strip.getFollowCaret());
 	}
@@ -91,12 +118,18 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertTrue(strip.getShowMarkAll());
 		strip.setShowMarkAll(false);
 		Assertions.assertFalse(strip.getShowMarkAll());
+		// Calling again with the same value does nothing
+		strip.setShowMarkAll(false);
+		Assertions.assertFalse(strip.getShowMarkAll());
 	}
 
 
 	@Test
 	void testGetSetShowMarkedOccurrences() {
 		Assertions.assertTrue(strip.getShowMarkedOccurrences());
+		strip.setShowMarkedOccurrences(false);
+		Assertions.assertFalse(strip.getShowMarkedOccurrences());
+		// Calling again with the same values does nothing
 		strip.setShowMarkedOccurrences(false);
 		Assertions.assertFalse(strip.getShowMarkedOccurrences());
 	}
@@ -125,7 +158,17 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
 	void testPaint() {
+		strip.addNotify();
+		strip.setSize(strip.getPreferredSize());
+		strip.doLayout();
+		Graphics g = createTestGraphics();
+		strip.paint(g);
+	}
 
+
+	@Test
+	void testPaint_paintCaretMarkerOnTop() {
+		strip.setCaretMarkerOnTop(true);
 		strip.addNotify();
 		strip.setSize(strip.getPreferredSize());
 		strip.doLayout();
@@ -160,7 +203,11 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 			// Note some notices on the same line
 			result.addNotice(new DefaultParserNotice(this, "test notice", 1));
 			result.addNotice(new DefaultParserNotice(this, "second notice", 1));
-			result.addNotice(new DefaultParserNotice(this, "third notice", 2));
+			DefaultParserNotice thirdNotice =
+				new DefaultParserNotice(this, "third notice", 2);
+			thirdNotice.setColor(null);
+			result.addNotice(thirdNotice);
+
 			return result;
 		}
 	}

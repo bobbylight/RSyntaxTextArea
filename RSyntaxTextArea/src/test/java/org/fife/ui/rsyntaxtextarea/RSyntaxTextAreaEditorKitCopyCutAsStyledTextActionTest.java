@@ -13,9 +13,12 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -26,6 +29,33 @@ import java.awt.event.ActionEvent;
  */
 @ExtendWith(SwingRunnerExtension.class)
 class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyntaxTextAreaTest {
+
+	@Test
+	void testConstructor_3Arg() throws IOException {
+
+		InputStream in = getClass().getResourceAsStream("ThemeTest_theme1.xml");
+		Theme theme = Theme.load(in);
+		if (in != null) {
+			in.close();
+		}
+
+		new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(
+			"test-theme", theme, false
+		);
+	}
+
+	@Test
+	void testConstructor_5Arg() {
+		Action a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(
+			"name", null, "desc", 1, null
+		);
+		Assertions.assertEquals("name", a.getValue(Action.NAME));
+		Assertions.assertNull(a.getValue(Action.LARGE_ICON_KEY));
+		Assertions.assertNull(a.getValue(Action.SMALL_ICON));
+		Assertions.assertEquals("desc", a.getValue(Action.SHORT_DESCRIPTION));
+		Assertions.assertEquals(1, a.getValue(Action.MNEMONIC_KEY));
+		Assertions.assertNull(a.getValue(Action.ACCELERATOR_KEY));
+	}
 
 	@Test
 	void testActionPerformedImpl_copyAsStyledText() throws Exception {
@@ -154,7 +184,7 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 	}
 
 	@Test
-	void test_disabledStyledCopyCutAction() throws Exception {
+	void testActionPerformedImpl_notEditable() throws Exception {
 
 		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
 
@@ -167,6 +197,45 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 			"}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, text);
 		textArea.setEditable(false);
+
+		textArea.setCaretPosition(5);
+		textArea.moveCaretPosition(8);
+
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+
+		String clipboardContent = (String)textArea.getToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent);
+		Assertions.assertEquals(text, textArea.getText());
+
+		textArea.setCaretPosition(8);
+		textArea.moveCaretPosition(11);
+
+		// Trying to cut "men". This shouldn't happen as the textArea is not editable.
+		a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
+		a.actionPerformedImpl(e, textArea);
+		clipboardContent = (String)textArea.getToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+		Assertions.assertEquals("com", clipboardContent, "Clipboard content should be unchanged");
+		Assertions.assertEquals(text, textArea.getText());
+
+	}
+
+	@Test
+	void testActionPerformedImpl_notEnabled() throws Exception {
+
+		Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
+		String text = "/*\n" +
+			"* comment\n" +
+			"*/\n" +
+			"public void foo() {\n" +
+			"  /* comment\n" +
+			"     two */\n" +
+			"}";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, text);
+		textArea.setEnabled(false);
 
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);

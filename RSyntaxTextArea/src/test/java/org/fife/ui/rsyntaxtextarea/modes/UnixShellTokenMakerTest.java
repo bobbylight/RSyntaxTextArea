@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class UnixShellTokenMakerTest extends AbstractTokenMakerTest {
+class UnixShellTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

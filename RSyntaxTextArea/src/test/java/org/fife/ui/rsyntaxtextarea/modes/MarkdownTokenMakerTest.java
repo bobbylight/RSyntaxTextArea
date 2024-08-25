@@ -19,7 +19,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
+class MarkdownTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override
@@ -47,8 +47,168 @@ class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testCommon_getSetCompleteCloseTags() {
+		MarkdownTokenMaker tm = (MarkdownTokenMaker)createTokenMaker();
+		Assertions.assertFalse(tm.getCompleteCloseTags());
+		try {
+			MarkdownTokenMaker.setCompleteCloseTags(true);
+			Assertions.assertTrue(tm.getCompleteCloseTags());
+		} finally {
+			MarkdownTokenMaker.setCompleteCloseTags(false);
+		}
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar() {
+		TokenMaker tm = createTokenMaker();
+		for (int i = 0; i < 3; i++) {
+			Assertions.assertTrue(tm.isIdentifierChar(i, 'a'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '9'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '-'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '.'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '_'));
+			Assertions.assertFalse(tm.isIdentifierChar(i, '!'));
+		}
+	}
+
+
+	@Test
 	void testGetCurlyBracesDenoteCodeBlocks() {
 		Assertions.assertFalse(createTokenMaker().getCurlyBracesDenoteCodeBlocks(0));
+	}
+
+
+	@Test
+	void testMarkdown_bold_asterisk() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			"** This is bold **",
+			"** This is bold and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_bold_asterisk_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			MarkdownTokenMaker.INTERNAL_IN_BOLD1,
+			"this is still bold **",
+			"This is still bold and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_bold_underscore() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			"__ This is bold __",
+			"__ This is bold and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_bold_underscore_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			MarkdownTokenMaker.INTERNAL_IN_BOLD2,
+			"this is still bold __",
+			"This is still bold and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_italic_asterisk() {
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			"*This is italic*",
+			"*This is italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_italic_asterisk_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			MarkdownTokenMaker.INTERNAL_IN_ITALIC1,
+			"this is still italic *",
+			"This is still italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_italic_underscore() {
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			"_ This is italic _",
+			"_ This is italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_italic_underscore_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			MarkdownTokenMaker.INTERNAL_IN_ITALIC2,
+			"this is still italic _",
+			"This is still italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_boldItalic_asterisk() {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			"*** This is bold and italic ***",
+			"*** This is bold and italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_boldItalic_asterisk_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			MarkdownTokenMaker.INTERNAL_IN_BOLDITALIC1,
+			"this is still bold and italic ***",
+			"This is still bold and italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_boldItalic_underscore() {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			"___ This is bold and italic ___",
+			"___ This is bold and italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdown_boldItalic_underscore_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			MarkdownTokenMaker.INTERNAL_IN_BOLDITALIC2,
+			"this is still bold and italic ___",
+			"This is still bold and italic and unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdownCode() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			"`foo bar`",
+			"`foo unterminated"
+		);
+	}
+
+
+	@Test
+	void testMarkdownCode_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			MarkdownTokenMaker.INTERNAL_IN_CODE,
+			"foo bar`",
+			"foo bar still unterminated"
+		);
 	}
 
 
@@ -80,6 +240,16 @@ class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(t.is(TokenTypes.PREPROCESSOR, "```"));
 		t = t.getNextToken();
 		Assertions.assertTrue(t.is(TokenTypes.VARIABLE, "javascript"));
+	}
+
+
+	@Test
+	void testMarkdownSyntaxHighlighting_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.PREPROCESSOR,
+			MarkdownTokenMaker.INTERNAL_IN_SYNTAX_HIGHLIGHTING,
+			"foo",
+			"foo bar bas"
+		);
 	}
 
 
@@ -181,6 +351,17 @@ class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 			"~~",
 			"~~word~~",
 			"~~multiple strikethrough words~~"
+		);
+	}
+
+
+	@Test
+	void testMarkdownStrikethrough_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			MarkdownTokenMaker.INTERNAL_IN_STRIKETHROUGH,
+			"~~",
+			"continued from prior line ~~",
+			"continued and still unterminated"
 		);
 	}
 
@@ -419,6 +600,18 @@ class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testHtml_unknownTagName() {
+		String code = "<unknown";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_DELIMITER, "<"));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE, "unknown"));
+	}
+
+
+	@Test
 	void testHtml_allowedTagNames() {
 
 		String[] tagNames = {
@@ -461,5 +654,45 @@ class MarkdownTokenMakerTest extends AbstractTokenMakerTest {
 			}
 
 		}
+	}
+
+
+	@Test
+	void testHtml_attribute_doubleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MarkdownTokenMaker.INTERNAL_INTAG,
+			"\"attribute value\"",
+			"\"unclosed attribute value"
+		);
+	}
+
+
+	@Test
+	void testHtml_attribute_doubleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MarkdownTokenMaker.INTERNAL_ATTR_DOUBLE,
+			"continued from prior line\"",
+			"continued and still unterminated"
+		);
+	}
+
+
+	@Test
+	void testHtml_attribute_singleQuote() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MarkdownTokenMaker.INTERNAL_INTAG,
+			"'attribute value'",
+			"'unclosed attribute value"
+		);
+	}
+
+
+	@Test
+	void testHtml_attribute_singleQuote_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE,
+			MarkdownTokenMaker.INTERNAL_ATTR_SINGLE,
+			"continued from prior line'",
+			"continued and still unterminated"
+		);
 	}
 }

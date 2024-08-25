@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicEditorPaneUI;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 
 /**
@@ -45,6 +47,17 @@ class TipUtilTest {
 		Assertions.assertEquals(defaultTipBG, TipUtil.getToolTipBackground(textArea));
 	}
 
+	@Test
+	void testGetToolTipBackground_zeroArg_nimbus() throws Exception {
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+			Assertions.assertEquals(UIManager.getColor("info"), TipUtil.getToolTipBackground());
+		} finally {
+			UIManager.setLookAndFeel(laf);
+		}
+	}
+
 	/**
 	 * If the text area uses some oddball background color, that color
 	 * should be returned to ensure the tip's content matches the style
@@ -60,8 +73,31 @@ class TipUtilTest {
 	}
 
 	@Test
+	void testGetToolTipBackground_oneArg_nimbus() throws Exception {
+		RTextArea textArea = new RTextArea();
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+			Assertions.assertEquals(UIManager.getColor("info"), TipUtil.getToolTipBackground(textArea));
+		} finally {
+			UIManager.setLookAndFeel(laf);
+		}
+	}
+
+	@Test
 	void getToolTipBorder_zeroArg() {
 		Assertions.assertNotNull(TipUtil.getToolTipBorder());
+	}
+
+	@Test
+	void getToolTipBorder_zeroArg_nimbus() throws Exception {
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+			Assertions.assertNotNull(TipUtil.getToolTipBorder());
+		} finally {
+			UIManager.setLookAndFeel(laf);
+		}
 	}
 
 	/**
@@ -76,6 +112,17 @@ class TipUtilTest {
 		textArea.setBackground(Color.WHITE);
 
 		Assertions.assertNotNull(TipUtil.getToolTipBackground(textArea));
+	}
+
+	@Test
+	void getToolTipBorder_oneArg_nimbus() throws Exception {
+		LookAndFeel laf = UIManager.getLookAndFeel();
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+			Assertions.assertNotNull(TipUtil.getToolTipBorder(new RTextArea()));
+		} finally {
+			UIManager.setLookAndFeel(laf);
+		}
 	}
 
 	/**
@@ -94,5 +141,20 @@ class TipUtilTest {
 		Border expected = BorderFactory.createLineBorder(Color.RED.brighter());
 		Assertions.assertEquals(Color.RED.brighter(), ((LineBorder)actual).getLineColor());
 
+	}
+
+	@Test
+	void testTweakTipEditorPane_nimbus() throws Exception {
+
+		JEditorPane textArea = new JEditorPane("text/html", "");
+		LookAndFeel laf = UIManager.getLookAndFeel();
+
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+			TipUtil.tweakTipEditorPane(textArea);
+			Assertions.assertInstanceOf(BasicEditorPaneUI.class, textArea.getUI());
+		} finally {
+			UIManager.setLookAndFeel(laf);
+		}
 	}
 }

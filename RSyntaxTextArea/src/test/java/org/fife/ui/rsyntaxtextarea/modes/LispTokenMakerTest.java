@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class LispTokenMakerTest extends AbstractTokenMakerTest {
+class LispTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

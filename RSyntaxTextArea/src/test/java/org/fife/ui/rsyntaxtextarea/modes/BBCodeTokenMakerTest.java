@@ -21,7 +21,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class BBCodeTokenMakerTest extends AbstractTokenMakerTest {
+class BBCodeTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

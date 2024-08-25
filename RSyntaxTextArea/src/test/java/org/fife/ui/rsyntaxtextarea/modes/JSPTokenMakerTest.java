@@ -9,9 +9,11 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -21,7 +23,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class JSPTokenMakerTest extends AbstractTokenMakerTest {
+class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -135,9 +137,28 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			JSPTokenMaker.LANG_INDEX_DEFAULT);
 		Assertions.assertEquals("<!--", startAndEnd[0]);
 		Assertions.assertEquals("-->", startAndEnd[1]);
+	}
+
+
+	@Test
+	void testCommon_getLineCommentStartAndEnd_css() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			JSPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertEquals("/*", startAndEnd[0]);
+		Assertions.assertEquals("*/", startAndEnd[1]);
+	}
+
+
+	@Test
+	void testCommon_getLineCommentStartAndEnd_js() {
+		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
+			JSPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertEquals("//", startAndEnd[0]);
+		Assertions.assertNull(startAndEnd[1]);
 	}
 
 
@@ -149,6 +170,128 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			boolean expected = i  == TokenTypes.FUNCTION || i == TokenTypes.VARIABLE ||
 				i == TokenTypes.MARKUP_TAG_NAME;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
+		}
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_null() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(null));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_nullToken() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(new TokenImpl()));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, JSPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, JSPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, JSPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, JSPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, JSPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, JSPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, JSPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, JSPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getSetCompleteCloseTags() {
+		JSPTokenMaker tm = new JSPTokenMaker();
+		boolean orig = tm.getCompleteCloseTags();
+		try {
+			Assertions.assertFalse(orig);
+			JSPTokenMaker.setCompleteCloseTags(true);
+			Assertions.assertTrue(tm.getCompleteCloseTags());
+		} finally {
+			JSPTokenMaker.setCompleteCloseTags(orig);
+		}
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar() {
+		TokenMaker tm = createTokenMaker();
+
+		// All sub-languages support the same identifier chars
+		for (int i = 0; i < 2; i++) {
+
+			// letters
+			for (int ch = 'A'; ch <= 'Z'; ch++) {
+				Assertions.assertTrue(tm.isIdentifierChar(i, (char)ch));
+				Assertions.assertTrue(tm.isIdentifierChar(i, (char)(ch+('a'-'A'))));
+			}
+
+			// some other chars
+			Assertions.assertTrue(tm.isIdentifierChar(i, '-'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '_'));
+			Assertions.assertTrue(tm.isIdentifierChar(i, '.'));
+
+			// Other stuff isn't identifier chars
+			Assertions.assertFalse(tm.isIdentifierChar(i, '%'));
 		}
 	}
 
@@ -188,15 +331,6 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			"and \\'he\\' said so'",
 			"continuation from a prior line"
 		);
-	}
-
-
-	@Test
-	void testCss_getLineCommentStartAndEnd() {
-		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(
-			JSPTokenMaker.LANG_INDEX_CSS);
-		Assertions.assertEquals("/*", startAndEnd[0]);
-		Assertions.assertEquals("*/", startAndEnd[1]);
 	}
 
 
@@ -275,18 +409,6 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "#mainContent"));
 
-	}
-
-	@Test
-	void testCss_isIdentifierChar() {
-		TokenMaker tm = createTokenMaker();
-		for (int ch = 'A'; ch <= 'Z'; ch++) {
-			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
-			Assertions.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
-		}
-		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
-		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
-		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
 	}
 
 
@@ -832,21 +954,22 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testHtml_doctype() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
 			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
-			"<!doctype unclosed",
-		};
+			"<!doctype unclosed"
+		);
+	}
 
-		TokenMaker tm = createTokenMaker();
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
-		}
 
+	@Test
+	void testHtml_doctype_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
+			TokenTypes.VARIABLE,
+			"continued from prior line>",
+			"continued and still unterminated"
+		);
 	}
 
 
@@ -971,21 +1094,22 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testHtml_processingInstructions() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
 			"<?xml version='1.0' encoding='UTF-8' ?>",
 			"<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>",
-			"<?xml unterminated",
-		};
+			"<?xml unterminated"
+		);
+	}
 
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
-		}
 
+	@Test
+	void testHtml_processingInstructions_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
+			TokenTypes.PREPROCESSOR,
+			"continued from prior line ?>",
+			"continued and still unterminated"
+		);
 	}
 
 
@@ -1072,94 +1196,427 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testJava_BinaryLiterals() {
-
-		String code =
-			"0b0 0b1 0B0 0B1 0b010 0B010 0b0_10 0B0_10";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_DECIMAL_INT, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"0b0",
+			"0b1",
+			"0B0",
+			"0B1",
+			"0b010",
+			"0B010",
+			"0b0_10",
+			"0B0_10"
+		);
 	}
 
 
 	@Test
 	void testJava_BooleanLiterals() {
-
-		String code = "true false";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_BOOLEAN, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"true",
+			"false"
+		);
 	}
 
 
 	@Test
 	void testJava_CharLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"'a'",
+			"'\\b'",
+			//"'\\s'",
+			"'\\t'",
+			"'\\r'",
+			"'\\f'",
+			"'\\n'",
+			"'\\u00fe'",
+			"'\\u00FE'",
+			"'\\111'",
+			"'\\222'",
+			"'\\333'",
+			"'\\11'",
+			"'\\22'",
+			"'\\33'",
+			"'\\1'"
+		);
+	}
 
-		String[] chars = {
-			"'a'", "'\\b'", "'\\t'", "'\\r'", "'\\f'", "'\\n'", "'\\u00fe'",
-			"'\\u00FE'", "'\\111'", "'\\222'", "'\\333'",
-			"'\\11'", "'\\22'", "'\\33'",
-			"'\\1'",
+
+	@Test
+	void testJava_CharLiterals_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"'\\x'"
+		);
+	}
+
+
+	@Test
+	void testJava_ClassNames_java_lang() {
+
+		String[] classNames = { "Appendable",
+			"AutoCloseable",
+			"CharSequence",
+			"Cloneable",
+			"Comparable",
+			"Iterable",
+			"Readable",
+			"Runnable",
+			"Thread.UncaughtExceptionHandler",
+			"Boolean",
+			"Byte",
+			"Character",
+			"Character.Subset",
+			"Character.UnicodeBlock",
+			"Class",
+			"ClassLoader",
+			"ClassValue",
+			"Compiler",
+			"Double",
+			"Enum",
+			"Float",
+			"InheritableThreadLocal",
+			"Integer",
+			"Long",
+			"Math",
+			"Number",
+			"Object",
+			"Package",
+			"Process",
+			"ProcessBuilder",
+			"ProcessBuilder.Redirect",
+			"Runtime",
+			"RuntimePermission",
+			"SecurityManager",
+			"Short",
+			"StackTraceElement",
+			"StrictMath",
+			"String",
+			"StringBuffer",
+			"StringBuilder",
+			"System",
+			"Thread",
+			"ThreadGroup",
+			"ThreadLocal",
+			"Throwable",
+			"Void",
+			"Character.UnicodeScript",
+			"ProcessBuilder.Redirect.Type",
+			"Thread.State",
+			"ArithmeticException",
+			"ArrayIndexOutOfBoundsException",
+			"ArrayStoreException",
+			"ClassCastException",
+			"ClassNotFoundException",
+			"CloneNotSupportedException",
+			"EnumConstantNotPresentException",
+			"Exception",
+			"IllegalAccessException",
+			"IllegalArgumentException",
+			"IllegalMonitorStateException",
+			"IllegalStateException",
+			"IllegalThreadStateException",
+			"IndexOutOfBoundsException",
+			"InstantiationException",
+			"InterruptedException",
+			"NegativeArraySizeException",
+			"NoSuchFieldException",
+			"NoSuchMethodException",
+			"NullPointerException",
+			"NumberFormatException",
+			"RuntimeException",
+			"SecurityException",
+			"StringIndexOutOfBoundsException",
+			"TypeNotPresentException",
+			"UnsupportedOperationException",
+			"AbstractMethodError",
+			"AssertionError",
+			"BootstrapMethodError",
+			"ClassCircularityError",
+			"ClassFormatError",
+			"Error",
+			"ExceptionInInitializerError",
+			"IllegalAccessError",
+			"IncompatibleClassChangeError",
+			"InstantiationError",
+			"InternalError",
+			"LinkageError",
+			"NoClassDefFoundError",
+			"NoSuchFieldError",
+			"NoSuchMethodError",
+			"OutOfMemoryError",
+			"StackOverflowError",
+			"ThreadDeath",
+			"UnknownError",
+			"UnsatisfiedLinkError",
+			"UnsupportedClassVersionError",
+			"VerifyError",
+			"VirtualMachineError",
 		};
 
-		for (String code : chars) {
+		for (String code : classNames) {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType());
+			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType());
 		}
 
 	}
 
 
 	@Test
+	void testJava_ClassNames_java_io() {
+
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"Closeable",
+			"DataInput",
+			"DataOutput",
+			"Externalizable",
+			"FileFilter",
+			"FilenameFilter",
+			"Flushable",
+			"ObjectInput",
+			//"ObjectInputFilter",
+			//"ObjectInputFilter.FilterInfo",
+			"ObjectInputValidation",
+			"ObjectOutput",
+			"ObjectStreamConstants",
+			"Serializable",
+
+			"BufferedInputStream",
+			"BufferedOutputStream",
+			"BufferedReader",
+			"BufferedWriter",
+			"ByteArrayInputStream",
+			"ByteArrayOutputStream",
+			"CharArrayReader",
+			"CharArrayWriter",
+			"Console",
+			"DataInputStream",
+			"DataOutputStream",
+			"File",
+			"FileDescriptor",
+			"FileInputStream",
+			"FileOutputStream",
+			"FilePermission",
+			"FileReader",
+			"FileWriter",
+			"FilterInputStream",
+			"FilterOutputStream",
+			"FilterReader",
+			"FilterWriter",
+			"InputStream",
+			"InputStreamReader",
+			"LineNumberInputStream",
+			"LineNumberReader",
+			"ObjectInputStream",
+			"ObjectInputStream.GetField",
+			"ObjectOutputStream",
+			"ObjectOutputStream.PutField",
+			"ObjectStreamClass",
+			"ObjectStreamField",
+			"OutputStream",
+			"OutputStreamWriter",
+			"PipedInputStream",
+			"PipedOutputStream",
+			"PipedReader",
+			"PipedWriter",
+			"PrintStream",
+			"PrintWriter",
+			"PushbackInputStream",
+			"PushbackReader",
+			"RandomAccessFile",
+			"Reader",
+			"SequenceInputStream",
+			"SerializablePermission",
+			"StreamTokenizer",
+			"StringBufferInputStream",
+			"StringReader",
+			"StringWriter",
+			"Writer",
+
+			"CharConversionException",
+			"EOFException",
+			"FileNotFoundException",
+			"InterruptedIOException",
+			"InvalidClassException",
+			"InvalidObjectException",
+			"IOException",
+			"NotActiveException",
+			"NotSerializableException",
+			"ObjectStreamException",
+			"OptionalDataException",
+			"StreamCorruptedException",
+			"SyncFailedException",
+			"UncheckedIOException",
+			"UnsupportedEncodingException",
+			"UTFDataFormatException",
+			"WriteAbortedException",
+
+			"IOError"
+
+			//"Serial"
+		);
+	}
+
+
+	@Test
+	void testJava_ClassNames_java_util() {
+
+		assertAllTokensOfType(TokenTypes.FUNCTION,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"Collection",
+			"Comparator",
+			"Deque",
+			"Enumeration",
+			"EventListener",
+			"Formattable",
+			"Iterator",
+			"List",
+			"ListIterator",
+			"Map",
+			"Map.Entry",
+			"NavigableMap",
+			"NavigableSet",
+			"Observer",
+			"PrimitiveIterator",
+			"PrimitiveIterator.OfDouble",
+			"PrimitiveIterator.OfInt",
+			"PrimitiveIterator.OfLong",
+			"Queue",
+			"RandomAccess",
+			"Set",
+			"SortedMap",
+			"SortedSet",
+			"Spliterator",
+			"Spliterator.OfDouble",
+			"Spliterator.OfInt",
+			"Spliterator.OfLong",
+			"Spliterator.OfPrimitive",
+
+			"AbstractCollection",
+			"AbstractList",
+			"AbstractMap",
+			"AbstractMap.SimpleEntry",
+			"AbstractMap.SimpleImmutableEntry",
+			"AbstractQueue",
+			"AbstractSequentialList",
+			"AbstractSet",
+			"ArrayDeque",
+			"ArrayList",
+			"Arrays",
+			"Base64",
+			"Base64.Decoder",
+			"Base64.Encoder",
+			"BitSet",
+			"Calendar",
+			"Calendar.Builder",
+			"Collections",
+			"Currency",
+			"Date",
+			"Dictionary",
+			"DoubleSummaryStatistics",
+			"EnumMap",
+			"EnumSet",
+			"EventListenerProxy",
+			"EventObject",
+			"FormattableFlags",
+			"Formatter",
+			"GregorianCalendar",
+			"HashMap",
+			"HashSet",
+			"Hashtable",
+			"IdentityHashMap",
+			"IntSummaryStatistics",
+			"LinkedHashMap",
+			"LinkedHashSet",
+			"LinkedList",
+			"ListResourceBundle",
+			"Locale",
+			"Locale.Builder",
+			"Locale.LanguageRange",
+			"LongSummaryStatistics",
+			"Objects",
+			"Observable",
+			"Optional",
+			"OptionalDouble",
+			"OptionalInt",
+			"OptionalLong",
+			"PriorityQueue",
+			"Properties",
+			"PropertyPermission",
+			"PropertyResourceBundle",
+			"Random",
+			"ResourceBundle",
+			"ResourceBundle.Control",
+			"Scanner",
+			"ServiceLoader",
+			"SimpleTimeZone",
+			"Spliterators",
+			"Spliterators.AbstractDoubleSpliterator",
+			"Spliterators.AbstractIntSpliterator",
+			"Spliterators.AbstractLongSpliterator",
+			"Spliterators.AbstractSpliterator",
+			"SpliteratorRandom",
+			"Stack",
+			"StringJoiner",
+			"StringTokenizer",
+			"Timer",
+			"TimerTask",
+			"TimeZone",
+			"TreeMap",
+			"TreeSet",
+			"UUID",
+			"Vector",
+			"WeakHashMap",
+
+			"Formatter.BigDecimalLayoutForm",
+			"Locale.Category",
+			"Locale.FilteringMode",
+
+			"ConcurrentModificationException",
+			"DuplicateFormatFlagsException",
+			"EmptyStackException",
+			"FormatFlagsConversionMismatchException",
+			"FormatterClosedException",
+			"IllegalFormatCodePointException",
+			"IllegalFormatConversionException",
+			"IllegalFormatException",
+			"IllegalFormatFlagsException",
+			"IllegalFormatPrecisionException",
+			"IllegalFormatWidthException",
+			"IllformedLocaleException",
+			"InputMismatchException",
+			"InvalidPropertiesFormatException",
+			"MissingFormatArgumentException",
+			"MissingFormatWidthException",
+			"MissingResourceException",
+			"NoSuchElementException",
+			"TooManyListenersException",
+			"UnknownFormatConversionException",
+			"UnknownFormatFlagsException",
+
+			"ServiceConfigurationError"
+		);
+	}
+
+
+	@Test
 	void testJava_DataTypes() {
-
-		String code = "boolean byte char double float int long short";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.DATA_TYPE, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.DATA_TYPE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"boolean",
+			"byte",
+			"char",
+			"double",
+			"float",
+			"int",
+			"long",
+			"short"
+		);
 	}
 
 
@@ -1167,7 +1624,19 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	void testJava_DocComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
 			JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT,
-			"/** Hello world */");
+			"/** Hello world */",
+			"/** Hello unterminated"
+		);
+	}
+
+
+	@Test
+	void testJava_DocComments_continuedFromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT,
+			"continued from a previous line */",
+			"continued from a previous line unterminated"
+		);
 	}
 
 
@@ -1249,9 +1718,59 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testJava_DocComments_URL_onlyUrlRegionIsHyperlinked() {
+
+		String text = "The URL https://www.google.com is the place";
+		Segment segment = createSegment(text);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_DOCCOMMENT, 0);
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals("The URL ", token.getLexeme());
+
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals("https://www.google.com", token.getLexeme());
+
+		token = token.getNextToken();
+		Assertions.assertFalse(token.isHyperlink());
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION, token.getType());
+		Assertions.assertEquals(" is the place", token.getLexeme());
+	}
+
+
+	@Test
 	void testJava_EolComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
 			"// Hello world");
+	}
+
+
+	@Test
+	@Disabled("URLs are not rendered in Java comments yet")
+	void testJava_EolComments_URL() {
+
+		String[] eolCommentLiterals = {
+			"// Hello world https://www.google.com",
+		};
+
+		for (String code : eolCommentLiterals) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+
+			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+
+			token = token.getNextToken();
+			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
+
+		}
+
 	}
 
 
@@ -1325,185 +1844,142 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testJava_ClassNames_java_lang() {
+	void testJava_Identifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			// Cyrillic chars - most Unicode chars are valid identifier chars
+			"\u0438\u0439"
+		);
+	}
 
-		String[] classNames = { "Appendable",
-				"AutoCloseable",
-				"CharSequence",
-				"Cloneable",
-				"Comparable",
-				"Iterable",
-				"Readable",
-				"Runnable",
-				"Thread.UncaughtExceptionHandler",
-				"Boolean",
-				"Byte",
-				"Character",
-				"Character.Subset",
-				"Character.UnicodeBlock",
-				"Class",
-				"ClassLoader",
-				"ClassValue",
-				"Compiler",
-				"Double",
-				"Enum",
-				"Float",
-				"InheritableThreadLocal",
-				"Integer",
-				"Long",
-				"Math",
-				"Number",
-				"Object",
-				"Package",
-				"Process",
-				"ProcessBuilder",
-				"ProcessBuilder.Redirect",
-				"Runtime",
-				"RuntimePermission",
-				"SecurityManager",
-				"Short",
-				"StackTraceElement",
-				"StrictMath",
-				"String",
-				"StringBuffer",
-				"StringBuilder",
-				"System",
-				"Thread",
-				"ThreadGroup",
-				"ThreadLocal",
-				"Throwable",
-				"Void",
-				"Character.UnicodeScript",
-				"ProcessBuilder.Redirect.Type",
-				"Thread.State",
-				"ArithmeticException",
-				"ArrayIndexOutOfBoundsException",
-				"ArrayStoreException",
-				"ClassCastException",
-				"ClassNotFoundException",
-				"CloneNotSupportedException",
-				"EnumConstantNotPresentException",
-				"Exception",
-				"IllegalAccessException",
-				"IllegalArgumentException",
-				"IllegalMonitorStateException",
-				"IllegalStateException",
-				"IllegalThreadStateException",
-				"IndexOutOfBoundsException",
-				"InstantiationException",
-				"InterruptedException",
-				"NegativeArraySizeException",
-				"NoSuchFieldException",
-				"NoSuchMethodException",
-				"NullPointerException",
-				"NumberFormatException",
-				"RuntimeException",
-				"SecurityException",
-				"StringIndexOutOfBoundsException",
-				"TypeNotPresentException",
-				"UnsupportedOperationException",
-				"AbstractMethodError",
-				"AssertionError",
-				"BootstrapMethodError",
-				"ClassCircularityError",
-				"ClassFormatError",
-				"Error",
-				"ExceptionInInitializerError",
-				"IllegalAccessError",
-				"IncompatibleClassChangeError",
-				"InstantiationError",
-				"InternalError",
-				"LinkageError",
-				"NoClassDefFoundError",
-				"NoSuchFieldError",
-				"NoSuchMethodError",
-				"OutOfMemoryError",
-				"StackOverflowError",
-				"ThreadDeath",
-				"UnknownError",
-				"UnsatisfiedLinkError",
-				"UnsupportedClassVersionError",
-				"VerifyError",
-				"VirtualMachineError",
-		};
 
-		for (String code : classNames) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assertions.assertEquals(TokenTypes.FUNCTION, token.getType());
-		}
+	@Test
+	void testJava_Identifiers_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"foo\\bar"
+		);
+	}
 
+
+	@Test
+	void testJava_IntegerLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"0",
+			"0l",
+			"0L",
+			"42",
+			"42l",
+			"42L",
+			"123_456",
+			"123_456l",
+			"123456L"
+		);
+	}
+
+	@Test
+	void testJava_IntegerLiterals_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"42rst"
+		);
 	}
 
 
 	@Test
 	void testJava_Keywords() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			//"_",
+			"abstract",
+			"assert",
+			"break",
+			"case",
+			"catch",
+			"class",
+			"const",
+			"continue",
+			"default",
+			"do",
+			"else",
+			"enum",
+			//"exports",
+			"extends",
+			"final",
+			"finally",
+			"for",
+			"goto",
+			"if",
+			"implements",
+			"import",
+			"instanceof",
+			"interface",
+			//"module",
+			"native",
+			"new",
+			//"non-sealed",
+			"null",
+			//"open",
+			//"opens",
+			"package",
+			//"permits",
+			"private",
+			"protected",
+			//"provides",
+			"public",
+			//"record",
+			//"requires",
+			//"sealed",
+			"static",
+			"strictfp",
+			"super",
+			"switch",
+			"synchronized",
+			"this",
+			"throw",
+			"throws",
+			//"to",
+			"transient",
+			//"transitive",
+			"try",
+			//"uses",
+			"void",
+			"volatile",
+			"while"
+			//"with"
+		);
+	}
 
-		String code = "abstract assert break case catch class const continue " +
-				"default do else enum extends final finally for goto if " +
-				"implements import instanceof interface native new null package " +
-				"private protected public static strictfp super switch " +
-				"synchronized this throw throws transient try void volatile while";
 
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-
-		String[] keywords = code.split(" +");
-		for (int i = 0; i < keywords.length; i++) {
-			Assertions.assertEquals(keywords[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
-			if (i < keywords.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
-			}
-			token = token.getNextToken();
-		}
-
-		segment = createSegment("return");
-		token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-		Assertions.assertEquals("return", token.getLexeme());
-		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
-
+	@Test
+	void testJava_Keywords_exitingMethod() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"return"
+			//"yield"
+		);
 	}
 
 
 	@Test
 	void testJava_MultiLineComments() {
-
-		String[] mlcLiterals = {
-			"/* Hello world */",
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
 			"/* Hello world unterminated",
+			"/* Hello world */",
 			"/**/"
-		};
-
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+		);
 	}
 
 
 	@Test
 	void testJava_MultiLineComments_fromPreviousLine() {
-
-		String[] mlcLiterals = {
-			"continued from a prior line unterminated",
-			"continued from a prior line */",
-		};
-
-		for (String code : mlcLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_MLC, 0);
-			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-		}
-
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_MLC,
+			"continued from a previous ine and unterminated",
+			"continued from a previous line */"
+		);
 	}
 
 
@@ -1511,7 +1987,7 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 	void testJava_MultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world https://www.sas.com */",
+			"/* Hello world https://www.google.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -1525,7 +2001,7 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -1595,44 +2071,60 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testJava_Separators() {
-
-		String code = "( ) [ ] { }";
-
-		Segment segment = createSegment(code);
-		TokenMaker tm = createTokenMaker();
-		Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-
-		String[] separators = code.split(" +");
-		for (int i = 0; i < separators.length; i++) {
-			Assertions.assertEquals(separators[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
-			// Just one extra test here
-			Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, separators[i].charAt(0)));
-			if (i < separators.length - 1) {
-				token = token.getNextToken();
-				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
-				Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "), "Not a single space: " + token);
-			}
-			token = token.getNextToken();
-		}
-
+		assertAllTokensOfType(TokenTypes.SEPARATOR,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"(",
+			")",
+			"[",
+			"]",
+			"{",
+			"}"
+		);
 	}
 
 
 	@Test
 	void testJava_StringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"\\\"\""
+		);
+	}
 
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\u00fe\"", "\"\\\"\"",
-		};
 
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
+	@Test
+	void testJava_StringLiterals_validEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"\"\\b\\t\\n\\f\\r\\n\\\"\\'\\\\\""
+		);
+	}
 
+
+	@Test
+	void testJava_StringLiteral_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			"\"unterminated string",
+			"\"string with an invalid \\x escape in it\""
+		);
+	}
+
+
+	@Test
+	void testJava_WhiteSpace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
+			" ",
+			"   ",
+			"\t",
+			"\t\t",
+			"\t  \n",
+			"\f"
+		);
 	}
 
 
@@ -1707,6 +2199,16 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Disabled("JSP does not render JS doc comments")
+	void testJS_DocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JS_PREV_TOKEN_TYPE,
+			"/** Hello world */"
+		);
+	}
+
+
+	@Test
 	void testJS_EolComments() {
 
 		String[] eolCommentLiterals = {
@@ -1728,10 +2230,12 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
-			"// Hello world https://www.sas.com",
-			"// Hello world https://www.sas.com extra",
-			"// Hello world https://www.sas.com",
-			"// Hello world ftp://sas.com",
+			"// Hello world https://www.google.com",
+			"// Hello world https://www.google.com extra",
+			"// Hello world http://www.google.com",
+			"// Hello world www.google.com",
+			"// Hello world ftp://google.com",
+			"// Hello world file://test.txt",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -1745,7 +2249,6 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertTrue(token.getLexeme().contains("sas.com"));
 
 			token = token.getNextToken();
 			// Note: The 0-length token at the end of the first example is a
@@ -2015,12 +2518,46 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testJS_Regexes() {
+	void testJS_regex_startOfLine() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			JS_PREV_TOKEN_TYPE,
 			"/foobar/",
 			"/foobar/gim",
 			"/foo\\/bar\\/bas/g"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
 		);
 	}
 
@@ -2119,6 +2656,20 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	void testJS_TemplateLiterals_invalid_unclosedExpression() {
+
+		String code = "`Hello ${unclosedName";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, JS_PREV_TOKEN_TYPE, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedName"));
+	}
+
+
+	@Test
 	void testJS_TemplateLiterals_valid_noInterpolatedExpression() {
 		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
 			JS_PREV_TOKEN_TYPE,
@@ -2197,6 +2748,126 @@ class JSPTokenMakerTest extends AbstractTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.WHITESPACE, token.getType());
 		}
 
+	}
+
+
+	@Test
+	void testJSP_hiddenComment() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			"<%-- comment 1 --%>",
+			"<%-- comment 2 % with % percents --%>",
+			"<%-- unterminated comment"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_charLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"'simple string'"
+			// Lexer doesn't support char escapes yet!
+			//"'string with \\'escaped\\' quotes'",
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_charLiterals_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"'unclosed string"
+		);
+	}
+
+
+	@Test
+	void testJSP_hiddenComment_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			JSPTokenMaker.INTERNAL_IN_HIDDEN_COMMENT,
+			"continued from prior line --%>",
+			"continued and still unterminated"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_closingTag() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_DELIMITER,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"%>"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_identifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"foo",
+			"%",
+			">"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_operators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"="
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_reservedWords() {
+		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"include",
+			"page",
+			"taglib"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_strings() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"\"simple string\""
+			// Lexer doesn't support string escapes yet!
+			//"\"string with \\\"escaped\\\" quotes\"",
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_strings_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			"\"unclosed string"
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_inside_whitespace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
+			" ",
+			"   ",
+			"\t",
+			"  \t  "
+		);
+	}
+
+
+	@Test
+	void testJSP_jspDirective_start() {
+		assertAllTokensOfType(TokenTypes.MARKUP_TAG_DELIMITER,
+			"<%@"
+		);
 	}
 
 

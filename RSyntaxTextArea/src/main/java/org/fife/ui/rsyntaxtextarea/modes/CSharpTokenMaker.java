@@ -1130,7 +1130,7 @@ public class CSharpTokenMaker extends AbstractJFlexCTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = VERBATIMSTRING;
@@ -1141,7 +1141,7 @@ public class CSharpTokenMaker extends AbstractJFlexCTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

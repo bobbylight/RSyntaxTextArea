@@ -18,11 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -104,8 +100,7 @@ public class CodeTemplateManager {
 			int index = Collections.binarySearch(templates, s, comparator);
 			return index>=0 ? templates.get(index) : null;
 		} catch (BadLocationException ble) {
-			ble.printStackTrace();
-			throw new InternalError("Error in CodeTemplateManager");
+			throw new InternalError("Error in CodeTemplateManager", ble);
 		}
 	}
 
@@ -219,9 +214,6 @@ public class CodeTemplateManager {
 	 */
 	public synchronized boolean saveTemplates() {
 
-		if (templates==null) {
-			return true;
-		}
 		if (directory==null || !directory.isDirectory()) {
 			return false;
 		}
@@ -292,10 +284,13 @@ public class CodeTemplateManager {
 					}
 					temp.add((CodeTemplate)obj);
 					d.close();
-				} catch (/*IO, NoSuchElement*/Exception e) {
+				} catch (IOException | ArrayIndexOutOfBoundsException | NoSuchElementException e) {
 					// NoSuchElementException can be thrown when reading
 					// an XML file not in the format expected by XMLDecoder.
 					// (e.g. CodeTemplates in an old format).
+					// ArrayIndexOutOfBoundsException is thrown by XMLDecoder
+					// in certain circumstances for XML that isn't an encoded
+					// Java object.
 					e.printStackTrace();
 				}
 			}

@@ -2,10 +2,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
-import org.fife.ui.rsyntaxtextarea.HtmlOccurrenceMarker;
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenMaker;
-import org.fife.ui.rsyntaxtextarea.TokenTypes;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -17,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class PhpTokenMakerTest extends AbstractTokenMakerTest {
+class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -168,6 +165,88 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 				i == TokenTypes.MARKUP_TAG_NAME;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_null() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(null));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_nullToken() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(new TokenImpl()));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, PHPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, PHPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, PHPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, PHPTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, PHPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, PHPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, PHPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, PHPTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
 	}
 
 
@@ -2253,21 +2332,23 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testHtml_doctype() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
 			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
-			"<!doctype unclosed",
-		};
+			"<!doctype unclosed"
+		);
+	}
 
-		TokenMaker tm = createTokenMaker();
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
-		}
 
+	@Test
+	@Disabled("Multiline DTDs are not supported")
+	void testHtml_doctype_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
+			TokenTypes.VARIABLE,
+			"continued from prior line>",
+			"continued and still unterminated"
+		);
 	}
 
 
@@ -2923,12 +3004,46 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testJS_Regexes() {
+	void testJS_regex_startOfLine() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			JS_PREV_TOKEN_TYPE,
 			"/foobar/",
 			"/foobar/gim",
 			"/foo\\/bar\\/bas/g"
+		);
+	}
+
+
+	@Test
+	void testTS_regex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
 		);
 	}
 
@@ -3023,6 +3138,20 @@ class PhpTokenMakerTest extends AbstractTokenMakerTest {
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
 			"`My name is \\ubar and I " // Continued onto another line
 		);
+	}
+
+
+	@Test
+	void testJS_TemplateLiterals_invalid_unclosedExpression() {
+
+		String code = "`Hello ${unclosedName";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, JS_PREV_TOKEN_TYPE, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedName"));
 	}
 
 

@@ -18,6 +18,7 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -104,7 +105,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * @param language The language to fold, such as {@link #LANGUAGE_PHP}.
 	 */
 	public HtmlFoldParser(int language) {
-		if (language<LANGUAGE_HTML && language>LANGUAGE_JSP) {
+		if (language<LANGUAGE_HTML || language>LANGUAGE_JSP) {
 			throw new IllegalArgumentException("Invalid language: " + language);
 		}
 		this.language = language;
@@ -121,7 +122,7 @@ public class HtmlFoldParser implements FoldParser {
 		Fold currentFold = null;
 		int lineCount = textArea.getLineCount();
 		boolean inMLC = false;
-		boolean inJSMLC = false;
+		boolean inJSPMLC = false;
 		TagCloseInfo tci = new TagCloseInfo();
 
 		try {
@@ -133,7 +134,7 @@ public class HtmlFoldParser implements FoldParser {
 
 					// If we're folding PHP.  Note that PHP folding can only be
 					// "one level deep," so our logic here is simple.
-					if (language>=0 && t.getType()==Token.SEPARATOR) {
+					if (language>=0 && t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 
 						// <?, <?php, <%, <%!, ...
 						if (t.startsWith(LANG_START[language])) {
@@ -166,7 +167,7 @@ public class HtmlFoldParser implements FoldParser {
 
 					if (!inSubLanguage) {
 
-						if (t.getType()==Token.COMMENT_MULTILINE) {
+						if (t.getType()== TokenTypes.MARKUP_COMMENT) {
 
 							// Continuing an MLC from a previous line
 							if (inMLC) {
@@ -187,7 +188,7 @@ public class HtmlFoldParser implements FoldParser {
 							}
 
 							// Continuing a JS MLC from a previous line
-							else if (inJSMLC) {
+							else if (inJSPMLC) {
 								// Found the end of the MLC starting on a previous line...
 								if (t.endsWith(JSP_COMMENT_END)) {
 									int mlcEnd = t.getEndOffset() - 1;
@@ -198,7 +199,7 @@ public class HtmlFoldParser implements FoldParser {
 										removeFold(currentFold, folds);
 									}
 									currentFold = parentFold;
-									inJSMLC = false;
+									inJSPMLC = false;
 								}
 								// Otherwise, this MLC is continuing on to yet
 								// another line.
@@ -227,13 +228,13 @@ public class HtmlFoldParser implements FoldParser {
 								else {
 									currentFold = currentFold.createChild(FoldType.COMMENT, t.getOffset());
 								}
-								inJSMLC = true;
+								inJSPMLC = true;
 							}
 
 						}
 
 						// If we're starting a new tag...
-						else if (t.isSingleChar(Token.MARKUP_TAG_DELIMITER, '<')) {
+						else if (t.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<')) {
 							Token tagStartToken = t;
 							Token tagNameToken = t.getNextToken();
 							if (isFoldableTag(tagNameToken)) {
@@ -244,7 +245,7 @@ public class HtmlFoldParser implements FoldParser {
 								// We have found either ">" or "/>" with tci.
 								//System.out.println(line + ", "+ tci + ", " + t);
 								Token tagCloseToken = tci.closeToken;
-								if (tagCloseToken.isSingleChar(Token.MARKUP_TAG_DELIMITER, '>')) {
+								if (tagCloseToken.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '>')) {
 									if (currentFold==null) {
 										currentFold = new Fold(FoldType.CODE, textArea,
 												tagStartToken.getOffset());
@@ -262,7 +263,7 @@ public class HtmlFoldParser implements FoldParser {
 						}
 
 						// If we've found a closing tag (e.g. "</div>").
-						else if (t.is(Token.MARKUP_TAG_DELIMITER, MARKUP_CLOSING_TAG_START)) {
+						else if (t.is(TokenTypes.MARKUP_TAG_DELIMITER, MARKUP_CLOSING_TAG_START)) {
 							if (currentFold!=null) {
 								Token tagNameToken = t.getNextToken();
 								if (isFoldableTag(tagNameToken) &&
@@ -318,7 +319,7 @@ public class HtmlFoldParser implements FoldParser {
 
 		do {
 
-			while (t!=null && t.getType()!=Token.MARKUP_TAG_DELIMITER) {
+			while (t!=null && t.getType()!=TokenTypes.MARKUP_TAG_DELIMITER) {
 				t = t.getNextToken();
 			}
 

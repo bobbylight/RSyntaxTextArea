@@ -1178,7 +1178,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 
 	static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -16;
 
-	static final int INTERNAL_IN_E4X_COMMENT = -17;
+	static final int INTERNAL_IN_E4X_COMMENT = -(1<<11);
 
 	static final int INTERNAL_E4X_DTD = -18;
 
@@ -1361,7 +1361,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case INTERNAL_IN_JS_MLC:
 				state = JS_MLC;
@@ -1437,8 +1437,8 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 					e4x_prevState = -initialTokenType&0xff;
 					languageIndex = LANG_INDEX_E4X;
 				}
-				else { // Shouldn't happen
-					state = Token.NULL;
+				else {
+					state = YYINITIAL;
 				}
 		}
 

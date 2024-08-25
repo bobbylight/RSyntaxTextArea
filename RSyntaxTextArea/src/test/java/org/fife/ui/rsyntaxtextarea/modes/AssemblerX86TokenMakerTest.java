@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
+class AssemblerX86TokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@BeforeEach
@@ -56,6 +56,38 @@ class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
 			boolean expected = i == TokenTypes.IDENTIFIER;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+
+
+	@Test
+	void testCharLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			"'Hello world'"
+		);
+	}
+
+
+	@Test
+	void testCharLiterals_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			"'Hello world unterminated"
+		);
+	}
+
+
+	@Test
+	void testComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+			"; This is a comment");
+	}
+
+
+	@Test
+	void testIdentifier() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo123"
+		);
 	}
 
 
@@ -854,8 +886,58 @@ class AssemblerX86TokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testComments() {
-		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
-			"; This is a comment");
+	void testNumbers() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"11",
+			"1234567890"
+		);
+	}
+
+
+	@Test
+	void testOperators() {
+		assertAllTokensOfType(TokenTypes.OPERATOR,
+			"+",
+			"-",
+			"*",
+			"/",
+			//"%",
+			"^",
+			"|",
+			"&",
+			"~",
+			"!",
+			"=",
+			"<",
+			">"
+		);
+	}
+
+
+	@Test
+	void testStrings() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"Hello world\""
+		);
+	}
+
+
+	@Test
+	void testStrings_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"Hello world unterminated"
+		);
+	}
+
+
+	@Test
+	void testWhitespace() {
+		assertAllTokensOfType(TokenTypes.WHITESPACE,
+			" ",
+			"  ",
+			"  \t  ",
+			"\t\t"
+		);
 	}
 }

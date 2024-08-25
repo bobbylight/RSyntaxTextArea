@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class SQLTokenMakerTest extends AbstractTokenMakerTest {
+class SQLTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

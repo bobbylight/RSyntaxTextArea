@@ -9,9 +9,11 @@ package org.fife.ui.rsyntaxtextarea.modes;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -21,7 +23,7 @@ import org.junit.jupiter.api.Test;
  * @author Robert Futrell
  * @version 1.0
  */
-class HTMLTokenMakerTest extends AbstractTokenMakerTest {
+class HTMLTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	/**
 	 * The last token type on the previous line for this token maker to
@@ -166,7 +168,7 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testCommon_getSetCloseCompleteTags() {
+	void testCommon_getSetCompleteCloseTags() {
 		HTMLTokenMaker tm = (HTMLTokenMaker)createTokenMaker();
 		Assertions.assertFalse(tm.getCompleteCloseTags());
 		try {
@@ -188,6 +190,128 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			boolean expected = i == TokenTypes.MARKUP_TAG_NAME;
 			Assertions.assertEquals(expected, tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_null() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(null));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_nullToken() {
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(new TokenImpl()));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, HTMLTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, HTMLTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, HTMLTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_css_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, HTMLTokenMaker.LANG_INDEX_CSS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterCurly() {
+		Segment seg = createSegment("{");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, HTMLTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterParen() {
+		Segment seg = createSegment("(");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.SEPARATOR, HTMLTokenMaker.LANG_INDEX_JS);
+		Assertions.assertTrue(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomSingleCharToken() {
+		Segment seg = createSegment("x");
+		Token token = new TokenImpl(
+			seg, 0, 0, 0, TokenTypes.IDENTIFIER, HTMLTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_getShouldIndentNextLineAfter_js_afterRandomMultiCharToken() {
+		Segment seg = createSegment("xx");
+		Token token = new TokenImpl(
+			seg, 0, 1, 0, TokenTypes.IDENTIFIER, HTMLTokenMaker.LANG_INDEX_JS);
+		Assertions.assertFalse(createTokenMaker().getShouldIndentNextLineAfter(token));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_default() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(0, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
+		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(0, '%'));
+	}
+
+
+	@Test
+	void testCommon_isIdentifierChar_js() {
+		TokenMaker tm = createTokenMaker();
+
+		// letters
+		for (int ch = 'A'; ch <= 'Z'; ch++) {
+			Assertions.assertTrue(tm.isIdentifierChar(HTMLTokenMaker.LANG_INDEX_JS, (char)ch));
+			Assertions.assertTrue(tm.isIdentifierChar(HTMLTokenMaker.LANG_INDEX_JS, (char)(ch+('a'-'A'))));
+		}
+
+		// some other chars
+		Assertions.assertTrue(tm.isIdentifierChar(HTMLTokenMaker.LANG_INDEX_JS, '_'));
+
+		// Other stuff isn't identifier chars
+		Assertions.assertFalse(tm.isIdentifierChar(HTMLTokenMaker.LANG_INDEX_JS, '%'));
 	}
 
 
@@ -319,6 +443,8 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '-'));
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '_'));
 		Assertions.assertTrue(tm.isIdentifierChar(langIndex, '.'));
+
+		Assertions.assertFalse(tm.isIdentifierChar(0, '!'));
 	}
 
 
@@ -864,21 +990,12 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testHtml_doctype() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
 			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
-			"<!doctype unclosed",
-		};
-
-		TokenMaker tm = createTokenMaker();
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
-		}
-
+			"<!doctype unclosed"
+		);
 	}
 
 
@@ -1003,21 +1120,12 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 	@Test
 	void testHtml_processingInstructions() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_PROCESSING_INSTRUCTION,
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
 			"<?xml version='1.0' encoding='UTF-8' ?>",
 			"<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>",
-			"<?xml unterminated",
-		};
-
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_PROCESSING_INSTRUCTION, token.getType());
-		}
-
+			"<?xml unterminated"
+		);
 	}
 
 
@@ -1149,6 +1257,16 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
+	@Disabled("JSP does not render JS doc comments")
+	void testJS_DocComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_DOCUMENTATION,
+			JS_PREV_TOKEN_TYPE,
+			"/** Hello world */"
+		);
+	}
+
+
+	@Test
 	void testJS_EolComments() {
 
 		String[] eolCommentLiterals = {
@@ -1171,11 +1289,11 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
-			"// Hello world https://www.sas.com",
-			"// Hello world https://www.sas.com extra",
-			"// Hello world https://www.sas.com",
-			"// Hello world www.sas.com",
-			"// Hello world ftp://sas.com",
+			"// Hello world https://www.google.com",
+			"// Hello world https://www.google.com extra",
+			"// Hello world https://www.google.com",
+			"// Hello world www.google.com",
+			"// Hello world ftp://google.com",
 			"// Hello world file://test.txt",
 		};
 
@@ -1460,12 +1578,46 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 
 
 	@Test
-	void testJS_Regexes() {
+	void testJS_regex() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			JS_PREV_TOKEN_TYPE,
 			"/foobar/",
 			"/foobar/gim",
 			"/foo\\/bar\\/bas/g"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			JS_PREV_TOKEN_TYPE,
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
 		);
 	}
 
@@ -1560,6 +1712,20 @@ class HTMLTokenMakerTest extends AbstractTokenMakerTest {
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
 			"`My name is \\ubar and I " // Continued onto another line
 		);
+	}
+
+
+	@Test
+	void testJS_TemplateLiterals_invalid_unclosedExpression() {
+
+		String code = "`Hello ${unclosedName";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, JS_PREV_TOKEN_TYPE, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedName"));
 	}
 
 

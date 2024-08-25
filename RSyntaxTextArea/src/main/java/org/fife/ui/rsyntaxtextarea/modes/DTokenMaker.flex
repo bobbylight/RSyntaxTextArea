@@ -69,7 +69,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * a nestable multi-line comment.  The nested depth is embedded in the
 	 * actual end token type.
 	 */
-	private static final int INTERNAL_IN_NESTABLE_MLC			= -(1<<11);
+	static final int INTERNAL_IN_NESTABLE_MLC			= -(1<<11);
 
 	/**
 	 * When in a (possibly) nested MLC, this is the current nested depth.
@@ -182,6 +182,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
+	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
 
 		resetTokenList();
@@ -189,7 +190,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		nestedMlcDepth = 0;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_BACKQUOTE:
 				state = WYSIWYG_STRING_2;
@@ -535,7 +536,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{HexStringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
 	{UnclosedHexStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 	{WysiwygStringLiteralStart}		{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(WYSIWYG_STRING_1); }
-	{WysiwygStringLiteralStart2}	{ addToken(Token.LITERAL_BACKQUOTE); yybegin(WYSIWYG_STRING_2); }
+    {WysiwygStringLiteralStart2}    { start = zzMarkedPos-1; yybegin(WYSIWYG_STRING_2); }
 
 	/* Comment literals. */
 	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
@@ -608,7 +609,6 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"/"						{}
 	
 	"+/"					{
-								System.out.println("... " + nestedMlcDepth);
 								if (--nestedMlcDepth==0) {
 									addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(YYINITIAL);
 								}
@@ -648,12 +648,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 }
 
 <WYSIWYG_STRING_2> {
-	[^\`]+					{ addToken(Token.LITERAL_BACKQUOTE); }
-	\`						{ addToken(Token.LITERAL_BACKQUOTE); yybegin(YYINITIAL); }
-	<<EOF>>					{
-								if (firstToken==null) {
-									addToken(Token.LITERAL_BACKQUOTE); 
-								}
-								return firstToken;
-							}
+	[^\`]+					{}
+	\`						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE); }
+	<<EOF>>			        { addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
 }

@@ -12,8 +12,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 
 /**
  * Utility methods for unit tests for <code>TokenMaker</code> implementations.
@@ -22,6 +20,68 @@ import java.io.IOException;
  * @version 1.0
  */
 abstract class AbstractTokenMakerTest {
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always a regex.
+	 *
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreRegexes(String... codes) {
+		assertAllSecondTokensAreRegexes(TokenTypes.NULL, codes);
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always a regex.
+	 *
+	 * @param initialTokenType The initial token tpe of the line.
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreRegexes(int initialTokenType, String... codes) {
+		for (String code : codes) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, initialTokenType, 0);
+
+			// Skip the first token
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.REGEX, token.getType(), "not a regex: " +
+				token + " (code snippet: \"" + code + "\"");
+		}
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always NOT a regex.
+	 *
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreNotRegexes(String... codes) {
+		assertAllSecondTokensAreNotRegexes(TokenTypes.NULL, codes);
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always NOT a regex.
+	 *
+	 * @param initialTokenType The initial token tpe of the line.
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreNotRegexes(int initialTokenType, String... codes) {
+		for (String code : codes) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, initialTokenType, 0);
+
+			// Skip the first token
+			token = token.getNextToken();
+			Assertions.assertNotEquals(TokenTypes.REGEX, token.getType(), "is a regex: " +
+				token + " (code snippet: \"" + code + "\"");
+		}
+	}
 
 
 	/**
@@ -189,15 +249,6 @@ abstract class AbstractTokenMakerTest {
 		};
 		for (Token token : indentAfter) {
 			Assertions.assertTrue(tm.getShouldIndentNextLineAfter(token));
-		}
-	}
-
-
-	@Test
-	void testCommon_yyclose() throws IOException {
-		TokenMaker tm = createTokenMaker();
-		if (tm instanceof AbstractJFlexTokenMaker) {
-			((AbstractJFlexTokenMaker)tm).yyclose();
 		}
 	}
 }
