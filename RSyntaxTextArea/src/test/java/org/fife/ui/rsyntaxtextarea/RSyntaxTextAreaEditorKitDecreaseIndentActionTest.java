@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.RecordableTextAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,35 @@ import java.awt.event.ActionEvent;
 class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRSyntaxTextAreaTest {
 
 	@Test
-	void testActionPerformedImpl_decreaseIndent() {
+	void testActionPerformedImpl_notEditable() {
+
+		RSyntaxTextArea textArea = createTextArea("\t\tfoo");
+		textArea.setEditable(false);
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		ActionEvent e = createActionEvent(textArea, a.getMacroID());
+		a.actionPerformedImpl(e, textArea);
+
+		// Text is unchanged
+		Assertions.assertEquals("\t\tfoo", textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_notEnabled() {
+
+		RSyntaxTextArea textArea = createTextArea("\t\tfoo");
+		textArea.setEnabled(false);
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		ActionEvent e = createActionEvent(textArea, a.getMacroID());
+		a.actionPerformedImpl(e, textArea);
+
+		// Text is unchanged
+		Assertions.assertEquals("\t\tfoo", textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_multipleLinesSelected() {
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA,
 			"/*\n" +
@@ -39,8 +68,8 @@ class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRSyntaxTe
 		textArea.setCaretPosition(0);
 		textArea.moveCaretPosition(textArea.getText().length());
 
-		RSyntaxTextAreaEditorKit.DecreaseIndentAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
-		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction);
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		ActionEvent e = createActionEvent(textArea, a.getMacroID());
 		a.actionPerformedImpl(e, textArea);
 
 		String expected = "/*\n" +
@@ -55,8 +84,34 @@ class RSyntaxTextAreaEditorKitDecreaseIndentActionTest extends AbstractRSyntaxTe
 	}
 
 	@Test
+	void testActionPerformedImpl_singleLine_noSelection() {
+
+		RSyntaxTextArea textArea = createTextArea("\t\tfoo");
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		ActionEvent e = createActionEvent(textArea, a.getMacroID());
+		a.actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("\tfoo", textArea.getText());
+	}
+
+	@Test
+	void testActionPerformedImpl_singleLine_selection() {
+
+		RSyntaxTextArea textArea = createTextArea("\t\tfoo");
+		textArea.setCaretPosition(1);
+		textArea.moveCaretPosition(5);
+
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		ActionEvent e = createActionEvent(textArea, a.getMacroID());
+		a.actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("\tfoo", textArea.getText());
+	}
+
+	@Test
 	void testGetMacroId() {
-		RSyntaxTextAreaEditorKit.DecreaseIndentAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
+		RecordableTextAction a = new RSyntaxTextAreaEditorKit.DecreaseIndentAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaDecreaseIndentAction, a.getMacroID());
 	}
 }

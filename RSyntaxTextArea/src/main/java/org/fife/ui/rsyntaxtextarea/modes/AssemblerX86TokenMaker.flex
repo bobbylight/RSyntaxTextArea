@@ -138,11 +138,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
-		switch (initialTokenType) {
-			default:
-				state = Token.NULL;
-		}
+		int state = YYINITIAL;
 
 		s = text;
 		try {

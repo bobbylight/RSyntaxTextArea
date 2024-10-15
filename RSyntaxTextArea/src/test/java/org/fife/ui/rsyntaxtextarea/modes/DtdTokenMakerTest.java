@@ -8,6 +8,7 @@ package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
 
+import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
@@ -44,6 +45,18 @@ class DtdTokenMakerTest extends AbstractTokenMakerTest {
 		for (int i = 0; i < TokenTypes.DEFAULT_NUM_TOKEN_TYPES; i++) {
 			Assertions.assertFalse(tm.getMarkOccurrencesOfTokenType(i));
 		}
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_yycharat() {
+		Segment segment = createSegment("foo\nbar");
+		TokenMaker tm = createTokenMaker();
+		tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () ->
+			((AbstractJFlexTokenMaker)tm).yycharat(0)
+		);
 	}
 
 

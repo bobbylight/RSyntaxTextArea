@@ -25,6 +25,68 @@ abstract class AbstractTokenMakerTest {
 
 
 	/**
+	 * Verifies that the second token in an array of token lists is always a regex.
+	 *
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreRegexes(String... codes) {
+		assertAllSecondTokensAreRegexes(TokenTypes.NULL, codes);
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always a regex.
+	 *
+	 * @param initialTokenType The initial token tpe of the line.
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreRegexes(int initialTokenType, String... codes) {
+		for (String code : codes) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, initialTokenType, 0);
+
+			// Skip the first token
+			token = token.getNextToken();
+			Assertions.assertEquals(TokenTypes.REGEX, token.getType(), "not a regex: " +
+				token + " (code snippet: \"" + code + "\"");
+		}
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always NOT a regex.
+	 *
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreNotRegexes(String... codes) {
+		assertAllSecondTokensAreNotRegexes(TokenTypes.NULL, codes);
+	}
+
+
+	/**
+	 * Verifies that the second token in an array of token lists is always NOT a regex.
+	 *
+	 * @param initialTokenType The initial token tpe of the line.
+	 * @param codes The array of token lists.
+	 */
+	protected void assertAllSecondTokensAreNotRegexes(int initialTokenType, String... codes) {
+		for (String code : codes) {
+
+			Segment segment = createSegment(code);
+			TokenMaker tm = createTokenMaker();
+			Token token = tm.getTokenList(segment, initialTokenType, 0);
+
+			// Skip the first token
+			token = token.getNextToken();
+			Assertions.assertNotEquals(TokenTypes.REGEX, token.getType(), "is a regex: " +
+				token + " (code snippet: \"" + code + "\"");
+		}
+	}
+
+
+	/**
 	 * Verifies that all tokens in an array have a specific token type.
 	 *
 	 * @param expectedType The expected token type.
@@ -194,10 +256,56 @@ abstract class AbstractTokenMakerTest {
 
 
 	@Test
+	public void testCommon_yycharat() {
+		TokenMaker tm = createTokenMaker();
+		if (tm instanceof AbstractJFlexTokenMaker) {
+			Segment segment = createSegment("foo\nbar");
+			tm.getTokenList(segment, TokenTypes.NULL, 0);
+			// We always parse entire lines so the next token is empty
+			Assertions.assertEquals('\n', ((AbstractJFlexTokenMaker)tm).yycharat(0));
+		}
+	}
+
+
+	@Test
 	void testCommon_yyclose() throws IOException {
 		TokenMaker tm = createTokenMaker();
 		if (tm instanceof AbstractJFlexTokenMaker) {
 			((AbstractJFlexTokenMaker)tm).yyclose();
+		}
+	}
+
+
+	@Test
+	void testCommon_yylength() {
+		TokenMaker tm = createTokenMaker();
+		if (tm instanceof AbstractJFlexTokenMaker) {
+			Segment segment = createSegment("foo");
+			tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assertions.assertEquals(0, ((AbstractJFlexTokenMaker)tm).yylength());
+		}
+	}
+
+
+	@Test
+	void testCommon_yystate() {
+		TokenMaker tm = createTokenMaker();
+		if (tm instanceof AbstractJFlexTokenMaker) {
+			Segment segment = createSegment("foo");
+			tm.getTokenList(segment, TokenTypes.NULL, 0);
+			Assertions.assertEquals(0, ((AbstractJFlexTokenMaker)tm).yystate());
+		}
+	}
+
+
+	@Test
+	void testCommon_yytext() {
+		TokenMaker tm = createTokenMaker();
+		if (tm instanceof AbstractJFlexTokenMaker) {
+			Segment segment = createSegment("foo");
+			tm.getTokenList(segment, TokenTypes.NULL, 0);
+			// We always parse entire lines so the next token is empty
+			Assertions.assertEquals("", ((AbstractJFlexTokenMaker)tm).yytext());
 		}
 	}
 }

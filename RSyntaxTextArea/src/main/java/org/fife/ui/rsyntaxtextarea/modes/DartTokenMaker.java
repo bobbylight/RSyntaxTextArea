@@ -1432,22 +1432,22 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 	/**
 	 * Token type specifying we're in an invalid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_INVALID	= -10;
+	static final int INTERNAL_IN_JS_STRING_INVALID	= -10;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS string.
 	 */
-	private static final int INTERNAL_IN_JS_STRING_VALID		= -11;
+	static final int INTERNAL_IN_JS_STRING_VALID		= -11;
 
 	/**
 	 * Token type specifying we're in an invalid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_INVALID	= -12;
+	static final int INTERNAL_IN_JS_CHAR_INVALID	= -12;
 
 	/**
 	 * Token type specifying we're in a valid multi-line JS single-quoted string.
 	 */
-	private static final int INTERNAL_IN_JS_CHAR_VALID		= -13;
+	static final int INTERNAL_IN_JS_CHAR_VALID		= -13;
 
 	/**
 	 * When in the JS_STRING state, whether the current string is valid.
@@ -1596,7 +1596,7 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 		int languageIndex = LANG_INDEX_DEFAULT;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = DART_MULTILINE_STRING_DOUBLE;
@@ -1622,7 +1622,7 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 				state = JS_CHAR;
 				break;
 			default:
-				state = YYINITIAL; // ???
+				state = YYINITIAL;
 				break;
 		}
 

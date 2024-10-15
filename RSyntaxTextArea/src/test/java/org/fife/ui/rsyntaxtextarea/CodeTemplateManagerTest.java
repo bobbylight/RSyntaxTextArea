@@ -4,7 +4,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-
+import org.fife.TestUtil;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate;
 import org.junit.jupiter.api.Assertions;
@@ -101,6 +101,7 @@ class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 		CodeTemplateManager manager = new CodeTemplateManager();
 		CodeTemplate template = new StaticCodeTemplate("id", "foo", "bar");
 		manager.addTemplate(template);
+		Assertions.assertEquals(1, manager.getTemplates().length);
 		Assertions.assertTrue(manager.removeTemplate(template));
 		Assertions.assertEquals(0, manager.getTemplates().length);
 	}
@@ -130,6 +131,41 @@ class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testSaveTemplates_nullDirectory() {
+		CodeTemplateManager manager = new CodeTemplateManager();
+		Assertions.assertFalse(manager.saveTemplates());
+	}
+
+
+	@Test
+	void testSaveTemplates_directoryDoesNotExist() throws IOException {
+		CodeTemplateManager manager = new CodeTemplateManager();
+		// Because we ensure the directory exists when setting it, this
+		// can only happen if the directory is removed out form under us.
+		Path tempDir = Files.createTempDirectory("testDir");
+		manager.setTemplateDirectory(tempDir.toFile());
+		Files.delete(tempDir);
+		Assertions.assertFalse(manager.saveTemplates());
+	}
+
+
+	@Test
+	void testSaveTemplates_deletesOldFiles() throws IOException {
+
+		CodeTemplateManager manager = new CodeTemplateManager();
+
+		File tempDir = Files.createTempDirectory("testDir").toFile();
+		manager.setTemplateDirectory(tempDir);
+
+		File oldFile = TestUtil.createFile(
+			".xml", "<test/>", tempDir);
+
+		manager.saveTemplates();
+		Assertions.assertEquals(0, tempDir.listFiles().length);
+	}
+
+
+	@Test
 	void testSetTemplateDirectory_dirExists() throws IOException {
 
 		CodeTemplateManager manager = new CodeTemplateManager();
@@ -144,6 +180,17 @@ class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		// Set to same directory just to load the same template a second time
 		Assertions.assertEquals(2, manager.setTemplateDirectory(tempDir.toFile()));
+	}
+
+
+	@Test
+	void testSetTemplateDirectory_dirExists_xmlFileThatIsNotACodeTemplate() throws IOException {
+
+		CodeTemplateManager manager = new CodeTemplateManager();
+		File file = TestUtil.createFile(".xml", "<not-a-macro/>");
+
+		// The non-template XML file is ignored.
+		Assertions.assertEquals(0, manager.setTemplateDirectory(file.getParentFile()));
 	}
 
 
