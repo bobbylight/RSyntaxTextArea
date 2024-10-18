@@ -179,7 +179,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -214,7 +214,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -692,11 +692,11 @@ ErrorIdentifier			= ({NonSeparator}+)
 
 <STRING> {
 	[^\n\\\$\@\%\"]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
@@ -704,19 +704,19 @@ ErrorIdentifier			= ({NonSeparator}+)
 <CHAR_LITERAL> {
 	[^\n\\\']+			{}
 	\\.?					{ /* Skip escaped single quotes only, but this should still work. */ }
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 }
 
 
 <BACKTICKS> {
 	[^\n\\\$\@\%\`]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE); }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
 }
 
@@ -733,10 +733,10 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* syntactic rules.                                                 */
 	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\\$\@\%]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.PREPROCESSOR); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
 }
 
@@ -750,8 +750,8 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* EOF and any other chars.                                         */
 	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
 }
 
@@ -768,10 +768,10 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* syntactic rules.                                                 */
 	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\\$\@\%]+			{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
 	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.PREPROCESSOR); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
+	\n |
 	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
 }
 

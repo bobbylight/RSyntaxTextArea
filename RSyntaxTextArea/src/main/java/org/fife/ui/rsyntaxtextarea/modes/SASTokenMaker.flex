@@ -149,7 +149,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -164,7 +164,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
@@ -642,7 +642,6 @@ MLCEnd			= ("*/")
 
 	[^\n\"]+						{}
 	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-/*	{StringBoundary}{StringBoundary}	{} */
 	{StringBoundary}				{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 
@@ -652,7 +651,6 @@ MLCEnd			= ("*/")
 
 	[^\n\']+						{}
 	{LineTerminator}				{ yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
-/*	{CharBoundary}{CharBoundary}		{} */
 	{CharBoundary}					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
 

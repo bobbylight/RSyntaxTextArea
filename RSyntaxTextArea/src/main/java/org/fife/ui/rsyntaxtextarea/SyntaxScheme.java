@@ -105,7 +105,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		for (Style style : styles) {
 			if (style != null && style.font != null) {
 				if (style.font.getFamily().equals(oldFont.getFamily()) &&
-					style.font.getSize() == oldFont.getSize()) {
+					style.font.getSize2D() == oldFont.getSize2D()) {
 					int styleFontStyle = style.font.getStyle(); // Keep bold or italic
 					style.font = newFont.deriveFont(styleFontStyle);
 				}

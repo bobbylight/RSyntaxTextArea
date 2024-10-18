@@ -374,7 +374,7 @@ public class FocusableTip {
 			}
 			else if (e.getKeyCode()==KeyEvent.VK_F2) {
 				if (tipWindow!=null && !tipWindow.getFocusableWindowState()) {
-					tipWindow.actionPerformed(null);
+					tipWindow.actionPerformed();
 					e.consume(); // Don't do bookmarking stuff
 				}
 			}
