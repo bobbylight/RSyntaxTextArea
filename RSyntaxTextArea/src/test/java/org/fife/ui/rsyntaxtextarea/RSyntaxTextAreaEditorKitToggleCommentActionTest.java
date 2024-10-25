@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.awt.event.ActionEvent;
+
 
 /**
  * Unit tests for the {@link RSyntaxTextAreaEditorKit.ToggleCommentAction} class.

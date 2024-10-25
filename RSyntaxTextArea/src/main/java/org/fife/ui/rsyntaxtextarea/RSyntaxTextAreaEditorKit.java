@@ -2287,7 +2287,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		private void handleToggleComment(Element elem, Document doc, String line, String[] startEnd, int[] pos) throws BadLocationException {
 			int startOffset = elem.getStartOffset();
 
-			if (pos[0] < 0 && pos[1] < 0) { // no marker found, add comment
+			if (pos[0] >= 0 && ((pos[1] >= 0 && startEnd[1] != null) || (pos[1] < 0 && startEnd[1] == null))) {
+				//  start-mark found (and also the end-mark for two-mark comments)
+				if (startEnd[1] != null && pos[1] >= 0)
+					doc.remove(startOffset + pos[1], startEnd[1].length());
+
+				if (pos[0] >= 0)
+					doc.remove(startOffset + pos[0], startEnd[0].length());
+			} else {
 				if (startEnd[1] != null) {
 					// add the mark after the last char of the line
 					doc.insertString(elem.getEndOffset() - 1, startEnd[1], null);
@@ -2296,12 +2303,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// insert the mark right before the first non-ws char
 				int n = RSyntaxUtilities.getLeadingWhitespace(line).length();
 				doc.insertString(startOffset + n, startEnd[0], null);
-			} else {
-				if (startEnd[1] != null && pos[1] >= 0)
-					doc.remove(startOffset + pos[1], startEnd[1].length());
-
-				if (pos[0] >= 0)
-					doc.remove(startOffset + pos[0], startEnd[0].length());
 			}
 		}
 
