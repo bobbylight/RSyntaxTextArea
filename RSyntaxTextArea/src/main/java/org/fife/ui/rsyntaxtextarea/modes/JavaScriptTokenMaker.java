@@ -1165,7 +1165,7 @@ public class JavaScriptTokenMaker extends AbstractJFlexCTokenMaker {
 
     static final int INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION = -16;
 
-    static final int INTERNAL_E4X_COMMENT = -17;
+	static final int INTERNAL_E4X_COMMENT = -(1<<11);
 
     static final int INTERNAL_E4X_DTD = -18;
 

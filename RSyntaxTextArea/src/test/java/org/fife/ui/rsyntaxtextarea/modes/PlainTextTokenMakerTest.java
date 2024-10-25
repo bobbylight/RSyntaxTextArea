@@ -22,7 +22,7 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
  * @author Robert Futrell
  * @version 1.0
  */
-class PlainTextTokenMakerTest extends AbstractTokenMakerTest {
+class PlainTextTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

@@ -23,7 +23,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class Assembler6502TokenMakerTest extends AbstractTokenMakerTest {
+class Assembler6502TokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@BeforeEach

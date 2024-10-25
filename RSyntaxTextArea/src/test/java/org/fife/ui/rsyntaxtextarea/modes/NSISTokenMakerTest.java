@@ -31,6 +31,33 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testBackquoteLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			"`This is a literal`"
+		);
+	}
+
+
+	@Test
+	void testBackquoteLiterals_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BACKQUOTE,
+			TokenTypes.LITERAL_BACKQUOTE,
+			"continued from prior line`",
+			"continued and still unterminated"
+		);
+	}
+
+
+	@Test
+	void testBooleanLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_BOOLEAN,
+			"true",
+			"false"
+		);
+	}
+
+
+	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
@@ -54,7 +81,11 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testCharLiterals() {
 
 		String[] chars = {
-			"''", "'hi'", "'\"\"'", "'$\'escaped single quote'",
+			"''",
+			"'hi'",
+			"'\"\"'",
+			"'$\\'escaped single quote'",
+			"'Ending with an escape to continue to the next line \\"
 		};
 
 		for (String code : chars) {
@@ -64,6 +95,24 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType(), "Invalid char literal: " + token);
 		}
 
+	}
+
+
+	@Test
+	void testCharLiterals_continuedFromPriorLine_closed() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued from prior line'"
+		);
+	}
+
+
+	@Test
+	void testCharLiterals_continuedFromPriorLine_unclosed() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			TokenTypes.LITERAL_CHAR,
+			"continued and still unterminated"
+		);
 	}
 
 
@@ -89,8 +138,8 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testEolComments_URL() {
 
 		String[] eolCommentLiterals = {
-			"# Hello world https://www.sas.com",
-			"; Hello world https://www.sas.com",
+			"# Hello world https://www.google.com",
+			"; Hello world https://www.google.com",
 		};
 
 		for (String code : eolCommentLiterals) {
@@ -104,10 +153,19 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_EOL, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 		}
 
+	}
+
+
+	@Test
+	void testErrorNumberFormat() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			"54for",
+			"0b10xxx"
+		);
 	}
 
 
@@ -135,6 +193,16 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
+	}
+
+
+	@Test
+	void testIntegers() {
+		assertAllTokensOfType(TokenTypes.LITERAL_NUMBER_DECIMAL_INT,
+			"0",
+			"1",
+			"123456790"
+		);
 	}
 
 
@@ -234,7 +302,7 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testMultiLineComments_URL() {
 
 		String[] mlcLiterals = {
-			"/* Hello world https://www.sas.com */",
+			"/* Hello world https://www.google.com */",
 		};
 
 		for (String code : mlcLiterals) {
@@ -248,7 +316,7 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 			Assertions.assertTrue(token.isHyperlink());
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
-			Assertions.assertEquals("https://www.sas.com", token.getLexeme());
+			Assertions.assertEquals("https://www.google.com", token.getLexeme());
 
 			token = token.getNextToken();
 			Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE, token.getType());
@@ -319,7 +387,10 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	void testStringLiterals() {
 
 		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"$\\\"escaped double quote\"",
+			"\"\"",
+			"\"hi\"",
+			"\"$\\\"escaped double quote\"",
+			"\"ending with escape to continue to the next line \\"
 		};
 
 		for (String code : stringLiterals) {
@@ -332,4 +403,20 @@ class NSISTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
+	@Test
+	void testStrings_continuedFromPriorLine_closed() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued from prior line\""
+		);
+	}
+
+
+	@Test
+	void testStrings_continuedFromPriorLine_unterminated() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"continued and still unterminated"
+		);
+	}
 }

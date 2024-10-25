@@ -123,13 +123,13 @@ import org.fife.ui.rsyntaxtextarea.*;
 	/**
 	 * Token type specifying we're in a JSP hidden comment ("<%-- ... --%>").
 	 */
-	private static final int INTERNAL_IN_HIDDEN_COMMENT		= -10;
+	static final int INTERNAL_IN_HIDDEN_COMMENT		= -10;
 
 	/**
 	 * Token type specifying we're in a JSP directive (either include, page
 	 * or taglib).
 	 */
-	private static final int INTERNAL_IN_JSP_DIRECTIVE			= -11;
+	static final int INTERNAL_IN_JSP_DIRECTIVE			= -11;
 
 	/**
 	 * Token type specifying we're in JavaScript.
@@ -413,7 +413,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		int languageIndex = 0;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.MARKUP_COMMENT:
 				state = COMMENT;

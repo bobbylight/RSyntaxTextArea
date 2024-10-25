@@ -148,7 +148,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state;
 		switch (initialTokenType) {
 			case Token.LITERAL_STRING_DOUBLE_QUOTE:
 				state = VERBATIMSTRING;
@@ -159,7 +159,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

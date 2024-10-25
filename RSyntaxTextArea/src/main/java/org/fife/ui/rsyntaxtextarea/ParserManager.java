@@ -42,7 +42,6 @@ import org.fife.ui.rtextarea.RDocument;
 import org.fife.ui.rtextarea.RTextAreaHighlighter.HighlightInfo;
 
 
-
 /**
  * Manages running a parser object for an <code>RSyntaxTextArea</code>.
  *
@@ -84,7 +83,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	/**
 	 * Whether to print debug messages while running parsers.
 	 */
-	private static final boolean DEBUG_PARSING;
+	private boolean debugParsing;
 
 	/**
 	 * The default delay between the last key press and when the document
@@ -113,6 +112,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 *        parsing.
 	 */
 	ParserManager(int delay, RSyntaxTextArea textArea) {
+		debugParsing = getDefaultDebugParsing();
 		this.textArea = textArea;
 		textArea.getDocument().addDocumentListener(this);
 		textArea.addPropertyChangeListener("document", this);
@@ -138,7 +138,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		}
 
 		long begin = 0;
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			begin = System.currentTimeMillis();
 		}
 
@@ -150,7 +150,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		int lastLine = lastOffsetModded==null ? root.getElementCount()-1 :
 			root.getElementIndex(lastOffsetModded.getOffset());
 		firstOffsetModded = lastOffsetModded = null;
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			System.out.println("[DEBUG]: Minimum lines to parse: " + firstLine + "-" + lastLine);
 		}
 
@@ -172,7 +172,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			doc.readUnlock();
 		}
 
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			float time = (System.currentTimeMillis()-begin)/1000f;
 			System.out.println("Total parsing time: " + time + " seconds");
 		}
@@ -220,7 +220,7 @@ class ParserManager implements DocumentListener, ActionListener,
 			return;
 		}
 
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			System.out.println("[DEBUG]: Adding parser notices from " +
 								res.getParser());
 		}
@@ -238,7 +238,7 @@ class ParserManager implements DocumentListener, ActionListener,
 													textArea.getHighlighter();
 
 			for (ParserNotice notice : notices) {
-				if (DEBUG_PARSING) {
+				if (debugParsing) {
 					System.out.println("[DEBUG]: ... adding: " + notice);
 				}
 				try {
@@ -255,7 +255,7 @@ class ParserManager implements DocumentListener, ActionListener,
 
 		}
 
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			System.out.println("[DEBUG]: Done adding parser notices from " +
 								res.getParser());
 		}
@@ -345,6 +345,18 @@ class ParserManager implements DocumentListener, ActionListener,
 		} finally {
 			doc.readUnlock();
 		}
+	}
+
+
+	private static boolean getDefaultDebugParsing() {
+		boolean debugParsing;
+		try {
+			debugParsing = Boolean.getBoolean(PROPERTY_DEBUG_PARSING);
+		} catch (AccessControlException ace) {
+			// Likely an applet's security manager.
+			debugParsing = false; // FindBugs
+		}
+		return debugParsing;
 	}
 
 
@@ -664,7 +676,7 @@ class ParserManager implements DocumentListener, ActionListener,
 					i.remove();
 					removed = true;
 				}
-				if (DEBUG_PARSING) {
+				if (debugParsing) {
 					String text = removed ? "[DEBUG]: ... notice removed: " :
 											"[DEBUG]: ... notice not removed: ";
 					System.out.println(text + pair.notice);
@@ -717,6 +729,18 @@ class ParserManager implements DocumentListener, ActionListener,
 
 
 	/**
+	 * Toggles whether debug information about parsing is
+	 * written to stdout.
+	 *
+	 * @param debugParsing Whether debug parsing information
+	 *        is enabled.
+	 */
+	public void setDebugParsing(boolean debugParsing) {
+		this.debugParsing = debugParsing;
+	}
+
+
+	/**
 	 * Sets the delay between the last "concurrent" edit and when the document
 	 * is reparsed.
 	 *
@@ -747,7 +771,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	private boolean shouldRemoveNotice(ParserNotice notice,
 											ParseResult res) {
 
-		if (DEBUG_PARSING) {
+		if (debugParsing) {
 			System.out.println("[DEBUG]: ... ... shouldRemoveNotice " +
 					notice + ": " + (notice.getParser()==res.getParser()));
 		}
@@ -788,18 +812,6 @@ class ParserManager implements DocumentListener, ActionListener,
 			this.highlight = highlight;
 		}
 
-	}
-
-
-	static {
-		boolean debugParsing;
-		try {
-			debugParsing = Boolean.getBoolean(PROPERTY_DEBUG_PARSING);
-		} catch (AccessControlException ace) {
-			// Likely an applet's security manager.
-			debugParsing = false; // FindBugs
-		}
-		DEBUG_PARSING = debugParsing;
 	}
 
 

@@ -106,9 +106,30 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	@Disabled("Not yet implemented")
-	void testJS_api_getClosestStandardTokenTypeForInternalType() {
-		// TODO
+	void testCommon_getClosestStandardTokenTypeForInternalType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_MLC));
+		Assertions.assertEquals(TokenTypes.COMMENT_DOCUMENTATION,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_COMMENT_DOCUMENTATION));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_STRING_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_STRING_VALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_CHAR_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_CHAR_VALID));
+
+		Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID));
+		Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE,
+			tm.getClosestStandardTokenTypeForInternalType(JavaScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID));
+
+		Assertions.assertEquals(TokenTypes.IDENTIFIER,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.IDENTIFIER));
 	}
 
 
@@ -575,6 +596,16 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testJS_e4x_priorLine_inComment() {
+		assertAllTokensOfType(TokenTypes.MARKUP_COMMENT,
+			JavaScriptTokenMaker.INTERNAL_E4X_COMMENT - JavaScriptTokenMaker.E4X,
+			"foo",
+			"foo -->"
+		);
+	}
+
+
+	@Test
 	void testJS_e4x_priorLine_intag() {
 		assertAllTokensOfType(TokenTypes.MARKUP_TAG_ATTRIBUTE,
 			JS_E4X_INTAG_PREV_TOKEN_TYPE,
@@ -668,11 +699,11 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] eolCommentLiterals = {
 			// Note: The 0-length token at the end of the first example is a
 			// minor bug/performance thing
-			"// Hello world https://www.sas.com",
-			"// Hello world https://www.sas.com extra",
-			"// Hello world https://www.sas.com",
-			"// Hello world www.sas.com",
-			"// Hello world ftp://sas.com",
+			"// Hello world https://www.google.com",
+			"// Hello world https://www.google.com extra",
+			"// Hello world http://www.google.com",
+			"// Hello world www.google.com",
+			"// Hello world ftp://google.com",
 			"// Hello world file://test.txt",
 		};
 
@@ -957,12 +988,44 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
-	void testJS_Regexes() {
+	void testJS_regex() {
 		assertAllTokensOfType(TokenTypes.REGEX,
 			JS_PREV_TOKEN_TYPE,
 			"/foobar/",
 			"/foobar/gim",
 			"/foo\\/bar\\/bas/g"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_followingCertainOperators() {
+		assertAllSecondTokensAreRegexes(
+			"=/foo/",
+			"(/foo/",
+			",/foo/",
+			"?/foo/",
+			":/foo/",
+			"[/foo/",
+			"!/foo/",
+			"&/foo/",
+			"=/foo/",
+			"==/foo/",
+			"!=/foo/",
+			"<<=/foo/",
+			">>=/foo/"
+		);
+	}
+
+
+	@Test
+	void testJS_regex_notWhenFollowingCertainTokens() {
+		assertAllSecondTokensAreNotRegexes(
+			"^/foo/",
+			">>/foo/",
+			"<</foo/",
+			"--/foo/",
+			"4/foo/"
 		);
 	}
 
@@ -1057,6 +1120,20 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"`foo\\ubar`", "`\\u00fg`", // Invalid Unicode escape
 			"`My name is \\ubar and I " // Continued onto another line
 		);
+	}
+
+
+	@Test
+	void testJS_TemplateLiterals_invalid_unclosedExpression() {
+
+		String code = "`Hello ${unclosedName";
+		Segment seg = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+
+		Token token = tm.getTokenList(seg, TokenTypes.NULL, 0);
+		Assertions.assertTrue(token.is(TokenTypes.LITERAL_BACKQUOTE, "`Hello "));
+		token = token.getNextToken();
+		Assertions.assertTrue(token.is(TokenTypes.VARIABLE, "${unclosedName"));
 	}
 
 

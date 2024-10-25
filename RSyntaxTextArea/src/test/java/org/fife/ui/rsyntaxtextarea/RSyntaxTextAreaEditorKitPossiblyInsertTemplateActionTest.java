@@ -5,6 +5,8 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
+import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +41,21 @@ class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends AbstractR
 
 
 	@Test
+	void testActionPerformedImpl_notEditable() {
+
+		String origContent = "line 1\nline 2\nline 3";
+		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
+		RSyntaxTextArea.setTemplatesEnabled(true);
+		textArea.setEditable(false);
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals(origContent, textArea.getText());
+	}
+
+
+	@Test
 	void testActionPerformedImpl_notEnabled() {
 
 		String origContent = "line 1\nline 2\nline 3";
@@ -64,6 +81,24 @@ class RSyntaxTextAreaEditorKitPossiblyInsertTemplateActionTest extends AbstractR
 		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
 
 		Assertions.assertEquals(origContent + " ", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_templatesEnabled_matchingTemplate() {
+
+		String origContent = "toReplace";
+		RSyntaxTextArea textArea = new RSyntaxTextArea(origContent);
+		RSyntaxTextArea.setTemplatesEnabled(true);
+		CodeTemplate template = new StaticCodeTemplate("toReplace", "foo", "bar");
+		RSyntaxTextArea.getCodeTemplateManager().addTemplate(template);
+		textArea.setCaretPosition(origContent.length());
+
+		ActionEvent e = new ActionEvent(textArea, 0, "command");
+		new RSyntaxTextAreaEditorKit.PossiblyInsertTemplateAction().actionPerformedImpl(e, textArea);
+
+		Assertions.assertEquals("foobar", textArea.getText());
+		Assertions.assertEquals("foo".length(), textArea.getCaretPosition());
 	}
 
 

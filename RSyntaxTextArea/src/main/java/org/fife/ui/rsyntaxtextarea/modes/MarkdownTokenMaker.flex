@@ -275,7 +275,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		int languageIndex = 0;
 
 		// Start off in the proper state.
-		int state = YYINITIAL;
+		int state;
 		switch (initialTokenType) {
 			case INTERNAL_INTAG:
 				state = INTAG;

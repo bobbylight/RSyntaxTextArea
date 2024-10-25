@@ -19,7 +19,7 @@ import javax.swing.text.Segment;
  * @author Robert Futrell
  * @version 1.0
  */
-class WindowsBatchTokenMakerTest extends AbstractTokenMakerTest {
+class WindowsBatchTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 
 	@Override

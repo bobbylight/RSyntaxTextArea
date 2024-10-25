@@ -8,6 +8,27 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.text.BreakIterator;
+import java.text.CharacterIterator;
+import java.util.ResourceBundle;
+import java.util.Stack;
+
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.Segment;
+import javax.swing.text.TextAction;
+
 import org.fife.ui.rsyntaxtextarea.folding.Fold;
 import org.fife.ui.rsyntaxtextarea.folding.FoldCollapser;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
@@ -16,15 +37,6 @@ import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.fife.ui.rtextarea.RecordableTextAction;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.text.CharacterIterator;
-import java.util.ResourceBundle;
-import java.util.Stack;
-
 
 /**
  * An extension of <code>RTextAreaEditorKit</code> that adds functionality for
@@ -1025,7 +1037,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				}
 			} else { // offs == start => previous word is on previous line
 				if (line == 0) {
-					return -1;
+					return BreakIterator.DONE;
 				}
 				elem = root.getElement(--line);
 				offs = elem.getEndOffset() - 1;
@@ -1141,6 +1153,25 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		private static boolean isIdentifierChar(char ch) {
 			//return doc.isIdentifierChar(languageIndex, ch);
 			return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
+		}
+
+	}
+
+
+	/**
+	 * Moves the caret to the end of the document, taking into account code
+	 * folding.
+	 */
+	public static class EndAction extends RTextAreaEditorKit.EndAction {
+
+		public EndAction(String name, boolean select) {
+			super(name, select);
+		}
+
+		@Override
+		protected int getVisibleEnd(RTextArea textArea) {
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			return rsta.getLastVisibleOffset();
 		}
 
 	}
@@ -1297,24 +1328,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	public static class GoToMatchingBracketAction
 		extends RecordableTextAction {
-
-		/**
-		 * Moves the caret to the end of the document, taking into account code
-		 * folding.
-		 */
-		public static class EndAction extends RTextAreaEditorKit.EndAction {
-
-			public EndAction(String name, boolean select) {
-				super(name, select);
-			}
-
-			@Override
-			protected int getVisibleEnd(RTextArea textArea) {
-				RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
-				return rsta.getLastVisibleOffset();
-			}
-
-		}
 
 		private static final long serialVersionUID = 1L;
 
@@ -1921,7 +1934,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			int end = root.getElement(line).getEndOffset() - 1;
-			if (offs == end) {// If we're already at the end of the line...
+			if (offs == end) { // If we're already at the end of the line...
 				RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
 				if (rsta.isCodeFoldingEnabled()) { // Start of next visible line
 					FoldManager fm = rsta.getFoldManager();
@@ -1995,33 +2008,27 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			if (RSyntaxTextArea.getTemplatesEnabled()) {
 
-				Document doc = textArea.getDocument();
-				if (doc != null) {
-
-					try {
+				try {
 
 						CodeTemplateManager manager = RSyntaxTextArea.
 							getCodeTemplateManager();
 						CodeTemplate template = manager == null ? null :
 							manager.getTemplate(rsta);
 
-						// A non-null template means modify the text to insert!
-						if (template != null) {
-							template.invoke(rsta);
-						}
+					// A non-null template means modify the text to insert!
+					if (template != null) {
+						template.invoke(rsta);
+					}
 
-						// No template - insert default text.  This is
-						// exactly what DefaultKeyTypedAction does.
-						else {
-							doDefaultInsert(rsta);
-						}
+					// No template - insert default text.  This is
+					// exactly what DefaultKeyTypedAction does.
+					else {
+						doDefaultInsert(rsta);
+					}
 
 					} catch (BadLocationException ble) {
 						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 					}
-
-
-				} // End of if (doc!=null).
 
 			} // End of if (textArea.getTemplatesEnabled()).
 

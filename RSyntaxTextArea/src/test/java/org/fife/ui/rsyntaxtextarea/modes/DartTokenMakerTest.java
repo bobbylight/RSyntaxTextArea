@@ -31,6 +31,15 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testAnnotations() {
+		assertAllTokensOfType(TokenTypes.ANNOTATION,
+			"@foo",
+			"@foo123"
+		);
+	}
+
+
+	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
 		String[] startAndEnd = createTokenMaker().getLineCommentStartAndEnd(0);
@@ -82,6 +91,43 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Assertions.assertEquals(TokenTypes.LITERAL_CHAR, token.getType(), "Invalid char literal: " + token);
 		}
 
+	}
+
+
+	@Test
+	void testCharLiterals_continuedFromPriorLine_valid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
+			DartTokenMaker.INTERNAL_IN_JS_CHAR_VALID,
+			"continued from prior line and terminated'"
+		);
+	}
+
+
+	@Test
+	void testCharLiterals_continuedFromPriorLine_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			DartTokenMaker.INTERNAL_IN_JS_CHAR_VALID,
+			"continued from prior line unterminated"
+		);
+	}
+
+
+	@Test
+	void testCharLiteral_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			"'unterminated char",
+			"'string with an invalid \\x escape in it'"
+		);
+	}
+
+
+	@Test
+	void testCharLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_CHAR,
+			DartTokenMaker.INTERNAL_IN_JS_CHAR_INVALID,
+			"finally terminated'",
+			"still unterminated"
+		);
 	}
 
 
@@ -145,6 +191,15 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testErrorNumberFormat() {
+		assertAllTokensOfType(TokenTypes.ERROR_NUMBER_FORMAT,
+			"54for",
+			"0b10xxx"
+		);
+	}
+
+
+	@Test
 	void testFloatingPointLiterals() {
 
 		String code =
@@ -187,6 +242,39 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testGetClosestStandardTokenTypeForInternalType() {
+
+		TokenMaker tm = createTokenMaker();
+
+		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
+			tm.getClosestStandardTokenTypeForInternalType(DartTokenMaker.INTERNAL_IN_JS_MLC));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(DartTokenMaker.INTERNAL_IN_JS_STRING_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(DartTokenMaker.INTERNAL_IN_JS_STRING_VALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(DartTokenMaker.INTERNAL_IN_JS_CHAR_INVALID));
+		Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			tm.getClosestStandardTokenTypeForInternalType(DartTokenMaker.INTERNAL_IN_JS_CHAR_VALID));
+		Assertions.assertEquals(TokenTypes.IDENTIFIER,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.IDENTIFIER));
+	}
+
+
+	@Test
+	void testGetJavaScriptVersion() {
+		String origVersion = DartTokenMaker.getJavaScriptVersion();
+		try {
+			Assertions.assertEquals("1.0", DartTokenMaker.getJavaScriptVersion());
+			DartTokenMaker.setJavaScriptVersion("1.5");
+			Assertions.assertEquals("1.5", DartTokenMaker.getJavaScriptVersion());
+		} finally {
+			DartTokenMaker.setJavaScriptVersion(origVersion);
+		}
+	}
+
+
+	@Test
 	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
@@ -211,6 +299,33 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
+	}
+
+
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo",
+			"foo123"
+		);
+	}
+
+
+	@Test
+	void testIdentifiers_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			"foo\\bar"
+		);
+	}
+
+
+	@Test
+	void testIsJavaScriptCompatible() {
+		Assertions.assertTrue(DartTokenMaker.isJavaScriptCompatible("0.9"));
+		Assertions.assertTrue(DartTokenMaker.isJavaScriptCompatible("1.0"));
+		Assertions.assertFalse(DartTokenMaker.isJavaScriptCompatible("1.1"));
+		Assertions.assertFalse(DartTokenMaker.isJavaScriptCompatible("1.2"));
+		Assertions.assertFalse(DartTokenMaker.isJavaScriptCompatible("1.3"));
 	}
 
 
@@ -552,18 +667,58 @@ class DartTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testStringLiterals() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\"",
+			"\"hi\"",
+			"\"\\u00fe\"",
+			"\"\\\"\""
+		);
+	}
 
-		String[] stringLiterals = {
-			"\"\"", "\"hi\"", "\"\\\"\"",
-		};
 
-		for (String code : stringLiterals) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
-		}
+	@Test
+	void testStringLiterals_continuedFromPriorLine_valid() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			DartTokenMaker.INTERNAL_IN_JS_STRING_VALID,
+			"continued from prior line and terminated\""
+		);
+	}
 
+
+	@Test
+	void testStringLiterals_continuedFromPriorLine_invalid() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			DartTokenMaker.INTERNAL_IN_JS_STRING_VALID,
+			"continued from prior line unterminated"
+		);
+	}
+
+
+	@Test
+	void testStringLiterals_validEscapeSequences() {
+		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
+			"\"\\b\\s\\t\\n\\f\\r\\n\\\"\\'\\\\\""
+		);
+	}
+
+
+	@Test
+	void testStringLiteral_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			"\"unterminated string",
+			"\"string with an invalid \\x escape in it\"",
+			"\"string with invalid \\u09KK unicode escape in it \""
+		);
+	}
+
+
+	@Test
+	void testStringLiteral_error_continuedFromPriorLine() {
+		assertAllTokensOfType(TokenTypes.ERROR_STRING_DOUBLE,
+			DartTokenMaker.INTERNAL_IN_JS_STRING_INVALID,
+			"finally terminated\"",
+			"still unterminated"
+		);
 	}
 
 

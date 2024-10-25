@@ -192,6 +192,10 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		ch = new char[] { '(' };
 		TokenImpl openParen = new TokenImpl(ch, 0, 0, 0, TokenTypes.SEPARATOR, 0);
 		Assertions.assertTrue(tm.getShouldIndentNextLineAfter(openParen));
+
+		ch = new char[] { 'x' };
+		TokenImpl other = new TokenImpl(ch, 0, 0, 0, TokenTypes.SEPARATOR, 0);
+		Assertions.assertFalse(tm.getShouldIndentNextLineAfter(other));
 	}
 
 
@@ -250,6 +254,8 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(tm.isIdentifierChar(0, '-'));
 		Assertions.assertTrue(tm.isIdentifierChar(0, '_'));
 		Assertions.assertTrue(tm.isIdentifierChar(0, '.'));
+
+		Assertions.assertFalse(tm.isIdentifierChar(0, '!'));
 	}
 
 
@@ -623,6 +629,31 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testCss_property_lessNestedSelectorWithPseudo_less() {
+
+		String[] tokens = {
+			"foo:root",
+			"foo:nth-child",
+			"foo:nth-last-child",
+			"foo:nth-of-type",
+			"foo:nth-last-of-type",
+			"foo:before",
+			"foo:after",
+			"foo:not",
+		};
+		CSSTokenMaker tm = (CSSTokenMaker)createTokenMaker();
+		tm.setHighlightingLess(true);
+
+		for (String code: tokens) {
+			Segment segment = createSegment(code);
+			Token t = tm.getTokenList(segment, CSSTokenMaker.INTERNAL_CSS_PROPERTY, 0);
+			Assertions.assertEquals(TokenTypes.RESERVED_WORD, t.getType(),
+				"Token not a reserved word: " + t);
+		}
+	}
+
+
+	@Test
 	void testCss_propertyValue_function() {
 
 		String code = "background-image: url(\"test.png\");";
@@ -746,7 +777,8 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			CSS_PREV_TOKEN_TYPE,
 			"\"Hello world\"",
-			"\"Hello \\\"world\\\""
+			"\"Hello \\\"world\\\"",
+			"\"Unterminated string"
 		);
 	}
 
@@ -773,5 +805,9 @@ class CSSTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_CHAR));
 		Assertions.assertEquals(TokenTypes.COMMENT_MULTILINE,
 			tm.getClosestStandardTokenTypeForInternalType(CSSTokenMaker.INTERNAL_CSS_MLC));
+
+		Assertions.assertEquals(
+			TokenTypes.IDENTIFIER,
+			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.IDENTIFIER));
 	}
 }
