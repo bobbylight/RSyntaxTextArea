@@ -38,6 +38,7 @@ import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.fife.ui.rtextarea.RecordableTextAction;
 
+
 /**
  * An extension of <code>RTextAreaEditorKit</code> that adds functionality for
  * programming-specific stuff.  There are currently subclasses to handle:
@@ -71,28 +72,28 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String rstaBacktickAction = "RSTA.BacktickAction";
-	public static final String rstaCloseCurlyBraceAction = "RSTA.CloseCurlyBraceAction";
-	public static final String rstaCloseMarkupTagAction = "RSTA.CloseMarkupTagAction";
-	public static final String rstaCollapseAllFoldsAction = "RSTA.CollapseAllFoldsAction";
+	public static final String rstaBacktickAction			= "RSTA.BacktickAction";
+	public static final String rstaCloseCurlyBraceAction	= "RSTA.CloseCurlyBraceAction";
+	public static final String rstaCloseMarkupTagAction		= "RSTA.CloseMarkupTagAction";
+	public static final String rstaCollapseAllFoldsAction	= "RSTA.CollapseAllFoldsAction";
 	public static final String rstaCollapseAllCommentFoldsAction = "RSTA.CollapseAllCommentFoldsAction";
-	public static final String rstaCollapseFoldAction = "RSTA.CollapseFoldAction";
-	public static final String rstaCopyAsStyledTextAction = "RSTA.CopyAsStyledTextAction";
-	public static final String rstaCutAsStyledTextAction = "RSTA.CutAsStyledTextAction";
-	public static final String rstaDecreaseIndentAction = "RSTA.DecreaseIndentAction";
-	public static final String rstaDoubleQuoteAction = "RSTA.DoubleQuoteAction";
-	public static final String rstaExpandAllFoldsAction = "RSTA.ExpandAllFoldsAction";
-	public static final String rstaExpandFoldAction = "RSTA.ExpandFoldAction";
-	public static final String rstaGoToMatchingBracketAction = "RSTA.GoToMatchingBracketAction";
-	public static final String rstaOpenParenAction = "RSTA.OpenParenAction";
-	public static final String rstaOpenSquareBracketAction = "RSTA.OpenSquareBracketAction";
-	public static final String rstaOpenCurlyAction = "RSTA.OpenCurlyAction";
+	public static final String rstaCollapseFoldAction		= "RSTA.CollapseFoldAction";
+	public static final String rstaCopyAsStyledTextAction   = "RSTA.CopyAsStyledTextAction";
+	public static final String rstaCutAsStyledTextAction   = "RSTA.CutAsStyledTextAction";
+	public static final String rstaDecreaseIndentAction		= "RSTA.DecreaseIndentAction";
+	public static final String rstaDoubleQuoteAction		= "RSTA.DoubleQuoteAction";
+	public static final String rstaExpandAllFoldsAction		= "RSTA.ExpandAllFoldsAction";
+	public static final String rstaExpandFoldAction			= "RSTA.ExpandFoldAction";
+	public static final String rstaGoToMatchingBracketAction	= "RSTA.GoToMatchingBracketAction";
+	public static final String rstaOpenParenAction			= "RSTA.OpenParenAction";
+	public static final String rstaOpenSquareBracketAction	= "RSTA.OpenSquareBracketAction";
+	public static final String rstaOpenCurlyAction			= "RSTA.OpenCurlyAction";
 	public static final String rstaPossiblyInsertTemplateAction = "RSTA.TemplateAction";
-	public static final String rstaSingleQuoteAction = "RSTA.SingleQuoteAction";
-	public static final String rstaToggleCommentAction = "RSTA.ToggleCommentAction";
-	public static final String rstaToggleCurrentFoldAction = "RSTA.ToggleCurrentFoldAction";
+	public static final String rstaSingleQuoteAction		= "RSTA.SingleQuoteAction";
+	public static final String rstaToggleCommentAction 		= "RSTA.ToggleCommentAction";
+	public static final String rstaToggleCurrentFoldAction	= "RSTA.ToggleCurrentFoldAction";
 
-	private static final String MSG = "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
+	private static final String MSG	= "org.fife.ui.rsyntaxtextarea.RSyntaxTextArea";
 	private static final ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 
@@ -165,7 +166,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	 */
 	@Override
 	public IconRowHeader createIconRowHeader(RTextArea textArea) {
-		return new FoldingAwareIconRowHeader((RSyntaxTextArea) textArea);
+		return new FoldingAwareIconRowHeader((RSyntaxTextArea)textArea);
 	}
 
 
@@ -214,35 +215,35 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getWordStart(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			if (offs == 0) {
+			if (offs==0) {
 				return offs;
 			}
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			int line = textArea.getLineOfOffset(offs);
 			int start = textArea.getLineStartOffset(line);
-			if (offs == start) {
+			if (offs==start) {
 				return start;
 			}
 			int end = textArea.getLineEndOffset(line);
-			if (line != textArea.getLineCount() - 1) {
+			if (line!=textArea.getLineCount()-1) {
 				end--;
 			}
-			doc.getText(start, end - start, seg);
+			doc.getText(start, end-start, seg);
 
 			// Determine the "type" of char at offs - lower case, upper case,
 			// whitespace or other.  We take special care here as we're starting
 			// in the middle of the Segment to check whether we're already at
 			// the "beginning" of a word.
-			int firstIndex = seg.getBeginIndex() + (offs - start) - 1;
+			int firstIndex = seg.getBeginIndex() + (offs-start) - 1;
 			seg.setIndex(firstIndex);
 			char ch = seg.current();
-			char nextCh = offs == end ? 0 : seg.array[seg.getIndex() + 1];
+			char nextCh = offs==end ? 0 : seg.array[seg.getIndex() + 1];
 
 			// The "word" is a group of letters and/or digits
 			int languageIndex = 0; // TODO
 			if (doc.isIdentifierChar(languageIndex, ch)) {
-				if (offs != end && !doc.isIdentifierChar(languageIndex, nextCh)) {
+				if (offs!=end && !doc.isIdentifierChar(languageIndex, nextCh)) {
 					return offs;
 				}
 				do {
@@ -252,7 +253,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// The "word" is whitespace
 			else if (Character.isWhitespace(ch)) {
-				if (offs != end && !Character.isWhitespace(nextCh)) {
+				if (offs!=end && !Character.isWhitespace(nextCh)) {
 					return offs;
 				}
 				do {
@@ -264,7 +265,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// etc.).
 
 			offs -= firstIndex - seg.getIndex() + 1;//seg.getEndIndex() - seg.getIndex();
-			if (ch != Segment.DONE && nextCh != '\n') {
+			if (ch!=Segment.DONE && nextCh!='\n') {
 				offs++;
 			}
 
@@ -294,14 +295,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				Fold fold = getClosestFold(rsta);
-				if (fold != null) {
+				if (fold!=null) {
 					fold.setCollapsed(collapse);
 				}
 				RSyntaxUtilities.possiblyRepaintGutter(textArea);
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
@@ -338,17 +340,17 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
-			RSyntaxDocument doc = (RSyntaxDocument) rsta.getDocument();
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
 
 			int languageIndex = 0;
 			int dot = textArea.getCaretPosition();
-			if (dot > 0) {
-				Token t = RSyntaxUtilities.getTokenAtOffset(rsta, dot - 1);
-				languageIndex = t == null ? 0 : t.getLanguageIndex();
+			if (dot>0) {
+				Token t = RSyntaxUtilities.getTokenAtOffset(rsta, dot-1);
+				languageIndex = t==null ? 0 : t.getLanguageIndex();
 			}
 			boolean alignCurlyBraces = rsta.isAutoIndentEnabled() &&
-				doc.getCurlyBracesDenoteCodeBlocks(languageIndex);
+									   doc.getCurlyBracesDenoteCodeBlocks(languageIndex);
 
 			if (alignCurlyBraces) {
 				textArea.beginAtomicEdit();
@@ -369,7 +371,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 					// Get the current line's text up to the '}' entered.
 					try {
-						doc.getText(start, dot - start, seg);
+						doc.getText(start, dot-start, seg);
 					} catch (BadLocationException ble) { // Never happens
 						ble.printStackTrace();
 						return;
@@ -377,8 +379,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 					// Only attempt to align if there's only whitespace up to
 					// the '}' entered.
-					for (int i = 0; i < seg.count; i++) {
-						char ch = seg.array[seg.offset + i];
+					for (int i=0; i<seg.count; i++) {
+						char ch = seg.array[seg.offset+i];
 						if (!Character.isWhitespace(ch)) {
 							return;
 						}
@@ -388,7 +390,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					// whitespace for the '}' to match that of the '{' char's line.
 					bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(
 						rsta, bracketInfo);
-					if (bracketInfo.y > -1) {
+					if (bracketInfo.y>-1) {
 						try {
 							String ws = RSyntaxUtilities.getLeadingWhitespace(
 								doc, bracketInfo.y);
@@ -436,11 +438,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
-			RSyntaxDocument doc = (RSyntaxDocument) rsta.getDocument();
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
+			RSyntaxDocument doc = (RSyntaxDocument)rsta.getDocument();
 
 			Caret c = rsta.getCaret();
-			boolean selection = c.getDot() != c.getMark();
+			boolean selection = c.getDot()!=c.getMark();
 			rsta.replaceSelection("/");
 
 			// Don't automatically complete a tag if there was a selection
@@ -448,21 +450,21 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			if (doc.getLanguageIsMarkup() &&
 				doc.getCompleteMarkupCloseTags() &&
-				!selection && rsta.getCloseMarkupTags() && dot > 1) {
+				!selection && rsta.getCloseMarkupTags() && dot>1) {
 
 				try {
 
 					// Check actual char before token type, since it's quicker
-					char ch = doc.charAt(dot - 2);
-					if (ch == '<' || ch == '[') {
+					char ch = doc.charAt(dot-2);
+					if (ch=='<' || ch=='[') {
 
 						Token t = doc.getTokenListForLine(
 							rsta.getCaretLineNumber());
-						t = RSyntaxUtilities.getTokenAtOffset(t, dot - 1);
-						if (t != null && t.getType() == Token.MARKUP_TAG_DELIMITER) { // Closing tag
+						t = RSyntaxUtilities.getTokenAtOffset(t, dot-1);
+						if (t!=null && t.getType()==Token.MARKUP_TAG_DELIMITER) { // Closing tag
 							String tagName = discoverTagName(doc, dot);
-							if (tagName != null) {
-								rsta.replaceSelection(tagName + (char) (ch + 2));
+							if (tagName!=null) {
+								rsta.replaceSelection(tagName + (char)(ch+2));
 							}
 						}
 
@@ -483,10 +485,10 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 *
 		 * @param doc The document to parse.
 		 * @param dot The location of the caret.  This should be right after
-		 *            the start of a closing tag token (e.g. "<code>&lt;/</code>"
-		 *            or "<code>[</code>" in the case of BBCode).
+		 *        the start of a closing tag token (e.g. "<code>&lt;/</code>"
+		 *        or "<code>[</code>" in the case of BBCode).
 		 * @return The name of the tag to close, or <code>null</code> if it
-		 * could not be determined.
+		 *         could not be determined.
 		 */
 		private String discoverTagName(RSyntaxDocument doc, int dot) {
 
@@ -495,46 +497,48 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			Element root = doc.getDefaultRootElement();
 			int curLine = root.getElementIndex(dot);
 
-			for (int i = 0; i <= curLine; i++) {
+			for (int i=0; i<=curLine; i++) {
 
 				Token t = doc.getTokenListForLine(i);
-				while (t != null && t.isPaintable()) {
+				while (t!=null && t.isPaintable()) {
 
-					if (t.getType() == Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<') || t.isSingleChar('[')) {
 							t = t.getNextToken();
-							while (t != null && t.isPaintable()) {
-								if (t.getType() == Token.MARKUP_TAG_NAME ||
+							while (t!=null && t.isPaintable()) {
+								if (t.getType()==Token.MARKUP_TAG_NAME ||
 									// Being lenient here and also checking
 									// for attributes, in case they
 									// (incorrectly) have whitespace between
 									// the '<' char and the element name.
-									t.getType() == Token.MARKUP_TAG_ATTRIBUTE) {
+									t.getType()==Token.MARKUP_TAG_ATTRIBUTE) {
 									stack.push(t.getLexeme());
 									break;
 								}
 								t = t.getNextToken();
 							}
-						} else if (t.length() == 2 && t.charAt(0) == '/' &&
-							(t.charAt(1) == '>' ||
-								t.charAt(1) == ']')) {
+						}
+						else if (t.length()==2 && t.charAt(0)=='/' &&
+								 (t.charAt(1)=='>' ||
+								  t.charAt(1)==']')) {
 							if (!stack.isEmpty()) { // Always true for valid XML
 								stack.pop();
 							}
-						} else if (t.length() == 2 &&
-							(t.charAt(0) == '<' || t.charAt(0) == '[') &&
-							t.charAt(1) == '/') {
+						}
+						else if (t.length()==2 &&
+								 (t.charAt(0)=='<' || t.charAt(0)=='[') &&
+								 t.charAt(1)=='/') {
 							String tagName = null;
 							if (!stack.isEmpty()) { // Always true for valid XML
 								tagName = stack.pop();
 							}
-							if (t.getEndOffset() >= dot) {
+							if (t.getEndOffset()>=dot) {
 								return tagName;
 							}
 						}
 					}
 
-					t = t == null ? null : t.getNextToken();
+					t = t==null ? null : t.getNextToken();
 
 				}
 
@@ -555,7 +559,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Collapses all comment folds.
 	 */
-	public static class CollapseAllCommentFoldsAction extends FoldRelatedAction {
+	public static class CollapseAllCommentFoldsAction extends FoldRelatedAction{
 
 		private static final long serialVersionUID = 1L;
 
@@ -571,12 +575,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				FoldCollapser collapser = new FoldCollapser();
 				collapser.collapseFolds(rsta.getFoldManager());
 				RSyntaxUtilities.possiblyRepaintGutter(textArea);
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
@@ -614,7 +619,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				FoldCollapser collapser = new FoldCollapser() {
 					@Override
@@ -624,7 +629,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				};
 				collapser.collapseFolds(rsta.getFoldManager());
 				RSyntaxUtilities.possiblyRepaintGutter(textArea);
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
@@ -683,7 +689,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			((RSyntaxTextArea) textArea).copyAsStyledText(theme);
+			((RSyntaxTextArea)textArea).copyAsStyledText(theme);
 			if (cutAction) {
 				int selStart = textArea.getSelectionStart();
 				int selEnd = textArea.getSelectionEnd();
@@ -701,7 +707,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		private void handleActionPerformedPlainText(RTextArea textArea) {
 			if (cutAction) {
 				textArea.cut();
-			} else {
+			}
+			else {
 				textArea.copy();
 			}
 			textArea.requestFocusInWindow();
@@ -735,7 +742,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
 			// All we need to do is update all the fonts in syntax
@@ -746,18 +753,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			boolean changed = false;
 			int count = scheme.getStyleCount();
-			for (int i = 0; i < count; i++) {
+			for (int i=0; i<count; i++) {
 				Style ss = scheme.getStyle(i);
-				if (ss != null) {
+				if (ss!=null) {
 					Font font = ss.font;
-					if (font != null) {
+					if (font!=null) {
 						float oldSize = font.getSize2D();
 						float newSize = oldSize - decreaseAmount;
-						if (newSize >= MINIMUM_SIZE) {
+						if (newSize>=MINIMUM_SIZE) {
 							// Shrink by decreaseAmount.
 							ss.font = font.deriveFont(newSize);
 							changed = true;
-						} else if (oldSize > MINIMUM_SIZE) {
+						}
+						else if (oldSize>MINIMUM_SIZE) {
 							// Can't shrink by full decreaseAmount, but
 							// can shrink a little.
 							ss.font = font.deriveFont(MINIMUM_SIZE);
@@ -771,11 +779,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			Font font = rsta.getFont();
 			float oldSize = font.getSize2D();
 			float newSize = oldSize - decreaseAmount;
-			if (newSize >= MINIMUM_SIZE) {
+			if (newSize>=MINIMUM_SIZE) {
 				// Shrink by decreaseAmount.
 				rsta.setFont(font.deriveFont(newSize));
 				changed = true;
-			} else if (oldSize > MINIMUM_SIZE) {
+			}
+			else if (oldSize>MINIMUM_SIZE) {
 				// Can't shrink by full decreaseAmount, but
 				// can shrink a little.
 				rsta.setFont(font.deriveFont(MINIMUM_SIZE));
@@ -801,7 +810,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						parent.repaint();
 					}
 				}
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 
@@ -847,7 +857,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// If there is a selection, indent all lines in the selection.
 			// Otherwise, indent the line the caret is on.
-			if (dot != mark) {
+			if (dot!=mark) {
 				// Note that we cheaply reuse variables here, so don't
 				// take their names to mean what they are.
 				int line2 = map.getElementIndex(mark);
@@ -856,7 +866,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				Element elem;
 				textArea.beginAtomicEdit();
 				try {
-					for (line1 = dot; line1 < mark; line1++) {
+					for (line1=dot; line1<mark; line1++) {
 						elem = map.getElement(line1);
 						handleDecreaseIndent(elem, document, tabSize);
 					}
@@ -866,7 +876,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					// due to the insertion of the tabs above.
 					elem = map.getElement(mark);
 					int start = elem.getStartOffset();
-					if (Math.max(c.getDot(), c.getMark()) != start) {
+					if (Math.max(c.getDot(),c.getMark())!=start) {
 						handleDecreaseIndent(elem, document, tabSize);
 					}
 				} catch (BadLocationException ble) {
@@ -876,7 +886,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				} finally {
 					textArea.endAtomicEdit();
 				}
-			} else {
+			}
+			else {
 				Element elem = map.getElement(line1);
 				try {
 					handleDecreaseIndent(elem, document, tabSize);
@@ -904,8 +915,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * removed; if there were 8 spaces, only the first 5 would be
 		 * removed).
 		 *
-		 * @param elem    The element to "de-indent."
-		 * @param doc     The document containing the specified element.
+		 * @param elem The element to "de-indent."
+		 * @param doc The document containing the specified element.
 		 * @param tabSize The size of a tab, in spaces.
 		 */
 		private void handleDecreaseIndent(Element elem, Document doc,
@@ -913,21 +924,21 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			throws BadLocationException {
 			int start = elem.getStartOffset();
 			int end = elem.getEndOffset() - 1; // Why always true??
-			doc.getText(start, end - start, s);
+			doc.getText(start,end-start, s);
 			int i = s.offset;
-			end = i + s.count;
-			if (end > i) {
+			end = i+s.count;
+			if (end>i) {
 				// If the first character is a tab, remove it.
-				if (s.array[i] == '\t') {
+				if (s.array[i]=='\t') {
 					doc.remove(start, 1);
 				}
 				// Otherwise, see if the first character is a space.  If it
 				// is, remove all contiguous whitespaces at the beginning of
 				// this line, up to the tab size.
-				else if (s.array[i] == ' ') {
+				else if (s.array[i]==' ') {
 					i++;
 					int toRemove = 1;
-					while (i < end && s.array[i] == ' ' && toRemove < tabSize) {
+					while (i<end && s.array[i]==' ' && toRemove<tabSize) {
 						i++;
 						toRemove++;
 					}
@@ -952,27 +963,27 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getPreviousWordStart(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			if (offs == 0) {
+			if (offs==0) {
 				return offs;
 			}
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			int line = textArea.getLineOfOffset(offs);
 			int start = textArea.getLineStartOffset(line);
-			if (offs == start) {
-				return start - 1; // Just delete the newline
+			if (offs==start) {
+				return start-1; // Just delete the newline
 			}
 			int end = textArea.getLineEndOffset(line);
-			if (line != textArea.getLineCount() - 1) {
+			if (line!=textArea.getLineCount()-1) {
 				end--;
 			}
-			doc.getText(start, end - start, seg);
+			doc.getText(start, end-start, seg);
 
 			// Determine the "type" of char at offs - lower case, upper case,
 			// whitespace or other.  We take special care here as we're starting
 			// in the middle of the Segment to check whether we're already at
 			// the "beginning" of a word.
-			int firstIndex = seg.getBeginIndex() + (offs - start) - 1;
+			int firstIndex = seg.getBeginIndex() + (offs-start) - 1;
 			seg.setIndex(firstIndex);
 			char ch = seg.current();
 
@@ -994,13 +1005,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			// The "word" is a series of symbols.
 			else {
 				while (!Character.isWhitespace(ch) &&
-					!doc.isIdentifierChar(languageIndex, ch) &&
-					ch != Segment.DONE) {
+					   !doc.isIdentifierChar(languageIndex, ch) &&
+					   ch!=Segment.DONE) {
 					ch = seg.previous();
 				}
 			}
 
-			if (ch == Segment.DONE) {
+			if (ch==Segment.DONE) {
 				return start; // Removed last "token" of the line
 			}
 			offs -= firstIndex - seg.getIndex();
@@ -1022,7 +1033,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getPreviousWord(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			Element elem = root.getElement(line);
@@ -1035,7 +1046,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				if (isIdentifierChar(ch)) {
 					offs--;
 				}
-			} else { // offs == start => previous word is on previous line
+			}
+			else { // offs == start => previous word is on previous line
 				if (line == 0) {
 					return BreakIterator.DONE;
 				}
@@ -1082,7 +1094,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getWordEnd(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			Element elem = root.getElement(line);
@@ -1103,7 +1115,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		@Override
 		protected int getWordStart(RTextArea textArea, int offs)
 			throws BadLocationException {
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			Element elem = root.getElement(line);
@@ -1125,7 +1137,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				wordStart--;
 			}
 
-			return wordStart == offs ? offs : wordStart + 1;
+			return wordStart==offs ? offs : wordStart + 1;
 
 		}
 
@@ -1135,12 +1147,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 *
 		 * @param prefix The prefix characters before the caret.
 		 * @return Whether the prefix could be part of a "word" in the context
-		 * of the text area's current content.
+		 *         of the text area's current content.
 		 */
 		@Override
 		protected boolean isAcceptablePrefix(String prefix) {
 			return !prefix.isEmpty() &&
-				isIdentifierChar(prefix.charAt(prefix.length() - 1));
+				   isIdentifierChar(prefix.charAt(prefix.length()-1));
 		}
 
 		/**
@@ -1195,20 +1207,20 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getWordEnd(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
-			if (offs == doc.getLength()) {
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			if (offs==doc.getLength()) {
 				return offs;
 			}
 
 			int line = textArea.getLineOfOffset(offs);
 			int end = textArea.getLineEndOffset(line);
-			if (line != textArea.getLineCount() - 1) {
+			if (line!=textArea.getLineCount()-1) {
 				end--; // Hide newline
 			}
-			if (offs == end) {
+			if (offs==end) {
 				return end;
 			}
-			doc.getText(offs, end - offs, seg);
+			doc.getText(offs, end-offs, seg);
 
 			// Determine the "type" of char at offs - letter/digit,
 			// whitespace or other
@@ -1220,7 +1232,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.next();
 				} while (doc.isIdentifierChar(languageIndex, ch) &&
-					ch != CharacterIterator.DONE);
+						 ch != CharacterIterator.DONE);
 			}
 
 			// The "word" is whitespace.
@@ -1267,21 +1279,22 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				FoldManager fm = rsta.getFoldManager();
-				for (int i = 0; i < fm.getFoldCount(); i++) {
+				for (int i=0; i<fm.getFoldCount(); i++) {
 					expand(fm.getFold(i));
 				}
 				RSyntaxUtilities.possiblyRepaintGutter(rsta);
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
 
 		private void expand(Fold fold) {
 			fold.setCollapsed(false);
-			for (int i = 0; i < fold.getChildCount(); i++) {
+			for (int i=0; i<fold.getChildCount(); i++) {
 				expand(fold.getChild(i));
 			}
 		}
@@ -1313,7 +1326,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int line = textArea.getCaretLineNumber();
 			FoldManager fm = textArea.getFoldManager();
 			Fold fold = fm.getFoldForLine(line);
-			if (fold == null) {
+			if (fold==null) {
 				fold = fm.getDeepestOpenFoldContaining(offs);
 			}
 			return fold;
@@ -1344,14 +1357,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(rsta,
 				bracketInfo);
-			if (bracketInfo.y > -1) {
+			if (bracketInfo.y>-1) {
 				// Go to the position AFTER the bracket so the previous
 				// bracket (which we were just on) is highlighted.
-				rsta.setCaretPosition(bracketInfo.y + 1);
-			} else {
+				rsta.setCaretPosition(bracketInfo.y+1);
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
@@ -1384,7 +1398,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
 
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			SyntaxScheme scheme = rsta.getSyntaxScheme();
 
 			// All we need to do is update all the fonts in syntax
@@ -1395,18 +1409,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			boolean changed = false;
 			int count = scheme.getStyleCount();
-			for (int i = 0; i < count; i++) {
+			for (int i=0; i<count; i++) {
 				Style ss = scheme.getStyle(i);
-				if (ss != null) {
+				if (ss!=null) {
 					Font font = ss.font;
-					if (font != null) {
+					if (font!=null) {
 						float oldSize = font.getSize2D();
 						float newSize = oldSize + increaseAmount;
-						if (newSize <= MAXIMUM_SIZE) {
+						if (newSize<=MAXIMUM_SIZE) {
 							// Grow by increaseAmount.
 							ss.font = font.deriveFont(newSize);
 							changed = true;
-						} else if (oldSize < MAXIMUM_SIZE) {
+						}
+						else if (oldSize<MAXIMUM_SIZE) {
 							// Can't grow by full increaseAmount, but
 							// can grow a little.
 							ss.font = font.deriveFont(MAXIMUM_SIZE);
@@ -1420,11 +1435,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			Font font = rsta.getFont();
 			float oldSize = font.getSize2D();
 			float newSize = oldSize + increaseAmount;
-			if (newSize <= MAXIMUM_SIZE) {
+			if (newSize<=MAXIMUM_SIZE) {
 				// Grow by increaseAmount.
 				rsta.setFont(font.deriveFont(newSize));
 				changed = true;
-			} else if (oldSize < MAXIMUM_SIZE) {
+			}
+			else if (oldSize<MAXIMUM_SIZE) {
 				// Can't grow by full increaseAmount, but
 				// can grow a little.
 				rsta.setFont(font.deriveFont(MAXIMUM_SIZE));
@@ -1450,7 +1466,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						parent.repaint();
 					}
 				}
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 
@@ -1476,14 +1493,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxTextArea sta = (RSyntaxTextArea) textArea;
-			boolean noSelection = sta.getSelectionStart() == sta.getSelectionEnd();
+			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
+			boolean noSelection= sta.getSelectionStart()==sta.getSelectionEnd();
 
 			// First, see if this language wants to handle inserting newlines
 			// itself.
 			boolean handled = false;
 			if (noSelection) {
-				RSyntaxDocument doc = (RSyntaxDocument) sta.getDocument();
+				RSyntaxDocument doc = (RSyntaxDocument)sta.getDocument();
 				handled = doc.insertBreakSpecialHandling(e);
 			}
 
@@ -1496,12 +1513,12 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		/**
 		 * @return The first location in the string past <code>pos</code> that
-		 * is NOT a whitespace char, or <code>-1</code> if only
-		 * whitespace chars follow <code>pos</code> (or it is the end
-		 * position in the string).
+		 *         is NOT a whitespace char, or <code>-1</code> if only
+		 *         whitespace chars follow <code>pos</code> (or it is the end
+		 *         position in the string).
 		 */
 		private static int atEndOfLine(int pos, String s, int sLen) {
-			for (int i = pos; i < sLen; i++) {
+			for (int i=pos; i<sLen; i++) {
 				if (!RSyntaxUtilities.isWhitespace(s.charAt(i))) {
 					return i;
 				}
@@ -1513,12 +1530,13 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 											 int languageIndex) {
 			int openCount = 0;
 			for (Token t : doc) {
-				if (t.getType() == Token.SEPARATOR && t.length() == 1 &&
-					t.getLanguageIndex() == languageIndex) {
+				if (t.getType()==Token.SEPARATOR && t.length()==1 &&
+					t.getLanguageIndex()==languageIndex) {
 					char ch = t.charAt(0);
-					if (ch == '{') {
+					if (ch=='{') {
 						openCount++;
-					} else if (ch == '}') {
+					}
+					else if (ch=='}') {
 						openCount--;
 					}
 				}
@@ -1531,7 +1549,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * if appropriate.  This method can be called by token makers who
 		 * implement a custom action for inserting newlines.
 		 *
-		 * @param textArea    The text area to examine.
+		 * @param textArea The text area to examine.
 		 * @param noSelection Whether there is no selection.
 		 */
 		protected void handleInsertBreak(RSyntaxTextArea textArea,
@@ -1547,7 +1565,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				} finally {
 					textArea.endAtomicEdit();
 				}
-			} else {
+			}
+			else {
 				textArea.replaceSelection("\n");
 			}
 		}
@@ -1561,8 +1580,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int lineNum = map.getElementIndex(caretPos);
 			Element line = map.getElement(lineNum);
 			int start = line.getStartOffset();
-			int end = line.getEndOffset() - 1; // Why always "-1"?
-			int len = end - start;
+			int end = line.getEndOffset()-1; // Why always "-1"?
+			int len = end-start;
 			String s = doc.getText(start, len);
 			int caretOffsInLine = caretPos - start;
 
@@ -1582,7 +1601,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// Find any non-whitespace text after the caret. If there is any, it gets put
 			// onto the next line. Whitespace between the caret and that text gets removed.
-			int nonWhitespacePos = atEndOfLine(caretPos - start, s, len);
+			int nonWhitespacePos = atEndOfLine(caretPos-start, s, len);
 			//textArea.moveCaretPosition(start + (nonWhitespacePos > -1 ? nonWhitespacePos : end));
 			textArea.moveCaretPosition(nonWhitespacePos > -1 ? start + nonWhitespacePos : end);
 			textArea.replaceSelection(sb.toString());
@@ -1609,24 +1628,24 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		private void possiblyCloseCurlyBrace(RSyntaxTextArea textArea,
 											 String leadingWS) {
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 
 			if (textArea.getCloseCurlyBraces()) {
 
 				int line = textArea.getCaretLineNumber();
-				Token t = doc.getTokenListForLine(line - 1);
+				Token t = doc.getTokenListForLine(line-1);
 				t = t.getLastNonCommentNonWhitespaceToken();
 
-				if (t != null && t.isLeftCurly()) {
+				if (t!=null && t.isLeftCurly()) {
 
 					int languageIndex = t.getLanguageIndex();
 					if (doc.getCurlyBracesDenoteCodeBlocks(languageIndex) &&
-						getOpenBraceCount(doc, languageIndex) > 0) {
+						getOpenBraceCount(doc, languageIndex)>0) {
 						StringBuilder sb = new StringBuilder();
-						if (line == textArea.getLineCount() - 1) {
+						if (line==textArea.getLineCount()-1) {
 							sb.append('\n');
 						}
-						if (leadingWS != null) {
+						if (leadingWS!=null) {
 							sb.append(leadingWS);
 						}
 						sb.append("}\n");
@@ -1675,13 +1694,14 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxTextArea sta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea sta = (RSyntaxTextArea)textArea;
 			boolean noSelection = sta.getSelectionStart() == sta.getSelectionEnd();
 
 			if (noSelection || !sta.getInsertPairedCharacters()) {
 				// Default action can be unique across OS's
 				super.actionPerformedImpl(e, textArea);
-			} else {
+			}
+			else {
 				wrapSelection(textArea);
 			}
 		}
@@ -1776,16 +1796,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					textArea.moveCaretPosition(offs + 1); // Force a replacement to ensure undo is contiguous
 					textArea.replaceSelection(stringifiedQuoteTypeCh);
 					textArea.setCaretPosition(offs + 1);
-				} else {
+				}
+				else {
 					super.actionPerformedImpl(e, textArea);
 				}
-			} else if (isComment || tokenType == quoteType.invalidTokenType) {
+			}
+			else if (isComment || tokenType == quoteType.invalidTokenType) {
 				// We could be smarter here for invalid quoted literals - if we knew whether the language
 				// used '\' as an escape character, and the caret is NOT between a '\' and the closing
 				// quote, we could then assume it's an invalid string due to e.g. a bad escape char, and
 				// overwrite the closing quote. But for now we're just doing nothing in this case
 				super.actionPerformedImpl(e, textArea); // Just insert the character
-			} else {
+			}
+			else {
 				insertEmptyQuoteLiteral(rsta);
 			}
 		}
@@ -1861,7 +1884,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				if (textArea.getTabsEmulated()) {
 					StringBuilder sb = new StringBuilder();
 					int temp = textArea.getTabSize();
-					for (int i = 0; i < temp; i++) {
+					for (int i=0; i<temp; i++) {
 						sb.append(' ');
 					}
 					replacement = sb.toString();
@@ -1869,7 +1892,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 				textArea.beginAtomicEdit();
 				try {
-					for (int i = first; i < last; i++) {
+					for (int i=first; i<last; i++) {
 						elem = map.getElement(i);
 						start = elem.getStartOffset();
 						document.insertString(start, replacement, null);
@@ -1880,7 +1903,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 					// due to the insertion of the tabs above.
 					elem = map.getElement(last);
 					start = elem.getStartOffset();
-					if (Math.max(c.getDot(), c.getMark()) != start) {
+					if (Math.max(c.getDot(), c.getMark())!=start) {
 						document.insertString(start, replacement, null);
 					}
 				} catch (BadLocationException ble) { // Never happens.
@@ -1890,7 +1913,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				} finally {
 					textArea.endAtomicEdit();
 				}
-			} else {
+			}
+			else {
 				textArea.replaceSelection("\t");
 			}
 
@@ -1926,30 +1950,31 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getNextWord(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
-			if (offs == doc.getLength()) {
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			if (offs==doc.getLength()) {
 				return offs;
 			}
 
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			int end = root.getElement(line).getEndOffset() - 1;
-			if (offs == end) { // If we're already at the end of the line...
-				RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			if (offs==end) { // If we're already at the end of the line...
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 				if (rsta.isCodeFoldingEnabled()) { // Start of next visible line
 					FoldManager fm = rsta.getFoldManager();
 					int lineCount = root.getElementCount();
-					while (++line < lineCount && fm.isLineHidden(line)) ;
-					if (line < lineCount) { // Found a lower visible line
+					while (++line<lineCount && fm.isLineHidden(line));
+					if (line<lineCount) { // Found a lower visible line
 						offs = root.getElement(line).getStartOffset();
 					}
 					// No lower visible line - we're already at last visible offset
 					return offs;
-				} else {
-					return offs + 1; // Start of next line.
+				}
+				else {
+					return offs+1; // Start of next line.
 				}
 			}
-			doc.getText(offs, end - offs, seg);
+			doc.getText(offs, end-offs, seg);
 
 			// Determine the "type" of char at offs - letter/digit,
 			// whitespace or other
@@ -1961,16 +1986,16 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.next();
 				} while (doc.isIdentifierChar(languageIndex, ch) &&
-					ch != CharacterIterator.DONE);
+						 ch != CharacterIterator.DONE);
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
 			else if (!Character.isWhitespace(ch)) {
 				do {
 					ch = seg.next();
-				} while (ch != Segment.DONE &&
-					!(doc.isIdentifierChar(languageIndex, ch) ||
-						Character.isWhitespace(ch)));
+				} while (ch!=Segment.DONE &&
+						 !(doc.isIdentifierChar(languageIndex, ch) ||
+						   Character.isWhitespace(ch)));
 			}
 
 			// Skip any trailing whitespace
@@ -1980,7 +2005,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			offs += seg.getIndex() - seg.getBeginIndex();
 			return offs;
+
 		}
+
 	}
 
 
@@ -2004,19 +2031,19 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 
 			if (RSyntaxTextArea.getTemplatesEnabled()) {
 
 				try {
 
-						CodeTemplateManager manager = RSyntaxTextArea.
-							getCodeTemplateManager();
-						CodeTemplate template = manager == null ? null :
-							manager.getTemplate(rsta);
+					CodeTemplateManager manager = RSyntaxTextArea.
+						getCodeTemplateManager();
+					CodeTemplate template =  manager==null ? null :
+						manager.getTemplate(rsta);
 
 					// A non-null template means modify the text to insert!
-					if (template != null) {
+					if (template!=null) {
 						template.invoke(rsta);
 					}
 
@@ -2026,9 +2053,10 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 						doDefaultInsert(rsta);
 					}
 
-					} catch (BadLocationException ble) {
-						UIManager.getLookAndFeel().provideErrorFeedback(textArea);
-					}
+				} catch (BadLocationException ble) {
+					UIManager.getLookAndFeel().
+						provideErrorFeedback(textArea);
+				}
 
 			} // End of if (textArea.getTemplatesEnabled()).
 
@@ -2087,29 +2115,30 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		protected int getPreviousWord(RTextArea textArea, int offs)
 			throws BadLocationException {
 
-			if (offs == 0) {
+			if (offs==0) {
 				return offs;
 			}
 
-			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			Element root = doc.getDefaultRootElement();
 			int line = root.getElementIndex(offs);
 			int start = root.getElement(line).getStartOffset();
-			if (offs == start) {// If we're already at the start of the line...
-				RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			if (offs==start) {// If we're already at the start of the line...
+				RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 				if (rsta.isCodeFoldingEnabled()) { // End of next visible line
 					FoldManager fm = rsta.getFoldManager();
-					while (--line >= 0 && fm.isLineHidden(line)) ;
-					if (line >= 0) { // Found an earlier visible line
+					while (--line>=0 && fm.isLineHidden(line));
+					if (line>=0) { // Found an earlier visible line
 						offs = root.getElement(line).getEndOffset() - 1;
 					}
 					// No earlier visible line - we must be at offs==0...
 					return offs;
-				} else {
-					return start - 1; // End of previous line.
+				}
+				else {
+					return start-1; // End of previous line.
 				}
 			}
-			doc.getText(start, offs - start, seg);
+			doc.getText(start, offs-start, seg);
 
 			// Determine the "type" of char at offs - lower case, upper case,
 			// whitespace or other
@@ -2126,20 +2155,20 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				do {
 					ch = seg.previous();
 				} while (doc.isIdentifierChar(languageIndex, ch) &&
-					ch != CharacterIterator.DONE);
+						 ch != CharacterIterator.DONE);
 			}
 
 			// Skip groups of "anything else" (operators, etc.).
 			else if (!Character.isWhitespace(ch)) {
 				do {
 					ch = seg.previous();
-				} while (ch != Segment.DONE &&
-					!(doc.isIdentifierChar(languageIndex, ch) ||
-						Character.isWhitespace(ch)));
+				} while (ch!=Segment.DONE &&
+						 !(doc.isIdentifierChar(languageIndex, ch) ||
+						   Character.isWhitespace(ch)));
 			}
 
 			offs -= seg.getEndIndex() - seg.getIndex();
-			if (ch != Segment.DONE) {
+			if (ch!=Segment.DONE) {
 				offs++;
 			}
 
@@ -2202,8 +2231,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			// Don't toggle comment on last line if there is no
-			// text selected on it.
+			/* Don't toggle comment on last line if there is no text selected on it. */
 			if (start != end) {
 				Element elem = map.getElement(end);
 				if (Math.max(dot, mark) == elem.getStartOffset()) {
@@ -2215,7 +2243,8 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			try {
 				for (line1 = end; line1 >= start; line1--) {
 					Element elem = map.getElement(line1);
-					String lineText = doc.getText(elem.getStartOffset(), elem.getEndOffset() - elem.getStartOffset() - 1);
+					String lineText = doc.getText(elem.getStartOffset(),
+						elem.getEndOffset() - elem.getStartOffset() - 1);
 					int[] pos = searchMarkers(lineText, startEnd);
 					handleToggleComment(elem, doc, lineText, startEnd, pos);
 				}
@@ -2235,24 +2264,30 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		 * @return The index of the mark if present, otherwise -1
 		 */
 		int endMatch(String text, String[] startEnd) {
-			if (startEnd[1] == null)
+			if (startEnd[1] == null) {
 				return -1;
+			}
 
 			char c;
 			int i = text.length() - 1;
 
 			while (i >= 0) {
 				c = text.charAt(i);
-				if (!Character.isWhitespace(c)) break;
+
+				if (!Character.isWhitespace(c)) {
+					break;
+				}
+
 				i--;
 			}
 
 			i = i - startEnd[1].length() + 1;
 
-			if (text.lastIndexOf(startEnd[1]) == i)
+			if (text.lastIndexOf(startEnd[1]) == i) {
 				return i;
-			else
+			} else {
 				return -1;
+			}
 		}
 
 		/**
@@ -2265,10 +2300,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		int startMatch(String text, String[] startEnd) {
 			String ws = RSyntaxUtilities.getLeadingWhitespace(text);
 
-			if (text.indexOf(startEnd[0]) == ws.length())
+			if (text.indexOf(startEnd[0]) == ws.length()) {
 				return ws.length();
-			else
+			} else {
 				return -1;
+			}
 		}
 
 		/**
@@ -2284,16 +2320,20 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			return new int[]{startOffset, endOffset};
 		}
 
-		private void handleToggleComment(Element elem, Document doc, String line, String[] startEnd, int[] pos) throws BadLocationException {
+		private void handleToggleComment(Element elem, Document doc, String line, String[] startEnd, int[] pos)
+			throws BadLocationException {
+
 			int startOffset = elem.getStartOffset();
 
 			if (pos[0] >= 0 && ((pos[1] >= 0 && startEnd[1] != null) || (pos[1] < 0 && startEnd[1] == null))) {
 				//  start-mark found (and also the end-mark for two-mark comments)
-				if (startEnd[1] != null && pos[1] >= 0)
+				if (startEnd[1] != null && pos[1] >= 0) {
 					doc.remove(startOffset + pos[1], startEnd[1].length());
+				}
 
-				if (pos[0] >= 0)
+				if (pos[0] >= 0) {
 					doc.remove(startOffset + pos[0], startEnd[0].length());
+				}
 			} else {
 				if (startEnd[1] != null) {
 					// add the mark after the last char of the line
@@ -2332,14 +2372,15 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			RSyntaxTextArea rsta = (RSyntaxTextArea) textArea;
+			RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 			if (rsta.isCodeFoldingEnabled()) {
 				Fold fold = getClosestFold(rsta);
-				if (fold != null) {
+				if (fold!=null) {
 					fold.toggleCollapsedState();
 				}
 				RSyntaxUtilities.possiblyRepaintGutter(textArea);
-			} else {
+			}
+			else {
 				UIManager.getLookAndFeel().provideErrorFeedback(rsta);
 			}
 		}
