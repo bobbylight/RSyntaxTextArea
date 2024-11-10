@@ -34,13 +34,10 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # Run gradle with xvfb to run the unit tests headlessly
+    # Note: Assumes we're running on Ubuntu
+    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
     - name: Build with Gradle
-      #run: ./gradlew build --warning-mode all
-      uses: hankolsen/xvfb-action@master
-      with:
-        run: ./gradlew build jacocoTestReport -xsign -xpublish --warning-mode all
-        working-directory: ./ #optional
+      run: xvfb-run ./gradlew build jacocoTestReport -xsign -xpublish --warning-mode all
 
     - name: Submit coverage data to codecov
       uses: codecov/codecov-action@v4
