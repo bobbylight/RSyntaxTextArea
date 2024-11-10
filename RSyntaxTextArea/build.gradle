@@ -2,9 +2,9 @@ import static org.gradle.api.JavaVersion.*
 
 ['base', 'jacoco', 'biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
 
-// We require building with JDK 8 or later.  We turn off doclint since our
+// We require building with JDK 11 or later.  We turn off doclint since our
 // generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
-assert current().isJava8Compatible()
+assert current().isJava11Compatible()
 allprojects {
 	tasks.withType(Javadoc) {
 		options.addStringOption('Xdoclint:none', '-quiet')

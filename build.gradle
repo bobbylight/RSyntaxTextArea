@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'com.fifesoft'
-// NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
+// NOTE: Local Java 11:  /Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home
 
 allprojects {
 
