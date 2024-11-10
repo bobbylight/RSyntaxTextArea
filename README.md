@@ -25,8 +25,14 @@ all unit tests, and create the jar, run:
 
     ./gradlew build --warning-mode all
 
-RSTA 3.0 and newer requires Java 17 to compile, but runs on Java 8.
-If you need Java 6 compatibility, you'll need to use a 2.6.x version.
+RSTA 4.0 and later requires Java 11 to run. If you need to support older
+Java versions, use the RSTA version specified in the following table:
+
+| RSTA Version | Required to build (JDK) | Required to run (JRE)  |
+|--------------|-------------------------|------------------------|
+| 4.x          | 17                      | 11                     |
+| 3.x          | 17                      | 8                      |
+| 2.6.x        | 6                       | 6                      |
 
 # Demos
 
