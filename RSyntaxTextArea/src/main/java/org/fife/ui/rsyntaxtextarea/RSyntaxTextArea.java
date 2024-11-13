@@ -3388,11 +3388,12 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 				popup.dispose();
 			}
 
-			Window window = SwingUtilities.getWindowAncestor(RSyntaxTextArea.this);
-			popup = new MatchedBracketPopup(window, RSyntaxTextArea.this, matchedBracketOffs);
-			popup.pack();
-			popup.setVisible(true);
-
+			if (RSyntaxTextArea.this.hasFocus()) {
+				Window window = SwingUtilities.getWindowAncestor(RSyntaxTextArea.this);
+				popup = new MatchedBracketPopup(window, RSyntaxTextArea.this, matchedBracketOffs);
+				popup.pack();
+				popup.setVisible(true);
+			}
 		}
 
 		@Override
