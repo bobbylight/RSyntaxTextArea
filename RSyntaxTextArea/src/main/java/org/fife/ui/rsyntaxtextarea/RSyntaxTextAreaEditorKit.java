@@ -2213,7 +2213,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
 			Element map = doc.getDefaultRootElement();
 			Caret c = textArea.getCaret();
 			int dot = c.getDot();
@@ -2221,7 +2221,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int line1 = map.getElementIndex(dot);
 			int line2 = map.getElementIndex(mark);
 			int start = Math.min(line1, line2);
-			int end   = Math.max(line1, line2);
+			int end = Math.max(line1, line2);
 
 			Token t = doc.getTokenListForLine(start);
 			int languageIndex = t != null ? t.getLanguageIndex() : 0;
@@ -2234,7 +2234,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			// Don't toggle comment on last line if there is no
 			// text selected on it.
-			if (start!=end) {
+			if (start != end) {
 				Element elem = map.getElement(end);
 				if (Math.max(dot, mark) == elem.getStartOffset()) {
 					end--;
