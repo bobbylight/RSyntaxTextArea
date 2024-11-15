@@ -2213,7 +2213,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				return;
 			}
 
-			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+			RSyntaxDocument doc = (RSyntaxDocument) textArea.getDocument();
 			Element map = doc.getDefaultRootElement();
 			Caret c = textArea.getCaret();
 			int dot = c.getDot();
@@ -2221,32 +2221,34 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			int line1 = map.getElementIndex(dot);
 			int line2 = map.getElementIndex(mark);
 			int start = Math.min(line1, line2);
-			int end   = Math.max(line1, line2);
+			int end = Math.max(line1, line2);
 
 			Token t = doc.getTokenListForLine(start);
-			int languageIndex = t!=null ? t.getLanguageIndex() : 0;
+			int languageIndex = t != null ? t.getLanguageIndex() : 0;
 			String[] startEnd = doc.getLineCommentStartAndEnd(languageIndex);
 
-			if (startEnd==null) {
+			if (startEnd == null) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				return;
 			}
 
 			// Don't toggle comment on last line if there is no
 			// text selected on it.
-			if (start!=end) {
+			if (start != end) {
 				Element elem = map.getElement(end);
-				if (Math.max(dot, mark)==elem.getStartOffset()) {
+				if (Math.max(dot, mark) == elem.getStartOffset()) {
 					end--;
 				}
 			}
 
 			textArea.beginAtomicEdit();
 			try {
-				boolean add = getDoAdd(doc,map, start,end, startEnd);
-				for (line1=start; line1<=end; line1++) {
+				for (line1 = end; line1 >= start; line1--) {
 					Element elem = map.getElement(line1);
-					handleToggleComment(elem, doc, startEnd, add);
+					String lineText = doc.getText(elem.getStartOffset(),
+						elem.getEndOffset() - elem.getStartOffset() - 1);
+					int[] pos = searchMarkers(lineText, startEnd);
+					handleToggleComment(elem, doc, lineText, startEnd, pos);
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace();
@@ -2254,42 +2256,95 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			} finally {
 				textArea.endAtomicEdit();
 			}
-
 		}
 
-		private boolean getDoAdd(Document doc, Element map, int startLine,
-							int endLine, String[] startEnd)
-								throws BadLocationException {
-			boolean doAdd = false;
-			for (int i=startLine; i<=endLine; i++) {
-				Element elem = map.getElement(i);
-				int start = elem.getStartOffset();
-				String t = doc.getText(start, elem.getEndOffset()-start-1);
-				if (!t.startsWith(startEnd[0]) ||
-						(startEnd[1]!=null && !t.endsWith(startEnd[1]))) {
-					doAdd = true;
+		/**
+		 * Search the end-comment mark, skipping trailing whitespaces
+		 *
+		 * @param text     The line text
+		 * @param startEnd start/end comment marks
+		 * @return The index of the mark if present, otherwise -1
+		 */
+		int endMatch(String text, String[] startEnd) {
+			if (startEnd[1] == null) {
+				return -1;
+			}
+
+			char c;
+			int i = text.length() - 1;
+
+			while (i >= 0) {
+				c = text.charAt(i);
+
+				if (!Character.isWhitespace(c)) {
 					break;
 				}
+
+				i--;
 			}
-			return doAdd;
+
+			i = i - startEnd[1].length() + 1;
+
+			if (text.lastIndexOf(startEnd[1]) == i) {
+				return i;
+			} else {
+				return -1;
+			}
 		}
 
-		private void handleToggleComment(Element elem, Document doc,
-			String[] startEnd, boolean add) throws BadLocationException {
-			int start = elem.getStartOffset();
-			int end = elem.getEndOffset() - 1;
-			if (add) {
-				if (startEnd[1]!=null) {
-					doc.insertString(end, startEnd[1], null);
-				}
-				doc.insertString(start, startEnd[0], null);
+		/**
+		 * Search the start-comment mark, skipping leading whitespaces
+		 *
+		 * @param text     The line text
+		 * @param startEnd start/end comment marks
+		 * @return The index of the mark if present, otherwise -1
+		 */
+		int startMatch(String text, String[] startEnd) {
+			String ws = RSyntaxUtilities.getLeadingWhitespace(text);
+
+			if (text.indexOf(startEnd[0]) == ws.length()) {
+				return ws.length();
+			} else {
+				return -1;
 			}
-			else {
-				if (startEnd[1]!=null) {
-					int temp = startEnd[1].length();
-					doc.remove(end-temp, temp);
+		}
+
+		/**
+		 * Search for start and end marks
+		 *
+		 * @return An array with the indices of the marks in the line. Negative indices means that the mark
+		 * is not present in the line
+		 */
+		private int[] searchMarkers(String line, String[] startEnd) {
+			int startOffset = startMatch(line, startEnd);
+			int endOffset = endMatch(line, startEnd);
+
+			return new int[]{startOffset, endOffset};
+		}
+
+		private void handleToggleComment(Element elem, Document doc, String line, String[] startEnd, int[] pos)
+			throws BadLocationException {
+
+			int startOffset = elem.getStartOffset();
+
+			if (pos[0] >= 0 && ((pos[1] >= 0 && startEnd[1] != null) || (pos[1] < 0 && startEnd[1] == null))) {
+				//  start-mark found (and also the end-mark for two-mark comments)
+				if (startEnd[1] != null && pos[1] >= 0) {
+					doc.remove(startOffset + pos[1], startEnd[1].length());
 				}
-				doc.remove(start, startEnd[0].length());
+
+				if (pos[0] >= 0) {
+					doc.remove(startOffset + pos[0], startEnd[0].length());
+				}
+			} else {
+				if (startEnd[1] != null) {
+					// add the mark after the last char of the line
+					doc.insertString(elem.getEndOffset() - 1, startEnd[1], null);
+				}
+
+				// insert the mark right before the first non-ws char
+				int n = RSyntaxUtilities.getLeadingWhitespace(line).length();
+				doc.insertString(startOffset + n, startEnd[0], null);
 			}
 		}
 
@@ -2297,7 +2352,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		public final String getMacroID() {
 			return rstaToggleCommentAction;
 		}
-
 	}
 
 
