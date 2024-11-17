@@ -11,10 +11,10 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -433,7 +433,7 @@ class ParserManager implements DocumentListener, ActionListener,
 		if (noticeHighlightPairs!=null) {
 
 			Point p = e.getPoint();
-			int pos = textArea.viewToModel(p);
+			int pos = textArea.viewToModel2D(p);
 
 			for (NoticeHighlightPair pair : noticeHighlightPairs) {
 				ParserNotice notice = pair.notice;
@@ -543,8 +543,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * @return Whether the parser notice actually contains the specified point
 	 *         in the view.
 	 */
-	private boolean noticeContainsPointInView(ParserNotice notice,
-			Point p) {
+	private boolean noticeContainsPointInView(ParserNotice notice, Point p) {
 
 		try {
 
@@ -567,9 +566,9 @@ class ParserManager implements DocumentListener, ActionListener,
 				end = elem.getEndOffset() - 1;
 			}
 
-			Rectangle r1 = textArea.modelToView(start);
-			Rectangle r2 = textArea.modelToView(end);
-			if (r1.y!=r2.y) {
+			Rectangle2D r1 = textArea.modelToView2D(start);
+			Rectangle2D r2 = textArea.modelToView2D(end);
+			if (r1.getY() != r2.getY()) {
 				// If the notice spans multiple lines, give them the benefit
 				// of the doubt.  This is only "wrong" if the user is in empty
 				// space "to the right" of the error marker when it ends at the
@@ -577,10 +576,11 @@ class ParserManager implements DocumentListener, ActionListener,
 				return true;
 			}
 
-			r1.y--; // Be a tiny bit lenient.
-			r1.height += 2; // Ditto
-			return p.x>=r1.x && p.x<(r2.x+r2.width) &&
-					p.y>=r1.y && p.y<(r1.y+r1.height);
+			// Be a tiny bit lenient with y/height
+			r1.setRect(r1.getX(), r1.getY() - 1, r1.getWidth(), r1.getHeight() + 2);
+
+			return p.x >= r1.getX() && p.x < (r2.getX() + r2.getWidth()) &&
+					p.y >= r1.getY() && p.y < (r1.getY() + r1.getHeight());
 
 		} catch (BadLocationException ble) { // Never occurs
 			// Give them the benefit of the doubt, should 99% of the time be

@@ -21,6 +21,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -60,8 +61,8 @@ public abstract class RTextAreaBase extends JTextArea {
 	private int marginSizeInChars;			// How many 'm' widths the margin line is over.
 	private boolean fadeCurrentLineHighlight;	// "Fade effect" for current line highlight.
 	private boolean roundedSelectionEdges;
-	private int previousCaretY;
-	int currentCaretY;							// Used to know when to highlight current line.
+	private double previousCaretY;
+	double currentCaretY;							// Used to know when to highlight current line.
 
 	private BackgroundPainterStrategy backgroundPainter;	// Paints the background.
 
@@ -395,7 +396,7 @@ public abstract class RTextAreaBase extends JTextArea {
 	 *
 	 * @return The y-offset of the caret.
 	 */
-	protected int getCurrentCaretY() {
+	protected double getCurrentCaretY() {
 		return currentCaretY;
 	}
 
@@ -711,48 +712,24 @@ public abstract class RTextAreaBase extends JTextArea {
 		int lineHeight = getLineHeight();
 		int dot = getCaretPosition();
 
-		// If we're wrapping lines we need to check the actual y-coordinate
-		// of the caret, not just the line number, since a single logical
-		// line can span multiple physical lines.
-		if (getLineWrap()) {
-			try {
-				Rectangle temp = modelToView(dot);
-				if (temp!=null) {
-					currentCaretY = temp.y;
-				}
-			} catch (BadLocationException ble) {
-				ble.printStackTrace(); // Should never happen.
+		// We can't just get the line number and multiply due to both line
+		// wrap and code folding. We could have a quicker code path if
+		// liene wrap and folding are both disabled.
+		try {
+			Rectangle2D temp = modelToView2D(dot);
+			if (temp!=null) {
+				currentCaretY = temp.getY();
 			}
-		}
-
-		// No line wrap - we can simply check the line number (quicker).
-		else {
-//			Document doc = getDocument();
-//			if (doc!=null) {
-//				Element map = doc.getDefaultRootElement();
-//				int caretLine = map.getElementIndex(dot);
-//				Rectangle alloc = ((RTextAreaUI)getUI()).
-//											getVisibleEditorRect();
-//				if (alloc!=null)
-//					currentCaretY = alloc.y + caretLine*lineHeight;
-//			}
-// Modified for code folding requirements
-try {
-	Rectangle temp = modelToView(dot);
-	if (temp!=null) {
-		currentCaretY = temp.y;
-	}
-} catch (BadLocationException ble) {
-	ble.printStackTrace(); // Should never happen.
-}
+		} catch (BadLocationException ble) {
+			ble.printStackTrace(); // Should never happen.
 		}
 
 		// Repaint current line (to fill in entire highlight), and old line
 		// (to erase entire old highlight) if necessary.  Always repaint
 		// current line in case selection is added or removed.
-		repaint(0,currentCaretY, width,lineHeight);
+		repaint(0, (int)currentCaretY, width,lineHeight);
 		if (previousCaretY!=currentCaretY) {
-			repaint(0,previousCaretY, width,lineHeight);
+			repaint(0, (int)previousCaretY, width,lineHeight);
 		}
 
 		previousCaretY = currentCaretY;

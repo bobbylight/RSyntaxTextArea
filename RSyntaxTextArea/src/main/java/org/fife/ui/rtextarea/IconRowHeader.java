@@ -12,10 +12,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -552,8 +552,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
 		int lineCount = root.getElementCount();
-		int topPosition = textArea.viewToModel(
-								new Point(visibleRect.x,visibleRect.y));
+		int topPosition = textArea.viewToModel2D(
+								new Point2D.Double(visibleRect.x, visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 
 		// Compute the y at which to begin painting text, taking into account
@@ -857,8 +857,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 * @return The corresponding line in the editor.
 	 * @throws BadLocationException ble If an error occurs.
 	 */
-	private int viewToModelLine(Point p) throws BadLocationException {
-		int offs = textArea.viewToModel(p);
+	private int viewToModelLine(Point2D p) throws BadLocationException {
+		int offs = textArea.viewToModel2D(p);
 		return offs>-1 ? textArea.getLineOfOffset(offs) : -1;
 	}
 

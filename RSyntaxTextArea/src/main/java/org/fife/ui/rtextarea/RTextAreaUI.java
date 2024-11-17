@@ -10,6 +10,7 @@ package org.fife.ui.rtextarea;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -456,22 +457,22 @@ public class RTextAreaUI extends BasicTextAreaUI {
 				//int height = textArea.currentCaretRect.height);
 				int height = textArea.getLineHeight();
 
+				Graphics2D g2d = (Graphics2D)g;
 				if (textArea.getFadeCurrentLineHighlight()) {
-					Graphics2D g2d = (Graphics2D)g;
 					Color bg = textArea.getBackground();
 					GradientPaint paint = new GradientPaint(
 						visibleRect.x,0, highlight,
 						visibleRect.x+visibleRect.width,0,
 								bg==null ? Color.WHITE : bg);
 					g2d.setPaint(paint);
-					g2d.fillRect(visibleRect.x,textArea.currentCaretY,
-									visibleRect.width, height);
 				}
 				else {
-					g.setColor(highlight);
-					g.fillRect(visibleRect.x,textArea.currentCaretY,
-									visibleRect.width, height);
+					g2d.setColor(highlight);
 				}
+				g2d.fill(new Rectangle2D.Double(
+					visibleRect.x, textArea.currentCaretY,
+					visibleRect.width, height
+				));
 
 			}
 
@@ -586,8 +587,8 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 *         into the document.
 	 */
 	public int yForLineContaining(int offs) throws BadLocationException {
-		Rectangle r = modelToView(textArea, offs);
-		return r!=null ? r.y : -1;
+		Rectangle2D r = modelToView2D(textArea, offs, Position.Bias.Forward);
+		return r != null ? (int)r.getY() : -1;
 	}
 
 

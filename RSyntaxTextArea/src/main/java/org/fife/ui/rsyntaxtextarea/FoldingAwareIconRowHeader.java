@@ -11,7 +11,6 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -203,8 +202,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		//boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
-		int topPosition = textArea.viewToModel(
-								new Point(visibleRect.x,visibleRect.y));
+		int topPosition = textArea.viewToModel2D(visibleRect.getLocation());
 		int topLine = root.getElementIndex(topPosition);
 
 		int topY = visibleRect.y;

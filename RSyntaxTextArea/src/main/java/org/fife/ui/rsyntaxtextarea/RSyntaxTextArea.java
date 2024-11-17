@@ -7,6 +7,7 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -848,10 +849,10 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 				(bracketInfo.y!=lastBracketMatchPos ||
 				 bracketInfo.x!=lastCaretBracketPos)) {
 			try {
-				match = modelToView(bracketInfo.y);
+				match = modelToView2D(bracketInfo.y).getBounds();
 				if (match!=null) { // Happens if we're not yet visible
 					if (getPaintMatchedBracketPair()) {
-						dotRect = modelToView(bracketInfo.x);
+						dotRect = modelToView2D(bracketInfo.x).getBounds();
 					}
 					else {
 						dotRect = null;
@@ -1604,7 +1605,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	boolean getPaintTokenBackgrounds(int line, float y) {
 		//System.out.println(y + ", " + getCurrentCaretY() + "-" + (getCurrentCaretY() + getLineHeight()));
 		int iy = (int)y;
-		int curCaretY = getCurrentCaretY();
+		double curCaretY = getCurrentCaretY();
 		return iy<curCaretY || iy>=curCaretY+getLineHeight() ||
 				!getHighlightCurrentLine();
 	}
@@ -2189,7 +2190,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @param offs The position in the model.
 	 * @return The token, or <code>null</code> if no token is at that
 	 *         position.
-	 * @see #viewToToken(Point)
+	 * @see #viewToToken(Point2D)
 	 */
 	public Token modelToToken(int offs) {
 		if (offs>=0) {
@@ -3354,14 +3355,14 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 *         position.
 	 * @see #modelToToken(int)
 	 */
-	public Token viewToToken(Point p) {
+	public Token viewToToken(Point2D p) {
 		/*
 		 * TODO: This is a little inefficient.  This should convert view
 		 * coordinates to the underlying token (if any).  The way things currently
 		 * are, we're calling getTokenListForLine() twice (once in viewToModel()
 		 * and once here).
 		 */
-		return modelToToken(viewToModel(p));
+		return modelToToken(viewToModel2D(p));
 	}
 
 	/**
@@ -3563,7 +3564,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 					c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 				}
 				else if (t!=null && linkGenerator!=null) {
-					int offs = viewToModel(e.getPoint());
+					int offs = viewToModel2D(e.getPoint());
 					LinkGeneratorResult newResult = linkGenerator.
 							isLinkAtOffset(RSyntaxTextArea.this, offs);
 					if (newResult!=null) {

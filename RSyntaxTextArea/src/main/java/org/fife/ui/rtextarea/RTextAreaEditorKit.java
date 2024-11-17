@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Reader;
 import java.text.BreakIterator;
@@ -2015,8 +2017,8 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				if (magicPosition == null &&
 					(direction == SwingConstants.NORTH ||
 					direction == SwingConstants.SOUTH)) {
-					Rectangle r = textArea.modelToView(dot);
-					magicPosition = new Point(r.x, r.y);
+					Rectangle2D r = textArea.modelToView2D(dot);
+					magicPosition = new Point((int)r.getX(), (int)r.getY());
 				}
 
 				NavigationFilter filter = textArea.getNavigationFilter();
@@ -2148,11 +2150,10 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			selectedIndex = textArea.getCaretPosition();
 			if (selectedIndex != -1) {
 				if (left) {
-					selectedIndex = textArea.viewToModel(
-									new Point(visible.x, visible.y));
+					selectedIndex = textArea.viewToModel2D(visible.getLocation());
 				}
 				else {
-					selectedIndex = textArea.viewToModel(
+					selectedIndex = textArea.viewToModel2D(
 							new Point(visible.x + visible.width - 1,
 									visible.y + visible.height - 1));
 				}
@@ -2769,37 +2770,37 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			int initialY = visible.y;
 			Caret caret = textArea.getCaret();
 			Point magicPosition = caret.getMagicCaretPosition();
-			int yOffset;
+			double yOffset;
 
 			if (selectedIndex!=-1) {
 
 				try {
 
-					Rectangle dotBounds = textArea.modelToView(selectedIndex);
-					int x = (magicPosition != null) ? magicPosition.x :
-												dotBounds.x;
-					int h = dotBounds.height;
+					Rectangle2D dotBounds = textArea.modelToView2D(selectedIndex);
+					double x = (magicPosition != null) ? magicPosition.x :
+												dotBounds.getX();
+					double h = dotBounds.getHeight();
 					yOffset = direction *
-							((int)Math.ceil(scrollAmount/(double)h)-1)*h;
+							(Math.ceil(scrollAmount/h)-1)*h;
 					newVis.y = constrainY(textArea, initialY+yOffset, yOffset, visible.height);
 					int newIndex;
 
-					if (visible.contains(dotBounds.x, dotBounds.y)) {
+					if (visible.contains(dotBounds.getX(), dotBounds.getY())) {
 						// Dot is currently visible, base the new
 						// location off the old, or
-						newIndex = textArea.viewToModel(
-									new Point(x, constrainY(textArea,
-										dotBounds.y + yOffset, 0, 0)));
-										}
+						newIndex = textArea.viewToModel2D(
+									new Point2D.Double(x, constrainY(textArea,
+										dotBounds.getY() + yOffset, 0, 0)));
+					}
 					else {
 						// Dot isn't visible, choose the top or the bottom
 						// for the new location.
 						if (direction == -1) {
-							newIndex = textArea.viewToModel(new Point(
+							newIndex = textArea.viewToModel2D(new Point2D.Double(
 													x, newVis.y));
 						}
 						else {
-							newIndex = textArea.viewToModel(new Point(
+							newIndex = textArea.viewToModel2D(new Point2D.Double(
 									x, newVis.y + visible.height));
 						}
 					}
@@ -2834,7 +2835,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			textArea.scrollRectToVisible(newVis);
 		}
 
-		private int constrainY(JTextComponent textArea, int y, int vis, int screenHeight) {
+		private int constrainY(JTextComponent textArea, double y, double vis, int screenHeight) {
 			if (y < 0) {
 				y = 0;
 			}
@@ -2842,7 +2843,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				//y = Math.max(0, textArea.getHeight() - vis);
 				y = Math.max(0, textArea.getHeight()-screenHeight);
 			}
-			return y;
+			return (int)y;
 		}
 
 		private int constrainOffset(JTextComponent text, int offset) {
@@ -2860,22 +2861,22 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 									Rectangle visible, int initialY,
 									int index) {
 			try {
-				Rectangle dotBounds = text.modelToView(index);
-	                if (dotBounds.y < visible.y ||
-					(dotBounds.y > (visible.y + visible.height)) ||
-					(dotBounds.y + dotBounds.height) >
+				Rectangle2D dotBounds = text.modelToView2D(index);
+	                if (dotBounds.getY() < visible.y ||
+					(dotBounds.getY() > (visible.y + visible.height)) ||
+					(dotBounds.getY() + dotBounds.getHeight()) >
 					(visible.y + visible.height)) {
-					int y;
-					if (dotBounds.y < visible.y) {
-						y = dotBounds.y;
+					double y;
+					if (dotBounds.getY() < visible.y) {
+						y = dotBounds.getY();
 					}
 					else {
-						y = dotBounds.y + dotBounds.height - visible.height;
+						y = dotBounds.getY() + dotBounds.getHeight() - visible.height;
 					}
 					if ((direction == -1 && y < initialY) ||
 						(direction == 1 && y > initialY)) {
 						// Only adjust if it won't cause scrolling upward.
-						visible.y = y;
+						visible.y = (int)y;
 					}
 				}
 			} catch (BadLocationException ble) {}
