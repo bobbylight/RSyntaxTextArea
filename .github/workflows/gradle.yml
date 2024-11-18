@@ -40,7 +40,7 @@ jobs:
       run: xvfb-run ./gradlew build jacocoTestReport -xsign -xpublish --warning-mode all
 
     - name: Submit coverage data to codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       if: matrix.java == '8'
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
