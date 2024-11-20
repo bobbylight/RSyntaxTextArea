@@ -250,6 +250,15 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
+	/**
+	 * Overridden to update the width of this component.
+	 */
+	@Override
+	void handleDocumentUpdated(RDocument oldDoc, RDocument newDoc) {
+		updateCellWidths();
+	}
+
+
 	@Override
 	protected void init() {
 

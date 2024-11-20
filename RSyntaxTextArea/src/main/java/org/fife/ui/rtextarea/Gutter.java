@@ -1260,6 +1260,11 @@ public class Gutter extends JPanel {
 				if (newDoc != null) {
 					newDoc.addDocumentListener(this);
 				}
+				for (int i=0; i<getComponentCount(); i++) {
+					AbstractGutterComponent agc =
+						(AbstractGutterComponent)getComponent(i);
+					agc.handleDocumentUpdated(old, newDoc);
+				}
 			}
 
 		}
