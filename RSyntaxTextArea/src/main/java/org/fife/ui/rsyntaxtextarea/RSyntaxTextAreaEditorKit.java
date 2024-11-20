@@ -2259,11 +2259,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		/**
-		 * Search the end-comment mark, skipping trailing whitespaces
+		 * Search the end-comment mark, skipping trailing whitespaces.
 		 *
-		 * @param text     The line text
-		 * @param startEnd start/end comment marks
-		 * @return The index of the mark if present, otherwise -1
+		 * @param text The line text.
+		 * @param startEnd The start/end comment marks.
+		 * @return The index of the mark if present, otherwise -1.
 		 */
 		int endMatch(String text, String[] startEnd) {
 			if (startEnd[1] == null) {
@@ -2293,11 +2293,11 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		/**
-		 * Search the start-comment mark, skipping leading whitespaces
+		 * Search the start-comment mark, skipping leading whitespaces.
 		 *
-		 * @param text     The line text
-		 * @param startEnd start/end comment marks
-		 * @return The index of the mark if present, otherwise -1
+		 * @param text The line text.
+		 * @param startEnd The start/end comment marks.
+		 * @return The index of the mark if present, otherwise -1.
 		 */
 		int startMatch(String text, String[] startEnd) {
 			String ws = RSyntaxUtilities.getLeadingWhitespace(text);
@@ -2310,10 +2310,10 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		/**
-		 * Search for start and end marks
+		 * Search for start and end marks.
 		 *
-		 * @return An array with the indices of the marks in the line. Negative indices means that the mark
-		 * is not present in the line
+		 * @return An array with the indices of the marks in the line.
+		 * Negative indices means that the mark is not present in the line.
 		 */
 		private int[] searchMarkers(String line, String[] startEnd) {
 			int startOffset = startMatch(line, startEnd);
