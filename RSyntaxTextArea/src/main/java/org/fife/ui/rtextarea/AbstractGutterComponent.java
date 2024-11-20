@@ -110,8 +110,24 @@ abstract class AbstractGutterComponent extends JPanel {
 	 * Implementations can take this opportunity to repaint, revalidate, etc.
 	 *
 	 * @param e The document event.
+	 * @see #handleDocumentUpdated(RDocument, RDocument)
 	 */
 	abstract void handleDocumentEvent(DocumentEvent e);
+
+
+	/**
+	 * Called when the document is updated. This happens when an application
+	 * calls {@code textArea.read(reader)}, for example.<p>
+	 *
+	 * The default implementation does nothing. Subclasses can override.
+	 *
+	 * @param oldDoc The old document, which may be {@code null}.
+	 * @param newDoc The new document, which may be {@code null}.
+	 * @see #handleDocumentEvent(DocumentEvent)
+	 */
+	void handleDocumentUpdated(RDocument oldDoc, RDocument newDoc) {
+		// Do nothing
+	}
 
 
 	/**
