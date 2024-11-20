@@ -44,5 +44,6 @@ jobs:
       if: matrix.java == '8'
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./RSyntaxTextArea/build/reports/jacoco/test/jacocoTestReport.xml
+        disable_search: true
+        files: ./RSyntaxTextArea/build/reports/jacoco/test/jacocoTestReport.xml
         name: codecov
