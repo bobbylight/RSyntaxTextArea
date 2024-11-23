@@ -194,7 +194,7 @@ class TipWindow extends JWindow {
 			r = textArea.modelToView(textArea.getDocument().getLength()-1);
 			if (r.y+r.height>d.height) {
 				d.height = r.y + r.height + 5;
-				if(ft.getMaxSize() != null) {
+				if (ft.getMaxSize() != null) {
 					d.height = Math.min(d.height, maxWindowH);
 				}
 				textArea.setPreferredSize(d);

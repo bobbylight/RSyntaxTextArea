@@ -510,7 +510,7 @@ private Fold getFoldForLineImpl(Fold parent, List<Fold> folds, int line) {
 	/**
 	 * Listens for events in the text editor.
 	 */
-	private class Listener implements DocumentListener, PropertyChangeListener {
+	private final class Listener implements DocumentListener, PropertyChangeListener {
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {

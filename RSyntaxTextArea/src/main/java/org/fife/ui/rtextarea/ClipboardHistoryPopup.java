@@ -246,7 +246,7 @@ class ClipboardHistoryPopup extends JWindow {
 	/**
 	 * Action performed when Escape is pressed in this popup.
 	 */
-	private class EscapeAction extends AbstractAction {
+	private final class EscapeAction extends AbstractAction {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

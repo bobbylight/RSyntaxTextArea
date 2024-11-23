@@ -712,7 +712,7 @@ public class ConfigurableCaret extends DefaultCaret {
 	 *
 	 * Common cases: backspacing to visible line of collapsed region.
 	 */
-	private class FoldAwareNavigationFilter extends NavigationFilter {
+	private final class FoldAwareNavigationFilter extends NavigationFilter {
 
 		@Override
 	    public void setDot(FilterBypass fb, int dot, Position.Bias bias) {

@@ -75,8 +75,8 @@
     <!-- See https://checkstyle.sourceforge.io/config_whitespace.html -->
     <!--<module name="FileTabCharacter"/>-->
 
-    <!-- Miscellaneous other checks.                            -->
-    <!-- See https://checkstyle.sourceforge.io/config_misc.html -->
+    <!-- Miscellaneous other checks.                                               -->
+    <!-- See https://checkstyle.sourceforge.io/checks/regexp/regexpsingleline.html -->
     <module name="RegexpSingleline">
         <property name="format" value="\s+$"/>
         <property name="minimum" value="0"/>
@@ -84,8 +84,8 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
 
-    <!-- Checks for Headers                                         -->
-    <!-- See https://checkstyle.sourceforge.io/config_header.html   -->
+    <!-- Checks for Headers                                               -->
+    <!-- See https://checkstyle.sourceforge.io/checks/header/index.html   -->
      <module name="Header">
        <property name="headerFile" value="${config_loc}/javaHeader.txt"/>
        <property name="fileExtensions" value="java"/>
@@ -97,9 +97,9 @@
         <!-- https://stackoverflow.com/questions/5761188/checkstyle-suppressioncommentfilter-not-ignoring-specified-rule/5764666#5764666 -->
         <module name="SuppressWarningsHolder" />
 
-        <!-- Checks for Javadoc comments.                              -->
-        <!-- See https://checkstyle.sourceforge.io/config_javadoc.html -->
-        <!--<module name="JavadocMethod"/> This is just too whiny for now. -->
+        <!-- Checks for Javadoc comments.                                    -->
+        <!-- See https://checkstyle.sourceforge.io/checks/javadoc/index.html -->
+        <!--<module name="JavadocMethod"/> This is just too whiny for now.   -->
         <module name="JavadocType"/>
         <!--
         <module name="JavadocVariable">
@@ -127,8 +127,8 @@
 
         <module name="JavadocContentLocationCheck"/>
 
-        <!-- Checks for Naming Conventions.                           -->
-        <!-- See https://checkstyle.sourceforge.io/config_naming.html -->
+        <!-- Checks for Naming Conventions.                                 -->
+        <!-- See https://checkstyle.sourceforge.io/checks/naming/index.html -->
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
@@ -139,23 +139,23 @@
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
-        <!-- Checks for annotations.                                      -->
-        <!-- See https://checkstyle.sourceforge.io/config_annotation.html -->
+        <!-- Checks for annotations.                                            -->
+        <!-- See https://checkstyle.sourceforge.io/checks/annotation/index.html -->
         <module name="AnnotationLocation"/>
         <module name="AnnotationUseStyle"/>
         <module name="MissingDeprecated"/>
         <module name="MissingOverride"/>
 
-        <!-- Checks for imports                                        -->
-        <!-- See https://checkstyle.sourceforge.io/config_imports.html -->
+        <!-- Checks for imports                                              -->
+        <!-- See https://checkstyle.sourceforge.io/checks/imports/index.html -->
         <!--<module name="AvoidStarImport"/>-->
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
 
-        <!-- Checks for Size Violations.                             -->
-        <!-- See https://checkstyle.sourceforge.io/config_sizes.html -->
+        <!-- Checks for Size Violations.                                   -->
+        <!-- See https://checkstyle.sourceforge.io/checks/sizes/index.html -->
         <module name="MethodLength">
             <property name="max" value="300"/>
         </module>
@@ -165,8 +165,8 @@
         </module>
 
 
-        <!-- Checks for whitespace                                        -->
-        <!-- See https://checkstyle.sourceforge.io/config_whitespace.html -->
+        <!-- Checks for whitespace                                              -->
+        <!-- See https://checkstyle.sourceforge.io/checks/whitespace/index.html -->
         <module name="EmptyForIteratorPad"/>
         <module name="GenericWhitespace"/>
         <module name="MethodParamPad"/>
@@ -177,17 +177,23 @@
         </module>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter">
+            <!-- TODO: Add COMMA and possibly SEMI, but it'll be a big diff -->
+            <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR,
+                LITERAL_FINALLY, LITERAL_CATCH, DO_WHILE, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY,
+                LITERAL_CASE, LAMBDA, LITERAL_WHEN"/>
+        </module>
         <!--<module name="WhitespaceAround"/>-->
 
 
-        <!-- Modifier Checks                                            -->
-        <!-- See https://checkstyle.sourceforge.io/config_modifier.html -->
+        <!-- Modifier Checks                                                  -->
+        <!-- See https://checkstyle.sourceforge.io/checks/modifier/index.html -->
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
 
 
-        <!-- Checks for blocks. You know, those {}'s                  -->
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html -->
+        <!-- Checks for blocks. You know, those {}'s                        -->
+        <!-- See https://checkstyle.sourceforge.io/checks/blocks/index.html -->
         <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
@@ -196,13 +202,14 @@
         </module>
         <module name="RightCurly"> <!-- Right curlies should be alone in if/else -->
             <property name="option" value="alone"/>
-            <property name="tokens" value="LITERAL_ELSE, METHOD_DEF"/>
+            <property name="tokens" value="CLASS_DEF, ENUM_DEF, LITERAL_ELSE, LITERAL_SWITCH, METHOD_DEF"/>
         </module>
 
-        <!-- Checks for common coding problems                        -->
-        <!-- See https://checkstyle.sourceforge.io/config_coding.html -->
+        <!-- Checks for common coding problems                              -->
+        <!-- See https://checkstyle.sourceforge.io/checks/coding/index.html -->
         <!--<module name="AvoidInlineConditionals"/>-->
         <!--<module name="EmptyStatement"/> Removed to allow "while (doSomething());" -->
+        <module name="ConstructorsDeclarationGrouping"/>
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <module name="ExplicitInitialization"/>
@@ -229,8 +236,8 @@
         <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnusedLocalVariable"/>
 
-        <!-- Checks for class design                                  -->
-        <!-- See https://checkstyle.sourceforge.io/config_design.html -->
+        <!-- Checks for class design                                        -->
+        <!-- See https://checkstyle.sourceforge.io/checks/design/index.html -->
         <!--<module name="DesignForExtension"/>-->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
@@ -241,8 +248,8 @@
         </module>
 
 
-        <!-- Miscellaneous other checks.                            -->
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html -->
+        <!-- Miscellaneous other checks.                                  -->
+        <!-- See https://checkstyle.sourceforge.io/checks/misc/index.html -->
         <module name="ArrayTypeStyle"/>
         <!--<module name="AvoidEscapedUnicodeCharacters">
             <property name="allowByTailComment" value="true"/>
@@ -253,7 +260,7 @@
         <module name="UpperEll"/>
 
         <!-- Checks for metrics.                                       -->
-        <!-- See https://checkstyle.sourceforge.io/config_metrics.html -->
+        <!-- See https://checkstyle.sourceforge.io/checks/metrics/index.html -->
         <!--        <module name="CyclomaticComplexity"/>-->
 
     </module>

@@ -699,7 +699,7 @@ public class ErrorStrip extends JPanel {
 	 *
 	 * @author predi
 	 */
-	private static class DefaultErrorStripMarkerToolTipProvider
+	private static final class DefaultErrorStripMarkerToolTipProvider
 			implements ErrorStripMarkerToolTipProvider {
 
 		@Override
@@ -753,7 +753,7 @@ public class ErrorStrip extends JPanel {
 	/**
 	 * Listens for events in the error strip and its markers.
 	 */
-	private class Listener extends MouseAdapter
+	private final class Listener extends MouseAdapter
 					implements PropertyChangeListener, CaretListener {
 
 		private final Rectangle r = new Rectangle();

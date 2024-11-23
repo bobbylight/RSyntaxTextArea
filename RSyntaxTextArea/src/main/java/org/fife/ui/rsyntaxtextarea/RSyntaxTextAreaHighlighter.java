@@ -284,7 +284,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	 * Highlight info implementation used for parser notices and marked
 	 * occurrences.
 	 */
-	private static class SyntaxLayeredHighlightInfoImpl extends
+	private static final class SyntaxLayeredHighlightInfoImpl extends
 			LayeredHighlightInfoImpl {
 
 		private ParserNotice notice;

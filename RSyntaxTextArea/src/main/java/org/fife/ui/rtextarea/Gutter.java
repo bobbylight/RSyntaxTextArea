@@ -1153,7 +1153,7 @@ public class Gutter extends JPanel {
 	/**
 	 * Listens for the text area resizing.
 	 */
-	private class TextAreaListener extends ComponentAdapter
+	private final class TextAreaListener extends ComponentAdapter
 						implements DocumentListener, PropertyChangeListener,
 						ActiveLineRangeListener {
 
