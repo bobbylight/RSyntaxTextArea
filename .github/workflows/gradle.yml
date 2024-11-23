@@ -41,7 +41,7 @@ jobs:
 
     - name: Submit coverage data to codecov
       uses: codecov/codecov-action@v5
-      if: matrix.java == '8'
+      if: matrix.java == '11'
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         disable_search: true
