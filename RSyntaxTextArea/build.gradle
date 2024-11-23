@@ -1,10 +1,7 @@
-import static org.gradle.api.JavaVersion.*
-
 ['base', 'jacoco', 'biz.aQute.bnd.builder', 'distribution', 'maven-publish', 'signing'].each { apply plugin: it }
 
-// We require building with JDK 8 or later.  We turn off doclint since our
-// generated *TokenMakers have horrible documentation (see https://github.com/jflex-de/jflex/issues/182)
-assert current().isJava8Compatible()
+// Turn off doclint since our generated *TokenMakers have horrible
+// documentation (see https://github.com/jflex-de/jflex/issues/182)
 allprojects {
 	tasks.withType(Javadoc) {
 		options.addStringOption('Xdoclint:none', '-quiet')
@@ -36,7 +33,7 @@ jar {
                 'Implementation-Version': version,
                 'Bundle-License': 'BSD-3-Clause',
                 // Not sure why Require-Capability is not being added by the osgi plugin...
-                'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=' + javaVersion + '))"')
+                'Require-Capability': 'osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.' + osgiRequiredCompatibility + '))"')
     }
 }
 test {

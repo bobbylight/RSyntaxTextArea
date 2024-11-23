@@ -11,8 +11,12 @@ plugins {
     id 'com.github.spotbugs' version '5.2.5'
 }
 
+// We require building with JDK 11 or later. Built artifact compatibility
+// is controlled by javaLanguageVersion
+assert JavaVersion.current().isJava11Compatible()
+
 group 'com.fifesoft'
-// NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
+// NOTE: Local Java 11:  /Library/Java/JavaVirtualMachines/jdk-11.0.25+9/Contents/Home
 
 allprojects {
 
@@ -24,7 +28,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '8.10.2'
+        gradleVersion = '8.11.1'
     }
 }
 
@@ -81,8 +85,7 @@ subprojects {
     }
 
     compileJava {
-        sourceCompatibility javaVersion.toString()
-        targetCompatibility javaVersion.toString()
+        options.release = Integer.parseInt(javaLanguageVersion)
         options.debug = true
         options.debugOptions.debugLevel = 'source,vars,lines'
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
