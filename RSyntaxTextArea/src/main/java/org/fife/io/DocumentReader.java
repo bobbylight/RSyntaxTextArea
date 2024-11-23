@@ -93,7 +93,7 @@ public class DocumentReader extends Reader {
 	 */
 	@Override
 	public int read() {
-		if(position>=document.getLength()) {
+		if (position>=document.getLength()) {
 			return -1;      // Read past end of document.
 		}
 		try {
@@ -133,14 +133,14 @@ public class DocumentReader extends Reader {
 	@Override
 	public int read(char[] cbuf, int off, int len) {
 		int k;
-		if(position>=document.getLength()) {
+		if (position>=document.getLength()) {
 			return -1;      // Read past end of document.
 		}
 		k = len;
-		if((position+k)>=document.getLength()) {
+		if ((position+k)>=document.getLength()) {
 			k = document.getLength() - (int)position;
 		}
-		if(off + k >= cbuf.length) {
+		if (off + k >= cbuf.length) {
 			k = cbuf.length - off;
 		}
 		try {
@@ -178,7 +178,7 @@ public class DocumentReader extends Reader {
 	 */
 	@Override
 	public void reset() {
-		if(mark==-1) {
+		if (mark==-1) {
 			position = 0;
 		}
 		else {

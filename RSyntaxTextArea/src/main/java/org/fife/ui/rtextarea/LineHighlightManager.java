@@ -227,7 +227,7 @@ class LineHighlightManager {
 	 * distinguished from one another.  See:
 	 * https://github.com/bobbylight/RSyntaxTextArea/issues/161
 	 */
-	private static class LineHighlightInfoComparator
+	private static final class LineHighlightInfoComparator
 			implements Comparator<LineHighlightInfo> {
 
 		@Override

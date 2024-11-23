@@ -913,7 +913,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 * Updates the alpha used for this component's "collapsed" fold icons, if
 	 * necessary.
 	 */
-	private class AlphaRunnable implements ActionListener {
+	private final class AlphaRunnable implements ActionListener {
 
 		private float delta;
 

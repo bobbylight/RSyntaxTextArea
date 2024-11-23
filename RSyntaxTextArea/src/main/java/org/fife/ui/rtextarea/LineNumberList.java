@@ -776,7 +776,7 @@ public class LineNumberList extends AbstractGutterComponent
 	/**
 	 * Listens for events in the text area we're interested in.
 	 */
-	private class Listener implements CaretListener, PropertyChangeListener {
+	private final class Listener implements CaretListener, PropertyChangeListener {
 
 		private boolean installed;
 
@@ -853,7 +853,7 @@ public class LineNumberList extends AbstractGutterComponent
 	}
 
 
-	private static class SimpleLineNumberFormatter implements LineNumberFormatter {
+	private static final class SimpleLineNumberFormatter implements LineNumberFormatter {
 		@Override
 		public String format(int lineNumber) {
 			return Integer.toString(lineNumber);

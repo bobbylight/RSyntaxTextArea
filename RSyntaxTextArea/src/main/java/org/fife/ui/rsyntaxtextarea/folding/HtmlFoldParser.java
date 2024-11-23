@@ -386,7 +386,7 @@ public class HtmlFoldParser implements FoldParser {
 	 * A simple wrapper for the token denoting the closing of a tag (i.e.
 	 * "<code>&gt;</code>" or "<code>/&gt;</code>").
 	 */
-	private static class TagCloseInfo {
+	private static final class TagCloseInfo {
 
 		private Token closeToken;
 		private int line;

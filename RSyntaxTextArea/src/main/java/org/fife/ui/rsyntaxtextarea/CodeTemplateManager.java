@@ -340,7 +340,7 @@ public class CodeTemplateManager {
 	 * parameter and a <code>Segment</code> as its second, and knows
 	 * to compare the template's ID to the segment's text.
 	 */
-	private static class TemplateComparator implements Comparator<Object>,
+	private static final class TemplateComparator implements Comparator<Object>,
 			Serializable{
 
 		@Override
@@ -382,7 +382,7 @@ public class CodeTemplateManager {
 	/**
 	 * A file filter that accepts only XML files.
 	 */
-	private static class XMLFileFilter implements FileFilter {
+	private static final class XMLFileFilter implements FileFilter {
 		@Override
 		public boolean accept(File f) {
 			return f.getName().toLowerCase().endsWith(".xml");

@@ -428,7 +428,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			} // End of for (int counter = 0; counter < nch; counter++).
 
 			if (last < nch) {
-				if(lastWasCR) {
+				if (lastWasCR) {
 					if (last < (nch - 1)) {
 						doc.insertString(pos, new String(buff, last,
 										nch - last - 1), null);
@@ -2012,7 +2012,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 			try {
 
-				if(magicPosition == null &&
+				if (magicPosition == null &&
 					(direction == SwingConstants.NORTH ||
 					direction == SwingConstants.SOUTH)) {
 					Rectangle r = textArea.modelToView(dot);
@@ -2037,7 +2037,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					caret.setDot(dot);
 				}
 
-				if(magicPosition != null &&
+				if (magicPosition != null &&
 					(direction == SwingConstants.NORTH ||
 					direction == SwingConstants.SOUTH)) {
 						caret.setMagicCaretPosition(magicPosition);
@@ -2078,7 +2078,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 			try {
 				offs = getNextWord(textArea, offs);
-				if(offs >= curPara.getEndOffset() &&
+				if (offs >= curPara.getEndOffset() &&
 							oldOffs != curPara.getEndOffset() - 1) {
 					// we should first move to the end of current paragraph
 					// https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4278839
@@ -2087,7 +2087,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			} catch (BadLocationException ble) {
 				int end = textArea.getDocument().getLength();
 				if (offs != end) {
-					if(oldOffs != curPara.getEndOffset() - 1) {
+					if (oldOffs != curPara.getEndOffset() - 1) {
 						offs = curPara.getEndOffset() - 1;
 					}
 					else {
@@ -2146,7 +2146,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			}
 
 			selectedIndex = textArea.getCaretPosition();
-			if(selectedIndex != -1) {
+			if (selectedIndex != -1) {
 				if (left) {
 					selectedIndex = textArea.viewToModel(
 									new Point(visible.x, visible.y));
@@ -2161,7 +2161,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					(selectedIndex  > (doc.getLength()-1))) {
 					selectedIndex = doc.getLength()-1;
 				}
-				else if(selectedIndex  < 0) {
+				else if (selectedIndex  < 0) {
 					selectedIndex = 0;
 				}
 				if (select) {
@@ -2301,7 +2301,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 				Element curPara = Utilities.getParagraphElement(textArea, offs);
 				offs = getPreviousWord(textArea, offs);
-				if(offs < curPara.getStartOffset()) {
+				if (offs < curPara.getStartOffset()) {
 					offs = Utilities.getParagraphElement(textArea, offs).
 												getEndOffset() - 1;
 				}

@@ -680,7 +680,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 	/**
 	 * Formats line numbers into Hindu-Arabic numerals.
 	 */
-	private static class HinduArabicLineNumberFormatter implements LineNumberFormatter {
+	private static final class HinduArabicLineNumberFormatter implements LineNumberFormatter {
 		private static final String[] NUMERALS = {
 			"٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"
 		};
