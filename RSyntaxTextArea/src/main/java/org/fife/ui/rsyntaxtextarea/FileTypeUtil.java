@@ -194,42 +194,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		}
 
 		if (firstLine.startsWith("#!")) {
-
-			// Determine the program name.  Take special care for
-			// the case of "#!/usr/bin/env programName".
-			int space = firstLine.indexOf(' ', 2);
-			if (space > -1) {
-				if (firstLine.startsWith("#!/usr/bin/env")) {
-					int space2 = firstLine.indexOf(' ', space + 1);
-					if (space2 == -1) { // Never happens in "correct" #!'s
-						space2 = firstLine.length();
-					}
-					firstLine = firstLine.substring(space + 1, space2);
-				}
-				else {
-					firstLine = firstLine.substring(2, space);
-				}
-			}
-
-			if (firstLine.endsWith("sh")) { // ksh, bash, sh, ...
-				style = SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL;
-			}
-			else if (firstLine.endsWith("perl")) {
-				style = SyntaxConstants.SYNTAX_STYLE_PERL;
-			}
-			else if (firstLine.endsWith("php")) {
-				style = SyntaxConstants.SYNTAX_STYLE_PHP;
-			}
-			else if (firstLine.endsWith("python")) {
-				style = SyntaxConstants.SYNTAX_STYLE_PYTHON;
-			}
-			else if (firstLine.endsWith("lua")) {
-				style = SyntaxConstants.SYNTAX_STYLE_LUA;
-			}
-			else if (firstLine.endsWith("ruby")) {
-				style = SyntaxConstants.SYNTAX_STYLE_RUBY;
-			}
-
+			style = guessContentTypeFromShebang(firstLine);
 		}
 
 		else if (firstLine.startsWith("<?xml") && firstLine.endsWith("?>")) {
@@ -341,7 +306,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 			fileName = stripBackupExtensions(fileName);
 		}
 
-		String style = guessContentTypeImpl(fileName, filters);
+		String style = guessContentTypeFromFileName(fileName, filters);
 
 		return style != null ? style : SyntaxConstants.SYNTAX_STYLE_NONE;
 	}
@@ -356,17 +321,18 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @return The syntax style for the file, or {@code null} if nothing could
 	 *         be determined.
 	 */
-	private static String guessContentTypeImpl(String fileName, Map<String, List<String>> filters) {
+	private static String guessContentTypeFromFileName(String fileName, Map<String, List<String>> filters) {
 
 		String syntaxStyle = null;
 
-		// First go by pattern matching (mostly by extension)
+		// Go by pattern matching (mostly by extension)
 		for (Map.Entry<String, List<String>> entry : filters.entrySet()) {
 			for (String filter : entry.getValue()) {
 				Pattern p = fileFilterToPattern(filter);
 				if (p.matcher(fileName).matches()) {
 					syntaxStyle = entry.getKey();
-					// Stop immediately if we find a non-wildcard match
+					// Stop immediately if we find a non-wildcard match,
+					// as it'll be exact, e.g. "makefile"
 					if (!filter.contains("*") && !filter.contains("?")) {
 						break;
 					}
@@ -375,6 +341,54 @@ public final class FileTypeUtil implements SyntaxConstants {
 		}
 
 		return syntaxStyle;
+	}
+
+
+	/**
+	 * Looks at a shebang line to try to divine the syntax style.
+	 *
+	 * @param firstLine The shebang line, e.g. {@code #!/bin/sh}.
+	 * @return The syntax style to use.
+	 */
+	private static String guessContentTypeFromShebang(String firstLine) {
+
+		String style = SyntaxConstants.SYNTAX_STYLE_NONE;
+
+		// Take special care for the case of "#!/usr/bin/env programName"
+		int space = firstLine.indexOf(' ', 2); // Skip the #!
+		if (space > -1) {
+			if (firstLine.startsWith("#!/usr/bin/env")) {
+				int space2 = firstLine.indexOf(' ', space + 1);
+				if (space2 == -1) { // No args, just program name
+					space2 = firstLine.length();
+				}
+				firstLine = firstLine.substring(space + 1, space2);
+			}
+			else {
+				firstLine = firstLine.substring(2, space);
+			}
+		}
+
+		if (firstLine.endsWith("sh")) { // ksh, bash, sh, ...
+			style = SyntaxConstants.SYNTAX_STYLE_UNIX_SHELL;
+		}
+		else if (firstLine.endsWith("perl")) {
+			style = SyntaxConstants.SYNTAX_STYLE_PERL;
+		}
+		else if (firstLine.endsWith("php")) {
+			style = SyntaxConstants.SYNTAX_STYLE_PHP;
+		}
+		else if (firstLine.endsWith("python")) {
+			style = SyntaxConstants.SYNTAX_STYLE_PYTHON;
+		}
+		else if (firstLine.endsWith("lua")) {
+			style = SyntaxConstants.SYNTAX_STYLE_LUA;
+		}
+		else if (firstLine.endsWith("ruby")) {
+			style = SyntaxConstants.SYNTAX_STYLE_RUBY;
+		}
+
+		return style;
 	}
 
 
@@ -430,6 +444,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_PROTO, "*.proto");
 		initFiltersImpl(map, SYNTAX_STYLE_PYTHON, "*.py");
 		initFiltersImpl(map, SYNTAX_STYLE_RUBY, "*.rb", "Vagrantfile");
+		initFiltersImpl(map, SYNTAX_STYLE_RUST, "*.rs");
 		initFiltersImpl(map, SYNTAX_STYLE_SAS, "*.sas");
 		initFiltersImpl(map, SYNTAX_STYLE_SCALA, "*.scala");
 		initFiltersImpl(map, SYNTAX_STYLE_SQL, "*.sql");

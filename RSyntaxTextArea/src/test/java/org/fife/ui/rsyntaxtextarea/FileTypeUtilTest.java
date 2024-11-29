@@ -89,6 +89,9 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		String[] texts = {
 			"#!/usr/bin/env perl\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/env perl -w\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/perl\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/perl -w\nprint(\"Hello world!\n\");",
 		};
 
 		for (String text : texts) {
@@ -105,6 +108,7 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		String[] texts = {
 			"#!/usr/bin/env php\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/php\nprint(\"Hello world!\n\");",
 		};
 
 		for (String text : texts) {
@@ -121,6 +125,7 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		String[] texts = {
 			"#!/usr/bin/env python\nprint(\"Hello world!\");",
+			"#!/usr/bin/python\nprint(\"Hello world!\");",
 		};
 
 		for (String text : texts) {
@@ -137,6 +142,7 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		String[] texts = {
 			"#!/usr/bin/env lua\nprint(\"Hello world!\");",
+			"#!/usr/bin/lua\nprint(\"Hello world!\");",
 		};
 
 		for (String text : texts) {
@@ -153,11 +159,29 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		String[] texts = {
 			"#!/usr/bin/env ruby\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/ruby\nprint(\"Hello world!\n\");",
 		};
 
 		for (String text : texts) {
 			RSyntaxTextArea textArea = plainTextArea(text);
 			Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_RUBY, util.guessContentType(textArea));
+		}
+	}
+
+
+	@Test
+	void testGuessContentType_textAreaArg_unknownProgramInShebang() {
+
+		FileTypeUtil util = FileTypeUtil.get();
+
+		String[] texts = {
+			"#!/usr/bin/env xxx\nprint(\"Hello world!\n\");",
+			"#!/usr/bin/xxx\nprint(\"Hello world!\n\");",
+		};
+
+		for (String text : texts) {
+			RSyntaxTextArea textArea = plainTextArea(text);
+			Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_NONE, util.guessContentType(textArea));
 		}
 	}
 
@@ -205,8 +229,14 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		FileTypeUtil util = FileTypeUtil.get();
 
-		File file = new File("test.java");
+		File file = new File("makefile");
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_MAKEFILE, util.guessContentType(file));
+
+		file = new File("test.java");
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_JAVA, util.guessContentType(file));
+
+		file = new File("test.rs");
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_RUST, util.guessContentType(file));
 
 		file = new File("test.xml");
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_XML, util.guessContentType(file));
