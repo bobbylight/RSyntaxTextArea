@@ -1,9 +1,11 @@
+import org.gradle.api.JavaVersion
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:7.1.0'
     }
 }
 
@@ -11,12 +13,12 @@ plugins {
     id 'com.github.spotbugs' version '6.0.26'
 }
 
-// We require building with JDK 11 or later. Built artifact compatibility
+// We require building with JDK 17 or later. Built artifact compatibility
 // is controlled by javaLanguageVersion
-assert JavaVersion.current().isJava11Compatible()
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
 
 group 'com.fifesoft'
-// NOTE: Local Java 11:  /Library/Java/JavaVirtualMachines/jdk-11.0.25+9/Contents/Home
+// NOTE: Local Java 17: /Library/Java/JavaVirtualMachines/jdk-17.0.13+11/Contents/Home
 
 allprojects {
 
