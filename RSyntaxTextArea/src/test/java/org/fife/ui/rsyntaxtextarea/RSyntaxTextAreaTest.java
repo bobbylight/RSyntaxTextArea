@@ -22,11 +22,16 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.DefaultHighlighter;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -791,33 +796,17 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testSyntaxEditingStyle_dontUpdateDocumentIfCalledViaSetDocument() {
 
-		// Unfortunately we can't use Mockito here because of its issues
-		// running in Java 17 (as of Mockito 4.4.0).
-		int[] stringOverloadCalled = { 0 };
-		int[] tokenMakerOverloadCalled = { 0 };
-
-		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE) {
-			@Override
-			public void setSyntaxStyle(TokenMaker tm) {
-				tokenMakerOverloadCalled[0]++;
-				super.setSyntaxStyle(tm);
-			}
-			@Override
-			public void setSyntaxStyle(String style) {
-				stringOverloadCalled[0]++;
-				super.setSyntaxStyle(style);
-			}
-		};
-		doc.setSyntaxStyle(new JavaTokenMaker());
-		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
+		RSyntaxDocument doc = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_NONE);
+		RSyntaxDocument docSpy = Mockito.spy(doc);
+		docSpy.setSyntaxStyle(new JavaTokenMaker());
+		new RSyntaxTextArea(docSpy);
 
 		// Verify the Document has its syntax style set only once, by the explicit
 		// call to the setSyntaxStyle(TokenMaker) overload.
-		// Verifying the string overload isn't called (after the initial call
+		// Specifically, the string overload isn't called (after the initial call
 		// via its constructor) per GitHub issue 206.
-		Assertions.assertEquals(1, stringOverloadCalled[0]);
-		Assertions.assertEquals(1, tokenMakerOverloadCalled[0]);
-
+		verify(docSpy, times(0)).setSyntaxStyle(ArgumentMatchers.anyString());
+		verify(docSpy, times(1)).setSyntaxStyle(ArgumentMatchers.any(TokenMaker.class));
 	}
 
 
