@@ -25,8 +25,8 @@ all unit tests, and create the jar, run:
 
     ./gradlew build --warning-mode all
 
-RSTA 3.0 and newer requires Java 8 to compile and run.  If you need
-Java 6 compatibility, you'll need to use a 2.6.x version.
+RSTA 3.0 and newer requires Java 17 to compile, but runs on Java 8.
+If you need Java 6 compatibility, you'll need to use a 2.6.x version.
 
 # Demos
 
