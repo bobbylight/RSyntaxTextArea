@@ -49,7 +49,7 @@ public final class SwingUtils {
 	 * @param beginIndex where to start
 	 * @param length the number of characters to check
 	 */
-	private static boolean needsTextLayout( char[] chars, int beginIndex, int length) {
+	private static boolean needsTextLayout(char[] chars, int beginIndex, int length) {
 		// this is just a guess based on visual observations when running fractionally scaled fonts on Windows
 		// it certainly breaks at 70k
 		int criticalLength = 1000;

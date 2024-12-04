@@ -515,7 +515,8 @@ public class ConfigurableCaret extends DefaultCaret {
 						}
 						g.setXORMode(textAreaBg);
 						double underlineY = r.getY() + r.getHeight();
-						Line2D.Double underline = new Line2D.Double(r.getX(), underlineY, r.getX() + r.getWidth() - 1.0f, underlineY);
+						Line2D.Double underline = new Line2D.Double(r.getX(), underlineY,
+																	r.getX() + r.getWidth() - 1.0f, underlineY);
 						g2d.draw(underline);
 						g2d.setXORMode(textAreaBg);
 						SwingUtils.drawLine(g2d, r.getX(), r.getY()+r.getHeight(),

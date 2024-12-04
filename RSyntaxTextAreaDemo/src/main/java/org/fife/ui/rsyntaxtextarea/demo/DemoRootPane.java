@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.awt.font.TextAttribute;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -253,7 +251,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		fontCombo.addItemListener(e -> textArea.setFont(deriveFont((Font) e.getItem(), fontSize)));
 		fontCombo.setRenderer((list, font, index, isSelected, cellHasFocus) -> new JLabel(font.getFontName()));
 		fillFontCombo(fontCombo, mono.isSelected());
-		mono.addItemListener(evt->fillFontCombo(fontCombo, mono.isSelected()));
+		mono.addItemListener(evt -> fillFontCombo(fontCombo, mono.isSelected()));
 
 		panel.add(new JLabel("Tab Size:"));
 		panel.add(tabSize);
@@ -297,7 +295,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		textArea.setMarkOccurrences(true);
 		textArea.setCodeFoldingEnabled(true);
 		textArea.setClearWhitespaceLinesEnabled(false);
-		addPropertyChangeListener(evt->textArea.onGraphicsChange());
+		addPropertyChangeListener(evt -> textArea.onGraphicsChange());
 
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
