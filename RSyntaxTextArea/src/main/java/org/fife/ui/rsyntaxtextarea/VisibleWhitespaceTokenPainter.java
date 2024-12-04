@@ -185,7 +185,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 	 * @param height The height of the current line of text being painted.
 	 */
 	protected void paintSpaceText(Graphics2D g, float x, float y, int ascent,
-								  int width, int height) {
+								  float width, int height) {
 		float dotX = x - width/2f; // "2.0f" for FindBugs
 		float dotY = y - ascent + height/2f; // Ditto
 		SwingUtils.drawLine(g, dotX, dotY, dotX, dotY);
