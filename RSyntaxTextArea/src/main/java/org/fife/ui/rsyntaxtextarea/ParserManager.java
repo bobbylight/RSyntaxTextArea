@@ -42,6 +42,7 @@ import org.fife.ui.rtextarea.RDocument;
 import org.fife.ui.rtextarea.RTextAreaHighlighter.HighlightInfo;
 import org.fife.util.SwingUtils;
 
+
 /**
  * Manages running a parser object for an <code>RSyntaxTextArea</code>.
  *

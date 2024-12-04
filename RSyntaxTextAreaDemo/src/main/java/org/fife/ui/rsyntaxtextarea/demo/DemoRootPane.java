@@ -47,8 +47,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	DemoRootPane() {
 		textArea = createTextArea();
-		setText("JavaExample.txt");
-		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_D);
+		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_NONE);
 		textArea.setTabSize(4);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
@@ -201,6 +200,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		cbItem = new JCheckBoxMenuItem(new TabLinesAction());
 		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new WhitespaceVisibleAction());
+		menu.add(cbItem);
 		cbItem = new JCheckBoxMenuItem(new ToggleLigatureSupportAction());
 		menu.add(cbItem);
 		mb.add(menu);
