@@ -689,14 +689,14 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 		boolean isBackward = (b == Position.Bias.Backward);
 		int testPos = (isBackward) ? Math.max(0, pos - 1) : pos;
-		if(isBackward && testPos < getStartOffset()) {
+		if (isBackward && testPos < getStartOffset()) {
 			return null;
 		}
 
 		int vIndex = getViewIndexAtPosition(testPos);
 		if ((vIndex != -1) && (vIndex < getViewCount())) {
 			View v = getView(vIndex);
-			if(v != null && testPos >= v.getStartOffset() &&
+			if (v != null && testPos >= v.getStartOffset() &&
 					testPos < v.getEndOffset()) {
 				Shape childShape = getChildAllocation(vIndex, a);
 				if (childShape == null) {
@@ -704,8 +704,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 					return null;
 				}
 				Shape retShape = v.modelToView(pos, childShape, b);
-				if(retShape == null && v.getEndOffset() == pos) {
-					if(++vIndex < getViewCount()) {
+				if (retShape == null && v.getEndOffset() == pos) {
+					if (++vIndex < getViewCount()) {
 						v = getView(vIndex);
 						retShape = v.modelToView(pos, getChildAllocation(vIndex, a), b);
 					}

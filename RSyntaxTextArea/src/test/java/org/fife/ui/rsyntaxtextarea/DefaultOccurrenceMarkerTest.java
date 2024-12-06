@@ -46,6 +46,42 @@ class DefaultOccurrenceMarkerTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetTokenToMark_none_atEndOfLineAfterNonWordChar() {
+
+		String origContent = "foo\n.";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setCaretPosition(origContent.indexOf('.') + 1); // End of document
+
+		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
+		Assertions.assertNull(marker.getTokenToMark(textArea));
+	}
+
+
+	@Test
+	void testGetTokenToMark_none_betweenTwoNonWordChars() {
+
+		String origContent = "..";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setCaretPosition(1); // Between the two periods
+
+		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
+		Assertions.assertNull(marker.getTokenToMark(textArea));
+	}
+
+
+	@Test
+	void testGetTokenToMark_none_atStartOfLinePrecedingNonWordChar() {
+
+		String origContent = "foo\n.";
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
+		textArea.setCaretPosition(origContent.indexOf('.')); // Start of line before the period
+
+		DefaultOccurrenceMarker marker = new DefaultOccurrenceMarker();
+		Assertions.assertNull(marker.getTokenToMark(textArea));
+	}
+
+
+	@Test
 	void testIsValidType_validType() {
 
 		String origContent = "public int foo() {}";

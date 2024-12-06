@@ -711,7 +711,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 
 			case WEST:
 				int endOffs = view.getEndOffset();
-				if(pos == -1) {
+				if (pos == -1) {
 					pos = Math.max(0, endOffs - 1);
 				}
 				else {
@@ -732,7 +732,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 				break;
 
 			case EAST:
-				if(pos == -1) {
+				if (pos == -1) {
 					pos = view.getStartOffset();
 				}
 				else {
@@ -1144,7 +1144,7 @@ return c.getLineStartOffset(line);
 
 		int endOffs = Math.min(offs+1, doc.getLength());
 		String s = doc.getText(lineStart, endOffs-lineStart);
-		if(s != null && !s.isEmpty()) {
+		if (s != null && !s.isEmpty()) {
 			int i = s.length() - 1;
 			char ch = s.charAt(i);
 			if (Character.isWhitespace(ch)) {

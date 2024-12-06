@@ -3,16 +3,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:7.1.0'
     }
 }
 
 plugins {
-    id 'com.github.spotbugs' version '5.2.5'
+    id 'com.github.spotbugs' version '6.0.26'
 }
 
+// We require building with JDK 17 or later. Built artifact compatibility
+// is controlled by javaLanguageVersion
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
+
 group 'com.fifesoft'
-// NOTE: Local Java 8:  /Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
+// NOTE: Local Java 17: /Library/Java/JavaVirtualMachines/jdk-17.0.13+11/Contents/Home
 
 allprojects {
 
@@ -24,7 +28,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '8.10.2'
+        gradleVersion = '8.11.1'
     }
 }
 
@@ -43,7 +47,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = '9.3'
+        toolVersion = '10.20.1'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 
@@ -76,13 +80,12 @@ subprojects {
     dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.3'
-        testImplementation 'org.mockito:mockito-inline:4.11.0'
+        testImplementation 'org.mockito:mockito-core:5.14.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
     }
 
     compileJava {
-        sourceCompatibility javaVersion.toString()
-        targetCompatibility javaVersion.toString()
+        options.release = Integer.parseInt(javaLanguageVersion)
         options.debug = true
         options.debugOptions.debugLevel = 'source,vars,lines'
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'

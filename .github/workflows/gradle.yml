@@ -16,14 +16,14 @@ jobs:
 
     strategy:
       matrix:
-        java: [ '8', '11', '17', '21']
+        java: [ '17', '21', '23' ]
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Verify gradle wrapper
       uses: gradle/actions/wrapper-validation@v4
-      if: matrix.java == '8'
+      if: matrix.java == '17'
 
     - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@v4
@@ -41,7 +41,7 @@ jobs:
 
     - name: Submit coverage data to codecov
       uses: codecov/codecov-action@v5
-      if: matrix.java == '8'
+      if: matrix.java == '17'
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         disable_search: true

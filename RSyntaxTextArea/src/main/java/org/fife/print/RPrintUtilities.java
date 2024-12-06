@@ -539,7 +539,7 @@ public abstract class RPrintUtilities {
 	 * A tab expander for the document currently being printed with the
 	 * font being used for the printing.
 	 */
-	private static class RPrintTabExpander implements TabExpander {
+	private static final class RPrintTabExpander implements TabExpander {
 
 		@Override
 		public float nextTabStop(float x, int tabOffset) {

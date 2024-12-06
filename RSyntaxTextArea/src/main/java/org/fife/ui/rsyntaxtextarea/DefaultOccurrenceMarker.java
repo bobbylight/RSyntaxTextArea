@@ -39,9 +39,13 @@ class DefaultOccurrenceMarker implements OccurrenceMarker {
 				RSyntaxUtilities.isNonWordChar(t)) {
 			// Try to the "left" of the caret.
 			dot--;
+			t = null; // Clear in case it's a non-word char
 			try {
 				if (dot>=textArea.getLineStartOffset(line)) {
 					t = RSyntaxUtilities.getTokenAtOffset(tokenList, dot);
+					if (t != null && RSyntaxUtilities.isNonWordChar(t)) {
+						t = null;
+					}
 				}
 			} catch (BadLocationException ble) {
 				ble.printStackTrace(); // Never happens

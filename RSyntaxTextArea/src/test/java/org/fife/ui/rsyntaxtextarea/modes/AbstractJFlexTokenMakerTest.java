@@ -97,9 +97,9 @@ abstract class AbstractJFlexTokenMakerTest extends AbstractTokenMakerTest {
 	void testCommon_yypushback_invalid() {
 		TokenMaker tm = createTokenMaker();
 		if (tm instanceof AbstractJFlexTokenMaker) {
-			Assertions.assertThrows(Error.class, () -> {
-				((AbstractJFlexTokenMaker)tm).yypushback(1);
-			});
+			Assertions.assertThrows(Error.class, () ->
+				((AbstractJFlexTokenMaker)tm).yypushback(1)
+			);
 		}
 	}
 

@@ -304,7 +304,7 @@ public class FocusableTip {
 	/**
 	 * Listens for events in a text area.
 	 */
-	private class TextAreaListener extends MouseInputAdapter implements
+	private final class TextAreaListener extends MouseInputAdapter implements
 			CaretListener, ComponentListener, FocusListener, KeyListener {
 
 		@Override

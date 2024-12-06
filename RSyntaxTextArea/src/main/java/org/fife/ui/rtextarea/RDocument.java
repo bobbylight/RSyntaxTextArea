@@ -45,7 +45,7 @@ public class RDocument extends PlainDocument {
 	/**
 	 * Document content that provides fast access to individual characters.
 	 */
-	private static class RGapContent extends GapContent {
+	private static final class RGapContent extends GapContent {
 
 		protected char charAt(int offset) throws BadLocationException {
 			if (offset<0 || offset>=length()) {

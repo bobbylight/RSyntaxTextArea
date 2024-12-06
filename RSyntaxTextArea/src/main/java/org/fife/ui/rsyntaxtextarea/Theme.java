@@ -595,7 +595,7 @@ public class Theme {
 	/**
 	 * Loads a <code>SyntaxScheme</code> from an XML file.
 	 */
-	private static class XmlHandler extends DefaultHandler {
+	private static final class XmlHandler extends DefaultHandler {
 
 		private Theme theme;
 
