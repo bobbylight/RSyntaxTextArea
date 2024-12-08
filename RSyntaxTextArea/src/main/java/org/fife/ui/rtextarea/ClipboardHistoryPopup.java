@@ -42,6 +42,7 @@ import javax.swing.UIManager;
 import javax.swing.text.Caret;
 
 import org.fife.ui.rsyntaxtextarea.focusabletip.TipUtil;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -161,7 +162,7 @@ class ClipboardHistoryPopup extends JWindow {
 
 		Rectangle r;
 		try {
-			r = textArea.modelToView(textArea.getCaretPosition());
+			r = SwingUtils.getBounds(textArea, textArea.getCaretPosition());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
