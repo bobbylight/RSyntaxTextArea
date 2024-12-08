@@ -40,6 +40,7 @@ import javax.swing.text.Utilities;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -2015,7 +2016,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 				if (magicPosition == null &&
 					(direction == SwingConstants.NORTH ||
 					direction == SwingConstants.SOUTH)) {
-					Rectangle r = textArea.modelToView(dot);
+					Rectangle r = SwingUtils.getBounds(textArea, dot);
 					magicPosition = new Point(r.x, r.y);
 				}
 
@@ -2148,11 +2149,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 			selectedIndex = textArea.getCaretPosition();
 			if (selectedIndex != -1) {
 				if (left) {
-					selectedIndex = textArea.viewToModel(
+					selectedIndex = textArea.viewToModel2D(
 									new Point(visible.x, visible.y));
 				}
 				else {
-					selectedIndex = textArea.viewToModel(
+					selectedIndex = textArea.viewToModel2D(
 							new Point(visible.x + visible.width - 1,
 									visible.y + visible.height - 1));
 				}
@@ -2775,7 +2776,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 				try {
 
-					Rectangle dotBounds = textArea.modelToView(selectedIndex);
+					Rectangle dotBounds = SwingUtils.getBounds(textArea, selectedIndex);
 					int x = (magicPosition != null) ? magicPosition.x :
 												dotBounds.x;
 					int h = dotBounds.height;
@@ -2787,7 +2788,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 					if (visible.contains(dotBounds.x, dotBounds.y)) {
 						// Dot is currently visible, base the new
 						// location off the old, or
-						newIndex = textArea.viewToModel(
+						newIndex = textArea.viewToModel2D(
 									new Point(x, constrainY(textArea,
 										dotBounds.y + yOffset, 0, 0)));
 										}
@@ -2795,11 +2796,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 						// Dot isn't visible, choose the top or the bottom
 						// for the new location.
 						if (direction == -1) {
-							newIndex = textArea.viewToModel(new Point(
+							newIndex = textArea.viewToModel2D(new Point(
 													x, newVis.y));
 						}
 						else {
-							newIndex = textArea.viewToModel(new Point(
+							newIndex = textArea.viewToModel2D(new Point(
 									x, newVis.y + visible.height));
 						}
 					}
@@ -2860,7 +2861,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 									Rectangle visible, int initialY,
 									int index) {
 			try {
-				Rectangle dotBounds = text.modelToView(index);
+				Rectangle dotBounds = SwingUtils.getBounds(text, index);
 	                if (dotBounds.y < visible.y ||
 					(dotBounds.y > (visible.y + visible.height)) ||
 					(dotBounds.y + dotBounds.height) >
