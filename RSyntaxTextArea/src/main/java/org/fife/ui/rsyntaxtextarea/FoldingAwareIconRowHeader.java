@@ -203,7 +203,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 		//boolean currentLineHighlighted = textArea.getHighlightCurrentLine();
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
-		int topPosition = textArea.viewToModel(
+		int topPosition = textArea.viewToModel2D(
 								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 

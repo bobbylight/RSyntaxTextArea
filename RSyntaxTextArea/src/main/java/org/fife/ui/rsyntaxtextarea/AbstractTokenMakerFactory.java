@@ -122,7 +122,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 		}
 
 		public TokenMaker create() throws Exception {
-			return (TokenMaker)Class.forName(className, true, cl).newInstance();
+			return (TokenMaker)Class.forName(className, true, cl).getDeclaredConstructor().newInstance();
 		}
 
 	}
