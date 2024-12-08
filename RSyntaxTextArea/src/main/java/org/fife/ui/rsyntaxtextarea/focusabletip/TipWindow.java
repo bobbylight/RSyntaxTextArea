@@ -15,7 +15,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -23,6 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -169,11 +169,11 @@ class TipWindow extends JWindow {
 	void fixSize() {
 
 		Dimension d;
-		Rectangle r;
+		Rectangle2D r;
 		try {
 
 			// modelToView call is required for this hack, never remove!
-			r = textArea.modelToView(textArea.getDocument().getLength()-1);
+			r = textArea.modelToView2D(textArea.getDocument().getLength()-1);
 
 			// Ensure the text area doesn't start out too tall or wide.
 			d = textArea.getPreferredSize();
@@ -191,9 +191,9 @@ class TipWindow extends JWindow {
 
 			// if the new textArea width causes our text to wrap, we must
 			// compute a new preferred size to get all our physical lines.
-			r = textArea.modelToView(textArea.getDocument().getLength()-1);
-			if (r.y+r.height>d.height) {
-				d.height = r.y + r.height + 5;
+			r = textArea.modelToView2D(textArea.getDocument().getLength()-1);
+			if (r.getMaxY() > d.height) {
+				d.height = (int)r.getMaxY() + 5;
 				if (ft.getMaxSize() != null) {
 					d.height = Math.min(d.height, maxWindowH);
 				}

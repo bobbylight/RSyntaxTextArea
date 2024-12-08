@@ -9,10 +9,7 @@
  */
 package org.fife.print;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 
@@ -368,7 +365,7 @@ public abstract class RPrintUtilities {
 		fm = g.getFontMetrics();
 		int fontHeight = fm.getHeight();
 
-		final int lineLengthInPixels = (int)pageFormat.getImageableWidth();
+		final double lineLengthInPixels = pageFormat.getImageableWidth();
 		final int maxLinesPerPage = (int)pageFormat.getImageableHeight() / fontHeight;
 
 		final int startingLineNumber = maxLinesPerPage * pageIndex;
@@ -416,7 +413,7 @@ public abstract class RPrintUtilities {
 			currentLineSeg = removeEndingWhitespace(currentLineSeg);
 
 			// Figure out how long the line is, in pixels.
-			int currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0, tabExpander, 0);
+			float currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0f, tabExpander, 0);
 
 			//System.err.println("'" + currentLineSeg + "' - " + currentLineLengthInPixels + "/" +
 			// LINE_LENGTH_IN_PIXELS);
@@ -470,7 +467,7 @@ public abstract class RPrintUtilities {
 								return Printable.NO_SUCH_PAGE;
 							}
 							currentLineLengthInPixels = Utilities.
-								getTabbedTextWidth(currentLineSeg, fm, 0, tabExpander, 0);
+								getTabbedTextWidth(currentLineSeg, fm, 0f, tabExpander, 0);
 						} while (currentLineLengthInPixels <= lineLengthInPixels);
 						currentPos--;
 
@@ -488,7 +485,7 @@ public abstract class RPrintUtilities {
 						return Printable.NO_SUCH_PAGE;
 					}
 
-					currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0, tabExpander, 0);
+					currentLineLengthInPixels = Utilities.getTabbedTextWidth(currentLineSeg, fm, 0f, tabExpander, 0);
 				} // End of while (currentLineLengthInPixels > LINE_LENGTH_IN_PIXELS).
 
 				startingOffset += currentPos;	// Where to start (offset from line's start), since this line wraps.
@@ -497,8 +494,8 @@ public abstract class RPrintUtilities {
 
 			numPrintedLines++;
 			if (numPrintedLines>startingLineNumber) {
-				//g.drawString(currentLineSeg.toString(), xOffset,y);
-				Utilities.drawTabbedText(currentLineSeg, xOffset,y, g, tabExpander, 0);
+				Graphics2D g2d = (Graphics2D)g;
+				Utilities.drawTabbedText(currentLineSeg, (float)xOffset,y, g2d, tabExpander, 0);
 				y += fontHeight;
 				if (numPrintedLines==startingLineNumber+maxLinesPerPage) {
 					return Printable.PAGE_EXISTS;
