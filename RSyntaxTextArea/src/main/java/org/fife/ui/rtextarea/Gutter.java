@@ -507,7 +507,7 @@ public class Gutter extends JPanel {
 	 */
 	public GutterIconInfo[] getTrackingIcons(Point p)
 			throws BadLocationException {
-		int offs = textArea.viewToModel(new Point(0, p.y));
+		int offs = textArea.viewToModel2D(new Point(0, p.y));
 		int line = textArea.getLineOfOffset(offs);
 		return iconArea.getTrackingIcons(line);
 	}

@@ -35,6 +35,7 @@ import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 import org.fife.ui.rtextarea.*;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -849,10 +850,10 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 				(bracketInfo.y!=lastBracketMatchPos ||
 				 bracketInfo.x!=lastCaretBracketPos)) {
 			try {
-				match = modelToView(bracketInfo.y);
+				match = SwingUtils.getBounds(this, bracketInfo.y);
 				if (match!=null) { // Happens if we're not yet visible
 					if (getPaintMatchedBracketPair()) {
-						dotRect = modelToView(bracketInfo.x);
+						dotRect = SwingUtils.getBounds(this, bracketInfo.x);
 					}
 					else {
 						dotRect = null;
@@ -3362,7 +3363,21 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		 * are, we're calling getTokenListForLine() twice (once in viewToModel()
 		 * and once here).
 		 */
-		return modelToToken(viewToModel(p));
+		return modelToToken(viewToModel2D(p));
+	}
+
+	/**
+	 * Update affected settings when the graphic properties change (screen resolution, scaling, etc).
+	 * Expect owner to listen to property changes on the container and call this methiod when necessary.
+	 * <p/>
+	 * Example:<br/>
+	 * <code>addPropertyChangeListener(evt-&gt;textArea.onGraphicsChange());</code>
+	 */
+	public void onGraphicsChange() {
+		Graphics graphics = getGraphics();
+		if (graphics != null) {
+			refreshFontMetrics(getGraphics2D(graphics));
+		}
 	}
 
 	/**
@@ -3564,7 +3579,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 					c2 = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 				}
 				else if (t!=null && linkGenerator!=null) {
-					int offs = viewToModel(e.getPoint());
+					int offs = viewToModel2D(e.getPoint());
 					LinkGeneratorResult newResult = linkGenerator.
 							isLinkAtOffset(RSyntaxTextArea.this, offs);
 					if (newResult!=null) {
