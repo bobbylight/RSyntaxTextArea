@@ -242,6 +242,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		textArea.setMarkOccurrences(true);
 		textArea.setCodeFoldingEnabled(true);
 		textArea.setClearWhitespaceLinesEnabled(false);
+		textArea.setWhitespaceVisible(true);
+		textArea.setFont(new java.awt.Font("Fira Code", Font.PLAIN, 12));
 
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
