@@ -196,7 +196,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 		if (rsta.isCodeFoldingEnabled()) { // Should always be true
-			int offs = rsta.viewToModel(p); // TODO: Optimize me
+			int offs = rsta.viewToModel2D(p); // TODO: Optimize me
 			if (offs>-1) {
 				try {
 					int line = rsta.getLineOfOffset(offs);
@@ -357,7 +357,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		RSyntaxTextArea rsta = (RSyntaxTextArea)textArea;
 		if (rsta.isCodeFoldingEnabled()) {
 			FoldManager fm = rsta.getFoldManager();
-			int pos = rsta.viewToModel(new Point(0, e.getY()));
+			int pos = rsta.viewToModel2D(new Point(0, e.getY()));
 			if (pos>=0) { // Not -1
 				int line;
 				try {
@@ -601,7 +601,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		View v = ui.getRootView(textArea).getView(0);
 		Document doc = textArea.getDocument();
 		Element root = doc.getDefaultRootElement();
-		int topPosition = textArea.viewToModel(
+		int topPosition = textArea.viewToModel2D(
 								new Point(visibleRect.x,visibleRect.y));
 		int topLine = root.getElementIndex(topPosition);
 		int cellHeight = textArea.getLineHeight();
@@ -712,7 +712,7 @@ public class FoldIndicator extends AbstractGutterComponent {
 		int line = 0;
 
 		try {
-			int offs = textArea.viewToModel(p);
+			int offs = textArea.viewToModel2D(p);
 			if (offs>-1) {
 				line = textArea.getLineOfOffset(offs);
 			}
