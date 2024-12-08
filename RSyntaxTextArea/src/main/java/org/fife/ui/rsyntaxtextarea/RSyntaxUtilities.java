@@ -10,6 +10,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -350,10 +352,10 @@ public final class RSyntaxUtilities implements SwingConstants {
 	 * @throws IllegalArgumentException If <code>p0</code> and <code>p1</code>
 	 *         are not on the same line.
 	 */
-	public static Rectangle getLineWidthUpTo(RSyntaxTextArea textArea,
+	public static Rectangle2D getLineWidthUpTo(RSyntaxTextArea textArea,
 								Segment s, int p0, int p1,
-								TabExpander e, Rectangle rect,
-								int x0)
+								TabExpander e, Rectangle2D rect,
+								float x0)
 								throws BadLocationException {
 
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
@@ -709,7 +711,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 				}
 				int x;
 				if (mcp == null) {
-					Rectangle loc = target.modelToView(pos);
+					Rectangle loc = SwingUtils.getBounds(target, pos);
 					x = (loc == null) ? 0 : loc.x;
 				}
 				else {
@@ -1477,12 +1479,12 @@ return c.getLineStartOffset(line);
 
 		Rectangle r;
 		try {
-			r = textArea.modelToView(start);
+			r = SwingUtils.getBounds(textArea, start);
 			if (r==null) { // Not yet visible; i.e. JUnit tests
 				return;
 			}
 			if (end!=start) {
-				r = r.union(textArea.modelToView(end));
+				r = r.union(SwingUtils.getBounds(textArea, end));
 			}
 		} catch (BadLocationException ble) { // Never happens
 			ble.printStackTrace();
@@ -1616,5 +1618,33 @@ return c.getLineStartOffset(line);
 
 	}
 
+	/**
+	 * Does the supplied metrics represent a monospaced font, ie a font where all characters are equally wide?
+	 *
+	 * @param fontMetrics the metrics to use for checking character widths
+	 * @return boolean
+	 */
+	public static boolean isMonospaced(FontMetrics fontMetrics) {
+		boolean isMonospaced = true;
+		int firstCharacterWidth = 0;
+		boolean hasFirstCharacterWidth = false;
+		for (int cp = 0; cp < 128; cp++) {
+			if (Character.isValidCodePoint(cp) &&  (Character.isLetter(cp) || Character.isDigit(cp))) {
+				char character = (char) cp;
+				int characterWidth = fontMetrics.charWidth(character);
+				if (hasFirstCharacterWidth) {
+					if (characterWidth != firstCharacterWidth) {
+						isMonospaced = false;
+						break;
+					}
+				}
+				else {
+					firstCharacterWidth = characterWidth;
+					hasFirstCharacterWidth = true;
+				}
+			}
+		}
+		return isMonospaced;
+	}
 
 }
