@@ -2309,12 +2309,6 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			}
 		}
 
-		/**
-		 * Search for start and end marks.
-		 *
-		 * @return An array with the indices of the marks in the line.
-		 * Negative indices means that the mark is not present in the line.
-		 */
 		private int[] searchMarkers(String line, String[] startEnd) {
 			int startOffset = startMatch(line, startEnd);
 			int endOffset = endMatch(line, startEnd);
