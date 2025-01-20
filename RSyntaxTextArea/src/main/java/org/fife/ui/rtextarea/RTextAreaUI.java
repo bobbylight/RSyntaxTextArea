@@ -359,7 +359,10 @@ public class RTextAreaUI extends BasicTextAreaUI {
 		super.installDefaults();
 
 		JTextComponent editor = getComponent();
-		editor.setFont(RTextAreaBase.getDefaultFont());
+		Font f = editor.getFont();
+		if (f == null || f instanceof UIResource) {
+			editor.setFont(RTextAreaBase.getDefaultFont());
+		}
 
 		// Nimbus (and possibly other Synth lafs) doesn't play by BasicLaf
 		// rules and doesn't set properties needed by custom BasicTextAreaUI's.
@@ -410,7 +413,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	@Override
 	public void installUI(JComponent c) {
 		if (!(c instanceof RTextArea)) {
-			throw new Error("RTextAreaUI needs an instance of RTextArea!");
+			throw new IllegalArgumentException("RTextAreaUI needs an instance of RTextArea!");
 		}
 		super.installUI(c);
 	}
