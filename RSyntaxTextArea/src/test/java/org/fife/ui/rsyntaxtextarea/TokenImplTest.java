@@ -9,6 +9,8 @@ package org.fife.ui.rsyntaxtextarea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 
 /**
  * Unit tests for the {@link TokenImpl} class.
@@ -81,6 +83,27 @@ class TokenImplTest {
 		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
 
 		Assertions.assertTrue(token.endsWith("".toCharArray()));
+	}
+
+
+	@Test
+	void testGetHTMLRepresentation_fallsBackToTextAreaFont() {
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setForeground(new Color(0xfcfcfc));
+
+		// Ensure identifier tokens have no theme FG so the fallback is used
+		Style style = textArea.getSyntaxScheme().getStyle(
+			TokenTypes.IDENTIFIER);
+		style.foreground = null;
+
+		char[] ch = "for".toCharArray();
+		TokenImpl token = new TokenImpl(ch, 0, 2, 0, TokenTypes.IDENTIFIER, 0);
+
+		// Don't bother checking font and other styles since it may be host-specific
+		String actual = token.getHTMLRepresentation(textArea);
+		Assertions.assertTrue(actual.contains("color=\"#fcfcfc\""));
+
 	}
 
 
