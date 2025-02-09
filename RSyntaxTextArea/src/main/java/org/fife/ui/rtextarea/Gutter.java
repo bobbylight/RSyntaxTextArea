@@ -1088,6 +1088,27 @@ public class Gutter extends JPanel {
 		}
 	}
 
+	/**
+	 * Adds a listener for the IconRowEvent posted after the Icon Row changes.
+	 *
+	 * @see     #removeIconRowListener(IconRowListener)
+	 * @param   l       the listener to add
+	 */
+	public void addIconRowListener(IconRowListener l) {
+		iconArea.addIconRowListener(l);
+	}
+
+	/**
+	 * Removes a listener previously added with <B>addIconRowListener()</B>.
+	 *
+	 * @see     #addIconRowListener(IconRowListener)
+	 * @param   l       the listener to remove
+	 */
+	public void removeIconRowListener(IconRowListener l) {
+		iconArea.removeIconRowListener(l);
+	}
+
+
 
 	/**
 	 * The border used by the gutter.
