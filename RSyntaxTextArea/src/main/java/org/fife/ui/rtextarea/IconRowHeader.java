@@ -884,8 +884,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		for (int i = listeners.length-2; i>=0; i-=2) {
 			if (listeners[i]== IconRowListener.class) {
 				// Lazily create the event:
-				if (e == null)
+				if (e == null) {
 					e = new IconRowEvent(source, iconInfo, line);
+				}
 				((IconRowListener)listeners[i+1]).bookmarkRemoved(e);
 			}
 		}
@@ -911,8 +912,9 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		for (int i = listeners.length-2; i>=0; i-=2) {
 			if (listeners[i]== IconRowListener.class) {
 				// Lazily create the event:
-				if (e == null)
+				if (e == null) {
 					e = new IconRowEvent(source, iconInfo, line);
+				}
 				((IconRowListener)listeners[i+1]).bookmarkAdded(e);
 			}
 		}
@@ -923,8 +925,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * Adds a listener for the IconRowEvent posted after the Icon Row changes.
 	 *
+	 * @param   l the listener to add
 	 * @see     #removeIconRowListener(IconRowListener)
-	 * @param   l       the listener to add
 	 */
 	public void addIconRowListener(IconRowListener l) {
 		listenerList.add(IconRowListener.class, l);
@@ -933,8 +935,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	/**
 	 * Removes a listener previously added with <B>addIconRowListener()</B>.
 	 *
+	 * @param   l the listener to remove
 	 * @see     #addIconRowListener(IconRowListener)
-	 * @param   l       the listener to remove
 	 */
 	public void removeIconRowListener(IconRowListener l) {
 		listenerList.remove(IconRowListener.class, l);
