@@ -90,6 +90,7 @@ import org.fife.ui.rtextarea.*;
  *       <li>Tcl
  *       <li>UNIX shell scripts
  *       <li>Visual Basic
+ *       <li>VHDL
  *       <li>Windows batch
  *       <li>XML files
  *    </ul>
