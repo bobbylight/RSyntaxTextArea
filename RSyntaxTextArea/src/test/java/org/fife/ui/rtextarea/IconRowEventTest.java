@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 
 /**
- * Unit tests for the {@link IconRowHeader} class.
+ * Unit tests for the {@link IconRowEvent} class.
  *
  * @author roger1337
  * @version 3.5.4
