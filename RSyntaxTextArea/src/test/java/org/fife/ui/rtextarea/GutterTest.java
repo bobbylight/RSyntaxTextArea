@@ -712,7 +712,7 @@ class GutterTest extends AbstractRTextAreaTest {
 	}
 
 	@Test
-	void testIconListener() {
+	void testIconListener_addAndRemove() {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
