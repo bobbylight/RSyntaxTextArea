@@ -1,0 +1,33 @@
+-- An VHDL example file.
+-- @author DOUDOU DIAWARA
+
+-----------------------------------------------------------------------------------------------------------------------------------
+-- Design : Multiplexer 4x1
+-- Function : Mux that selects one of several data inputs and forwards it to the output.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+library  IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+entity Mux4_1 is
+    generic (DataWidth : natural := 8);
+    port(
+        input0,input1,input2,input3 : in std_logic_vector(DataWidth-1 downto 0);
+        sel : in std_logic_vector( 1 downto 0);
+        output : out std_logic_vector(DataWidth-1 downto 0)
+    );
+end entity Mux4_1;
+
+architecture behaviour of Mux4_1 is
+
+begin
+    with sel select
+    output <=   input0 when "00",
+                input1 when "01",
+                input2 when "10",
+                input3 when "11",
+    (others => '0') when others;
+
+end architecture behaviour;
