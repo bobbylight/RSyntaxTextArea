@@ -8,9 +8,8 @@ import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -27,33 +26,27 @@ import java.beans.PropertyChangeListener;
 class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testConstructor_oneArg(String debugParsing) {
+	@Test
+	void testConstructor_oneArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		Assertions.assertEquals(1250, manager.getDelay());
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testConstructor_twoArg(String debugParsing) {
+	@Test
+	void testConstructor_twoArg() {
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(2000, textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		Assertions.assertEquals(2000, manager.getDelay());
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testActionPerformed_noParsers(String debugParsing) {
+	@Test
+	void testActionPerformed_noParsers() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		Assertions.assertEquals(0, manager.getParserNotices().size());
 
 		manager.actionPerformed(new ActionEvent(textArea, 0, null));
@@ -61,9 +54,8 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testActionPerformed_parsersFireChangeEvents(String debugParsing) {
+	@Test
+	void testActionPerformed_parsersFireChangeEvents() {
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -77,7 +69,6 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		manager.addParser(parser);
 		Assertions.assertEquals(0, manager.getParserNotices().size());
 
@@ -87,13 +78,11 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testAddRemoveParser(String debugParsing) {
+	@Test
+	void testAddRemoveParser() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 
 		Assertions.assertEquals(0, manager.getParserCount());
 
@@ -112,9 +101,8 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testClearParsers(String debugParsing) {
+	@Test
+	void testClearParsers() {
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -128,7 +116,6 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		manager.addParser(parser);
 		Assertions.assertEquals(1, manager.getParserCount());
 
@@ -142,9 +129,8 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testForceReparsing_parsersFireChangeEvents(String debugParsing) {
+	@Test
+	void testForceReparsing_parsersFireChangeEvents() {
 
 		boolean[] parserNoticeChangeEventFired = { false };
 
@@ -170,9 +156,8 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testForceReparsing_disabledParserClearsItsNotices(String debugParsing) {
+	@Test
+	void testForceReparsing_disabledParserClearsItsNotices() {
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -200,13 +185,11 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testGetSetDelay(String debugParsing) {
+	@Test
+	void testGetSetDelay() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 
 		manager.setDelay(12345);
 		Assertions.assertEquals(12345, manager.getDelay());
@@ -221,9 +204,8 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testGetToolTipText(String debugParsing) {
+	@Test
+	void testGetToolTipText() {
 
 		AbstractParser parser = new AbstractParser() {
 			@Override
@@ -239,7 +221,6 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 		textArea.setAntiAliasingEnabled(false); // Needed to initialize font metrics cache
 		RTextScrollPane sp = new RTextScrollPane(textArea); // text area needs a parent
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		manager.addParser(parser);
 
 		manager.forceReparsing(0);
@@ -250,25 +231,21 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testInsertUpdate(String debugParsing) {
+	@Test
+	void testInsertUpdate() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 
 		textArea.insert("inserted text", 5);
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testPropertyChange_document(String debugParsing) {
+	@Test
+	void testPropertyChange_document() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 		RSyntaxDocument origDocument = (RSyntaxDocument)textArea.getDocument();
 
 		RSyntaxDocument newDocument = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C);
@@ -280,13 +257,11 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	}
 
 
-	@ParameterizedTest
-	@ValueSource(strings = { "true", "false" })
-	void testRemoveUpdate(String debugParsing) {
+	@Test
+	void testRemoveUpdate() {
 
 		RSyntaxTextArea textArea = createTextArea();
 		ParserManager manager = new ParserManager(textArea);
-		manager.setDebugParsing(Boolean.parseBoolean(debugParsing));
 
 		textArea.replaceRange("", 5, 9);
 	}
