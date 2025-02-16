@@ -479,11 +479,6 @@ public abstract class RPrintUtilities {
 					try {
 						doc.getText((currentLineStart+startingOffset), currentPos, currentLineSeg);
 					} catch (BadLocationException ble) {
-						System.err.println("BadLocationException in print (a):");
-						System.err.println("==> currentLineStart: " + currentLineStart +
-							"; startingOffset: " + startingOffset + "; currentPos: " + currentPos);
-						System.err.println("==> Range: " + (currentLineStart+startingOffset) + " - " +
-									(currentLineStart+startingOffset+currentPos));
 						ble.printStackTrace();
 						return Printable.NO_SUCH_PAGE;
 					}

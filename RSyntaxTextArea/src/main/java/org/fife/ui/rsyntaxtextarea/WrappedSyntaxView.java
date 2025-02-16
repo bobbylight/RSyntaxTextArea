@@ -1150,7 +1150,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			} catch (BadLocationException ble) {
 				ble.printStackTrace();
 			}
-			System.err.println(">>> >>> calculated # of lines for this view (" + line + "/" + numLines + ": " + nlines);
+			//System.err.println(">> >> calculated # of lines for this view (" + line + "/" + numLines + ": " + nlines);
 			*/
 			return nlines;
 		}

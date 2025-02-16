@@ -810,8 +810,8 @@ public class Theme {
 					field = Token.class.getField(type);
 				} catch (RuntimeException re) {
 					throw re; // FindBugs
-				} catch (Exception e) {
-					System.err.println("Invalid token type: " + type);
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
 					return;
 				}
 

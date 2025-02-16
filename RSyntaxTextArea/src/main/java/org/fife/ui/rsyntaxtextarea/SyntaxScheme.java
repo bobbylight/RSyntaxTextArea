@@ -653,7 +653,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 				} catch (RuntimeException re) {
 					throw re; // FindBugs
 				} catch (Exception e) {
-					System.err.println("Error fetching 'getType' method for Token class");
+					e.printStackTrace();
 					return;
 				}
 

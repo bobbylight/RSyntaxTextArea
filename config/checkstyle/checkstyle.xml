@@ -83,6 +83,12 @@
         <property name="maximum" value="0"/>
         <property name="message" value="Line has trailing spaces."/>
     </module>
+    <module name="RegexpSingleline">
+        <property name="format" value="(?&lt;!//)\s*System\.(?:out|err)\.println\("/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="message" value="Do not use System.out.println or System.err.println"/>
+    </module>
 
     <!-- Checks for Headers                                               -->
     <!-- See https://checkstyle.sourceforge.io/checks/header/index.html   -->
