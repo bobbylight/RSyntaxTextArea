@@ -502,7 +502,7 @@ public class RTATextTransferHandler extends TransferHandler {
 				stringFlavors[1] = DataFlavor.stringFlavor;
 
 			} catch (ClassNotFoundException cle) {
-				System.err.println("Error initializing org.fife.ui.RTATextTransferHandler");
+				cle.printStackTrace();
 			}
 		}
 
