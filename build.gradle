@@ -15,7 +15,7 @@ plugins {
 // is controlled by javaLanguageVersion
 assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
 
-group 'com.fifesoft'
+group = 'com.fifesoft'
 // NOTE: Local Java 17: /Library/Java/JavaVirtualMachines/jdk-17.0.13+11/Contents/Home
 
 allprojects {
@@ -23,7 +23,7 @@ allprojects {
     repositories {
         mavenCentral()
         maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
         }
     }
 
