@@ -340,6 +340,10 @@ public interface SyntaxConstants {
 	 */
 	String SYNTAX_STYLE_VISUAL_BASIC	= "text/vb";
 
+	/**
+	 * style for highlighting VHDL.
+	 */
+	String SYNTAX_STYLE_VHDL = "text/vhdl";
 
 	/**
 	 * Style for highlighting Windows batch files.
