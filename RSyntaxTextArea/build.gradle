@@ -40,10 +40,10 @@ test {
     testLogging {
         events 'failed' //, 'passed', 'skipped', 'standardOut', 'standardError'
 
-        showExceptions true
-        exceptionFormat 'full'
-        showCauses true
-        showStackTraces true
+        showExceptions = true
+        exceptionFormat = 'full'
+        showCauses = true
+        showStackTraces = true
 
         showStandardStreams = false
     }
@@ -106,7 +106,7 @@ publishing {
 
 signing {
     // Don't require signing for e.g. ./gradlew install
-    required { gradle.taskGraph.hasTask('publish') && isReleaseVersion }
+    required = { gradle.taskGraph.hasTask('publish') && isReleaseVersion }
     sign publishing.publications.maven
 }
 tasks.withType(Sign) {

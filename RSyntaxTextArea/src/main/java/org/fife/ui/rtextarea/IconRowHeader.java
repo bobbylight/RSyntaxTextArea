@@ -110,7 +110,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 	 */
 	private boolean inheritsGutterBackground;
 
-
 	/**
 	 * Constructor.
 	 *
@@ -802,7 +801,8 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		GutterIconInfo[] icons = getTrackingIcons(line);
 		if (icons.length==0) {
 			int offs = textArea.getLineStartOffset(line);
-			addOffsetTrackingIcon(offs, bookmarkIcon);
+			fireBookmarkAdded(this, addOffsetTrackingIcon(offs, bookmarkIcon), line);
+
 			return true;
 		}
 
@@ -811,6 +811,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			if (icon.getIcon() == bookmarkIcon) {
 				removeTrackingIcon(icon);
 				found = true;
+				fireBookmarkRemoved(this, icon, line);
 				// Don't quit, in case they manipulate the document so > 1
 				// bookmark is on a single line (kind of flaky, but it
 				// works...).  If they delete all chars in the document,
@@ -821,7 +822,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		}
 		if (!found) {
 			int offs = textArea.getLineStartOffset(line);
-			addOffsetTrackingIcon(offs, bookmarkIcon);
+			fireBookmarkAdded(this, addOffsetTrackingIcon(offs, bookmarkIcon), line);
 		}
 
 		return !found;
@@ -862,6 +863,84 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		return offs>-1 ? textArea.getLineOfOffset(offs) : -1;
 	}
 
+
+	/**
+	 * Notifies all listeners that have registered interest for
+	 * notification on this event type.  The event instance
+	 * is lazily created using the parameters passed into
+	 * the fire method.
+	 *
+	 * @param source the source of the {@code IconRowEvent};
+	 *               typically {@code this}
+	 * @param iconInfo information regarding the icon in question
+	 * @param line the line at which the event occurred
+	 */
+	protected void fireBookmarkRemoved(Object source, GutterIconInfo iconInfo, int line) {
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+		IconRowEvent e = null;
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length-2; i>=0; i-=2) {
+			if (listeners[i]== IconRowListener.class) {
+				// Lazily create the event:
+				if (e == null) {
+					e = new IconRowEvent(source, iconInfo, line);
+				}
+				((IconRowListener)listeners[i+1]).bookmarkRemoved(e);
+			}
+		}
+	}
+
+	/**
+	 * Notifies all listeners that have registered interest for
+	 * notification on this event type.  The event instance
+	 * is lazily created using the parameters passed into
+	 * the fire method.
+	 *
+	 * @param source the source of the {@code IconRowEvent};
+	 *               typically {@code this}
+	 * @param iconInfo information regarding the icon in question
+	 * @param line the line at which the event occurred
+	 */
+	protected void fireBookmarkAdded(Object source, GutterIconInfo iconInfo, int line) {
+		// Guaranteed to return a non-null array
+		Object[] listeners = listenerList.getListenerList();
+		IconRowEvent e = null;
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listeners.length-2; i>=0; i-=2) {
+			if (listeners[i]== IconRowListener.class) {
+				// Lazily create the event:
+				if (e == null) {
+					e = new IconRowEvent(source, iconInfo, line);
+				}
+				((IconRowListener)listeners[i+1]).bookmarkAdded(e);
+			}
+		}
+	}
+
+
+
+	/**
+	 * Adds a listener for the IconRowEvent posted after the Icon Row changes.
+	 *
+	 * @param   l the listener to add
+	 * @see     #removeIconRowListener(IconRowListener)
+	 */
+	public void addIconRowListener(IconRowListener l) {
+		listenerList.add(IconRowListener.class, l);
+	}
+
+	/**
+	 * Removes a listener previously added with <B>addIconRowListener()</B>.
+	 *
+	 * @param   l the listener to remove
+	 * @see     #addIconRowListener(IconRowListener)
+	 */
+	public void removeIconRowListener(IconRowListener l) {
+		listenerList.remove(IconRowListener.class, l);
+	}
 
 	/**
 	 * Implementation of the icons rendered.

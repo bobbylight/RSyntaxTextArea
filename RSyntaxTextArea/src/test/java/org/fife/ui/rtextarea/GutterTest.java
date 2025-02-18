@@ -711,5 +711,23 @@ class GutterTest extends AbstractRTextAreaTest {
 		Assertions.assertEquals(new Insets(2, 2, 2, 2), border.getBorderInsets());
 	}
 
+	@Test
+	void testIconListener_addAndRemove() {
+		RTextArea textArea = new RTextArea(PLAIN_TEXT);
+		Gutter gutter = new Gutter(textArea);
 
+		IconRowListener iconRowListener = new IconRowListener() {
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+			}
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+			}
+		};
+		gutter.addIconRowListener(iconRowListener);
+		gutter.removeIconRowListener(iconRowListener);
+
+		// not much to do here as it just passes the call on to IconRowHeader - real tests
+		// will be in there
+	}
 }

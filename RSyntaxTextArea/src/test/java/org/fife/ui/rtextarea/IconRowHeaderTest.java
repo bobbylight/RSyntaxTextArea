@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -201,5 +202,129 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		header.toggleBookmark(1);
 		header.toggleBookmark(1);
 		Assertions.assertEquals(0, header.getBookmarks().length);
+	}
+
+	@Test
+	void testAddIconRowListener_countOfListeners() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		IconRowListener iconRowListener = new IconRowListener() {
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+			}
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+			}
+		};
+
+		header.addIconRowListener(iconRowListener);
+		Object[] listeners = header.getListeners(IconRowListener.class);
+		Assertions.assertEquals(1, listeners.length);
+
+		header.removeIconRowListener(iconRowListener);
+		listeners = header.getListeners(IconRowListener.class);
+		Assertions.assertEquals(0, listeners.length);
+	}
+
+	@Test
+	void testAddIconRowListener_bookmarkAdded() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+
+		class IconRowListenerBookmarkAddedTest implements IconRowListener {
+			public boolean added;
+
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+				added = true;
+			}
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+			}
+		};
+
+		IconRowListenerBookmarkAddedTest test = new IconRowListenerBookmarkAddedTest();
+
+		header.addIconRowListener(test);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new ImageIcon());
+		Assertions.assertDoesNotThrow(() -> header.toggleBookmark(1),
+			"Unexpected exception occurred when toggling bookmark");
+
+		Assertions.assertTrue(test.added);
+	}
+
+	@Test
+	void testAddIconRowListener_bookmarkRemoved() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+
+		class IconRowListenerBookmarkRemovedTest implements IconRowListener {
+			public boolean removed = false;
+
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+
+			}
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+				removed=true;
+			}
+		};
+
+		IconRowListenerBookmarkRemovedTest test = new IconRowListenerBookmarkRemovedTest();
+
+		header.addIconRowListener(test);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new ImageIcon());
+		Assertions.assertDoesNotThrow(() -> header.toggleBookmark(1),
+			"Unexpected exception occurred when toggling bookmark");
+		Assertions.assertDoesNotThrow(() -> header.toggleBookmark(1),
+			"Unexpected exception occurred when toggling bookmark");
+
+		Assertions.assertTrue(test.removed);
+	}
+
+
+	@Test
+	void testAddIconRowListener_multipleBookmarkListeners() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+
+		class IconRowListenerBookmarkMultipleTest implements IconRowListener {
+			public static int addedCount = 0;
+			public static int removedCount = 0;
+
+
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+				addedCount++;
+			}
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+				removedCount++;
+			}
+		};
+
+		IconRowListenerBookmarkMultipleTest test1 = new IconRowListenerBookmarkMultipleTest();
+		IconRowListenerBookmarkMultipleTest test2 = new IconRowListenerBookmarkMultipleTest();
+		IconRowListenerBookmarkMultipleTest test3 = new IconRowListenerBookmarkMultipleTest();
+
+		header.addIconRowListener(test1);
+		header.addIconRowListener(test2);
+		header.addIconRowListener(test3);
+		Assertions.assertEquals(3, header.getListeners(IconRowListener.class).length);
+
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new ImageIcon());
+		Assertions.assertDoesNotThrow(() -> header.toggleBookmark(1),
+			"Unexpected exception occurred when toggling bookmark");
+		Assertions.assertDoesNotThrow(() -> header.toggleBookmark(1),
+			"Unexpected exception occurred when toggling bookmark");
+
+		Assertions.assertEquals(3, IconRowListenerBookmarkMultipleTest.addedCount);
+		Assertions.assertEquals(3, IconRowListenerBookmarkMultipleTest.removedCount);
+
 	}
 }
