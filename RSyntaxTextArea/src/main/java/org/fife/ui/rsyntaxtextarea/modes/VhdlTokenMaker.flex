@@ -161,7 +161,7 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
 %}
 
 LineTerminator				= (\n|\r|\r\n)
-WhiteSpace				= ([ \t\f]+)
+WhiteSpace				= ([ \t\f])
 NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
@@ -177,7 +177,9 @@ stringliteral           = \"([^\"\n\r])*\"
 
 /* Numbers */
 
-decimal_literal         = {Digit}(_?(Digit))*
+integer_literal         = ([-]?[+]?{NonzeroDigit}{Digit}*|"0")
+exponent			    = ({integer_literal}+.{integer_literal}+[e|E]{integer_literal}+)
+floatnumber		        = ({integer_literal}+.{integer_literal}+)
 binary_literal          =  [Bb]\"[01](_?[01])*\"
 octal_literal           =  [Oo]\"[0-7](_?[0-7])*\"
 hex_literal             =  [Xx]\"[0-9A-Fa-f](_?[0-9A-Fa-f])*\"
@@ -307,10 +309,15 @@ Comment = "--".*
 "'VALUE"    { addToken(Token.RESERVED_WORD); }
 
 /* Numbers */
-{decimal_literal}    { addToken(Token.LITERAL_NUMBER_DECIMAL_INT) ;}
+{integer_literal}    { addToken(Token.LITERAL_NUMBER_DECIMAL_INT) ;}
 {binary_literal}     { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 {octal_literal}      { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 {hex_literal}        { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+{exponent}           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+{floatnumber}        { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+
+/* WhiteSpace */
+{WhiteSpace}+        { addToken(Token.WHITESPACE); }
 
  /* Separators */
 "(" |
@@ -330,12 +337,13 @@ Comment = "--".*
 "bit_vector" |
 "boolean" |
 "integer" |
+"real" |
 "natural" |
 "positive" |
 "std_logic" |
 "std_logic_unsigned" |
 "std_logic_vector" |
-"std_logis_signed"		{ addToken(Token.DATA_TYPE); }
+"std_logic_signed"		{ addToken(Token.DATA_TYPE); }
 	
 /* Functions */
 "'-'" |
@@ -374,17 +382,15 @@ Comment = "--".*
 {stringliteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
 
 /*COMMENTS*/
-{Comment} {  addToken(Token.COMMENT_EOL); }
+{Comment}                 {  addToken(Token.COMMENT_EOL); }
 
 
-{Identifier} { addToken(Token.IDENTIFIER);}
+{Identifier}             { addToken(Token.IDENTIFIER);}
 
-. { addToken(Token.ERROR_IDENTIFIER); }
+.                        { addToken(Token.ERROR_IDENTIFIER); }
 
-{LineTerminator} { addNullToken(); return firstToken; }
-
-{WhiteSpace}+ { addToken(Token.WHITESPACE); }
+{LineTerminator}         { addNullToken(); return firstToken; }
 
 /* Ended with a line not in a string or comment. */
-	<<EOF>>						{ addNullToken(); return firstToken; }
+	<<EOF>>				{ addNullToken(); return firstToken; }
 }
