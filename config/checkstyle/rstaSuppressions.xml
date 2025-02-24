@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE suppressions PUBLIC
-    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
-    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
     <suppress files=".*Demo(?:App)?\.java" checks="[a-zA-Z0-9]*"/>
-    <suppress files=".*TokenMaker.*\.java" checks="[a-zA-Z0-9]*"/>
-    <suppress files=".*src[\\/]test[\\/].*" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*TokenMaker\.java" checks="[a-zA-Z0-9]*"/>
+
+    <!-- We're a little more lax in test files due to naming conventions, etc. -->
+    <suppress files=".*src[\\/]test[\\/].*" checks="MethodNameCheck"/>
+    <suppress files=".*src[\\/]test[\\/].*" checks="JavadocPackageCheck"/>
+    <suppress files=".*TokenMakerTest\.java" checks="FileLengthCheck"/>
+    <suppress files=".*TokenMakerTest\.java" checks="LineLengthCheck"/>
+    <suppress files=".*TokenMakerTest\.java" checks="MethodLengthCheck"/>
 
     <!-- These files are long due to how much functionality we have -->
     <suppress files="RSyntaxTextArea.java" checks="FileLengthCheck"/>

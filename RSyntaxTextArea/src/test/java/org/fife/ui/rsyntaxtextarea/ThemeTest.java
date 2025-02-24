@@ -53,7 +53,8 @@ class ThemeTest {
 		Assertions.assertNotEquals(textArea1.getMarginLineColor(), textArea2.getMarginLineColor());
 		Assertions.assertNotEquals(textArea1.getMarkAllHighlightColor(), textArea2.getMarkAllHighlightColor());
 		Assertions.assertNotEquals(textArea1.getMarkOccurrencesColor(), textArea2.getMarkOccurrencesColor());
-		Assertions.assertNotEquals(textArea1.getPaintMarkOccurrencesBorder(), textArea2.getPaintMarkOccurrencesBorder());
+		Assertions.assertNotEquals(textArea1.getPaintMarkOccurrencesBorder(),
+			textArea2.getPaintMarkOccurrencesBorder());
 		Assertions.assertNotEquals(textArea1.getMatchedBracketBGColor(), textArea2.getMatchedBracketBGColor());
 		Assertions.assertNotEquals(textArea1.getMatchedBracketBorderColor(), textArea2.getMatchedBracketBorderColor());
 		Assertions.assertNotEquals(textArea1.getPaintMatchedBracketPair(), textArea2.getPaintMatchedBracketPair());
@@ -66,7 +67,8 @@ class ThemeTest {
 		Assertions.assertNotEquals(gutter1.getBackground(), gutter2.getBackground());
 		Assertions.assertNotEquals(gutter1.getBorderColor(), gutter2.getBorderColor());
 		Assertions.assertNotEquals(gutter1.getActiveLineRangeColor(), gutter2.getActiveLineRangeColor());
-		Assertions.assertNotEquals(gutter1.getIconRowHeaderInheritsGutterBackground(), gutter2.getIconRowHeaderInheritsGutterBackground());
+		Assertions.assertNotEquals(gutter1.getIconRowHeaderInheritsGutterBackground(),
+			gutter2.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertNotEquals(gutter1.getLineNumberColor(), gutter2.getLineNumberColor());
 		Assertions.assertNotEquals(gutter1.getLineNumberFont(), gutter2.getLineNumberFont());
 		Assertions.assertNotEquals(gutter1.getCurrentLineNumberColor(), gutter2.getCurrentLineNumberColor());
@@ -243,7 +245,8 @@ class ThemeTest {
 		Assertions.assertEquals(gutter1.getBackground(), gutter2.getBackground());
 		Assertions.assertEquals(gutter1.getBorderColor(), gutter2.getBorderColor());
 		Assertions.assertEquals(gutter1.getActiveLineRangeColor(), gutter2.getActiveLineRangeColor());
-		Assertions.assertEquals(gutter1.getIconRowHeaderInheritsGutterBackground(), gutter2.getIconRowHeaderInheritsGutterBackground());
+		Assertions.assertEquals(gutter1.getIconRowHeaderInheritsGutterBackground(),
+			gutter2.getIconRowHeaderInheritsGutterBackground());
 		Assertions.assertEquals(gutter1.getLineNumberColor(), gutter2.getLineNumberColor());
 		Assertions.assertEquals(gutter1.getCurrentLineNumberColor(), gutter2.getCurrentLineNumberColor());
 		Assertions.assertEquals(gutter1.getLineNumberFont(), gutter2.getLineNumberFont());

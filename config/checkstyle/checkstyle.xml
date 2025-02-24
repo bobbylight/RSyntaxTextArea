@@ -189,7 +189,15 @@
                 LITERAL_FINALLY, LITERAL_CATCH, DO_WHILE, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY,
                 LITERAL_CASE, LAMBDA, LITERAL_WHEN"/>
         </module>
-        <!--<module name="WhitespaceAround"/>-->
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+            <!-- Don't check around boolean comparators as old code didn't follow this convention for them. -->
+            <property name="tokens" value="LCURLY, LITERAL_IF, LITERAL_ELSE, LITERAL_WHILE, LITERAL_DO, LITERAL_FOR,
+                LITERAL_FINALLY, LITERAL_CATCH, DO_WHILE, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY,
+                LAMBDA, LITERAL_WHEN"/>
+        </module>
 
 
         <!-- Modifier Checks                                                  -->

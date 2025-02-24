@@ -38,14 +38,14 @@ class RSyntaxDocumentTest {
 	 */
 	private static void insertHelloWorldC(RSyntaxDocument doc)
 			throws Exception {
-		String str = "#include <stdio.h>\n"
-				+ "/*\n"
-				+ " * Multi-line comment */\n"
-				+ "int main(int argc, char **argv)\n"
-				+ "{\n"
-				+ "    printf(\"Hello world!\n\");\n"
-				+ "\n"
-				+ "}\n";
+		String str = "#include <stdio.h>\n" +
+				"/*\n" +
+				" * Multi-line comment */\n" +
+				"int main(int argc, char **argv)\n" +
+				"{\n" +
+				"    printf(\"Hello world!\n\");\n" +
+				"\n" +
+				"}\n";
 		doc.insertString(0, str, null);
 	}
 
@@ -515,7 +515,7 @@ class RSyntaxDocumentTest {
 	/**
 	 * A token maker factory with no mappings to languages.
 	 */
-	private static class EmptyTokenMakerFactory
+	private static final class EmptyTokenMakerFactory
 			extends AbstractTokenMakerFactory {
 
 		@Override

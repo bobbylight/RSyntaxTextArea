@@ -53,7 +53,8 @@ class RSyntaxTextAreaEditorKitCollapseAllCommentFoldsActionTest extends Abstract
 
 		textArea.setCaretPosition(textArea.getDocument().getLength());
 
-		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction();
+		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.
+			CollapseAllCommentFoldsAction();
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCollapseAllCommentFoldsAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -79,7 +80,8 @@ class RSyntaxTextAreaEditorKitCollapseAllCommentFoldsActionTest extends Abstract
 		textArea.setCodeFoldingEnabled(false);
 		textArea.setCaretPosition(textArea.getDocument().getLength());
 
-		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction();
+		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.
+			CollapseAllCommentFoldsAction();
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCollapseAllCommentFoldsAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -89,7 +91,8 @@ class RSyntaxTextAreaEditorKitCollapseAllCommentFoldsActionTest extends Abstract
 
 	@Test
 	void testGetMacroId() {
-		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction();
+		RSyntaxTextAreaEditorKit.CollapseAllCommentFoldsAction a = new RSyntaxTextAreaEditorKit.
+			CollapseAllCommentFoldsAction();
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCollapseAllCommentFoldsAction, a.getMacroID());
 	}
 }

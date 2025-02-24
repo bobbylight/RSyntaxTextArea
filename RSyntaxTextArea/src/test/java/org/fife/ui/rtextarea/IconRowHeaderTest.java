@@ -233,7 +233,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		IconRowHeader header = new IconRowHeader(textArea);
 
 		class IconRowListenerBookmarkAddedTest implements IconRowListener {
-			public boolean added;
+			private boolean added;
 
 			@Override
 			public void bookmarkAdded(IconRowEvent e) {
@@ -242,7 +242,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			@Override
 			public void bookmarkRemoved(IconRowEvent e) {
 			}
-		};
+		}
 
 		IconRowListenerBookmarkAddedTest test = new IconRowListenerBookmarkAddedTest();
 
@@ -261,7 +261,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		IconRowHeader header = new IconRowHeader(textArea);
 
 		class IconRowListenerBookmarkRemovedTest implements IconRowListener {
-			public boolean removed = false;
+			private boolean removed;
 
 			@Override
 			public void bookmarkAdded(IconRowEvent e) {
@@ -271,7 +271,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			public void bookmarkRemoved(IconRowEvent e) {
 				removed=true;
 			}
-		};
+		}
 
 		IconRowListenerBookmarkRemovedTest test = new IconRowListenerBookmarkRemovedTest();
 
@@ -293,8 +293,8 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		IconRowHeader header = new IconRowHeader(textArea);
 
 		class IconRowListenerBookmarkMultipleTest implements IconRowListener {
-			public static int addedCount = 0;
-			public static int removedCount = 0;
+			private static int addedCount;
+			private static int removedCount;
 
 
 			@Override
@@ -305,7 +305,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			public void bookmarkRemoved(IconRowEvent e) {
 				removedCount++;
 			}
-		};
+		}
 
 		IconRowListenerBookmarkMultipleTest test1 = new IconRowListenerBookmarkMultipleTest();
 		IconRowListenerBookmarkMultipleTest test2 = new IconRowListenerBookmarkMultipleTest();

@@ -77,7 +77,7 @@ class ToolTipInfoTest {
 	/**
 	 * Mock listener class for unit testing.
 	 */
-	private static class MockHyperlinkListener implements HyperlinkListener {
+	private static final class MockHyperlinkListener implements HyperlinkListener {
 
 		@Override
 		public void hyperlinkUpdate(HyperlinkEvent e) {

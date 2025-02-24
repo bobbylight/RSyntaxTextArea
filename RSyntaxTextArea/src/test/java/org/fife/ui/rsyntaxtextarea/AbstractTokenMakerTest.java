@@ -43,7 +43,7 @@ class AbstractTokenMakerTest {
 	/**
 	 * A concrete implementation for test purposes.
 	 */
-	private static class ConcreteTestTokenMaker extends AbstractTokenMaker {
+	private static final class ConcreteTestTokenMaker extends AbstractTokenMaker {
 
 		@Override
 		public TokenMap getWordsToHighlight() {

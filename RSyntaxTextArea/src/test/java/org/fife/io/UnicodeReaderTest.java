@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 class UnicodeReaderTest {
 
 	private static final String CONTENT = "Hello world";
-	private static boolean origWriteUtf8Bom = false;
+	private static boolean origWriteUtf8Bom;
 
 	private static File createTempFile(Charset charset)	throws IOException {
 		return createTempFile(charset.name());

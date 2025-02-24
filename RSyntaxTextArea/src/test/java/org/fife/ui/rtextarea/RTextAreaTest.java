@@ -1,3 +1,7 @@
+/*
+ * This library is distributed under a modified BSD license.  See the included
+ * LICENSE file for details.
+ */
 package org.fife.ui.rtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
@@ -113,7 +117,7 @@ class RTextAreaTest {
 	void testGetAction_validActionValues() {
 
 		// Actions are lazily instantiated on first RSTA creation
-		RTextArea textArea = new RTextArea();
+		new RTextArea();
 
 		Assertions.assertNotNull(RTextArea.getAction(RTextArea.COPY_ACTION));
 		Assertions.assertNotNull(RTextArea.getAction(RTextArea.CUT_ACTION));
@@ -127,7 +131,6 @@ class RTextAreaTest {
 
 	@Test
 	void testGetCurrentMacro_nothingBeingRecorded() {
-		RTextArea textArea = new RTextArea(); // Not strictly needed
 		Assertions.assertNull(RTextArea.getCurrentMacro());
 	}
 
@@ -326,14 +329,12 @@ class RTextAreaTest {
 
 	@Test
 	void testSetActionProperties_charMnemonic_doNothingForInvalidAction() {
-		RTextArea textArea = new RTextArea();
 		RTextArea.setActionProperties(-1, "foo", 'x', null);
 	}
 
 
 	@Test
 	void testSetActionProperties_intMnemonic_doNothingForInvalidAction() {
-		RTextArea textArea = new RTextArea();
 		RTextArea.setActionProperties(-1, "foo", -1, null);
 	}
 

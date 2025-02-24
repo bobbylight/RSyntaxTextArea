@@ -133,7 +133,6 @@ class TokenImplTest {
 
 		// Don't bother checking font and other styles since it may be host-specific
 		String actual = token.getHTMLRepresentation(textArea);
-		System.out.println(actual);
 		Assertions.assertTrue(actual.startsWith("<font"));
 		Assertions.assertTrue(actual.endsWith("> &amp;&#09;&lt;&gt;&#39;&#34;&#47;</font>"));
 

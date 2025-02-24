@@ -27,9 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(SwingRunnerExtension.class)
 class GutterTest extends AbstractRTextAreaTest {
 
-	private static final String PLAIN_TEXT = "Line 1\n"
-			+ "Line 2\n"
-			+ "Line 3\n";
+	private static final String PLAIN_TEXT = "Line 1\nLine 2\nLine 3\n";
 
 
 	@Test
@@ -566,9 +564,10 @@ class GutterTest extends AbstractRTextAreaTest {
 	void testPropertyChange_newDocumentUpdatesGutter() {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Gutter gutter = new Gutter(textArea);
+		//Gutter gutter = new Gutter(textArea);
 
 		textArea.setDocument(new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C));
+		// TODO: How to verify?
 	}
 
 

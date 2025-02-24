@@ -84,7 +84,8 @@ class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntax
 		action.actionPerformed(createActionEvent(textArea));
 		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   amazing", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
-		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aardvark", textArea.getText());
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   aardvark",
+			textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
 		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   arthur", textArea.getText());
 		action.actionPerformed(createActionEvent(textArea));
@@ -270,8 +271,10 @@ class RSyntaxTextAreaEditorKitDumbCompleteWordActionTest extends AbstractRSyntax
 		RSyntaxTextArea textArea = new RSyntaxTextArea(doc);
 
 		textArea.setText("aaron arthur aardvark\nfoo bar\n// bad code\namazing\n   a");
-		Assertions.assertEquals(textArea.getDocument().getLength()-1, action.getPreviousWord(textArea, textArea.getDocument().getLength()));
-		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\n".length(), action.getPreviousWord(textArea, textArea.getDocument().getLength()-2));
+		Assertions.assertEquals(textArea.getDocument().getLength()-1,
+			action.getPreviousWord(textArea, textArea.getDocument().getLength()));
+		Assertions.assertEquals("aaron arthur aardvark\nfoo bar\n// bad code\n".length(),
+			action.getPreviousWord(textArea, textArea.getDocument().getLength()-2));
 		Assertions.assertEquals("aaron arthur ".length(), action.getPreviousWord(textArea, 22));
 		Assertions.assertEquals("aaron ".length(), action.getPreviousWord(textArea, 8));
 

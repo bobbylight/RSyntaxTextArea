@@ -1,3 +1,7 @@
+/*
+ * This library is distributed under a modified BSD license.  See the included
+ * LICENSE file for details.
+ */
 package org.fife.ui.rsyntaxtextarea.modes;
 
 import javax.swing.text.Segment;
@@ -326,7 +330,7 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	}
 
-/* Not in PHPTokenMaker ???
+	/* Not in PHPTokenMaker ???
 	@Test
 	public void testPhp_EolComments_URL() {
 
@@ -350,7 +354,7 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		}
 
 	}
-*/
+	*/
 
 
 	@Test
@@ -2638,17 +2642,17 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
-	// This fails because we create a (possibly) 0-length token before this - yuck!
-//	@Test
-//	void testJS_DocComments_InlineTags() {
-//		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
-//			JS_DOC_COMMENT_PREV_TOKEN_TYPE,
-//			"@link",
-//			"@linkplain",
-//			"@linkcode",
-//			"@tutorial"
-//		);
-//	}
+	@Test
+	@Disabled("Fails because we create a (possibly) 0-length token before this - yuck!")
+	void testJS_DocComments_InlineTags() {
+		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+			JS_DOC_COMMENT_PREV_TOKEN_TYPE,
+			"@link",
+			"@linkplain",
+			"@linkcode",
+			"@tutorial"
+		);
+	}
 
 
 	@Test

@@ -20,7 +20,7 @@ class MockParser extends AbstractParser {
 	private DefaultParseResult result;
 
 
-	public MockParser() {
+	MockParser() {
 		result = new DefaultParseResult(this);
 	}
 

@@ -126,7 +126,7 @@ abstract class AbstractJFlexTokenMakerTest extends AbstractTokenMakerTest {
 		}
 	}
 
-	private static class EmptyInputStream extends InputStream {
+	private static final class EmptyInputStream extends InputStream {
 		@Override
 		public int read() {
 			return -1;

@@ -13,6 +13,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -44,15 +45,18 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	private static final int TS_VALID_CHAR_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_IN_JS_CHAR_VALID;
 
-	private static final int TS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID;
+	private static final int TS_INVALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE =
+		TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID;
 
-	private static final int TS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID;
+	private static final int TS_VALID_TEMPLATE_LITERAL_PREV_TOKEN_TYPE =
+		TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID;
 
 	private static final int TS_E4X_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_E4X;
 
 	private static final int TS_E4X_INTAG_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_E4X_INTAG;
 
-	private static final int TS_E4X_PI_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION;
+	private static final int TS_E4X_PI_PREV_TOKEN_TYPE =
+		TypeScriptTokenMaker.INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION;
 
 	private static final int TS_E4X_DTD_PREV_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_E4X_DTD;
 
@@ -100,7 +104,8 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertEquals(TokenTypes.LITERAL_BACKQUOTE,
 			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID));
 		Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE,
-			tm.getClosestStandardTokenTypeForInternalType(TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID));
+			tm.getClosestStandardTokenTypeForInternalType(
+				TypeScriptTokenMaker.INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID));
 
 		Assertions.assertEquals(TokenTypes.IDENTIFIER,
 			tm.getClosestStandardTokenTypeForInternalType(TokenTypes.IDENTIFIER));
@@ -269,17 +274,17 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
-	// This fails because we create a (possibly) 0-length token before this - yuck!
-//	@Test
-//	void testJS_DocComments_InlineTags() {
-//		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
-//			TS_DOC_COMMENT_PREV_TOKEN_TYPE,
-//			"@link",
-//			"@linkplain",
-//			"@linkcode",
-//			"@tutorial"
-//		);
-//	}
+	@Test
+	@Disabled("Fails because we create a (possibly) 0-length token before this -  yuck!")
+	void testJS_DocComments_InlineTags() {
+		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+			TS_DOC_COMMENT_PREV_TOKEN_TYPE,
+			"@link",
+			"@linkplain",
+			"@linkcode",
+			"@tutorial"
+		);
+	}
 
 
 	@Test
@@ -287,8 +292,8 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String text = "<code>";
 		Segment segment = createSegment(text);
 		TokenMaker tm = createTokenMaker();
-		final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -9;
-		Token token = tm.getTokenList(segment, INTERNAL_IN_JS_COMMENT_DOCUMENTATION, 0);
+		final int internalInJsCommentDocumentation = -9;
+		Token token = tm.getTokenList(segment, internalInJsCommentDocumentation, 0);
 		// Can sometimes produce empty tokens, if e.g. @foo is first token
 		// on a line. We could technically make that better, but it is not
 		// the common case
@@ -700,20 +705,20 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String code =
 			// Basic doubles
 			"3.0 4.2 3.0 4.2 .111 " +
-				// Basic floats ending in f, F, d, or D
-				"3f 3F 3d 3D 3.f 3.F 3.d 3.D 3.0f 3.0F 3.0d 3.0D .111f .111F .111d .111D " +
-				// lower-case exponent, no sign
-				"3e7f 3e7F 3e7d 3e7D 3.e7f 3.e7F 3.e7d 3.e7D 3.0e7f 3.0e7F 3.0e7d 3.0e7D .111e7f .111e7F .111e7d .111e7D " +
-				// Upper-case exponent, no sign
-				"3E7f 3E7F 3E7d 3E7D 3.E7f 3.E7F 3.E7d 3.E7D 3.0E7f 3.0E7F 3.0E7d 3.0E7D .111E7f .111E7F .111E7d .111E7D " +
-				// Lower-case exponent, positive
-				"3e+7f 3e+7F 3e+7d 3e+7D 3.e+7f 3.e+7F 3.e+7d 3.e+7D 3.0e+7f 3.0e+7F 3.0e+7d 3.0e+7D .111e+7f .111e+7F .111e+7d .111e+7D " +
-				// Upper-case exponent, positive
-				"3E+7f 3E+7F 3E+7d 3E+7D 3.E+7f 3.E+7F 3.E+7d 3.E+7D 3.0E+7f 3.0E+7F 3.0E+7d 3.0E+7D .111E+7f .111E+7F .111E+7d .111E+7D " +
-				// Lower-case exponent, negative
-				"3e-7f 3e-7F 3e-7d 3e-7D 3.e-7f 3.e-7F 3.e-7d 3.e-7D 3.0e-7f 3.0e-7F 3.0e-7d 3.0e-7D .111e-7f .111e-7F .111e-7d .111e-7D " +
-				// Upper-case exponent, negative
-				"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
+			// Basic floats ending in f, F, d, or D
+			"3f 3F 3d 3D 3.f 3.F 3.d 3.D 3.0f 3.0F 3.0d 3.0D .111f .111F .111d .111D " +
+			// lower-case exponent, no sign
+			"3e7f 3e7F 3e7d 3e7D 3.e7f 3.e7F 3.e7d 3.e7D 3.0e7f 3.0e7F 3.0e7d 3.0e7D .111e7f .111e7F .111e7d .111e7D " +
+			// Upper-case exponent, no sign
+			"3E7f 3E7F 3E7d 3E7D 3.E7f 3.E7F 3.E7d 3.E7D 3.0E7f 3.0E7F 3.0E7d 3.0E7D .111E7f .111E7F .111E7d .111E7D " +
+			// Lower-case exponent, positive
+			"3e+7f 3e+7F 3e+7d 3e+7D 3.e+7f 3.e+7F 3.e+7d 3.e+7D 3.0e+7f 3.0e+7F 3.0e+7d 3.0e+7D .111e+7f .111e+7F .111e+7d .111e+7D " +
+			// Upper-case exponent, positive
+			"3E+7f 3E+7F 3E+7d 3E+7D 3.E+7f 3.E+7F 3.E+7d 3.E+7D 3.0E+7f 3.0E+7F 3.0E+7d 3.0E+7D .111E+7f .111E+7F .111E+7d .111E+7D " +
+			// Lower-case exponent, negative
+			"3e-7f 3e-7F 3e-7d 3e-7D 3.e-7f 3.e-7F 3.e-7d 3.e-7D 3.0e-7f 3.0e-7F 3.0e-7d 3.0e-7D .111e-7f .111e-7F .111e-7d .111e-7D " +
+			// Upper-case exponent, negative
+			"3E-7f 3E-7F 3E-7d 3E-7D 3.E-7f 3.E-7F 3.E-7d 3.E-7D 3.0E-7f 3.0E-7F 3.0E-7d 3.0E-7D .111E-7f .111E-7F .111E-7d .111E-7D";
 
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
@@ -765,7 +770,8 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String[] literals = code.split(" +");
 		for (int i = 0; i < literals.length; i++) {
 			Assertions.assertEquals(literals[i], token.getLexeme());
-			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType(), "Not a hex number: " + token);
+			Assertions.assertEquals(TokenTypes.LITERAL_NUMBER_HEXADECIMAL, token.getType(),
+				"Not a hex number: " + token);
 			if (i < literals.length - 1) {
 				token = token.getNextToken();
 				Assertions.assertTrue(token.isWhitespace(), "Not a whitespace token: " + token);
@@ -1031,7 +1037,8 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			Segment segment = createSegment(code);
 			TokenMaker tm = createTokenMaker();
 			Token token = tm.getTokenList(segment, TS_PREV_TOKEN_TYPE, 0);
-			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(), "Not an ERROR_STRING_DOUBLE: " + token);
+			Assertions.assertEquals(TokenTypes.ERROR_STRING_DOUBLE, token.getType(),
+				"Not an ERROR_STRING_DOUBLE: " + token);
 		}
 
 	}

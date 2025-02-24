@@ -74,7 +74,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(false);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -100,7 +101,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(false);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -126,7 +128,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(true);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -163,7 +166,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(true);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCutAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -201,7 +205,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(false);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -240,7 +245,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 		textArea.setCaretPosition(5);
 		textArea.moveCaretPosition(8);
 
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(false);
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction);
 		a.actionPerformedImpl(e, textArea);
 
@@ -263,7 +269,8 @@ class RSyntaxTextAreaEditorKitCopyCutAsStyledTextActionTest extends AbstractRSyn
 
 	@Test
 	void testGetMacroId() {
-		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(false);
+		RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction a = new RSyntaxTextAreaEditorKit.
+			CopyCutAsStyledTextAction(false);
 		Assertions.assertEquals(RSyntaxTextAreaEditorKit.rstaCopyAsStyledTextAction, a.getMacroID());
 
 		a = new RSyntaxTextAreaEditorKit.CopyCutAsStyledTextAction(true);

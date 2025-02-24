@@ -772,7 +772,7 @@ class KotlinTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD,
 			/* Hard keywords (sans "return", "true" and "false") */
-		"as",
+			"as",
 			"as?",
 			"break",
 			"class",

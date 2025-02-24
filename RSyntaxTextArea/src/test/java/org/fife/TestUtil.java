@@ -1,4 +1,4 @@
-/**
+/*
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
@@ -16,7 +16,7 @@ import java.io.PrintWriter;
  */
 public final class TestUtil {
 
-	private static String DEFAULT_TEMP_FILE_EXTENSION = ".tmp";
+	private static final String DEFAULT_TEMP_FILE_EXTENSION = ".tmp";
 
 
 	/**

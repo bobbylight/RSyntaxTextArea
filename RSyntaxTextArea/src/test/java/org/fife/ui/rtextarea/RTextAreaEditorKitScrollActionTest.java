@@ -26,7 +26,7 @@ class RTextAreaEditorKitScrollActionTest {
 	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("foo");
-		RTextScrollPane sp = new RTextScrollPane(textArea);
+		new RTextScrollPane(textArea); // Needed for the test
 
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.ScrollAction("scroll", 1).actionPerformedImpl(e, textArea);

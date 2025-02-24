@@ -383,7 +383,7 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		}
 	}
 
-/* TODO: Start highlighting these!
+	/* TODO: Start highlighting these!
 	@Test
 	public void testHexLiterals() {
 
@@ -416,7 +416,7 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		Assertions.assertTrue(token.getType() == TokenTypes.NULL);
 
 	}
-*/
+	*/
 
 	@Test
 	void testStandardFunctions() {

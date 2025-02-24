@@ -156,11 +156,11 @@ class SearchContextTest {
 
 	@Test
 	void testToString() {
-		final String EXPECTED = "[SearchContext: searchFor=null, " +
+		String expected = "[SearchContext: searchFor=null, " +
 				"replaceWith=null, matchCase=false, wholeWord=false, " +
 				"regex=false, markAll=true]";
 		SearchContext sc = new SearchContext();
-		Assertions.assertEquals(EXPECTED, sc.toString());
+		Assertions.assertEquals(expected, sc.toString());
 	}
 
 

@@ -271,9 +271,9 @@ class DefaultParserNoticeTest {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
 
-		final String TIP = "Hello world";
-		notice.setToolTipText(TIP);
-		Assertions.assertEquals(TIP, notice.getToolTipText());
+		final String tip = "Hello world";
+		notice.setToolTipText(tip);
+		Assertions.assertEquals(tip, notice.getToolTipText());
 
 	}
 
@@ -338,9 +338,9 @@ class DefaultParserNoticeTest {
 		notice = new DefaultParserNotice(parser, "Foo", 5, 4, 7);
 		Assertions.assertEquals("Foo", notice.getToolTipText()); // Defaults to message
 
-		final String TIP = "Hello world";
-		notice.setToolTipText(TIP);
-		Assertions.assertEquals(TIP, notice.getToolTipText());
+		final String tip = "Hello world";
+		notice.setToolTipText(tip);
+		Assertions.assertEquals(tip, notice.getToolTipText());
 
 	}
 
