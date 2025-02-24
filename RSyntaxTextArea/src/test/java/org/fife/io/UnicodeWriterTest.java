@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 class UnicodeWriterTest {
 
 	private static final String CONTENT = "Hello world";
-	private static boolean origWriteUtf8Bom = false;
+	private static boolean origWriteUtf8Bom;
 
 	private static File createTempFile() throws IOException {
 		File file = File.createTempFile("unitTest", ".tmp");

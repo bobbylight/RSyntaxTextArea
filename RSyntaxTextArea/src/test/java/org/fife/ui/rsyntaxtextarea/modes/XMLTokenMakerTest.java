@@ -137,21 +137,13 @@ class XMLTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	@Test
 	void testXML_doctype() {
-
-		String[] doctypes = {
+		assertAllTokensOfType(TokenTypes.MARKUP_DTD,
 			"<!doctype html>",
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">",
-			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
-			"<!DOCTYPE note [ xxx ]>",
-		};
-
-		for (String code : doctypes) {
-			Segment segment = createSegment(code);
-			TokenMaker tm = createTokenMaker();
-			Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-			Assertions.assertEquals(TokenTypes.MARKUP_DTD, token.getType());
-		}
-
+			"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " +
+				"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+			"<!DOCTYPE note [ xxx ]>"
+		);
 	}
 
 
@@ -222,7 +214,8 @@ class XMLTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""), "Unexpected token: " + token);
+		Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, "\"doSomething()\""),
+			"Unexpected token: " + token);
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.WHITESPACE, " "));
 		token = token.getNextToken();

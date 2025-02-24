@@ -219,7 +219,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.addNotify();
 		textArea.setAntiAliasingEnabled(false); // Needed to initialize font metrics cache
-		RTextScrollPane sp = new RTextScrollPane(textArea); // text area needs a parent
+		new RTextScrollPane(textArea); // text area needs a parent
 		ParserManager manager = new ParserManager(textArea);
 		manager.addParser(parser);
 
@@ -235,7 +235,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	void testInsertUpdate() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		ParserManager manager = new ParserManager(textArea);
+		new ParserManager(textArea);
 
 		textArea.insert("inserted text", 5);
 	}
@@ -245,7 +245,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	void testPropertyChange_document() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		ParserManager manager = new ParserManager(textArea);
+		new ParserManager(textArea);
 		RSyntaxDocument origDocument = (RSyntaxDocument)textArea.getDocument();
 
 		RSyntaxDocument newDocument = new RSyntaxDocument(SyntaxConstants.SYNTAX_STYLE_C);
@@ -261,7 +261,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 	void testRemoveUpdate() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		ParserManager manager = new ParserManager(textArea);
+		new ParserManager(textArea);
 
 		textArea.replaceRange("", 5, 9);
 	}

@@ -126,7 +126,6 @@ class RTATextTransferHandlerTest {
 		textArea.setEditable(editable);
 
 		RTATextTransferHandler handler = new RTATextTransferHandler();
-		Transferable transferable = handler.createTransferable(textArea);
 
 		return handler.canImport(textArea, new DataFlavor[] {
 			flavor

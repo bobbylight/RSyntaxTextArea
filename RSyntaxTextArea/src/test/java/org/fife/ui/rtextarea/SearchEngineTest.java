@@ -528,7 +528,8 @@ class SearchEngineTest {
 
 
 	/**
-	 * https://github.com/bobbylight/RSyntaxTextArea/issues/38
+	 * Verifies the fix for bug
+	 * <a href="https://github.com/bobbylight/RSyntaxTextArea/issues/38">38</a>.
 	 */
 	@Test
 	void testSearchEngineRegexFindEmptyString() {
@@ -689,7 +690,8 @@ class SearchEngineTest {
 		// Search for "chuck", ignoring case.
 		context.setSearchFor("chuck");
 		textArea.setText(text);
-		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
+		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")",
+			context.getReplaceWith());
 		textArea.setCaretPosition(offs);
 		boolean found = replaceImpl(context);
 		assertTrue(found);
@@ -830,7 +832,8 @@ class SearchEngineTest {
 	}
 
 	/**
-	 * https://github.com/bobbylight/RSyntaxTextArea/issues/427
+	 * Verifies the fix for bug
+	 * <a href="https://github.com/bobbylight/RSyntaxTextArea/issues/427>427</a>.
 	 */
 	@Test
 	void testSearchEngineReplaceBackwardOnEmptyDocument() {
@@ -958,7 +961,8 @@ class SearchEngineTest {
 		// Replace "chuck", ignoring case.
 		context.setSearchFor("chuck");
 		textArea.setText(text);
-		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")", context.getReplaceWith());
+		String expected = textArea.getText().replaceAll("(?i:" + context.getSearchFor() +  ")",
+			context.getReplaceWith());
 		int count = replaceAllImpl(context);
 		assertEquals(4, count);
 		assertEquals(expected, textArea.getText());

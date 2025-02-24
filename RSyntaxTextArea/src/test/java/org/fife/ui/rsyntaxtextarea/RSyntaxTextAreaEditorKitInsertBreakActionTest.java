@@ -494,7 +494,7 @@ class RSyntaxTextAreaEditorKitInsertBreakActionTest extends AbstractRSyntaxTextA
 	}
 
 	@Test
-	void test_noSelection_autoIndentDisabled_clearWSLinesDisabled_allWSLine_caretInMiddle_wsLineClearedAndWSAfterCaretRemoved() {
+	void test_noSelection_autoIndentDisabled_clearWSLinesDisabled_allWSLine_caretInMiddle_wsAfterCaretRemoved() {
 
 		String origContent = "public void foo() {\n\t\t";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);

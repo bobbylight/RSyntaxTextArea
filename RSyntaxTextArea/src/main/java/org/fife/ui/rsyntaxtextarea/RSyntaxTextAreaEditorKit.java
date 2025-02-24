@@ -559,7 +559,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 	/**
 	 * Collapses all comment folds.
 	 */
-	public static class CollapseAllCommentFoldsAction extends FoldRelatedAction{
+	public static class CollapseAllCommentFoldsAction extends FoldRelatedAction {
 
 		private static final long serialVersionUID = 1L;
 

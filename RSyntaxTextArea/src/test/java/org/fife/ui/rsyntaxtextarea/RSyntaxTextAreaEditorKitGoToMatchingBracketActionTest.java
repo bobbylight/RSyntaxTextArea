@@ -43,7 +43,7 @@ class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyn
 
 		String origContent = "public void foo() {\n" +
 			"  if (something) {\n" +
-			"    System.out.println(\"Hello world\");\n" +
+			"    postMessage(\"Hello world\");\n" +
 			"  }\n" +
 			"}";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
@@ -64,7 +64,7 @@ class RSyntaxTextAreaEditorKitGoToMatchingBracketActionTest extends AbstractRSyn
 		// Missing the final closing bracket
 		String origContent = "public void foo() {\n" +
 			"  if (something) {\n" +
-			"    System.out.println(\"Hello world\");\n" +
+			"    postMessage(\"Hello world\");\n" +
 			"  }";
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
 

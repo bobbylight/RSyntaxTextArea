@@ -116,7 +116,7 @@ public abstract class AbstractTokenMakerFactory extends TokenMakerFactory {
 		private String className;
 		private ClassLoader cl;
 
-		public TokenMakerCreator(String className, ClassLoader cl) {
+		 TokenMakerCreator(String className, ClassLoader cl) {
 			this.className = className;
 			this.cl = cl!=null ? cl : getClass().getClassLoader();
 		}

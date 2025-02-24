@@ -42,7 +42,6 @@ class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntax
 	void testActionPerformedImpl_increaseFontSize_happyPath() {
 
 		RSyntaxTextArea textArea = createTextArea();
-		JScrollPane sp = new JScrollPane(textArea);
 
 		int origFontSize = 0;
 		for (Style style : textArea.getSyntaxScheme().getStyles()) {
@@ -76,7 +75,6 @@ class RSyntaxTextAreaEditorKitIncreaseFontSizeActionTest extends AbstractRSyntax
 		RSyntaxTextArea textArea = createTextArea();
 		Font font = textArea.getFont();
 		textArea.setFont(font.deriveFont(maxSize - 0.5f));
-		float origFontSize = textArea.getFont().getSize2D();
 
 		RSyntaxTextAreaEditorKit.IncreaseFontSizeAction a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction();
 		ActionEvent e = createActionEvent(textArea, RSyntaxTextAreaEditorKit.rtaIncreaseFontSizeAction);

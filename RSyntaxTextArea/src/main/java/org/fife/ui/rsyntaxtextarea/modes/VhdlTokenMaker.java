@@ -24,7 +24,6 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
 
 
-
 /**
  * A parser for the VHDL hardware description programming language.
  *

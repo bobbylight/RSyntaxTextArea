@@ -36,7 +36,6 @@ class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("   Hello world");
 		textArea.setCaretPosition(14);
-		int firstNonWhiteSpaceOffs = 3;
 
 		RTextAreaEditorKit.BeginLineAction action = new RTextAreaEditorKit.BeginLineAction("beginLine", false);
 
@@ -62,7 +61,6 @@ class RTextAreaEditorKitBeginLineActionTest extends AbstractRTextAreaTest {
 
 		RSyntaxTextArea textArea = new RSyntaxTextArea("   Hello world");
 		textArea.setCaretPosition(14);
-		int firstNonWhiteSpaceOffs = 3;
 
 		RTextAreaEditorKit.BeginLineAction action = new RTextAreaEditorKit.BeginLineAction("beginLine", true);
 

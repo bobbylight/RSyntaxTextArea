@@ -193,7 +193,7 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 	/**
 	 * A dummy parser that returns a single parser notice for test purposes.
 	 */
-	private static class TestParser extends AbstractParser {
+	private static final class TestParser extends AbstractParser {
 
 		@Override
 		public ParseResult parse(RSyntaxDocument doc, String style) {

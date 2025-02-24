@@ -32,7 +32,7 @@ public abstract class TokenMakerFactory {
 	/**
 	 * The singleton default <code>TokenMakerFactory</code> instance.
 	 */
-	private static TokenMakerFactory DEFAULT_INSTANCE;
+	private static TokenMakerFactory defaultInstance;
 
 
 	/**
@@ -43,7 +43,7 @@ public abstract class TokenMakerFactory {
 	 * @see #setDefaultInstance(TokenMakerFactory)
 	 */
 	public static synchronized TokenMakerFactory getDefaultInstance() {
-		if (DEFAULT_INSTANCE==null) {
+		if (defaultInstance ==null) {
 			String clazz;
 			try {
 				clazz= System.getProperty(PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY);
@@ -54,7 +54,7 @@ public abstract class TokenMakerFactory {
 				clazz = "org.fife.ui.rsyntaxtextarea.DefaultTokenMakerFactory";
 			}
 			try {
-				DEFAULT_INSTANCE = (TokenMakerFactory)Class.forName(clazz).
+				defaultInstance = (TokenMakerFactory)Class.forName(clazz).
 					getDeclaredConstructor().newInstance();
 			} catch (RuntimeException re) { // FindBugs
 				throw re;
@@ -64,7 +64,7 @@ public abstract class TokenMakerFactory {
 											clazz);
 			}
 		}
-		return DEFAULT_INSTANCE;
+		return defaultInstance;
 	}
 
 
@@ -117,7 +117,7 @@ public abstract class TokenMakerFactory {
 		if (tmf==null) {
 			throw new IllegalArgumentException("tmf cannot be null");
 		}
-		DEFAULT_INSTANCE = tmf;
+		defaultInstance = tmf;
 	}
 
 

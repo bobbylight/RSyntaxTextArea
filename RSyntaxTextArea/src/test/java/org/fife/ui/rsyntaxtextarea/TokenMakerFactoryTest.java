@@ -69,7 +69,7 @@ class TokenMakerFactoryTest {
 	}
 
 
-	private static class TestTokenMakerFactory extends AbstractTokenMakerFactory {
+	private static final class TestTokenMakerFactory extends AbstractTokenMakerFactory {
 
 		@Override
 		protected void initTokenMakerMap() {

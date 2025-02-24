@@ -103,7 +103,7 @@ class TclTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	@Test
 	void testIdentifiers() {
-		assertAllTokensOfType( TokenTypes.IDENTIFIER, "foo");
+		assertAllTokensOfType(TokenTypes.IDENTIFIER, "foo");
 	}
 
 

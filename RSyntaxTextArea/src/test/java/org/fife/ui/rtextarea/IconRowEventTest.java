@@ -20,35 +20,35 @@ public class IconRowEventTest {
 
 	@Test
 	void testIconRowEvent_verify() {
-		int LINE = 1;
-		int MARKED_OFFSET = 2;
-		Icon ICON = new ImageIcon();
-		String TOOLTIP = "Hello";
-		Object SOURCE = new Object();
+		int line = 1;
+		int markedOffset = 2;
+		Icon icon = new ImageIcon();
+		String tooltip = "Hello";
+		Object source = new Object();
 
 		GutterIconInfo info = new GutterIconInfo() {
 			@Override
 			public Icon getIcon() {
-				return ICON;
+				return icon;
 			}
 
 			@Override
 			public int getMarkedOffset() {
-				return MARKED_OFFSET;
+				return markedOffset;
 			}
 
 			@Override
 			public String getToolTip() {
-				return TOOLTIP;
+				return tooltip;
 			}
 		};
 
-		IconRowEvent event = new IconRowEvent(SOURCE, info, LINE);
+		IconRowEvent event = new IconRowEvent(source, info, line);
 
-		Assertions.assertEquals(LINE, event.getLine());
-		Assertions.assertEquals(TOOLTIP, event.getIconInfo().getToolTip());
-		Assertions.assertEquals(MARKED_OFFSET, event.getIconInfo().getMarkedOffset());
-		Assertions.assertEquals(ICON, event.getIconInfo().getIcon());
-		Assertions.assertEquals(SOURCE, event.getSource());
+		Assertions.assertEquals(line, event.getLine());
+		Assertions.assertEquals(tooltip, event.getIconInfo().getToolTip());
+		Assertions.assertEquals(markedOffset, event.getIconInfo().getMarkedOffset());
+		Assertions.assertEquals(icon, event.getIconInfo().getIcon());
+		Assertions.assertEquals(source, event.getSource());
 	}
 }

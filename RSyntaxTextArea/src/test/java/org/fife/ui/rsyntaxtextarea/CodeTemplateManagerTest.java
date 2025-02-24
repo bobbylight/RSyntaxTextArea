@@ -157,8 +157,8 @@ class CodeTemplateManagerTest extends AbstractRSyntaxTextAreaTest {
 		File tempDir = Files.createTempDirectory("testDir").toFile();
 		manager.setTemplateDirectory(tempDir);
 
-		File oldFile = TestUtil.createFile(
-			".xml", "<test/>", tempDir);
+		// Directory starts out with a file in it
+		TestUtil.createFile(".xml", "<test/>", tempDir);
 
 		manager.saveTemplates();
 		Assertions.assertEquals(0, tempDir.listFiles().length);

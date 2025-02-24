@@ -283,17 +283,17 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
-	// This fails because we create a (possibly) 0-length token before this - yuck!
-//	@Test
-//	void testJS_DocComments_InlineTags() {
-//		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
-//			JS_DOC_COMMENT_PREV_TOKEN_TYPE,
-//			"@link",
-//			"@linkplain",
-//			"@linkcode",
-//			"@tutorial"
-//		);
-//	}
+	@Test
+	@Disabled("Fails because we create a (possibly) 0-length token before this - yuck!")
+	void testJS_DocComments_InlineTags() {
+		assertAllTokensOfType(TokenTypes.COMMENT_KEYWORD,
+			JS_DOC_COMMENT_PREV_TOKEN_TYPE,
+			"@link",
+			"@linkplain",
+			"@linkcode",
+			"@tutorial"
+		);
+	}
 
 
 	@Test
@@ -301,8 +301,8 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		String text = "<code>";
 		Segment segment = createSegment(text);
 		TokenMaker tm = createTokenMaker();
-		final int INTERNAL_IN_JS_COMMENT_DOCUMENTATION = -9;
-		Token token = tm.getTokenList(segment, INTERNAL_IN_JS_COMMENT_DOCUMENTATION, 0);
+		final int internalInJsCommentDocumentation = -9;
+		Token token = tm.getTokenList(segment, internalInJsCommentDocumentation, 0);
 		// Can sometimes produce empty tokens, if e.g. @foo is first token
 		// on a line. We could technically make that better, but it is not
 		// the common case

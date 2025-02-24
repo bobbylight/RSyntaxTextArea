@@ -945,7 +945,7 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			TokenMaker tm = createTokenMaker();
 
 			Token token = tm.getTokenList(segment, TokenTypes.MARKUP_COMMENT, 0);
-			Assertions.assertTrue(token.isHyperlink());
+			Assertions.assertTrue(token.isHyperlink(), "not a hyperlink: " + token);
 			Assertions.assertEquals(TokenTypes.MARKUP_COMMENT, token.getType());
 			Assertions.assertEquals(literal, token.getLexeme());
 		}
@@ -1379,8 +1379,8 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"FilenameFilter",
 			"Flushable",
 			"ObjectInput",
-			//"ObjectInputFilter",
-			//"ObjectInputFilter.FilterInfo",
+			"ObjectInputFilter",
+			"ObjectInputFilter.FilterInfo",
 			"ObjectInputValidation",
 			"ObjectOutput",
 			"ObjectStreamConstants",
@@ -1412,6 +1412,7 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"InputStreamReader",
 			"LineNumberInputStream",
 			"LineNumberReader",
+			"ObjectInputFilter.Config",
 			"ObjectInputStream",
 			"ObjectInputStream.GetField",
 			"ObjectOutputStream",
@@ -1456,9 +1457,9 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"UTFDataFormatException",
 			"WriteAbortedException",
 
-			"IOError"
+			"IOError",
 
-			//"Serial"
+			"Serial"
 		);
 	}
 
@@ -1946,8 +1947,8 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			//"uses",
 			"void",
 			"volatile",
-			"while"
 			//"with"
+			"while"
 		);
 	}
 
@@ -1956,8 +1957,8 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	void testJava_Keywords_exitingMethod() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
 			JSPTokenMaker.INTERNAL_IN_JAVA_EXPRESSION,
-			"return"
 			//"yield"
+			"return"
 		);
 	}
 
@@ -2765,9 +2766,9 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	void testJSP_jspDirective_inside_charLiterals() {
 		assertAllTokensOfType(TokenTypes.LITERAL_CHAR,
 			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
-			"'simple string'"
 			// Lexer doesn't support char escapes yet!
 			//"'string with \\'escaped\\' quotes'",
+			"'simple string'"
 		);
 	}
 
@@ -2835,9 +2836,9 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	void testJSP_jspDirective_inside_strings() {
 		assertAllTokensOfType(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE,
 			JSPTokenMaker.INTERNAL_IN_JSP_DIRECTIVE,
-			"\"simple string\""
 			// Lexer doesn't support string escapes yet!
 			//"\"string with \\\"escaped\\\" quotes\"",
+			"\"simple string\""
 		);
 	}
 

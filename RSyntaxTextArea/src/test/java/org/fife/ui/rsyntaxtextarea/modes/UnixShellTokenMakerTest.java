@@ -1625,7 +1625,7 @@ class UnixShellTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	 * Overrides the default implementation to remember the last token's lexeme
 	 * and type whenever an <code>addToken()</code> overload is called.
 	 */
-	private static class AddTokenCatchingUnixShellTokenMaker
+	private static final class AddTokenCatchingUnixShellTokenMaker
 			extends UnixShellTokenMaker {
 
 		private String lastTokenLexeme;

@@ -142,7 +142,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_comments_oneLine(int languageIndex) {
 
@@ -169,7 +169,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_comments_twoLines(int languageIndex) {
 
@@ -197,7 +197,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_comments_onOneLineIsNotAFold(int languageIndex) {
 
@@ -216,7 +216,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_tags_oneLine(int languageIndex) {
 
@@ -243,7 +243,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_tags_twoLines(int languageIndex) {
 
@@ -271,7 +271,7 @@ class HtmlFoldParserTest {
 	@ValueSource(ints = {
 		HtmlFoldParser.LANGUAGE_HTML,
 		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP,
+		HtmlFoldParser.LANGUAGE_JSP
 	})
 	void testGetFolds_tags_onOneLineIsNotAFold(int languageIndex) {
 

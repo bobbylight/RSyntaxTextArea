@@ -1,8 +1,4 @@
 /*
- * 02/11/2008
- *
- * JSPTokenMaker.java - Generates tokens for JSP syntax highlighting.
- * 
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
@@ -837,7 +833,6 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
 
 <COMMENT> {
 	[^hwf\n\-]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
 	{URL}					{
                                 int temp = zzStartRead;
                                 if (start <= zzStartRead - 1) {
@@ -1660,6 +1655,8 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
     "FilenameFilter" |
     "Flushable" |
     "ObjectInput" |
+    "ObjectInputFilter" |
+    "ObjectInputFilter.FilterInfo" |
     "ObjectInputValidation" |
     "ObjectOutput" |
     "ObjectStreamConstants" |
@@ -1691,6 +1688,7 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
     "InputStreamReader" |
     "LineNumberInputStream" |
     "LineNumberReader" |
+    "ObjectInputFilter.Config" |
     "ObjectInputStream" |
     "ObjectInputStream.GetField" |
     "ObjectOutputStream" |
@@ -1736,6 +1734,8 @@ CSS_Number					= ({CSS_Digits}|{CSS_Hex})
     "WriteAbortedException" |
 
     "IOError" |
+
+    "Serial" |
 
 	/* java.util classes */
     "Collection" |

@@ -341,7 +341,7 @@ public class CodeTemplateManager {
 	 * to compare the template's ID to the segment's text.
 	 */
 	private static final class TemplateComparator implements Comparator<Object>,
-			Serializable{
+			Serializable {
 
 		@Override
 		public int compare(Object template, Object segment) {

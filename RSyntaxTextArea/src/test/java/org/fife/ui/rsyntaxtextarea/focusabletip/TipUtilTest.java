@@ -138,7 +138,6 @@ class TipUtilTest {
 
 		Border actual = TipUtil.getToolTipBorder(textArea);
 		Assertions.assertInstanceOf(LineBorder.class, actual);
-		Border expected = BorderFactory.createLineBorder(Color.RED.brighter());
 		Assertions.assertEquals(Color.RED.brighter(), ((LineBorder)actual).getLineColor());
 
 	}

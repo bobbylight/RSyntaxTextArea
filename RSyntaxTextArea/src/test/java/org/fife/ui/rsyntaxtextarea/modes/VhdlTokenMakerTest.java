@@ -1,13 +1,14 @@
+/*
+ * This library is distributed under a modified BSD license.  See the included
+ * LICENSE file for details.
+ */
 package org.fife.ui.rsyntaxtextarea.modes;
 
 import org.junit.jupiter.api.Test;
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rsyntaxtextarea.TokenImpl;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+
 
 /**
  * Unit tests for the {@link VhdlTokenMaker} class.
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
  * @author DOUDOU DIAWARA
  * @version 0.0
  */
-public class VhdlTokenMakerTest extends  AbstractTokenMakerTest{
+public class VhdlTokenMakerTest extends  AbstractJFlexTokenMakerTest {
 
 	@Override
 	protected TokenMaker createTokenMaker() {
@@ -97,6 +98,20 @@ public class VhdlTokenMakerTest extends  AbstractTokenMakerTest{
 				"'Z'",
 				"false",
 				"true");
+	}
+
+	@Test
+	void testIdentifiers() {
+		assertAllTokensOfType(TokenTypes.IDENTIFIER,
+			"foo"
+		);
+	}
+
+	@Test
+	void testIdentifiers_error() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			"^"
+		);
 	}
 
 	@Test
@@ -255,7 +270,7 @@ public class VhdlTokenMakerTest extends  AbstractTokenMakerTest{
 				"|",
 				"=>",
 				"<=",
-				":=" );
+				":=");
 
 	}
 

@@ -130,11 +130,11 @@ class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 
 	/**
 	 * Needed to avoid a call to {@code SwingUtilities.invokeLater()}
-	 * which doesn't seem possible to unit test
+	 * which doesn't seem possible to unit test.
 	 */
 	static class TestableFocusableTip extends FocusableTip {
 
-		public TestableFocusableTip(JTextArea textArea, HyperlinkListener listener) {
+		TestableFocusableTip(JTextArea textArea, HyperlinkListener listener) {
 			super(textArea, listener);
 		}
 
