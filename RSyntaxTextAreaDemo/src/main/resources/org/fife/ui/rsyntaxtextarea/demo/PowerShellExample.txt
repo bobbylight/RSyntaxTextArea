@@ -1,0 +1,29 @@
+# Sample PowerShell script for lexer testing
+
+$PSVersionTable
+
+# Variable assignment
+$greeting = "Hello, world!"
+$global:Var = "global scope"
+
+# Function definition
+function Get-Greeting {
+    param (
+        [string]$Name
+    )
+    $local:Var = 'local Scope'
+    # Conditional logic
+    if ($Name) {
+        return "Hello, $Name!"
+    } else {
+        return $greeting
+    }
+}
+
+# Looping construct
+foreach ($name in @("Alice", "Bob", "Charlie")) {
+    Write-Output (Get-Greeting -Name $name)
+}
+
+# Pipeline example
+Get-Process | Where-Object { $_.CPU -gt 100 } | Sort-Object CPU -Descending
