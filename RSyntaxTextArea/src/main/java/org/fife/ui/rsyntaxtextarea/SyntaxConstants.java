@@ -268,6 +268,10 @@ public interface SyntaxConstants {
 	 */
 	String SYNTAX_STYLE_PHP				= "text/php";
 
+	/**
+	 * Style for highlighting Powershell files.
+	 */
+	String SYNTAX_STYLE_POWERSHELL = "text/powershell";
 
 	/**
 	 * Style for highlighbting proto files.
@@ -279,7 +283,6 @@ public interface SyntaxConstants {
 	 * Style for highlighting properties files.
 	 */
 	String SYNTAX_STYLE_PROPERTIES_FILE	= "text/properties";
-
 
 	/**
 	 * Style for highlighting Python.
