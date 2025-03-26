@@ -72,151 +72,108 @@ import org.fife.ui.rsyntaxtextarea.*;
 		super();
 	}
 
+	void addToken(int tokenType) {
+        super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead);
+    }
 
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param tokenType The token's type.
-	 */
-	private void addToken(int tokenType) {
-		addToken(zzStartRead, zzMarkedPos-1, tokenType);
-	}
+    @Override
+    public String[] getLineCommentStartAndEnd(int languageIndex) {
+        return new String[]{"#", null};
+    }
 
+    @Override
+    public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
+        resetTokenList();
 
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param tokenType The token's type.
-	 */
-	private void addToken(int start, int end, int tokenType) {
-		int so = start + offsetShift;
-		addToken(zzBuffer, start,end, tokenType, so);
-	}
+        try {
+            super.s = text;
+            super.start = startOffset;
+            reset(text, 0, text.count, 0);
+            yylex();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        return firstToken;
+    }
 
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param array The character array.
-	 * @param start The starting offset in the array.
-	 * @param end The ending offset in the array.
-	 * @param tokenType The token's type.
-	 * @param startOffset The offset in the document at which this token
-	 *                    occurs.
-	 */
-	@Override
-	public void addToken(char[] array, int start, int end, int tokenType, int startOffset) {
-		super.addToken(array, start,end, tokenType, startOffset);
-		zzStartRead = zzMarkedPos;
-	}
+    public final String yytext() {
+        return zzBuffer.subSequence(zzStartRead, zzMarkedPos).toString();
+    }
 
+    @Override
+    public void yyclose() throws IOException {
+    }
 
-	@Override
-	public String[] getLineCommentStartAndEnd(int languageIndex) {
-		return new String[] { ";", null };
-	}
+    int idStart = -1;
+    int idEnd = -1;
 
+    void updateIdentifier() {
+        if (idStart < 0) {
+            idStart = zzStartRead;
+            idEnd = zzMarkedPos - 1;
+        } else {
+            idEnd = zzMarkedPos - 1;
+        }
+    }
 
-	/**
-	 * Returns the first token in the linked list of tokens generated
-	 * from <code>text</code>.  This method must be implemented by
-	 * subclasses so they can correctly implement syntax highlighting.
-	 *
-	 * @param text The text from which to get tokens.
-	 * @param initialTokenType The token type we should start with.
-	 * @param startOffset The offset into the document at which
-	 *        <code>text</code> starts.
-	 * @return The first <code>Token</code> in a linked list representing
-	 *         the syntax highlighted text.
-	 */
-	@Override
-	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
-
-		resetTokenList();
-		this.offsetShift = -text.offset + startOffset;
-
-		// Start off in the proper state.
-		int state = YYINITIAL;
-		s = text;
-		try {
-			yyreset(zzReader);
-			yybegin(state);
-			return yylex();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return new TokenImpl();
-		}
-
-	}
-
-
-	/**
-	 * Refills the input buffer.
-	 *
-	 * @return      <code>true</code> if EOF was reached, otherwise
-	 *              <code>false</code>.
-	 */
-	private boolean zzRefill() {
-		return zzCurrentPos>=s.offset+s.count;
-	}
-
-
-	/**
-	 * Resets the scanner to read from a new input stream.
-	 * Does not close the old reader.
-	 *
-	 * All internal variables are reset, the old input stream 
-	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
-	 * Lexical state is set to <tt>YY_INITIAL</tt>.
-	 *
-	 * @param reader   the new input stream 
-	 */
-	public final void yyreset(Reader reader) {
-		// 's' has been updated.
-		zzBuffer = s.array;
-		/*
-		 * We replaced the line below with the two below it because zzRefill
-		 * no longer "refills" the buffer (since the way we do it, it's always
-		 * "full" the first time through, since it points to the segment's
-		 * array).  So, we assign zzEndRead here.
-		 */
-		//zzStartRead = zzEndRead = s.offset;
-		zzStartRead = s.offset;
-		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
-		zzLexicalState = YYINITIAL;
-		zzReader = reader;
-		zzAtBOL  = true;
-		zzAtEOF  = false;
-	}
-
-
+    void addIdentifier(int type) {
+        if (idStart >= 0) {
+            super.addToken(s.array, s.offset + idStart, s.offset + idEnd, type, start + idStart);
+            idStart = idEnd = -1;
+        }
+    }
 %}
 
 Equals				= ([=])
+Escaped             = "\\"[tnr\"f0;#'\\]
 Identifier			= ([^ \t\n#;\[=]*)
 Whitespace			= ([ \t]+)
 Comment				= ([#;].*)
 Section				= ([\[][^\]]*[\]]?)
 
 %state VALUE
+%state STRING
+%state SINGLE_QUOTE_STRING
+%state PRE_VALUE
 
 %%
 
 <YYINITIAL> {
 	{Identifier}		{ addToken(Token.DATA_TYPE); }
-	{Equals}			{ start = zzMarkedPos; addToken(Token.OPERATOR); yybegin(VALUE); }
+	{Equals}			{ addToken(Token.OPERATOR); yybegin(PRE_VALUE); }
 	{Whitespace}		{ addToken(Token.WHITESPACE); }
 	{Comment}			{ addToken(Token.COMMENT_EOL); }
 	{Section}			{ addToken(Token.PREPROCESSOR); }
 	<<EOF>>				{ addNullToken(); return firstToken; }
 }
 
+<PRE_VALUE> {
+    {Whitespace}        { addToken(TokenTypes.WHITESPACE); }
+    [\"]                { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(STRING); }
+    [']                 { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(SINGLE_QUOTE_STRING); }
+    [^] 				{ yypushback(1); yybegin(VALUE); }
+    <<EOF>>				{ addNullToken(); return firstToken; }
+}
+
+<STRING> {
+    [\"]                { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(VALUE); }
+}
+
+<SINGLE_QUOTE_STRING> {
+    [']                 { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(VALUE); }
+}
+
+<STRING, SINGLE_QUOTE_STRING> {
+    {Escaped}           { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+    {Whitespace}        { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.WHITESPACE); }
+    [^]                 { updateIdentifier(); }
+    <<EOF>>				{ addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken; }
+}
+
 <VALUE> {
-	{Identifier}		{ addToken(Token.IDENTIFIER); }
-	{Equals}			{ start = zzMarkedPos; addToken(Token.OPERATOR); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
-	{Comment}			{ addToken(Token.COMMENT_EOL); }
-	{Section}			{ addToken(Token.PREPROCESSOR); }
-	<<EOF>>				{ addNullToken(); return firstToken; }
+    {Comment}			{ addIdentifier(TokenTypes.IDENTIFIER); addToken(Token.COMMENT_EOL); }
+    {Whitespace}        { addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.WHITESPACE); }
+	[^]                 { updateIdentifier(); }
+	<<EOF>>				{ addIdentifier(TokenTypes.IDENTIFIER); addNullToken(); return firstToken; }
 }
