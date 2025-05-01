@@ -9,7 +9,7 @@ the box, it supports syntax highlighting for 50+ programming languages, code fol
 and has add-on libraries for code completion and spell checking.  Syntax highlighting for additional languages
 [can be added](https://github.com/bobbylight/RSyntaxTextArea/wiki) via tools such as [JFlex](http://jflex.de).
 
-RSyntaxTextArea is available under a [BSD 3-Clause license](https://github.com/bobbylight/RSyntaxTextArea/blob/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE).
+RSyntaxTextArea is available under a [BSD 3-Clause license](https://raw.githubusercontent.com/bobbylight/RSyntaxTextArea/refs/heads/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE).
 For more information, visit [http://bobbylight.github.io/RSyntaxTextArea/](http://bobbylight.github.io/RSyntaxTextArea/).
 
 Available in the [Maven Central repository](http://search.maven.org/#search%7Cga%7C1%7Crsyntaxtextarea%20jar) (`com.fifesoft:rsyntaxtextarea:XXX`).
