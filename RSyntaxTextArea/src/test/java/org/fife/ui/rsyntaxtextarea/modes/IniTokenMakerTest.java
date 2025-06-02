@@ -152,8 +152,9 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 
 		while (token != null) {
-			if (token.getType() != TokenTypes.NULL)
+			if (token.getType() != TokenTypes.NULL) {
 				Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
+			}
 			token = token.getNextToken();
 		}
 	}
@@ -176,8 +177,9 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 
 		while (token != null) {
-			if (token.getType() != TokenTypes.NULL)
+			if (token.getType() != TokenTypes.NULL) {
 				Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			}
 			token = token.getNextToken();
 		}
 
@@ -236,8 +238,9 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 
 		while (token != null) {
-			if (token.getType() != TokenTypes.NULL)
+			if (token.getType() != TokenTypes.NULL) {
 				Assertions.assertEquals(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, token.getType());
+			}
 			token = token.getNextToken();
 		}
 
