@@ -2,7 +2,7 @@
 ![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/gradle.yml/badge.svg)
 ![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fifesoft/rsyntaxtextarea/badge.svg)
-[![codecov](https://codecov.io/gh/bobbylight/RSyntaxTextArea/branch/master/graph/badge.svg?token=Hktq3vfINy)](https://codecov.io/gh/bobbylight/RSyntaxTextArea)
+[![codecov](https://codecov.io/gh/bobbylight/RSyntaxTextArea/graph/badge.svg?token=6YxJwHpfCp)](https://codecov.io/gh/bobbylight/RSyntaxTextArea)
 
 RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of
 the box, it supports syntax highlighting for 50+ programming languages, code folding, search and replace,
