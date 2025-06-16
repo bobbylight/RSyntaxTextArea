@@ -127,7 +127,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static int zzUnpackcmap_blocks(String packed, int offset, int [] result) {
     int i = 0;       /* index in packed string  */
-    int j = offset;  /* index in unpacked array */
+    int j = offset;  /* index in an unpacked array */
     int l = packed.length();
     while (i < l) {
       int count = packed.charAt(i++);
@@ -186,7 +186,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static int zzUnpackRowMap(String packed, int offset, int [] result) {
     int i = 0;  /* index in packed string  */
-    int j = offset;  /* index in unpacked array */
+    int j = offset;  /* index in an unpacked array */
     int l = packed.length() - 1;
     while (i < l) {
       int high = packed.charAt(i++) << 16;
@@ -219,7 +219,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static int zzUnpacktrans(String packed, int offset, int [] result) {
     int i = 0;       /* index in packed string  */
-    int j = offset;  /* index in unpacked array */
+    int j = offset;  /* index in an unpacked array */
     int l = packed.length();
     while (i < l) {
       int count = packed.charAt(i++);
@@ -314,7 +314,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
     @Override
     public String[] getLineCommentStartAndEnd(int languageIndex) {
-        return new String[]{"#", null};
+        return new String[]{";", null};
     }
 
     @Override
@@ -327,7 +327,8 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
             reset(text, 0, text.count, 0);
             yylex();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+			return new TokenImpl();
         }
 
         return firstToken;
@@ -359,16 +360,6 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
             idStart = idEnd = -1;
         }
     }
-
-
-  /**
-   * Creates a new scanner
-   *
-   * @param   in  the java.io.Reader to read input from.
-   */
-  public IniTokenMaker(java.io.Reader in) {
-  }
-
 
   /**
    * Translates raw input code points to DFA table row

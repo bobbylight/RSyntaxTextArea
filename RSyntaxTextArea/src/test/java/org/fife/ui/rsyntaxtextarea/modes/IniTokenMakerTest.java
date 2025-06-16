@@ -38,7 +38,7 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	public void testCommon_GetLineCommentStartAndEnd() {
 		TokenMaker tm = createTokenMaker();
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
-		Assertions.assertEquals("#", startAndEnd[0]);
+		Assertions.assertEquals(";", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);
 	}
 

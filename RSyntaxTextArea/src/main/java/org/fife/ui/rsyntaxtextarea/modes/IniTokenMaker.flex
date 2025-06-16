@@ -78,7 +78,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
     @Override
     public String[] getLineCommentStartAndEnd(int languageIndex) {
-        return new String[]{"#", null};
+        return new String[]{";", null};
     }
 
     @Override
@@ -91,7 +91,8 @@ import org.fife.ui.rsyntaxtextarea.*;
             reset(text, 0, text.count, 0);
             yylex();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new TokenImpl();
         }
 
         return firstToken;
