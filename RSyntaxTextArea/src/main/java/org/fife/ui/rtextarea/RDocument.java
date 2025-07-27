@@ -26,9 +26,12 @@ public class RDocument extends PlainDocument {
 	 * Constructor.
 	 */
 	public RDocument() {
-		super(new RGapContent());
+		this(new RGapContent());
 	}
 
+    public RDocument(RContent content) {
+        super(content != null ? content : new RGapContent());
+    }
 
 	/**
 	 * Returns the character in the document at the specified offset.
@@ -38,16 +41,16 @@ public class RDocument extends PlainDocument {
 	 * @throws BadLocationException If the offset is invalid.
 	 */
 	public char charAt(int offset) throws BadLocationException {
-		return ((RGapContent)getContent()).charAt(offset);
+		return ((RContent)getContent()).charAt(offset);
 	}
 
 
 	/**
 	 * Document content that provides fast access to individual characters.
 	 */
-	private static final class RGapContent extends GapContent {
+	private static final class RGapContent extends GapContent implements RContent {
 
-		protected char charAt(int offset) throws BadLocationException {
+		public char charAt(int offset) throws BadLocationException {
 			if (offset<0 || offset>=length()) {
 				throw new BadLocationException("Invalid offset", offset);
 			}

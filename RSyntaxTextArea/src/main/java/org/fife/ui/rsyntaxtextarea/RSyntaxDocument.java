@@ -21,6 +21,7 @@ import javax.swing.text.Element;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.modes.AbstractMarkupTokenMaker;
+import org.fife.ui.rtextarea.RContent;
 import org.fife.ui.rtextarea.RDocument;
 import org.fife.util.DynamicIntArray;
 
@@ -102,7 +103,13 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @param syntaxStyle The syntax highlighting scheme to use.
 	 */
 	public RSyntaxDocument(TokenMakerFactory tmf, String syntaxStyle) {
-		putProperty(tabSizeAttribute, 5);
+	    this(null, tmf, syntaxStyle);
+	}
+	
+	
+	public RSyntaxDocument(RContent content, TokenMakerFactory tmf, String syntaxStyle) {
+		super(content);
+	    putProperty(tabSizeAttribute, 5);
 		lastTokensOnLines = new DynamicIntArray(400);
 		lastTokensOnLines.add(Token.NULL); // Initial (empty) line.
 		s = new Segment();
