@@ -609,9 +609,15 @@ public class Theme {
 			throw e;
 		}
 
-	    public static void load(Theme theme, InputStream in) throws IOException {
+		public static void load(Theme theme, InputStream in) throws IOException {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setValidating(true);
+
+			// Disable external entity resolution to prevent XXE attacks
+			spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+			spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
 			try {
 				SAXParser parser = spf.newSAXParser();
 				XMLReader reader = parser.getXMLReader();
@@ -624,8 +630,8 @@ public class Theme {
 				InputSource is = new InputSource(in);
 				is.setEncoding("UTF-8");
 				reader.parse(is);
-			} catch (/*SAX|ParserConfiguration*/Exception se) {
-				throw new IOException(se.toString());
+			} catch (SAXException | ParserConfigurationException se) {
+				throw new IOException("Error parsing XML: " + se.getMessage(), se);
 			}
 		}
 
