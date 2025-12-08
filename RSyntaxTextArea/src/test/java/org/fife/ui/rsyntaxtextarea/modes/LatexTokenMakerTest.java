@@ -32,7 +32,7 @@ class LatexTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	@Test
 	void testEolComments() {
-		assertAllTokensOfType(TokenTypes.COMMENT_EOL,
+		assertAllTokensOfType(TokenTypes.COMMENT_EOL, TokenTypes.NULL, false,
 			"% Hello world"
 		);
 	}
@@ -44,9 +44,68 @@ class LatexTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
 		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
-		Assertions.assertTrue(token.isSingleChar(TokenTypes.SEPARATOR, '\\'));
+		Assertions.assertFalse(token.isComment());
+	}
+
+
+	@Test
+	void testPackageWithOptions() {
+		String code = "\\usepackage[i]{babel}";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
+
 		token = token.getNextToken();
-		Assertions.assertTrue(token.isSingleChar(TokenTypes.IDENTIFIER, '%'));
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.PREPROCESSOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.REGEX, token.getType());
+	}
+
+	@Test
+	void testLabel() {
+		String code = "\\label{L}";
+		Segment segment = createSegment(code);
+		TokenMaker tm = createTokenMaker();
+		Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.REGEX, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+
+		code = "\\label {L}";
+		segment = createSegment(code);
+		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertEquals(TokenTypes.RESERVED_WORD, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertTrue(token.isWhitespace());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.REGEX, token.getType());
+
+		token = token.getNextToken();
+		Assertions.assertEquals(TokenTypes.SEPARATOR, token.getType());
 	}
 
 
