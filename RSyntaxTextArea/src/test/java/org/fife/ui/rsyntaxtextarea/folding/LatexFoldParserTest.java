@@ -44,7 +44,7 @@ class LatexFoldParserTest {
 
 		Assertions.assertEquals(1, folds.size());
 
-		Fold firstFold = folds.getFirst();
+		Fold firstFold = folds.get(0);
 		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
 		Assertions.assertEquals(code.indexOf("\\begin"), firstFold.getStartOffset());
 		Assertions.assertEquals(code.lastIndexOf("\\end"), firstFold.getEndOffset());
