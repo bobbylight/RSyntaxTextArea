@@ -9,7 +9,10 @@ buildscript {
 
 plugins {
     id 'com.github.spotbugs' version '6.1.7'
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
+
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
 // We require building with JDK 17 or later. Built artifact compatibility
 // is controlled by javaLanguageVersion
@@ -89,5 +92,17 @@ subprojects {
         options.debug = true
         options.debugOptions.debugLevel = 'source,vars,lines'
         options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            // We must defensively check for these properties so CI builds work
+            username.set(project.hasProperty('sonatypeUsername') ? sonatypeUsername : 'unknown')
+            password.set(project.hasProperty('sonatypePassword') ? sonatypePassword : 'unknown')
+        }
     }
 }

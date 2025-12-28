@@ -21,10 +21,7 @@ import java.lang.reflect.Field;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -613,12 +610,12 @@ public class Theme {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setValidating(true);
 
-			// Disable external entity resolution to prevent XXE attacks
-			spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
-			spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-			spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-
 			try {
+				// Disable external entity resolution to prevent XXE attacks
+				spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+				spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+				spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
 				SAXParser parser = spf.newSAXParser();
 				XMLReader reader = parser.getXMLReader();
 				XmlHandler handler = new XmlHandler();
