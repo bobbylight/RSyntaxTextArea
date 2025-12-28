@@ -19,7 +19,7 @@ jobs:
         java: [ '17', '21', '23' ]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Verify gradle wrapper
       uses: gradle/actions/wrapper-validation@v5
