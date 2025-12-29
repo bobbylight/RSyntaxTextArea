@@ -6,13 +6,13 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import javax.swing.text.Segment;
-
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.text.Segment;
 
 
 /**
@@ -22,11 +22,6 @@ import org.junit.jupiter.api.Test;
  * @version 1.0
  */
 class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
-
-	@Test
-	@Override
-	public void testCommon_yycharat() {
-	}
 
 	@Override
 	protected TokenMaker createTokenMaker() {
@@ -111,8 +106,7 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.OPERATOR, '='));
 		token = token.getNextToken();
-		Assertions.assertEquals(TokenTypes.IDENTIFIER, token.getType());
-
+		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "Options=hello"));
 	}
 
 
@@ -215,7 +209,7 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\""));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\\\""));
+		Assertions.assertTrue(token.is(TokenTypes.REGEX, "\\\""));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "#")); // still into the string, not a comment
 	}
@@ -272,9 +266,9 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.isSingleChar(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, '\''));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\\;"));
+		Assertions.assertTrue(token.is(TokenTypes.REGEX, "\\;"));
 		token = token.getNextToken();
-		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "\\\""));
+		Assertions.assertTrue(token.is(TokenTypes.REGEX, "\\\""));
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "#")); // still into the string, not a comment
 	}
