@@ -1,4 +1,4 @@
-/**
+/*
  * 27/02/2025
  * PowerShellTokenMaker.java - Scanner for the PowerShell scripting language.
  *
@@ -16,7 +16,7 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
 
 /**
- * Scanner for the PowerShell scripting language.
+ * Scanner for the PowerShell scripting language.<p>
  *
  * This implementation was created using
  * <a href="https://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
@@ -129,10 +129,11 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
         this.offsetShift = -text.offset + startOffset;
 
         // Start off in the proper state.
-        int state = TokenTypes.NULL;
+        int state;
         switch (initialTokenType) {
             case TokenTypes.COMMENT_MULTILINE:
                 state = BLOCK_COMMENT;
+                start = text.offset;
                 break;
             default:
                 state = YYINITIAL;
@@ -455,7 +456,7 @@ stringsingle            = \'([^\'\n\r])*\'
 
     /* Comments */
     {LineComment} { addToken(TokenTypes.COMMENT_EOL); }
-    {BlockCommentStart} { yybegin(BLOCK_COMMENT); addToken(TokenTypes.COMMENT_MULTILINE); }
+    {BlockCommentStart} { start = zzMarkedPos-2; yybegin(BLOCK_COMMENT); }
 
     /* Whitespace */
     {WhiteSpace}+ { addToken(TokenTypes.WHITESPACE); }
@@ -471,10 +472,11 @@ stringsingle            = \'([^\'\n\r])*\'
 }
 
 <BLOCK_COMMENT> {
-    {BlockCommentEnd} { yybegin(YYINITIAL); addToken(TokenTypes.COMMENT_MULTILINE); }
-    [^#]+ { addToken(TokenTypes.COMMENT_MULTILINE); }
-    "#" { addToken(TokenTypes.COMMENT_MULTILINE); }
-    {LineTerminator} { addToken(TokenTypes.COMMENT_MULTILINE); }
+    [^#]+ {}
+    {BlockCommentEnd} { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
+    "#" {}
+    {LineTerminator} |
+    <<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
 }
 
 

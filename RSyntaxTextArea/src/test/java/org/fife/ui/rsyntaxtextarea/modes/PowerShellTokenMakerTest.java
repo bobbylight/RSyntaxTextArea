@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * @author DOUDOU DIAWARA
  * @version 0.0
  */
-public class PowerShellTokenMakerTest  extends  AbstractJFlexTokenMakerTest  {
+class PowerShellTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	@Override
 	protected TokenMaker createTokenMaker() {
@@ -34,6 +34,31 @@ public class PowerShellTokenMakerTest  extends  AbstractJFlexTokenMakerTest  {
 	@Test
 	void testComments(){
 		assertAllTokensOfType(TokenTypes.COMMENT_EOL, "# This is a comment in Powershell!");
+	}
+
+	@Test
+	void testIdentifiers_errors() {
+		assertAllTokensOfType(TokenTypes.ERROR_IDENTIFIER,
+			"\\"
+		);
+	}
+
+	@Test
+	void testMultiLineComments() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			"<# Hello world unterminated",
+			"<# Hello world #>",
+			"<##>"
+		);
+	}
+
+	@Test
+	void testMultiLineComments_fromPreviousLine() {
+		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
+			TokenTypes.COMMENT_MULTILINE,
+			" this is continued from a prior line #>",
+			" this is also continued, but not terminated"
+		);
 	}
 
 	@Test
