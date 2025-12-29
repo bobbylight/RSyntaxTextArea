@@ -127,7 +127,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static int zzUnpackcmap_blocks(String packed, int offset, int [] result) {
     int i = 0;       /* index in packed string  */
-    int j = offset;  /* index in an unpacked array */
+    int j = offset;  /* index in unpacked array */
     int l = packed.length();
     while (i < l) {
       int count = packed.charAt(i++);
@@ -144,13 +144,12 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\1\4\0\1\1\1\2\1\3\1\4\1\5\1\6"+
-    "\1\7\1\10\1\11\1\12\1\6\1\13\1\14\1\15"+
-    "\1\16\1\5\1\17";
+    "\1\7\1\10\1\11\1\12\1\13\1\7\1\14\1\15"+
+    "\1\16\1\17\1\6\1\20";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[22];
-    int offset = 0;
-    offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+    int [] result = new int[23];
+    zzUnpackAction(ZZ_ACTION_PACKED_0, 0, result);
     return result;
   }
 
@@ -174,19 +173,19 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static final String ZZ_ROWMAP_PACKED_0 =
     "\0\0\0\14\0\30\0\44\0\60\0\74\0\110\0\124"+
-    "\0\140\0\154\0\140\0\170\0\204\0\220\0\140\0\234"+
-    "\0\140\0\250\0\140\0\140\0\140\0\140";
+    "\0\140\0\124\0\154\0\124\0\170\0\204\0\220\0\124"+
+    "\0\234\0\124\0\250\0\124\0\124\0\124\0\124";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[22];
+    int [] result = new int[23];
     int offset = 0;
-    offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
+    zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
   }
 
   private static int zzUnpackRowMap(String packed, int offset, int [] result) {
     int i = 0;  /* index in packed string  */
-    int j = offset;  /* index in an unpacked array */
+    int j = offset;  /* index in unpacked array */
     int l = packed.length() - 1;
     while (i < l) {
       int high = packed.charAt(i++) << 16;
@@ -201,14 +200,14 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\6\1\7\1\0\2\6\1\10\2\6\1\11\1\12"+
-    "\2\6\1\13\1\14\3\13\1\15\7\13\1\16\2\13"+
-    "\1\17\5\13\1\20\2\13\1\16\4\13\1\17\3\13"+
-    "\1\20\1\13\1\21\1\22\2\21\1\23\1\21\1\24"+
-    "\5\21\1\6\2\0\2\6\1\0\2\6\2\0\2\6"+
-    "\1\0\1\7\12\0\2\10\2\0\10\10\14\0\13\12"+
-    "\1\25\1\0\1\14\12\0\2\15\2\0\10\15\1\0"+
-    "\1\16\16\0\4\26\2\0\1\26\2\0\1\22\12\0";
+    "\1\6\1\7\1\10\2\6\1\11\2\6\1\12\1\13"+
+    "\2\6\1\14\1\15\3\14\1\16\7\14\1\17\2\14"+
+    "\1\20\5\14\1\21\2\14\1\17\4\14\1\20\3\14"+
+    "\1\21\1\14\1\22\1\23\2\22\1\24\1\22\1\25"+
+    "\5\22\1\6\2\0\2\6\1\0\2\6\2\0\2\6"+
+    "\1\0\1\7\26\0\2\11\2\0\10\11\13\13\1\26"+
+    "\1\0\1\15\12\0\2\16\2\0\10\16\1\0\1\17"+
+    "\16\0\4\27\2\0\1\27\2\0\1\23\12\0";
 
   private static int [] zzUnpacktrans() {
     int [] result = new int[180];
@@ -219,7 +218,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
 
   private static int zzUnpacktrans(String packed, int offset, int [] result) {
     int i = 0;       /* index in packed string  */
-    int j = offset;  /* index in an unpacked array */
+    int j = offset;  /* index in unpacked array */
     int l = packed.length();
     while (i < l) {
       int count = packed.charAt(i++);
@@ -249,13 +248,12 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\1\4\0\3\1\1\11\1\1\1\11\3\1\1\11"+
-    "\1\1\1\11\1\1\4\11";
+    "\1\1\4\0\2\1\1\11\1\1\1\11\1\1\1\11"+
+    "\3\1\1\11\1\1\1\11\1\1\4\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[22];
-    int offset = 0;
-    offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
+    int [] result = new int[23];
+    zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, 0, result);
     return result;
   }
 
@@ -297,9 +295,6 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
-	/* user code: */
-
-
 	/**
 	 * Constructor.  This must be here because JFlex does not generate a
 	 * no-parameter constructor.
@@ -328,7 +323,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
             yylex();
         } catch (IOException e) {
             e.printStackTrace();
-			return new TokenImpl();
+            return new TokenImpl();
         }
 
         return firstToken;
@@ -348,10 +343,9 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
     void updateIdentifier() {
         if (idStart < 0) {
             idStart = zzStartRead;
-            idEnd = zzMarkedPos - 1;
-        } else {
-            idEnd = zzMarkedPos - 1;
         }
+
+        idEnd = zzMarkedPos - 1;
     }
 
     void addIdentifier(int type) {
@@ -557,114 +551,123 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
       // store back cached position
       zzMarkedPos = zzMarkedPosL;
 
-      if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
-        zzAtEOF = true;
-            switch (zzLexicalState) {
-            case YYINITIAL: {
-              addNullToken(); return firstToken;
-            }  // fall though
-            case 23: break;
-            case VALUE: {
-              addIdentifier(TokenTypes.IDENTIFIER); addNullToken(); return firstToken;
-            }  // fall though
-            case 24: break;
-            case STRING: {
-              addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken;
-            }  // fall though
-            case 25: break;
-            case SINGLE_QUOTE_STRING: {
-              addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken;
-            }  // fall though
-            case 26: break;
-            case PRE_VALUE: {
-              addNullToken(); return firstToken;
-            }  // fall though
-            case 27: break;
-            default:
-        return null;
-        }
-      }
+		if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
+			zzAtEOF = true;
+			switch (zzLexicalState) {
+				case PRE_VALUE:
+				case YYINITIAL: {
+					addNullToken();
+					return firstToken;
+				}  // fall though
+				case VALUE: {
+					addIdentifier(TokenTypes.IDENTIFIER);
+					addNullToken();
+					return firstToken;
+				}
+				case SINGLE_QUOTE_STRING:
+				case STRING: {
+					addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+					addNullToken();
+					return firstToken;
+				}
+				case 24:
+				case 25:
+				case 26:
+				case 27:
+				case 28:
+					break;
+				default:
+					return null;
+			}
+		}
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
             { addToken(Token.DATA_TYPE);
             }
           // fall through
-          case 16: break;
+          case 17: break;
           case 2:
             { addToken(Token.WHITESPACE);
             }
           // fall through
-          case 17: break;
-          case 3:
-            { addToken(Token.COMMENT_EOL);
-            }
-          // fall through
           case 18: break;
-          case 4:
-            { addToken(Token.OPERATOR); yybegin(PRE_VALUE);
+          case 3:
+            { addNullToken(); return firstToken;
             }
           // fall through
           case 19: break;
-          case 5:
-            { addToken(Token.PREPROCESSOR);
+          case 4:
+            { addToken(Token.COMMENT_EOL);
             }
           // fall through
           case 20: break;
-          case 6:
-            { updateIdentifier();
+          case 5:
+            { addToken(Token.OPERATOR); yybegin(PRE_VALUE);
             }
           // fall through
           case 21: break;
-          case 7:
-            { addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.WHITESPACE);
+          case 6:
+            { addToken(Token.PREPROCESSOR);
             }
           // fall through
           case 22: break;
-          case 8:
-            { addIdentifier(TokenTypes.IDENTIFIER); addToken(Token.COMMENT_EOL);
+          case 7:
+            { updateIdentifier();
             }
           // fall through
           case 23: break;
-          case 9:
-            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.WHITESPACE);
+          case 8:
+            { addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.WHITESPACE);
             }
           // fall through
           case 24: break;
-          case 10:
-            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(VALUE);
+          case 9:
+            { addIdentifier(TokenTypes.IDENTIFIER); addToken(Token.COMMENT_EOL);
             }
           // fall through
           case 25: break;
-          case 11:
-            { yypushback(1); yybegin(VALUE);
+          case 10:
+            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.WHITESPACE);
             }
           // fall through
           case 26: break;
-          case 12:
-            { addToken(TokenTypes.WHITESPACE);
+          case 11:
+            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(VALUE);
             }
           // fall through
           case 27: break;
-          case 13:
-            { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(STRING);
+          case 12:
+            { yypushback(1); yybegin(VALUE);
             }
           // fall through
           case 28: break;
-          case 14:
-            { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(SINGLE_QUOTE_STRING);
+          case 13:
+            { addToken(TokenTypes.WHITESPACE);
             }
           // fall through
           case 29: break;
-          case 15:
-            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
+          case 14:
+            { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(STRING);
             }
           // fall through
           case 30: break;
+          case 15:
+            { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(SINGLE_QUOTE_STRING);
+            }
+          // fall through
+          case 31: break;
+          case 16:
+            { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.REGEX);
+            }
+          // fall through
+          case 32: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }
       }
     }
   }
+
+
 }

@@ -6,6 +6,7 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
+import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
@@ -35,6 +36,19 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		String[] startAndEnd = tm.getLineCommentStartAndEnd(0);
 		Assertions.assertEquals(";", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);
+	}
+
+
+	@Test
+	@Override
+	public void testCommon_yycharat() {
+		Segment segment = createSegment("foobar");
+		TokenMaker tm = createTokenMaker();
+		tm.getTokenList(segment, TokenTypes.NULL, 0);
+		Assertions.assertThrows(StringIndexOutOfBoundsException.class, () ->
+			// assertion needed to appease spotbugsTest
+			Assertions.assertEquals('\n', ((AbstractJFlexTokenMaker)tm).yycharat(0))
+		);
 	}
 
 
