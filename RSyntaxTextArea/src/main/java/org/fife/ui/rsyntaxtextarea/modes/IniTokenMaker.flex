@@ -112,10 +112,9 @@ import org.fife.ui.rsyntaxtextarea.*;
     void updateIdentifier() {
         if (idStart < 0) {
             idStart = zzStartRead;
-            idEnd = zzMarkedPos - 1;
-        } else {
-            idEnd = zzMarkedPos - 1;
         }
+
+        idEnd = zzMarkedPos - 1;
     }
 
     void addIdentifier(int type) {
@@ -146,6 +145,7 @@ Section				= ([\[][^\]]*[\]]?)
 	{Whitespace}		{ addToken(Token.WHITESPACE); }
 	{Comment}			{ addToken(Token.COMMENT_EOL); }
 	{Section}			{ addToken(Token.PREPROCESSOR); }
+    \n                  { addNullToken(); return firstToken; }
 	<<EOF>>				{ addNullToken(); return firstToken; }
 }
 
@@ -166,7 +166,7 @@ Section				= ([\[][^\]]*[\]]?)
 }
 
 <STRING, SINGLE_QUOTE_STRING> {
-    {Escaped}           { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+    {Escaped}           { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.REGEX); }
     {Whitespace}        { addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(TokenTypes.WHITESPACE); }
     [^]                 { updateIdentifier(); }
     <<EOF>>				{ addIdentifier(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken; }
