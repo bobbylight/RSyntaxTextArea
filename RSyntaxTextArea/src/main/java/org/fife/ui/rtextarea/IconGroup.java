@@ -58,7 +58,7 @@ public class IconGroup {
 	private String name;
 	private String jarFile;
 
-	private static final String DEFAULT_EXTENSION	= "gif";
+	private static final String DEFAULT_EXTENSION = "gif";
 
 
 	/**

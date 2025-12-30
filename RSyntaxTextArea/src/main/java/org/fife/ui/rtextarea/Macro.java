@@ -67,14 +67,14 @@ public class Macro {
 	private String name;
 	private ArrayList<MacroRecord> macroRecords;
 
-	private static final String ROOT_ELEMENT			= "macro";
-	private static final String MACRO_NAME				= "macroName";
-	private static final String ACTION					= "action";
-	private static final String ID					= "id";
+	private static final String ROOT_ELEMENT = "macro";
+	private static final String MACRO_NAME = "macroName";
+	private static final String ACTION = "action";
+	private static final String ID = "id";
 
-	private static final String UNTITLED_MACRO_NAME		= "<Untitled>";
+	private static final String UNTITLED_MACRO_NAME = "<Untitled>";
 
-	private static final String FILE_ENCODING			= "UTF-8";
+	private static final String FILE_ENCODING = "UTF-8";
 
 
 	/**
@@ -312,7 +312,7 @@ public class Macro {
 
 
 	/**
-	 * Saves this macro to a  file.  This file can later be read in by the
+	 * Saves this macro to a file.  This file can later be read in by the
 	 * constructor taking a <code>File</code> parameter; this is the mechanism
 	 * for saving macros.
 	 *

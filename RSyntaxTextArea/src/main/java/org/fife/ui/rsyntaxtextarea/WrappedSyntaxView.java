@@ -79,7 +79,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * The width of this view cannot be below this amount, as if the width
 	 * is ever 0 (really a bug), we'll go into an infinite loop.
 	 */
-	private static final int MIN_WIDTH		= 20;
+	private static final int MIN_WIDTH = 20;
 
 
 	/**

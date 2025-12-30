@@ -624,7 +624,7 @@ class DTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

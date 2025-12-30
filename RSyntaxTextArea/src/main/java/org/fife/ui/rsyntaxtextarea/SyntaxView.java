@@ -143,7 +143,7 @@ public class SyntaxView extends View implements TabExpander,
 	 *        be a valid line number in the model.
 	 * @param line1 The ending line number to repaint.  This must
 	 *        be a valid line number in the model.
-	 * @param a  The region allocated for the view to render into.
+	 * @param a The region allocated for the view to render into.
 	 * @param host The component hosting the view (used to call repaint).
 	 */
 	protected void damageLineRange(int line0, int line1, Shape a,

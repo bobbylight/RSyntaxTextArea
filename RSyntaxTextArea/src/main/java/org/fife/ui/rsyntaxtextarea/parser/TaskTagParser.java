@@ -29,7 +29,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 public class TaskTagParser extends AbstractParser {
 
 	private DefaultParseResult result;
-	private static final String DEFAULT_TASK_PATTERN	= "TODO|FIXME|HACK";
+	private static final String DEFAULT_TASK_PATTERN = "TODO|FIXME|HACK";
 	private Pattern taskPattern;
 
 	private static final Color COLOR = new Color(48, 150, 252);

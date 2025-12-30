@@ -45,7 +45,7 @@ class StaticCodeTemplateTest {
 
 		Assertions.assertEquals(id1, id1);
 		Assertions.assertEquals(id1, id2);
-		Assertions.assertNotEquals(id1, null);
+		Assertions.assertNotEquals(null, id1);
 		Assertions.assertNotEquals(id1, different);
 	}
 

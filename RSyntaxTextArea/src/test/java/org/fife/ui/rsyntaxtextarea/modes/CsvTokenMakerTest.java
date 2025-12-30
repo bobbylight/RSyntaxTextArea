@@ -125,7 +125,7 @@ class CsvTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		Assertions.assertTrue(token.is(TokenTypes.DATA_TYPE, "\"unfinished-two"));
 
 		token = token.getNextToken();
-		Assertions.assertEquals(token.getType(), CsvTokenMaker.INTERNAL_STRING | 1);
+		Assertions.assertEquals(CsvTokenMaker.INTERNAL_STRING | 1, token.getType());
 	}
 
 

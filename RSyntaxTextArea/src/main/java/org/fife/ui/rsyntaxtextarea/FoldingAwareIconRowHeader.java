@@ -100,7 +100,7 @@ public class FoldingAwareIconRowHeader extends IconRowHeader {
 				int realY1 = rsta.yForLine(activeLineRangeStart);
 				if (realY1>-1) { // Not in a collapsed fold...
 
-					int  y1 = realY1;//Math.max(y, realY1);
+					int y1 = realY1;//Math.max(y, realY1);
 
 					int y2 = rsta.yForLine(activeLineRangeEnd);
 					if (y2==-1) { // In a collapsed fold

@@ -73,7 +73,7 @@ class SizeGrip extends JPanel {
 		ComponentOrientation orientation = getComponentOrientation();
 
 		if (orientation.isLeftToRight()) {
-			int width = dim.width  -= 3;
+			int width = dim.width -= 3;
 			int height = dim.height -= 3;
 			g.setColor(c1);
 			g.fillRect(width-9,height-1, 3,3);

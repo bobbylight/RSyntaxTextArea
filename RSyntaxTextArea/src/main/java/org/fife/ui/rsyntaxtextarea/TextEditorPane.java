@@ -64,22 +64,22 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @see #load(FileLocation, String)
 	 * @see #saveAs(FileLocation)
 	 */
-	public static final String FULL_PATH_PROPERTY	= "TextEditorPane.fileFullPath";
+	public static final String FULL_PATH_PROPERTY = "TextEditorPane.fileFullPath";
 
 	/**
 	 * Property change event fired when the text area's dirty flag changes.
 	 *
 	 * @see #setDirty(boolean)
 	 */
-	public static final String DIRTY_PROPERTY	= "TextEditorPane.dirty";
+	public static final String DIRTY_PROPERTY = "TextEditorPane.dirty";
 
 	/**
 	 * Property change event fired when the text area should be treated as
-	 * read-only, and previously it should not, or vice-versa.
+	 * read-only, and previously it should not, or vice versa.
 	 *
 	 * @see #setReadOnly(boolean)
 	 */
-	public static final String READ_ONLY_PROPERTY	= "TextEditorPane.readOnly";
+	public static final String READ_ONLY_PROPERTY = "TextEditorPane.readOnly";
 
 	/**
 	 * Property change event fired when the text area's encoding changes.
@@ -118,7 +118,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	/**
 	 * The value returned by {@link #getLastSaveOrLoadTime()} for remote files.
 	 */
-	public static final long LAST_MODIFIED_UNKNOWN		= 0;
+	public static final long LAST_MODIFIED_UNKNOWN = 0;
 
 	/**
 	 * The default name given to files if none is specified in a constructor.
@@ -326,7 +326,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 			// Ensure that line separator always has a value, even if the file
 			// does not exist (or is the "default" file).  This makes life
 			// easier for host applications that want to display this value.
-			setLineSeparator(System.getProperty("line.separator"));
+			setLineSeparator(System.lineSeparator());
 		}
 		else {
 			load(loc, defaultEnc); // Sets this.loc

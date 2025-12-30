@@ -22,7 +22,7 @@ import javax.swing.text.Segment;
  * that users call <code>resetTokenList</code> when creating a new token list so
  * that the token maker can keep an accurate list of available tokens.<p>
  *
- * NOTE:  This class should only be used by {@link TokenMaker}; nobody else
+ * NOTE: This class should only be used by {@link TokenMaker}; nobody else
  * needs it!
  *
  * @author Robert Futrell

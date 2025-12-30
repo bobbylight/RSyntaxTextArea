@@ -44,11 +44,11 @@ import javax.swing.text.Caret;
  */
 public abstract class RTextAreaBase extends JTextArea {
 
-	public static final String BACKGROUND_IMAGE_PROPERTY			= "background.image";
-	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY	= "RTA.currentLineHighlightColor";
-	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY	= "RTA.currentLineHighlightFade";
-	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY		= "RTA.currentLineHighlight";
-	public static final String ROUNDED_SELECTION_PROPERTY			= "RTA.roundedSelection";
+	public static final String BACKGROUND_IMAGE_PROPERTY = "background.image";
+	public static final String CURRENT_LINE_HIGHLIGHT_COLOR_PROPERTY = "RTA.currentLineHighlightColor";
+	public static final String CURRENT_LINE_HIGHLIGHT_FADE_PROPERTY = "RTA.currentLineHighlightFade";
+	public static final String HIGHLIGHT_CURRENT_LINE_PROPERTY = "RTA.currentLineHighlight";
+	public static final String ROUNDED_SELECTION_PROPERTY = "RTA.roundedSelection";
 
 	private boolean tabsEmulatedWithSpaces;		// If true, tabs will be expanded to spaces.
 
@@ -67,11 +67,11 @@ public abstract class RTextAreaBase extends JTextArea {
 
 	private RTAMouseListener mouseListener;
 
-	private static final Color DEFAULT_CARET_COLOR				= new ColorUIResource(255,51,51);
-	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
-	private static final Color DEFAULT_MARGIN_LINE_COLOR			= new Color(255,224,224);
-	private static final int DEFAULT_TAB_SIZE					= 4;
-	private static final int DEFAULT_MARGIN_LINE_POSITION			= 80;
+	private static final Color DEFAULT_CARET_COLOR = new ColorUIResource(255,51,51);
+	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR = new Color(255,255,170);
+	private static final Color DEFAULT_MARGIN_LINE_COLOR = new Color(255,224,224);
+	private static final int DEFAULT_TAB_SIZE = 4;
+	private static final int DEFAULT_MARGIN_LINE_POSITION = 80;
 
 
 	/**

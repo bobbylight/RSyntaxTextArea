@@ -35,7 +35,7 @@ import org.fife.ui.rtextarea.ChangeableHighlightPainter;
 public class SquiggleUnderlineHighlightPainter
 				extends ChangeableHighlightPainter {
 
-	private static final int AMT			= 2;
+	private static final int AMT = 2;
 
 	/**
 	 * Constructor.

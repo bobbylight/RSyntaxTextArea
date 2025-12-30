@@ -92,7 +92,7 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -161,7 +161,7 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -187,7 +187,7 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -293,14 +293,14 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 		segment = createSegment("return");
 		token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 		Assertions.assertEquals("return", token.getLexeme());
 		Assertions.assertEquals(TokenTypes.RESERVED_WORD_2, token.getType());
 		token = token.getNextToken();
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -376,7 +376,7 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -404,7 +404,7 @@ class GoTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

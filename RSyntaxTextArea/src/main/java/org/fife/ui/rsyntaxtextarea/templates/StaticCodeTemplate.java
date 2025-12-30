@@ -66,7 +66,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 	 */
 	private transient int firstAfterNewline;
 
-	private static final String EMPTY_STRING		= "";
+	private static final String EMPTY_STRING = "";
 
 
 	/**
@@ -215,7 +215,7 @@ public class StaticCodeTemplate extends AbstractCodeTemplate {
 	 * @throws IOException If an IO error occurs.
 	 */
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException,
-											IOException  {
+											IOException {
 		in.defaultReadObject();
 		// "Resetting" before and after text to the same values will replace
 		// nulls with empty strings, and set transient "first*Newline" values.

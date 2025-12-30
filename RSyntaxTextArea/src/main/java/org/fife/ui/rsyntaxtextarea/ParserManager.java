@@ -61,7 +61,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	/**
 	 * Mapping of notices to their highlights in the editor.  Can't use a Map
 	 * since parsers could return two <code>ParserNotice</code>s that compare
-	 * equally via <code>equals()</code>.  Real-world example:  The Perl
+	 * equally via <code>equals()</code>.  Real-world example: The Perl
 	 * compiler will return 2+ identical error messages if the same error is
 	 * committed in a single line more than once.
 	 */
@@ -77,7 +77,7 @@ class ParserManager implements DocumentListener, ActionListener,
 	 * The default delay between the last key press and when the document
 	 * is parsed, in milliseconds.
 	 */
-	private static final int DEFAULT_DELAY_MS		= 1250;
+	private static final int DEFAULT_DELAY_MS = 1250;
 
 
 	/**
