@@ -109,7 +109,7 @@
         <module name="JavadocType"/>
         <!--
         <module name="JavadocVariable">
-            <property name="scope" value="package"/>
+            <property name="accessModifiers" value="package"/>
         </module>
         -->
         <module name="JavadocStyle"/>
@@ -241,8 +241,10 @@
         <!--<module name="MagicNumber"/> Unfortunately, too much noise -->
         <!--<module name="MissingSwitchDefault"/>-->
         <module name="MultipleVariableDeclarations"/>
+        <module name="PatternVariableAssignment"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+        <module name="UnnecessaryNullCheckWithInstanceOf"/>
         <!--        <module name="UnnecessaryParentheses"/>-->
         <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
