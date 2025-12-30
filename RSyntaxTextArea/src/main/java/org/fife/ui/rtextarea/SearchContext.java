@@ -27,16 +27,16 @@ import java.io.Serializable;
 public class SearchContext implements Cloneable, Serializable {
 
 	/** Fired when the "search for" property is modified. */
-	public static final String PROPERTY_SEARCH_FOR		= "Search.searchFor";
+	public static final String PROPERTY_SEARCH_FOR = "Search.searchFor";
 
 	/** Fired when the "replace with" property is modified. */
-	public static final String PROPERTY_REPLACE_WITH	= "Search.replaceWith";
+	public static final String PROPERTY_REPLACE_WITH = "Search.replaceWith";
 
 	/** Fired when the "match case" property is toggled. */
-	public static final String PROPERTY_MATCH_CASE		= "Search.MatchCase";
+	public static final String PROPERTY_MATCH_CASE = "Search.MatchCase";
 
 	/** Fired when the "whole word" property is toggled. */
-	public static final String PROPERTY_MATCH_WHOLE_WORD	= "Search.MatchWholeWord";
+	public static final String PROPERTY_MATCH_WHOLE_WORD = "Search.MatchWholeWord";
 
 	/** Fired when search direction is toggled. */
 	public static final String PROPERTY_SEARCH_FORWARD = "Search.Forward";
@@ -48,7 +48,7 @@ public class SearchContext implements Cloneable, Serializable {
 	public static final String PROPERTY_SELECTION_ONLY = "Search.SelectionOnly";
 
 	/** Fired when "use regular expressions" is toggled. */
-	public static final String PROPERTY_USE_REGEX		= "Search.UseRegex";
+	public static final String PROPERTY_USE_REGEX = "Search.UseRegex";
 
 	/** Fired when the user toggles the "Mark All" property. */
 	public static final String PROPERTY_MARK_ALL = "Search.MarkAll";

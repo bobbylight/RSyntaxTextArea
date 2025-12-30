@@ -34,9 +34,9 @@ import javax.swing.JPanel;
 @SuppressWarnings("checkstyle:visibilitymodifier")
 public class Style implements Cloneable {
 
-	public static final Color DEFAULT_FOREGROUND	= Color.BLACK;
-	public static final Color DEFAULT_BACKGROUND	= null;
-	public static final Font DEFAULT_FONT			= null;
+	public static final Color DEFAULT_FOREGROUND = Color.BLACK;
+	public static final Color DEFAULT_BACKGROUND = null;
+	public static final Font DEFAULT_FONT = null;
 
 	public Color foreground;
 	public Color background;

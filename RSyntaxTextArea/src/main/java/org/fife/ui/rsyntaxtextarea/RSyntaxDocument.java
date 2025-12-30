@@ -198,7 +198,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	@Override
 	protected void fireRemoveUpdate(DocumentEvent chng) {
 
-		cachedTokenList =  null;
+		cachedTokenList = null;
 		Element lineMap = getDefaultRootElement();
 		int numLines = lineMap.getElementCount();
 

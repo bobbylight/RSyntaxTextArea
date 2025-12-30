@@ -39,7 +39,7 @@ class RTextAreaEditorKitTimeDateActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.TimeDateAction().actionPerformedImpl(e, textArea);
 
-		Assertions.assertTrue(textArea.getText().length() > 0);
+		Assertions.assertFalse(textArea.getText().isEmpty());
 	}
 
 

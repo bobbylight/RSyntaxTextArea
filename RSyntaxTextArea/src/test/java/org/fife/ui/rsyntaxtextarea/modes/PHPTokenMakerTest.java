@@ -2514,7 +2514,7 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 				Token token = tm.getTokenList(segment, TokenTypes.NULL, 0);
 				Assertions.assertTrue(token.isSingleChar(TokenTypes.MARKUP_TAG_DELIMITER, '<'));
 				token = token.getNextToken();
-				Assertions.assertEquals(token.getType(), TokenTypes.MARKUP_TAG_NAME);
+				Assertions.assertEquals(TokenTypes.MARKUP_TAG_NAME, token.getType());
 
 			}
 

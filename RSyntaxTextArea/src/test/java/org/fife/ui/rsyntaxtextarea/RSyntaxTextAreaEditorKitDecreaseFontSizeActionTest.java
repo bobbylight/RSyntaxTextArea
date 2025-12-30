@@ -88,7 +88,7 @@ class RSyntaxTextAreaEditorKitDecreaseFontSizeActionTest extends AbstractRSyntax
 				break;
 			}
 		}
-		Assertions.assertEquals(newFontSize, 2f);
+		Assertions.assertEquals(2f, newFontSize);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class RSyntaxTextAreaEditorKitDecreaseFontSizeActionTest extends AbstractRSyntax
 				break;
 			}
 		}
-		Assertions.assertEquals(newFontSize, minSize);
+		Assertions.assertEquals(minSize, newFontSize);
 	}
 
 	@Test

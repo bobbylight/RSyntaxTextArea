@@ -141,10 +141,10 @@ public class TokenMap {
 		mainLoop:
 			while (token!=null) {
 				if (token.length==length1) {
-					array2  = token.text;
+					array2 = token.text;
 					offset2 = token.offset;
 					offset1 = start;
-					length  = length1;
+					length = length1;
 					while (length-- > 0) {
 						if (array1[offset1++]!=array2[offset2++]) {
 							token = token.nextToken;
@@ -166,10 +166,10 @@ public class TokenMap {
 		mainLoop2:
 			while (token!=null) {
 				if (token.length==length1) {
-					array2  = token.text;
+					array2 = token.text;
 					offset2 = token.offset;
 					offset1 = start;
-					length  = length1;
+					length = length1;
 					while (length-- > 0) {
 						if (RSyntaxUtilities.toLowerCase(
 							array1[offset1++]) != array2[offset2++]) {

@@ -62,7 +62,7 @@ class ClipboardHistoryPopup extends JWindow {
 	/**
 	 * The space between the caret and the completion popup.
 	 */
-	private static final int VERTICAL_SPACE			= 1;
+	private static final int VERTICAL_SPACE = 1;
 
 	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
 
@@ -178,7 +178,7 @@ class ClipboardHistoryPopup extends JWindow {
 
 		// Try putting our stuff "below" the caret first.  We assume that the
 		// entire height of our stuff fits on the screen one way or the other.
-		int y = r.y + r.height +  VERTICAL_SPACE;
+		int y = r.y + r.height + VERTICAL_SPACE;
 		if (y+totalH>screenBounds.height) {
 			y = r.y - VERTICAL_SPACE - getHeight();
 		}

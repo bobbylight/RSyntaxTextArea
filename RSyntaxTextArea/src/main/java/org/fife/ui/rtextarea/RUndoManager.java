@@ -39,7 +39,7 @@ public class RUndoManager extends UndoManager {
 
 	private int internalAtomicEditDepth;
 
-	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
+	private static final String MSG = "org.fife.ui.rtextarea.RTextArea";
 
 
 	/**

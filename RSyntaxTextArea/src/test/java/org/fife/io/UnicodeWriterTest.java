@@ -209,7 +209,7 @@ class UnicodeWriterTest {
 		// Read file back and verify contents
 		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
 			String actual = r.readLine();
-			Assertions.assertEquals(actual, testContent);
+			Assertions.assertEquals(testContent, actual);
 		}
 	}
 
@@ -247,7 +247,7 @@ class UnicodeWriterTest {
 		// Read file back and verify contents
 		try (BufferedReader r = new BufferedReader(new UnicodeReader(file, "UTF-16BE"))) {
 			String actual = r.readLine();
-			Assertions.assertEquals(actual, testContent);
+			Assertions.assertEquals(testContent, actual);
 		}
 	}
 }

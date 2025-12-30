@@ -636,7 +636,7 @@ public final class SearchEngine {
 		}
 
 		try {
-			wsAfter  = !Character.isLetterOrDigit(searchIn.charAt(offset + len));
+			wsAfter = !Character.isLetterOrDigit(searchIn.charAt(offset + len));
 		} catch (IndexOutOfBoundsException e) {
 			wsAfter = true;
 		}

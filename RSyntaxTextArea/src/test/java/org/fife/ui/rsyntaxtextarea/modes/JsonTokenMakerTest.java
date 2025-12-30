@@ -93,7 +93,7 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -133,7 +133,7 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -159,7 +159,7 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 
@@ -208,7 +208,7 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertEquals(token.getType(), TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
 

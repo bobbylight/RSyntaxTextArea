@@ -71,7 +71,7 @@ class RTextAreaEditorKitIncreaseFontSizeActionTest {
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.IncreaseFontSizeAction().actionPerformedImpl(e, textArea);
 
-		Assertions.assertEquals(textArea.getFont().getSize(), origFontSize);
+		Assertions.assertEquals(origFontSize, textArea.getFont().getSize());
 	}
 
 

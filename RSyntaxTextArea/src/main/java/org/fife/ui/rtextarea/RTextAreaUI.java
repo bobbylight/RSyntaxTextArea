@@ -29,8 +29,8 @@ import javax.swing.plaf.basic.*;
  */
 public class RTextAreaUI extends BasicTextAreaUI {
 
-	private static final String SHARED_ACTION_MAP_NAME	= "RTextAreaUI.actionMap";
-	private static final String SHARED_INPUT_MAP_NAME	= "RTextAreaUI.inputMap";
+	private static final String SHARED_ACTION_MAP_NAME = "RTextAreaUI.actionMap";
+	private static final String SHARED_INPUT_MAP_NAME = "RTextAreaUI.inputMap";
 
 	protected RTextArea textArea;				// The text area for which we are the UI.
 
@@ -38,7 +38,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	private static final TransferHandler DEFAULT_TRANSFER_HANDLER =
 										new RTATextTransferHandler();
 
-	private static final String RTEXTAREA_KEYMAP_NAME	= "RTextAreaKeymap";
+	private static final String RTEXTAREA_KEYMAP_NAME = "RTextAreaKeymap";
 
 
 	/**

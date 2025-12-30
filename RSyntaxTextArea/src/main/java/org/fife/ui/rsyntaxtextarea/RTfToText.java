@@ -232,7 +232,7 @@ final class RtfToText {
 	 */
 	private static String getPlainText(Reader r) throws IOException {
 		try {
-			RtfToText  converter = new RtfToText(r);
+			RtfToText converter = new RtfToText(r);
 			return converter.convert();
 		} finally {
 			r.close();

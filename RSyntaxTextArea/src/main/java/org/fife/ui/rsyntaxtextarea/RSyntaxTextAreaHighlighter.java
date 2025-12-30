@@ -56,7 +56,7 @@ public class RSyntaxTextAreaHighlighter extends RTextAreaHighlighter {
 	/**
 	 * The default color used for parser notices when none is specified.
 	 */
-	private static final Color DEFAULT_PARSER_NOTICE_COLOR	= Color.RED;
+	private static final Color DEFAULT_PARSER_NOTICE_COLOR = Color.RED;
 
 
 	/**
