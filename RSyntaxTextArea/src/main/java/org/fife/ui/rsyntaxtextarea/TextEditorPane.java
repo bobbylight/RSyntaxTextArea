@@ -89,7 +89,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	public static final String ENCODING_PROPERTY = "TextEditorPane.encoding";
 
 	/**
-	 * The location of the file being edited.
+	 * The location of the file being edited. This is never <code>null</code>,
+	 * even if the file does not (yet) exist (i.e. represents a new, unsaved file).
 	 */
 	private FileLocation loc;
 
@@ -244,9 +245,11 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Returns the full path to this document.
+	 * Returns the full path to this document. Note the file returned may not yet
+	 * exist, if it is new and not yet saved.
 	 *
 	 * @return The full path to the document.
+	 * @see #getFileName()
 	 */
 	public String getFileFullPath() {
 		return loc==null ? null : loc.getFileFullPath();
@@ -254,9 +257,11 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 
 	/**
-	 * Returns the file name of this document.
+	 * Returns the file name of this document. Note the file returned may not yet
+	 * exist, if it is new and not yet saved.
 	 *
 	 * @return The file name.
+	 * @see #getFileFullPath()
 	 */
 	public String getFileName() {
 		return loc==null ? null : loc.getFileName();
@@ -479,6 +484,8 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 */
 	public void load(FileLocation loc, String defaultEnc) throws IOException {
 
+		lastSaveOrLoadTime = loc.getActualLastModified();
+
 		// For new local files, just go with it.
 		if (loc.isLocal() && !loc.isLocalAndExists()) {
 			this.charSet = defaultEnc!=null ? defaultEnc : getDefaultEncoding();
@@ -533,6 +540,13 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @see #isLocalAndExists()
 	 */
 	public void reload() throws IOException {
+
+		// A new, unsaved file does nothing if reloaded. We check saveOrLoadTime over existence
+		// to throw an exception if the underlying file was deleted out from under us.
+		if (isLocal() && getLastSaveOrLoadTime() == LAST_MODIFIED_UNKNOWN) {
+			return;
+		}
+
 		String oldEncoding = getEncoding();
 		UnicodeReader ur = new UnicodeReader(loc.getInputStream(), oldEncoding);
 		String encoding = ur.getEncoding();
@@ -580,7 +594,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * Saves this file in a new local location.  This method fires a property
 	 * change event of type {@link #FULL_PATH_PROPERTY}.
 	 *
-	 * @param loc The location to save to.
+	 * @param loc The location to save to. This cannot be <code>null</code>.
 	 * @throws IOException If an IO error occurs.
 	 * @see #save()
 	 * @see #load(FileLocation, String)
@@ -680,7 +694,7 @@ public class TextEditorPane extends RSyntaxTextArea implements
 
 	/**
 	 * Sets the line separator sequence to use when this file is saved (e.g.
-	 * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").
+	 * "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>").<p>
 	 *
 	 * Besides parameter checking, this method is preferred over
 	 * <code>getDocument().putProperty()</code> because it sets the editor's
