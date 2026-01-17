@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:7.2.0'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:7.2.1'
     }
 }
 
@@ -26,12 +26,12 @@ allprojects {
     repositories {
         mavenCentral()
         maven {
-            url = 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = 'https://central.sonatype.com/repository/maven-snapshots/'
         }
     }
 
     wrapper {
-        gradleVersion = '9.2.1'
+        gradleVersion = '9.3.0'
     }
 }
 
@@ -81,7 +81,7 @@ subprojects {
     }
 
     dependencies {
-        testImplementation platform('org.junit:junit-bom:6.0.1')
+        testImplementation platform('org.junit:junit-bom:6.0.2')
         testImplementation 'org.junit.jupiter:junit-jupiter'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
         testImplementation 'org.mockito:mockito-core:5.21.0'

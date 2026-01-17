@@ -144,7 +144,7 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 	@Test
-	void sectionIntoValue() {
+	void testSectionIntoValue() {
 		String code = "array = [1,2,3,4]";
 		Segment segment = createSegment(code);
 		TokenMaker tm = createTokenMaker();
@@ -229,7 +229,7 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 	@Test
-	void singleQuotedValues() {
+	void testSingleQuotedValues() {
 		// comment-like string quoted -> not a comment
 		String code = "hex_color = '#ff44aa'";
 		Segment segment = createSegment(code);

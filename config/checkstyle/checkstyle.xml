@@ -142,6 +142,7 @@
         <module name="MethodName"/>
         <module name="PackageName"/>
         <module name="ParameterName"/>
+        <module name="LambdaParameterName"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
