@@ -1,7 +1,7 @@
 # RSyntaxTextArea
 ![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/gradle.yml/badge.svg)
 ![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/codeql-analysis.yml/badge.svg)
-![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fifesoft/rsyntaxtextarea/badge.svg)
+![Maven Central](https://maven-badges.sml.io/maven-central/com.fifesoft/rsyntaxtextarea/badge.svg)
 [![codecov](https://codecov.io/gh/bobbylight/RSyntaxTextArea/graph/badge.svg?token=6YxJwHpfCp)](https://codecov.io/gh/bobbylight/RSyntaxTextArea)
 
 RSyntaxTextArea is a customizable, syntax highlighting text component for Java Swing applications.  Out of
@@ -12,8 +12,8 @@ and has add-on libraries for code completion and spell checking.  Syntax highlig
 RSyntaxTextArea is available under a [BSD 3-Clause license](https://raw.githubusercontent.com/bobbylight/RSyntaxTextArea/refs/heads/master/RSyntaxTextArea/src/main/resources/META-INF/LICENSE).
 For more information, visit [http://bobbylight.github.io/RSyntaxTextArea/](http://bobbylight.github.io/RSyntaxTextArea/).
 
-Available in the [Maven Central repository](http://search.maven.org/#search%7Cga%7C1%7Crsyntaxtextarea%20jar) (`com.fifesoft:rsyntaxtextarea:XXX`).
-SNAPSHOT builds of the in-development, unreleased version are hosted on [Sonatype](https://oss.sonatype.org/content/repositories/snapshots/com/fifesoft/rsyntaxtextarea/).
+Available in the [Maven Central repository](https://central.sonatype.com/artifact/com.fifesoft/rsyntaxtextarea) (`com.fifesoft:rsyntaxtextarea:XXX`).
+SNAPSHOT builds of the in-development, unreleased version are hosted on [Sonatype](https://central.sonatype.com/repository/maven-snapshots/).
 
 Please see [the wiki](https://github.com/bobbylight/RSyntaxTextArea/wiki)
 for an overview of features and a deep-dive into the code!
