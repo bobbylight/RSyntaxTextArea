@@ -113,15 +113,13 @@ import org.fife.ui.rsyntaxtextarea.*;
 		super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead, true);
 	}
 
-	/**
-	 * ${inheritDoc}
-	 */
+	
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "%", null };
 	}
 
-    @Override
+ @Override
 	public void yyclose() {
 	}
 
