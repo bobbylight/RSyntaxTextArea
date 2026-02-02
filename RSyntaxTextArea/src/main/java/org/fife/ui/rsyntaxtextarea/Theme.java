@@ -101,6 +101,7 @@ public class Theme {
 	public Color currentLineNumberColor;
 	public String lineNumberFont;
 	public int lineNumberFontSize;
+	public Color foldIndicatorBG;
 	public Color foldIndicatorFG;
 	public Color foldIndicatorArmedFG;
 	public Color foldBG;
@@ -168,6 +169,7 @@ public class Theme {
 			currentLineNumberColor = gutter.getCurrentLineNumberColor();
 			lineNumberFont = gutter.getLineNumberFont().getFamily();
 			lineNumberFontSize = gutter.getLineNumberFont().getSize();
+			foldIndicatorBG = gutter.getFoldIndicatorBackground();
 			foldIndicatorFG = gutter.getFoldIndicatorForeground();
 			foldIndicatorArmedFG = gutter.getFoldIndicatorArmedForeground();
 			foldBG = gutter.getFoldBackground();
@@ -224,6 +226,7 @@ public class Theme {
 				this.lineNumberFontSize : null;
 			Font font = FontUtil.deriveFont(baseFont, lineNumberFontFamily, null, lineNumberFontSize);
 			gutter.setLineNumberFont(font);
+			gutter.setFoldIndicatorBackground(foldIndicatorBG);
 			gutter.setFoldIndicatorForeground(foldIndicatorFG);
 			gutter.setFoldIndicatorArmedForeground(foldIndicatorArmedFG);
 			gutter.setFoldBackground(foldBG);
@@ -456,6 +459,9 @@ public class Theme {
 			root.appendChild(elem);
 
 			elem = doc.createElement("foldIndicator");
+			if (foldIndicatorBG != null) {
+				elem.setAttribute("bg", colorToString(foldIndicatorBG));
+			}
 			elem.setAttribute("fg", colorToString(foldIndicatorFG));
 			if (foldIndicatorArmedFG != null) {
 				elem.setAttribute("armedFg", colorToString(foldIndicatorArmedFG));
@@ -698,7 +704,9 @@ public class Theme {
 			}
 
 			else if ("foldIndicator".equals(qName)) {
-				String color = attrs.getValue("fg");
+				String color = attrs.getValue("bg");
+				theme.foldIndicatorBG = stringToColor(color);
+				color = attrs.getValue("fg");
 				theme.foldIndicatorFG = stringToColor(color);
 				color = attrs.getValue("armedFg");
 				// This field must have a value for downstream consumers to

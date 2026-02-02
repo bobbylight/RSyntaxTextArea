@@ -63,6 +63,11 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	private Color armedForeground;
 
+	/**
+	 * The color used for fold indicator background.
+	 * are used.  This may be {@code null}.
+	 */
+	private Color foldIndicatorBackground;
 
 	/**
 	 * The color to use for fold icon backgrounds, if the default icons
@@ -228,6 +233,18 @@ public class FoldIndicator extends AbstractGutterComponent {
 	 */
 	public Color getArmedForeground() {
 		return armedForeground;
+	}
+
+
+	/**
+	 * Returns the background color used for fold indicator.
+	 *
+	 * @return The background color used for fold indicator. If this is {@code null}, there is no
+	 * 		   special color for fold indicator background.
+	 * @see #setFoldIndicatorBackground(Color)
+	 */
+	public Color getFoldIndicatorBackground() {
+		return foldIndicatorBackground;
 	}
 
 
@@ -756,6 +773,17 @@ public class FoldIndicator extends AbstractGutterComponent {
 			fg = FoldIndicator.DEFAULT_FOREGROUND;
 		}
 		armedForeground = fg;
+	}
+
+	/**
+	 * Sets the background color used for fold indicator.
+	 *
+	 * @param bg The new fold indicator background. If {@code null} is passed in,
+	 *           there will be no special color for fold indicator background.
+	 * @see #getFoldIndicatorBackground()
+	 */
+	public void setFoldIndicatorBackground(Color bg) {
+		this.foldIndicatorBackground = bg;
 	}
 
 

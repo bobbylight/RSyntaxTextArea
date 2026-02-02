@@ -389,6 +389,18 @@ public class Gutter extends JPanel {
 
 
 	/**
+	 * Returns the background color of the fold indicator.
+	 *
+	 * @return The background color used for fold indicator. If this is {@code null}, there is no
+	 * 		   special color for fold indicator background.
+	 * @see #setFoldIndicatorBackground(Color)
+	 */
+	public Color getFoldIndicatorBackground() {
+		return foldIndicator.getFoldIndicatorBackground();
+	}
+
+
+	/**
 	 * Returns the foreground color of the fold indicator.
 	 *
 	 * @return The foreground color of the fold indicator.
@@ -823,6 +835,18 @@ public class Gutter extends JPanel {
 			fg = FoldIndicator.DEFAULT_FOREGROUND;
 		}
 		foldIndicator.setArmedForeground(fg);
+	}
+
+
+	/**
+	 * Sets the background color used by the fold indicator.
+	 *
+	 * @param bg The new fold indicator background. If {@code null} is passed in,
+	 *           there will be no special color for fold indicator background.
+	 * @see #getFoldIndicatorBackground()
+	 */
+	public void setFoldIndicatorBackground(Color bg) {
+		foldIndicator.setFoldIndicatorBackground(bg);
 	}
 
 

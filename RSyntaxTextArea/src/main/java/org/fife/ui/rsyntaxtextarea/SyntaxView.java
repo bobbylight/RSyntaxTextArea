@@ -761,6 +761,17 @@ public class SyntaxView extends View implements TabExpander,
 		while (y<clip.y+clip.height+ascent && line<lineCount) {
 
 			Fold fold = fm.getFoldForLine(line);
+			boolean isFoldCollapsed = fold != null && fold.isCollapsed();
+
+			// Paint indicator of collapsed background
+			if (isFoldCollapsed) {
+				Color c = RSyntaxUtilities.getFoldedIndicatorBackground(host);
+				if (c != null) {
+					g.setColor(c);
+					g.fillRect(x, y - ascent, host.getWidth(), lineHeight);
+				}
+			}
+
 			Element lineElement = map.getElement(line);
 			int startOffset = lineElement.getStartOffset();
 			//int endOffset = (line==lineCount ? lineElement.getEndOffset()-1 :
@@ -784,7 +795,7 @@ public class SyntaxView extends View implements TabExpander,
 			h.paintParserHighlights(g2d, startOffset, endOffset,
 				a, host, this);
 
-			if (fold!=null && fold.isCollapsed()) {
+			if (isFoldCollapsed) {
 
 				// Visible indicator of collapsed lines
 				Color c = RSyntaxUtilities.getFoldedLineBottomColor(host);

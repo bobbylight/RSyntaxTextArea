@@ -862,8 +862,20 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 			tempRect.height = getSpan(Y_AXIS, i);
 			//System.err.println("For line " + i + ": tempRect==" + tempRect);
 
+			Fold possibleFold = fm.getFoldForLine(i);
+			boolean isFoldCollapsed = possibleFold != null && possibleFold.isCollapsed();
+
 			if (tempRect.intersects(clip)) {
 				Element lineElement = root.getElement(i);
+				// Paint indicator of collapsed background
+				if (isFoldCollapsed) {
+					Color c = RSyntaxUtilities.getFoldedIndicatorBackground(host);
+					if (c != null) {
+						g.setColor(c);
+						g.fillRect(x, tempRect.y, host.getWidth(), tempRect.height);
+					}
+				}
+
 				int startOffset = lineElement.getStartOffset();
 				int endOffset = lineElement.getEndOffset()-1; // Why always "-1"?
 				View view = getView(i);
@@ -881,8 +893,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 
 			tempRect.y += tempRect.height;
 
-			Fold possibleFold = fm.getFoldForLine(i);
-			if (possibleFold!=null && possibleFold.isCollapsed()) {
+			if (isFoldCollapsed) {
 				i += possibleFold.getCollapsedLineCount();
 				// Visible indicator of collapsed lines
 				Color c = RSyntaxUtilities.getFoldedLineBottomColor(host);

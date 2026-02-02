@@ -70,6 +70,7 @@
       fontFamily CDATA #IMPLIED
       fontSize   CDATA #IMPLIED>
 <!ATTLIST foldIndicator
+      bg          CDATA #IMPLIED
       fg          CDATA #REQUIRED
       armedFg     CDATA #IMPLIED
       iconBg      CDATA #REQUIRED

@@ -183,6 +183,20 @@ public final class RSyntaxUtilities implements SwingConstants {
 				getDesktopProperty("awt.font.desktophints");
 	}
 
+	/**
+	 * Returns the color to use for the background of a folded region.
+	 *
+	 * @param textArea The text area.
+	 * @return The color to use.
+	 */
+	public static Color getFoldedIndicatorBackground(RSyntaxTextArea textArea) {
+		Color color = null;
+		Gutter gutter = RSyntaxUtilities.getGutter(textArea);
+		if (gutter != null) {
+			color = gutter.getFoldIndicatorBackground();
+		}
+		return color;
+	}
 
 	/**
 	 * Returns the color to use for the line underneath a folded region line.
