@@ -50,7 +50,8 @@ public class LatexFoldParser implements FoldParser {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
+
+							if (temp != null && temp.getType() == Token.REGEX) {
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 									folds.add(currentFold);
@@ -69,7 +70,8 @@ public class LatexFoldParser implements FoldParser {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
+
+							if (temp != null && temp.getType() == Token.REGEX) {
 								String value = temp.getLexeme();
 								if (expectedStack.peek().equals(value)) {
 									expectedStack.pop();
