@@ -30,10 +30,7 @@ public final class RSyntaxTextAreaDemoApp extends JFrame {
 				e.printStackTrace(); // Never happens
 			}
 			Toolkit.getDefaultToolkit().setDynamicLayout(true);
-			RSyntaxTextAreaDemoApp app = new RSyntaxTextAreaDemoApp();
-			app.setLocationRelativeTo(null);
-			app.setSize(new Dimension(1200, 800));
-			app.setVisible(true);
+			new RSyntaxTextAreaDemoApp().setVisible(true);
 		});
 	}
 
