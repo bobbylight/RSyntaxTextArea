@@ -24,11 +24,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.fife.ui.rsyntaxtextarea.*;
-import org.fife.ui.rtextarea.FoldIndicatorStyle;
-import org.fife.ui.rtextarea.Gutter;
-import org.fife.ui.rtextarea.RTextScrollPane;
-import org.fife.ui.rtextarea.LineNumberFormatter;
-import org.fife.ui.rtextarea.LineNumberList;
+import org.fife.ui.rtextarea.*;
 
 
 /**
@@ -47,7 +43,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	DemoRootPane() {
 		textArea = createTextArea();
-		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_NONE);
+		setText("JavaExample.txt");
+		textArea.setSyntaxEditingStyle(SYNTAX_STYLE_JAVA);
 		textArea.setTabSize(4);
 		scrollPane = new RTextScrollPane(textArea, true);
 		Gutter gutter = scrollPane.getGutter();
@@ -138,6 +135,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addSyntaxItem("VHDL", "VhdlExample.txt", SYNTAX_STYLE_VHDL, bg, menu);
 		addSyntaxItem("XML",  "XMLExample.txt", SYNTAX_STYLE_XML, bg, menu);
 		addSyntaxItem("YAML", "YamlExample.txt", SYNTAX_STYLE_YAML, bg, menu);
+		menu.getItem(13).setSelected(true); // Default to Java
 		mb.add(menu);
 
 		menu = new JMenu("View");
@@ -247,7 +245,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		fontSize.addChangeListener(e -> textArea.setFont(deriveFont(textArea.getFont(), fontSize)));
 
 		JCheckBox mono = new JCheckBox("Monospaced");
-		mono.setSelected(false);
+		mono.setSelected(true);
 
 		JComboBox<Font> fontCombo = new JComboBox<>();
 		fontCombo.addItemListener(e -> textArea.setFont(deriveFont((Font) e.getItem(), fontSize)));
@@ -269,12 +267,12 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 	}
 
 	private void fillFontCombo(JComboBox<Font> fontCombo, boolean onlyMonospaced) {
-		Font appFont = new JLabel().getFont();
+		Font appFont = RSyntaxTextArea.getDefaultFont();
 		String[] fontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
 		fontCombo.removeAllItems();
 		for (String name : fontFamilyNames) {
-			Font font = new Font(name, Font.PLAIN, appFont.getSize());
+			Font font = FontUtil.createFont(name, Font.PLAIN, appFont.getSize());
 			if (!onlyMonospaced || RSyntaxUtilities.isMonospaced(getFontMetrics(font))) {
 				fontCombo.addItem(font);
 			}
