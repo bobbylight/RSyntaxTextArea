@@ -24,7 +24,8 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.swing.JTextArea;
+import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.CaretEvent;
@@ -44,7 +45,7 @@ import org.fife.ui.rsyntaxtextarea.PopupWindowDecorator;
  */
 public class FocusableTip {
 
-	private JTextArea textArea;
+	private JComponent textArea;
 	private TipWindow tipWindow;
 	private URL imageBase;
 	private TextAreaListener textAreaListener;
@@ -73,7 +74,7 @@ public class FocusableTip {
 			"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip");
 
 
-	public FocusableTip(JTextArea textArea, HyperlinkListener listener) {
+	public FocusableTip(JComponent textArea, HyperlinkListener listener) {
 		setTextArea(textArea);
 		this.hyperlinkListener = listener;
 		textAreaListener = new TextAreaListener();
@@ -271,7 +272,7 @@ public class FocusableTip {
     }
 
 
-	private void setTextArea(JTextArea textArea) {
+	private void setTextArea(JComponent textArea) {
 		this.textArea = textArea;
 		// Is okay to do multiple times.
 		ToolTipManager.sharedInstance().registerComponent(textArea);
@@ -358,8 +359,10 @@ public class FocusableTip {
 			possiblyDisposeOfTipWindow();
 		}
 
-		protected void install(JTextArea textArea) {
-			textArea.addCaretListener(this);
+		protected void install(JComponent textArea) {
+            if (textArea instanceof JTextComponent) {
+                ((JTextComponent)textArea).addCaretListener(this);
+            }
 			textArea.addComponentListener(this);
 			textArea.addFocusListener(this);
 			textArea.addKeyListener(this);
@@ -402,7 +405,9 @@ public class FocusableTip {
 		}
 
 		protected void uninstall() {
-			textArea.removeCaretListener(this);
+            if (textArea instanceof JTextComponent) {
+                ((JTextComponent)textArea).removeCaretListener(this);
+            }
 			textArea.removeComponentListener(this);
 			textArea.removeFocusListener(this);
 			textArea.removeKeyListener(this);
