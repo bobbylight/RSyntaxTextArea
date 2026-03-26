@@ -938,7 +938,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 				}
 
 				// Notify the listener
-				((IconRowListener) listeners[i + 1]).mouseClicked(evt, mouseEvent );
+				((IconRowListener) listeners[i + 1]).mouseClicked(evt, mouseEvent);
 
 				// Stop dispatching if a listener consumed the event
 				if (evt.isConsumed()) {
