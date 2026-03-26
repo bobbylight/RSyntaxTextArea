@@ -9,6 +9,7 @@
 
 package org.fife.ui.rtextarea;
 
+import java.awt.event.MouseEvent;
 import java.util.EventListener;
 
 
@@ -36,5 +37,13 @@ public interface IconRowListener extends EventListener {
 	 * @see IconRowHeader#toggleBookmark(int)
 	 */
 	void bookmarkRemoved(IconRowEvent e);
+
+	/**
+	 * Invoked when the user clicks on a line in the icon row.
+	 *
+	 * @param me the event describing the click
+	 */
+	default void mouseClicked(IconRowEvent e, MouseEvent me) {
+	}
 
 }
