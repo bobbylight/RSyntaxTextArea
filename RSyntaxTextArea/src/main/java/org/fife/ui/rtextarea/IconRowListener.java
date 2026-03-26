@@ -41,6 +41,7 @@ public interface IconRowListener extends EventListener {
 	/**
 	 * Invoked when the user clicks on a line in the icon row.
 	 *
+	 * @param e an IconRowEvent describing the changes to the IconRowHeader
 	 * @param me the event describing the click
 	 */
 	default void mouseClicked(IconRowEvent e, MouseEvent me) {
