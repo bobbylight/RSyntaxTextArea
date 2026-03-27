@@ -341,8 +341,8 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 
 		class IconRowListenerMouseClickedTest implements IconRowListener {
 			IconRowEvent evt;
-			boolean consume = false;
-			boolean bookmarkAdded = false;
+			boolean consume;
+			boolean bookmarkAdded;
 
 			@Override
 			public void bookmarkAdded(IconRowEvent e) {
@@ -364,7 +364,8 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		}
 
 		// left-click on line 0
-		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
 		IconRowListenerMouseClickedTest test = new IconRowListenerMouseClickedTest();
 		header.addIconRowListener(test);
 
