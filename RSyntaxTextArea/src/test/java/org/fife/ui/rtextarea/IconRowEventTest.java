@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 
 /**
  * Unit tests for the {@link IconRowEvent} class.
@@ -17,6 +18,30 @@ import javax.swing.*;
  * @version 3.5.4
  */
 public class IconRowEventTest {
+
+	@Test
+	void testMouseClicked() throws BadLocationException {
+		int line = 0;
+		ImageIcon icon = new ImageIcon();
+		RTextArea textArea = new RTextArea();
+
+		IconRowHeader h = new IconRowHeader(textArea);
+		IconRowEvent evt = new IconRowEvent(h, null, line);
+
+		Assertions.assertFalse(evt.isConsumed());
+		Assertions.assertNotNull(evt.getIconsAtLine());
+		Assertions.assertEquals(0, evt.getIconsAtLine().length);
+
+		// icons at line
+		h.addOffsetTrackingIcon(0, icon);
+		h.addOffsetTrackingIcon(0, icon);
+		Assertions.assertEquals(2, evt.getIconsAtLine().length);
+
+		Assertions.assertNull(evt.getIconInfo()); // not a bookmark event
+
+		evt.consume();
+		Assertions.assertTrue(evt.isConsumed());
+	}
 
 	@Test
 	void testIconRowEvent_verify() {
