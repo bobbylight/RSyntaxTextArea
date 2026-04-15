@@ -920,6 +920,26 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 
 	@Test
+	void testRestrictedKeywords_additionalContextCoverage() {
+
+		assertTokenTypeForLexeme("yield;", "yield",
+			TokenTypes.IDENTIFIER);
+		assertTokenTypeForLexeme("{ yield 42; }", "yield",
+			TokenTypes.RESERVED_WORD_2);
+		assertTokenTypeForLexeme("open mod", "open",
+			TokenTypes.IDENTIFIER);
+		assertTokenTypeForLexeme("open mutable", "open",
+			TokenTypes.IDENTIFIER);
+		assertTokenTypeForLexeme("open modules", "open",
+			TokenTypes.IDENTIFIER);
+		assertTokenTypeForLexeme("foo.module demo {", "module",
+			TokenTypes.IDENTIFIER);
+		assertTokenTypeForLexeme("opened module demo {", "module",
+			TokenTypes.IDENTIFIER);
+	}
+
+
+	@Test
 	void testMultiLineComments() {
 		assertAllTokensOfType(TokenTypes.COMMENT_MULTILINE,
 			"/* Hello world unterminated",
