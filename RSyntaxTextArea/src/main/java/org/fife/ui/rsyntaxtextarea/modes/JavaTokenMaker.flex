@@ -73,6 +73,147 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Java has several context-sensitive keywords that are only keywords in
+	 * very specific constructs.  Highlight them conservatively to avoid
+	 * false positives for methods and fields such as "open()" or "record".
+	 */
+	private int getContextualTokenType(char[] array, int start, int end,
+			int tokenType) {
+
+		if (isToken(array, start, end, "yield")) {
+			return isYieldKeyword(array, start) ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "open")) {
+			return nextTokenEquals(array, end, "module") ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "module")) {
+			return nextTokenStartsIdentifier(array, end) &&
+					(noPreviousToken(start) ||
+					previousTokenEquals(array, start, "open")) ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "sealed") ||
+				isToken(array, start, end, "non-sealed")) {
+			return nextTokenEquals(array, end, "class") ||
+					nextTokenEquals(array, end, "interface") ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "exports") ||
+				isToken(array, start, end, "opens") ||
+				isToken(array, start, end, "permits") ||
+				isToken(array, start, end, "provides") ||
+				isToken(array, start, end, "record") ||
+				isToken(array, start, end, "requires") ||
+				isToken(array, start, end, "to") ||
+				isToken(array, start, end, "transitive") ||
+				isToken(array, start, end, "uses") ||
+				isToken(array, start, end, "var") ||
+				isToken(array, start, end, "with")) {
+			return nextTokenStartsIdentifier(array, end) ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		return tokenType;
+	}
+
+
+	private int findNextNonWhitespace(char[] array, int pos) {
+		int end = s.offset + s.count;
+		while (pos < end && Character.isWhitespace(array[pos])) {
+			pos++;
+		}
+		return pos < end ? pos : -1;
+	}
+
+
+	private int findPreviousNonWhitespace(char[] array, int pos) {
+		while (pos >= s.offset && Character.isWhitespace(array[pos])) {
+			pos--;
+		}
+		return pos;
+	}
+
+
+	private boolean isToken(char[] array, int start, int end, String lexeme) {
+		if (end - start + 1 != lexeme.length()) {
+			return false;
+		}
+		for (int i = 0; i < lexeme.length(); i++) {
+			if (array[start + i] != lexeme.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	private boolean isYieldKeyword(char[] array, int start) {
+		int prev = findPreviousNonWhitespace(array, start - 1);
+		if (prev < 0) {
+			return false;
+		}
+		if (array[prev] == ':' || array[prev] == '{') {
+			return true;
+		}
+		if (array[prev] == '>') {
+			int prevPrev = findPreviousNonWhitespace(array, prev - 1);
+			return prevPrev >= 0 && array[prevPrev] == '-';
+		}
+		return false;
+	}
+
+
+	private boolean nextTokenEquals(char[] array, int end, String lexeme) {
+		int next = findNextNonWhitespace(array, end + 1);
+		if (next < 0 || !Character.isJavaIdentifierStart(array[next])) {
+			return false;
+		}
+		int tokenEnd = next + lexeme.length();
+		if (tokenEnd > s.offset + s.count) {
+			return false;
+		}
+		for (int i = 0; i < lexeme.length(); i++) {
+			if (array[next + i] != lexeme.charAt(i)) {
+				return false;
+			}
+		}
+		return tokenEnd == s.offset + s.count ||
+				!Character.isJavaIdentifierPart(array[tokenEnd]);
+	}
+
+
+	private boolean nextTokenStartsIdentifier(char[] array, int end) {
+		int next = findNextNonWhitespace(array, end + 1);
+		return next >= 0 && Character.isJavaIdentifierStart(array[next]);
+	}
+
+
+	private boolean noPreviousToken(int start) {
+		return findPreviousNonWhitespace(s.array, start - 1) < 0;
+	}
+
+
+	private boolean previousTokenEquals(char[] array, int start, String lexeme) {
+		int prev = findPreviousNonWhitespace(array, start - 1);
+		if (prev < 0 || !Character.isJavaIdentifierPart(array[prev])) {
+			return false;
+		}
+		int tokenStart = prev;
+		while (tokenStart > s.offset &&
+				Character.isJavaIdentifierPart(array[tokenStart - 1])) {
+			tokenStart--;
+		}
+		return isToken(array, tokenStart, prev, lexeme);
+	}
+
+
+	/**
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
@@ -120,6 +261,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
+		if (tokenType == TokenTypes.DATA_TYPE ||
+				tokenType == TokenTypes.RESERVED_WORD ||
+				tokenType == TokenTypes.RESERVED_WORD_2) {
+			tokenType = getContextualTokenType(array, start, end, tokenType);
+		}
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
 		zzStartRead = zzMarkedPos;
 	}

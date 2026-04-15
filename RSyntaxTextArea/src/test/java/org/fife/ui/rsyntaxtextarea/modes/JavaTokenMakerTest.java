@@ -30,6 +30,27 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
+	private void assertTokenTypeForLexeme(String code, String lexeme,
+			int expectedType) {
+
+		Token token = createTokenMaker().getTokenList(createSegment(code),
+				TokenTypes.NULL, 0);
+
+		while (token != null && token.isPaintable()) {
+			if (lexeme.equals(token.getLexeme())) {
+				Assertions.assertEquals(expectedType, token.getType(),
+						"Unexpected token type for token: " + token +
+						" (code snippet: \"" + code + "\")");
+				return;
+			}
+			token = token.getNextToken();
+		}
+
+		Assertions.fail("Token not found: " + lexeme + " in snippet \"" +
+				code + "\"");
+	}
+
+
 	@Test
 	@Override
 	public void testCommon_GetLineCommentStartAndEnd() {
@@ -786,7 +807,6 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"do",
 			"else",
 			"enum",
-			"exports",
 			"extends",
 			"final",
 			"finally",
@@ -797,22 +817,13 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"import",
 			"instanceof",
 			"interface",
-			"module",
 			"native",
 			"new",
-			"non-sealed",
 			"null",
-			"open",
-			"opens",
 			"package",
-			"permits",
 			"private",
 			"protected",
-			"provides",
 			"public",
-			"record",
-			"requires",
-			"sealed",
 			"static",
 			"strictfp",
 			"super",
@@ -821,15 +832,11 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			"this",
 			"throw",
 			"throws",
-			"to",
 			"transient",
-			"transitive",
 			"try",
-			"uses",
 			"void",
 			"volatile",
-			"while",
-			"with"
+			"while"
 		);
 	}
 
@@ -837,9 +844,78 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	@Test
 	void testKeywords_exitingMethod() {
 		assertAllTokensOfType(TokenTypes.RESERVED_WORD_2,
-			"return",
-			"yield"
+			"return"
 		);
+	}
+
+
+	@Test
+	void testRestrictedKeywords_inJavaConstructs() {
+
+		assertTokenTypeForLexeme("open module demo {", "open",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("open module demo {", "module",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("record Point(int x) {", "record",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("sealed interface Shape permits Circle {", "sealed",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("sealed interface Shape permits Circle {", "permits",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("non-sealed class Square extends Shape {", "non-sealed",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("exports com.example to com.client;", "exports",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("exports com.example to com.client;", "to",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("opens com.example.internal;", "opens",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("requires transitive com.example;", "requires",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("requires transitive com.example;", "transitive",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("uses com.example.Service;", "uses",
+			TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme(
+			"provides com.example.Service with com.example.ServiceImpl;",
+			"provides", TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme(
+			"provides com.example.Service with com.example.ServiceImpl;",
+			"with", TokenTypes.RESERVED_WORD);
+		assertTokenTypeForLexeme("var answer = 42;", "var",
+			TokenTypes.DATA_TYPE);
+		assertTokenTypeForLexeme("case 1 -> yield 42;", "yield",
+			TokenTypes.RESERVED_WORD_2);
+	}
+
+
+	@Test
+	void testRestrictedKeywords_usedAsIdentifiers() {
+
+		String[] restrictedKeywords = {
+			"exports",
+			"module",
+			"open",
+			"opens",
+			"permits",
+			"provides",
+			"record",
+			"requires",
+			"sealed",
+			"to",
+			"transitive",
+			"uses",
+			"var",
+			"with",
+			"yield"
+		};
+
+		for (String keyword : restrictedKeywords) {
+			assertTokenTypeForLexeme("public int " + keyword + "() {", keyword,
+				TokenTypes.IDENTIFIER);
+			assertTokenTypeForLexeme("this." + keyword + "();", keyword,
+				TokenTypes.IDENTIFIER);
+		}
 	}
 
 
