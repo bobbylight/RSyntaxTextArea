@@ -5273,16 +5273,24 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 			}
 			// Skip multi-line comments (work backwards from */)
 			if (pos > s.offset && array[pos] == '/' && array[pos - 1] == '*') {
-				// Found end of comment, skip backwards to find start
+				// Found end of comment, skip backwards to find matching start
 				pos -= 2;
-				while (pos > s.offset) {
-					if (array[pos] == '*' && array[pos - 1] == '/') {
+				int depth = 1; // Track nesting depth
+				while (pos > s.offset && depth > 0) {
+					if (array[pos] == '/' && pos > s.offset && array[pos - 1] == '*') {
+						// Found another */ - increase depth
+						depth++;
 						pos -= 2;
-						break;
+					} else if (array[pos] == '*' && pos > s.offset && array[pos - 1] == '/') {
+						// Found /* - decrease depth
+						depth--;
+						pos -= 2;
+					} else {
+						pos--;
 					}
-					pos--;
 				}
-				if (pos < s.offset) {
+				if (depth > 0 || pos < s.offset) {
+					// Didn't find matching start on this line
 					return -1;
 				}
 				continue;
@@ -5333,10 +5341,15 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
-		// yield is a keyword in statement contexts: after ':', '{', ';', or ')'
+		// yield is a keyword in statement contexts: after ':', '{', ';', ')', or 'else'
 		// The ')' case handles control flow like "if (cond) yield value;"
+		// The 'else' case handles "if (c) yield 1; else yield 2;"
 		char prevChar = array[prev];
 		if (prevChar == ':' || prevChar == '{' || prevChar == ';' || prevChar == ')') {
+			return true;
+		}
+		// Check if preceded by 'else' keyword
+		if (previousTokenEquals(array, start, "else")) {
 			return true;
 		}
 		return false;
