@@ -5250,12 +5250,18 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 			// Skip multi-line comments
 			if (pos + 1 < end && array[pos] == '/' && array[pos + 1] == '*') {
 				pos += 2;
+				boolean foundClosing = false;
 				while (pos + 1 < end) {
 					if (array[pos] == '*' && array[pos + 1] == '/') {
 						pos += 2;
+						foundClosing = true;
 						break;
 					}
 					pos++;
+				}
+				// If comment is unterminated at end of line, treat as end-of-line
+				if (!foundClosing) {
+					return -1;
 				}
 				continue;
 			}
@@ -5369,7 +5375,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 		if (previousTokenEquals(array, start, "open")) {
 			return true;
 		}
-		int prev = findPreviousNonWhitespace(array, start - 1);
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
 		if (prev >= s.offset) {
 			// Check for closing paren of annotation
 			if (array[prev] == ')') {
@@ -5384,7 +5390,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 				}
 				// Check if there's an @ before this identifier/qualified name
 				if (tokenStart > s.offset) {
-					int beforeId = findPreviousNonWhitespace(array, tokenStart - 1);
+					int beforeId = findPreviousNonWhitespaceSkipComments(array, tokenStart - 1);
 					if (beforeId >= s.offset && array[beforeId] == '@') {
 						return true;
 					}
