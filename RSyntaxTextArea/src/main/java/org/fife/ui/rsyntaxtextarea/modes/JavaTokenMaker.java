@@ -5171,6 +5171,13 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 		}
 
 		if (isToken(array, start, end, "open")) {
+			// Be conservative: treat as keyword if we can't verify context (e.g., next line)
+			// This handles "open\nmodule" formatting
+			int next = findNextNonWhitespaceSkipComments(array, end + 1);
+			if (next < 0) {
+				// Next token not on this line - conservatively treat as keyword
+				return tokenType;
+			}
 			return nextTokenEquals(array, end, "module") ?
 					tokenType : TokenTypes.IDENTIFIER;
 		}
@@ -5349,14 +5356,14 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 			if (array[prev] == ')') {
 				return true;
 			}
-			// Check for bare annotation (e.g., @Deprecated module)
-			// Look for identifier preceded by @
+			// Check for bare annotation (e.g., @Deprecated module) or qualified (e.g., @com.acme.Visible module)
+			// Look for identifier or qualified name preceded by @
 			if (Character.isJavaIdentifierPart(array[prev])) {
 				int tokenStart = prev;
-				while (tokenStart > s.offset && Character.isJavaIdentifierPart(array[tokenStart - 1])) {
+				while (tokenStart > s.offset && (Character.isJavaIdentifierPart(array[tokenStart - 1]) || array[tokenStart - 1] == '.')) {
 					tokenStart--;
 				}
-				// Check if there's an @ before this identifier
+				// Check if there's an @ before this identifier/qualified name
 				if (tokenStart > s.offset) {
 					int beforeId = findPreviousNonWhitespace(array, tokenStart - 1);
 					if (beforeId >= s.offset && array[beforeId] == '@') {
@@ -5376,6 +5383,10 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 	 */
 	private boolean nextClassOrInterfaceKeyword(char[] array, int end) {
 		int pos = findNextNonWhitespaceSkipComments(array, end + 1);
+		// Conservative: if next token not on current line, treat as keyword to handle line breaks
+		if (pos < 0) {
+			return true;
+		}
 		while (pos >= 0) {
 			// Skip annotations (@...)
 			if (array[pos] == '@') {
@@ -5384,8 +5395,8 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 				if (pos < 0 || !Character.isJavaIdentifierStart(array[pos])) {
 					return false;
 				}
-				// Skip the annotation name
-				while (pos < s.offset + s.count && Character.isJavaIdentifierPart(array[pos])) {
+				// Skip the annotation name (including qualified names like @com.acme.Anno)
+				while (pos < s.offset + s.count && (Character.isJavaIdentifierPart(array[pos]) || array[pos] == '.')) {
 					pos++;
 				}
 				// Skip annotation parameters if present
