@@ -199,9 +199,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
-		// yield is a keyword in statement contexts: after ':', '{', ')', or ';'
+		// yield is a keyword in statement contexts: after ':', '{', or ';'
 		char prevChar = array[prev];
-		if (prevChar == ':' || prevChar == '{' || prevChar == ')' || prevChar == ';') {
+		if (prevChar == ':' || prevChar == '{' || prevChar == ';') {
 			return true;
 		}
 		return false;
@@ -247,12 +247,43 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	/**
 	 * Checks if the next keyword after the given position is "class" or "interface",
-	 * skipping over modifiers (abstract, final, static, etc.) and comments.
+	 * skipping over modifiers (abstract, final, static, etc.), annotations, and comments.
 	 * This is used for sealed/non-sealed keyword detection.
 	 */
 	private boolean nextClassOrInterfaceKeyword(char[] array, int end) {
 		int pos = findNextNonWhitespaceSkipComments(array, end + 1);
 		while (pos >= 0) {
+			// Skip annotations (@...)
+			if (array[pos] == '@') {
+				// Skip the @ symbol
+				pos = findNextNonWhitespaceSkipComments(array, pos + 1);
+				if (pos < 0 || !Character.isJavaIdentifierStart(array[pos])) {
+					return false;
+				}
+				// Skip the annotation name
+				while (pos < s.offset + s.count && Character.isJavaIdentifierPart(array[pos])) {
+					pos++;
+				}
+				// Skip annotation parameters if present
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				if (pos >= 0 && array[pos] == '(') {
+					// Skip to closing paren
+					int depth = 1;
+					pos++;
+					while (pos < s.offset + s.count && depth > 0) {
+						if (array[pos] == '(') {
+							depth++;
+						} else if (array[pos] == ')') {
+							depth--;
+						}
+						pos++;
+					}
+				}
+				// Continue to next token after annotation
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				continue;
+			}
+
 			if (!Character.isJavaIdentifierStart(array[pos])) {
 				return false;
 			}
