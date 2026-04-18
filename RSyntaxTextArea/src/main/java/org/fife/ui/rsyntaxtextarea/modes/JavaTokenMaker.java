@@ -5427,10 +5427,54 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 				// Skip annotation parameters if present
 				pos = findNextNonWhitespaceSkipComments(array, pos);
 				if (pos >= 0 && array[pos] == '(') {
-					// Skip to closing paren
+					// Skip to closing paren, handling strings and comments
 					int depth = 1;
 					pos++;
 					while (pos < s.offset + s.count && depth > 0) {
+						// Skip string literals
+						if (array[pos] == '"') {
+							pos++;
+							while (pos < s.offset + s.count && array[pos] != '"') {
+								if (array[pos] == '\\' && pos + 1 < s.offset + s.count) {
+									pos += 2; // Skip escaped character
+								} else {
+									pos++;
+								}
+							}
+							pos++; // Skip closing quote
+							continue;
+						}
+						// Skip character literals
+						if (array[pos] == '\'') {
+							pos++;
+							while (pos < s.offset + s.count && array[pos] != '\'') {
+								if (array[pos] == '\\' && pos + 1 < s.offset + s.count) {
+									pos += 2; // Skip escaped character
+								} else {
+									pos++;
+								}
+							}
+							pos++; // Skip closing quote
+							continue;
+						}
+						// Skip single-line comments
+						if (pos + 1 < s.offset + s.count && array[pos] == '/' && array[pos + 1] == '/') {
+							// Skip to end of line
+							break;
+						}
+						// Skip multi-line comments
+						if (pos + 1 < s.offset + s.count && array[pos] == '/' && array[pos + 1] == '*') {
+							pos += 2;
+							while (pos + 1 < s.offset + s.count) {
+								if (array[pos] == '*' && array[pos + 1] == '/') {
+									pos += 2;
+									break;
+								}
+								pos++;
+							}
+							continue;
+						}
+						// Count parentheses
 						if (array[pos] == '(') {
 							depth++;
 						} else if (array[pos] == ')') {
