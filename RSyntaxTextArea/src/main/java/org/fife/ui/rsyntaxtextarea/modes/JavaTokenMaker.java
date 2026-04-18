@@ -5482,8 +5482,15 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 						}
 						pos++;
 					}
+					// If annotation parameters wrap lines, treat conservatively as keyword
+					if (depth > 0) {
+						return true;
+					}
 				}
-				// Continue to next token after annotation
+				// Continue to next token after annotation (guard against negative pos)
+				if (pos < 0) {
+					return true;
+				}
 				pos = findNextNonWhitespaceSkipComments(array, pos);
 				continue;
 			}
