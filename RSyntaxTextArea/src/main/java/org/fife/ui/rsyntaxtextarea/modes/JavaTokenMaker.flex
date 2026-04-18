@@ -182,14 +182,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	private boolean isYieldKeywordAtLineStart(char[] array, int start) {
-		int next = findNextNonWhitespace(array, start + "yield".length());
+		int next = findNextNonWhitespaceSkipComments(array, start + "yield".length());
 		if (next < 0) {
 			// No token after yield - ambiguous, lean toward identifier
 			return false;
 		}
 		char ch = array[next];
-		// yield is a keyword if followed by a value/expression, not if followed by ( or : or ;
-		return ch != '(' && ch != ':' && ch != ';';
+		// yield is a keyword if followed by a value/expression (including '(' for yield (expr))
+		// not if followed by ':' or ';' (those would make it an identifier/label)
+		return ch != ':' && ch != ';';
 	}
 
 
@@ -289,7 +290,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	private boolean nextTokenEquals(char[] array, int end, String lexeme) {
-		int next = findNextNonWhitespace(array, end + 1);
+		int next = findNextNonWhitespaceSkipComments(array, end + 1);
 		if (next < 0 || !Character.isJavaIdentifierStart(array[next])) {
 			return false;
 		}
@@ -308,7 +309,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	private boolean nextTokenStartsIdentifier(char[] array, int end) {
-		int next = findNextNonWhitespace(array, end + 1);
+		int next = findNextNonWhitespaceSkipComments(array, end + 1);
 		return next >= 0 && Character.isJavaIdentifierStart(array[next]);
 	}
 
