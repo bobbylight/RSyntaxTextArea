@@ -98,8 +98,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 		if (isToken(array, start, end, "sealed") ||
 				isToken(array, start, end, "non-sealed")) {
-			return nextTokenEquals(array, end, "class") ||
-					nextTokenEquals(array, end, "interface") ?
+			return nextClassOrInterfaceKeyword(array, end) ?
 					tokenType : TokenTypes.IDENTIFIER;
 		}
 
@@ -128,6 +127,36 @@ import org.fife.ui.rsyntaxtextarea.*;
 			pos++;
 		}
 		return pos < end ? pos : -1;
+	}
+
+
+	private int findNextNonWhitespaceSkipComments(char[] array, int pos) {
+		int end = s.offset + s.count;
+		while (pos < end) {
+			if (Character.isWhitespace(array[pos])) {
+				pos++;
+				continue;
+			}
+			// Skip single-line comments
+			if (pos + 1 < end && array[pos] == '/' && array[pos + 1] == '/') {
+				// Skip to end of line (which is end of segment in this tokenizer)
+				return -1;
+			}
+			// Skip multi-line comments
+			if (pos + 1 < end && array[pos] == '/' && array[pos + 1] == '*') {
+				pos += 2;
+				while (pos + 1 < end) {
+					if (array[pos] == '*' && array[pos + 1] == '/') {
+						pos += 2;
+						break;
+					}
+					pos++;
+				}
+				continue;
+			}
+			return pos;
+		}
+		return -1;
 	}
 
 
@@ -182,7 +211,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// module is a keyword when:
 		// 1. It's the first token on the line, OR
 		// 2. It's preceded by "open", OR
-		// 3. It's preceded by ')' (end of annotation like @Deprecated)
+		// 3. It's preceded by ')' (end of annotation like @Deprecated), OR
+		// 4. It's preceded by '@' identifier (bare annotation like @Deprecated)
 		if (noPreviousToken(array, start)) {
 			return true;
 		}
@@ -190,7 +220,71 @@ import org.fife.ui.rsyntaxtextarea.*;
 			return true;
 		}
 		int prev = findPreviousNonWhitespace(array, start - 1);
-		return prev >= s.offset && array[prev] == ')';
+		if (prev >= s.offset) {
+			// Check for closing paren of annotation
+			if (array[prev] == ')') {
+				return true;
+			}
+			// Check for bare annotation (e.g., @Deprecated module)
+			if (Character.isJavaIdentifierPart(array[prev])) {
+				int tokenStart = prev;
+				while (tokenStart > s.offset && Character.isJavaIdentifierPart(array[tokenStart - 1])) {
+					tokenStart--;
+				}
+				// Check if there's an @ before this identifier
+				if (tokenStart > s.offset) {
+					int beforeId = findPreviousNonWhitespace(array, tokenStart - 1);
+					if (beforeId >= s.offset && array[beforeId] == '@') {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks if the next keyword after the given position is "class" or "interface",
+	 * skipping over modifiers (abstract, final, static, etc.) and comments.
+	 * This is used for sealed/non-sealed keyword detection.
+	 */
+	private boolean nextClassOrInterfaceKeyword(char[] array, int end) {
+		int pos = findNextNonWhitespaceSkipComments(array, end + 1);
+		while (pos >= 0) {
+			if (!Character.isJavaIdentifierStart(array[pos])) {
+				return false;
+			}
+			// Find the end of this identifier
+			int tokenStart = pos;
+			while (pos < s.offset + s.count && Character.isJavaIdentifierPart(array[pos])) {
+				pos++;
+			}
+			int tokenEnd = pos - 1;
+
+			// Check if it's "class" or "interface"
+			if (isToken(array, tokenStart, tokenEnd, "class") ||
+					isToken(array, tokenStart, tokenEnd, "interface")) {
+				return true;
+			}
+
+			// Check if it's a modifier we should skip
+			if (isToken(array, tokenStart, tokenEnd, "abstract") ||
+					isToken(array, tokenStart, tokenEnd, "final") ||
+					isToken(array, tokenStart, tokenEnd, "static") ||
+					isToken(array, tokenStart, tokenEnd, "public") ||
+					isToken(array, tokenStart, tokenEnd, "protected") ||
+					isToken(array, tokenStart, tokenEnd, "private") ||
+					isToken(array, tokenStart, tokenEnd, "strictfp")) {
+				// Skip this modifier and continue looking
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				continue;
+			}
+
+			// Found something that's not a modifier or class/interface
+			return false;
+		}
+		return false;
 	}
 
 
