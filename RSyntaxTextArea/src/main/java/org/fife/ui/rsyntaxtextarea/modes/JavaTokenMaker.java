@@ -5183,9 +5183,13 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 		}
 
 		if (isToken(array, start, end, "module")) {
-			return nextTokenStartsIdentifier(array, end) &&
-					isModuleKeyword(array, start) ?
-					tokenType : TokenTypes.IDENTIFIER;
+			// Be conservative: treat as keyword if we can't verify context (e.g., module name on next line)
+			// This handles "module\n    com.example {}" formatting
+			if (!nextTokenStartsIdentifier(array, end)) {
+				// Next token not on this line or not an identifier - conservatively treat as keyword
+				return isModuleKeyword(array, start) ? tokenType : TokenTypes.IDENTIFIER;
+			}
+			return isModuleKeyword(array, start) ? tokenType : TokenTypes.IDENTIFIER;
 		}
 
 		if (isToken(array, start, end, "sealed") ||
@@ -5313,8 +5317,9 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 	private boolean isYieldKeywordAtLineStart(char[] array, int start) {
 		int next = findNextNonWhitespaceSkipComments(array, start + "yield".length());
 		if (next < 0) {
-			// No token after yield - ambiguous, lean toward identifier
-			return false;
+			// No token after yield on this line - conservatively treat as keyword
+			// This handles "yield\n    someValue" formatting
+			return true;
 		}
 		char ch = array[next];
 		// yield is a keyword if followed by a value/expression (including '(' for yield (expr))
