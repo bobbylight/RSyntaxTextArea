@@ -5177,8 +5177,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 
 		if (isToken(array, start, end, "module")) {
 			return nextTokenStartsIdentifier(array, end) &&
-					(noPreviousToken(start) ||
-					previousTokenEquals(array, start, "open")) ?
+					isModuleKeyword(array, start) ?
 					tokenType : TokenTypes.IDENTIFIER;
 		}
 
@@ -5240,17 +5239,27 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 
 	private boolean isYieldKeyword(char[] array, int start) {
 		int prev = findPreviousNonWhitespace(array, start - 1);
-		if (prev < 0) {
-			return false;
-		}
-		if (array[prev] == ':' || array[prev] == '{') {
+		// yield is a keyword after ':' or '{' (statement context)
+		if (prev >= s.offset && (array[prev] == ':' || array[prev] == '{')) {
 			return true;
 		}
-		if (array[prev] == '>') {
-			int prevPrev = findPreviousNonWhitespace(array, prev - 1);
-			return prevPrev >= 0 && array[prevPrev] == '-';
-		}
 		return false;
+	}
+
+
+	private boolean isModuleKeyword(char[] array, int start) {
+		// module is a keyword when:
+		// 1. It's the first token on the line, OR
+		// 2. It's preceded by "open", OR
+		// 3. It's preceded by ')' (end of annotation like @Deprecated)
+		if (noPreviousToken(array, start)) {
+			return true;
+		}
+		if (previousTokenEquals(array, start, "open")) {
+			return true;
+		}
+		int prev = findPreviousNonWhitespace(array, start - 1);
+		return prev >= s.offset && array[prev] == ')';
 	}
 
 
@@ -5279,8 +5288,8 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
-	private boolean noPreviousToken(int start) {
-		return findPreviousNonWhitespace(s.array, start - 1) < 0;
+	private boolean noPreviousToken(char[] array, int start) {
+		return findPreviousNonWhitespace(array, start - 1) < 0;
 	}
 
 
