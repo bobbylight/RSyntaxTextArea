@@ -169,8 +169,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
-		// yield is a keyword after ':' or '{' (statement context)
-		if (array[prev] == ':' || array[prev] == '{') {
+		// yield is a keyword in statement contexts: after ':', '{', ')', or ';'
+		char prevChar = array[prev];
+		if (prevChar == ':' || prevChar == '{' || prevChar == ')' || prevChar == ';') {
 			return true;
 		}
 		return false;
@@ -219,7 +220,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	private boolean noPreviousToken(char[] array, int start) {
-		return findPreviousNonWhitespace(array, start - 1) < 0;
+		return findPreviousNonWhitespace(array, start - 1) < s.offset;
 	}
 
 
