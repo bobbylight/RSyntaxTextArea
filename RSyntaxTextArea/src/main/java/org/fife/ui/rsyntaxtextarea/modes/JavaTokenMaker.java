@@ -5237,10 +5237,25 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
+	private boolean isYieldKeywordAtLineStart(char[] array, int start) {
+		int next = findNextNonWhitespace(array, start + "yield".length());
+		if (next < 0) {
+			// No token after yield - ambiguous, lean toward identifier
+			return false;
+		}
+		char ch = array[next];
+		// yield is a keyword if followed by a value/expression, not if followed by ( or : or ;
+		return ch != '(' && ch != ':' && ch != ';';
+	}
+
+
 	private boolean isYieldKeyword(char[] array, int start) {
 		int prev = findPreviousNonWhitespace(array, start - 1);
+		if (prev < s.offset) {
+			return isYieldKeywordAtLineStart(array, start);
+		}
 		// yield is a keyword after ':' or '{' (statement context)
-		if (prev >= s.offset && (array[prev] == ':' || array[prev] == '{')) {
+		if (array[prev] == ':' || array[prev] == '{') {
 			return true;
 		}
 		return false;
