@@ -5337,7 +5337,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 
 
 	private boolean isYieldKeyword(char[] array, int start) {
-		int prev = findPreviousNonWhitespace(array, start - 1);
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
@@ -5504,7 +5504,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 
 
 	private boolean previousTokenEquals(char[] array, int start, String lexeme) {
-		int prev = findPreviousNonWhitespace(array, start - 1);
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
 		if (prev < 0 || !Character.isJavaIdentifierPart(array[prev])) {
 			return false;
 		}
