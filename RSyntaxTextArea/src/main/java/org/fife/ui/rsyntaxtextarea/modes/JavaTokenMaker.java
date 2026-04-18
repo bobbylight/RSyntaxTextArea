@@ -5280,22 +5280,17 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 			// Skip multi-line comments (work backwards from */)
 			if (pos > s.offset && array[pos] == '/' && array[pos - 1] == '*') {
 				// Found end of comment, skip backwards to find matching start
+				// Java block comments don't nest, so find the first /*
 				pos -= 2;
-				int depth = 1; // Track nesting depth
-				while (pos > s.offset && depth > 0) {
-					if (array[pos] == '/' && pos > s.offset && array[pos - 1] == '*') {
-						// Found another */ - increase depth
-						depth++;
+				while (pos > s.offset) {
+					if (array[pos] == '*' && pos > s.offset && array[pos - 1] == '/') {
+						// Found /* - this is the start of the comment
 						pos -= 2;
-					} else if (array[pos] == '*' && pos > s.offset && array[pos - 1] == '/') {
-						// Found /* - decrease depth
-						depth--;
-						pos -= 2;
-					} else {
-						pos--;
+						break;
 					}
+					pos--;
 				}
-				if (depth > 0 || pos < s.offset) {
+				if (pos < s.offset) {
 					// Didn't find matching start on this line
 					return -1;
 				}
