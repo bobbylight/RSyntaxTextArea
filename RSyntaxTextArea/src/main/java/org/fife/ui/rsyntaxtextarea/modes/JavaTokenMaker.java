@@ -5198,8 +5198,17 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 				isToken(array, start, end, "uses") ||
 				isToken(array, start, end, "var") ||
 				isToken(array, start, end, "with")) {
-			return nextTokenStartsIdentifier(array, end) ?
-					tokenType : TokenTypes.IDENTIFIER;
+			// Check if used as method/field name (preceded by '.' or followed by '(')
+			int prev = findPreviousNonWhitespace(array, start - 1);
+			if (prev >= s.offset && array[prev] == '.') {
+				return TokenTypes.IDENTIFIER;
+			}
+			int next = findNextNonWhitespaceSkipComments(array, end + 1);
+			if (next >= 0 && array[next] == '(') {
+				return TokenTypes.IDENTIFIER;
+			}
+			// Otherwise treat as keyword (conservative for module declarations, etc.)
+			return tokenType;
 		}
 
 		return tokenType;
@@ -5245,6 +5254,34 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 	}
 
 
+	private int findPreviousNonWhitespaceSkipComments(char[] array, int pos) {
+		while (pos >= s.offset) {
+			if (Character.isWhitespace(array[pos])) {
+				pos--;
+				continue;
+			}
+			// Skip multi-line comments (work backwards from */)
+			if (pos > s.offset && array[pos] == '/' && array[pos - 1] == '*') {
+				// Found end of comment, skip backwards to find start
+				pos -= 2;
+				while (pos > s.offset) {
+					if (array[pos] == '*' && array[pos - 1] == '/') {
+						pos -= 2;
+						break;
+					}
+					pos--;
+				}
+				if (pos < s.offset) {
+					return -1;
+				}
+				continue;
+			}
+			return pos;
+		}
+		return pos;
+	}
+
+
 	private int findPreviousNonWhitespace(char[] array, int pos) {
 		while (pos >= s.offset && Character.isWhitespace(array[pos])) {
 			pos--;
@@ -5284,9 +5321,10 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
-		// yield is a keyword in statement contexts: after ':', '{', or ';'
+		// yield is a keyword in statement contexts: after ':', '{', ';', or ')'
+		// The ')' case handles control flow like "if (cond) yield value;"
 		char prevChar = array[prev];
-		if (prevChar == ':' || prevChar == '{' || prevChar == ';') {
+		if (prevChar == ':' || prevChar == '{' || prevChar == ';' || prevChar == ')') {
 			return true;
 		}
 		return false;
@@ -5432,7 +5470,7 @@ public class JavaTokenMaker extends AbstractJFlexCTokenMaker {
 
 
 	private boolean noPreviousToken(char[] array, int start) {
-		return findPreviousNonWhitespace(array, start - 1) < s.offset;
+		return findPreviousNonWhitespaceSkipComments(array, start - 1) < s.offset;
 	}
 
 
