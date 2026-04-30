@@ -20,6 +20,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -43,6 +47,8 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 	private RTextScrollPane scrollPane;
 	private RSyntaxTextArea textArea;
+	private SmartIndentPreviewPanel smartIndentPreviewPanel;
+	private JSplitPane splitPane;
 
 
 	DemoRootPane() {
@@ -54,11 +60,24 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		gutter.setBookmarkingEnabled(true);
 		URL url = getClass().getResource("bookmark.png");
 		gutter.setBookmarkIcon(new ImageIcon(url));
-		getContentPane().add(scrollPane);
+
 		ErrorStrip errorStrip = new ErrorStrip(textArea);
-		//errorStrip.setBackground(java.awt.Color.blue);
-		getContentPane().add(errorStrip, BorderLayout.LINE_END);
+
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.add(scrollPane, BorderLayout.CENTER);
+		centerPanel.add(errorStrip, BorderLayout.LINE_END);
+
+		smartIndentPreviewPanel = new SmartIndentPreviewPanel();
+		smartIndentPreviewPanel.setVisible(false);
+
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerPanel, smartIndentPreviewPanel);
+		splitPane.setResizeWeight(1.0);
+		splitPane.setDividerLocation(0.8);
+
+		getContentPane().add(splitPane, BorderLayout.CENTER);
 		setJMenuBar(createMenuBar());
+
+		setupIndentPreviewListeners();
 	}
 
 
@@ -217,6 +236,12 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		addThemeItem("Eclipse", "eclipse.xml", bg, menu);
 		addThemeItem("IDEA", "idea.xml", bg, menu);
 		addThemeItem("Visual Studio", "vs.xml", bg, menu);
+		mb.add(menu);
+
+		menu = new JMenu("Tools");
+		JCheckBoxMenuItem smartIndentItem = new JCheckBoxMenuItem(new SmartIndentPreviewAction());
+		smartIndentItem.setSelected(false);
+		menu.add(smartIndentItem);
 		mb.add(menu);
 
 		menu = new JMenu("Help");
@@ -400,6 +425,9 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 			setText(res);
 			textArea.setCaretPosition(0);
 			textArea.setSyntaxEditingStyle(style);
+			if (smartIndentPreviewPanel.isVisible()) {
+				refreshIndentPreview();
+			}
 		}
 
 	}
@@ -706,6 +734,82 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 		@Override
 		public int getMaxLength(int maxLineNumber) {
 			return String.valueOf(maxLineNumber).length();
+		}
+	}
+
+
+	private void setupIndentPreviewListeners() {
+		textArea.addCaretListener(new CaretListener() {
+			@Override
+			public void caretUpdate(CaretEvent e) {
+				if (smartIndentPreviewPanel.isVisible()) {
+					refreshIndentPreview();
+				}
+			}
+		});
+
+		textArea.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				if (smartIndentPreviewPanel.isVisible()) {
+					refreshIndentPreview();
+				}
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				if (smartIndentPreviewPanel.isVisible()) {
+					refreshIndentPreview();
+				}
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				if (smartIndentPreviewPanel.isVisible()) {
+					refreshIndentPreview();
+				}
+			}
+		});
+
+		smartIndentPreviewPanel.addRefreshActionListener(e -> refreshIndentPreview());
+	}
+
+
+	private void refreshIndentPreview() {
+		try {
+			String text = textArea.getText();
+			int caretPosition = textArea.getCaretPosition();
+			int caretLine = textArea.getLineOfOffset(caretPosition);
+			String syntaxStyle = textArea.getSyntaxEditingStyle();
+			smartIndentPreviewPanel.updatePreview(text, caretLine, syntaxStyle);
+		} catch (Exception e) {
+			smartIndentPreviewPanel.updatePreview("", 0, "");
+		}
+	}
+
+
+	/**
+	 * Toggles the Smart Indent Preview panel.
+	 */
+	private class SmartIndentPreviewAction extends AbstractAction {
+
+		SmartIndentPreviewAction() {
+			putValue(NAME, "Smart Indent Preview");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			boolean currentlyVisible = smartIndentPreviewPanel.isVisible();
+			smartIndentPreviewPanel.setVisible(!currentlyVisible);
+
+			if (!currentlyVisible) {
+				splitPane.setDividerLocation(0.8);
+				refreshIndentPreview();
+			}
+
+			if (e.getSource() instanceof JCheckBoxMenuItem) {
+				((JCheckBoxMenuItem) e.getSource()).setSelected(!currentlyVisible);
+			}
 		}
 	}
 
