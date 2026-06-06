@@ -451,7 +451,7 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
                                     // If for some reason it isn't, highlight it as an identifier and continue on
                                     else {
                                         int count = yylength();
-                                        addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+                                        addToken(zzStartRead, zzStartRead, Token.IDENTIFIER);
                                         zzMarkedPos -= (count - 1);
                                     }
                                 }
