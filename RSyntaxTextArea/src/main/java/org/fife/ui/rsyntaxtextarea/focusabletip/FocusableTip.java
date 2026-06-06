@@ -45,10 +45,10 @@ import org.fife.ui.rsyntaxtextarea.PopupWindowDecorator;
  */
 public class FocusableTip {
 
-	private JComponent textArea;
+	private JComponent component;
 	private TipWindow tipWindow;
 	private URL imageBase;
-	private TextAreaListener textAreaListener;
+	private ParentComponentListener parentComponentListener;
 	private HyperlinkListener hyperlinkListener;
 	private String lastText;
 
@@ -74,10 +74,10 @@ public class FocusableTip {
 			"org.fife.ui.rsyntaxtextarea.focusabletip.FocusableTip");
 
 
-	public FocusableTip(JComponent textArea, HyperlinkListener listener) {
-		setTextArea(textArea);
+	public FocusableTip(JComponent component, HyperlinkListener listener) {
+		setComponent(component);
 		this.hyperlinkListener = listener;
-		textAreaListener = new TextAreaListener();
+		parentComponentListener = new ParentComponentListener();
 		tipVisibleBounds = new Rectangle();
 	}
 
@@ -92,7 +92,7 @@ public class FocusableTip {
 		// in Java windows, not globally.
 		Rectangle r = tipWindow.getBounds();
 		Point p = r.getLocation();
-		SwingUtilities.convertPointFromScreen(p, textArea);
+		SwingUtilities.convertPointFromScreen(p, component);
 		r.setLocation(p);
 		tipVisibleBounds.setBounds(r.x,r.y-15, r.width,r.height+15*2);
 	}
@@ -100,7 +100,7 @@ public class FocusableTip {
 
 	private void createAndShowTipWindow(final MouseEvent e, final String text) {
 
-		Window owner = SwingUtilities.getWindowAncestor(textArea);
+		Window owner = SwingUtilities.getWindowAncestor(component);
 		tipWindow = new TipWindow(owner, this, text);
 		tipWindow.setHyperlinkListener(hyperlinkListener);
 
@@ -127,10 +127,10 @@ public class FocusableTip {
 			}
 
 			tipWindow.fixSize();
-			ComponentOrientation o = textArea.getComponentOrientation();
+			ComponentOrientation o = component.getComponentOrientation();
 
 			Point p = e.getPoint();
-			SwingUtilities.convertPointToScreen(p, textArea);
+			SwingUtilities.convertPointToScreen(p, component);
 
 			// Ensure tool tip is in the window bounds.
 			// Multi-monitor support - make sure the completion window (and
@@ -172,7 +172,7 @@ public class FocusableTip {
 			tipWindow.setVisible(true);
 
 			computeTipVisibleBounds(); // Do after tip is visible
-			textAreaListener.install(textArea);
+			parentComponentListener.install(component);
 			lastText = text;
 
 		});
@@ -233,10 +233,10 @@ public class FocusableTip {
 		if (tipWindow != null) {
 			tipWindow.dispose();
 			tipWindow = null;
-			textAreaListener.uninstall();
+			parentComponentListener.uninstall();
 			tipVisibleBounds.setBounds(-1, -1, 0, 0);
 			lastText = null;
-			textArea.requestFocus();
+			component.requestFocus();
 			return true;
 		}
 		return false;
@@ -245,7 +245,7 @@ public class FocusableTip {
 
 	void removeListeners() {
 		//System.out.println("DEBUG: Removing text area listeners");
-		textAreaListener.uninstall();
+		parentComponentListener.uninstall();
 	}
 
 
@@ -272,10 +272,15 @@ public class FocusableTip {
     }
 
 
-	private void setTextArea(JComponent textArea) {
-		this.textArea = textArea;
+	/**
+	 * Sets the component this focusable tip is associated with.
+	 *
+	 * @param component The component, which cannot be {@code null}.
+	 */
+	private void setComponent(JComponent component) {
+		this.component = component;
 		// Is okay to do multiple times.
-		ToolTipManager.sharedInstance().registerComponent(textArea);
+		ToolTipManager.sharedInstance().registerComponent(component);
 	}
 
 
@@ -305,13 +310,13 @@ public class FocusableTip {
 	/**
 	 * Listens for events in a text area.
 	 */
-	private final class TextAreaListener extends MouseInputAdapter implements
+	private final class ParentComponentListener extends MouseInputAdapter implements
 			CaretListener, ComponentListener, FocusListener, KeyListener {
 
 		@Override
 		public void caretUpdate(CaretEvent e) {
 			Object source = e.getSource();
-			if (source == textArea) {
+			if (source == component) {
 				possiblyDisposeOfTipWindow();
 			}
 		}
@@ -359,15 +364,15 @@ public class FocusableTip {
 			possiblyDisposeOfTipWindow();
 		}
 
-		protected void install(JComponent textArea) {
-            if (textArea instanceof JTextComponent) {
-                ((JTextComponent)textArea).addCaretListener(this);
+		protected void install(JComponent component) {
+            if (component instanceof JTextComponent) {
+                ((JTextComponent) component).addCaretListener(this);
             }
-			textArea.addComponentListener(this);
-			textArea.addFocusListener(this);
-			textArea.addKeyListener(this);
-			textArea.addMouseListener(this);
-			textArea.addMouseMotionListener(this);
+			component.addComponentListener(this);
+			component.addFocusListener(this);
+			component.addKeyListener(this);
+			component.addMouseListener(this);
+			component.addMouseMotionListener(this);
 		}
 
 		@Override
@@ -405,14 +410,14 @@ public class FocusableTip {
 		}
 
 		protected void uninstall() {
-            if (textArea instanceof JTextComponent) {
-                ((JTextComponent)textArea).removeCaretListener(this);
+            if (component instanceof JTextComponent) {
+                ((JTextComponent) component).removeCaretListener(this);
             }
-			textArea.removeComponentListener(this);
-			textArea.removeFocusListener(this);
-			textArea.removeKeyListener(this);
-			textArea.removeMouseListener(this);
-			textArea.removeMouseMotionListener(this);
+			component.removeComponentListener(this);
+			component.removeFocusListener(this);
+			component.removeKeyListener(this);
+			component.removeMouseListener(this);
+			component.removeMouseMotionListener(this);
 		}
 
 	}
