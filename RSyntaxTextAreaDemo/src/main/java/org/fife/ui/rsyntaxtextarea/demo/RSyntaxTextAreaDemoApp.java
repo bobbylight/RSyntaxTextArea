@@ -1,6 +1,6 @@
 package org.fife.ui.rsyntaxtextarea.demo;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import javax.swing.*;
 
 
