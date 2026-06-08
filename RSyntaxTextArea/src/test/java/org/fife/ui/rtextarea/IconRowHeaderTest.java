@@ -213,6 +213,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			@Override
 			public void bookmarkAdded(IconRowEvent e) {
 			}
+
 			@Override
 			public void bookmarkRemoved(IconRowEvent e) {
 			}
@@ -239,6 +240,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			public void bookmarkAdded(IconRowEvent e) {
 				added = true;
 			}
+
 			@Override
 			public void bookmarkRemoved(IconRowEvent e) {
 			}
@@ -267,9 +269,10 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			public void bookmarkAdded(IconRowEvent e) {
 
 			}
+
 			@Override
 			public void bookmarkRemoved(IconRowEvent e) {
-				removed=true;
+				removed = true;
 			}
 		}
 
@@ -301,6 +304,7 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 			public void bookmarkAdded(IconRowEvent e) {
 				addedCount++;
 			}
+
 			@Override
 			public void bookmarkRemoved(IconRowEvent e) {
 				removedCount++;
@@ -326,5 +330,59 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertEquals(3, IconRowListenerBookmarkMultipleTest.addedCount);
 		Assertions.assertEquals(3, IconRowListenerBookmarkMultipleTest.removedCount);
 
+	}
+
+	@Test
+	void testAddIconRowListener_mouseClicked() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new ImageIcon());
+
+		class IconRowListenerMouseClickedTest implements IconRowListener {
+			IconRowEvent evt;
+			boolean consume;
+			boolean bookmarkAdded;
+
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+				bookmarkAdded = true;
+			}
+
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(IconRowEvent e, MouseEvent me) {
+				evt = e;
+
+				if (consume) {
+					e.consume();
+				}
+			}
+		}
+
+		// left-click on line 0
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		IconRowListenerMouseClickedTest test = new IconRowListenerMouseClickedTest();
+		header.addIconRowListener(test);
+
+		// event is consumed and no bookmark is added
+		test.consume = true;
+		header.mouseClicked(evt);
+		Assertions.assertNotNull(test.evt);
+		Assertions.assertTrue(test.evt.isConsumed());
+		Assertions.assertEquals(0, test.evt.getIconsAtLine().length);
+		Assertions.assertFalse(test.bookmarkAdded);
+
+		// event is handled by listeners but not consumed and a bookmark is added
+		test.consume = false;
+		header.mouseClicked(evt);
+		Assertions.assertNotNull(test.evt);
+		Assertions.assertFalse(test.evt.isConsumed());
+		Assertions.assertEquals(1, test.evt.getIconsAtLine().length);
+		Assertions.assertTrue(test.bookmarkAdded);
 	}
 }
