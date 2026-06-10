@@ -263,6 +263,21 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, ctrlShift), "copyAsStyledTextEclipse");
 			am.put("copyAsStyledTextEclipse", createCopyAsStyledTextAction("eclipse"));
+
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0), "inc");
+			am.put("inc", new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					textArea.setLineHeightMultiplier(textArea.getLineHeightMultiplier() + 0.1f);
+				}
+			});
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0), "dec");
+			am.put("dec", new AbstractAction() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					textArea.setLineHeightMultiplier(textArea.getLineHeightMultiplier() - 0.1f);
+				}
+			});
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
