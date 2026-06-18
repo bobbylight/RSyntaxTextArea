@@ -606,7 +606,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		ToggleAntiAliasingAction() {
 			putValue(NAME, "Anti-Aliasing");
-			int defaultModifier = getToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_DOWN_MASK;
+			int defaultModifier = getToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, defaultModifier));
 		}
 
@@ -624,7 +624,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		ToggleFractionalFontMetricsAction() {
 			putValue(NAME, "Fractional Font Metrics");
-			int defaultModifier = getToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_DOWN_MASK;
+			int defaultModifier = getToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, defaultModifier));
 		}
 
@@ -642,7 +642,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		ToggleKerningAction() {
 			putValue(NAME, "Kerning");
-			int defaultModifier = getToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_DOWN_MASK;
+			int defaultModifier = getToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, defaultModifier));
 		}
 
@@ -665,7 +665,7 @@ public class DemoRootPane extends JRootPane implements HyperlinkListener,
 
 		ToggleLigatureSupportAction() {
 			putValue(NAME, "Ligature Support");
-			int defaultModifier = getToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_DOWN_MASK;
+			int defaultModifier = getToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_2, defaultModifier));
 		}
 
