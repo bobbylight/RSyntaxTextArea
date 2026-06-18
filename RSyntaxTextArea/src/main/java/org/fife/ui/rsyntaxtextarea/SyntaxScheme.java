@@ -19,12 +19,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -626,14 +627,15 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 				throws IOException {
 			SyntaxSchemeLoader parser;
 			try {
-				XMLReader reader = XMLReaderFactory.createXMLReader();
+				SAXParserFactory factory = SAXParserFactory.newInstance();
+				XMLReader reader = factory.newSAXParser().getXMLReader();
 				parser = new SyntaxSchemeLoader(baseFont);
 				parser.baseFont = baseFont;
 				reader.setContentHandler(parser);
 				InputSource is = new InputSource(in);
 				is.setEncoding("UTF-8");
 				reader.parse(is);
-			} catch (SAXException se) {
+			} catch (SAXException | ParserConfigurationException se) {
 				throw new IOException(se.toString());
 			}
 			return parser.scheme;
