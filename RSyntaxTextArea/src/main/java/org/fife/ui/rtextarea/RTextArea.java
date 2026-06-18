@@ -1746,7 +1746,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			// WORKAROUND:  Since JTextComponent only updates the caret
 			// location on mouse clicked and released, we'll do it on dragged
 			// events when the left mouse button is clicked.
-			if ((e.getModifiers() & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
+			if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
 				Caret caret = getCaret();
 				dot = caret.getDot();
 				mark = caret.getMark();
