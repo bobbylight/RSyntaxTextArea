@@ -42,60 +42,60 @@ class RPrintUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testPrintDocumentMonospaced_happyPath() throws BadLocationException {
 
-		Graphics g = createTestGraphics();
+		Graphics2D g2d = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, createContent(5000), null);
 		PageFormat pageFormat = new PageFormat();
 
-		RPrintUtilities.printDocumentMonospaced(g, doc, 10, 0, pageFormat, 4);
+		RPrintUtilities.printDocumentMonospaced(g2d, doc, 10, 0, pageFormat, 4);
 	}
 
 
 	@Test
 	void testPrintDocumentMonospaced_happyPath_tabSizeZero() throws BadLocationException {
 
-		Graphics g = createTestGraphics();
+		Graphics2D g2d = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, createContent(5000), null);
 		PageFormat pageFormat = new PageFormat();
 
-		RPrintUtilities.printDocumentMonospaced(g, doc, 10, 0, pageFormat, 0);
+		RPrintUtilities.printDocumentMonospaced(g2d, doc, 10, 0, pageFormat, 0);
 	}
 
 
 	@Test
 	void testPrintDocumentMonospaced_happyPath_empty() throws BadLocationException {
 
-		Graphics g = createTestGraphics();
+		Graphics2D g2d = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, createContent(0), null);
 		PageFormat pageFormat = new PageFormat();
 
-		RPrintUtilities.printDocumentMonospaced(g, doc, 10, 0, pageFormat, 4);
+		RPrintUtilities.printDocumentMonospaced(g2d, doc, 10, 0, pageFormat, 4);
 	}
 
 
 	@Test
 	void testPrintDocumentMonospacedWordWrap_happyPath() throws BadLocationException {
 
-		Graphics g = createTestGraphics();
+		Graphics2D g2d = createTestGraphics();
 		PlainDocument doc = new PlainDocument();
 		doc.insertString(0, createContent(5000), null);
 		PageFormat pageFormat = new PageFormat();
 
-		RPrintUtilities.printDocumentMonospacedWordWrap(g, doc, 10, 0, pageFormat, 4);
+		RPrintUtilities.printDocumentMonospacedWordWrap(g2d, doc, 10, 0, pageFormat, 4);
 	}
 
 
 	@Test
 	void testPrintDocumentWordWrap_happyPath() {
 
-		Graphics g = createTestGraphics();
+		Graphics2D g2d = createTestGraphics();
 		RSyntaxTextArea textArea = createTextArea();
 		textArea.setText(createContent(4000));
 		PageFormat pageFormat = new PageFormat();
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 12);
 
-		RPrintUtilities.printDocumentWordWrap(g, textArea, font, 0, pageFormat, 4);
+		RPrintUtilities.printDocumentWordWrap(g2d, textArea, font, 0, pageFormat, 4);
 	}
 }

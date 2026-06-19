@@ -7,3 +7,4 @@ build
 /.settings/
 bin/
 out/
+settings.local.json
