@@ -568,8 +568,7 @@ public class SyntaxView extends View implements TabExpander,
 
 
 	/**
-	 * Provides a mapping from the document model coordinate space
-	 * to the coordinate space of the view mapped to it.
+	 * Returns the bounding box for an offset in the document.
 	 *
 	 * @param pos the position to convert &gt;= 0
 	 * @param a the allocated region to render into
@@ -588,18 +587,11 @@ public class SyntaxView extends View implements TabExpander,
 		int lineIndex = map.getElementIndex(pos);
 		Token tokenList = doc.getTokenListForLine(lineIndex);
 		Rectangle2D lineArea = lineToRect(a, lineIndex);
-		tabBase = (float) lineArea.getX(); // Used by listOffsetToView().
+		tabBase = (float) lineArea.getX();
 
-		//int x = (int)RSyntaxUtilities.getTokenListWidthUpTo(tokenList,
-		//							(RSyntaxTextArea)getContainer(),
-		//							this, 0, pos);
-		// We use this method instead as it returns the actual bounding box,
-		// not just the x-coordinate.
-		lineArea = tokenList.listOffsetToView(
+		return tokenList.listOffsetToView(
 						(RSyntaxTextArea)getContainer(), this, pos,
 						tabBase, lineArea);
-
-		return lineArea;
 
 	}
 
