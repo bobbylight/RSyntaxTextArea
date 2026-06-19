@@ -80,10 +80,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 	private static final int LETTER_MASK			= 2;
 	//private static final int WHITESPACE_MASK		= 4;
 	//private static final int UPPER_CASE_MASK		= 8;
-	private static final int HEX_CHARACTER_MASK		= 16;
 	private static final int LETTER_OR_DIGIT_MASK	= 32;
-	private static final int BRACKET_MASK			= 64;
-	private static final int JAVA_OPERATOR_MASK		= 128;
 
 	/**
 	 * A lookup table used to quickly decide if a 16-bit Java char is a
@@ -312,17 +309,6 @@ public final class RSyntaxUtilities implements SwingConstants {
 		int endOffs = elem.getEndOffset() - 1;
 		String text = doc.getText(startOffs, endOffs-startOffs);
 		return getLeadingWhitespace(text);
-	}
-
-
-	private static Element getLineElem(Document doc, int offs) {
-		Element root = doc.getDefaultRootElement();
-		int line = root.getElementIndex(offs);
-		Element elem = root.getElement(line);
-		if ((offs>=elem.getStartOffset()) && (offs<elem.getEndOffset())) {
-			return elem;
-		}
-		return null;
 	}
 
 
@@ -1096,94 +1082,6 @@ return c.getLineStartOffset(line);
 
 
 	/**
-	 * Returns the end of the word at the given offset.
-	 *
-	 * @param textArea The text area.
-	 * @param offs The offset into the text area's content.
-	 * @return The end offset of the word.
-	 * @throws BadLocationException If <code>offs</code> is invalid.
-	 * @see #getWordStart(RSyntaxTextArea, int)
-	 */
-	public static int getWordEnd(RSyntaxTextArea textArea, int offs)
-										throws BadLocationException {
-
-		Document doc = textArea.getDocument();
-		int endOffs = textArea.getLineEndOffsetOfCurrentLine();
-		int lineEnd = Math.min(endOffs, doc.getLength());
-		if (offs == lineEnd) { // End of the line.
-			return offs;
-		}
-
-		String s = doc.getText(offs, lineEnd-offs-1);
-		if (s!=null && !s.isEmpty()) { // Should always be true
-			int i = 0;
-			int count = s.length();
-			char ch = s.charAt(i);
-			if (Character.isWhitespace(ch)) {
-				while (i<count && Character.isWhitespace(s.charAt(i++)));
-			}
-			else if (Character.isLetterOrDigit(ch)) {
-				while (i<count && Character.isLetterOrDigit(s.charAt(i++)));
-			}
-			else {
-				i = 2;
-			}
-			offs += i - 1;
-		}
-
-		return offs;
-
-	}
-
-	/**
-	 * Returns the start of the word at the given offset.
-	 *
-	 * @param textArea The text area.
-	 * @param offs The offset into the text area's content.
-	 * @return The start offset of the word.
-	 * @throws BadLocationException If <code>offs</code> is invalid.
-	 * @see #getWordEnd(RSyntaxTextArea, int)
-	 */
-	public static int getWordStart(RSyntaxTextArea textArea, int offs)
-											throws BadLocationException {
-
-		Document doc = textArea.getDocument();
-		Element line = getLineElem(doc, offs);
-		if (line == null) {
-			throw new BadLocationException("No word at " + offs, offs);
-		}
-
-		int lineStart = line.getStartOffset();
-		if (offs==lineStart) { // Start of the line.
-			return offs;
-		}
-
-		int endOffs = Math.min(offs+1, doc.getLength());
-		String s = doc.getText(lineStart, endOffs-lineStart);
-		if (s != null && !s.isEmpty()) {
-			int i = s.length() - 1;
-			char ch = s.charAt(i);
-			if (Character.isWhitespace(ch)) {
-				while (i>0 && Character.isWhitespace(s.charAt(i-1))) {
-					i--;
-				}
-				offs = lineStart + i;
-			}
-			else if (Character.isLetterOrDigit(ch)) {
-				while (i>0 && Character.isLetterOrDigit(s.charAt(i-1))) {
-					i--;
-				}
-				offs = lineStart + i;
-			}
-
-		}
-
-		return offs;
-
-	}
-
-
-	/**
 	 * Determines the width of the given token list taking tabs
 	 * into consideration.  This is implemented in a 1.1 style coordinate
 	 * system where ints are used and 72dpi is assumed.<p>
@@ -1213,7 +1111,6 @@ return c.getLineStartOffset(line);
 	 * @param e The tab expander.  This value cannot be <code>null</code>.
 	 * @param x0 The x-pixel coordinate of the start of the token list.
 	 * @return The width of the token list, in pixels.
-	 * @see #getTokenListWidthUpTo
 	 */
 	public static float getTokenListWidth(final Token tokenList,
 									RSyntaxTextArea textArea,
@@ -1223,55 +1120,6 @@ return c.getLineStartOffset(line);
 			width += t.getWidth(textArea, e, width);
 		}
 		return width - x0;
-	}
-
-
-	/**
-	 * Determines the width of the given token list taking tabs into
-	 * consideration and only up to the given index in the document
-	 * (exclusive).
-	 *
-	 * @param tokenList The token list representing the text.
-	 * @param textArea The text area in which this token list resides.
-	 * @param e The tab expander.  This value cannot be <code>null</code>.
-	 * @param x0 The x-pixel coordinate of the start of the token list.
-	 * @param upTo The document position at which you want to stop,
-	 *        exclusive.  If this position is before the starting position
-	 *        of the token list, a width of <code>0</code> will be
-	 *        returned; similarly, if this position comes after the entire
-	 *        token list, the width of the entire token list is returned.
-	 * @return The width of the token list, in pixels, up to, but not
-	 *         including, the character at position <code>upTo</code>.
-	 * @see #getTokenListWidth
-	 */
-	public static float getTokenListWidthUpTo(final Token tokenList,
-								RSyntaxTextArea textArea, TabExpander e,
-								float x0, int upTo) {
-		float width = 0;
-		for (Token t=tokenList; t!=null&&t.isPaintable(); t=t.getNextToken()) {
-			if (t.containsPosition(upTo)) {
-				return width + t.getWidthUpTo(upTo-t.getOffset(), textArea, e,
-													x0+width);
-			}
-			width += t.getWidth(textArea, e, x0+width);
-		}
-		return width;
-	}
-
-
-	/**
-	 * Returns whether this character is a "bracket" to be matched by
-	 * such programming languages as C, C++, and Java.
-	 *
-	 * @param ch The character to check.
-	 * @return Whether the character is a "bracket" - one of '(', ')',
-	 *         '[', ']', '{', and '}'.
-	 */
-	public static boolean isBracket(char ch) {
-		// We need the first condition as it might be that ch>255, and thus
-		// not in our table.  '}' is the highest-valued char in the bracket
-		// set.
-		return ch<='}' && (DATA_TABLE[ch]&BRACKET_MASK)>0;
 	}
 
 
@@ -1286,37 +1134,6 @@ return c.getLineStartOffset(line);
 		// to check that ch<255 so it can index into our table, then whether
 		// that table position has the digit mask).
 		return ch>='0' && ch<='9';
-	}
-
-
-	/**
-	 * Returns whether this character is a hex character.  This method
-	 * accepts both upper- and lower-case letters a-f.
-	 *
-	 * @param ch The character to check.
-	 * @return Whether the character is a hex character 0-9, a-f, or
-	 *         A-F.
-	 */
-	public static boolean isHexCharacter(char ch) {
-		// We need the first condition as it could be that ch>255 (and thus
-		// not a valid index into our table).  'f' is the highest-valued
-		// char that is a valid hex character.
-		return (ch<='f') && (DATA_TABLE[ch]&HEX_CHARACTER_MASK)>0;
-	}
-
-
-	/**
-	 * Returns whether a character is a Java operator.  Note that C and C++
-	 * operators are the same as Java operators.
-	 *
-	 * @param ch The character to check.
-	 * @return Whether the character is a Java operator.
-	 */
-	public static boolean isJavaOperator(char ch) {
-		// We need the first condition as it could be that ch>255 (and thus
-		// not a valid index into our table).  '~' is the highest-valued
-		// char that is a valid Java operator.
-		return (ch<='~') && (DATA_TABLE[ch]&JAVA_OPERATOR_MASK)>0;
 	}
 
 
