@@ -32,6 +32,7 @@ import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.TokenUtils.TokenSubList;
 import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
+import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;

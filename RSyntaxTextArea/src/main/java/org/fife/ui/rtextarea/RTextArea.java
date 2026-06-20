@@ -34,7 +34,6 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 import org.fife.print.RPrintUtilities;
-import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.fife.ui.rtextarea.Macro.MacroRecord;
 
 

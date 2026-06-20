@@ -25,8 +25,6 @@ import javax.swing.text.LayeredHighlighter;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 
-import org.fife.ui.rsyntaxtextarea.DocumentRange;
-
 
 /**
  * The highlighter implementation used by {@link RTextArea}s.  It knows to

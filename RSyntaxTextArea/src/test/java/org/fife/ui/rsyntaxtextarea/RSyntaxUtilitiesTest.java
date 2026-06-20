@@ -6,6 +6,7 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

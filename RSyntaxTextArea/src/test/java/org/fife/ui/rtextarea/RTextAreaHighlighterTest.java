@@ -5,7 +5,6 @@
 package org.fife.ui.rtextarea;
 
 
-import org.fife.ui.rsyntaxtextarea.DocumentRange;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

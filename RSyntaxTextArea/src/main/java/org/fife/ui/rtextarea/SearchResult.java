@@ -8,8 +8,6 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.rsyntaxtextarea.DocumentRange;
-
 
 /**
  * The result of a find, replace, or "mark all" operation.
