@@ -226,12 +226,9 @@ public abstract class RTextAreaBase extends JTextArea {
 
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
-		StringBuilder stringBuilder = new StringBuilder();
-		for (int i=0; i<tabSize; i++) {
-			stringBuilder.append(" ");
-		}
+		String stringBuilder = " ".repeat(Math.max(0, tabSize));
 		String text = getText();
-		setText(text.replaceAll(stringBuilder.toString(), "\t"));
+		setText(text.replaceAll(stringBuilder, "\t"));
 		int newDocumentLength = getDocument().getLength();
 
 		// Place the caret back in its proper position.
@@ -261,12 +258,9 @@ public abstract class RTextAreaBase extends JTextArea {
 
 		int caretPosition = getCaretPosition();
 		int tabSize = getTabSize();
-		StringBuilder tabInSpaces = new StringBuilder();
-		for (int i=0; i<tabSize; i++) {
-			tabInSpaces.append(' ');
-		}
+		String tabInSpaces = " ".repeat(Math.max(0, tabSize));
 		String text = getText();
-		setText(text.replaceAll("\t", tabInSpaces.toString()));
+		setText(text.replaceAll("\t", tabInSpaces));
 
 		// Put caret back at same place in document.
 		setCaretPosition(caretPosition);

@@ -74,7 +74,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		manager.actionPerformed(new ActionEvent(textArea, 0, null));
 		Assertions.assertEquals(1, manager.getParserNotices().size());
-		Assertions.assertEquals("test", manager.getParserNotices().get(0).getMessage());
+		Assertions.assertEquals("test", manager.getParserNotices().getFirst().getMessage());
 	}
 
 
@@ -121,7 +121,7 @@ class ParserManagerTest extends AbstractRSyntaxTextAreaTest {
 
 		manager.actionPerformed(new ActionEvent(textArea, 0, null));
 		Assertions.assertEquals(1, manager.getParserNotices().size());
-		Assertions.assertEquals("test", manager.getParserNotices().get(0).getMessage());
+		Assertions.assertEquals("test", manager.getParserNotices().getFirst().getMessage());
 
 		manager.clearParsers();
 		Assertions.assertEquals(0, manager.getParserNotices().size());

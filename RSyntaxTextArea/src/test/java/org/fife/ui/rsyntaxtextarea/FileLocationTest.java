@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Assertions;
@@ -86,7 +87,7 @@ class FileLocationTest {
 
 	@Test
 	void testCreate_UrlArg_HttpsUrl() throws Exception {
-		URL url = new URL("https://google.com");
+		URL url = URI.create("https://google.com").toURL();
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertInstanceOf(URLFileLocation.class, loc);
 		Assertions.assertFalse(loc.isLocal());
@@ -96,7 +97,7 @@ class FileLocationTest {
 
 	@Test
 	void testCreate_UrlArg_FileUrl() throws Exception {
-		URL url = new URL("file:///test.txt");
+		URL url = URI.create("file:///test.txt").toURL();
 		FileLocation loc = FileLocation.create(url);
 		Assertions.assertInstanceOf(FileFileLocation.class, loc);
 		Assertions.assertTrue(loc.isLocal());

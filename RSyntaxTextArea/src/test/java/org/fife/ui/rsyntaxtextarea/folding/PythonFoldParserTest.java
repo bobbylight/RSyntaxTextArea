@@ -62,7 +62,7 @@ class PythonFoldParserTest {
 		Assertions.assertEquals(2, folds.size());
 
 		// First top-level fold is def main()
-		Fold topLevelFold = folds.get(0);
+		Fold topLevelFold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
 		Assertions.assertEquals(code.indexOf("def main"), topLevelFold.getStartOffset());
 		Assertions.assertEquals(2, topLevelFold.getChildCount());

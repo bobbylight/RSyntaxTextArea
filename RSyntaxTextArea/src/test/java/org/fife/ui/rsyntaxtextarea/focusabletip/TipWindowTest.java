@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 
 /**
@@ -87,7 +87,7 @@ class TipWindowTest {
 		JFrame owner = new JFrame();
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		FocusableTip focusableTip = new FocusableTipTest.TestableFocusableTip(textArea, null);
-		focusableTip.setImageBase(new URL("https://google.com"));
+		focusableTip.setImageBase(URI.create("https://google.com").toURL());
 
 		new TipWindow(owner, focusableTip, "test");
 	}
@@ -107,7 +107,7 @@ class TipWindowTest {
 		JFrame owner = new JFrame();
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		FocusableTip focusableTip = new FocusableTipTest.TestableFocusableTip(textArea, null);
-		focusableTip.setImageBase(new URL("https://google.com"));
+		focusableTip.setImageBase(URI.create("https://google.com").toURL());
 
 		TipWindow tw = new TipWindow(owner, focusableTip, "test");
 		tw.setHyperlinkListener(e -> {});

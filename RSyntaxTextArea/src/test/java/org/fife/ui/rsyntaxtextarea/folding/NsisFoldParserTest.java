@@ -53,7 +53,7 @@ class NsisFoldParserTest {
 
 		Assertions.assertEquals(3, folds.size());
 
-		Fold firstFold = folds.get(0);
+		Fold firstFold = folds.getFirst();
 		Assertions.assertEquals(FoldType.COMMENT, firstFold.getFoldType());
 		Assertions.assertEquals(code.indexOf("/*"), firstFold.getStartOffset());
 		Assertions.assertEquals(code.indexOf("*/") + 1, firstFold.getEndOffset());

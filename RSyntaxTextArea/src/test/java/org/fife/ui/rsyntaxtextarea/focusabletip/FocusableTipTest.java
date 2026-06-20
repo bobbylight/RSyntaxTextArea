@@ -18,6 +18,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -37,7 +38,7 @@ class FocusableTipTest extends AbstractRSyntaxTextAreaTest {
 		FocusableTip tip = new TestableFocusableTip(textArea, null);
 
 		Assertions.assertNull(tip.getImageBase());
-		URL url = new URL("https://www.google.com");
+		URL url = URI.create("https://www.google.com").toURL();
 		tip.setImageBase(url);
 		Assertions.assertEquals(url, tip.getImageBase());
 	}

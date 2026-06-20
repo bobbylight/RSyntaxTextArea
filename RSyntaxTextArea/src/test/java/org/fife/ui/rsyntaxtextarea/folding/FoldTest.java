@@ -88,7 +88,7 @@ class FoldTest extends AbstractRSyntaxTextAreaTest {
 
 		RSyntaxTextArea textArea = createTextArea(CODE_WITH_CHILDREN);
 
-		Fold fold = new CurlyFoldParser().getFolds(textArea).get(0);
+		Fold fold = new CurlyFoldParser().getFolds(textArea).getFirst();
 		Assertions.assertEquals(2, fold.getChildren().size());
 	}
 

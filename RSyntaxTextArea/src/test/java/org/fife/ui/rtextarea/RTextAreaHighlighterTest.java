@@ -81,7 +81,7 @@ class RTextAreaHighlighterTest extends AbstractRTextAreaTest {
 		h.addMarkAllHighlight(1, 3, new ChangeableHighlightPainter());
 		List<DocumentRange> ranges = h.getMarkAllHighlightRanges();
 		Assertions.assertEquals(1, ranges.size());
-		DocumentRange range = ranges.get(0);
+		DocumentRange range = ranges.getFirst();
 		Assertions.assertEquals(new DocumentRange(1, 3), range);
 	}
 
