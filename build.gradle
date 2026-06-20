@@ -14,12 +14,12 @@ plugins {
 
 apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
-// We require building with JDK 17 or later. Built artifact compatibility
+// We require building with JDK 25 or later. Built artifact compatibility
 // is controlled by javaLanguageVersion
-assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
+assert JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)
 
 group = 'com.fifesoft'
-// NOTE: Local Java 17: /Library/Java/JavaVirtualMachines/jdk-17.0.13+11/Contents/Home
+// NOTE: Local Java 25: /Library/Java/JavaVirtualMachines/jdk-25.0.1+8/Contents/Home
 
 allprojects {
 
