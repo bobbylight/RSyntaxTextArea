@@ -30,7 +30,7 @@ Java versions, use the RSTA version specified in the following table:
 
 | RSTA Version | Required to build (JDK) | Required to run (JRE)  |
 |--------------|-------------------------|------------------------|
-| 4.x          | 17                      | 11                     |
+| 4.x          | 25                      | 11                     |
 | 3.x          | 17                      | 8                      |
 | 2.6.x        | 6                       | 6                      |
 
