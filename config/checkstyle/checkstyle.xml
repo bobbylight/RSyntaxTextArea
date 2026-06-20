@@ -67,6 +67,7 @@
         <property name="max" value="2000"/>
     </module>
 
+    <module name="LineEnding"/>
     <module name="LineLength">
         <property name="max" value="120"/>
     </module>
@@ -236,6 +237,7 @@
         -->
         <!--        <module name="IllegalCatch"/>-->
         <module name="IllegalInstantiation"/>
+        <module name="IllegalSymbol"/>
         <module name="IllegalThrows"/>
         <module name="IllegalType"/>
         <!--<module name="InnerAssignment"/> -->
@@ -252,6 +254,8 @@
         <module name="UnnecessarySemicolonInEnumeration"/>
         <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnusedLocalVariable"/>
+        <module name="UnusedTryResourceShouldBeUnnamed"/>
+        <!--<module name="UseEnhancedSwitch"/> - TODO: too noisy for now -->
 
         <!-- Checks for class design                                        -->
         <!-- See https://checkstyle.sourceforge.io/checks/design/index.html -->
@@ -273,6 +277,7 @@
         </module>-->
         <module name="CommentsIndentation"/>
         <!--<module name="FinalParameters"/>-->
+        <module name="NumericalPrefixesInfixesSuffixesCharacterCase"/>
         <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
 
