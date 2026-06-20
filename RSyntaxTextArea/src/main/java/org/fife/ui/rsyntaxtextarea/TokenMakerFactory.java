@@ -44,12 +44,7 @@ public abstract class TokenMakerFactory {
 	 */
 	public static synchronized TokenMakerFactory getDefaultInstance() {
 		if (defaultInstance ==null) {
-			String clazz;
-			try {
-				clazz= System.getProperty(PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY);
-			} catch (java.security.AccessControlException ace) {
-				clazz = null; // We're in an applet; take default.
-			}
+			String clazz = System.getProperty(PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY);
 			if (clazz==null) {
 				clazz = "org.fife.ui.rsyntaxtextarea.DefaultTokenMakerFactory";
 			}

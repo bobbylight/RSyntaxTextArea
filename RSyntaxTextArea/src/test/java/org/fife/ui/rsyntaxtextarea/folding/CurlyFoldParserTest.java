@@ -36,7 +36,7 @@ class CurlyFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold importFold = folds.get(0);
+		Fold importFold = folds.getFirst();
 		Assertions.assertEquals(0, importFold.getStartOffset());
 		Assertions.assertEquals(code.lastIndexOf(";"), importFold.getEndOffset());
 
@@ -59,7 +59,7 @@ class CurlyFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold importFold = folds.get(0);
+		Fold importFold = folds.getFirst();
 		Assertions.assertEquals(0, importFold.getStartOffset());
 		Assertions.assertEquals(code.lastIndexOf(";"), importFold.getEndOffset());
 
@@ -87,7 +87,7 @@ class CurlyFoldParserTest {
 
 		Assertions.assertEquals(1, folds.size());
 
-		Fold topLevelFold = folds.get(0);
+		Fold topLevelFold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, topLevelFold.getFoldType());
 		int firstCurlyOffs = code.indexOf('{');
 		int lastCurlyOffs = code.lastIndexOf('}');

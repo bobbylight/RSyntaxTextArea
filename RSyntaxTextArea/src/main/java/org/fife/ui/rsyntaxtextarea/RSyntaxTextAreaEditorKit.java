@@ -1881,12 +1881,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// soft tab behavior provided by RTextArea.replaceSelection().
 				String replacement = "\t";
 				if (textArea.getTabsEmulated()) {
-					StringBuilder sb = new StringBuilder();
-					int temp = textArea.getTabSize();
-					for (int i=0; i<temp; i++) {
-						sb.append(' ');
-					}
-					replacement = sb.toString();
+					replacement = " ".repeat(Math.max(0, textArea.getTabSize()));
 				}
 
 				textArea.beginAtomicEdit();

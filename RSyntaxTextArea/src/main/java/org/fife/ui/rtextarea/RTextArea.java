@@ -527,12 +527,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param size The number of spaces.
 	 * @return The string of spaces.
 	 */
-	private String createSpacer(int size) {
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<size; i++) {
-			sb.append(' ');
-		}
-		return sb.toString();
+	private static String createSpacer(int size) {
+		return " ".repeat(Math.max(0, size));
 	}
 
 

@@ -479,7 +479,7 @@ class ThemeTest {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		theme.save(baos);
-		String actual = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+		String actual = baos.toString(StandardCharsets.UTF_8);
 		baos.close();
 
 		ByteArrayInputStream bin = new ByteArrayInputStream(actual.getBytes(StandardCharsets.UTF_8));

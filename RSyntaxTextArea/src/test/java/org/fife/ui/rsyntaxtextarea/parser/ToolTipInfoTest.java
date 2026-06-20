@@ -7,6 +7,7 @@
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import javax.swing.event.HyperlinkEvent;
@@ -31,7 +32,7 @@ class ToolTipInfoTest {
 	@BeforeEach
 	void setUp() throws MalformedURLException {
 		mhl = new MockHyperlinkListener();
-		imageBase = new URL("file:///localhost/images");
+		imageBase = URI.create("file:///localhost/images").toURL();
 	}
 
 

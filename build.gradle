@@ -43,6 +43,10 @@ subprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
+        // Only need `options.release` set for `compileJava`, not for tests
+        options.debug = true
+        options.debugOptions.debugLevel = 'source,vars,lines'
+        options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
     }
 
     test {
@@ -89,9 +93,6 @@ subprojects {
 
     compileJava {
         options.release = Integer.parseInt(javaLanguageVersion)
-        options.debug = true
-        options.debugOptions.debugLevel = 'source,vars,lines'
-        options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
     }
 }
 

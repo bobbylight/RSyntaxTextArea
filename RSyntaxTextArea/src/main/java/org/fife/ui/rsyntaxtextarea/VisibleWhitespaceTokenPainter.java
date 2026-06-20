@@ -205,7 +205,7 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 	 */
 	protected void paintTabText(Graphics2D g, float x, float y,
 						float nextTabStop, int ascent, int height) {
-		float halfHeight = height / 2;
+		float halfHeight = height / 2f;
 		float quarterHeight = halfHeight / 2;
 		float ymid = (int)y - ascent + halfHeight;
 		SwingUtils.drawLine(g, x,ymid, nextTabStop,ymid);

@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.security.AccessControlException;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -239,7 +238,7 @@ public class IconGroup {
 				// URLs that are valid but simply don't exist can create -1x-1 ImageIcons
 				return icon.getIconWidth() == -1 ? null : icon;
 			}
-		} catch (AccessControlException | IOException ace) {
+		} catch (IOException ioe) {
 			return null;
 		}
 	}

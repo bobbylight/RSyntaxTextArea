@@ -56,7 +56,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(1, fold.getLineCount());
@@ -79,7 +79,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(2, fold.getLineCount());
@@ -115,7 +115,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.COMMENT, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(1, fold.getLineCount());
@@ -157,7 +157,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.COMMENT, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(1, fold.getLineCount());
@@ -185,7 +185,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.COMMENT, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(2, fold.getLineCount());
@@ -231,7 +231,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(1, fold.getLineCount());
@@ -259,7 +259,7 @@ class HtmlFoldParserTest {
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
-		Fold fold = folds.get(0);
+		Fold fold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, fold.getFoldType());
 		Assertions.assertEquals(0, fold.getChildCount());
 		Assertions.assertEquals(2, fold.getLineCount());

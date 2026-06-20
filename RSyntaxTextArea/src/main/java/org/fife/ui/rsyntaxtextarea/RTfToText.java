@@ -231,11 +231,9 @@ final class RtfToText {
 	 * @throws IOException If an IO error occurs.
 	 */
 	private static String getPlainText(Reader r) throws IOException {
-		try {
+		try (r) {
 			RtfToText converter = new RtfToText(r);
 			return converter.convert();
-		} finally {
-			r.close();
 		}
 	}
 

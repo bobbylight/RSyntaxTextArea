@@ -63,7 +63,7 @@ class TaskTagParserTest {
 		// Note that the parser does not understand EOL vs. MLC comments, so
 		// it just returns everything from the start of the task to the end of
 		// the line.
-		Assertions.assertEquals("TODO: Fix this */", notices.get(0).getToolTipText());
+		Assertions.assertEquals("TODO: Fix this */", notices.getFirst().getToolTipText());
 
 	}
 

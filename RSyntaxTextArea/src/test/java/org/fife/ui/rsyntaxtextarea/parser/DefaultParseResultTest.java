@@ -115,7 +115,7 @@ class DefaultParseResultTest {
 		res.addNotice(notice);
 		List<ParserNotice> notices = res.getNotices();
 		Assertions.assertEquals(1, notices.size());
-		Assertions.assertEquals(notice, notices.get(0));
+		Assertions.assertEquals(notice, notices.getFirst());
 
 	}
 

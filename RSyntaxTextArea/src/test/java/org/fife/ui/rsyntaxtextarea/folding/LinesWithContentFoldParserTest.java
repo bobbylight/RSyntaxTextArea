@@ -42,7 +42,7 @@ class LinesWithContentFoldParserTest {
 
 		Assertions.assertEquals(2, folds.size());
 
-		Fold firstFold = folds.get(0);
+		Fold firstFold = folds.getFirst();
 		Assertions.assertEquals(FoldType.CODE, firstFold.getFoldType());
 		Assertions.assertEquals(0, firstFold.getStartOffset());
 		// End of fold is the end of hte last line containing content

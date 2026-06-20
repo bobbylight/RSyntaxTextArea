@@ -91,7 +91,7 @@ class XmlParserTest {
 		Assertions.assertEquals(1, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
 		Assertions.assertEquals(1, notices.size());
-		ParserNotice notice = notices.get(0);
+		ParserNotice notice = notices.getFirst();
 		Assertions.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
 
 	}
@@ -115,7 +115,7 @@ class XmlParserTest {
 		Assertions.assertEquals(2, res.getLastLineParsed());
 		List<ParserNotice> notices = res.getNotices();
 		Assertions.assertEquals(1, notices.size());
-		ParserNotice notice = notices.get(0);
+		ParserNotice notice = notices.getFirst();
 		Assertions.assertEquals(ParserNotice.Level.ERROR, notice.getLevel());
 
 	}
