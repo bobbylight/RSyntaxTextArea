@@ -24,6 +24,7 @@ import javax.swing.text.View;
 
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
+import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.RTextAreaHighlighter;
 import org.fife.ui.rtextarea.SmartHighlightPainter;
 

@@ -41,6 +41,7 @@ import javax.swing.text.BadLocationException;
 import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.TaskTagParser.TaskNotice;
+import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.RTextArea;
 
 
