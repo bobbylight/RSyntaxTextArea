@@ -50,7 +50,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = '12.3.1'
+        toolVersion = '13.6.0'
         configDirectory = file("$rootProject.projectDir/config/checkstyle")
     }
 

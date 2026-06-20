@@ -51,7 +51,7 @@ class RtfToTextTest {
 
 	@Test
 	void testGetPlainText_inputStream() throws IOException {
-		try (BufferedInputStream bin = new BufferedInputStream(new ByteArrayInputStream(
+		try (BufferedInputStream _ = new BufferedInputStream(new ByteArrayInputStream(
 			SIMPLE_RTF.getBytes(StandardCharsets.UTF_8)))) {
 			Assertions.assertEquals(SIMPLE_TEXT, RtfToText.getPlainText(SIMPLE_RTF));
 		}
