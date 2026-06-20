@@ -385,4 +385,122 @@ class IconRowHeaderTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertEquals(1, test.evt.getIconsAtLine().length);
 		Assertions.assertTrue(test.bookmarkAdded);
 	}
+
+
+	@Test
+	void testAddIconRowListener_mouseClicked_multipleListenersShareSameEvent() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new ImageIcon());
+
+		class IconRowListenerMouseClickedTest implements IconRowListener {
+			IconRowEvent evt;
+
+			@Override
+			public void bookmarkAdded(IconRowEvent e) {
+			}
+
+			@Override
+			public void bookmarkRemoved(IconRowEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(IconRowEvent e, MouseEvent me) {
+				evt = e;
+			}
+		}
+
+		IconRowListenerMouseClickedTest test1 = new IconRowListenerMouseClickedTest();
+		IconRowListenerMouseClickedTest test2 = new IconRowListenerMouseClickedTest();
+		header.addIconRowListener(test1);
+		header.addIconRowListener(test2);
+
+		// left-click on line 0
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		header.mouseClicked(evt);
+
+		// Both listeners are notified of the same event instance, rather than each getting its own
+		Assertions.assertNotNull(test1.evt);
+		Assertions.assertSame(test1.evt, test2.evt);
+	}
+
+
+	@Test
+	void testMouseClicked_noListenersRegistered_stillTogglesBookmark() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new EmptyTestIcon());
+
+		// left-click on line 0, with no IconRowListener registered at all
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		header.mouseClicked(evt);
+
+		Assertions.assertEquals(1, header.getBookmarks().length);
+	}
+
+
+	@Test
+	void testMouseClicked_rightClick_doesNotToggleBookmark() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new EmptyTestIcon());
+
+		// right-click on line 0
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON3);
+		header.mouseClicked(evt);
+
+		Assertions.assertEquals(0, header.getBookmarks().length);
+	}
+
+
+	@Test
+	void testMouseClicked_doubleClick_doesNotToggleBookmark() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		header.setBookmarkIcon(new EmptyTestIcon());
+
+		// left double-click on line 0
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 2, false, MouseEvent.BUTTON1);
+		header.mouseClicked(evt);
+
+		Assertions.assertEquals(0, header.getBookmarks().length);
+	}
+
+
+	@Test
+	void testMouseClicked_bookmarkingDisabled_doesNotToggleBookmark() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+
+		// left-click on line 0, with bookmarking left disabled
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		header.mouseClicked(evt);
+
+		Assertions.assertEquals(0, header.getBookmarks().length);
+	}
+
+
+	@Test
+	void testMouseClicked_bookmarkIconNotSet_doesNotToggleBookmark() {
+		RSyntaxTextArea textArea = createTextArea();
+		IconRowHeader header = new IconRowHeader(textArea);
+		header.setBookmarkingEnabled(true);
+		// bookmark icon intentionally left unset (null)
+
+		// left-click on line 0
+		MouseEvent evt = new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),
+			0, 0, 0, 1, false, MouseEvent.BUTTON1);
+		header.mouseClicked(evt);
+
+		Assertions.assertEquals(0, header.getBookmarks().length);
+	}
 }
