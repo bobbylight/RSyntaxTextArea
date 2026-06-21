@@ -1,9 +1,9 @@
 /*
- * 04/24/2012
+ * 08/12/2025
  *
  * LatexTokenMaker.java - Scanner for LaTeX.
  * 
- * This library is distributed under a modified BSD license.  See the included
+ * This library is distributed under a modified BSD license. See the included
  * LICENSE file for details.
  */
 package org.fife.ui.rsyntaxtextarea.modes;
@@ -13,12 +13,11 @@ import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.*;
 
-
 /**
- * Scanner for the LaTeX.<p>
+ * Scanner for <a href="https://www.latex-project.org/">LaTeX</a>.<p>
  *
  * This implementation was created using
- * <a href="https://www.jflex.de/">JFlex</a> 1.4.1; however, the generated file
+ * <a href="https://www.jflex.de/">JFlex</a> 1.9.1; however, the generated file
  * was modified for performance.  Memory allocation needs to be almost
  * completely removed to be competitive with the handwritten lexers (subclasses
  * of <code>AbstractTokenMaker</code>), so this class has been modified so that
@@ -49,7 +48,8 @@ import org.fife.ui.rsyntaxtextarea.*;
  * </ul>
  *
  * @author Robert Futrell
- * @version 0.5
+ * @author Mattia Marelli
+ * @version 1.0
  *
  */
 %%
@@ -65,74 +65,63 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
-	 * Constructor.  This must be here because JFlex does not generate a
+	 * Constructor. This must be here because JFlex does not generate a
 	 * no-parameter constructor.
 	 */
 	public LatexTokenMaker() {
 	}
 
+    /**
+     * If we're not in math mode, add a default null token, else add a token saving the current math mode we are into.
+     */
+    @Override
+    public void addNullToken() {
+        if(currentState >= 0) {
+            super.addNullToken();
+        } else {
+            super.addToken(s.array, start, start - 1, currentState, start);
+        }
+    }
 
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param tokenType The token's type.
-	 * @see #addToken(int, int, int)
-	 */
-	private void addHyperlinkToken(int start, int end, int tokenType) {
-		int so = start + offsetShift;
-		addToken(zzBuffer, start,end, tokenType, so, true);
-	}
+    protected void addNullToken(int value) {
+        super.addToken(s.array, start, start - 1, value, start);
+    }
 
-
-	/**
+    /**
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
 	 */
 	private void addToken(int tokenType) {
-		addToken(zzStartRead, zzMarkedPos-1, tokenType);
+        // take care of the math mode
+        if(currentState != 0) {
+            super.setLanguageIndex(1);
+        } else {
+            super.setLanguageIndex(0);
+        }
+
+		super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead);
 	}
 
+    private void addToken(int tokenType, int languageIndex) {
+        super.setLanguageIndex(languageIndex);
+        super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead);
+    }
 
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param tokenType The token's type.
-	 * @see #addHyperlinkToken(int, int, int)
-	 */
-	private void addToken(int start, int end, int tokenType) {
-		int so = start + offsetShift;
-		addToken(zzBuffer, start,end, tokenType, so, false);
+    private void addHyperlinkToken(int tokenType) {
+        super.setLanguageIndex(0); // Hyperlinks cannot be found into math blocks
+		super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead, true);
 	}
 
-
-	/**
-	 * Adds the token specified to the current linked list of tokens.
-	 *
-	 * @param array The character array.
-	 * @param start The starting offset in the array.
-	 * @param end The ending offset in the array.
-	 * @param tokenType The token's type.
-	 * @param startOffset The offset in the document at which this token
-	 *                    occurs.
-	 * @param hyperlink Whether this token is a hyperlink.
-	 */
-	@Override
-	public void addToken(char[] array, int start, int end, int tokenType,
-						int startOffset, boolean hyperlink) {
-		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
-		zzStartRead = zzMarkedPos;
-	}
-
-
-	/**
-	 * ${inheritDoc}
-	 */
+	
 	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "%", null };
 	}
 
+ @Override
+	public void yyclose() {
+	}
 
 	/**
 	 * Returns the first token in the linked list of tokens generated
@@ -148,17 +137,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	@Override
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
+        super.s = text;
+        super.start = startOffset;
 
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
 
-		// Start off in the proper state.
-		int state = Token.NULL;
+        int state = YYINITIAL;
+        setLanguageIndex(0);
+        currentState = 0;
+
+		if(initialTokenType == STATE_OPT) {
+            state = OPT; // still into options
+        } else if (initialTokenType < 0) { // math mode
+            currentState = (byte) initialTokenType;
+        }
 
 		s = text;
+
 		try {
-			yyreset(zzReader);
-			yybegin(state);
+			reset(text, 0, text.count, state);
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -167,50 +165,48 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	}
 
+    private void switchMath(byte type) {
+        if(type == currentState) {
+            currentState = 0;
+        } else {
+            currentState = type;
+        }
+    }
 
-	/**
-	 * Refills the input buffer.
-	 *
-	 * @return      <code>true</code> if EOF was reached, otherwise
-	 *              <code>false</code>.
-	 */
-	private boolean zzRefill() {
-		return zzCurrentPos>=s.offset+s.count;
-	}
+    private void addTokenStripWS(int tokenType) {
+        // take care of the math mode
+        if(currentState != 0) {
+            super.setLanguageIndex(1);
+        } else {
+            super.setLanguageIndex(0);
+        }
 
+        String text = yytext().trim();
+        int textL = yylength() - text.length();
 
-	/**
-	 * Resets the scanner to read from a new input stream.
-	 * Does not close the old reader.
-	 *
-	 * All internal variables are reset, the old input stream 
-	 * <b>cannot</b> be reused (internal buffer is discarded and lost).
-	 * Lexical state is set to <tt>YY_INITIAL</tt>.
-	 *
-	 * @param reader   the new input stream 
-	 */
-	public final void yyreset(java.io.Reader reader) {
-		// 's' has been updated.
-		zzBuffer = s.array;
-		/*
-		 * We replaced the line below with the two below it because zzRefill
-		 * no longer "refills" the buffer (since the way we do it, it's always
-		 * "full" the first time through, since it points to the segment's
-		 * array).  So, we assign zzEndRead here.
-		 */
-		//zzStartRead = zzEndRead = s.offset;
-		zzStartRead = s.offset;
-		zzEndRead = zzStartRead + s.count - 1;
-		zzCurrentPos = zzMarkedPos = zzPushbackPos = s.offset;
-		zzLexicalState = YYINITIAL;
-		zzReader = reader;
-		zzAtBOL  = true;
-		zzAtEOF  = false;
-	}
+        if(textL != 0) {
+            textL = text.length();
+            super.addToken(s.array, s.offset + zzStartRead, s.offset + zzStartRead + textL - 1, tokenType, start + zzStartRead);
+            super.addToken(s.array, s.offset + zzStartRead + textL, s.offset + zzMarkedPos - 1, TokenTypes.WHITESPACE, start + zzStartRead + textL);
+        } else {
+            super.addToken(s.array, s.offset + zzStartRead, s.offset + zzMarkedPos - 1, tokenType, start + zzStartRead);
+        }
+    }
 
-
+    byte currentState;
+    static byte STATE_INLINE_MATH_1 = -2;
+    static byte STATE_INLINE_MATH_2 = -3;
+    static byte STATE_DISPLAY_MATH_1 = -4;
+    static byte STATE_DISPLAY_MATH_2 = -5;
+    static byte STATE_OPT = -16;
 %}
 
+Spaces                  = "\\" [;:,!]
+Sectioning              = "\\" ( "part" | "chapter" | "section" | "subsection" | "subsubsection" | "paragraph" | "subparagraph" ) "*"?
+SpecialCommand          = "\\" ("newcommand" | "renewcommand" | "newenvironment" | "renewenvironment"
+                            | "newcounter" | "newlength"
+                            | "def"
+                            | "usepackage" )
 Letter					= ([A-Za-z])
 Digit					= ([0-9])
 LetterOrUnderscore		= ({Letter}|[_])
@@ -228,47 +224,68 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 %state EOL_COMMENT
+%state ENV
+%state OPT
 
 %%
 
 <YYINITIAL> {
+    "\\usepackage"              { addToken(Token.RESERVED_WORD); yybegin(OPT); }
+    "\\documentclass"           { addToken(Token.RESERVED_WORD); yybegin(OPT); }
+    "\\begin" {Whitespace}* "{" { yypushback(1); addTokenStripWS(Token.RESERVED_WORD); yybegin(ENV); }
+    "\\end" {Whitespace}* "{"   { yypushback(1); addTokenStripWS(Token.RESERVED_WORD); yybegin(ENV); }
+    "\\label" {Whitespace}* "{" { yypushback(1); addTokenStripWS(Token.RESERVED_WORD); yybegin(ENV); }
+    "\\" ((eq|page)? "ref")
+       {Whitespace}* "{"        { yypushback(1); addTokenStripWS(Token.FUNCTION); yybegin(ENV); }
 
+    {Spaces}                    { addToken(Token.FUNCTION); }
+    {Sectioning}                { addToken(Token.VARIABLE); }
+    {SpecialCommand}            { addToken(Token.RESERVED_WORD); }
 	([\\]{AnyChar}+)			{ addToken(Token.FUNCTION); }
-	([\\]%)						{ int temp = zzStartRead;
-									addToken(temp, temp, Token.SEPARATOR);
-									addToken(temp + 1, temp + 1, Token.IDENTIFIER);
-								}
+	([\\]%)						{ addToken(Token.FUNCTION); }
 	[\{\}]						{ addToken(Token.SEPARATOR); }
-	("\\begin{"{AnyChar}+"}")   { int temp = zzStartRead;
-							addToken(temp, temp+5, Token.RESERVED_WORD);
-							addToken(temp+6, temp+6, Token.SEPARATOR);
-							addToken(temp+7, zzMarkedPos-2, Token.RESERVED_WORD);
-							addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
-								}
-	("\\end{"{AnyChar}+"}")		{ int temp = zzStartRead;
-							addToken(temp, temp+3, Token.RESERVED_WORD);
-							addToken(temp+4, temp+4, Token.SEPARATOR);
-							addToken(temp+5, zzMarkedPos-2, Token.RESERVED_WORD);
-							addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
-								}
+
 	{Whitespace}				{ addToken(Token.WHITESPACE); }
 
-	{LineCommentBegin}			{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
+	{LineCommentBegin}			{ addToken(Token.COMMENT_EOL); yybegin(EOL_COMMENT); }
 
-	"\n" |
-	<<EOF>>						{ addNullToken(); return firstToken; }
+    // MATH BLOCKS
+    "$$"                        { addToken(Token.SEPARATOR, 1); switchMath(STATE_DISPLAY_MATH_1); }
+    "\\["                       { addToken(Token.SEPARATOR, 1); currentState = STATE_DISPLAY_MATH_2; }
+    "\\]"                       { addToken(Token.SEPARATOR, 1); currentState = 0; }
+    "\\("                       { addToken(Token.SEPARATOR, 1); currentState = STATE_INLINE_MATH_2; }
+    "\\)"                       { addToken(Token.SEPARATOR, 1); currentState = 0; }
+    "$"                         { addToken(Token.SEPARATOR, 1); switchMath(STATE_INLINE_MATH_1); }
+
+	\n                          { addNullToken(); return firstToken; }
+	<<EOF>>                     { addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as identifiers. */
-	{AnyChar}+ |
-	.							{ addToken(Token.IDENTIFIER); }
-
+	[^]							{ addToken(Token.IDENTIFIER); }
 }
 
+<OPT> {
+    ","                         { addToken(Token.OPERATOR); }
+    "{"                         { addToken(Token.SEPARATOR); yybegin(ENV); }
+    "["                         { addToken(Token.SEPARATOR); }
+    "]"                         { addToken(Token.SEPARATOR); yybegin(ENV);}
+    {Whitespace}                { addToken(Token.WHITESPACE); }
+    [^]                         { addToken(Token.PREPROCESSOR); }
+    <<EOF>> 				    { addNullToken(STATE_OPT); return firstToken; }
+}
+
+<ENV> {
+    {Whitespace}            { addToken(Token.WHITESPACE); }
+    "{"                     { addToken(Token.SEPARATOR); }
+    "}"                     { addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
+    [^{}]+                  { addToken(Token.REGEX); }
+    <<EOF>> 				{ addNullToken(); return firstToken; }
+}
 
 <EOL_COMMENT> {
-	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
-	[hwf]					{}
-	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	[^hwf\n]+				{ addToken(Token.COMMENT_EOL); }
+	{URL}					{ addHyperlinkToken(Token.COMMENT_EOL);  }
+	[hwf]					{ addToken(Token.COMMENT_EOL); }
+	\n  					{ addNullToken(); return firstToken; }
+	<<EOF>>					{ addNullToken(); return firstToken; }
 }
