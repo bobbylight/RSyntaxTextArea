@@ -18,6 +18,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.event.DocumentEvent;
@@ -52,7 +53,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 												RSTAView {
 
     private int tabBase;
-    private int tabSize;
+    private float tabSize;
 
 	/**
 	 * This is reused to keep from allocating/deallocating.
@@ -822,8 +823,8 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		if (tabSize == 0) {
 			return x;
 		}
-		int ntabs = ((int) x - tabBase) / tabSize;
-		return tabBase + ((ntabs + 1f) * tabSize);
+		int ntabs = (int) ((x - tabBase) / tabSize);
+		return tabBase + ((ntabs + 1) * tabSize);
 	}
 
 
@@ -1040,7 +1041,9 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		Component host = getContainer();
 		Font f = host.getFont();
 		metrics = host.getFontMetrics(f); // Metrics for the default font.
-		tabSize = getTabSize() * metrics.charWidth('m');
+		FontRenderContext frc = metrics.getFontRenderContext();
+		float tabWidth = (float) f.getStringBounds("m", frc).getWidth();
+		tabSize = getTabSize() * tabWidth;
 	}
 
 
