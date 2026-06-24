@@ -174,8 +174,8 @@ public class SyntaxView extends View implements TabExpander,
 	 * @param y The y-coordinate at which to render.
 	 */
 	static void drawEOLMarker(RSyntaxTextArea textArea, Graphics2D g, float x, float y) {
-		g.setColor(textArea.getForegroundForTokenType(Token.WHITESPACE));
-		g.setFont(textArea.getFontForTokenType(Token.WHITESPACE));
+		g.setColor(textArea.getForegroundForTokenType(TokenTypes.WHITESPACE));
+		g.setFont(textArea.getFontForTokenType(TokenTypes.WHITESPACE));
 		g.drawString(EOL_MARKER, x, y);
 	}
 

@@ -713,7 +713,7 @@ public class TclTokenMaker extends AbstractJFlexCTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 
 		s = text;
 		try {
@@ -993,51 +993,51 @@ public final void yybegin(int newState) {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 14:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 15: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 16: break;
         case 13:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 17: break;
         case 11:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 18: break;
         case 4:
-          { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 19: break;
         case 6:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 20: break;
         case 10:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 21: break;
         case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 22: break;
         case 12:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 23: break;
         case 8:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 24: break;
         case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 25: break;
         case 7:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 26: break;
         case 5:
@@ -1045,7 +1045,7 @@ public final void yybegin(int newState) {
           }
         case 27: break;
         case 9:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 28: break;
         default:

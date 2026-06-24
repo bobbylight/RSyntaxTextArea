@@ -301,47 +301,47 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %%
 
 <YYINITIAL> {
-	([^ \t\f<]+)				{ /* Not really valid */ addToken(Token.IDENTIFIER); }
+	([^ \t\f<]+)				{ /* Not really valid */ addToken(TokenTypes.IDENTIFIER); }
 	"<!--"						{ start = zzStartRead; prevState = zzLexicalState; yybegin(COMMENT); }
-	"<!"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG_START); }
-	"<"							{ addToken(Token.IDENTIFIER); }
-	{Whitespace}+				{ addToken(Token.WHITESPACE); }
+	"<!"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG_START); }
+	"<"							{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}+				{ addToken(TokenTypes.WHITESPACE); }
 	{LineTerminator} |
 	<<EOF>>						{ addNullToken(); return firstToken; }
 }
 
 <COMMENT> {
 	[^hwf\n\-]+					{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]						{}
-	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(prevState); }
+	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); start = temp; yybegin(prevState); }
 	"-"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken; }
 }
 
 <INTAG_START> {
-	("ELEMENT")					{ addToken(Token.MARKUP_TAG_NAME); yybegin(INTAG_ELEMENT); }
-	("ATTLIST")					{ addToken(Token.MARKUP_TAG_NAME); yybegin(INTAG_ATTLIST); }
-	([^ \t\f>]+)				{ addToken(Token.IDENTIFIER); }
-	{Whitespace}+				{ addToken(Token.WHITESPACE); }
-	(">")						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	("ELEMENT")					{ addToken(TokenTypes.MARKUP_TAG_NAME); yybegin(INTAG_ELEMENT); }
+	("ATTLIST")					{ addToken(TokenTypes.MARKUP_TAG_NAME); yybegin(INTAG_ATTLIST); }
+	([^ \t\f>]+)				{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}+				{ addToken(TokenTypes.WHITESPACE); }
+	(">")						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	<<EOF>>						{ addEndToken(INTERNAL_INTAG_START); return firstToken; }
 }
 
 <INTAG_ELEMENT> {
-	([^ \t\f>]+)				{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	{Whitespace}+				{ addToken(Token.WHITESPACE); }
-	(">")						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	([^ \t\f>]+)				{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}+				{ addToken(TokenTypes.WHITESPACE); }
+	(">")						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	<<EOF>>						{ addEndToken(INTERNAL_INTAG_ELEMENT); return firstToken; }
 }
 
 <INTAG_ATTLIST> {
-	("CDATA"|"#IMPLIED"|"#REQUIRED")	{ addToken(Token.MARKUP_PROCESSING_INSTRUCTION); }
-	([^ \t\f>\"\']+)			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	({UnclosedString}[\"]?)		{ addToken(Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	({UnclosedChar}[\']?)		{ addToken(Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	{Whitespace}+				{ addToken(Token.WHITESPACE); }
-	(">")						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	("CDATA"|"#IMPLIED"|"#REQUIRED")	{ addToken(TokenTypes.MARKUP_PROCESSING_INSTRUCTION); }
+	([^ \t\f>\"\']+)			{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	({UnclosedString}[\"]?)		{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	({UnclosedChar}[\']?)		{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	{Whitespace}+				{ addToken(TokenTypes.WHITESPACE); }
+	(">")						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
 	<<EOF>>						{ addEndToken(INTERNAL_INTAG_ATTLIST); return firstToken; }
 }

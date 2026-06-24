@@ -139,15 +139,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state = YYINITIAL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR;
 				start = text.offset;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
@@ -370,14 +370,14 @@ MLCEnd			= "*/"
 	"WHEN" |
 	"WHERE" |
 	"WITH" |
-	"YESNO"					{ addToken(Token.RESERVED_WORD); }
+	"YESNO"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	/* SQL99 aggregate functions */
 	"AVG" |
 	"COUNT" |
 	"MIN" |
 	"MAX" |
-	"SUM"					{ addToken(Token.FUNCTION); }
+	"SUM"					{ addToken(TokenTypes.FUNCTION); }
 
 	/* SQL99 built-in scalar functions */
 	"CURRENT_DATE" |
@@ -385,14 +385,14 @@ MLCEnd			= "*/"
 	"CURRENT_TIMESTAMP" |
 	"CURRENT_USER" |
 	"SESSION_USER" |
-	"SYSTEM_USER"			{ addToken(Token.FUNCTION); }
+	"SYSTEM_USER"			{ addToken(TokenTypes.FUNCTION); }
 
 	/* SQL99 numeric scalar functions */
 	"BIT_LENGTH" |
 	"CHAR_LENGTH" |
 	"EXTRACT" |
 	"OCTET_LENGTH" |
-	"POSITION"				{ addToken(Token.FUNCTION); }
+	"POSITION"				{ addToken(TokenTypes.FUNCTION); }
 
 	/* SQL99 string functions */
 	"CONCATENATE" |
@@ -401,68 +401,68 @@ MLCEnd			= "*/"
 	"SUBSTRING" |
 	"TRANSLATE" |
 	"TRIM" |
-	"UPPER"					{ addToken(Token.FUNCTION); }
+	"UPPER"					{ addToken(TokenTypes.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	";"							{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	";"							{ addToken(TokenTypes.IDENTIFIER); }
 
-	{Parameter}					{ addToken(Token.IDENTIFIER); }
+	{Parameter}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{Comment}						{ addToken(Token.COMMENT_EOL); }
+	{Comment}						{ addToken(TokenTypes.COMMENT_EOL); }
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
 
-	{Whitespace}					{ addToken(Token.WHITESPACE); }
+	{Whitespace}					{ addToken(TokenTypes.WHITESPACE); }
 
-	{Operator}					{ addToken(Token.OPERATOR); }
-	{Separator}					{ addToken(Token.SEPARATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
 
-	{Integer}						{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{Float}						{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ApproxNum}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
+	{Integer}						{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{Float}						{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ApproxNum}					{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
 
 	"\""							{ start = zzMarkedPos-1; yybegin(STRING); }
 	"\'"							{ start = zzMarkedPos-1; yybegin(CHAR); }
 
     // MS-SQL square bracket identifiers
-	"["[^\]]*"]"					{ addToken(Token.PREPROCESSOR); }
-	"["[^\]]*						{ addToken(Token.ERROR_IDENTIFIER); addNullToken(); return firstToken; }
+	"["[^\]]*"]"					{ addToken(TokenTypes.PREPROCESSOR); }
+	"["[^\]]*						{ addToken(TokenTypes.ERROR_IDENTIFIER); addNullToken(); return firstToken; }
 
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as OK; */
 	/* I don't know enough about SQL to know what's really invalid. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 <STRING> {
 
 	[^\n\"]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 	"\"\""				{}
-	"\""					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	"\""					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 
 }
 
 <CHAR> {
 
 	[^\n\']+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 	"\'\'"				{}
-	"\'"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	"\'"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 
 }
 
 <MLC> {
 
 	[^\n\*]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	{MLCEnd}				{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	\n					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
+	{MLCEnd}				{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*					{}
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
 
 }

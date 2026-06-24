@@ -125,7 +125,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.RESERVED_WORD;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.RESERVED_WORD;
 	}
 
 
@@ -234,46 +234,46 @@ WhiteSpace				= ([ \t\f])
 	"entrypoint" |
 	"label" |
 	"arg" |
-	"stopsignal" 					{ addToken(Token.RESERVED_WORD); }
+	"stopsignal" 					{ addToken(TokenTypes.RESERVED_WORD); }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	"[" |
-	"]"								{ addToken(Token.SEPARATOR); }
+	"]"								{ addToken(TokenTypes.SEPARATOR); }
 	
 	"|" |
 	">" |
-	">>"							{ addToken(Token.OPERATOR); }
+	">>"							{ addToken(TokenTypes.OPERATOR); }
 	
 	/* String/Character literals. */
 	\"							{ start = zzMarkedPos-1; yybegin(STRING); }
 	\'							{ start = zzMarkedPos-1; yybegin(CHAR_LITERAL); }
 
 	/* Comment literals. */
-	"#".*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	"#".*			{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Ended with a line not in a string or comment. */
 	"\n" |
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 <STRING> {
 	[^\n\\\"]+			{}
 	\\.?				{ /* Skip escaped chars. */ }
-	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
 <CHAR_LITERAL> {
 	[^\n\\\']+			{}
 	\\.?					{ /* Skip escaped single quotes only, but this should still work. */ }
-	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 }

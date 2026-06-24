@@ -134,7 +134,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 
 		s = text;
 		try {
@@ -234,165 +234,165 @@ ErrorIdentifier			= ({NonSeparator}+)
 %%
 
 /* Keywords */
-<YYINITIAL> "append"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "array"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "auto_mkindex"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "concat"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "console"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "eval"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "expr"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "format"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "global"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "set"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "trace"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "unset"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "upvar"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "join"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lappend"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lindex"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "linsert"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "list"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "llength"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lrange"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lreplace"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lsearch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lsort"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "split"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "scan"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "string"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "regexp"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "regsub"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "if"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "else"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "elseif"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "switch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "for"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "foreach"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "while"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "break"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "continue"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "proc"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "return"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "source"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "unkown"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "uplevel"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "cd"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "close"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "eof"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "file"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "flush"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "gets"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "glob"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "open"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "read"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "puts"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "pwd"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "seek"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tell"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "catch"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "error"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "exec"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "pid"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "after"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "time"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "exit"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "history"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "rename"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "info"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ceil"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "floor"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "round"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "incr"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "hypot"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "abs"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "acos"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "cos"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "cosh"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "asin"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sin"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sinh"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "atan"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "atan2"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tan"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tanh"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "log"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "log10"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "fmod"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "pow"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "hypot"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "sqrt"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "double"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "int"				{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "append"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "array"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "auto_mkindex"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "concat"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "console"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "eval"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "expr"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "format"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "global"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "set"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "trace"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "unset"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "upvar"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "join"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lappend"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lindex"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "linsert"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "list"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "llength"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lrange"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lreplace"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lsearch"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lsort"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "split"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "scan"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "string"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "regexp"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "regsub"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "if"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "else"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "elseif"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "switch"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "for"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "foreach"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "while"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "break"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "continue"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "proc"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "return"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "source"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "unkown"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "uplevel"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "cd"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "close"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "eof"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "file"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "flush"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "gets"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "glob"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "open"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "read"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "puts"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "pwd"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "seek"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tell"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "catch"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "error"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "exec"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "pid"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "after"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "time"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "exit"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "history"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "rename"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "info"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ceil"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "floor"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "round"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "incr"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "hypot"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "abs"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "acos"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "cos"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "cosh"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "asin"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "sin"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "sinh"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "atan"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "atan2"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tan"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tanh"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "log"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "log10"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "fmod"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "pow"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "hypot"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "sqrt"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "double"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "int"				{ addToken(TokenTypes.RESERVED_WORD); }
 
-<YYINITIAL> "bind"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "button"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "canvas"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "checkbutton"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "destroy"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "entry"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "focus"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "frame"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "grab"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "image"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "label"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "listbox"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "lower"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "menu"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "menubutton"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "message"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "option"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "pack"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "placer"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "radiobutton"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "raise"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "scale"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "scrollbar"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "selection"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "send"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "text"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tk"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tkerror"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "tkwait"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "toplevel"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "update"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "winfo"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "wm"				{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "bind"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "button"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "canvas"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "checkbutton"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "destroy"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "entry"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "focus"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "frame"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "grab"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "image"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "label"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "listbox"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "lower"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "menu"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "menubutton"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "message"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "option"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "pack"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "placer"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "radiobutton"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "raise"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "scale"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "scrollbar"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "selection"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "send"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "text"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tk"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tkerror"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "tkwait"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "toplevel"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "update"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "winfo"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "wm"				{ addToken(TokenTypes.RESERVED_WORD); }
 
 
 <YYINITIAL> {
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{StringLiteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}			{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 
 	/* Comment literals. */
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{LineCommentBegin}.*			{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Separators. */
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}					{ addToken(Token.IDENTIFIER); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{HexLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{FloatLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ErrorNumberFormat}				{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
+	{ErrorIdentifier}				{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }

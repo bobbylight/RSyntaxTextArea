@@ -1455,7 +1455,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 44: break;
         case 27:
@@ -1463,11 +1463,11 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 45: break;
         case 38:
-          { addToken(start,zzStartRead + 2, Token.FUNCTION); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead + 2, TokenTypes.FUNCTION); yybegin(YYINITIAL);
           }
         case 46: break;
         case 17:
-          { yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER);
+          { yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER);
           }
         case 47: break;
         case 11:
@@ -1477,18 +1477,18 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
         case 12:
           { // In many cases, '>' is the beginning of a block quote
                                     if (TokenUtils.isBlankOrAllWhiteSpace(firstToken)) {
-                                        addToken(Token.COMMENT_EOL);
+                                        addToken(TokenTypes.COMMENT_EOL);
                                     }
                                     // But if not, highlight it as an identifier and continue on
                                     else {
                                         int count = yylength();
-                                        addToken(zzStartRead, zzStartRead, Token.IDENTIFIER);
+                                        addToken(zzStartRead, zzStartRead, TokenTypes.IDENTIFIER);
                                         zzMarkedPos -= (count - 1);
                                     }
           }
         case 49: break;
         case 30:
-          { addToken(start,zzStartRead + 1, Token.RESERVED_WORD_2); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead + 1, TokenTypes.RESERVED_WORD_2); yybegin(YYINITIAL);
           }
         case 50: break;
         case 28:
@@ -1515,7 +1515,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 53: break;
         case 6:
-          { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG);
           }
         case 54: break;
         case 4:
@@ -1527,12 +1527,12 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 56: break;
         case 24:
-          { addToken(start,zzStartRead, Token.PREPROCESSOR); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead, TokenTypes.PREPROCESSOR); yybegin(YYINITIAL);
           }
         case 57: break;
         case 26:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-1); //yypushback(count-1);
 									yybegin(INTAG_CHECK_TAG_NAME);
           }
@@ -1560,7 +1560,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 60: break;
         case 22:
-          { yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
+          { yybegin(INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 61: break;
         case 14:
@@ -1570,12 +1570,12 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
         case 8:
           { // In almost all cases, '#' is the beginning of a heading
                                     if (getNoTokensIdentifiedYet()) {
-                                        addToken(Token.RESERVED_WORD);
+                                        addToken(TokenTypes.RESERVED_WORD);
                                     }
                                     // If for some reason it isn't, highlight it as an identifier and continue on
                                     else {
                                         int count = yylength();
-                                        addToken(zzStartRead, zzStartRead, Token.IDENTIFIER);
+                                        addToken(zzStartRead, zzStartRead, TokenTypes.IDENTIFIER);
                                         zzMarkedPos -= (count - 1);
                                     }
           }
@@ -1598,13 +1598,13 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
                                         }
                                         else {
                                             // "hr" markup with following content is invalid
-                                            addToken(start, start + 2, Token.IDENTIFIER);
+                                            addToken(start, start + 2, TokenTypes.IDENTIFIER);
                                             zzMarkedPos = start + 3;
                                         }
                                     }
                                     else {
                                         // The "hr" markup is really just an identifier
-                                        addToken(start, start + 2, Token.IDENTIFIER);
+                                        addToken(start, start + 2, TokenTypes.IDENTIFIER);
                                         zzMarkedPos = start + 3;
                                     }
           }
@@ -1614,11 +1614,11 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 67: break;
         case 5:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 68: break;
         case 21:
-          { addToken(Token.MARKUP_TAG_NAME);
+          { addToken(TokenTypes.MARKUP_TAG_NAME);
           }
         case 69: break;
         case 35:
@@ -1626,7 +1626,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 70: break;
         case 23:
-          { addToken(start,zzStartRead, Token.DATA_TYPE); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead, TokenTypes.DATA_TYPE); yybegin(YYINITIAL);
           }
         case 71: break;
         case 16:
@@ -1634,11 +1634,11 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 72: break;
         case 13:
-          { addToken(Token.MARKUP_TAG_ATTRIBUTE);
+          { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE);
           }
         case 73: break;
         case 7:
-          { addToken(Token.MARKUP_ENTITY_REFERENCE);
+          { addToken(TokenTypes.MARKUP_ENTITY_REFERENCE);
           }
         case 74: break;
         case 41:
@@ -1651,11 +1651,11 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 75: break;
         case 39:
-          { addToken(start,zzStartRead + 2, Token.PREPROCESSOR); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead + 2, TokenTypes.PREPROCESSOR); yybegin(YYINITIAL);
           }
         case 76: break;
         case 31:
-          { addToken(start,zzStartRead + 1, Token.OPERATOR); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead + 1, TokenTypes.OPERATOR); yybegin(YYINITIAL);
           }
         case 77: break;
         case 40:
@@ -1670,7 +1670,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
         case 78: break;
         case 33:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-2); //yypushback(count-2);
 									yybegin(INTAG_CHECK_TAG_NAME);
           }
@@ -1688,7 +1688,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 82: break;
         case 18:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 83: break;
         case 25:
@@ -1696,7 +1696,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 84: break;
         case 15:
-          { addToken(Token.MARKUP_TAG_DELIMITER);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER);
           }
         case 85: break;
         case 1:
@@ -1708,7 +1708,7 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case CODE: {
-              addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_IN_CODE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_IN_CODE); return firstToken;
             }
             case 343: break;
             case INTAG_CHECK_TAG_NAME: {
@@ -1716,43 +1716,43 @@ public class MarkdownTokenMaker extends AbstractMarkupTokenMaker {
             }
             case 344: break;
             case STRIKETHROUGH: {
-              addToken(start,zzStartRead-1, Token.OPERATOR); addEndToken(INTERNAL_IN_STRIKETHROUGH); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.OPERATOR); addEndToken(INTERNAL_IN_STRIKETHROUGH); return firstToken;
             }
             case 345: break;
             case BOLDITALIC2: {
-              addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC2); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC2); return firstToken;
             }
             case 346: break;
             case BOLDITALIC1: {
-              addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC1); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC1); return firstToken;
             }
             case 347: break;
             case ITALIC2: {
-              addToken(start,zzStartRead-1, Token.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC2); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC2); return firstToken;
             }
             case 348: break;
             case ITALIC1: {
-              addToken(start,zzStartRead-1, Token.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC1); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC1); return firstToken;
             }
             case 349: break;
             case BOLD2: {
-              addToken(start,zzStartRead-1, Token.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD2); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD2); return firstToken;
             }
             case 350: break;
             case BOLD1: {
-              addToken(start,zzStartRead-1, Token.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD1); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD1); return firstToken;
             }
             case 351: break;
             case SYNTAX_HIGHLIGHTING: {
-              addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_IN_SYNTAX_HIGHLIGHTING); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_IN_SYNTAX_HIGHLIGHTING); return firstToken;
             }
             case 352: break;
             case INATTR_SINGLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken;
             }
             case 353: break;
             case INATTR_DOUBLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken;
             }
             case 354: break;
             case YYINITIAL: {

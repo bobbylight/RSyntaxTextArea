@@ -134,18 +134,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = LONGSTRING;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -260,14 +260,14 @@ Identifier				= ({Letter}({Letter}|{Digit})*)
 <YYINITIAL> "return" |
 <YYINITIAL> "then" |
 <YYINITIAL> "until" |
-<YYINITIAL> "while" { addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "while" { addToken(TokenTypes.RESERVED_WORD); }
 
 /* Data types. */
 <YYINITIAL> "<number>" |
 <YYINITIAL> "<name>" |
 <YYINITIAL> "<string>" |
 <YYINITIAL> "<eof>" |
-<YYINITIAL> "NULL"					{ addToken(Token.DATA_TYPE); }
+<YYINITIAL> "NULL"					{ addToken(TokenTypes.DATA_TYPE); }
 
 /* Functions. */
 <YYINITIAL> "_G" |
@@ -298,23 +298,23 @@ Identifier				= ({Letter}({Letter}|{Digit})*)
 <YYINITIAL> "tostring" |
 <YYINITIAL> "type" |
 <YYINITIAL> "unpack" |
-<YYINITIAL> "xpcall"				{ addToken(Token.FUNCTION); }
+<YYINITIAL> "xpcall"				{ addToken(TokenTypes.FUNCTION); }
 
 /* Booleans. */
-<YYINITIAL> {BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+<YYINITIAL> {BooleanLiteral}			{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 
 
 <YYINITIAL> {
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
-	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{CharLiteral}					{ addToken(TokenTypes.LITERAL_CHAR); }
+	{UnclosedCharLiteral}			{ addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken; }
+	{StringLiteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}			{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 	{LongStringBegin}				{ start = zzMarkedPos-2; yybegin(LONGSTRING); }
 
 	/* Comment literals. */
@@ -322,47 +322,47 @@ Identifier				= ({Letter}({Letter}|{Digit})*)
 	{LineCommentBegin}				{ start = zzMarkedPos-2; yybegin(LINECOMMENT); }
 
 	/* Separators. */
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}					{ addToken(Token.IDENTIFIER); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Identifiers - Comes after Operators for "and", "not" and "or". */
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Numbers */
-	{Number}						{ addToken(Token.LITERAL_NUMBER_FLOAT); }
+	{Number}						{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 
 <MLC> {
 	[^\n\]]+					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	{LongStringEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
+	{LongStringEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\]						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
 }
 
 
 <LONGSTRING> {
 	[^\n\]]+					{}
-	\n						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-	{LongStringEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	{LongStringEnd}			{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 	\]						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
 
 <LINECOMMENT> {
 	[^\n]+					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); return firstToken; }
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); return firstToken; }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); return firstToken; }
 }

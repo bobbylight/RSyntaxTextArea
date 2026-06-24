@@ -571,15 +571,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"void" |
 	"while" |
 	"with" |
-	"yield"                    { addToken(Token.RESERVED_WORD); }
-	"return"					{ addToken(Token.RESERVED_WORD_2); }
+	"yield"                    { addToken(TokenTypes.RESERVED_WORD); }
+	"return"					{ addToken(TokenTypes.RESERVED_WORD_2); }
 	
 	//e4X
-	"each" 						{if(e4xSupported){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	"each" 						{if(e4xSupported){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);} }
 	//JavaScript 1.7
-	"let" 						{ addToken(Token.RESERVED_WORD); }
+	"let" 						{ addToken(TokenTypes.RESERVED_WORD); }
 	// e4x miscellaneous
-	{JS_E4xAttribute}			{ addToken(isE4xSupported() ? Token.MARKUP_TAG_ATTRIBUTE : Token.ERROR_IDENTIFIER); }
+	{JS_E4xAttribute}			{ addToken(isE4xSupported() ? TokenTypes.MARKUP_TAG_ATTRIBUTE : TokenTypes.ERROR_IDENTIFIER); }
 	
 	// TypeScript data types
 	"any" |
@@ -594,7 +594,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"float" |
 	"int" |
 	"long" |
-	"short"						{ addToken(Token.DATA_TYPE); }
+	"short"						{ addToken(TokenTypes.DATA_TYPE); }
 	
 	// Reserved words, mostly from older standards
 	"abstract" |
@@ -613,13 +613,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"throws" |
 	"transient" |
 	"volatile" |
-	"null"						{ addToken(Token.RESERVED_WORD); }
+	"null"						{ addToken(TokenTypes.RESERVED_WORD); }
 
 	// Literals.
 	"false" |
-	"true"						{ addToken(Token.LITERAL_BOOLEAN); }
+	"true"						{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 	"NaN" |
-	"Infinity"					{ addToken(Token.RESERVED_WORD); }
+	"Infinity"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	// Functions.
 	"eval" |
@@ -628,11 +628,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"escape" |
 	"unescape" |
 	"isNaN" |
-	"isFinite"						{ addToken(Token.FUNCTION); }
+	"isFinite"						{ addToken(TokenTypes.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
-	{JS_Identifier}					{ addToken(Token.IDENTIFIER); }
-	{Whitespace}					{ addToken(Token.WHITESPACE); }
+	{JS_Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
 	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
@@ -640,7 +640,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[\`]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_TEMPLATE_LITERAL); }
 
 	/* Comment literals. */
-	"/**/"							{ addToken(Token.COMMENT_MULTILINE); }
+	"/**/"							{ addToken(TokenTypes.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
 	{JS_DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(JS_DOCCOMMENT); }
 	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
@@ -649,7 +649,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_Regex}						{
 										boolean highlightedAsRegex = false;
 										if (firstToken==null) {
-											addToken(Token.REGEX);
+											addToken(TokenTypes.REGEX);
 											highlightedAsRegex = true;
 										}
 										else {
@@ -657,7 +657,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 											// the previous token, highlight it as such.
 											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
 											if (RSyntaxUtilities.regexCanFollowInJavaScript(t)) {
-												addToken(Token.REGEX);
+												addToken(TokenTypes.REGEX);
 												highlightedAsRegex = true;
 											}
 										}
@@ -665,14 +665,14 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 										// individual tokens.
 										if (!highlightedAsRegex) {
 											int temp = zzStartRead + 1;
-											addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+											addToken(zzStartRead, zzStartRead, TokenTypes.OPERATOR);
 											zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 										}
 									}
 
 	/* Separators. */
-	{JS_Separator}					{ addToken(Token.SEPARATOR); }
-	{JS_Separator2}					{ addToken(Token.IDENTIFIER); }
+	{JS_Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{JS_Separator2}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Operators. */
 	[\+]?"="{Whitespace}*"<"		{
@@ -680,10 +680,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 										int operatorLen = yycharat(0)=='+' ? 2 : 1;
 										int yylen = yylength(); // Cache before first addToken() invalidates it
 										//System.out.println("'" + yytext() + "': " + yylength() + ", " + (operatorLen+1));
-										addToken(zzStartRead,zzStartRead+operatorLen-1, Token.OPERATOR);
+										addToken(zzStartRead,zzStartRead+operatorLen-1, TokenTypes.OPERATOR);
 										if (yylen>operatorLen+1) {
 											//System.out.println((start+operatorLen) + ", " + (zzMarkedPos-2));
-											addToken(start+operatorLen,zzMarkedPos-2, Token.WHITESPACE);
+											addToken(start+operatorLen,zzMarkedPos-2, TokenTypes.WHITESPACE);
 										}
 										zzStartRead = zzCurrentPos = zzMarkedPos = zzMarkedPos - 1;
 										if (isE4xSupported()) {
@@ -693,21 +693,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 										// Found e4x (or syntax error) but option not enabled;
 										// Scanning will continue at "<" as operator
 									}
-	{JS_Operator}					{ addToken(Token.OPERATOR); }
+	{JS_Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{JS_IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{JS_HexLiteral}				{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{JS_FloatLiteral}				{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{JS_ErrorNumberFormat}			{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{JS_IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{JS_HexLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{JS_FloatLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{JS_ErrorNumberFormat}			{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{JS_ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
+	{JS_ErrorIdentifier}			{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }
 
@@ -720,18 +720,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									addEndToken(INTERNAL_IN_JS_STRING_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
 								}
 								return firstToken;
 							}
-	\"						{ int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\"						{ int type = validJSString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 }
 
 <JS_CHAR> {
@@ -743,18 +743,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addToken(start,zzStartRead, TokenTypes.ERROR_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
 								}
 								return firstToken;
 							}
-	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\'						{ int type = validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addNullToken(); return firstToken; }
 }
 
 <JS_TEMPLATE_LITERAL> {
@@ -766,7 +766,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 
 	{JS_TemplateLiteralExprStart}	{
-								addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+								addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 								start = zzMarkedPos-2;
 								if (varDepths==null) {
 									varDepths = new Stack<>();
@@ -779,16 +779,16 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							}
 	"$"						{ /* Skip valid '$' that is not part of template literal expression start */ }
 	
-	\`						{ int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\`						{ int type = validJSString ? TokenTypes.LITERAL_BACKQUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 
 	/* Line ending in '\' => continue to next line, though not necessary in template strings. */
 	\\						{
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
@@ -796,11 +796,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n |
 	<<EOF>>					{
 								if (validJSString) {
-									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
@@ -813,7 +813,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							if (!varDepths.empty()) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE);
 									start = zzMarkedPos;
 									yybegin(JS_TEMPLATE_LITERAL);
 								}
@@ -824,109 +824,109 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n |
 	<<EOF>>				{
 							// TODO: This isn't right.  The expression and its depth should continue to the next line.
-							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+							addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
 						}
 }
 
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
 	[^hwf\n\*]+			{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
-	{JS_MLCEnd}				{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	{JS_MLCEnd}				{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*						{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 }
 
 <JS_DOCCOMMENT> {
 	[^hwf\@\{\n\<\*]+			{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
 	[hwf]						{}
 
-	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"@"							{}
-	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"{"							{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
-	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }
+	\n							{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MARKUP); start = zzMarkedPos; }
 	\<							{}
-	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
+	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_DOCUMENTATION); }
 	\*							{}
-	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
 }
 
 <JS_EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 }
 
 <E4X> {
 	"<!--"						{ start = zzStartRead; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
-	{e4x_CDataBegin}			{ addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(E4X_CDATA); }
+	{e4x_CDataBegin}			{ addToken(TokenTypes.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(E4X_CDATA); }
 	"<!"						{ start = zzMarkedPos-2; e4x_inInternalDtd = false; yybegin(E4X_DTD); }
 	"<?"						{ start = zzMarkedPos-2; yybegin(E4X_PI); }
 	"<"{e4x_TagName}			{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(E4X_INTAG);
 								}
 	"</"{e4x_TagName}			{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(E4X_INTAG);
 								}
-	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
-	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
-	{e4x_Identifier}			{ addToken(Token.IDENTIFIER); }
-	{e4x_EndXml}				{ yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(Token.IDENTIFIER); }
-	{e4x_EntityReference}				{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	"<"							{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
+	"</"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG); }
+	{e4x_Identifier}			{ addToken(TokenTypes.IDENTIFIER); }
+	{e4x_EndXml}				{ yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(TokenTypes.IDENTIFIER); }
+	{e4x_EntityReference}				{ addToken(TokenTypes.MARKUP_ENTITY_REFERENCE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
 	{LineTerminator} |
 	<<EOF>>						{ addEndToken(INTERNAL_E4X); return firstToken; }
 }
 
 <E4X_COMMENT> {
 	[^hwf\n\-]+					{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT); start = zzMarkedPos; }
 	[hwf]						{}
-	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(e4x_prevState); }
+	"-->"						{ int temp = zzMarkedPos; addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); start = temp; yybegin(e4x_prevState); }
 	"-"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken; }
 }
 
 <E4X_PI> {
 	[^\n\?]+					{}
-	"?>"						{ yybegin(E4X); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION); }
+	"?>"						{ yybegin(E4X); addToken(start,zzStartRead+1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); }
 	"?"							{}
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken; }
 }
 
 <E4X_DTD> {
 	[^\n\[\]<>]+				{}
-	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
+	"<!--"						{ int temp = zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT); }
 	"<"							{}
 	"["							{ e4x_inInternalDtd = true; }
 	"]"							{ e4x_inInternalDtd = false; }
-	">"							{ if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, Token.MARKUP_DTD); } }
+	">"							{ if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, TokenTypes.MARKUP_DTD); } }
 	{LineTerminator} |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken; }
 }
 
 <E4X_INTAG> {
-	{e4x_InTagIdentifier}		{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
-	"="							{ addToken(Token.OPERATOR); }
-	"/"							{ addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */ }
-	"/>"						{ yybegin(E4X); addToken(Token.MARKUP_TAG_DELIMITER); }
-	">"							{ yybegin(E4X); addToken(Token.MARKUP_TAG_DELIMITER); }
+	{e4x_InTagIdentifier}		{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
+	"="							{ addToken(TokenTypes.OPERATOR); }
+	"/"							{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */ }
+	"/>"						{ yybegin(E4X); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	">"							{ yybegin(E4X); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(E4X_INATTR_DOUBLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(E4X_INATTR_SINGLE); }
 	<<EOF>>						{ addToken(start,zzStartRead-1, INTERNAL_E4X_INTAG); return firstToken; }
@@ -934,19 +934,19 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <E4X_INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_DOUBLE); return firstToken; }
+	[\"]						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_DOUBLE); return firstToken; }
 }
 
 <E4X_INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_SINGLE); return firstToken; }
+	[\']						{ yybegin(E4X_INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_SINGLE); return firstToken; }
 }
 
 <E4X_CDATA> {
 	[^\]]+						{}
-	{e4x_CDataEnd}				{ int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER); }
+	{e4x_CDataEnd}				{ int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_CDATA_DELIMITER); }
 	"]"							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addEndToken(INTERNAL_E4X_MARKUP_CDATA); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); addEndToken(INTERNAL_E4X_MARKUP_CDATA); return firstToken; }
 }

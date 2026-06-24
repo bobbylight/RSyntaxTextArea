@@ -25,8 +25,8 @@ public abstract class AbstractTokenMaker extends TokenMakerBase {
 	/**
 	 * Hash table of words to highlight and what token type they are.
 	 * The keys are the words to highlight, and their values are the
-	 * token types, for example, <code>Token.RESERVED_WORD</code> or
-	 * <code>Token.FUNCTION</code>.
+	 * token types, for example, <code>TokenTypes.RESERVED_WORD</code> or
+	 * <code>TokenTypes.FUNCTION</code>.
 	 */
 	protected TokenMap wordsToHighlight;
 

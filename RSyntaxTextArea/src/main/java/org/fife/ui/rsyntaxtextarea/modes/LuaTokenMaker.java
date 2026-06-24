@@ -550,18 +550,18 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = LONGSTRING;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -845,7 +845,7 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 24: break;
         case 13:
-          { addToken(Token.LITERAL_CHAR);
+          { addToken(TokenTypes.LITERAL_CHAR);
           }
         case 25: break;
         case 15:
@@ -853,19 +853,19 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 26: break;
         case 19:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 27: break;
         case 4:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 28: break;
         case 2:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 29: break;
         case 17:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 30: break;
         case 21:
@@ -873,51 +873,51 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 31: break;
         case 7:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 32: break;
         case 1:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 33: break;
         case 18:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 34: break;
         case 5:
-          { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 35: break;
         case 6:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 36: break;
         case 23:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 37: break;
         case 22:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 38: break;
         case 20:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 39: break;
         case 14:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 40: break;
         case 11:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 41: break;
         case 12:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); return firstToken;
           }
         case 42: break;
         case 8:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 43: break;
         case 16:
@@ -929,7 +929,7 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 45: break;
         case 10:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
           }
         case 46: break;
         default:
@@ -941,15 +941,15 @@ public class LuaTokenMaker extends AbstractJFlexTokenMaker {
             }
             case 204: break;
             case LONGSTRING: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
             }
             case 205: break;
             case LINECOMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); return firstToken;
             }
             case 206: break;
             case MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
             }
             case 207: break;
             default:

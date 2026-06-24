@@ -136,18 +136,18 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -230,181 +230,181 @@ Boolean				= (\.(true|false)\.)
 %%
 
 /* Keywords */
-<YYINITIAL> "INCLUDE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PROGRAM"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MODULE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SUBROUTINE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FUNCTION"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CONTAINS"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "USE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CALL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "RETURN"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IMPLICIT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "EXPLICIT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NONE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATA"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PARAMETER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALLOCATE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALLOCATABLE"			{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALLOCATED"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DEALLOCATE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INTEGER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REAL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DOUBLE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PRECISION"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COMPLEX"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LOGICAL"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CHARACTER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DIMENSION"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "KIND"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CASE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SELECT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DEFAULT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CONTINUE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CYCLE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DO"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "WHILE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ELSE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IF"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ELSEIF"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "THEN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ELSEWHERE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "END"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ENDIF"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ENDDO"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FORALL"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "WHERE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "EXIT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "GOTO"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PAUSE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "STOP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "BACKSPACE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CLOSE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ENDFILE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INQUIRE"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "OPEN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "PRINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "READ"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REWIND"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "WRITE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FORMAT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AIMAG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMAX0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMIN0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ANINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CEILING"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CMPLX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CONJG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DBLE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DCMPLX"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DFLOAT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DIM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DPROD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOAT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOOR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IFIX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IMAG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LOGICAL"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MODULO"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REAL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SIGN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SNGL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TRANSFER"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ZEXT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ABS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ACOS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AIMAG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALOG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ALOG10"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMAX0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMAX1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMIN0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMIN1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "AMOD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ANINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ASIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ATAN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ATAN2"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CABS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CCOS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CHAR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CLOG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CMPLX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CONJG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "COSH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CSIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "CSQRT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DABS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DACOS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DASIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATAN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DATAN2"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DBLE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DCOS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DCOSH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DDIM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DEXP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DIM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DLOG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DLOG10"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DMAX1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DMIN1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DMOD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DNINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DPROD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DREAL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DSIGN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DSIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DSINH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DSQRT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DTAN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "DTANH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "EXP"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "FLOAT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IABS"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ICHAR"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IDIM"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IDINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IDNINT"				{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "IFIX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INDEX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "INT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "ISIGN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LEN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LGE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LGT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LLE"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LLT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LOG"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "LOG10"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MAX"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MAX0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MAX1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MIN0"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MIN1"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "MOD"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "NINT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "REAL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SIGN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SIN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SINH"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SNGL"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "SQRT"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TAN"					{ addToken(Token.RESERVED_WORD); }
-<YYINITIAL> "TANH"					{ addToken(Token.RESERVED_WORD); }
+<YYINITIAL> "INCLUDE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "PROGRAM"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MODULE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SUBROUTINE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FUNCTION"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CONTAINS"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "USE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CALL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "RETURN"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IMPLICIT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "EXPLICIT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "NONE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DATA"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "PARAMETER"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ALLOCATE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ALLOCATABLE"			{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ALLOCATED"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DEALLOCATE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "INTEGER"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "REAL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DOUBLE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "PRECISION"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "COMPLEX"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LOGICAL"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CHARACTER"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DIMENSION"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "KIND"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CASE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SELECT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DEFAULT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CONTINUE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CYCLE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DO"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "WHILE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ELSE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IF"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ELSEIF"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "THEN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ELSEWHERE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "END"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ENDIF"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ENDDO"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FORALL"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "WHERE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "EXIT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "GOTO"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "PAUSE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "STOP"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "BACKSPACE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CLOSE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ENDFILE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "INQUIRE"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "OPEN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "PRINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "READ"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "REWIND"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "WRITE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FORMAT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AIMAG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMAX0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMIN0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ANINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CEILING"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CMPLX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CONJG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DBLE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DCMPLX"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DFLOAT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DIM"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DPROD"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FLOAT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FLOOR"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IFIX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IMAG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "INT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LOGICAL"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MODULO"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "NINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "REAL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SIGN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SNGL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "TRANSFER"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ZEXT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ABS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ACOS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AIMAG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ALOG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ALOG10"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMAX0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMAX1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMIN0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMIN1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "AMOD"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ANINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ASIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ATAN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ATAN2"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CABS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CCOS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CHAR"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CLOG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CMPLX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CONJG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "COS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "COSH"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CSIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "CSQRT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DABS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DACOS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DASIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DATAN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DATAN2"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DBLE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DCOS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DCOSH"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DDIM"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DEXP"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DIM"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DLOG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DLOG10"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DMAX1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DMIN1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DMOD"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DNINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DPROD"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DREAL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DSIGN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DSIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DSINH"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DSQRT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DTAN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "DTANH"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "EXP"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "FLOAT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IABS"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ICHAR"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IDIM"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IDINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IDNINT"				{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "IFIX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "INDEX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "INT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "ISIGN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LEN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LGE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LGT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LLE"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LLT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LOG"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "LOG10"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MAX"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MAX0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MAX1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MIN0"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MIN1"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "MOD"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "NINT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "REAL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SIGN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SIN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SINH"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SNGL"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "SQRT"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "TAN"					{ addToken(TokenTypes.RESERVED_WORD); }
+<YYINITIAL> "TANH"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 <YYINITIAL> {
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character Literals. */
 	{CharDelimiter}				{ start = zzMarkedPos-1; yybegin(CHAR); }
@@ -419,12 +419,12 @@ Boolean				= (\.(true|false)\.)
 							// So we must check whether we're really at the beginning
 							// of the line ourselves...
 							if (zzStartRead==s.offset) {
-								addToken(zzStartRead,zzEndRead, Token.COMMENT_EOL);
+								addToken(zzStartRead,zzEndRead, TokenTypes.COMMENT_EOL);
 								addNullToken();
 								return firstToken;
 							}
 							else {
-								addToken(Token.IDENTIFIER);
+								addToken(TokenTypes.IDENTIFIER);
 							}
 						}
 	{Column1Comment2Begin}	{
@@ -433,42 +433,42 @@ Boolean				= (\.(true|false)\.)
 							// So we must check whether we're really at the beginning
 							// of the line ourselves...
 							if (zzStartRead==s.offset) {
-								addToken(zzStartRead,zzEndRead, Token.COMMENT_DOCUMENTATION);
+								addToken(zzStartRead,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION);
 								addNullToken();
 								return firstToken;
 							}
 							else {
-								addToken(Token.IDENTIFIER);
+								addToken(TokenTypes.IDENTIFIER);
 							}
 						}
-	{AnywhereCommentBegin}	{ addToken(zzStartRead,zzEndRead, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{AnywhereCommentBegin}	{ addToken(zzStartRead,zzEndRead, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Boolean literals. */
-	{Boolean}						{ addToken(Token.LITERAL_BOOLEAN); }
+	{Boolean}						{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Ended with a line not in a string or char literal. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 <CHAR> {
 	[^\'\n]*						{}
-	\'							{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	\n							{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	\'							{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
+	\n							{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 }
 
 <STRING> {
 	[^\"\n]*						{}
-	\"							{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	\n							{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	\"							{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\n							{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }

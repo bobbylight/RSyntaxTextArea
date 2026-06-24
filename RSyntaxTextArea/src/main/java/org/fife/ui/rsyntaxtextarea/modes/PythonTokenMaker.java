@@ -16,6 +16,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -708,16 +709,16 @@ public class PythonTokenMaker extends AbstractJFlexTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = LONG_STRING_2;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = LONG_STRING_1;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -1001,83 +1002,83 @@ public class PythonTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 22: break;
         case 10:
-          { addToken(Token.LITERAL_CHAR);
+          { addToken(TokenTypes.LITERAL_CHAR);
           }
         case 23: break;
         case 8:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 24: break;
         case 12:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 25: break;
         case 14:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 26: break;
         case 9:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 27: break;
         case 16:
-          { yybegin(LONG_STRING_1); addToken(Token.LITERAL_CHAR);
+          { yybegin(LONG_STRING_1); addToken(TokenTypes.LITERAL_CHAR);
           }
         case 28: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 29: break;
         case 15:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 30: break;
         case 18:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 31: break;
         case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 32: break;
         case 13:
-          { addToken(Token.ANNOTATION);
+          { addToken(TokenTypes.ANNOTATION);
           }
         case 33: break;
         case 4:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 34: break;
         case 21:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 35: break;
         case 7:
-          { addToken(Token.COMMENT_EOL);
+          { addToken(TokenTypes.COMMENT_EOL);
           }
         case 36: break;
         case 11:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 37: break;
         case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 38: break;
         case 6:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 39: break;
         case 20:
-          { yybegin(YYINITIAL); addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { yybegin(YYINITIAL); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 40: break;
         case 17:
-          { yybegin(LONG_STRING_2); addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { yybegin(LONG_STRING_2); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 41: break;
         case 19:
-          { yybegin(YYINITIAL); addToken(Token.LITERAL_CHAR);
+          { yybegin(YYINITIAL); addToken(TokenTypes.LITERAL_CHAR);
           }
         case 42: break;
         default:
@@ -1090,14 +1091,14 @@ public class PythonTokenMaker extends AbstractJFlexTokenMaker {
             case 277: break;
             case LONG_STRING_2: {
               if (firstToken==null) {
-										addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+										addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									}
 									return firstToken;
             }
             case 278: break;
             case LONG_STRING_1: {
               if (firstToken==null) {
-										addToken(Token.LITERAL_CHAR);
+										addToken(TokenTypes.LITERAL_CHAR);
 									}
 									return firstToken;
             }

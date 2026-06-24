@@ -218,7 +218,7 @@ public interface Token extends TokenTypes {
 	 *        offset.
 	 * @return The position (in the document, NOT into the token list!) that
 	 *         covers the pixel location.  If <code>tokenList</code> is
-	 *         <code>null</code> or has type <code>Token.NULL</code>, then
+	 *         <code>null</code> or has type <code>TokenTypes.NULL</code>, then
 	 *         <code>-1</code> is returned; the caller should recognize this and
 	 *         return the actual end position of the (empty) line.
 	 */
@@ -439,7 +439,7 @@ public interface Token extends TokenTypes {
 	 * Returns whether this token is "paintable;" i.e., whether
 	 * the type of this token is one such that it has an associated syntax
 	 * style.  What this boils down to is whether the token type is greater
-	 * than <code>Token.NULL</code>.
+	 * than <code>TokenTypes.NULL</code>.
 	 *
 	 * @return Whether this token is paintable.
 	 */

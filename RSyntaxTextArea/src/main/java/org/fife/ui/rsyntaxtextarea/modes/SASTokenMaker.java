@@ -996,7 +996,7 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -1021,15 +1021,15 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR;
 				start = text.offset;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
@@ -1349,7 +1349,7 @@ public final void yybegin(int newState) {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 13:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+          { yybegin(YYINITIAL); addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
           }
         case 21: break;
         case 2:
@@ -1357,7 +1357,7 @@ public final void yybegin(int newState) {
           }
         case 22: break;
         case 18:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 23: break;
         case 17:
@@ -1365,7 +1365,7 @@ public final void yybegin(int newState) {
           }
         case 24: break;
         case 3:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 25: break;
         case 8:
@@ -1373,35 +1373,35 @@ public final void yybegin(int newState) {
           }
         case 26: break;
         case 5:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 27: break;
         case 6:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 28: break;
         case 16:
-          { addToken(Token.VARIABLE);
+          { addToken(TokenTypes.VARIABLE);
           }
         case 29: break;
         case 14:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
           }
         case 30: break;
         case 1:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 31: break;
         case 20:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 32: break;
         case 19:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 33: break;
         case 11:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 34: break;
         case 9:
@@ -1415,18 +1415,18 @@ public final void yybegin(int newState) {
 									start = zzStartRead;
 									// Might not be any whitespace.
 									if (yylength()>1) {
-										addToken(zzStartRead,zzMarkedPos-2, Token.WHITESPACE);
+										addToken(zzStartRead,zzMarkedPos-2, TokenTypes.WHITESPACE);
 										zzStartRead = zzMarkedPos-1;
 									}
 									// Remember:  zzStartRead may now be updated,
 									// so we must check against 'start'.
 									if (start==s.offset) {
-										addToken(zzStartRead,zzEndRead, Token.COMMENT_EOL);
+										addToken(zzStartRead,zzEndRead, TokenTypes.COMMENT_EOL);
 										addNullToken();
 										return firstToken;
 									}
 									else {
-										addToken(zzStartRead,zzStartRead, Token.OPERATOR);
+										addToken(zzStartRead,zzStartRead, TokenTypes.OPERATOR);
 									}
           }
         case 35: break;
@@ -1435,11 +1435,11 @@ public final void yybegin(int newState) {
           }
         case 36: break;
         case 4:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 37: break;
         case 12:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 38: break;
         case 10:
@@ -1447,7 +1447,7 @@ public final void yybegin(int newState) {
           }
         case 39: break;
         case 15:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
           }
         case 40: break;
         default:
@@ -1455,7 +1455,7 @@ public final void yybegin(int newState) {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case STRING: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
             }
             case 640: break;
             case YYINITIAL: {
@@ -1463,11 +1463,11 @@ public final void yybegin(int newState) {
             }
             case 641: break;
             case MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
             }
             case 642: break;
             case CHAR: {
-              addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
             }
             case 643: break;
             default:

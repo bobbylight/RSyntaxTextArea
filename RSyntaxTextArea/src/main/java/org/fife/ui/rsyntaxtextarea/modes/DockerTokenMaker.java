@@ -364,7 +364,7 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.RESERVED_WORD;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.RESERVED_WORD;
 	}
 
 
@@ -667,27 +667,27 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 16:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 17: break;
         case 1:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 18: break;
         case 7:
-          { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 19: break;
         case 2:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 20: break;
         case 11:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 21: break;
         case 14:
-          { addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
           }
         case 22: break;
         case 12:
@@ -695,7 +695,7 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 23: break;
         case 4:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 24: break;
         case 15:
@@ -707,11 +707,11 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 26: break;
         case 13:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
           }
         case 27: break;
         case 10:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 28: break;
         case 8:
@@ -723,7 +723,7 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 30: break;
         case 3:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 31: break;
         case 6:
@@ -735,11 +735,11 @@ public class DockerTokenMaker extends AbstractJFlexTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case STRING: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
             }
             case 85: break;
             case CHAR_LITERAL: {
-              addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
             }
             case 86: break;
             case YYINITIAL: {

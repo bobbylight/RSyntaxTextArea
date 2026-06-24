@@ -671,9 +671,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{URL}					{
                                 int temp = zzStartRead;
                                 if (start <= zzStartRead - 1) {
-                                    addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION);
+                                    addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION);
                                 }
-                                addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION);
+                                addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION);
                                 start = zzMarkedPos;
                             }
 	[hwf]					{}

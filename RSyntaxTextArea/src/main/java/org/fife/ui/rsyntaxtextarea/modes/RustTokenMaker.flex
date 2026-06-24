@@ -598,15 +598,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\u						{ /* Invalid Unicode character \\uXXXX */ validString = false; }
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Skip all escape chars for now, even though this isn't right */ }
-	\"						{ int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\"						{ int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 	<<EOF>>					{
                                 // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addEndToken(INTERNAL_IN_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addEndToken(INTERNAL_IN_STRING_INVALID);
                                 }
                                 return firstToken;
@@ -621,15 +621,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     \\u						{ /* All Unicode chars, valid or not, are not allowed in byte strings \\uXXXX */ validString = false; }
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Skip all escape chars for now, even though this isn't right */ }
-	\"						{ int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
+	\"						{ int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL); }
 	<<EOF>>					{
                                 // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addEndToken(INTERNAL_IN_BYTE_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addEndToken(INTERNAL_IN_BYTE_STRING_INVALID);
                                 }
                                 return firstToken;
@@ -645,7 +645,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
                                 // some reason)
                                 int tokenLength = yylength();
                                 if (tokenLength >= delimiter.length()) {
-                                    int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE;
+                                    int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE;
                                     int end = zzStartRead + delimiter.length();
                                     addToken(start, end - 1, type);
                                     zzStartRead = zzCurrentPos = zzMarkedPos = end;
@@ -657,11 +657,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	<<EOF>>					{
                                 // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_STRING_INVALID);
                                 }
                                 return firstToken;
@@ -677,7 +677,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
                                 // some reason)
                                 int tokenLength = yylength();
                                 if (tokenLength >= delimiter.length()) {
-                                    int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE;
+                                    int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE;
                                     int end = zzStartRead + delimiter.length();
                                     addToken(start, end - 1, type);
                                     zzStartRead = zzCurrentPos = zzMarkedPos = end;
@@ -689,11 +689,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	<<EOF>>					{
                                 // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_BYTE_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_BYTE_STRING_INVALID);
                                 }
                                 return firstToken;

@@ -128,7 +128,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -152,7 +152,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		s = text;
 		try {
 			yyreset(zzReader);
-			yybegin(Token.NULL);
+			yybegin(TokenTypes.NULL);
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -266,41 +266,41 @@ Operator				= ([\:\+\?]?"=")
 	"define" |
 	"endef" |
 	"ifdef" |
-	"ifndef"					{ addToken(Token.RESERVED_WORD); }
+	"ifndef"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{Label}							{ addToken(Token.PREPROCESSOR); }
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Label}							{ addToken(TokenTypes.PREPROCESSOR); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
-	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
-	{StringLiteral}					{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-	{BacktickLiteral}				{ addToken(Token.LITERAL_BACKQUOTE); }
-	{BacktickLiteral}				{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{CharLiteral}					{ addToken(TokenTypes.LITERAL_CHAR); }
+	{UnclosedCharLiteral}			{ addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken; }
+	{StringLiteral}					{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}			{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{BacktickLiteral}				{ addToken(TokenTypes.LITERAL_BACKQUOTE); }
+	{BacktickLiteral}				{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 
 	/* Variables. */
 	{CurlyVarStart}					{ if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.TRUE); start = zzMarkedPos-2; yybegin(VAR); }
 	{ParenVarStart}					{ if (varDepths==null) { varDepths = new Stack<>(); } else { varDepths.clear(); } varDepths.push(Boolean.FALSE); start = zzMarkedPos-2; yybegin(VAR); }
 
 	/* Comment literals. */
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{LineCommentBegin}.*			{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch-all for anything else. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
@@ -310,7 +310,7 @@ Operator				= ([\:\+\?]?"=")
 							if (!varDepths.empty() && Boolean.TRUE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE); yybegin(YYINITIAL);
 								}
 							}
 						}
@@ -318,13 +318,13 @@ Operator				= ([\:\+\?]?"=")
 							if (!varDepths.empty() && Boolean.FALSE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE); yybegin(YYINITIAL);
 								}
 							}
 						}
 	"${"				{ varDepths.push(Boolean.TRUE); }
 	"$("				{ varDepths.push(Boolean.FALSE); }
 	"$"					{}
-	"#".*				{ int temp1 = zzStartRead; int temp2 = zzMarkedPos; addToken(start,zzStartRead-1, Token.VARIABLE); addToken(temp1, temp2-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.VARIABLE); addNullToken(); return firstToken; }
+	"#".*				{ int temp1 = zzStartRead; int temp2 = zzMarkedPos; addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addToken(temp1, temp2-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addNullToken(); return firstToken; }
 }

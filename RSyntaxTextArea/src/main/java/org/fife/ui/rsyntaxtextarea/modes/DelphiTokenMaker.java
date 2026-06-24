@@ -1151,7 +1151,7 @@ public class DelphiTokenMaker extends AbstractJFlexTokenMaker {
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
@@ -1168,7 +1168,7 @@ public class DelphiTokenMaker extends AbstractJFlexTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -1449,11 +1449,11 @@ public final void yybegin(int newState) {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 15:
-          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE); return firstToken;
           }
         case 35: break;
         case 4:
-          { addToken(Token.PREPROCESSOR);
+          { addToken(TokenTypes.PREPROCESSOR);
           }
         case 36: break;
         case 5:
@@ -1461,43 +1461,43 @@ public final void yybegin(int newState) {
           }
         case 37: break;
         case 27:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 38: break;
         case 6:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 39: break;
         case 21:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 40: break;
         case 20:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 41: break;
         case 26:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 42: break;
         case 16:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.PREPROCESSOR);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.PREPROCESSOR);
           }
         case 43: break;
         case 9:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 44: break;
         case 17:
-          { addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE2); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE2); return firstToken;
           }
         case 45: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 46: break;
         case 18:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 47: break;
         case 25:
@@ -1505,35 +1505,35 @@ public final void yybegin(int newState) {
           }
         case 48: break;
         case 30:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 49: break;
         case 7:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 50: break;
         case 14:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_MLC2); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_MLC2); return firstToken;
           }
         case 51: break;
         case 32:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 52: break;
         case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 53: break;
         case 31:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 54: break;
         case 22:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 55: break;
         case 34:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 56: break;
         case 29:
@@ -1545,27 +1545,27 @@ public final void yybegin(int newState) {
           }
         case 58: break;
         case 33:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 59: break;
         case 19:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 60: break;
         case 28:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.PREPROCESSOR);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.PREPROCESSOR);
           }
         case 61: break;
         case 13:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.COMMENT_MULTILINE);
           }
         case 62: break;
         case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 63: break;
         case 10:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 64: break;
         case 8:
@@ -1581,7 +1581,7 @@ public final void yybegin(int newState) {
           }
         case 67: break;
         case 12:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
           }
         case 68: break;
         default:
@@ -1589,11 +1589,11 @@ public final void yybegin(int newState) {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case COMPILER_DIRECTIVE: {
-              addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE); return firstToken;
             }
             case 438: break;
             case EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
             }
             case 439: break;
             case YYINITIAL: {
@@ -1601,15 +1601,15 @@ public final void yybegin(int newState) {
             }
             case 440: break;
             case COMPILER_DIRECTIVE2: {
-              addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE2); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_COMPILER_DIRECTIVE2); return firstToken;
             }
             case 441: break;
             case MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
             }
             case 442: break;
             case MLC2: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_MLC2); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_MLC2); return firstToken;
             }
             case 443: break;
             default:

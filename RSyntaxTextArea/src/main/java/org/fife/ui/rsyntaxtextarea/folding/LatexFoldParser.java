@@ -15,6 +15,7 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -46,11 +47,11 @@ public class LatexFoldParser implements FoldParser {
 				Token t = textArea.getTokenListForLine(line);
 				while (t!=null && t.isPaintable()) {
 
-					if (t.is(Token.RESERVED_WORD, BEGIN)) {
+					if (t.is(TokenTypes.RESERVED_WORD, BEGIN)) {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
+							if (temp!=null && temp.getType()==TokenTypes.RESERVED_WORD) {
 								if (currentFold==null) {
 									currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 									folds.add(currentFold);
@@ -64,12 +65,12 @@ public class LatexFoldParser implements FoldParser {
 						}
 					}
 
-					else if (t.is(Token.RESERVED_WORD, END) &&
+					else if (t.is(TokenTypes.RESERVED_WORD, END) &&
 							currentFold!=null && !expectedStack.isEmpty()) {
 						Token temp = t.getNextToken();
 						if (temp!=null && temp.isLeftCurly()) {
 							temp = temp.getNextToken();
-							if (temp!=null && temp.getType()==Token.RESERVED_WORD) {
+							if (temp!=null && temp.getType()==TokenTypes.RESERVED_WORD) {
 								String value = temp.getLexeme();
 								if (expectedStack.peek().equals(value)) {
 									expectedStack.pop();

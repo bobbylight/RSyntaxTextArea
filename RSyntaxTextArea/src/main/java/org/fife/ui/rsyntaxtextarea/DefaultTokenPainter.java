@@ -183,7 +183,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		}
 
 		// Don't check if it's whitespace - some TokenMakers may return types
-		// other than Token.WHITESPACE for spaces (such as Token.IDENTIFIER).
+		// other than TokenTypes.WHITESPACE for spaces (such as TokenTypes.IDENTIFIER).
 		// This also allows us to paint tab lines for MLC's.
 		if (host.getPaintTabLines() && origX==host.getMargin().left) {// && isWhitespace()) {
 			paintTabLines(token, origX, y, nextX, g, e, host);
@@ -227,12 +227,12 @@ public class DefaultTokenPainter implements TokenPainter {
 	protected void paintTabLines(Token token, float x, float y, float endX,
 				Graphics2D g, TabExpander e, RSyntaxTextArea host) {
 
-		// We allow tab lines to be painted in more than just Token.WHITESPACE,
-		// i.e. for MLC's and Token.IDENTIFIERS (for TokenMakers that return
+		// We allow tab lines to be painted in more than just TokenTypes.WHITESPACE,
+		// i.e. for MLC's and TokenTypes.IDENTIFIERs (for TokenMakers that return
 		// whitespace as identifiers for performance).  But we only paint tab
 		// lines for the leading whitespace in the token.  So, if this isn't a
 		// WHITESPACE token, figure out the leading whitespace's length.
-		if (token.getType()!=Token.WHITESPACE) {
+		if (token.getType()!=TokenTypes.WHITESPACE) {
 			int offs = 0;
 			for (; offs<token.length(); offs++) {
 				if (!RSyntaxUtilities.isWhitespace(token.charAt(offs))) {

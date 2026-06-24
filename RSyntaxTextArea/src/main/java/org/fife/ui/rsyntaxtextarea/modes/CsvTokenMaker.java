@@ -275,7 +275,7 @@ public class CsvTokenMaker extends AbstractJFlexTokenMaker {
 	 * Adds a token for either an even column or an odd column.
 	 */
 	private void addEvenOrOddColumnToken(int start, int end) {
-		addToken(start, end, evenOdd == 0 ? Token.IDENTIFIER : Token.DATA_TYPE);
+		addToken(start, end, evenOdd == 0 ? TokenTypes.IDENTIFIER : TokenTypes.DATA_TYPE);
 	}
 
 
@@ -329,7 +329,7 @@ public class CsvTokenMaker extends AbstractJFlexTokenMaker {
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type == Token.IDENTIFIER || type == Token.DATA_TYPE;
+		return type == TokenTypes.IDENTIFIER || type == TokenTypes.DATA_TYPE;
 	}
 
 
@@ -658,7 +658,7 @@ public class CsvTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 10: break;
         case 3:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
                                 evenOdd = (evenOdd + 1) & 1;
           }
         case 11: break;

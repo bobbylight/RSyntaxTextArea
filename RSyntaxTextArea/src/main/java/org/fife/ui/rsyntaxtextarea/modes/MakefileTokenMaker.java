@@ -416,7 +416,7 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -440,7 +440,7 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
 		s = text;
 		try {
 			yyreset(zzReader);
-			yybegin(Token.NULL);
+			yybegin(TokenTypes.NULL);
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -714,7 +714,7 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 13:
-          { addToken(Token.PREPROCESSOR);
+          { addToken(TokenTypes.PREPROCESSOR);
           }
         case 22: break;
         case 3:
@@ -722,15 +722,15 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 23: break;
         case 16:
-          { addToken(Token.LITERAL_CHAR);
+          { addToken(TokenTypes.LITERAL_CHAR);
           }
         case 24: break;
         case 4:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 25: break;
         case 21:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 26: break;
         case 20:
@@ -738,7 +738,7 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 27: break;
         case 18:
-          { addToken(Token.LITERAL_BACKQUOTE);
+          { addToken(TokenTypes.LITERAL_BACKQUOTE);
           }
         case 28: break;
         case 19:
@@ -746,23 +746,23 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 29: break;
         case 1:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 30: break;
         case 5:
-          { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 31: break;
         case 6:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 32: break;
         case 10:
-          { int temp1 = zzStartRead; int temp2 = zzMarkedPos; addToken(start,zzStartRead-1, Token.VARIABLE); addToken(temp1, temp2-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { int temp1 = zzStartRead; int temp2 = zzMarkedPos; addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addToken(temp1, temp2-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 33: break;
         case 17:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 34: break;
         case 14:
@@ -773,13 +773,13 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
           { if (!varDepths.empty() && Boolean.TRUE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE); yybegin(YYINITIAL);
 								}
 							}
           }
         case 36: break;
         case 7:
-          { addToken(Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 37: break;
         case 15:
@@ -787,18 +787,18 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 38: break;
         case 2:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 39: break;
         case 8:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 40: break;
         case 11:
           { if (!varDepths.empty() && Boolean.FALSE.equals(varDepths.peek())) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE); yybegin(YYINITIAL);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE); yybegin(YYINITIAL);
 								}
 							}
           }
@@ -812,7 +812,7 @@ public class MakefileTokenMaker extends AbstractJFlexTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case VAR: {
-              addToken(start,zzStartRead-1, Token.VARIABLE); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addNullToken(); return firstToken;
             }
             case 128: break;
             case YYINITIAL: {

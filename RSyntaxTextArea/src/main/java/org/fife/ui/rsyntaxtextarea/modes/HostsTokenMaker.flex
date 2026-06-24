@@ -133,7 +133,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type == Token.RESERVED_WORD;
+		return type == TokenTypes.RESERVED_WORD;
 	}
 
 
@@ -232,10 +232,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 	{Identifier}			{
-								addToken(first ? Token.RESERVED_WORD : Token.IDENTIFIER);
+								addToken(first ? TokenTypes.RESERVED_WORD : TokenTypes.IDENTIFIER);
 								first = false;
 							}
-	{Whitespace}			{ addToken(Token.WHITESPACE); }
+	{Whitespace}			{ addToken(TokenTypes.WHITESPACE); }
 	{LineCommentBegin}		{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
 	\n |
 	<<EOF>>					{ addNullToken(); return firstToken; }
@@ -243,8 +243,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 }

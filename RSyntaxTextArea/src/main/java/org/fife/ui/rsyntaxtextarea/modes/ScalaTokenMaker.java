@@ -18,6 +18,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexCTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -572,10 +573,10 @@ public class ScalaTokenMaker extends AbstractJFlexCTokenMaker {
 		// Start off in the proper state.
 		int state = YYINITIAL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = MULTILINE_STRING_DOUBLE;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				break;
 			default:
@@ -865,7 +866,7 @@ public final void yybegin(int newState) {
           }
         case 26: break;
         case 15:
-          { addToken(Token.LITERAL_CHAR);
+          { addToken(TokenTypes.LITERAL_CHAR);
           }
         case 27: break;
         case 21:
@@ -873,7 +874,7 @@ public final void yybegin(int newState) {
           }
         case 28: break;
         case 19:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 29: break;
         case 18:
@@ -881,27 +882,27 @@ public final void yybegin(int newState) {
           }
         case 30: break;
         case 8:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 31: break;
         case 20:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 32: break;
         case 13:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 33: break;
         case 14:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 34: break;
         case 4:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 35: break;
         case 22:
-          { addToken(Token.LITERAL_BACKQUOTE);
+          { addToken(TokenTypes.LITERAL_BACKQUOTE);
           }
         case 36: break;
         case 9:
@@ -909,11 +910,11 @@ public final void yybegin(int newState) {
           }
         case 37: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 38: break;
         case 12:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 39: break;
         case 17:
@@ -921,35 +922,35 @@ public final void yybegin(int newState) {
           }
         case 40: break;
         case 23:
-          { addToken(start,zzStartRead+2, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead+2, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
           }
         case 41: break;
         case 5:
-          { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 42: break;
         case 7:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 43: break;
         case 16:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 44: break;
         case 10:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 45: break;
         case 25:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 46: break;
         case 24:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 47: break;
         case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 48: break;
         case 1:
@@ -957,7 +958,7 @@ public final void yybegin(int newState) {
           }
         case 49: break;
         case 11:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
           }
         case 50: break;
         default:
@@ -965,11 +966,11 @@ public final void yybegin(int newState) {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
             }
             case 185: break;
             case MULTILINE_STRING_DOUBLE: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
             }
             case 186: break;
             case YYINITIAL: {
@@ -977,7 +978,7 @@ public final void yybegin(int newState) {
             }
             case 187: break;
             case MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
             }
             case 188: break;
             default:

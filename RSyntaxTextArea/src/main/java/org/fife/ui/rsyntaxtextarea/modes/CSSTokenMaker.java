@@ -650,7 +650,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.RESERVED_WORD; // Used for CSS keys
+		return type==TokenTypes.RESERVED_WORD; // Used for CSS keys
 	}
 
 
@@ -1010,11 +1010,11 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 1:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 48: break;
         case 2:
-          { /*System.out.println("yyinitial: " + yytext());*/ addToken(Token.IDENTIFIER);
+          { /*System.out.println("yyinitial: " + yytext());*/ addToken(TokenTypes.IDENTIFIER);
           }
         case 49: break;
         case 25:
@@ -1022,7 +1022,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 50: break;
         case 16:
-          { addToken(highlightingLess ? Token.RESERVED_WORD : Token.IDENTIFIER);
+          { addToken(highlightingLess ? TokenTypes.RESERVED_WORD : TokenTypes.IDENTIFIER);
           }
         case 51: break;
         case 42:
@@ -1033,21 +1033,21 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
           }
         case 52: break;
         case 9:
-          { addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY);
+          { addToken(TokenTypes.SEPARATOR); yybegin(CSS_PROPERTY);
           }
         case 53: break;
         case 29:
-          { addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState);
+          { addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState);
           }
         case 54: break;
         case 32:
-          { addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken;
           }
         case 55: break;
         case 37:
@@ -1055,7 +1055,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 56: break;
         case 34:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL);
 								switch (cssPrevState) {
 									case CSS_PROPERTY:
 										addEndToken(INTERNAL_CSS_PROPERTY);
@@ -1071,15 +1071,15 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 57: break;
         case 31:
-          { addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState);
+          { addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); yybegin(cssPrevState);
           }
         case 58: break;
         case 43:
-          { addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState);
+          { addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); yybegin(cssPrevState);
           }
         case 59: break;
         case 12:
-          { addToken(highlightingLess ? Token.SEPARATOR : Token.IDENTIFIER);
+          { addToken(highlightingLess ? TokenTypes.SEPARATOR : TokenTypes.IDENTIFIER);
           }
         case 60: break;
         case 10:
@@ -1087,15 +1087,15 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 61: break;
         case 17:
-          { addToken(Token.OPERATOR); yybegin(CSS_VALUE);
+          { addToken(TokenTypes.OPERATOR); yybegin(CSS_VALUE);
           }
         case 62: break;
         case 5:
-          { /* Unknown pseudo class */ addToken(Token.DATA_TYPE);
+          { /* Unknown pseudo class */ addToken(TokenTypes.DATA_TYPE);
           }
         case 63: break;
         case 23:
-          { addToken(Token.OPERATOR); yybegin(CSS_PROPERTY);
+          { addToken(TokenTypes.OPERATOR); yybegin(CSS_PROPERTY);
           }
         case 64: break;
         case 28:
@@ -1103,15 +1103,15 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 65: break;
         case 46:
-          { addToken(Token.REGEX);
+          { addToken(TokenTypes.REGEX);
           }
         case 66: break;
         case 36:
-          { addToken(highlightingLess ? Token.ANNOTATION : Token.VARIABLE);
+          { addToken(highlightingLess ? TokenTypes.ANNOTATION : TokenTypes.VARIABLE);
           }
         case 67: break;
         case 3:
-          { addToken(highlightingLess ? Token.LITERAL_NUMBER_DECIMAL_INT : Token.IDENTIFIER);
+          { addToken(highlightingLess ? TokenTypes.LITERAL_NUMBER_DECIMAL_INT : TokenTypes.IDENTIFIER);
           }
         case 68: break;
         case 20:
@@ -1119,42 +1119,42 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 69: break;
         case 7:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 70: break;
         case 19:
-          { addToken(Token.SEPARATOR); yybegin(YYINITIAL);
+          { addToken(TokenTypes.SEPARATOR); yybegin(YYINITIAL);
           }
         case 71: break;
         case 47:
-          { addToken(Token.PREPROCESSOR);
+          { addToken(TokenTypes.PREPROCESSOR);
           }
         case 72: break;
         case 4:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 73: break;
         case 35:
-          { addToken(highlightingLess ? Token.VARIABLE : Token.REGEX);
+          { addToken(highlightingLess ? TokenTypes.VARIABLE : TokenTypes.REGEX);
           }
         case 74: break;
         case 24:
           { int temp = zzMarkedPos - 2;
-							  addToken(zzStartRead, temp, Token.FUNCTION);
-							  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+							  addToken(zzStartRead, temp, TokenTypes.FUNCTION);
+							  addToken(zzMarkedPos-1, zzMarkedPos-1, TokenTypes.SEPARATOR);
 							  zzStartRead = zzCurrentPos = zzMarkedPos;
           }
         case 75: break;
         case 18:
-          { addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */
+          { addToken(TokenTypes.SEPARATOR); /* helps with auto-closing curlies when editing CSS */
           }
         case 76: break;
         case 22:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 77: break;
         case 30:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken;
           }
         case 78: break;
         case 41:
@@ -1163,19 +1163,19 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 										// syntax highlighting, we do not color nested selectors
 										// properly.  For uniformity, color this the same as
 										// CSS_Property
-										addToken(Token.RESERVED_WORD);
+										addToken(TokenTypes.RESERVED_WORD);
 									}
 									else {
-										addToken(Token.IDENTIFIER);
+										addToken(TokenTypes.IDENTIFIER);
 									}
           }
         case 79: break;
         case 33:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken;
           }
         case 80: break;
         case 26:
-          { /* End of a function */ addToken(Token.SEPARATOR);
+          { /* End of a function */ addToken(TokenTypes.SEPARATOR);
           }
         case 81: break;
         case 40:
@@ -1185,25 +1185,25 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
           }
         case 82: break;
         case 39:
-          { addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER);
+          { addToken(highlightingLess ? TokenTypes.VARIABLE : TokenTypes.IDENTIFIER);
           }
         case 83: break;
         case 14:
-          { /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER);
+          { /*System.out.println("css_property: " + yytext());*/ addToken(TokenTypes.IDENTIFIER);
           }
         case 84: break;
         case 15:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 85: break;
         case 44:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 86: break;
         case 11:
@@ -1211,7 +1211,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 87: break;
         case 6:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 88: break;
         case 13:
@@ -1224,21 +1224,21 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
           }
         case 90: break;
         case 8:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 91: break;
         case 21:
-          { /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER);
+          { /*System.out.println("css_value: " + yytext());*/ addToken(TokenTypes.IDENTIFIER);
           }
         case 92: break;
         case 45:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 93: break;
         case 27:
@@ -1250,11 +1250,11 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case CSS_C_STYLE_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken;
             }
             case 341: break;
             case LESS_EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL);
 								switch (cssPrevState) {
 									case CSS_PROPERTY:
 										addEndToken(INTERNAL_CSS_PROPERTY);
@@ -1274,7 +1274,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 343: break;
             case CSS_STRING: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken;
             }
             case 344: break;
             case CSS_VALUE: {
@@ -1286,7 +1286,7 @@ public class CSSTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 346: break;
             case CSS_CHAR_LITERAL: {
-              addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken;
             }
             case 347: break;
             default:

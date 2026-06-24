@@ -393,8 +393,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.FUNCTION || type==Token.VARIABLE ||
-				type==Token.MARKUP_TAG_NAME;
+		return type==TokenTypes.FUNCTION || type==TokenTypes.VARIABLE ||
+				type==TokenTypes.MARKUP_TAG_NAME;
 	}
 
 
@@ -439,7 +439,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.MARKUP_COMMENT:
+			case TokenTypes.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
 			case INTERNAL_INTAG:
@@ -790,35 +790,35 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 	"<!--"						{ start = zzMarkedPos-4; yybegin(COMMENT); }
 	"<"[sS][cC][rR][iI][pP][tT]	{
-								  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-								  addToken(zzMarkedPos-6,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+								  addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-6,zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 								  start = zzMarkedPos; yybegin(INTAG_SCRIPT);
 								}
 	"<"[sS][tT][yY][lL][eE]		{
-								  addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-								  addToken(zzMarkedPos-5,zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+								  addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-5,zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 								  start = zzMarkedPos; cssPrevState = zzLexicalState; yybegin(INTAG_STYLE);
 								}
 	"<!"						{ start = zzMarkedPos-2; yybegin(DTD); }
-	{PHP_Start}					{ addToken(Token.MARKUP_TAG_DELIMITER); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-1); //yypushback(count-1);
 									yybegin(INTAG_CHECK_TAG_NAME);
 								}
 	"</"({Letter}|{Digit})+		{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-2); //yypushback(count-2);
 									yybegin(INTAG_CHECK_TAG_NAME);
 								}
-	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
-	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"<"							{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"</"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
-	{Identifier}				{ addToken(Token.IDENTIFIER); } // Catches everything.
-	{EntityReference}				{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	{Identifier}				{ addToken(TokenTypes.IDENTIFIER); } // Catches everything.
+	{EntityReference}				{ addToken(TokenTypes.MARKUP_ENTITY_REFERENCE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
@@ -834,17 +834,17 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
                             }
 	[hwf]					{}
-	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); }
+	"-->"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); }
 	"-"						{}
 	{LineTerminator} |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); return firstToken; }
 }
 
 <DTD> {
 	[^\n>]+					{}
-	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); }
+	">"						{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.MARKUP_DTD); }
 	{LineTerminator} |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.MARKUP_DTD); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); return firstToken; }
 }
 
 <INTAG_CHECK_TAG_NAME> {
@@ -973,106 +973,106 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[uU] |
 	[uU][lL] |
 	[vV][aA][rR] |
-	[vV][iI][dD][eE][oO]    { addToken(Token.MARKUP_TAG_NAME); }
+	[vV][iI][dD][eE][oO]    { addToken(TokenTypes.MARKUP_TAG_NAME); }
 	{InTagIdentifier}		{ /* A non-recognized HTML tag name */ yypushback(yylength()); yybegin(INTAG); }
 	.						{ /* Shouldn't happen */ yypushback(1); yybegin(INTAG); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
 }
 
 <INTAG> {
-	{PHP_Start}				{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
-	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
-	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
-	"="						{ addToken(Token.OPERATOR); }
-	"/>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
-	">"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
+	{PHP_Start}				{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	{InTagIdentifier}			{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
+	"="						{ addToken(TokenTypes.OPERATOR); }
+	"/>"						{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	">"						{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
 }
 
 <INATTR_DOUBLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\"<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
+	[\"]						{ addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\'<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
+	[\']						{ addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <INTAG_SCRIPT> {
-	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
-	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
-	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
-	"="						{ addToken(Token.OPERATOR); }
-	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(JAVASCRIPT, LANG_INDEX_JS); }
+	{PHP_Start}					{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{InTagIdentifier}			{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	"/>"					{	addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
+	"="						{ addToken(TokenTypes.OPERATOR); }
+	">"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(JAVASCRIPT, LANG_INDEX_JS); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_SCRIPT); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_SCRIPT); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_SCRIPT); return firstToken; }
 }
 
 <INATTR_DOUBLE_SCRIPT> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\"<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\"]						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
+	[\"]						{ addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INATTR_SINGLE_SCRIPT> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\'<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\']						{ addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
+	[\']						{ addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); yybegin(INTAG_SCRIPT); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_SCRIPT); return firstToken; }
 }
 
 <INTAG_STYLE> {
-	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
-	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	"/>"					{	addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
-	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
-	"="						{ addToken(Token.OPERATOR); }
-	">"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(CSS, LANG_INDEX_CSS); }
+	{PHP_Start}					{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{InTagIdentifier}			{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	"/>"					{	addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL); }
+	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); } // Won't appear in valid HTML.
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
+	"="						{ addToken(TokenTypes.OPERATOR); }
+	">"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(CSS, LANG_INDEX_CSS); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE_STYLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE_STYLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG_STYLE); return firstToken; }
 }
 
 <INATTR_DOUBLE_STYLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\"<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\"]						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_STYLE); return firstToken; }
+	[\"]						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE_QUOTE_STYLE); return firstToken; }
 }
 
 <INATTR_SINGLE_STYLE> {
-	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\'<]*						{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	[\']						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_STYLE); return firstToken; }
+	[\']						{ yybegin(INTAG_STYLE); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE_QUOTE_STYLE); return firstToken; }
 }
 
 <JAVASCRIPT> {
 
 	{EndScriptTag}					{
 								  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
-								  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-								  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-								  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+								  addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+								  addToken(zzMarkedPos-7,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+								  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 								}
 
 	// ECMA 3+ keywords.
@@ -1090,61 +1090,61 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"var" |
 	"void" |
 	"while" |
-	"with"						{ addToken(Token.RESERVED_WORD); }
-	"return"					{ addToken(Token.RESERVED_WORD_2); }
+	"with"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"return"					{ addToken(TokenTypes.RESERVED_WORD_2); }
 
 	//JavaScript 1.6
-	"each" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.6")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	"each" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.6")){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);} }
 	//JavaScript 1.7
-	"let" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.7")){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);} }
+	"let" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.7")){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);} }
 
 	// Reserved (but not yet used) ECMA keywords.
-	"abstract"					{ addToken(Token.RESERVED_WORD); }
-	"boolean"						{ addToken(Token.DATA_TYPE); }
-	"byte"						{ addToken(Token.DATA_TYPE); }
-	"case"						{ addToken(Token.RESERVED_WORD); }
-	"catch"						{ addToken(Token.RESERVED_WORD); }
-	"char"						{ addToken(Token.DATA_TYPE); }
-	"class"						{ addToken(Token.RESERVED_WORD); }
-	"const"						{ addToken(Token.RESERVED_WORD); }
-	"debugger"					{ addToken(Token.RESERVED_WORD); }
-	"default"						{ addToken(Token.RESERVED_WORD); }
-	"do"							{ addToken(Token.RESERVED_WORD); }
-	"double"						{ addToken(Token.DATA_TYPE); }
-	"enum"						{ addToken(Token.RESERVED_WORD); }
-	"export"						{ addToken(Token.RESERVED_WORD); }
-	"extends"						{ addToken(Token.RESERVED_WORD); }
-	"final"						{ addToken(Token.RESERVED_WORD); }
-	"finally"						{ addToken(Token.RESERVED_WORD); }
-	"float"						{ addToken(Token.DATA_TYPE); }
-	"goto"						{ addToken(Token.RESERVED_WORD); }
-	"implements"					{ addToken(Token.RESERVED_WORD); }
-	"import"						{ addToken(Token.RESERVED_WORD); }
-	"instanceof"					{ addToken(Token.RESERVED_WORD); }
-	"int"						{ addToken(Token.DATA_TYPE); }
-	"interface"					{ addToken(Token.RESERVED_WORD); }
-	"long"						{ addToken(Token.DATA_TYPE); }
-	"native"						{ addToken(Token.RESERVED_WORD); }
-	"package"						{ addToken(Token.RESERVED_WORD); }
-	"private"						{ addToken(Token.RESERVED_WORD); }
-	"protected"					{ addToken(Token.RESERVED_WORD); }
-	"public"						{ addToken(Token.RESERVED_WORD); }
-	"short"						{ addToken(Token.DATA_TYPE); }
-	"static"						{ addToken(Token.RESERVED_WORD); }
-	"super"						{ addToken(Token.RESERVED_WORD); }
-	"switch"						{ addToken(Token.RESERVED_WORD); }
-	"synchronized"					{ addToken(Token.RESERVED_WORD); }
-	"throw"						{ addToken(Token.RESERVED_WORD); }
-	"throws"						{ addToken(Token.RESERVED_WORD); }
-	"transient"					{ addToken(Token.RESERVED_WORD); }
-	"try"						{ addToken(Token.RESERVED_WORD); }
-	"volatile"					{ addToken(Token.RESERVED_WORD); }
-	"null"						{ addToken(Token.RESERVED_WORD); }
+	"abstract"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"boolean"						{ addToken(TokenTypes.DATA_TYPE); }
+	"byte"						{ addToken(TokenTypes.DATA_TYPE); }
+	"case"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"catch"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"char"						{ addToken(TokenTypes.DATA_TYPE); }
+	"class"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"const"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"debugger"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"default"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"do"							{ addToken(TokenTypes.RESERVED_WORD); }
+	"double"						{ addToken(TokenTypes.DATA_TYPE); }
+	"enum"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"export"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"extends"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"final"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"finally"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"float"						{ addToken(TokenTypes.DATA_TYPE); }
+	"goto"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"implements"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"import"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"instanceof"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"int"						{ addToken(TokenTypes.DATA_TYPE); }
+	"interface"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"long"						{ addToken(TokenTypes.DATA_TYPE); }
+	"native"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"package"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"private"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"protected"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"public"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"short"						{ addToken(TokenTypes.DATA_TYPE); }
+	"static"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"super"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"switch"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"synchronized"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"throw"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"throws"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"transient"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"try"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"volatile"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"null"						{ addToken(TokenTypes.RESERVED_WORD); }
 
 	// Literals.
-	{JS_BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
-	"NaN"						{ addToken(Token.RESERVED_WORD); }
-	"Infinity"					{ addToken(Token.RESERVED_WORD); }
+	{JS_BooleanLiteral}			{ addToken(TokenTypes.LITERAL_BOOLEAN); }
+	"NaN"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"Infinity"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	// Functions.
 	"eval" |
@@ -1153,11 +1153,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"escape" |
 	"unescape" |
 	"isNaN" |
-	"isFinite"					{ addToken(Token.FUNCTION); }
+	"isFinite"					{ addToken(TokenTypes.FUNCTION); }
 
 	{LineTerminator}				{ addEndToken(INTERNAL_IN_JS); return firstToken; }
-	{JS_Identifier}				{ addToken(Token.IDENTIFIER); }
-	{Whitespace}					{ addToken(Token.WHITESPACE); }
+	{JS_Identifier}				{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
 	[\']							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_CHAR); }
@@ -1165,7 +1165,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	[\`]							{ start = zzMarkedPos-1; validJSString = true; yybegin(JS_TEMPLATE_LITERAL); }
 
 	/* Comment literals. */
-	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
+	"/**/"						{ addToken(TokenTypes.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(JS_MLC); }
 	{JS_DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(JS_DOCCOMMENT); }
 	{JS_LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(JS_EOL_COMMENT); }
@@ -1174,7 +1174,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{JS_Regex}						{
 										boolean highlightedAsRegex = false;
 										if (firstToken==null) {
-											addToken(Token.REGEX);
+											addToken(TokenTypes.REGEX);
 											highlightedAsRegex = true;
 										}
 										else {
@@ -1182,7 +1182,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 											// the previous token, highlight it as such.
 											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
 											if (RSyntaxUtilities.regexCanFollowInJavaScript(t)) {
-												addToken(Token.REGEX);
+												addToken(TokenTypes.REGEX);
 												highlightedAsRegex = true;
 											}
 										}
@@ -1190,42 +1190,42 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 										// individual tokens.
 										if (!highlightedAsRegex) {
 											int temp = zzStartRead + 1;
-											addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+											addToken(zzStartRead, zzStartRead, TokenTypes.OPERATOR);
 											zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 										}
 									}
 
 	/* Separators. */
-	{JS_Separator}					{ addToken(Token.SEPARATOR); }
-	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
+	{JS_Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{JS_Separator2}				{ addToken(TokenTypes.IDENTIFIER); }
 
-	{PHP_Start}					{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}					{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 
 	/* Operators. */
-	{JS_Operator}					{ addToken(Token.OPERATOR); }
+	{JS_Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{JS_IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{JS_HexLiteral}				{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{JS_FloatLiteral}				{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{JS_ErrorNumberFormat}			{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{JS_IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{JS_HexLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{JS_FloatLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{JS_ErrorNumberFormat}			{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{JS_ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
+	{JS_ErrorIdentifier}			{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addEndToken(INTERNAL_IN_JS); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }
 
 
 <JS_STRING> {
-	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE); validJSString = true; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\n\\\"<]+				{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
-	\n						{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
 	\\x{HexDigit}{2}		{}
 	\\x						{ /* Invalid latin-1 character \xXX */ validJSString = false; }
 	\\u{HexDigit}{4}		{}
@@ -1233,21 +1233,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									addEndToken(INTERNAL_IN_JS_STRING_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
 								}
 								return firstToken;
 							}
-	\"						{ int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	\"						{ int type = validJSString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
 <JS_CHAR> {
-	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\n\\\'<]+				{}
 	"<"							{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\\x{HexDigit}{2}		{}
@@ -1257,18 +1257,18 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 	\\						{ /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addToken(start,zzStartRead, TokenTypes.ERROR_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
 								}
 								return firstToken;
 							}
-	\'						{ int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	\'						{ int type = validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addEndToken(INTERNAL_IN_JS); return firstToken; }
 }
 
 <JS_TEMPLATE_LITERAL> {
@@ -1280,7 +1280,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\\.						{ /* Skip all escaped chars. */ }
 
 	{JS_TemplateLiteralExprStart}	{
-								addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+								addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 								start = zzMarkedPos-2;
 								if (varDepths==null) {
 									varDepths = new Stack<>();
@@ -1293,16 +1293,16 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							}
 	"$"						{ /* Skip valid '$' that is not part of template literal expression start */ }
 	
-	\`						{ int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
+	\`						{ int type = validJSString ? TokenTypes.LITERAL_BACKQUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(JAVASCRIPT); }
 
 	/* Line ending in '\' => continue to next line, though not necessary in template strings. */
 	\\						{
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
@@ -1310,11 +1310,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n |
 	<<EOF>>					{
 								if (validJSString) {
-									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
@@ -1327,7 +1327,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 							if (!varDepths.empty()) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE);
 									start = zzMarkedPos;
 									yybegin(JS_TEMPLATE_LITERAL);
 								}
@@ -1338,183 +1338,183 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	\n |
 	<<EOF>>				{
 							// TODO: This isn't right.  The expression and its depth should continue to the next line.
-							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+							addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
 						}
 }
 
 <JS_MLC> {
 	// JavaScript MLC's.  This state is essentially Java's MLC state.
 	[^hwf<\n\*]+			{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
 							  yybegin(YYINITIAL);
 							  int temp = zzStartRead;
-							  addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE);
-							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
-							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+							  addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE);
+							  addToken(temp,temp+1, TokenTypes.MARKUP_TAG_DELIMITER);
+							  addToken(zzMarkedPos-7,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+							  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 							}
 	"<"						{}
-	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	{JS_MLCEnd}					{ yybegin(JAVASCRIPT); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*							{}
 	\n |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken; }
 }
 
 
 
 <JS_DOCCOMMENT> {
 	[^hwf\@\{\n\<\*]+			{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
 	[hwf]						{}
 
-	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"@"{JS_BlockTag}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"@"							{}
-	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos; }
+	"{@"{JS_InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_KEYWORD); start = zzMarkedPos; }
 	"{"							{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
-	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos; }
+	\n							{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MARKUP); start = zzMarkedPos; }
 	\<							{}
-	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
+	{JS_MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_DOCUMENTATION); }
 	\*							{}
-	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken; }
 }
 
 
 <JS_EOL_COMMENT> {
 	[^hwf<\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	{EndScriptTag}			{
 							  int temp = zzStartRead;
-							  addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+							  addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL);
 							  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
-							  addToken(temp,temp+1, Token.MARKUP_TAG_DELIMITER);
-							  addToken(zzMarkedPos-7,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-							  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+							  addToken(temp,temp+1, TokenTypes.MARKUP_TAG_DELIMITER);
+							  addToken(zzMarkedPos-7,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+							  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 							}
 	"<"						{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addEndToken(INTERNAL_IN_JS); return firstToken; }
 
 }
 
 
 <CSS> {
-	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}			{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
-						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 						}
-	{CSS_SelectorPiece}	{ addToken(Token.DATA_TYPE); }
-	{CSS_PseudoClass}	{ addToken(Token.RESERVED_WORD); }
-	":"					{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
-	{CSS_AtKeyword}		{ addToken(Token.REGEX); }
-	{CSS_Id}			{ addToken(Token.VARIABLE); }
-	"{"					{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
-	[,]					{ addToken(Token.IDENTIFIER); }
+	{CSS_SelectorPiece}	{ addToken(TokenTypes.DATA_TYPE); }
+	{CSS_PseudoClass}	{ addToken(TokenTypes.RESERVED_WORD); }
+	":"					{ /* Unknown pseudo class */ addToken(TokenTypes.DATA_TYPE); }
+	{CSS_AtKeyword}		{ addToken(TokenTypes.REGEX); }
+	{CSS_Id}			{ addToken(TokenTypes.VARIABLE); }
+	"{"					{ addToken(TokenTypes.SEPARATOR); yybegin(CSS_PROPERTY); }
+	[,]					{ addToken(TokenTypes.IDENTIFIER); }
 	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	[+>~\^$\|=]			{ addToken(Token.OPERATOR); }
-	{CSS_Separator}		{ addToken(Token.SEPARATOR); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	[+>~\^$\|=]			{ addToken(TokenTypes.OPERATOR); }
+	{CSS_Separator}		{ addToken(TokenTypes.SEPARATOR); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
 	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("CSS: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.					{ /*System.out.println("CSS: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>				{ addEndToken(INTERNAL_CSS); return firstToken; }
 }
 
 <CSS_PROPERTY> {
-	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}			{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
-						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 						}
-	{CSS_Property}		{ addToken(Token.RESERVED_WORD); }
-	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
-	":"					{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	{CSS_Property}		{ addToken(TokenTypes.RESERVED_WORD); }
+	"}"					{ addToken(TokenTypes.SEPARATOR); yybegin(CSS); }
+	":"					{ addToken(TokenTypes.OPERATOR); yybegin(CSS_VALUE); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
 	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.					{ /*System.out.println("css_property: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>				{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
 }
 
 <CSS_VALUE> {
-	{PHP_Start}			{ addToken(Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}			{ addToken(TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	{EndStyleTag}		{
 						  yybegin(YYINITIAL, LANG_INDEX_DEFAULT);
-						  addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-						  addToken(zzMarkedPos-6,zzMarkedPos-2, Token.MARKUP_TAG_NAME);
-						  addToken(zzMarkedPos-1,zzMarkedPos-1, Token.MARKUP_TAG_DELIMITER);
+						  addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+						  addToken(zzMarkedPos-6,zzMarkedPos-2, TokenTypes.MARKUP_TAG_NAME);
+						  addToken(zzMarkedPos-1,zzMarkedPos-1, TokenTypes.MARKUP_TAG_DELIMITER);
 						}
-	{CSS_Value}			{ addToken(Token.IDENTIFIER); }
-	"!important"		{ addToken(Token.ANNOTATION); }
+	{CSS_Value}			{ addToken(TokenTypes.IDENTIFIER); }
+	"!important"		{ addToken(TokenTypes.ANNOTATION); }
 	{CSS_Function}		{ int temp = zzMarkedPos - 2;
-						  addToken(zzStartRead, temp, Token.FUNCTION);
-						  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+						  addToken(zzStartRead, temp, TokenTypes.FUNCTION);
+						  addToken(zzMarkedPos-1, zzMarkedPos-1, TokenTypes.SEPARATOR);
 						  zzStartRead = zzCurrentPos = zzMarkedPos;
 						}
-	{CSS_Number}		{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{CSS_Number}		{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
 	\"					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'					{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	")"					{ /* End of a function */ addToken(Token.SEPARATOR); }
-	[;]					{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
-	[,\.]				{ addToken(Token.IDENTIFIER); }
-	"}"					{ addToken(Token.SEPARATOR); yybegin(CSS); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
+	")"					{ /* End of a function */ addToken(TokenTypes.SEPARATOR); }
+	[;]					{ addToken(TokenTypes.OPERATOR); yybegin(CSS_PROPERTY); }
+	[,\.]				{ addToken(TokenTypes.IDENTIFIER); }
+	"}"					{ addToken(TokenTypes.SEPARATOR); yybegin(CSS); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
 	{CSS_MlcStart}		{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.					{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.					{ /*System.out.println("css_value: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>				{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
 }
 
 <CSS_STRING> {
-	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\n\\\"<]+			{}
 	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\\.?				{ /* Skip escaped chars. */ }
-	\"					{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
+	\"					{ addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
 }
 
 <CSS_CHAR_LITERAL> {
-	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^\n\\\'<]+			{}
 	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
 	\\.?				{ /* Skip escaped chars. */ }
-	\'					{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState); }
+	\'					{ addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); yybegin(cssPrevState); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
 }
 
 <CSS_C_STYLE_COMMENT> {
-	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
+	{PHP_Start}				{ int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR); validJSString = true; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); phpInState = zzLexicalState; yybegin(PHP, LANG_INDEX_PHP); }
 	[^hwf\n\*<]+			{}
 	"<"					{ /* Allowing "<?" and "<?php" to start PHP */ }
-	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]				{}
-	{CSS_MlcEnd}		{ addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState); }
+	{CSS_MlcEnd}		{ addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); yybegin(cssPrevState); }
 	\*					{}
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
 }
 
 
 <PHP> {
 
-	"?>"						{ yybegin(phpInState, phpInLangIndex); addToken(Token.MARKUP_TAG_DELIMITER); start = zzMarkedPos; }
+	"?>"						{ yybegin(phpInState, phpInLangIndex); addToken(TokenTypes.MARKUP_TAG_DELIMITER); start = zzMarkedPos; }
 
 	/* Error control operator */
 	("@"{JS_Identifier})		{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.FUNCTION);
+									addToken(zzStartRead,zzStartRead, TokenTypes.FUNCTION);
 									zzMarkedPos -= (count-1); //yypushback(count-1);
 								}
 
@@ -1589,10 +1589,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	"parent" |
 	"self" |
-	"stdClass"					{ addToken(Token.RESERVED_WORD); }
+	"stdClass"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	"exit" |
-	"return"					{ addToken(Token.RESERVED_WORD_2); }
+	"return"					{ addToken(TokenTypes.RESERVED_WORD_2); }
 
 	/* Functions */
 	"__call" |
@@ -2495,45 +2495,45 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"use_result" |
 	"user_error" |
 	("velocis_"("autocommit"|"close"|"commit"|"connect"|"exec"|"fetch"|"fieldname"|"fieldnum"|"freeresult"|"off_autocommit"|"result"|"rollback")) |
-	"virtual"							{ addToken(Token.FUNCTION); }
+	"virtual"							{ addToken(TokenTypes.FUNCTION); }
 
-	{PHP_BooleanLiteral}		{ addToken(Token.LITERAL_BOOLEAN); }
-	{PHP_Null}					{ addToken(Token.RESERVED_WORD); }
-	{PHP_Variable}				{ addToken(Token.VARIABLE); }
+	{PHP_BooleanLiteral}		{ addToken(TokenTypes.LITERAL_BOOLEAN); }
+	{PHP_Null}					{ addToken(TokenTypes.RESERVED_WORD); }
+	{PHP_Variable}				{ addToken(TokenTypes.VARIABLE); }
 
 	{LineTerminator}				{ addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
-	{JS_Identifier}				{ addToken(Token.IDENTIFIER); }
-	{Whitespace}					{ addToken(Token.WHITESPACE); }
+	{JS_Identifier}				{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character literals. */
 	[\"]							{ start = zzMarkedPos-1; yybegin(PHP_STRING); }
 	[\']							{ start = zzMarkedPos-1; yybegin(PHP_CHAR); }
 
 	/* Comment literals. */
-	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
+	"/**/"						{ addToken(TokenTypes.COMMENT_MULTILINE); }
 	{JS_MLCBegin}					{ start = zzMarkedPos-2; yybegin(PHP_MLC); }
-	{PHP_LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
+	{PHP_LineCommentBegin}.*			{ addToken(TokenTypes.COMMENT_EOL); addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
 
 	/* Separators. */
-	{JS_Separator}					{ addToken(Token.SEPARATOR); }
-	{JS_Separator2}				{ addToken(Token.IDENTIFIER); }
+	{JS_Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{JS_Separator2}				{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Operators. */
-	{JS_Operator}					{ addToken(Token.OPERATOR); }
+	{JS_Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{JS_IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{JS_HexLiteral}				{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{JS_FloatLiteral}				{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{JS_ErrorNumberFormat}			{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{JS_IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{JS_HexLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{JS_FloatLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{JS_ErrorNumberFormat}			{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{JS_ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
+	{JS_ErrorIdentifier}			{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addPhpEndToken(INTERNAL_IN_PHP); return firstToken; }
 
 	/* Catch any other (unhandled) characters and assume they are okay. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
@@ -2541,12 +2541,12 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <PHP_MLC> {
 	// PHP MLC's.  This state is essentially Java's MLC state.
 	[^hwf\n\*]+					{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]						{}
-	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	{JS_MLCEnd}					{ yybegin(PHP); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*							{}
 	\n |
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addPhpEndToken(INTERNAL_IN_PHP_MLC); return firstToken; }
 }
 
 
@@ -2556,22 +2556,22 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{PHP_Variable}		{
                             int temp=zzStartRead;
                             if (start <= zzStartRead - 1) {
-                                addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                             }
-                            addToken(temp,zzMarkedPos-1, Token.VARIABLE);
+                            addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE);
                             start = zzMarkedPos;
                         }
 	"$"					{}
-	\"					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\"					{ yybegin(PHP); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addPhpEndToken(INTERNAL_IN_PHP_STRING); return firstToken; }
 }
 
 
 <PHP_CHAR> {
 	[^\n\\\']+			{}
 	\\.?				{ /* Skip escaped single quotes only, but this should still work. */ }
-	\'					{ yybegin(PHP); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	\'					{ yybegin(PHP); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); addPhpEndToken(INTERNAL_IN_PHP_CHAR); return firstToken; }
 }
