@@ -1753,10 +1753,10 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 										int operatorLen = yycharat(0)=='+' ? 2 : 1;
 										int yylen = yylength(); // Cache before first addToken() invalidates it
 										//System.out.println("'" + yytext() + "': " + yylength() + ", " + (operatorLen+1));
-										addToken(zzStartRead,zzStartRead+operatorLen-1, Token.OPERATOR);
+										addToken(zzStartRead,zzStartRead+operatorLen-1, TokenTypes.OPERATOR);
 										if (yylen>operatorLen+1) {
 											//System.out.println((start+operatorLen) + ", " + (zzMarkedPos-2));
-											addToken(start+operatorLen,zzMarkedPos-2, Token.WHITESPACE);
+											addToken(start+operatorLen,zzMarkedPos-2, TokenTypes.WHITESPACE);
 										}
 										zzStartRead = zzCurrentPos = zzMarkedPos = zzMarkedPos - 1;
 										if (isE4xSupported()) {
@@ -1772,42 +1772,42 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 84: break;
         case 43:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 85: break;
         case 80:
-          { addToken(Token.RESERVED_WORD_2);
+          { addToken(TokenTypes.RESERVED_WORD_2);
           }
         case 86: break;
         case 27:
-          { addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken;
           }
         case 87: break;
         case 40:
-          { int type = validJSString ? Token.LITERAL_BACKQUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validJSString ? TokenTypes.LITERAL_BACKQUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 88: break;
         case 3:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 89: break;
         case 18:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
           }
         case 90: break;
         case 72:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 91: break;
         case 56:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_MARKUP); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MARKUP); start = zzMarkedPos;
           }
         case 92: break;
         case 42:
           { if (!varDepths.empty()) {
 								varDepths.pop();
 								if (varDepths.empty()) {
-									addToken(start,zzStartRead, Token.VARIABLE);
+									addToken(start,zzStartRead, TokenTypes.VARIABLE);
 									start = zzMarkedPos;
 									yybegin(JS_TEMPLATE_LITERAL);
 								}
@@ -1827,7 +1827,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 96: break;
         case 12:
-          { addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 97: break;
         case 77:
@@ -1835,11 +1835,11 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 98: break;
         case 68:
-          { int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER);
+          { int temp=zzStartRead; yybegin(E4X); addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_CDATA_DELIMITER);
           }
         case 99: break;
         case 61:
-          { addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+          { addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 								start = zzMarkedPos-2;
 								if (varDepths==null) {
 									varDepths = new Stack<>();
@@ -1860,7 +1860,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 102: break;
         case 69:
-          { addToken(Token.COMMENT_MULTILINE);
+          { addToken(TokenTypes.COMMENT_MULTILINE);
           }
         case 103: break;
         case 59:
@@ -1868,17 +1868,17 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 104: break;
         case 36:
-          { yybegin(E4X_INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
+          { yybegin(E4X_INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 105: break;
         case 14:
-          { int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validJSString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 106: break;
         case 63:
           { boolean highlightedAsRegex = false;
 										if (firstToken==null) {
-											addToken(Token.REGEX);
+											addToken(TokenTypes.REGEX);
 											highlightedAsRegex = true;
 										}
 										else {
@@ -1886,7 +1886,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 											// the previous token, highlight it as such.
 											Token t = firstToken.getLastNonCommentNonWhitespaceToken();
 											if (RSyntaxUtilities.regexCanFollowInJavaScript(t)) {
-												addToken(Token.REGEX);
+												addToken(TokenTypes.REGEX);
 												highlightedAsRegex = true;
 											}
 										}
@@ -1894,17 +1894,17 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
 										// individual tokens.
 										if (!highlightedAsRegex) {
 											int temp = zzStartRead + 1;
-											addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+											addToken(zzStartRead, zzStartRead, TokenTypes.OPERATOR);
 											zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 										}
           }
         case 107: break;
         case 20:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 108: break;
         case 24:
-          { yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(Token.IDENTIFIER);
+          { yybegin(YYINITIAL, LANG_INDEX_DEFAULT); addToken(TokenTypes.IDENTIFIER);
           }
         case 109: break;
         case 52:
@@ -1913,62 +1913,62 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
         case 110: break;
         case 41:
           { // TODO: This isn't right.  The expression and its depth should continue to the next line.
-							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+							addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
           }
         case 111: break;
         case 79:
-          { int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT);
+          { int temp = zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); start = temp; e4x_prevState = zzLexicalState; yybegin(E4X_COMMENT);
           }
         case 112: break;
         case 71:
-          { if(e4xSupported){ addToken(Token.RESERVED_WORD);} else {addToken(Token.IDENTIFIER);}
+          { if(e4xSupported){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);}
           }
         case 113: break;
         case 66:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(E4X_INTAG);
           }
         case 114: break;
         case 67:
-          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(e4x_prevState);
+          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); start = temp; yybegin(e4x_prevState);
           }
         case 115: break;
         case 7:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 116: break;
         case 60:
-          { yybegin(E4X); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION);
+          { yybegin(E4X); addToken(start,zzStartRead+1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION);
           }
         case 117: break;
         case 55:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_DOCUMENTATION);
           }
         case 118: break;
         case 19:
-          { addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken;
           }
         case 119: break;
         case 26:
-          { addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken;
           }
         case 120: break;
         case 5:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 121: break;
         case 73:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 122: break;
         case 49:
-          { addToken(isE4xSupported() ? Token.MARKUP_TAG_ATTRIBUTE : Token.ERROR_IDENTIFIER);
+          { addToken(isE4xSupported() ? TokenTypes.MARKUP_TAG_ATTRIBUTE : TokenTypes.ERROR_IDENTIFIER);
           }
         case 123: break;
         case 76:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 124: break;
         case 64:
@@ -1984,7 +1984,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 127: break;
         case 25:
-          { addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken;
           }
         case 128: break;
         case 10:
@@ -1996,7 +1996,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 130: break;
         case 75:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION); start = zzMarkedPos;
           }
         case 131: break;
         case 47:
@@ -2004,35 +2004,35 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 132: break;
         case 45:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 133: break;
         case 81:
-          { addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(E4X_CDATA);
+          { addToken(TokenTypes.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(E4X_CDATA);
           }
         case 134: break;
         case 32:
-          { addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */
           }
         case 135: break;
         case 2:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 136: break;
         case 78:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT); start = zzMarkedPos;
           }
         case 137: break;
         case 33:
-          { yybegin(E4X); addToken(Token.MARKUP_TAG_DELIMITER);
+          { yybegin(E4X); addToken(TokenTypes.MARKUP_TAG_DELIMITER);
           }
         case 138: break;
         case 23:
-          { addToken(Token.MARKUP_ENTITY_REFERENCE);
+          { addToken(TokenTypes.MARKUP_ENTITY_REFERENCE);
           }
         case 139: break;
         case 70:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 140: break;
         case 4:
@@ -2040,73 +2040,73 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 141: break;
         case 50:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 142: break;
         case 13:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									addEndToken(INTERNAL_IN_JS_STRING_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
 								}
 								return firstToken;
           }
         case 143: break;
         case 54:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 144: break;
         case 65:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 145: break;
         case 22:
-          { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(E4X_INTAG);
           }
         case 146: break;
         case 8:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 147: break;
         case 38:
           { if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
           }
         case 148: break;
         case 31:
-          { addToken(Token.MARKUP_TAG_ATTRIBUTE);
+          { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE);
           }
         case 149: break;
         case 16:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addToken(start,zzStartRead, TokenTypes.ERROR_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
 								}
 								return firstToken;
           }
         case 150: break;
         case 74:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_KEYWORD); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_KEYWORD); start = zzMarkedPos;
           }
         case 151: break;
         case 17:
-          { int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 152: break;
         case 46:
@@ -2119,21 +2119,21 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
         case 154: break;
         case 57:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(E4X_INTAG);
           }
         case 155: break;
         case 44:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 156: break;
         case 28:
-          { if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, Token.MARKUP_DTD); }
+          { if (!e4x_inInternalDtd) { yybegin(E4X); addToken(start,zzStartRead, TokenTypes.MARKUP_DTD); }
           }
         case 157: break;
         case 6:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 158: break;
         case 30:
@@ -2142,18 +2142,18 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
         case 159: break;
         case 37:
           { if (validJSString) {
-									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
           }
         case 160: break;
         case 15:
-          { addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 161: break;
         case 1:
@@ -2165,7 +2165,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case JS_STRING: {
-              addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
             }
             case 647: break;
             case E4X: {
@@ -2177,56 +2177,56 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 649: break;
             case E4X_PI: {
-              addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); addEndToken(INTERNAL_E4X_MARKUP_PROCESSING_INSTRUCTION); return firstToken;
             }
             case 650: break;
             case JS_MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
             }
             case 651: break;
             case JS_CHAR: {
-              addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
             }
             case 652: break;
             case JS_EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
             }
             case 653: break;
             case E4X_COMMENT: {
-              addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_E4X_COMMENT - e4x_prevState); return firstToken;
             }
             case 654: break;
             case JS_DOCCOMMENT: {
-              yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken;
+              yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_IN_JS_COMMENT_DOCUMENTATION); return firstToken;
             }
             case 655: break;
             case E4X_DTD: {
-              addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); addEndToken(e4x_inInternalDtd ? INTERNAL_E4X_DTD_INTERNAL : INTERNAL_E4X_DTD); return firstToken;
             }
             case 656: break;
             case JS_TEMPLATE_LITERAL: {
               if (validJSString) {
-									addToken(start, zzStartRead - 1, Token.LITERAL_BACKQUOTE);
+									addToken(start, zzStartRead - 1, TokenTypes.LITERAL_BACKQUOTE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_VALID);
 								}
 								else {
-									addToken(start,zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID);
 								}
 								return firstToken;
             }
             case 657: break;
             case E4X_INATTR_SINGLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_SINGLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_SINGLE); return firstToken;
             }
             case 658: break;
             case E4X_INATTR_DOUBLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_DOUBLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_E4X_ATTR_DOUBLE); return firstToken;
             }
             case 659: break;
             case JS_TEMPLATE_LITERAL_EXPR: {
               // TODO: This isn't right.  The expression and its depth should continue to the next line.
-							addToken(start,zzStartRead-1, Token.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
+							addToken(start,zzStartRead-1, TokenTypes.VARIABLE); addEndToken(INTERNAL_IN_JS_TEMPLATE_LITERAL_INVALID); return firstToken;
             }
             case 660: break;
             case YYINITIAL: {
@@ -2234,7 +2234,7 @@ public class TypeScriptTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 661: break;
             case E4X_CDATA: {
-              addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addEndToken(INTERNAL_E4X_MARKUP_CDATA); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); addEndToken(INTERNAL_E4X_MARKUP_CDATA); return firstToken;
             }
             case 662: break;
             default:

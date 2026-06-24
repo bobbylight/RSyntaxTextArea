@@ -663,7 +663,7 @@ public class TokenImpl implements Token {
 
 	@Override
 	public boolean isPaintable() {
-		return getType()>Token.NULL;
+		return getType()>TokenTypes.NULL;
 	}
 
 
@@ -923,7 +923,7 @@ public class TokenImpl implements Token {
 	@Override
 	public String toString() {
 		return "[Token: " +
-			(getType()==Token.NULL ? "<null token>" :
+			(getType()==TokenTypes.NULL ? "<null token>" :
 				"text: '" +
 					(text==null ? "<null>" : getLexeme() + "'; " +
 	       		"offset: " + getOffset() + "; type: " + getType() + "; " +

@@ -153,7 +153,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 
 		s = text;
 		try {
@@ -233,25 +233,25 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 <YYINITIAL> {
 
-	([\\]{AnyChar}+)			{ addToken(Token.FUNCTION); }
+	([\\]{AnyChar}+)			{ addToken(TokenTypes.FUNCTION); }
 	([\\]%)						{ int temp = zzStartRead;
-									addToken(temp, temp, Token.SEPARATOR);
-									addToken(temp + 1, temp + 1, Token.IDENTIFIER);
+									addToken(temp, temp, TokenTypes.SEPARATOR);
+									addToken(temp + 1, temp + 1, TokenTypes.IDENTIFIER);
 								}
-	[\{\}]						{ addToken(Token.SEPARATOR); }
+	[\{\}]						{ addToken(TokenTypes.SEPARATOR); }
 	("\\begin{"{AnyChar}+"}")   { int temp = zzStartRead;
-							addToken(temp, temp+5, Token.RESERVED_WORD);
-							addToken(temp+6, temp+6, Token.SEPARATOR);
-							addToken(temp+7, zzMarkedPos-2, Token.RESERVED_WORD);
-							addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+							addToken(temp, temp+5, TokenTypes.RESERVED_WORD);
+							addToken(temp+6, temp+6, TokenTypes.SEPARATOR);
+							addToken(temp+7, zzMarkedPos-2, TokenTypes.RESERVED_WORD);
+							addToken(zzMarkedPos-1, zzMarkedPos-1, TokenTypes.SEPARATOR);
 								}
 	("\\end{"{AnyChar}+"}")		{ int temp = zzStartRead;
-							addToken(temp, temp+3, Token.RESERVED_WORD);
-							addToken(temp+4, temp+4, Token.SEPARATOR);
-							addToken(temp+5, zzMarkedPos-2, Token.RESERVED_WORD);
-							addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+							addToken(temp, temp+3, TokenTypes.RESERVED_WORD);
+							addToken(temp+4, temp+4, TokenTypes.SEPARATOR);
+							addToken(temp+5, zzMarkedPos-2, TokenTypes.RESERVED_WORD);
+							addToken(zzMarkedPos-1, zzMarkedPos-1, TokenTypes.SEPARATOR);
 								}
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
 
 	{LineCommentBegin}			{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
 
@@ -260,15 +260,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	/* Catch any other (unhandled) characters and flag them as identifiers. */
 	{AnyChar}+ |
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 }

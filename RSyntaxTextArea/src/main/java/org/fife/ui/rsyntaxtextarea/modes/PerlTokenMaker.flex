@@ -157,7 +157,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return super.getMarkOccurrencesOfTokenType(type) || type==Token.VARIABLE;
+		return super.getMarkOccurrencesOfTokenType(type) || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -181,15 +181,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR_LITERAL;
 				start = text.offset;
 				break;
-			case Token.LITERAL_BACKQUOTE:
+			case TokenTypes.LITERAL_BACKQUOTE:
 				state = BACKTICKS;
 				start = text.offset;
 				break;
@@ -253,7 +253,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					ch=='&'
 				)) ||
 				/* Operators "==", "===", "!=", "!==", etc. */
-				(t.getType()==Token.OPERATOR &&
+				(t.getType()==TokenTypes.OPERATOR &&
 					((ch=t.charAt(t.length()-1))=='=' || ch=='~'));
 	}
 
@@ -389,7 +389,7 @@ ErrorIdentifier			= ({NonSeparator}+)
 	"unless" |
 	"until" |
 	"while" |
-	"xor"				{ addToken(Token.RESERVED_WORD); }
+	"xor"				{ addToken(TokenTypes.RESERVED_WORD); }
 
 	/* Standard Functions */
 	"abs" |
@@ -591,16 +591,16 @@ ErrorIdentifier			= ({NonSeparator}+)
 	"waitpid" |
 	"wantarray" |
 	"warn" |
-	"write"			{ addToken(Token.FUNCTION); }
+	"write"			{ addToken(TokenTypes.FUNCTION); }
 
 }
 
 <YYINITIAL> {
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
-	{Variable}					{ addToken(Token.VARIABLE); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
+	{Variable}					{ addToken(TokenTypes.VARIABLE); }
 
 	/* String/Character literals. */
 	\"							{ start = zzMarkedPos-1; yybegin(STRING); }
@@ -608,14 +608,14 @@ ErrorIdentifier			= ({NonSeparator}+)
 	\`							{ start = zzMarkedPos-1; yybegin(BACKTICKS); }
 
 	/* Comment literals. */
-	{LineCommentBegin}"!".*			{ addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; }
-	{LineCommentBegin}.*			{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{LineCommentBegin}"!".*			{ addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; }
+	{LineCommentBegin}.*			{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Easily identifiable regexes of the form "/.../". This is not foolproof. */
 	{Regex}		{
 					boolean highlightedAsRegex = false;
 					if (firstToken==null) {
-						addToken(Token.REGEX);
+						addToken(TokenTypes.REGEX);
 						highlightedAsRegex = true;
 					}
 					else {
@@ -623,7 +623,7 @@ ErrorIdentifier			= ({NonSeparator}+)
 						// the previous token, highlight it as such.
 						Token t = firstToken.getLastNonCommentNonWhitespaceToken();
 						if (regexCanFollow(t)) {
-							addToken(Token.REGEX);
+							addToken(TokenTypes.REGEX);
 							highlightedAsRegex = true;
 						}
 					}
@@ -631,28 +631,28 @@ ErrorIdentifier			= ({NonSeparator}+)
 					// individual tokens.
 					if (!highlightedAsRegex) {
 						int temp = zzStartRead + 1;
-						addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+						addToken(zzStartRead, zzStartRead, TokenTypes.OPERATOR);
 						zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 					}
 				}
 
 	/* More regexes (m/.../, s!...!!, etc.).  This is nowhere near */
 	/* exhaustive, but is rather just the common ones.             */
-	m"/"[^/]*"/"[msixpodualgc]*				{ addToken(Token.REGEX); }
-	m"!"[^!]*"!"[msixpodualgc]*				{ addToken(Token.REGEX); }
-	m"|"[^\|]*"|"[msixpodualgc]*			{ addToken(Token.REGEX); }
-	m\\[^\\]*\\[msixpodualgc]*				{ addToken(Token.REGEX); }
-	s"/"[^/]*"/"[^/]*"/"[msixpodualgcer]*	{ addToken(Token.REGEX); }
-	s"!"[^!]*"!"[^!]*"!"[msixpodualgcer]*	{ addToken(Token.REGEX); }
-	s"|"[^\|]*"|"[^\|]*"|"[msixpodualgcer]*	{ addToken(Token.REGEX); }
-	(tr|y)"/"[^/]*"/"[^/]*"/"[cdsr]*		{ addToken(Token.REGEX); }
-	(tr|y)"!"[^!]*"!"[^!]*"!"[cdsr]*		{ addToken(Token.REGEX); }
-	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cdsr]*		{ addToken(Token.REGEX); }
-	(tr|y)\\[^\\]*\\[^\\]*\\[cdsr]*		{ addToken(Token.REGEX); }
-	qr"/"[^/]*"/"[msixpodual]*			{ addToken(Token.REGEX); }
-	qr"!"[^/]*"!"[msixpodual]*			{ addToken(Token.REGEX); }
-	qr"|"[^/]*"|"[msixpodual]*			{ addToken(Token.REGEX); }
-	qr\\[^/]*\\[msixpodual]*			{ addToken(Token.REGEX); }
+	m"/"[^/]*"/"[msixpodualgc]*				{ addToken(TokenTypes.REGEX); }
+	m"!"[^!]*"!"[msixpodualgc]*				{ addToken(TokenTypes.REGEX); }
+	m"|"[^\|]*"|"[msixpodualgc]*			{ addToken(TokenTypes.REGEX); }
+	m\\[^\\]*\\[msixpodualgc]*				{ addToken(TokenTypes.REGEX); }
+	s"/"[^/]*"/"[^/]*"/"[msixpodualgcer]*	{ addToken(TokenTypes.REGEX); }
+	s"!"[^!]*"!"[^!]*"!"[msixpodualgcer]*	{ addToken(TokenTypes.REGEX); }
+	s"|"[^\|]*"|"[^\|]*"|"[msixpodualgcer]*	{ addToken(TokenTypes.REGEX); }
+	(tr|y)"/"[^/]*"/"[^/]*"/"[cdsr]*		{ addToken(TokenTypes.REGEX); }
+	(tr|y)"!"[^!]*"!"[^!]*"!"[cdsr]*		{ addToken(TokenTypes.REGEX); }
+	(tr|y)"|"[^\|]*"|"[^\|]*"|"[cdsr]*		{ addToken(TokenTypes.REGEX); }
+	(tr|y)\\[^\\]*\\[^\\]*\\[cdsr]*		{ addToken(TokenTypes.REGEX); }
+	qr"/"[^/]*"/"[msixpodual]*			{ addToken(TokenTypes.REGEX); }
+	qr"!"[^/]*"!"[msixpodual]*			{ addToken(TokenTypes.REGEX); }
+	qr"|"[^/]*"|"[msixpodual]*			{ addToken(TokenTypes.REGEX); }
+	qr\\[^/]*\\[msixpodual]*			{ addToken(TokenTypes.REGEX); }
 
 	/* "Here-document" syntax.  This is only implemented for the common */
 	/* cases.                                                           */
@@ -666,26 +666,26 @@ ErrorIdentifier			= ({NonSeparator}+)
 	"<<" {WhiteSpace}* \`"EOT"\`		{ start = zzStartRead; yybegin(HEREDOC_EOT_UNQUOTED); }
 
 	/* POD commands. */
-	{PodCommandsExceptCut}			{ addToken(Token.COMMENT_EOL); start = zzMarkedPos; yybegin(POD); }
+	{PodCommandsExceptCut}			{ addToken(TokenTypes.COMMENT_EOL); start = zzMarkedPos; yybegin(POD); }
 
 	/* Separators and operators. */
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}					{ addToken(Token.IDENTIFIER); }
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}					{ addToken(TokenTypes.IDENTIFIER); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{HexLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{FloatLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ErrorNumberFormat}				{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
+	{ErrorIdentifier}				{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }
 
@@ -693,31 +693,31 @@ ErrorIdentifier			= ({NonSeparator}+)
 <STRING> {
 	[^\n\\\$\@\%\"]+		{}
 	\\.?					{ /* Skip escaped chars. */ }
-	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
-	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
 
 <CHAR_LITERAL> {
 	[^\n\\\']+			{}
 	\\.?					{ /* Skip escaped single quotes only, but this should still work. */ }
-	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
+	\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 }
 
 
 <BACKTICKS> {
 	[^\n\\\$\@\%\`]+		{}
 	\\.?					{ /* Skip escaped chars. */ }
-	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.LITERAL_BACKQUOTE); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
-	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE); }
+	\`					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_BACKQUOTE); return firstToken; }
 }
 
 
@@ -731,13 +731,13 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* NOTE2: This case is used for unquoted <<EOF, double quoted       */
 	/* <<"EOF" and backticks <<`EOF`, since they all follow the same    */
 	/* syntactic rules.                                                 */
-	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	"EOF"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\\$\@\%]+			{}
 	\\.?					{ /* Skip escaped chars. */ }
-	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.PREPROCESSOR); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_UNQUOTED); return firstToken; }
 }
 
 
@@ -748,11 +748,11 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* work.  Fortunately we don't need the start- and end-line anchors */
 	/* since the production after "EOF" will match any line containing  */
 	/* EOF and any other chars.                                         */
-	"EOF"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	"EOF"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\]+				{}
 	\\.?					{ /* Skip escaped chars. */ }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOF_SINGLE_QUOTED); return firstToken; }
 }
 
 
@@ -766,13 +766,13 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* NOTE2: This case is used for unquoted <<EOT, double quoted       */
 	/* <<"EOT" and backticks <<`EOT`, since they all follow the same    */
 	/* syntactic rules.                                                 */
-	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	"EOT"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\\$\@\%]+			{}
 	\\.?					{ /* Skip escaped chars. */ }
-	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.PREPROCESSOR); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_UNQUOTED); return firstToken; }
 }
 
 
@@ -783,20 +783,20 @@ ErrorIdentifier			= ({NonSeparator}+)
 	/* work.  Fortunately we don't need the start- and end-line anchors */
 	/* since the production after "EOT" will match any line containing  */
 	/* EOT and any other chars.                                         */
-	"EOT"				{ if (start==zzStartRead) { addToken(Token.PREPROCESSOR); addNullToken(); return firstToken; } }
+	"EOT"				{ if (start==zzStartRead) { addToken(TokenTypes.PREPROCESSOR); addNullToken(); return firstToken; } }
 	[^\n\\]+				{}
-	\n					{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_HEREDOC_EOT_SINGLE_QUOTED); return firstToken; }
 }
 
 
 <POD> {
 	[^\n\=]+				{}
-	"=cut"				{ if (start==zzStartRead) { addToken(Token.COMMENT_DOCUMENTATION); yybegin(YYINITIAL); } }
-	{PodCommandsExceptCut}	{ if (start==zzStartRead) { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; } }
+	"=cut"				{ if (start==zzStartRead) { addToken(TokenTypes.COMMENT_DOCUMENTATION); yybegin(YYINITIAL); } }
+	{PodCommandsExceptCut}	{ if (start==zzStartRead) { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; } }
 	=					{}
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_POD); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addEndToken(INTERNAL_POD); return firstToken; }
 }
 

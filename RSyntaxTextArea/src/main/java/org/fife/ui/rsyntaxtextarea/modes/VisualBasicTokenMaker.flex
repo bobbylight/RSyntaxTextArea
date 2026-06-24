@@ -394,8 +394,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"With" |
 	"WithEvents" |
 	"WriteOnly" |
-	"Xor"						{ addToken(Token.RESERVED_WORD); }
-	"Return"					{ addToken(Token.RESERVED_WORD_2); }
+	"Xor"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"Return"					{ addToken(TokenTypes.RESERVED_WORD_2); }
 
 	/* Data types. */
 	"Boolean" |
@@ -413,45 +413,45 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"String" |
 	"UInteger" |
 	"ULong" |
-	"UShort"					{ addToken(Token.DATA_TYPE); }
+	"UShort"					{ addToken(TokenTypes.DATA_TYPE); }
 
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	{BooleanLiteral}			{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 
 	{LineTerminator}			{ addNullToken(); return firstToken; }
 
-	{Identifier}				{ addToken(Token.IDENTIFIER); }
+	{Identifier}				{ addToken(TokenTypes.IDENTIFIER); }
 
-	{WhiteSpace}+				{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+				{ addToken(TokenTypes.WHITESPACE); }
 
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{StringLiteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}		{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 
 	{LineCommentBegin}			{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
 
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}				{ addToken(Token.IDENTIFIER); }
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}				{ addToken(TokenTypes.IDENTIFIER); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
-	{IntegerLiteral}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{HexLiteral}				{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}				{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}			{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{IntegerLiteral}			{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{HexLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{FloatLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ErrorNumberFormat}			{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{ErrorIdentifier}			{ addToken(Token.ERROR_IDENTIFIER); }
+	{ErrorIdentifier}			{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 }

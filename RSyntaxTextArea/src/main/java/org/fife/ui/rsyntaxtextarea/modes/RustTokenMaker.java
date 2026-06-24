@@ -1431,7 +1431,7 @@ public class RustTokenMaker extends AbstractJFlexCTokenMaker {
                                 // some reason)
                                 int tokenLength = yylength();
                                 if (tokenLength >= delimiter.length()) {
-                                    int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE;
+                                    int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE;
                                     int end = zzStartRead + delimiter.length();
                                     addToken(start, end - 1, type);
                                     zzStartRead = zzCurrentPos = zzMarkedPos = end;
@@ -1523,7 +1523,7 @@ public class RustTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 64: break;
         case 13:
-          { int type = validString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 65: break;
         case 16:
@@ -1617,11 +1617,11 @@ public class RustTokenMaker extends AbstractJFlexCTokenMaker {
             case BYTE_STRING_LITERAL: {
               // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addEndToken(INTERNAL_IN_BYTE_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addEndToken(INTERNAL_IN_BYTE_STRING_INVALID);
                                 }
                                 return firstToken;
@@ -1634,11 +1634,11 @@ public class RustTokenMaker extends AbstractJFlexCTokenMaker {
             case STRING: {
               // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addEndToken(INTERNAL_IN_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addEndToken(INTERNAL_IN_STRING_INVALID);
                                 }
                                 return firstToken;
@@ -1651,11 +1651,11 @@ public class RustTokenMaker extends AbstractJFlexCTokenMaker {
             case RAW_STRING_LITERAL: {
               // Strings always continue to the next line
                                 if (validString) {
-                                    addToken(start, zzStartRead - 1, Token.LITERAL_STRING_DOUBLE_QUOTE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_STRING_VALID);
                                 }
                                 else {
-                                    addToken(start, zzStartRead - 1, Token.ERROR_STRING_DOUBLE);
+                                    addToken(start, zzStartRead - 1, TokenTypes.ERROR_STRING_DOUBLE);
                                     addRawStringLiteralEndToken(INTERNAL_IN_RAW_STRING_INVALID);
                                 }
                                 return firstToken;

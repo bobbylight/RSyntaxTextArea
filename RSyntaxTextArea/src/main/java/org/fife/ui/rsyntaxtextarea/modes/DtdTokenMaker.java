@@ -17,6 +17,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -737,31 +738,31 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 3:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 16: break;
         case 2:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 17: break;
         case 1:
-          { /* Not really valid */ addToken(Token.IDENTIFIER);
+          { /* Not really valid */ addToken(TokenTypes.IDENTIFIER);
           }
         case 18: break;
         case 12:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT); start = zzMarkedPos;
           }
         case 19: break;
         case 9:
-          { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG_START);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG_START);
           }
         case 20: break;
         case 6:
-          { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(YYINITIAL);
           }
         case 21: break;
         case 10:
-          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(prevState);
+          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); start = temp; yybegin(prevState);
           }
         case 22: break;
         case 11:
@@ -769,19 +770,19 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 23: break;
         case 7:
-          { addToken(Token.MARKUP_TAG_ATTRIBUTE);
+          { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE);
           }
         case 24: break;
         case 15:
-          { addToken(Token.MARKUP_TAG_NAME); yybegin(INTAG_ATTLIST);
+          { addToken(TokenTypes.MARKUP_TAG_NAME); yybegin(INTAG_ATTLIST);
           }
         case 25: break;
         case 14:
-          { addToken(Token.MARKUP_TAG_NAME); yybegin(INTAG_ELEMENT);
+          { addToken(TokenTypes.MARKUP_TAG_NAME); yybegin(INTAG_ELEMENT);
           }
         case 26: break;
         case 13:
-          { addToken(Token.MARKUP_PROCESSING_INSTRUCTION);
+          { addToken(TokenTypes.MARKUP_PROCESSING_INSTRUCTION);
           }
         case 27: break;
         case 4:
@@ -789,11 +790,11 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 28: break;
         case 5:
-          { addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken;
           }
         case 29: break;
         case 8:
-          { addToken(Token.MARKUP_TAG_ATTRIBUTE_VALUE);
+          { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 30: break;
         default:
@@ -817,7 +818,7 @@ public class DtdTokenMaker extends AbstractJFlexTokenMaker {
             }
             case 74: break;
             case COMMENT: {
-              addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_COMMENT - prevState); return firstToken;
             }
             case 75: break;
             default:

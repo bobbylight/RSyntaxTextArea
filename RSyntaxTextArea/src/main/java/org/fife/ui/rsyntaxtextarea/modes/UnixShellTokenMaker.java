@@ -60,25 +60,25 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		switch (tokenType) {
 			// Since reserved words, functions, and data types are all passed into here
 			// as "identifiers," we have to see what the token really is...
-			case Token.IDENTIFIER:
+			case TokenTypes.IDENTIFIER:
 				int value = wordsToHighlight.get(segment, start,end);
 				if (value!=-1)
 					tokenType = value;
 				break;
-			case Token.WHITESPACE:
-			case Token.SEPARATOR:
-			case Token.OPERATOR:
-			case Token.LITERAL_NUMBER_DECIMAL_INT:
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-			case Token.LITERAL_CHAR:
-			case Token.LITERAL_BACKQUOTE:
-			case Token.COMMENT_EOL:
-			case Token.PREPROCESSOR:
-			case Token.VARIABLE:
+			case TokenTypes.WHITESPACE:
+			case TokenTypes.SEPARATOR:
+			case TokenTypes.OPERATOR:
+			case TokenTypes.LITERAL_NUMBER_DECIMAL_INT:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_CHAR:
+			case TokenTypes.LITERAL_BACKQUOTE:
+			case TokenTypes.COMMENT_EOL:
+			case TokenTypes.PREPROCESSOR:
+			case TokenTypes.VARIABLE:
 				break;
 
 			default:
-				tokenType = Token.IDENTIFIER;
+				tokenType = TokenTypes.IDENTIFIER;
 				break;
 
 		}
@@ -104,7 +104,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 	 */
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -120,7 +120,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 		TokenMap tokenMap = new TokenMap();
 
-		int reservedWord = Token.RESERVED_WORD;
+		int reservedWord = TokenTypes.RESERVED_WORD;
 		tokenMap.put("case",				reservedWord);
 		tokenMap.put("do",				reservedWord);
 		tokenMap.put("done",				reservedWord);
@@ -136,7 +136,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		tokenMap.put("until",			reservedWord);
 		tokenMap.put("while",			reservedWord);
 
-		int function = Token.FUNCTION;
+		int function = TokenTypes.FUNCTION;
 		tokenMap.put("addbib",			function);
 		tokenMap.put("admin",			function);
 		tokenMap.put("alias",			function);
@@ -434,7 +434,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 			switch (currentTokenType) {
 
-				case Token.NULL:
+				case TokenTypes.NULL:
 
 					currentTokenStart = i;	// Starting a new token here.
 
@@ -442,89 +442,89 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 						case ' ':
 						case '\t':
-							currentTokenType = Token.WHITESPACE;
+							currentTokenType = TokenTypes.WHITESPACE;
 							break;
 
 						case '`':
 							if (backslash) { // Escaped back quote => call '`' an identifier..
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 								backslash = false;
 							}
 							else {
-								currentTokenType = Token.LITERAL_BACKQUOTE;
+								currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 							}
 							break;
 
 						case '"':
 							if (backslash) { // Escaped double quote => call '"' an identifier..
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 								backslash = false;
 							}
 							else {
-								currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+								currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 							}
 							break;
 
 						case '\'':
 							if (backslash) { // Escaped single quote => call '\'' an identifier.
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 								backslash = false;
 							}
 							else {
-								currentTokenType = Token.LITERAL_CHAR;
+								currentTokenType = TokenTypes.LITERAL_CHAR;
 							}
 							break;
 
 						case '\\':
-							addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+							currentTokenType = TokenTypes.NULL;
 							backslash = !backslash;
 							break;
 
 						case '$':
 							if (backslash) { // Escaped dollar sign => call '$' an identifier..
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 								backslash = false;
 							}
 							else {
-								currentTokenType = Token.VARIABLE;
+								currentTokenType = TokenTypes.VARIABLE;
 							}
 							break;
 
 						case '#':
 							backslash = false;
-							currentTokenType = Token.COMMENT_EOL;
+							currentTokenType = TokenTypes.COMMENT_EOL;
 							break;
 
 						default:
 							if (RSyntaxUtilities.isDigit(c)) {
-								currentTokenType = Token.LITERAL_NUMBER_DECIMAL_INT;
+								currentTokenType = TokenTypes.LITERAL_NUMBER_DECIMAL_INT;
 								break;
 							}
 							else if (RSyntaxUtilities.isLetter(c) || c=='/' || c=='_') {
-								currentTokenType = Token.IDENTIFIER;
+								currentTokenType = TokenTypes.IDENTIFIER;
 								break;
 							}
 							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i, Token.OPERATOR, newStartOffset+currentTokenStart);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i, TokenTypes.OPERATOR, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i, Token.SEPARATOR, newStartOffset+currentTokenStart);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i, TokenTypes.SEPARATOR, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							else {
-								currentTokenType = Token.IDENTIFIER;
+								currentTokenType = TokenTypes.IDENTIFIER;
 								break;
 							}
 
@@ -532,7 +532,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 					break;
 
-				case Token.WHITESPACE:
+				case TokenTypes.WHITESPACE:
 
 					switch (c) {
 
@@ -541,79 +541,79 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							break;	// Still whitespace.
 
 						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+							currentTokenType = TokenTypes.NULL;
 							backslash = true; // Previous char whitespace => this must be first backslash.
 							break;
 
 						case '`': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_BACKQUOTE;
+							currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 							backslash = false;
 							break;
 
 						case '"': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+							currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 							backslash = false;
 							break;
 
 						case '\'': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
+							currentTokenType = TokenTypes.LITERAL_CHAR;
 							backslash = false;
 							break;
 
 						case '$': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.VARIABLE;
+							currentTokenType = TokenTypes.VARIABLE;
 							backslash = false;
 							break;
 
 						case '#':
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.COMMENT_EOL;
+							currentTokenType = TokenTypes.COMMENT_EOL;
 							break;
 
 						default:	// Add the whitespace token and start anew.
 
-							addToken(text, currentTokenStart,i-1, Token.WHITESPACE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.WHITESPACE, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
 
 							if (RSyntaxUtilities.isDigit(c)) {
-								currentTokenType = Token.LITERAL_NUMBER_DECIMAL_INT;
+								currentTokenType = TokenTypes.LITERAL_NUMBER_DECIMAL_INT;
 								break;
 							}
 							else if (RSyntaxUtilities.isLetter(c) || c=='/' || c=='_') {
-								currentTokenType = Token.IDENTIFIER;
+								currentTokenType = TokenTypes.IDENTIFIER;
 								break;
 							}
 							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, i,i, TokenTypes.OPERATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, i,i, Token.SEPARATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, i,i, TokenTypes.SEPARATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							else {
-								currentTokenType = Token.IDENTIFIER;
+								currentTokenType = TokenTypes.IDENTIFIER;
 							}
 
 					} // End of switch (c).
@@ -621,62 +621,62 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 					break;
 
 				default: // Should never happen
-				case Token.IDENTIFIER:
+				case TokenTypes.IDENTIFIER:
 
 					switch (c) {
 
 						case ' ':
 						case '\t':
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.WHITESPACE;
+							currentTokenType = TokenTypes.WHITESPACE;
 							break;
 
 						case '/': // Special-case to colorize commands like "echo" in "/bin/echo"
-							addToken(text, currentTokenStart,i, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i+1;
-							currentTokenType = Token.NULL;
+							currentTokenType = TokenTypes.NULL;
 							break;
 
 						case '`': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_BACKQUOTE;
+							currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 							backslash = false;
 							break;
 
 						case '"': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+							currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 							backslash = false;
 							break;
 
 						case '\'': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
+							currentTokenType = TokenTypes.LITERAL_CHAR;
 							backslash = false;
 							break;
 
 						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+							currentTokenType = TokenTypes.NULL;
 							backslash = true;
 							break;
 
 						case '$': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.VARIABLE;
+							currentTokenType = TokenTypes.VARIABLE;
 							backslash = false;
 							break;
 
 						case '=': // Special case here; when you have "identifier=<value>" in shell, "identifier" is a variable.
-							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
+							addToken(text, i,i, TokenTypes.OPERATOR, newStartOffset+i);
+							currentTokenType = TokenTypes.NULL;
 							break;
 
 						default:
@@ -685,23 +685,23 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							}
 							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.OPERATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.SEPARATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.SEPARATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.IDENTIFIER, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.IDENTIFIER, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							// Otherwise, we're still an identifier (?).
@@ -710,49 +710,49 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 					break;
 
-				case Token.LITERAL_NUMBER_DECIMAL_INT:
+				case TokenTypes.LITERAL_NUMBER_DECIMAL_INT:
 
 					switch (c) {
 
 						case ' ':
 						case '\t':
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.WHITESPACE;
+							currentTokenType = TokenTypes.WHITESPACE;
 							break;
 
 						case '`': // Don't need to worry about backslashes as previous char is space.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_BACKQUOTE;
+							currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 							backslash = false;
 							break;
 
 						case '"': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+							currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 							backslash = false;
 							break;
 
 						case '\'': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.LITERAL_CHAR;
+							currentTokenType = TokenTypes.LITERAL_CHAR;
 							backslash = false;
 							break;
 
 						case '$': // Don't need to worry about backslashes as previous char is non-backslash.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							currentTokenStart = i;
-							currentTokenType = Token.VARIABLE;
+							currentTokenType = TokenTypes.VARIABLE;
 							backslash = false;
 							break;
 
 						case '\\':
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-							addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+							currentTokenType = TokenTypes.NULL;
 							backslash = true;
 							break;
 
@@ -763,50 +763,50 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 							}
 							int indexOf = OPERATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.OPERATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.OPERATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.SEPARATOR, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.SEPARATOR, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 							indexOf = SEPARATORS2.indexOf(c);
 							if (indexOf>-1) {
-								addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
-								addToken(text, i,i, Token.IDENTIFIER, newStartOffset+i);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+								addToken(text, i,i, TokenTypes.IDENTIFIER, newStartOffset+i);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 
 							// Otherwise, remember this was a number and start over.
-							addToken(text, currentTokenStart,i-1, Token.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_NUMBER_DECIMAL_INT, newStartOffset+currentTokenStart);
 							i--;
-							currentTokenType = Token.NULL;
+							currentTokenType = TokenTypes.NULL;
 
 					} // End of switch (c).
 
 					break;
 
-				case Token.VARIABLE:
+				case TokenTypes.VARIABLE:
 
 					// Note that we first arrive here AFTER the '$' character.
 					// First check if the variable name is enclosed in '{' and '}' characters.
 					if (c=='{') {
 						while (++i<end) {
 							if (array[i]=='}') {
-								addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
-								currentTokenType = Token.NULL;
+								addToken(text, currentTokenStart,i, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.NULL;
 								break;
 							}
 						} // End of while (++i<end).
 						if (i==end) { // Happens when '}' wasn't found...
-							addToken(text, currentTokenStart,end-1, Token.VARIABLE, newStartOffset+currentTokenStart);
-							currentTokenType = Token.NULL;
+							addToken(text, currentTokenStart,end-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
+							currentTokenType = TokenTypes.NULL;
 						}
 						break;
 					} // End of if (i<end-1 && array[i+1]=='{').
@@ -815,9 +815,9 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 					while (i<end) {
 						c = array[i];	// Not needed the first iteration, but can't think of a better way to do it...
 						if (!RSyntaxUtilities.isLetterOrDigit(c) && shellVariables.indexOf(c)==-1 && c!='_') {
-							addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+							addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 							i--;
-							currentTokenType = Token.NULL;
+							currentTokenType = TokenTypes.NULL;
 							break;
 						}
 						i++;
@@ -825,33 +825,33 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 					// This only happens if we never found the end of the variable in the loop above.
 					if (i==end) {
-						addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
-						currentTokenType = Token.NULL;
+						addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
+						currentTokenType = TokenTypes.NULL;
 					}
 
 					break;
 
-				case Token.COMMENT_EOL:
+				case TokenTypes.COMMENT_EOL:
 					// If we got here, then the line != "#" only, so check for "#!".
 					if (c=='!')
-						currentTokenType = Token.PREPROCESSOR;
+						currentTokenType = TokenTypes.PREPROCESSOR;
 					i = end - 1;
 					addToken(text, currentTokenStart,i, currentTokenType, newStartOffset+currentTokenStart);
 					// We need to set token type to null so at the bottom we don't add one more token.
-					currentTokenType = Token.NULL;
+					currentTokenType = TokenTypes.NULL;
 
 					break;
 
-				case Token.LITERAL_CHAR:
+				case TokenTypes.LITERAL_CHAR:
 
 						if (c=='\\') {
 							backslash = !backslash; // Okay because if we got in here, backslash was initially false.
 						}
 						else {
 							if (c=='\'' && !backslash) {
-								addToken(text, currentTokenStart,i, Token.LITERAL_CHAR, newStartOffset+currentTokenStart);
+								addToken(text, currentTokenStart,i, TokenTypes.LITERAL_CHAR, newStartOffset+currentTokenStart);
 								currentTokenStart = i + 1;
-								currentTokenType = Token.NULL;
+								currentTokenType = TokenTypes.NULL;
 								// backslash is definitely false when we leave.
 							}
 
@@ -862,7 +862,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 						break;
 
-				case Token.LITERAL_BACKQUOTE:
+				case TokenTypes.LITERAL_BACKQUOTE:
 
 						switch (c) {
 
@@ -872,8 +872,8 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 							case '`':
 								if (!backslash) {
-									addToken(text, currentTokenStart,i, Token.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
-									currentTokenType = Token.NULL;
+									addToken(text, currentTokenStart,i, TokenTypes.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
+									currentTokenType = TokenTypes.NULL;
 									// backslash is definitely false when we leave.
 									break;
 								}
@@ -889,8 +889,8 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								}
 
 								// Add the string up-to the variable.
-								addToken(text, currentTokenStart,i-1, Token.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
-								currentTokenType = Token.VARIABLE;
+								addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_BACKQUOTE, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.VARIABLE;
 								currentTokenStart = i;
 
 								// First check if the variable name is enclosed in '{' and '}' characters.
@@ -898,39 +898,39 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 									i++; // Now we're on the '{' char.
 									while (++i<end) {
 										if (array[i]=='}') {
-											addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+											addToken(text, currentTokenStart,i, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 											i++;
 											if (i<end) {
 												c = array[i];
 												if (c=='`') { // The only rub - back quote right after variable.
-													addToken(text, i,i, Token.LITERAL_BACKQUOTE, newStartOffset+i);
-													currentTokenType = Token.NULL;
+													addToken(text, i,i, TokenTypes.LITERAL_BACKQUOTE, newStartOffset+i);
+													currentTokenType = TokenTypes.NULL;
 													break;
 												}
 												else { // Continue on with the string.
 													currentTokenStart = i;
-													currentTokenType = Token.LITERAL_BACKQUOTE;
+													currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 													i--;
 													break;
 												}
 											}
 											else { // i==end = "trick" this method so that the string is continued to the next line.
 												currentTokenStart = i;
-												currentTokenType = Token.LITERAL_BACKQUOTE;
+												currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 												break; // So we don't hit the condition below.
 											}
 										} // End of if (array[i]=='}').
 									} // End of while (++i<end).
 									if (i==end) { // Happens when '}' wasn't found...
-										addToken(text, currentTokenStart,end-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										addToken(text, currentTokenStart,end-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 										currentTokenStart = end; // ???
-										currentTokenType = Token.LITERAL_BACKQUOTE;
+										currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 										break;
 									}
 								} // End of if (i<end-1 && array[i+1]=='{').
 
 								// If we reached the end of the variable, get out.
-								if (currentTokenType==Token.NULL || currentTokenType==Token.LITERAL_BACKQUOTE)
+								if (currentTokenType==TokenTypes.NULL || currentTokenType==TokenTypes.LITERAL_BACKQUOTE)
 									break;
 
 								// If we didn't find the '{' character, find the end of the variable...
@@ -938,15 +938,15 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								while (++i<end) {
 									c = array[i];
 									if (!RSyntaxUtilities.isLetterOrDigit(c) && shellVariables.indexOf(c)==-1 && c!='_') {
-										addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 										if (c=='`') { // The only rub.
-											addToken(text, i,i, Token.LITERAL_BACKQUOTE, newStartOffset+i);
-											currentTokenType = Token.NULL;
+											addToken(text, i,i, TokenTypes.LITERAL_BACKQUOTE, newStartOffset+i);
+											currentTokenType = TokenTypes.NULL;
 											break;
 										}
 										else {
 											currentTokenStart = i;
-											currentTokenType = Token.LITERAL_BACKQUOTE;
+											currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 											i--;
 											break;
 										}
@@ -956,9 +956,9 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								// This only happens if we never found the end of the variable in the loop above.
 								// We "trick" this method so that the backquote string token is at the end.
 								if (i==end) {
-									addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+									addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 									currentTokenStart = i;
-									currentTokenType = Token.LITERAL_BACKQUOTE;
+									currentTokenType = TokenTypes.LITERAL_BACKQUOTE;
 								}
 
 								break;
@@ -971,7 +971,7 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 						break;
 
-				case Token.LITERAL_STRING_DOUBLE_QUOTE:
+				case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 
 						switch (c) {
 
@@ -981,8 +981,8 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 
 							case '"':
 								if (!backslash) {
-									addToken(text, currentTokenStart,i, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
-									currentTokenType = Token.NULL;
+									addToken(text, currentTokenStart,i, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
+									currentTokenType = TokenTypes.NULL;
 									// backslash is definitely false when we leave.
 									break;
 								}
@@ -998,8 +998,8 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								}
 
 								// Add the string up-to the variable.
-								addToken(text, currentTokenStart,i-1, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
-								currentTokenType = Token.VARIABLE;
+								addToken(text, currentTokenStart,i-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+currentTokenStart);
+								currentTokenType = TokenTypes.VARIABLE;
 								currentTokenStart = i;
 
 								// First check if the variable name is enclosed in '{' and '}' characters.
@@ -1007,39 +1007,39 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 									i++; // Now we're on the '{' char.
 									while (++i<end) {
 										if (array[i]=='}') {
-											addToken(text, currentTokenStart,i, Token.VARIABLE, newStartOffset+currentTokenStart);
+											addToken(text, currentTokenStart,i, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 											i++;
 											if (i<end) {
 												c = array[i];
 												if (c=='"') { // The only rub - double-quote right after variable.
-													addToken(text, i,i, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+i);
-													currentTokenType = Token.NULL;
+													addToken(text, i,i, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+i);
+													currentTokenType = TokenTypes.NULL;
 													break;
 												}
 												else { // Continue on with the string.
 													currentTokenStart = i;
-													currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+													currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 													i--;
 													break;
 												}
 											}
 											else { // i==end = "trick" this method so that the string is continued to the next line.
 												currentTokenStart = i;
-												currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+												currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 												break; // So we don't hit the condition below.
 											}
 										} // End of if (array[i]=='}').
 									} // End of while (++i<end).
 									if (i==end) { // Happens when '}' wasn't found...
-										addToken(text, currentTokenStart,end-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										addToken(text, currentTokenStart,end-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 										currentTokenStart = end; // ???
-										currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+										currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 										break;
 									}
 								} // End of if (i<end-1 && array[i+1]=='{').
 
 								// If we reached the end of the variable, get out.
-								if (currentTokenType==Token.NULL || currentTokenType==Token.LITERAL_STRING_DOUBLE_QUOTE)
+								if (currentTokenType==TokenTypes.NULL || currentTokenType==TokenTypes.LITERAL_STRING_DOUBLE_QUOTE)
 									break;
 
 								// If we didn't find the '{' character, find the end of the variable...
@@ -1047,15 +1047,15 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								while (++i<end) {
 									c = array[i];
 									if (!RSyntaxUtilities.isLetterOrDigit(c) && shellVariables.indexOf(c)==-1 && c!='_') {
-										addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+										addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 										if (c=='"') { // The only rub.
-											addToken(text, i,i, Token.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+i);
-											currentTokenType = Token.NULL;
+											addToken(text, i,i, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, newStartOffset+i);
+											currentTokenType = TokenTypes.NULL;
 											break;
 										}
 										else {
 											currentTokenStart = i;
-											currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+											currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 											i--;
 											break;
 										}
@@ -1065,9 +1065,9 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 								// This only happens if we never found the end of the variable in the loop above.
 								// We "trick" this method so that the double-quote string token is at the end.
 								if (i==end) {
-									addToken(text, currentTokenStart,i-1, Token.VARIABLE, newStartOffset+currentTokenStart);
+									addToken(text, currentTokenStart,i-1, TokenTypes.VARIABLE, newStartOffset+currentTokenStart);
 									currentTokenStart = i;
-									currentTokenType = Token.LITERAL_STRING_DOUBLE_QUOTE;
+									currentTokenType = TokenTypes.LITERAL_STRING_DOUBLE_QUOTE;
 								}
 
 								break;
@@ -1087,14 +1087,14 @@ public class UnixShellTokenMaker extends AbstractTokenMaker {
 		switch (currentTokenType) {
 
 			// Remember what token type to begin the next line with.
-			case Token.LITERAL_BACKQUOTE:
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_BACKQUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_CHAR:
 						addToken(text, currentTokenStart,end-1, currentTokenType, newStartOffset+currentTokenStart);
 						break;
 
 			// Do nothing if everything was okay.
-			case Token.NULL:
+			case TokenTypes.NULL:
 						addNullToken();
 						break;
 

@@ -424,7 +424,7 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 	"USES" |
 	"WHILE" |
 	"WRT" |
-	"ZERO?"		{ addToken(Token.PREPROCESSOR); }
+	"ZERO?"		{ addToken(TokenTypes.PREPROCESSOR); }
 
 	"DB" |
 	"DW" |
@@ -440,7 +440,7 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 	"EQU" |
 	"TEXTEQU" |
 	"TIMES" |
-	"DUP"		{ addToken(Token.FUNCTION); }
+	"DUP"		{ addToken(TokenTypes.FUNCTION); }
 
 	"BYTE" |
 	"WORD" |
@@ -454,7 +454,7 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 	"SDWORD" |
 	"REAL4" |
 	"REAL8" |
-	"REAL10"		{ addToken(Token.DATA_TYPE); }
+	"REAL10"		{ addToken(TokenTypes.DATA_TYPE); }
 
 	/* Registers */
 	"AL" |
@@ -528,7 +528,7 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 	"TR4" |
 	"TR5" |
 	"TR6" |
-	"TR7"		{ addToken(Token.VARIABLE); }
+	"TR7"		{ addToken(TokenTypes.VARIABLE); }
 
 	/* Pentium III Instructions. */
 	"AAA" |
@@ -985,7 +985,7 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 	"XLAT" |
 	"XLATB" |
 	"XOR" |
-	"XORPS"		{ addToken(Token.RESERVED_WORD); }
+	"XORPS"		{ addToken(TokenTypes.RESERVED_WORD); }
 
 }
 
@@ -993,33 +993,33 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character Literals. */
-	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); /*addNullToken(); return firstToken;*/ }
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{CharLiteral}					{ addToken(TokenTypes.LITERAL_CHAR); }
+	{UnclosedCharLiteral}			{ addToken(TokenTypes.ERROR_CHAR); /*addNullToken(); return firstToken;*/ }
+	{StringLiteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}			{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 
 	/* Labels. */
-	{Label}						{ addToken(Token.PREPROCESSOR); }
+	{Label}						{ addToken(TokenTypes.PREPROCESSOR); }
 
-	^%({Letter}|{Digit})*			{ addToken(Token.FUNCTION); }
+	^%({Letter}|{Digit})*			{ addToken(TokenTypes.FUNCTION); }
 
 	/* Comment Literals. */
-	{CommentBegin}.*				{ addToken(Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	{CommentBegin}.*				{ addToken(TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{Number}						{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+	{Number}						{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters. */
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	.							{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }

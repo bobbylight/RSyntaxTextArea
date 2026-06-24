@@ -998,7 +998,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     /* Handlebars states */
     "{{{{" |
     "{{{" |
-    "{{"                        { hbCurlyCount = zzMarkedPos - zzStartRead; addToken(Token.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
+    "{{"                        { hbCurlyCount = zzMarkedPos - zzStartRead; addToken(TokenTypes.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
     "{"                         { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
 
 	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
@@ -1016,7 +1016,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     /* Handlebars states */
     "{{{{" |
     "{{{" |
-    "{{"                        { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
+    "{{"                        { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
     "{"                         {}
 
 	[^\"{]*						{}
@@ -1028,7 +1028,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     /* Handlebars states */
     "{{{{" |
     "{{{" |
-    "{{"                        { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
+    "{{"                        { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS); }
     "{"                         {}
 
 	[^\'{]*						{}
@@ -1129,8 +1129,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"void" |
 	"while" |
 	"with" |
-    "yield"                     { addToken(Token.RESERVED_WORD); }
-	"return"					{ addToken(Token.RESERVED_WORD_2); }
+    "yield"                     { addToken(TokenTypes.RESERVED_WORD); }
+	"return"					{ addToken(TokenTypes.RESERVED_WORD_2); }
 
 	//JavaScript 1.6
 	"each" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.6")){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);} }
@@ -1138,30 +1138,30 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"let" 						{if(JavaScriptTokenMaker.isJavaScriptCompatible("1.7")){ addToken(TokenTypes.RESERVED_WORD);} else {addToken(TokenTypes.IDENTIFIER);} }
 
 	// Reserved (but not yet used) ECMA keywords.
-	"abstract"					{ addToken(Token.RESERVED_WORD); }
-	"boolean"						{ addToken(Token.DATA_TYPE); }
-	"byte"						{ addToken(Token.DATA_TYPE); }
-	"char"						{ addToken(Token.DATA_TYPE); }
-	"default"						{ addToken(Token.RESERVED_WORD); }
-	"double"						{ addToken(Token.DATA_TYPE); }
-	"enum"						{ addToken(Token.RESERVED_WORD); }
-	"final"						{ addToken(Token.RESERVED_WORD); }
-	"float"						{ addToken(Token.DATA_TYPE); }
-	"goto"						{ addToken(Token.RESERVED_WORD); }
-	"implements"					{ addToken(Token.RESERVED_WORD); }
-	"int"						{ addToken(Token.DATA_TYPE); }
-	"interface"					{ addToken(Token.RESERVED_WORD); }
-	"long"						{ addToken(Token.DATA_TYPE); }
-	"native"						{ addToken(Token.RESERVED_WORD); }
-	"package"						{ addToken(Token.RESERVED_WORD); }
-	"private"						{ addToken(Token.RESERVED_WORD); }
-	"protected"					{ addToken(Token.RESERVED_WORD); }
-	"public"						{ addToken(Token.RESERVED_WORD); }
-	"short"						{ addToken(Token.DATA_TYPE); }
-	"synchronized"					{ addToken(Token.RESERVED_WORD); }
-	"throws"						{ addToken(Token.RESERVED_WORD); }
-	"transient"					{ addToken(Token.RESERVED_WORD); }
-	"volatile"					{ addToken(Token.RESERVED_WORD); }
+	"abstract"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"boolean"						{ addToken(TokenTypes.DATA_TYPE); }
+	"byte"						{ addToken(TokenTypes.DATA_TYPE); }
+	"char"						{ addToken(TokenTypes.DATA_TYPE); }
+	"default"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"double"						{ addToken(TokenTypes.DATA_TYPE); }
+	"enum"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"final"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"float"						{ addToken(TokenTypes.DATA_TYPE); }
+	"goto"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"implements"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"int"						{ addToken(TokenTypes.DATA_TYPE); }
+	"interface"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"long"						{ addToken(TokenTypes.DATA_TYPE); }
+	"native"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"package"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"private"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"protected"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"public"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"short"						{ addToken(TokenTypes.DATA_TYPE); }
+	"synchronized"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"throws"						{ addToken(TokenTypes.RESERVED_WORD); }
+	"transient"					{ addToken(TokenTypes.RESERVED_WORD); }
+	"volatile"					{ addToken(TokenTypes.RESERVED_WORD); }
 
 	// Literals.
 	"false" |

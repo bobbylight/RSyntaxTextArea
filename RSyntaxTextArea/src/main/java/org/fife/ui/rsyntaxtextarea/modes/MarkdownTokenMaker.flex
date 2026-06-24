@@ -446,12 +446,12 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
     {HeadingStart}.*            {
                                     // In almost all cases, '#' is the beginning of a heading
                                     if (getNoTokensIdentifiedYet()) {
-                                        addToken(Token.RESERVED_WORD);
+                                        addToken(TokenTypes.RESERVED_WORD);
                                     }
                                     // If for some reason it isn't, highlight it as an identifier and continue on
                                     else {
                                         int count = yylength();
-                                        addToken(zzStartRead, zzStartRead, Token.IDENTIFIER);
+                                        addToken(zzStartRead, zzStartRead, TokenTypes.IDENTIFIER);
                                         zzMarkedPos -= (count - 1);
                                     }
                                 }
@@ -508,12 +508,12 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
     ">".*                       {
                                     // In many cases, '>' is the beginning of a block quote
                                     if (TokenUtils.isBlankOrAllWhiteSpace(firstToken)) {
-                                        addToken(Token.COMMENT_EOL);
+                                        addToken(TokenTypes.COMMENT_EOL);
                                     }
                                     // But if not, highlight it as an identifier and continue on
                                     else {
                                         int count = yylength();
-                                        addToken(zzStartRead, zzStartRead, Token.IDENTIFIER);
+                                        addToken(zzStartRead, zzStartRead, TokenTypes.IDENTIFIER);
                                         zzMarkedPos -= (count - 1);
                                     }
                                 }
@@ -537,35 +537,35 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
                                         }
                                         else {
                                             // "hr" markup with following content is invalid
-                                            addToken(start, start + 2, Token.IDENTIFIER);
+                                            addToken(start, start + 2, TokenTypes.IDENTIFIER);
                                             zzMarkedPos = start + 3;
                                         }
                                     }
                                     else {
                                         // The "hr" markup is really just an identifier
-                                        addToken(start, start + 2, Token.IDENTIFIER);
+                                        addToken(start, start + 2, TokenTypes.IDENTIFIER);
                                         zzMarkedPos = start + 3;
                                     }
                                 }
 
 	"<"({Letter}|{Digit})+		{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-1); //yypushback(count-1);
 									yybegin(INTAG_CHECK_TAG_NAME);
 								}
 	"</"({Letter}|{Digit})+		{
 									int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
 									zzMarkedPos -= (count-2); //yypushback(count-2);
 									yybegin(INTAG_CHECK_TAG_NAME);
 								}
-	"<"							{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
-	"</"						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"<"							{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"</"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}			{ addNullToken(); return firstToken; }
-	{Identifier}				{ addToken(Token.IDENTIFIER); } // Catches everything.
-	{EntityReference}			{ addToken(Token.MARKUP_ENTITY_REFERENCE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
+	{Identifier}				{ addToken(TokenTypes.IDENTIFIER); } // Catches everything.
+	{EntityReference}			{ addToken(TokenTypes.MARKUP_ENTITY_REFERENCE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
@@ -693,19 +693,19 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
 	[uU] |
 	[uU][lL] |
 	[vV][aA][rR] |
-	[vV][iI][dD][eE][oO]    { addToken(Token.MARKUP_TAG_NAME); }
+	[vV][iI][dD][eE][oO]    { addToken(TokenTypes.MARKUP_TAG_NAME); }
 	{InTagIdentifier}		{ /* A non-recognized HTML tag name */ yypushback(yylength()); yybegin(INTAG); }
 	.						{ /* Shouldn't happen */ yypushback(1); yybegin(INTAG); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
 }
 
 <INTAG> {
-	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
-	{InTagIdentifier}			{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	{Whitespace}				{ addToken(Token.WHITESPACE); }
-	"="						{ addToken(Token.OPERATOR); }
-	"/>"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
-	">"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
+	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	{InTagIdentifier}			{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}				{ addToken(TokenTypes.WHITESPACE); }
+	"="						{ addToken(TokenTypes.OPERATOR); }
+	"/>"						{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	">"						{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
 	[\"]						{ start = zzMarkedPos-1; yybegin(INATTR_DOUBLE); }
 	[\']						{ start = zzMarkedPos-1; yybegin(INATTR_SINGLE); }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
@@ -713,69 +713,69 @@ EmailAddress            = ([^@]+@[^@]+\.[^@]+)
 
 <INATTR_DOUBLE> {
 	[^\"]*						{}
-	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
+	[\"]						{ yybegin(INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken; }
 }
 
 <INATTR_SINGLE> {
 	[^\']*						{}
-	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
+	[\']						{ yybegin(INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken; }
 }
 
 <BOLDITALIC1> {
     [^*]*                       {}
-    [*][*][*]                   { addToken(start,zzStartRead + 2, Token.FUNCTION); yybegin(YYINITIAL); }
+    [*][*][*]                   { addToken(start,zzStartRead + 2, TokenTypes.FUNCTION); yybegin(YYINITIAL); }
     [*]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC1); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC1); return firstToken; }
 }
 <BOLDITALIC2> {
     [^_]*                       {}
-    [_][_][_]                   { addToken(start,zzStartRead + 2, Token.FUNCTION); yybegin(YYINITIAL); }
+    [_][_][_]                   { addToken(start,zzStartRead + 2, TokenTypes.FUNCTION); yybegin(YYINITIAL); }
     [_]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC2); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.FUNCTION); addEndToken(INTERNAL_IN_BOLDITALIC2); return firstToken; }
 }
 
 <BOLD1> {
     [^*]*                       {}
-    [*][*]                      { addToken(start,zzStartRead + 1, Token.RESERVED_WORD_2); yybegin(YYINITIAL); }
+    [*][*]                      { addToken(start,zzStartRead + 1, TokenTypes.RESERVED_WORD_2); yybegin(YYINITIAL); }
     [*]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD1); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD1); return firstToken; }
 }
 <BOLD2> {
     [^_]*                       {}
-    [_][_]                      { addToken(start,zzStartRead + 1, Token.RESERVED_WORD_2); yybegin(YYINITIAL); }
+    [_][_]                      { addToken(start,zzStartRead + 1, TokenTypes.RESERVED_WORD_2); yybegin(YYINITIAL); }
     [_]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD2); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.RESERVED_WORD_2); addEndToken(INTERNAL_IN_BOLD2); return firstToken; }
 }
 
 <ITALIC1> {
     [^*]*                       {}
-    [*]                         { addToken(start,zzStartRead, Token.DATA_TYPE); yybegin(YYINITIAL); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC1); return firstToken; }
+    [*]                         { addToken(start,zzStartRead, TokenTypes.DATA_TYPE); yybegin(YYINITIAL); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC1); return firstToken; }
 }
 <ITALIC2> {
     [^_]*                       {}
-    [_]                         { addToken(start,zzStartRead, Token.DATA_TYPE); yybegin(YYINITIAL); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC2); return firstToken; }
+    [_]                         { addToken(start,zzStartRead, TokenTypes.DATA_TYPE); yybegin(YYINITIAL); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.DATA_TYPE); addEndToken(INTERNAL_IN_ITALIC2); return firstToken; }
 }
 
 <STRIKETHROUGH> {
     [^~]*                       {}
-    [~][~]                      { addToken(start,zzStartRead + 1, Token.OPERATOR); yybegin(YYINITIAL); }
+    [~][~]                      { addToken(start,zzStartRead + 1, TokenTypes.OPERATOR); yybegin(YYINITIAL); }
     [~]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.OPERATOR); addEndToken(INTERNAL_IN_STRIKETHROUGH); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.OPERATOR); addEndToken(INTERNAL_IN_STRIKETHROUGH); return firstToken; }
 }
 
 <CODE> {
     [^`]*                       {}
-    [`]                         { addToken(start,zzStartRead, Token.PREPROCESSOR); yybegin(YYINITIAL); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_IN_CODE); return firstToken; }
+    [`]                         { addToken(start,zzStartRead, TokenTypes.PREPROCESSOR); yybegin(YYINITIAL); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_IN_CODE); return firstToken; }
 }
 
 <SYNTAX_HIGHLIGHTING> {
     [^`]*                       {}
-    [`][`][`]                   { addToken(start,zzStartRead + 2, Token.PREPROCESSOR); yybegin(YYINITIAL); }
+    [`][`][`]                   { addToken(start,zzStartRead + 2, TokenTypes.PREPROCESSOR); yybegin(YYINITIAL); }
     [`]                         {}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.PREPROCESSOR); addEndToken(INTERNAL_IN_SYNTAX_HIGHLIGHTING); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.PREPROCESSOR); addEndToken(INTERNAL_IN_SYNTAX_HIGHLIGHTING); return firstToken; }
 }

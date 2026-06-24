@@ -107,7 +107,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Adds a token for either an even column or an odd column.
 	 */
 	private void addEvenOrOddColumnToken(int start, int end) {
-		addToken(start, end, evenOdd == 0 ? Token.IDENTIFIER : Token.DATA_TYPE);
+		addToken(start, end, evenOdd == 0 ? TokenTypes.IDENTIFIER : TokenTypes.DATA_TYPE);
 	}
 
 
@@ -161,7 +161,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type == Token.IDENTIFIER || type == Token.DATA_TYPE;
+		return type == TokenTypes.IDENTIFIER || type == TokenTypes.DATA_TYPE;
 	}
 
 	/**
@@ -263,7 +263,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 <YYINITIAL> {
     \"                      { start = zzMarkedPos - 1; yybegin(STRING); }
     [,]                     {
-                                addToken(Token.OPERATOR);
+                                addToken(TokenTypes.OPERATOR);
                                 evenOdd = (evenOdd + 1) & 1;
                             }
     [^,\"\n]+               { addEvenOrOddColumnToken(); }

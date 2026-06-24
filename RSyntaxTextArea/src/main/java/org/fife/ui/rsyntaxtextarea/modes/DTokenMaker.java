@@ -1396,16 +1396,16 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_BACKQUOTE:
+			case TokenTypes.LITERAL_BACKQUOTE:
 				state = WYSIWYG_STRING_2;
 				break;
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = WYSIWYG_STRING_1;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				break;
-			case Token.COMMENT_DOCUMENTATION:
+			case TokenTypes.COMMENT_DOCUMENTATION:
 				state = DOCCOMMENT;
 				break;
 			case INTERNAL_IN_NESTABLE_MLC:
@@ -1706,43 +1706,43 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 14:
-          { yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken;
+          { yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); return firstToken;
           }
         case 45: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 46: break;
         case 40:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 47: break;
         case 24:
-          { addToken(Token.ERROR_CHAR);
+          { addToken(TokenTypes.ERROR_CHAR);
           }
         case 48: break;
         case 21:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 49: break;
         case 4:
-          { addToken(Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 50: break;
         case 18:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 51: break;
         case 11:
-          { addToken(Token.ANNOTATION);
+          { addToken(TokenTypes.ANNOTATION);
           }
         case 52: break;
         case 6:
-          { addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 53: break;
         case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 54: break;
         case 32:
@@ -1754,15 +1754,15 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 56: break;
         case 42:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION); start = zzMarkedPos;
           }
         case 57: break;
         case 34:
-          { addToken(Token.LITERAL_CHAR);
+          { addToken(TokenTypes.LITERAL_CHAR);
           }
         case 58: break;
         case 23:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 59: break;
         case 27:
@@ -1770,31 +1770,31 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 60: break;
         case 17:
-          { addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addNullToken(); return firstToken;
           }
         case 61: break;
         case 7:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 62: break;
         case 31:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_DOCUMENTATION);
           }
         case 63: break;
         case 38:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 64: break;
         case 30:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 65: break;
         case 3:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 66: break;
         case 19:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
           }
         case 67: break;
         case 8:
@@ -1802,7 +1802,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 68: break;
         case 20:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_BACKQUOTE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_BACKQUOTE);
           }
         case 69: break;
         case 37:
@@ -1810,15 +1810,15 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 70: break;
         case 15:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addNestedMlcEndToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addNestedMlcEndToken(); return firstToken;
           }
         case 71: break;
         case 29:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 72: break;
         case 41:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 73: break;
         case 28:
@@ -1826,21 +1826,21 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 74: break;
         case 44:
-          { addToken(Token.RESERVED_WORD_2);
+          { addToken(TokenTypes.RESERVED_WORD_2);
           }
         case 75: break;
         case 16:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 76: break;
         case 10:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 77: break;
         case 33:
           {
 								if (--nestedMlcDepth==0) {
-									addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(YYINITIAL);
+									addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); yybegin(YYINITIAL);
 								}
           }
         case 78: break;
@@ -1849,27 +1849,27 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 79: break;
         case 13:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
           }
         case 80: break;
         case 9:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 81: break;
         case 22:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 82: break;
         case 25:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(WYSIWYG_STRING_1);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(WYSIWYG_STRING_1);
           }
         case 83: break;
         case 43:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 84: break;
         case 39:
-          { addToken(Token.COMMENT_MULTILINE);
+          { addToken(TokenTypes.COMMENT_MULTILINE);
           }
         case 85: break;
         case 26:
@@ -1881,7 +1881,7 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 87: break;
         case 35:
-          { addToken(Token.ERROR_STRING_DOUBLE);
+          { addToken(TokenTypes.ERROR_STRING_DOUBLE);
           }
         case 88: break;
         default:
@@ -1890,21 +1890,21 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
             switch (zzLexicalState) {
             case WYSIWYG_STRING_1: {
               if (firstToken==null) {
-									addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 								}
 								return firstToken;
             }
             case 460: break;
             case EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
             }
             case 461: break;
             case NESTABLE_MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addNestedMlcEndToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addNestedMlcEndToken(); return firstToken;
             }
             case 462: break;
             case DOCCOMMENT: {
-              yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken;
+              yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); return firstToken;
             }
             case 463: break;
             case YYINITIAL: {
@@ -1912,15 +1912,15 @@ public class DTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 464: break;
             case MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken;
             }
             case 465: break;
             case WYSIWYG_STRING_2: {
-              addToken(start,zzStartRead-1, Token.LITERAL_BACKQUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_BACKQUOTE); return firstToken;
             }
             case 466: break;
             case EOL_DOCCOMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addNullToken(); return firstToken;
             }
             case 467: break;
             default:

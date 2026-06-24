@@ -239,7 +239,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		// If this line is an empty line, then the token list is simply a
 		// null token.  In this case, the line highlight will be skipped in
 		// the loop below, so unfortunately we must manually do it here.
-		if (token!=null && token.getType()==Token.NULL) {
+		if (token!=null && token.getType()==TokenTypes.NULL) {
 			h.paintLayeredHighlights(g, p0,p1, r, host, this);
 			return;
 		}
@@ -324,7 +324,7 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 		// If this line is an empty line, then the token list is simply a
 		// null token.  In this case, the line highlight will be skipped in
 		// the loop below, so unfortunately we must manually do it here.
-		if (token!=null && token.getType()==Token.NULL) {
+		if (token!=null && token.getType()==TokenTypes.NULL) {
 			h.paintLayeredHighlights(g, p0,p1, r, host, this);
 			return;
 		}

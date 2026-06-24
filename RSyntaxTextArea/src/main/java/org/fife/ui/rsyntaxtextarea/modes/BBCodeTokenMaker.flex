@@ -164,14 +164,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
 			case INTERNAL_INTAG:
 				state = INTAG;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -252,22 +252,22 @@ Tag					= ("b"|"i"|"u"|"s"|"size"|"color"|"center"|"quote"|"url"|"img"|"ul"|"li"
 %%
 
 <YYINITIAL> {
-	{Identifier}			{ addToken(Token.IDENTIFIER); }
-	{Whitespace}			{ addToken(Token.WHITESPACE); }
-	"["						{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
-	"[/"					{ addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	{Identifier}			{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}			{ addToken(TokenTypes.WHITESPACE); }
+	"["						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
+	"[/"					{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG); }
 	{LineTerminator}		{ addNullToken(); return firstToken; }
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
 <INTAG> {
-	"/"						{ addToken(Token.MARKUP_TAG_DELIMITER); }
-	{Tag}					{ addToken(Token.MARKUP_TAG_NAME); }
-	{InTagIdentifier}		{ addToken(Token.MARKUP_TAG_ATTRIBUTE); }
-	{Whitespace}			{ addToken(Token.WHITESPACE); }
-	"="						{ addToken(Token.OPERATOR); }
-	"/]"					{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
-	"]"						{ yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER); }
-	.						{ addToken(Token.IDENTIFIER); /* Unhandled chars, not likely */ }
+	"/"						{ addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	{Tag}					{ addToken(TokenTypes.MARKUP_TAG_NAME); }
+	{InTagIdentifier}		{ addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE); }
+	{Whitespace}			{ addToken(TokenTypes.WHITESPACE); }
+	"="						{ addToken(TokenTypes.OPERATOR); }
+	"/]"					{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	"]"						{ yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER); }
+	.						{ addToken(TokenTypes.IDENTIFIER); /* Unhandled chars, not likely */ }
 	<<EOF>>					{ addToken(zzMarkedPos,zzMarkedPos, INTERNAL_INTAG); return firstToken; }
 }

@@ -1598,10 +1598,10 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = DART_MULTILINE_STRING_DOUBLE;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = DART_MULTILINE_STRING_SINGLE;
 				break;
 			case INTERNAL_IN_JS_MLC:
@@ -1933,19 +1933,19 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 11:
-          { addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
           }
         case 45: break;
         case 5:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 46: break;
         case 41:
-          { addToken(Token.LITERAL_BOOLEAN);
+          { addToken(TokenTypes.LITERAL_BOOLEAN);
           }
         case 47: break;
         case 39:
-          { addToken(start,zzStartRead+2, Token.LITERAL_CHAR); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead+2, TokenTypes.LITERAL_CHAR); yybegin(YYINITIAL);
           }
         case 48: break;
         case 30:
@@ -1957,27 +1957,27 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 50: break;
         case 38:
-          { addToken(start,zzStartRead+2, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
+          { addToken(start,zzStartRead+2, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(YYINITIAL);
           }
         case 51: break;
         case 23:
-          { addToken(Token.ERROR_NUMBER_FORMAT);
+          { addToken(TokenTypes.ERROR_NUMBER_FORMAT);
           }
         case 52: break;
         case 17:
-          { addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
           }
         case 53: break;
         case 36:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 54: break;
         case 28:
-          { addToken(Token.ANNOTATION);
+          { addToken(TokenTypes.ANNOTATION);
           }
         case 55: break;
         case 2:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 56: break;
         case 27:
@@ -1985,7 +1985,7 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 57: break;
         case 13:
-          { int type = validJSString ? Token.LITERAL_STRING_DOUBLE_QUOTE : Token.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validJSString ? TokenTypes.LITERAL_STRING_DOUBLE_QUOTE : TokenTypes.ERROR_STRING_DOUBLE; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 58: break;
         case 37:
@@ -1993,11 +1993,11 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 59: break;
         case 16:
-          { int type = validJSString ? Token.LITERAL_CHAR : Token.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
+          { int type = validJSString ? TokenTypes.LITERAL_CHAR : TokenTypes.ERROR_CHAR; addToken(start,zzStartRead, type); yybegin(YYINITIAL);
           }
         case 60: break;
         case 14:
-          { addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
           }
         case 61: break;
         case 26:
@@ -2013,49 +2013,49 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 64: break;
         case 25:
-          { addToken(Token.LITERAL_NUMBER_HEXADECIMAL);
+          { addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL);
           }
         case 65: break;
         case 12:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									addEndToken(INTERNAL_IN_JS_STRING_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_STRING_DOUBLE);
+									addToken(start,zzStartRead, TokenTypes.ERROR_STRING_DOUBLE);
 									addEndToken(INTERNAL_IN_JS_STRING_INVALID);
 								}
 								return firstToken;
           }
         case 66: break;
         case 3:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 67: break;
         case 35:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 68: break;
         case 33:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE);
           }
         case 69: break;
         case 15:
           { /* Line ending in '\' => continue to next line. */
 								if (validJSString) {
-									addToken(start,zzStartRead, Token.LITERAL_CHAR);
+									addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_VALID);
 								}
 								else {
-									addToken(start,zzStartRead, Token.ERROR_CHAR);
+									addToken(start,zzStartRead, TokenTypes.ERROR_CHAR);
 									addEndToken(INTERNAL_IN_JS_CHAR_INVALID);
 								}
 								return firstToken;
           }
         case 70: break;
         case 6:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 71: break;
         case 10:
@@ -2075,23 +2075,23 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 75: break;
         case 29:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 76: break;
         case 42:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos;
           }
         case 77: break;
         case 44:
-          { addToken(Token.RESERVED_WORD_2);
+          { addToken(TokenTypes.RESERVED_WORD_2);
           }
         case 78: break;
         case 18:
-          { addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
           }
         case 79: break;
         case 8:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 80: break;
         case 4:
@@ -2099,23 +2099,23 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 81: break;
         case 7:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 82: break;
         case 21:
-          { addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
           }
         case 83: break;
         case 24:
-          { addToken(Token.LITERAL_NUMBER_FLOAT);
+          { addToken(TokenTypes.LITERAL_NUMBER_FLOAT);
           }
         case 84: break;
         case 43:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos;
           }
         case 85: break;
         case 40:
-          { addToken(Token.COMMENT_MULTILINE);
+          { addToken(TokenTypes.COMMENT_MULTILINE);
           }
         case 86: break;
         case 1:
@@ -2123,7 +2123,7 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
           }
         case 87: break;
         case 19:
-          { addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
           }
         case 88: break;
         default:
@@ -2131,19 +2131,19 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
             zzAtEOF = true;
             switch (zzLexicalState) {
             case JS_STRING: {
-              addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken;
             }
             case 617: break;
             case JS_CHAR: {
-              addToken(start,zzStartRead-1, Token.ERROR_CHAR); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.ERROR_CHAR); addNullToken(); return firstToken;
             }
             case 618: break;
             case DART_MULTILINE_STRING_DOUBLE: {
-              addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken;
             }
             case 619: break;
             case JS_EOL_COMMENT: {
-              addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken;
             }
             case 620: break;
             case YYINITIAL: {
@@ -2151,11 +2151,11 @@ public class DartTokenMaker extends AbstractJFlexCTokenMaker {
             }
             case 621: break;
             case JS_MLC: {
-              addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_IN_JS_MLC); return firstToken;
             }
             case 622: break;
             case DART_MULTILINE_STRING_SINGLE: {
-              addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken;
             }
             case 623: break;
             default:

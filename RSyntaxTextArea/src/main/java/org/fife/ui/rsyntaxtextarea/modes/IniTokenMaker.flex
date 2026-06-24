@@ -140,11 +140,11 @@ Section				= ([\[][^\]]*[\]]?)
 %%
 
 <YYINITIAL> {
-	{Identifier}		{ addToken(Token.DATA_TYPE); }
-	{Equals}			{ addToken(Token.OPERATOR); yybegin(PRE_VALUE); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
-	{Comment}			{ addToken(Token.COMMENT_EOL); }
-	{Section}			{ addToken(Token.PREPROCESSOR); }
+	{Identifier}		{ addToken(TokenTypes.DATA_TYPE); }
+	{Equals}			{ addToken(TokenTypes.OPERATOR); yybegin(PRE_VALUE); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
+	{Comment}			{ addToken(TokenTypes.COMMENT_EOL); }
+	{Section}			{ addToken(TokenTypes.PREPROCESSOR); }
     \n                  { addNullToken(); return firstToken; }
 	<<EOF>>				{ addNullToken(); return firstToken; }
 }
@@ -173,7 +173,7 @@ Section				= ([\[][^\]]*[\]]?)
 }
 
 <VALUE> {
-    {Comment}			{ addIdentifier(TokenTypes.IDENTIFIER); addToken(Token.COMMENT_EOL); }
+    {Comment}			{ addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.COMMENT_EOL); }
     {Whitespace}        { addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.WHITESPACE); }
 	[^]                 { updateIdentifier(); }
 	<<EOF>>				{ addIdentifier(TokenTypes.IDENTIFIER); addNullToken(); return firstToken; }

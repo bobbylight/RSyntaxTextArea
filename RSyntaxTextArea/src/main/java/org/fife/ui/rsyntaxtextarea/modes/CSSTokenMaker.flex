@@ -200,7 +200,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 	@Override
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.RESERVED_WORD; // Used for CSS keys
+		return type==TokenTypes.RESERVED_WORD; // Used for CSS keys
 	}
 
 
@@ -387,21 +387,21 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 %%
 
 <YYINITIAL> {
-	{CSS_SelectorPiece}		{ addToken(Token.DATA_TYPE); }
-	{CSS_PseudoClass}		{ addToken(Token.RESERVED_WORD); }
-	":"						{ /* Unknown pseudo class */ addToken(Token.DATA_TYPE); }
-	{CSS_AtRule}			{ addToken(Token.REGEX); }
-	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.REGEX); }
-	{CSS_Number}			{ addToken(highlightingLess ? Token.LITERAL_NUMBER_DECIMAL_INT : Token.IDENTIFIER); }
-	{CSS_Id}				{ addToken(highlightingLess ? Token.ANNOTATION : Token.VARIABLE); }
-	"{"						{ addToken(Token.SEPARATOR); yybegin(CSS_PROPERTY); }
-	[,]						{ addToken(Token.IDENTIFIER); }
+	{CSS_SelectorPiece}		{ addToken(TokenTypes.DATA_TYPE); }
+	{CSS_PseudoClass}		{ addToken(TokenTypes.RESERVED_WORD); }
+	":"						{ /* Unknown pseudo class */ addToken(TokenTypes.DATA_TYPE); }
+	{CSS_AtRule}			{ addToken(TokenTypes.REGEX); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? TokenTypes.VARIABLE : TokenTypes.REGEX); }
+	{CSS_Number}			{ addToken(highlightingLess ? TokenTypes.LITERAL_NUMBER_DECIMAL_INT : TokenTypes.IDENTIFIER); }
+	{CSS_Id}				{ addToken(highlightingLess ? TokenTypes.ANNOTATION : TokenTypes.VARIABLE); }
+	"{"						{ addToken(TokenTypes.SEPARATOR); yybegin(CSS_PROPERTY); }
+	[,]						{ addToken(TokenTypes.IDENTIFIER); }
 	\"						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	"}"						{ addToken(highlightingLess ? Token.SEPARATOR : Token.IDENTIFIER); }
-	[+>~\^$\|=]				{ addToken(Token.OPERATOR); }
-	{CSS_Separator}			{ addToken(Token.SEPARATOR); }
-	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	"}"						{ addToken(highlightingLess ? TokenTypes.SEPARATOR : TokenTypes.IDENTIFIER); }
+	[+>~\^$\|=]				{ addToken(TokenTypes.OPERATOR); }
+	{CSS_Separator}			{ addToken(TokenTypes.SEPARATOR); }
+	{WhiteSpace}			{ addToken(TokenTypes.WHITESPACE); }
 	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
 	{Less_LineCommentBegin}	{
 								if (highlightingLess) {
@@ -409,35 +409,35 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
 							}
-	.						{ /*System.out.println("yyinitial: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.						{ /*System.out.println("yyinitial: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>					{ addNullToken(); return firstToken; }
 }
 
 <CSS_PROPERTY> {
-	{CSS_Property}			{ addToken(Token.RESERVED_WORD); }
-	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
-	{Less_Nested_Selector_With_Pseudo}	{ addToken(highlightingLess ? Token.RESERVED_WORD : Token.IDENTIFIER); }
+	{CSS_Property}			{ addToken(TokenTypes.RESERVED_WORD); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? TokenTypes.VARIABLE : TokenTypes.IDENTIFIER); }
+	{Less_Nested_Selector_With_Pseudo}	{ addToken(highlightingLess ? TokenTypes.RESERVED_WORD : TokenTypes.IDENTIFIER); }
 	{Less_Selector_ParentRef}	{
 									if (highlightingLess) {
 										// Unfortunately, as we're sharing the CSS and Less
 										// syntax highlighting, we do not color nested selectors
 										// properly.  For uniformity, color this the same as
 										// CSS_Property
-										addToken(Token.RESERVED_WORD);
+										addToken(TokenTypes.RESERVED_WORD);
 									}
 									else {
-										addToken(Token.IDENTIFIER);
+										addToken(TokenTypes.IDENTIFIER);
 									}
 								}
-	"{"						{ addToken(Token.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
-	"}"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
-	":"						{ addToken(Token.OPERATOR); yybegin(CSS_VALUE); }
-	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	"{"						{ addToken(TokenTypes.SEPARATOR); /* helps with auto-closing curlies when editing CSS */ }
+	"}"						{ addToken(TokenTypes.SEPARATOR); yybegin(YYINITIAL); }
+	":"						{ addToken(TokenTypes.OPERATOR); yybegin(CSS_VALUE); }
+	{WhiteSpace}			{ addToken(TokenTypes.WHITESPACE); }
 	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
 	{Less_LineCommentBegin}	{
 								if (highlightingLess) {
@@ -446,11 +446,11 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
 							}
-	.						{ /*System.out.println("css_property: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.						{ /*System.out.println("css_property: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>					{ addEndToken(INTERNAL_CSS_PROPERTY); return firstToken; }
 }
@@ -464,28 +464,28 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 								}
 								else { // Highlight the "//" as an identifier and continue on
 									int temp = zzStartRead + 2;
-									addToken(zzStartRead, zzStartRead + 1, Token.IDENTIFIER);
+									addToken(zzStartRead, zzStartRead + 1, TokenTypes.IDENTIFIER);
 									zzStartRead = temp;
 								}
 							}
-	{CSS_Value}				{ addToken(Token.IDENTIFIER); }
-	"!important"			{ addToken(Token.PREPROCESSOR); }
+	{CSS_Value}				{ addToken(TokenTypes.IDENTIFIER); }
+	"!important"			{ addToken(TokenTypes.PREPROCESSOR); }
 	{CSS_Function}			{ int temp = zzMarkedPos - 2;
-							  addToken(zzStartRead, temp, Token.FUNCTION);
-							  addToken(zzMarkedPos-1, zzMarkedPos-1, Token.SEPARATOR);
+							  addToken(zzStartRead, temp, TokenTypes.FUNCTION);
+							  addToken(zzMarkedPos-1, zzMarkedPos-1, TokenTypes.SEPARATOR);
 							  zzStartRead = zzCurrentPos = zzMarkedPos;
 							}
-	{CSS_Number}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{CSS_Less_Var}			{ addToken(highlightingLess ? Token.VARIABLE : Token.IDENTIFIER); }
+	{CSS_Number}			{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{CSS_Less_Var}			{ addToken(highlightingLess ? TokenTypes.VARIABLE : TokenTypes.IDENTIFIER); }
 	\"						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_STRING); }
 	\'						{ start = zzMarkedPos-1; cssPrevState = zzLexicalState; yybegin(CSS_CHAR_LITERAL); }
-	")"						{ /* End of a function */ addToken(Token.SEPARATOR); }
-	[;]						{ addToken(Token.OPERATOR); yybegin(CSS_PROPERTY); }
-	[,\.]					{ addToken(Token.IDENTIFIER); }
-	"}"						{ addToken(Token.SEPARATOR); yybegin(YYINITIAL); }
-	{WhiteSpace}			{ addToken(Token.WHITESPACE); }
+	")"						{ /* End of a function */ addToken(TokenTypes.SEPARATOR); }
+	[;]						{ addToken(TokenTypes.OPERATOR); yybegin(CSS_PROPERTY); }
+	[,\.]					{ addToken(TokenTypes.IDENTIFIER); }
+	"}"						{ addToken(TokenTypes.SEPARATOR); yybegin(YYINITIAL); }
+	{WhiteSpace}			{ addToken(TokenTypes.WHITESPACE); }
 	{MlcStart}				{ start = zzMarkedPos-2; cssPrevState = zzLexicalState; yybegin(CSS_C_STYLE_COMMENT); }
-	.						{ /*System.out.println("css_value: " + yytext());*/ addToken(Token.IDENTIFIER); }
+	.						{ /*System.out.println("css_value: " + yytext());*/ addToken(TokenTypes.IDENTIFIER); }
 	"\n" |
 	<<EOF>>					{ addEndToken(INTERNAL_CSS_VALUE); return firstToken; }
 }
@@ -493,36 +493,36 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <CSS_STRING> {
 	[^\n\\\"]+			{}
 	\\.?				{ /* Skip escaped chars. */ }
-	\"					{ addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
+	\"					{ addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); yybegin(cssPrevState); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addEndToken(INTERNAL_CSS_STRING - cssPrevState); return firstToken; }
 }
 
 <CSS_CHAR_LITERAL> {
 	[^\n\\\']+			{}
 	\\.?				{ /* Skip escaped chars. */ }
-	\'					{ addToken(start,zzStartRead, Token.LITERAL_CHAR); yybegin(cssPrevState); }
+	\'					{ addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); yybegin(cssPrevState); }
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); addEndToken(INTERNAL_CSS_CHAR - cssPrevState); return firstToken; }
 }
 
 <CSS_C_STYLE_COMMENT> {
 	[^hwf\n\*]+			{}
-	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]				{}
-	{MlcEnd}			{ addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); yybegin(cssPrevState); }
+	{MlcEnd}			{ addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); yybegin(cssPrevState); }
 	\*					{}
 	\n |
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addEndToken(INTERNAL_CSS_MLC - cssPrevState); return firstToken; }
 }
 
 <LESS_EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	\n |
 	<<EOF>>					{
-								addToken(start,zzStartRead-1, Token.COMMENT_EOL);
+								addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL);
 								switch (cssPrevState) {
 									case CSS_PROPERTY:
 										addEndToken(INTERNAL_CSS_PROPERTY);

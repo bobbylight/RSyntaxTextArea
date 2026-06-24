@@ -22,6 +22,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -942,47 +943,47 @@ public class VhdlTokenMaker extends AbstractJFlexTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 10:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 14: break;
         case 5:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 15: break;
         case 13:
-          { addToken(Token.FUNCTION);
+          { addToken(TokenTypes.FUNCTION);
           }
         case 16: break;
         case 8:
-          { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE);
+          { addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
           }
         case 17: break;
         case 3:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 18: break;
         case 4:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT) ;
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT) ;
           }
         case 19: break;
         case 12:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 20: break;
         case 9:
-          { addToken(Token.COMMENT_EOL);
+          { addToken(TokenTypes.COMMENT_EOL);
           }
         case 21: break;
         case 1:
-          { addToken(Token.ERROR_IDENTIFIER);
+          { addToken(TokenTypes.ERROR_IDENTIFIER);
           }
         case 22: break;
         case 7:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 23: break;
         case 11:
-          { addToken(Token.LITERAL_NUMBER_DECIMAL_INT);
+          { addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT);
           }
         case 24: break;
         case 2:
@@ -990,7 +991,7 @@ public class VhdlTokenMaker extends AbstractJFlexTokenMaker {
           }
         case 25: break;
         case 6:
-          { addToken(Token.SEPARATOR);
+          { addToken(TokenTypes.SEPARATOR);
           }
         case 26: break;
         default:

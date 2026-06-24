@@ -127,7 +127,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.IDENTIFIER || type==Token.VARIABLE;
+		return type==TokenTypes.IDENTIFIER || type==TokenTypes.VARIABLE;
 	}
 
 
@@ -151,15 +151,15 @@ import org.fife.ui.rsyntaxtextarea.*;
 		// Start off in the proper state.
 		int state;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = CHAR;
 				start = text.offset;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
@@ -475,7 +475,7 @@ MLCEnd			= ("*/")
 	"while" |
 	"with" |
 	"window" |
-	"x"				{ addToken(Token.RESERVED_WORD); }
+	"x"				{ addToken(TokenTypes.RESERVED_WORD); }
 
 	/* Base SAS procs. */
 	"append" |
@@ -520,12 +520,12 @@ MLCEnd			= ("*/")
 	"tabulate" |
 	"template" |
 	"timeplot" |
-	"transpose"			{ addToken(Token.DATA_TYPE); }
+	"transpose"			{ addToken(TokenTypes.DATA_TYPE); }
 
 	/* SAS/STAT procs. */
 	"corr" |
 	"freq" |
-	"univariate"			{ addToken(Token.DATA_TYPE); }
+	"univariate"			{ addToken(TokenTypes.DATA_TYPE); }
 
 	/* Macros. */
 	"%abort" |
@@ -579,7 +579,7 @@ MLCEnd			= ("*/")
 	"%until" |
 	"%upcase" |
 	"%while" |
-	"%window"				{ addToken(Token.FUNCTION); }
+	"%window"				{ addToken(TokenTypes.FUNCTION); }
 
 }
 
@@ -601,31 +601,31 @@ MLCEnd			= ("*/")
 									start = zzStartRead;
 									// Might not be any whitespace.
 									if (yylength()>1) {
-										addToken(zzStartRead,zzMarkedPos-2, Token.WHITESPACE);
+										addToken(zzStartRead,zzMarkedPos-2, TokenTypes.WHITESPACE);
 										zzStartRead = zzMarkedPos-1;
 									}
 									// Remember:  zzStartRead may now be updated,
 									// so we must check against 'start'.
 									if (start==s.offset) {
-										addToken(zzStartRead,zzEndRead, Token.COMMENT_EOL);
+										addToken(zzStartRead,zzEndRead, TokenTypes.COMMENT_EOL);
 										addNullToken();
 										return firstToken;
 									}
 									else {
-										addToken(zzStartRead,zzStartRead, Token.OPERATOR);
+										addToken(zzStartRead,zzStartRead, TokenTypes.OPERATOR);
 									}
 								}
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
 
 	/* Do operators before identifiers since some of them are words. */
-	{Operator}					{ addToken(Token.OPERATOR); }
-	{Separator}					{ addToken(Token.SEPARATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
-	{MacroVariable}				{ addToken(Token.VARIABLE); }
-	{Semicolon}					{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
+	{MacroVariable}				{ addToken(TokenTypes.VARIABLE); }
+	{Semicolon}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{Whitespace}					{ addToken(Token.WHITESPACE); }
+	{Whitespace}					{ addToken(TokenTypes.WHITESPACE); }
 
 	{StringBoundary}				{ start = zzMarkedPos-1; yybegin(STRING); }
 	{CharBoundary}					{ start = zzMarkedPos-1; yybegin(CHAR); }
@@ -634,34 +634,34 @@ MLCEnd			= ("*/")
 
 	/* Catch any other (unhandled) characters and flag them as OK;    */
 	/* This will include "." from statements like "from lib.dataset". */
-	.							{ addToken(Token.IDENTIFIER); }
+	.							{ addToken(TokenTypes.IDENTIFIER); }
 
 }
 
 <STRING> {
 
 	[^\n\"]+						{}
-	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-	{StringBoundary}				{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	{LineTerminator}				{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	{StringBoundary}				{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 
 }
 
 <CHAR> {
 
 	[^\n\']+						{}
-	{LineTerminator}				{ yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
-	{CharBoundary}					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_CHAR); }
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	{LineTerminator}				{ yybegin(YYINITIAL); addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
+	{CharBoundary}					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_CHAR); }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 
 }
 
 <MLC> {
 
 	[^\n\*]+						{}
-	{LineTerminator}				{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	{MLCEnd}						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	{LineTerminator}				{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
+	{MLCEnd}						{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*							{}
-	<<EOF>>						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	<<EOF>>						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
 
 }

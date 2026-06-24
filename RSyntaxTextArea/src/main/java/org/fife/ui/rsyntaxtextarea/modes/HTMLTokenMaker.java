@@ -2601,7 +2601,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 121: break;
         case 109:
-          { addToken(Token.RESERVED_WORD_2);
+          { addToken(TokenTypes.RESERVED_WORD_2);
           }
         case 122: break;
         case 89:
@@ -3020,7 +3020,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 208: break;
         case 84:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 209: break;
         case 97:
@@ -3066,7 +3066,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 214: break;
         case 98:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 215: break;
         case 83:

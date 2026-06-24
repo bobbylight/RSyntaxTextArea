@@ -59,7 +59,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 		boolean forward = true;
 		t = doc.getTokenListForLine(curLine);
 		while (t!=null && t.isPaintable()) {
-			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+			if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 				if (t.isSingleChar('<') && t.getOffset()+1==tokenOffs) {
 					found = true;
 					break;
@@ -84,7 +84,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 			do {
 
 				while (t!=null && t.isPaintable()) {
-					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 						if (t.is(CLOSE_TAG_START)) {
 							Token match = t.getNextToken();
 							if (match!=null && match.is(lexeme)) {
@@ -138,7 +138,7 @@ public class XmlOccurrenceMarker implements OccurrenceMarker {
 			do {
 
 				while (t!=null && t.getOffset()<endBefore && t.isPaintable()) {
-					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<')) {
 							Token next = t.getNextToken();
 							if (next!=null) {

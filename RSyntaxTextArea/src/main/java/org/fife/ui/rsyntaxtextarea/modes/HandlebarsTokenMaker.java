@@ -2867,7 +2867,7 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 144: break;
         case 131:
-          { addToken(Token.RESERVED_WORD_2);
+          { addToken(TokenTypes.RESERVED_WORD_2);
           }
         case 145: break;
         case 103:
@@ -3215,7 +3215,7 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 218: break;
         case 91:
-          { hbCurlyCount = zzMarkedPos - zzStartRead; addToken(Token.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS);
+          { hbCurlyCount = zzMarkedPos - zzStartRead; addToken(TokenTypes.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS);
           }
         case 219: break;
         case 32:
@@ -3360,7 +3360,7 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 243: break;
         case 92:
-          { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, Token.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS);
+          { int temp=zzStartRead; if (zzStartRead>start) addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); hbCurlyCount = zzMarkedPos - temp; addToken(temp, zzMarkedPos-1, TokenTypes.SEPARATOR); hbInState = zzLexicalState; yybegin(HB, LANG_INDEX_HANDLEBARS);
           }
         case 244: break;
         case 18:
@@ -3397,7 +3397,7 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 250: break;
         case 98:
-          { addToken(Token.RESERVED_WORD);
+          { addToken(TokenTypes.RESERVED_WORD);
           }
         case 251: break;
         case 115:
@@ -3447,7 +3447,7 @@ public class HandlebarsTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 257: break;
         case 116:
-          { addToken(Token.DATA_TYPE);
+          { addToken(TokenTypes.DATA_TYPE);
           }
         case 258: break;
         case 97:

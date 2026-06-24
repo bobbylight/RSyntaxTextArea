@@ -135,14 +135,14 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = VALUE;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -212,18 +212,18 @@ SingleQuote			= (')
 %%
 
 <YYINITIAL> {
-	{Name}			{ addToken(Token.RESERVED_WORD); }
-	{Equals}			{ start = zzMarkedPos; addToken(Token.OPERATOR); yybegin(VALUE); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
-	{Comment}			{ addToken(Token.COMMENT_EOL); }
+	{Name}			{ addToken(TokenTypes.RESERVED_WORD); }
+	{Equals}			{ start = zzMarkedPos; addToken(TokenTypes.OPERATOR); yybegin(VALUE); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
+	{Comment}			{ addToken(TokenTypes.COMMENT_EOL); }
 	<<EOF>>			{ addNullToken(); return firstToken; }
 }
 
 <VALUE> {
-	{SingleQuote}[^']*{SingleQuote}?	{ addToken(start, zzMarkedPos-1, Token.LITERAL_STRING_DOUBLE_QUOTE); start = zzMarkedPos; }
+	{SingleQuote}[^']*{SingleQuote}?	{ addToken(start, zzMarkedPos-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); start = zzMarkedPos; }
 	[^'\{\\]+						{}
-	"{"[^\}]*"}"?					{ int temp=zzStartRead; addToken(start, zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp, zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"{"[^\}]*"}"?					{ int temp=zzStartRead; addToken(start, zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp, zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	[\\].							{}
-	[\\]							{ addToken(start, zzEndRead, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
-	<<EOF>>							{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken; }
+	[\\]							{ addToken(start, zzEndRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>							{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addNullToken(); return firstToken; }
 }

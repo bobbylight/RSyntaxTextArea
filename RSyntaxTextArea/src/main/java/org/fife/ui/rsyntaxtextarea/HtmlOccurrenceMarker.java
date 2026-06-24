@@ -168,7 +168,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 		Token toMark = null;
 
 		while (t!=null && t.isPaintable()) {
-			if (t.getType()==Token.MARKUP_TAG_NAME) {
+			if (t.getType()==TokenTypes.MARKUP_TAG_NAME) {
 				toMark = t;
 			}
 			// Check for the token containing the caret before checking
@@ -177,14 +177,14 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 				// Some languages, like PHP, mark functions/variables (PHP,
 				// JavaScirpt) as well as HTML tags.
 				if (occurrenceMarker.isValidType(textArea, t) &&
-						t.getType()!=Token.MARKUP_TAG_NAME) {
+						t.getType()!=TokenTypes.MARKUP_TAG_NAME) {
 					return t;
 				}
 				if (t.containsPosition(dot)) {
 					break;
 				}
 			}
-			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+			if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 				if (t.isSingleChar('>') || t.is(TAG_SELF_CLOSE)) {
 					toMark = null;
 				}
@@ -213,7 +213,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 	public void markOccurrences(RSyntaxDocument doc, Token t,
 			RSyntaxTextAreaHighlighter h, SmartHighlightPainter p) {
 
-		if (t.getType()!=Token.MARKUP_TAG_NAME) {
+		if (t.getType()!=TokenTypes.MARKUP_TAG_NAME) {
 			DefaultOccurrenceMarker.markOccurrencesOfToken(doc, t, h, p);
 			return;
 		}
@@ -233,7 +233,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 		boolean forward = true;
 		t = doc.getTokenListForLine(curLine);
 		while (t!=null && t.isPaintable()) {
-			if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+			if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 				if (t.isSingleChar('<') && t.getOffset()+1==tokenOffs) {
 					// Don't try to match a tag that is optionally closed (or
 					// closing is forbidden entirely).
@@ -264,7 +264,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 			do {
 
 				while (t!=null && t.isPaintable()) {
-					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 						if (t.is(CLOSE_TAG_START)) {
 							Token match = t.getNextToken();
 							if (match!=null && match.is(lexeme)) {
@@ -318,7 +318,7 @@ public class HtmlOccurrenceMarker implements OccurrenceMarker {
 			do {
 
 				while (t!=null && t.getOffset()<endBefore && t.isPaintable()) {
-					if (t.getType()==Token.MARKUP_TAG_DELIMITER) {
+					if (t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 						if (t.isSingleChar('<')) {
 							Token next = t.getNextToken();
 							if (next!=null) {

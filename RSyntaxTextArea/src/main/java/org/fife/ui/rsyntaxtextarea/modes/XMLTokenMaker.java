@@ -457,14 +457,14 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 
 
 	/**
-	 * Returns <code>Token.MARKUP_TAG_NAME</code>.
+	 * Returns <code>TokenTypes.MARKUP_TAG_NAME</code>.
 	 *
 	 * @param type The token type.
 	 * @return Whether tokens of this type should have "mark occurrences"
 	 *         enabled.
 	 */
 	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==Token.MARKUP_TAG_NAME;
+		return type==TokenTypes.MARKUP_TAG_NAME;
 	}
 
 
@@ -490,7 +490,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 		// Start off in the proper state.
 		int state = YYINITIAL;
 		switch (initialTokenType) {
-			case Token.MARKUP_COMMENT:
+			case TokenTypes.MARKUP_COMMENT:
 				state = COMMENT;
 				break;
 			case INTERNAL_DTD:
@@ -506,13 +506,13 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 			case INTERNAL_ATTR_SINGLE:
 				state = INATTR_SINGLE;
 				break;
-			case Token.MARKUP_PROCESSING_INSTRUCTION:
+			case TokenTypes.MARKUP_PROCESSING_INSTRUCTION:
 				state = PI;
 				break;
 			case INTERNAL_INTAG:
 				state = INTAG;
 				break;
-			case Token.MARKUP_CDATA:
+			case TokenTypes.MARKUP_CDATA:
 				state = CDATA;
 				break;
 			default:
@@ -527,7 +527,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 					prevState = -initialTokenType&0xff;
 				}
 				else { // Shouldn't happen
-					state = Token.NULL;
+					state = TokenTypes.NULL;
 				}
 		}
 
@@ -820,11 +820,11 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
 
       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
         case 25:
-          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, Token.MARKUP_COMMENT); start = temp; yybegin(prevState);
+          { int temp = zzMarkedPos; addToken(start,zzStartRead+2, TokenTypes.MARKUP_COMMENT); start = temp; yybegin(prevState);
           }
         case 31: break;
         case 19:
-          { yybegin(INTAG); addToken(start,zzStartRead, Token.MARKUP_TAG_ATTRIBUTE_VALUE);
+          { yybegin(INTAG); addToken(start,zzStartRead, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE);
           }
         case 32: break;
         case 3:
@@ -832,7 +832,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 33: break;
         case 29:
-          { int temp = zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_DTD); start = temp; prevState = zzLexicalState; yybegin(COMMENT);
+          { int temp = zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); start = temp; prevState = zzLexicalState; yybegin(COMMENT);
           }
         case 34: break;
         case 11:
@@ -840,23 +840,23 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 35: break;
         case 4:
-          { addToken(Token.MARKUP_TAG_DELIMITER); yybegin(INTAG);
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); yybegin(INTAG);
           }
         case 36: break;
         case 9:
-          { addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken;
           }
         case 37: break;
         case 16:
-          { addToken(Token.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */
+          { addToken(TokenTypes.MARKUP_TAG_DELIMITER); /* Not valid but we'll still accept it */
           }
         case 38: break;
         case 7:
-          { addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken;
           }
         case 39: break;
         case 5:
-          { addToken(Token.WHITESPACE);
+          { addToken(TokenTypes.WHITESPACE);
           }
         case 40: break;
         case 27:
@@ -864,26 +864,26 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 41: break;
         case 26:
-          { int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, Token.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, Token.MARKUP_CDATA_DELIMITER);
+          { int temp=zzStartRead; yybegin(YYINITIAL); addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); addToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_CDATA_DELIMITER);
           }
         case 42: break;
         case 20:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-1), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(INTAG);
           }
         case 43: break;
         case 6:
-          { addToken(Token.MARKUP_ENTITY_REFERENCE);
+          { addToken(TokenTypes.MARKUP_ENTITY_REFERENCE);
           }
         case 44: break;
         case 12:
-          { if (!inInternalDtd) { yybegin(YYINITIAL); addToken(start,zzStartRead, Token.MARKUP_DTD); }
+          { if (!inInternalDtd) { yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.MARKUP_DTD); }
           }
         case 45: break;
         case 2:
-          { addToken(Token.IDENTIFIER);
+          { addToken(TokenTypes.IDENTIFIER);
           }
         case 46: break;
         case 10:
@@ -891,7 +891,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 47: break;
         case 23:
-          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.MARKUP_PROCESSING_INSTRUCTION);
+          { yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION);
           }
         case 48: break;
         case 21:
@@ -903,7 +903,7 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 50: break;
         case 8:
-          { addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
+          { addToken(start,zzStartRead-1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
           }
         case 51: break;
         case 14:
@@ -911,11 +911,11 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
           }
         case 52: break;
         case 28:
-          { int temp=zzStartRead; addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, Token.MARKUP_COMMENT); start = zzMarkedPos;
+          { int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.MARKUP_COMMENT); start = zzMarkedPos;
           }
         case 53: break;
         case 15:
-          { yybegin(YYINITIAL); addToken(Token.MARKUP_TAG_DELIMITER);
+          { yybegin(YYINITIAL); addToken(TokenTypes.MARKUP_TAG_DELIMITER);
           }
         case 54: break;
         case 17:
@@ -924,21 +924,21 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
         case 55: break;
         case 24:
           { int count = yylength();
-									addToken(zzStartRead,zzStartRead+1, Token.MARKUP_TAG_DELIMITER);
-									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, Token.MARKUP_TAG_NAME);
+									addToken(zzStartRead,zzStartRead+1, TokenTypes.MARKUP_TAG_DELIMITER);
+									addToken(zzMarkedPos-(count-2), zzMarkedPos-1, TokenTypes.MARKUP_TAG_NAME);
 									yybegin(INTAG);
           }
         case 56: break;
         case 18:
-          { addToken(Token.OPERATOR);
+          { addToken(TokenTypes.OPERATOR);
           }
         case 57: break;
         case 30:
-          { addToken(Token.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(CDATA);
+          { addToken(TokenTypes.MARKUP_CDATA_DELIMITER); start = zzMarkedPos; yybegin(CDATA);
           }
         case 58: break;
         case 13:
-          { addToken(Token.MARKUP_TAG_ATTRIBUTE);
+          { addToken(TokenTypes.MARKUP_TAG_ATTRIBUTE);
           }
         case 59: break;
         case 1:
@@ -954,11 +954,11 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
             }
             case 84: break;
             case DTD: {
-              addToken(start,zzStartRead-1, Token.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_DTD); addEndToken(inInternalDtd ? INTERNAL_DTD_INTERNAL : INTERNAL_DTD); return firstToken;
             }
             case 85: break;
             case INATTR_DOUBLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_DOUBLE); return firstToken;
             }
             case 86: break;
             case YYINITIAL: {
@@ -966,19 +966,19 @@ public class XMLTokenMaker extends AbstractMarkupTokenMaker {
             }
             case 87: break;
             case COMMENT: {
-              addToken(start,zzStartRead-1, Token.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_COMMENT); addEndToken(INTERNAL_IN_XML_COMMENT - prevState); return firstToken;
             }
             case 88: break;
             case CDATA: {
-              addToken(start,zzStartRead-1, Token.MARKUP_CDATA); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_CDATA); return firstToken;
             }
             case 89: break;
             case INATTR_SINGLE: {
-              addToken(start,zzStartRead-1, Token.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE); addEndToken(INTERNAL_ATTR_SINGLE); return firstToken;
             }
             case 90: break;
             case PI: {
-              addToken(start,zzStartRead-1, Token.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
+              addToken(start,zzStartRead-1, TokenTypes.MARKUP_PROCESSING_INSTRUCTION); return firstToken;
             }
             case 91: break;
             default:

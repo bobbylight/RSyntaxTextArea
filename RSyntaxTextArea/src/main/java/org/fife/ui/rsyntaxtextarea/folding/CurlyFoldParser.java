@@ -178,7 +178,7 @@ public class CurlyFoldParser implements FoldParser {
 						}
 						else {
 							// If we're an MLC that ends on a later line...
-							if (t.getType()!=Token.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
+							if (t.getType()!=TokenTypes.COMMENT_EOL && !t.endsWith(C_MLC_END)) {
 								//System.out.println("Starting MLC at: " + t.offset);
 								inMLC = true;
 								mlcStart = t.getOffset();
@@ -264,7 +264,7 @@ public class CurlyFoldParser implements FoldParser {
 					// Java-specific folding rules
 					else if (java) {
 
-						if (t.is(Token.RESERVED_WORD, KEYWORD_IMPORT)) {
+						if (t.is(TokenTypes.RESERVED_WORD, KEYWORD_IMPORT)) {
 							if (importStartLine==-1) {
 								importStartLine = line;
 								importGroupStartOffs = t.getOffset();

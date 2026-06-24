@@ -146,26 +146,26 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = MULTILINE_STRING_DOUBLE;
 				start = text.offset;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = MULTILINE_STRING_SINGLE;
 				start = text.offset;
 				break;
-			case Token.COMMENT_MULTILINE:
+			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
 				start = text.offset;
 				break;
-			case Token.COMMENT_DOCUMENTATION:
+			case TokenTypes.COMMENT_DOCUMENTATION:
 				state = DOCCOMMENT;
 				start = text.offset;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -201,7 +201,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					ch=='['
 				)) ||
 				/* Operators "==", "===", "!=", "!==", etc. */
-				(t.getType()==Token.OPERATOR &&
+				(t.getType()==TokenTypes.OPERATOR &&
 					((ch=t.charAt(t.length()-1))=='=' || ch=='~'));
 	}
 
@@ -387,8 +387,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"try" |
 	"void" |
 	"volatile" |
-	"while"				{ addToken(Token.RESERVED_WORD); }
-	"return"			{ addToken(Token.RESERVED_WORD_2); }
+	"while"				{ addToken(TokenTypes.RESERVED_WORD); }
+	"return"			{ addToken(TokenTypes.RESERVED_WORD_2); }
 
 	/* Groovy keywords */
 	"as" |
@@ -398,7 +398,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"property" |
 	"test" |
 	"using" |
-	"in"				{ addToken(Token.RESERVED_WORD); }
+	"in"				{ addToken(TokenTypes.RESERVED_WORD); }
 
 	/* Data types. */
 	"boolean" |
@@ -408,10 +408,10 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"float" |
 	"int" |
 	"long" |
-	"short"					{ addToken(Token.DATA_TYPE); }
+	"short"					{ addToken(TokenTypes.DATA_TYPE); }
 
 	/* Booleans. */
-	{BooleanLiteral}			{ addToken(Token.LITERAL_BOOLEAN); }
+	{BooleanLiteral}			{ addToken(TokenTypes.LITERAL_BOOLEAN); }
 
 	/* java.lang classes */
 	"Appendable" |
@@ -731,7 +731,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "UnknownFormatConversionException" |
     "UnknownFormatFlagsException" |
 
-    "ServiceConfigurationError" 		{ addToken(Token.FUNCTION); }
+    "ServiceConfigurationError" 		{ addToken(TokenTypes.FUNCTION); }
 
 	/* Commonly used methods added to Object class */
 	"addShutdownHook" |
@@ -773,13 +773,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"sprintf" |
 	"toString" |
 	"use" |
-	"with" 			{ addToken(Token.FUNCTION); }
+	"with" 			{ addToken(TokenTypes.FUNCTION); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{Identifier}					{ addToken(Token.IDENTIFIER); }
+	{Identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* Multiline string literals. */
 	\"\"\"						{ start = zzMarkedPos-3; yybegin(MULTILINE_STRING_DOUBLE); }
@@ -787,13 +787,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 
 	/* String/Character literals. */
-	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
-	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
-	{ErrorCharLiteral}				{ addToken(Token.ERROR_CHAR); }
+	{CharLiteral}					{ addToken(TokenTypes.LITERAL_CHAR); }
+	{UnclosedCharLiteral}			{ addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken; }
+	{ErrorCharLiteral}				{ addToken(TokenTypes.ERROR_CHAR); }
 	\"								{ start = zzMarkedPos-1; yybegin(STRING_DOUBLE); }
 
 	/* Comment literals. */
-	"/**/"						{ addToken(Token.COMMENT_MULTILINE); }
+	"/**/"						{ addToken(TokenTypes.COMMENT_MULTILINE); }
 	{MLCBegin}					{ start = zzMarkedPos-2; yybegin(MLC); }
 	{DocCommentBegin}			{ start = zzMarkedPos-3; yybegin(DOCCOMMENT); }
 	{LineCommentBegin}			{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
@@ -802,7 +802,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{Regex}	{
 				boolean highlightedAsRegex = false;
 				if (zzBuffer[zzStartRead]=='~' || firstToken==null) {
-					addToken(Token.REGEX);
+					addToken(TokenTypes.REGEX);
 					highlightedAsRegex = true;
 				}
 				else {
@@ -810,7 +810,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 					// the previous token, highlight it as such.
 					Token t = firstToken.getLastNonCommentNonWhitespaceToken();
 					if (regexCanFollow(t)) {
-						addToken(Token.REGEX);
+						addToken(TokenTypes.REGEX);
 						highlightedAsRegex = true;
 					}
 				}
@@ -818,35 +818,35 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 				// individual tokens.
 				if (!highlightedAsRegex) {
 					int temp = zzStartRead + 1;
-					addToken(zzStartRead, zzStartRead, Token.OPERATOR);
+					addToken(zzStartRead, zzStartRead, TokenTypes.OPERATOR);
 					zzStartRead = zzCurrentPos = zzMarkedPos = temp;
 				}
 			}
 
 	/* Annotations. */
-	{Annotation}					{ addToken(Token.ANNOTATION); }
+	{Annotation}					{ addToken(TokenTypes.ANNOTATION); }
 
 	/* Separators. */
-	{Separator}					{ addToken(Token.SEPARATOR); }
-	{Separator2}					{ addToken(Token.IDENTIFIER); }
+	{Separator}					{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}					{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Operators. */
-	{Operator}					{ addToken(Token.OPERATOR); }
+	{Operator}					{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{IntegerLiteral}				{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{BinaryLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{HexLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_HEXADECIMAL); }
+	{FloatLiteral}					{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ErrorNumberFormat}				{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
-	{ErrorIdentifier}				{ addToken(Token.ERROR_IDENTIFIER); }
+	{ErrorIdentifier}				{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }
 
@@ -854,13 +854,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <MLC> {
 
 	[^hwf\n\*]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_MULTILINE); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_MULTILINE); start = zzMarkedPos; }
 	[hwf]					{}
 
-	\n						{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
-	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_MULTILINE); }
+	\n						{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
+	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_MULTILINE); }
 	\*						{}
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_MULTILINE); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_MULTILINE); return firstToken; }
 
 }
 
@@ -868,60 +868,60 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <DOCCOMMENT> {
 
 	[^hwf\@\{\n\<\*]+			{}
-	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
+	{URL}						{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_DOCUMENTATION); start = zzMarkedPos; }
 	[hwf]						{}
 
-	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"@"{BlockTag}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	"@"							{}
-	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	"{@"{InlineTag}[^\}]*"}"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	"{"							{}
-	\n							{ addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); return firstToken; }
-	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, Token.PREPROCESSOR); start = zzMarkedPos; }
+	\n							{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); return firstToken; }
+	"<"[/]?({Letter}[^\>]*)?">"	{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_DOCUMENTATION); addToken(temp,zzMarkedPos-1, TokenTypes.PREPROCESSOR); start = zzMarkedPos; }
 	\<							{}
-	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, Token.COMMENT_DOCUMENTATION); }
+	{MLCEnd}					{ yybegin(YYINITIAL); addToken(start,zzStartRead+1, TokenTypes.COMMENT_DOCUMENTATION); }
 	\*							{}
-	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, Token.COMMENT_DOCUMENTATION); return firstToken; }
+	<<EOF>>						{ yybegin(YYINITIAL); addToken(start,zzEndRead, TokenTypes.COMMENT_DOCUMENTATION); return firstToken; }
 
 }
 
 
 <EOL_COMMENT> {
 	[^hwf\n]+				{}
-	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, Token.COMMENT_EOL); start = zzMarkedPos; }
+	{URL}					{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addHyperlinkToken(temp,zzMarkedPos-1, TokenTypes.COMMENT_EOL); start = zzMarkedPos; }
 	[hwf]					{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.COMMENT_EOL); addNullToken(); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.COMMENT_EOL); addNullToken(); return firstToken; }
 }
 
 
 <MULTILINE_STRING_DOUBLE> {
 	[^\"\\\$\n]*				{}
 	\\.?						{ /* Skip escaped chars, handles case: '\"""'. */ }
-	\"\"\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{Variable}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	\"\"\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{Variable}				{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}			{}
 	\"						{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); return firstToken; }
 }
 
 
 <MULTILINE_STRING_SINGLE> {
 	[^\'\\\n]*				{}
 	\\.?						{ /* Skip escaped chars, handles case: "\'''". */ }
-	\'\'\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, Token.LITERAL_CHAR); }
+	\'\'\'					{ yybegin(YYINITIAL); addToken(start,zzStartRead+2, TokenTypes.LITERAL_CHAR); }
 	\'						{}
 	\n |
-	<<EOF>>					{ addToken(start,zzStartRead-1, Token.LITERAL_CHAR); return firstToken; }
+	<<EOF>>					{ addToken(start,zzStartRead-1, TokenTypes.LITERAL_CHAR); return firstToken; }
 }
 
 <STRING_DOUBLE> {
 	[^\n\\\$\"]+		{}
-	\n					{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	\n					{ addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
 	\\.?					{ /* Skip escaped chars. */ }
-	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, Token.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, Token.VARIABLE); start = zzMarkedPos; }
+	{Variable}			{ int temp=zzStartRead; addToken(start,zzStartRead-1, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); addToken(temp,zzMarkedPos-1, TokenTypes.VARIABLE); start = zzMarkedPos; }
 	{VariableStart}		{}
-	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	<<EOF>>				{ addToken(start,zzStartRead-1, Token.ERROR_STRING_DOUBLE); return firstToken; }
+	\"					{ yybegin(YYINITIAL); addToken(start,zzStartRead, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	<<EOF>>				{ addToken(start,zzStartRead-1, TokenTypes.ERROR_STRING_DOUBLE); return firstToken; }
 }
 

@@ -216,20 +216,20 @@ ErrorStringLiteral		= ({UnclosedStringLiteral}[\"])
 %%
 
 <YYINITIAL> {
-	{Identifier}		{ addToken(Token.IDENTIFIER); }
-	{Whitespace}		{ addToken(Token.WHITESPACE); }
-	{Separator}			{ addToken(Token.SEPARATOR); }
-	{Separator2}		{ addToken(Token.IDENTIFIER); }
-	{Operator}			{ addToken(Token.OPERATOR); }
+	{Identifier}		{ addToken(TokenTypes.IDENTIFIER); }
+	{Whitespace}		{ addToken(TokenTypes.WHITESPACE); }
+	{Separator}			{ addToken(TokenTypes.SEPARATOR); }
+	{Separator2}		{ addToken(TokenTypes.IDENTIFIER); }
+	{Operator}			{ addToken(TokenTypes.OPERATOR); }
 	
-	{Comment}			{ addToken(Token.COMMENT_EOL); }
+	{Comment}			{ addToken(TokenTypes.COMMENT_EOL); }
 	
-	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
-	{UnclosedCharLiteral}		{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
-	{ErrorCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-	{ErrorStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); }
+	{CharLiteral}				{ addToken(TokenTypes.LITERAL_CHAR); }
+	{UnclosedCharLiteral}		{ addToken(TokenTypes.ERROR_CHAR); addNullToken(); return firstToken; }
+	{ErrorCharLiteral}			{ addToken(TokenTypes.ERROR_CHAR); }
+	{StringLiteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{UnclosedStringLiteral}		{ addToken(TokenTypes.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+	{ErrorStringLiteral}		{ addToken(TokenTypes.ERROR_STRING_DOUBLE); }
 
 	\n |
 	<<EOF>>				{ addNullToken(); return firstToken; }

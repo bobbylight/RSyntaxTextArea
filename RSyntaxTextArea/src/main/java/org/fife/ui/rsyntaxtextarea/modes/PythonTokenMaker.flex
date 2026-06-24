@@ -14,6 +14,7 @@ import javax.swing.text.Segment;
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 /**
@@ -116,16 +117,16 @@ import org.fife.ui.rsyntaxtextarea.TokenImpl;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = Token.NULL;
+		int state = TokenTypes.NULL;
 		switch (initialTokenType) {
-			case Token.LITERAL_STRING_DOUBLE_QUOTE:
+			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = LONG_STRING_2;
 				break;
-			case Token.LITERAL_CHAR:
+			case TokenTypes.LITERAL_CHAR:
 				state = LONG_STRING_1;
 				break;
 			default:
-				state = Token.NULL;
+				state = TokenTypes.NULL;
 		}
 
 		s = text;
@@ -267,7 +268,7 @@ LineComment		= ("#".*)
     "return" |
     "try" |
     "while" |
-    "yield"					{ addToken(Token.RESERVED_WORD); }
+    "yield"					{ addToken(TokenTypes.RESERVED_WORD); }
 
     /* Data types. */
     "char" |
@@ -278,7 +279,7 @@ LineComment		= ("#".*)
     "short" |
     "signed" |
     "unsigned" |
-    "void"					{ addToken(Token.DATA_TYPE); }
+    "void"					{ addToken(TokenTypes.DATA_TYPE); }
 
     /* Standard functions */
 	"abs" |
@@ -345,25 +346,25 @@ LineComment		= ("#".*)
 	"unicode" |
 	"vars" |
 	"xrange" |
-	"zip"					{ addToken(Token.FUNCTION); }
+	"zip"					{ addToken(TokenTypes.FUNCTION); }
 
     "True" |
     "False" |
-    "None"                          { addToken(Token.LITERAL_BOOLEAN); }
+    "None"                          { addToken(TokenTypes.LITERAL_BOOLEAN); }
 
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
-	{identifier}					{ addToken(Token.IDENTIFIER); }
+	{identifier}					{ addToken(TokenTypes.IDENTIFIER); }
 
-	{WhiteSpace}+					{ addToken(Token.WHITESPACE); }
+	{WhiteSpace}+					{ addToken(TokenTypes.WHITESPACE); }
 
 	/* String/Character Literals. */
-	{stringliteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	{LongStringStart1}				{ yybegin(LONG_STRING_1); addToken(Token.LITERAL_CHAR); }
-	{LongStringStart2}				{ yybegin(LONG_STRING_2); addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	{stringliteral}				{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	{LongStringStart1}				{ yybegin(LONG_STRING_1); addToken(TokenTypes.LITERAL_CHAR); }
+	{LongStringStart2}				{ yybegin(LONG_STRING_2); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 
 	/* Comment Literals. */
-	{LineComment}					{ addToken(Token.COMMENT_EOL); }
+	{LineComment}					{ addToken(TokenTypes.COMMENT_EOL); }
 
 	/* Separators. */
 	"(" |
@@ -371,7 +372,7 @@ LineComment		= ("#".*)
 	"[" |
 	"]" |
 	"{" |
-	"}"							{ addToken(Token.SEPARATOR); }
+	"}"							{ addToken(TokenTypes.SEPARATOR); }
 
 	/* Operators. */
 	"=" |
@@ -406,44 +407,44 @@ LineComment		= ("#".*)
 	"++" |
 	"--" |
 	"." |
-	","							{ addToken(Token.OPERATOR); }
+	","							{ addToken(TokenTypes.OPERATOR); }
 
 	/* Numbers */
-	{longinteger}|{integer}			{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
-	{floatnumber}|{imagnumber}		{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{longinteger}|{integer}			{ addToken(TokenTypes.LITERAL_NUMBER_DECIMAL_INT); }
+	{floatnumber}|{imagnumber}		{ addToken(TokenTypes.LITERAL_NUMBER_FLOAT); }
+	{ErrorNumberFormat}				{ addToken(TokenTypes.ERROR_NUMBER_FORMAT); }
 
 	/* Other punctuation, we'll highlight it as "identifiers." */
-    {annotation}                { addToken(Token.ANNOTATION); }
-	";"							{ addToken(Token.IDENTIFIER); }
+    {annotation}                { addToken(TokenTypes.ANNOTATION); }
+	";"							{ addToken(TokenTypes.IDENTIFIER); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }
 
 	/* Catch any other (unhandled) characters and flag them as bad. */
-	.							{ addToken(Token.ERROR_IDENTIFIER); }
+	.							{ addToken(TokenTypes.ERROR_IDENTIFIER); }
 
 }
 
 <LONG_STRING_1> {
-	[^\']+						{ addToken(Token.LITERAL_CHAR); }
-	"'''"						{ yybegin(YYINITIAL); addToken(Token.LITERAL_CHAR); }
-	"'"							{ addToken(Token.LITERAL_CHAR); }
+	[^\']+						{ addToken(TokenTypes.LITERAL_CHAR); }
+	"'''"						{ yybegin(YYINITIAL); addToken(TokenTypes.LITERAL_CHAR); }
+	"'"							{ addToken(TokenTypes.LITERAL_CHAR); }
 	<<EOF>>						{
 									if (firstToken==null) {
-										addToken(Token.LITERAL_CHAR); 
+										addToken(TokenTypes.LITERAL_CHAR);
 									}
 									return firstToken;
 								}
 }
 
 <LONG_STRING_2> {
-	[^\"]+						{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	\"\"\"						{ yybegin(YYINITIAL); addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-	\"							{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
+	[^\"]+						{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\"\"\"						{ yybegin(YYINITIAL); addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
+	\"							{ addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE); }
 	<<EOF>>						{
 									if (firstToken==null) {
-										addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); 
+										addToken(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE);
 									}
 									return firstToken;
 								}

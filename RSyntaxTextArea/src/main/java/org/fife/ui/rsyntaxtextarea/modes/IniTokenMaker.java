@@ -583,12 +583,12 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { addToken(Token.DATA_TYPE);
+            { addToken(TokenTypes.DATA_TYPE);
             }
           // fall through
           case 17: break;
           case 2:
-            { addToken(Token.WHITESPACE);
+            { addToken(TokenTypes.WHITESPACE);
             }
           // fall through
           case 18: break;
@@ -598,17 +598,17 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
           // fall through
           case 19: break;
           case 4:
-            { addToken(Token.COMMENT_EOL);
+            { addToken(TokenTypes.COMMENT_EOL);
             }
           // fall through
           case 20: break;
           case 5:
-            { addToken(Token.OPERATOR); yybegin(PRE_VALUE);
+            { addToken(TokenTypes.OPERATOR); yybegin(PRE_VALUE);
             }
           // fall through
           case 21: break;
           case 6:
-            { addToken(Token.PREPROCESSOR);
+            { addToken(TokenTypes.PREPROCESSOR);
             }
           // fall through
           case 22: break;
@@ -623,7 +623,7 @@ public class IniTokenMaker extends AbstractJFlexTokenMaker {
           // fall through
           case 24: break;
           case 9:
-            { addIdentifier(TokenTypes.IDENTIFIER); addToken(Token.COMMENT_EOL);
+            { addIdentifier(TokenTypes.IDENTIFIER); addToken(TokenTypes.COMMENT_EOL);
             }
           // fall through
           case 25: break;
