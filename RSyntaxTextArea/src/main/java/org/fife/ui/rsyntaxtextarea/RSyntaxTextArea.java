@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
@@ -35,7 +34,6 @@ import org.fife.ui.rsyntaxtextarea.parser.Parser;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rsyntaxtextarea.parser.ToolTipInfo;
 import org.fife.ui.rtextarea.*;
-import org.fife.util.SwingUtils;
 
 
 /**
@@ -169,45 +167,8 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Whether templates are enabled. */
 	private static boolean templatesEnabled;
 
-	/**
-	 * The rectangle surrounding the "matched bracket" if bracket matching
-	 * is enabled.
-	 */
-	private Rectangle match;
-
-	/**
-	 * The rectangle surrounding the current offset if both bracket matching and
-	 * "match both brackets" are enabled.
-	 */
-	private Rectangle dotRect;
-
-	/**
-	 * Used to store the location of the bracket at the caret position (either
-	 * just before or just after it) and the location of its match.
-	 */
-	private Point bracketInfo;
-
-	/**
-	 * Colors used for the "matched bracket" if bracket matching is enabled.
-	 */
-	private Color matchedBracketBGColor;
-	private Color matchedBracketBorderColor;
-
-	/** The location of the last matched bracket. */
-	private int lastBracketMatchPos;
-
-	/** Whether bracket matching is enabled. */
-	private boolean bracketMatchingEnabled;
-
-	/** Whether bracket matching is animated. */
-	private boolean animateBracketMatching;
-
-	/** Whether <b>both</b> brackets are highlighted when bracket matching. */
-	private boolean paintMatchedBracketPair;
-
-	private BracketMatchingTimer bracketRepaintTimer;
-
-	private MatchedBracketPopupTimer matchedBracketPopupTimer;
+	/** Handles bracket matching support. */
+	private BracketMatchingSupport bracketMatchingSupport;
 
 	private boolean metricsNeverRefreshed;
 
@@ -315,9 +276,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	/** Renders tokens. */
 	private TokenPainter tokenPainter;
-
-	/** Whether a popup showing matched bracket lines when they're off-screen. */
-	private boolean showMatchedBracketPopup;
 
 	private int lineHeight;		// Height of a line of text; same for default, bold & italic.
 	private int maxAscent;
@@ -832,67 +790,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * and if it exists, highlights it.
 	 */
 	protected final void doBracketMatching() {
-
-		// We always need to repaint the "matched bracket" highlight if it
-		// exists.
-		if (match!=null) {
-			repaint(match);
-			if (dotRect!=null) {
-				repaint(dotRect);
-			}
-		}
-
-		// If a matching bracket is found, get its bounds and paint it!
-		int lastCaretBracketPos = bracketInfo==null ? -1 : bracketInfo.x;
-		bracketInfo = RSyntaxUtilities.getMatchingBracketPosition(this,
-				bracketInfo);
-		if (bracketInfo.y>-1 &&
-				(bracketInfo.y!=lastBracketMatchPos ||
-				 bracketInfo.x!=lastCaretBracketPos)) {
-			try {
-				match = SwingUtils.getBounds(this, bracketInfo.y);
-				if (match!=null) { // Happens if we're not yet visible
-					if (getPaintMatchedBracketPair()) {
-						dotRect = SwingUtils.getBounds(this, bracketInfo.x);
-					}
-					else {
-						dotRect = null;
-					}
-					if (getAnimateBracketMatching()) {
-						bracketRepaintTimer.restart();
-					}
-					repaint(match);
-					if (dotRect!=null) {
-						repaint(dotRect);
-					}
-
-					if (getShowMatchedBracketPopup()) {
-						Container parent = getParent();
-						if (parent instanceof JViewport) {
-							Rectangle visibleRect = this.getVisibleRect();
-							if (match.y + match.height < visibleRect.getY()) {
-								if (matchedBracketPopupTimer == null) {
-									matchedBracketPopupTimer =
-											new MatchedBracketPopupTimer();
-								}
-								matchedBracketPopupTimer.restart(bracketInfo.y);
-							}
-						}
-					}
-
-				}
-			} catch (BadLocationException ble) {
-				ble.printStackTrace(); // Shouldn't happen.
-			}
-		}
-		else if (bracketInfo.y==-1) {
-			// Set match to null so the old value isn't still repainted.
-			match = null;
-			dotRect = null;
-			bracketRepaintTimer.stop();
-		}
-		lastBracketMatchPos = bracketInfo.y;
-
+		bracketMatchingSupport.doBracketMatching();
 	}
 
 
@@ -989,8 +887,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @param fold The fold that was collapsed or expanded.
 	 */
 	public void foldToggled(Fold fold) {
-		match = null; // TODO: Update the bracket rect rather than hide it
-		dotRect = null;
+		bracketMatchingSupport.hideMatch(); // TODO: Update the bracket rect rather than hide it
 		if (getLineWrap()) {
 			// NOTE: Without doing this later, the caret position is out of
 			// sync with the Element structure when word wrap is enabled, and
@@ -1053,7 +950,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setAnimateBracketMatching(boolean)
 	 */
 	public boolean getAnimateBracketMatching() {
-		return animateBracketMatching;
+		return bracketMatchingSupport.getAnimateBracketMatching();
 	}
 
 
@@ -1510,7 +1407,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getMatchedBracketBorderColor
 	 */
 	public Color getMatchedBracketBGColor() {
-		return matchedBracketBGColor;
+		return bracketMatchingSupport.getMatchedBracketBGColor();
 	}
 
 
@@ -1522,7 +1419,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getMatchedBracketBGColor
 	 */
 	public Color getMatchedBracketBorderColor() {
-		return matchedBracketBorderColor;
+		return bracketMatchingSupport.getMatchedBracketBorderColor();
 	}
 
 
@@ -1536,7 +1433,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getMatchRectangle()
 	 */
 	Rectangle getDotRectangle() {
-		return dotRect;
+		return bracketMatchingSupport.getDotRectangle();
 	}
 
 
@@ -1549,7 +1446,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getDotRectangle()
 	 */
 	Rectangle getMatchRectangle() {
-		return match;
+		return bracketMatchingSupport.getMatchRectangle();
 	}
 
 
@@ -1577,7 +1474,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setBracketMatchingEnabled(boolean)
 	 */
 	public boolean getPaintMatchedBracketPair() {
-		return paintMatchedBracketPair;
+		return bracketMatchingSupport.getPaintMatchedBracketPair();
 	}
 
 
@@ -1712,7 +1609,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setShowMatchedBracketPopup(boolean)
 	 */
 	public boolean getShowMatchedBracketPopup() {
-		return showMatchedBracketPopup;
+		return bracketMatchingSupport.getShowMatchedBracketPopup();
 	}
 
 
@@ -2071,6 +1968,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 		tokenPainterFactory = new DefaultTokenPainterFactory();
 		tokenPainter = tokenPainterFactory.getTokenPainter(this);
+		bracketMatchingSupport = new BracketMatchingSupport(this);
 
 		// NOTE: Our actions are created here instead of in a static block
 		// so they are only created when the first RTextArea is instantiated,
@@ -2088,7 +1986,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		setMatchedBracketBorderColor(getDefaultBracketMatchBorderColor());
 		setBracketMatchingEnabled(true);
 		setAnimateBracketMatching(true);
-		lastBracketMatchPos = -1;
 		setSelectionColor(getDefaultSelectionColor());
 		setTabLineColor(null);
 		setMarkOccurrencesColor(MarkOccurrencesSupport.DEFAULT_COLOR);
@@ -2143,7 +2040,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setBracketMatchingEnabled
 	 */
 	public final boolean isBracketMatchingEnabled() {
-		return bracketMatchingEnabled;
+		return bracketMatchingSupport.isEnabled();
 	}
 
 
@@ -2382,14 +2279,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getAnimateBracketMatching()
 	 */
 	public void setAnimateBracketMatching(boolean animate) {
-		if (animate!=animateBracketMatching) {
-			animateBracketMatching = animate;
-			if (animate && bracketRepaintTimer==null) {
-				bracketRepaintTimer = new BracketMatchingTimer();
-			}
-			firePropertyChange(ANIMATE_BRACKET_MATCHING_PROPERTY,
-								!animate, animate);
-		}
+		bracketMatchingSupport.setAnimateBracketMatching(animate);
 	}
 
 
@@ -2449,11 +2339,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #isBracketMatchingEnabled()
 	 */
 	public void setBracketMatchingEnabled(boolean enabled) {
-		if (enabled!=bracketMatchingEnabled) {
-			bracketMatchingEnabled = enabled;
-			repaint();
-			firePropertyChange(BRACKET_MATCHING_PROPERTY, !enabled, enabled);
-		}
+		bracketMatchingSupport.setEnabled(enabled);
 	}
 
 
@@ -2648,8 +2534,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 			// though the caret's location hasn't changed.
 			forceCurrentLineHighlightRepaint();
 			// Update the "matched bracket", if any
-			lastBracketMatchPos = -1;
-			doBracketMatching();
+			bracketMatchingSupport.forceReMatch();
 			// Get line number border in text area to repaint again
 			// since line heights have updated.
 			firePropertyChange("font", old, font);
@@ -2906,10 +2791,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setPaintMarkOccurrencesBorder(boolean)
 	 */
 	public void setMatchedBracketBGColor(Color color) {
-		matchedBracketBGColor = color;
-		if (match!=null) {
-			repaint();
-		}
+		bracketMatchingSupport.setMatchedBracketBGColor(color);
 	}
 
 
@@ -2921,10 +2803,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setMatchedBracketBGColor
 	 */
 	public void setMatchedBracketBorderColor(Color color) {
-		matchedBracketBorderColor = color;
-		if (match!=null) {
-			repaint();
-		}
+		bracketMatchingSupport.setMatchedBracketBorderColor(color);
 	}
 
 
@@ -2959,13 +2838,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #setBracketMatchingEnabled(boolean)
 	 */
 	public void setPaintMatchedBracketPair(boolean paintPair) {
-		if (paintPair!=paintMatchedBracketPair) {
-			paintMatchedBracketPair = paintPair;
-			doBracketMatching();
-			repaint();
-			firePropertyChange(PAINT_MATCHED_BRACKET_PAIR_PROPERTY,
-					!paintMatchedBracketPair, paintMatchedBracketPair);
-		}
+		bracketMatchingSupport.setPaintMatchedBracketPair(paintPair);
 	}
 
 
@@ -3061,7 +2934,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 * @see #getShowMatchedBracketPopup()
 	 */
 	public void setShowMatchedBracketPopup(boolean show) {
-		showMatchedBracketPopup = show;
+		bracketMatchingSupport.setShowMatchedBracketPopup(show);
 	}
 
 
@@ -3134,8 +3007,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 		// Updates the margin line and "matched bracket" highlight
 		updateMarginLineX();
-		lastBracketMatchPos = -1;
-		doBracketMatching();
+		bracketMatchingSupport.forceReMatch();
 
 		// Force the current line highlight to be repainted, even though
 		// the caret's location hasn't changed.
@@ -3379,136 +3251,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 			refreshFontMetrics(getGraphics2D(graphics));
 		}
 	}
-
-	/**
-	 * Renders the text on the line containing the "matched bracket" after a
-	 * delay.
-	 */
-	private final class MatchedBracketPopupTimer extends Timer
-			implements ActionListener, CaretListener {
-
-		private MatchedBracketPopup popup;
-		private int origDot;
-		private int matchedBracketOffs;
-
-		private MatchedBracketPopupTimer() {
-			super(350, null);
-			addActionListener(this);
-			setRepeats(false);
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-			if (popup != null) {
-				popup.dispose();
-			}
-
-			if (RSyntaxTextArea.this.hasFocus()) {
-				Window window = SwingUtilities.getWindowAncestor(RSyntaxTextArea.this);
-				popup = new MatchedBracketPopup(window, RSyntaxTextArea.this, matchedBracketOffs);
-				popup.pack();
-				popup.setVisible(true);
-			}
-		}
-
-		@Override
-		public void caretUpdate(CaretEvent e) {
-			int dot = e.getDot();
-			if (dot != origDot) {
-				stop();
-				removeCaretListener(this);
-				if (popup != null) {
-					popup.dispose();
-				}
-			}
-		}
-
-		/**
-		 * Restarts this timer, and stores a new offset to paint.
-		 *
-		 * @param matchedBracketOffs The offset of the new matched bracket.
-		 */
-		public void restart(int matchedBracketOffs) {
-			this.origDot = getCaretPosition();
-			this.matchedBracketOffs = matchedBracketOffs;
-			this.restart();
-		}
-
-		@Override
-		public void start() {
-			super.start();
-			addCaretListener(this);
-		}
-
-	}
-
-
-	/**
-	 * A timer that animates the "bracket matching" animation.
-	 */
-	private class BracketMatchingTimer extends Timer implements ActionListener {
-
-		private int pulseCount;
-
-		BracketMatchingTimer() {
-			super(20, null);
-			addActionListener(this);
-			setCoalesce(false);
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (isBracketMatchingEnabled()) {
-				if (match!=null) {
-					updateAndInvalidate(match);
-				}
-				if (dotRect!=null && getPaintMatchedBracketPair()) {
-					updateAndInvalidate(dotRect);
-				}
-				if (++pulseCount==8) {
-					pulseCount = 0;
-					stop();
-				}
-			}
-		}
-
-		private void init(Rectangle r) {
-			r.x += 3;
-			r.y += 3;
-			r.width -= 6;
-			r.height -= 6; // So animation can "grow" match
-		}
-
-		@Override
-		public void start() {
-			init(match);
-			if (dotRect!=null && getPaintMatchedBracketPair()) {
-				init(dotRect);
-			}
-			pulseCount = 0;
-			super.start();
-		}
-
-		private void updateAndInvalidate(Rectangle r) {
-			if (pulseCount<5) {
-				r.x--;
-				r.y--;
-				r.width += 2;
-				r.height += 2;
-				repaint(r.x,r.y, r.width,r.height);
-			}
-			else if (pulseCount<7) {
-				r.x++;
-				r.y++;
-				r.width -= 2;
-				r.height -= 2;
-				repaint(r.x-2,r.y-2, r.width+5,r.height+5);
-			}
-		}
-
-	}
-
 
 	/**
 	 * Handles hyperlinks.
