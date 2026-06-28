@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.Point;
 
 
 /**
@@ -420,5 +421,130 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 	void testWildcardToPattern_nonStartCaret() {
 		Assertions.assertEquals("foo\\^bar",
 			RSyntaxUtilities.wildcardToPattern("foo^bar", false, false).pattern());
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_forwardMatch() {
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "(hello)");
+		textArea.setCaretPosition(1); // caret just after '(' at offset 0
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, null);
+		Assertions.assertEquals(0, result.x); // '(' at offset 0
+		Assertions.assertEquals(6, result.y); // ')' at offset 6
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_backwardMatch() {
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "(hello)");
+		textArea.setCaretPosition(7); // caret just after ')' at offset 6
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, null);
+		Assertions.assertEquals(6, result.x); // ')' at offset 6
+		Assertions.assertEquals(0, result.y); // '(' at offset 0
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_noMatch_notOnBracket() {
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "hello");
+		textArea.setCaretPosition(3); // caret in the middle of an identifier
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, null);
+		Assertions.assertEquals(-1, result.x);
+		Assertions.assertEquals(-1, result.y);
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_customBrackets_forwardMatch() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea("«hello»") {
+			@Override
+			public Graphics getGraphics() {
+				return createTestGraphics();
+			}
+		};
+		textArea.setBounds(0, 0, 800, 800);
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		doc.setSyntaxStyle(new CustomBracketTokenMaker());
+
+		textArea.setCaretPosition(1); // caret just after '«' at offset 0
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, null);
+		Assertions.assertEquals(0, result.x); // '«' at offset 0
+		Assertions.assertEquals(6, result.y); // '»' at offset 6
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_customBrackets_backwardMatch() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea("«hello»") {
+			@Override
+			public Graphics getGraphics() {
+				return createTestGraphics();
+			}
+		};
+		textArea.setBounds(0, 0, 800, 800);
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		doc.setSyntaxStyle(new CustomBracketTokenMaker());
+
+		textArea.setCaretPosition(7); // caret just after '»' at offset 6
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, null);
+		Assertions.assertEquals(6, result.x); // '»' at offset 6
+		Assertions.assertEquals(0, result.y); // '«' at offset 0
+	}
+
+
+	@Test
+	void testGetMatchingBracketPosition_reuseInputPoint() {
+		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, "(hello)");
+		textArea.setCaretPosition(1);
+		Point reuse = new Point();
+		Point result = RSyntaxUtilities.getMatchingBracketPosition(textArea, reuse);
+		Assertions.assertSame(reuse, result);
+		Assertions.assertEquals(0, result.x);
+		Assertions.assertEquals(6, result.y);
+	}
+
+
+	@Test
+	void testRSyntaxDocument_getBracketPairs_defaultPairs() {
+		RSyntaxTextArea textArea = createTextArea();
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		Assertions.assertEquals("{}()[]", doc.getBracketPairs());
+	}
+
+
+	/**
+	 * A minimal token maker that tokenizes {@code «»} (and the standard
+	 * bracket characters) as {@link TokenTypes#SEPARATOR} and everything
+	 * else as {@link TokenTypes#IDENTIFIER}.  Used to test custom bracket
+	 * pair support.
+	 */
+	private static final class CustomBracketTokenMaker extends TokenMakerBase {
+
+		private static final String BRACKET_CHARS = "{}()[]" + "«»"; // «»
+
+		@Override
+		public String getBracketPairs() {
+			return BRACKET_CHARS;
+		}
+
+		@Override
+		public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+			return false;
+		}
+
+		@Override
+		public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
+			resetTokenList();
+			char[] array = text.array;
+			int start = text.offset;
+			int end = start + text.count;
+			for (int i = start; i < end; i++) {
+				char ch = array[i];
+				int type = BRACKET_CHARS.indexOf(ch) >= 0 ?TokenTypes.SEPARATOR : TokenTypes.IDENTIFIER;
+				addToken(array, i, i, type, startOffset + (i - start));
+			}
+			addNullToken();
+			return firstToken;
+		}
 	}
 }

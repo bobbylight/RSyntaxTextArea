@@ -821,4 +821,10 @@ class MxmlTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			Assertions.assertTrue(token.is(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, '"' + attr + '"'));
 		}
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
 }

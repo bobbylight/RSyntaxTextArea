@@ -122,6 +122,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
+	@Override
+	public String getBracketPairs() {
+		return "[]";
+	}
+
+
 	/**
 	 * Sets whether markup close tags should be completed.  The default value
 	 * for BBCode is <code>true</code>.

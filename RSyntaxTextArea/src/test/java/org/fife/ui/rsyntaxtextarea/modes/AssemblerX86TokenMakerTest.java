@@ -940,4 +940,10 @@ class AssemblerX86TokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"\t\t"
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("[]", createTokenMaker().getBracketPairs());
+	}
 }

@@ -84,7 +84,13 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 		super.addToken(array, start, end, tokenType, startOffset);
 		zzStartRead = zzMarkedPos;
 	}
-	
+
+	@Override
+	public String getBracketPairs() {
+		return "()";
+	}
+
+
 		@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "--", null };

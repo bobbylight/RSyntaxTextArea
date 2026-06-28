@@ -281,6 +281,17 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 
 	/**
+	 * Returns the bracket pairs used for bracket matching in this language.
+	 *
+	 * @return The bracket pairs string.
+	 * @see TokenMaker#getBracketPairs()
+	 */
+	public String getBracketPairs() {
+		return tokenMaker.getBracketPairs();
+	}
+
+
+	/**
 	 * Returns whether the current programming language uses curly braces
 	 * ('<code>{</code>' and '<code>}</code>') to denote code blocks.
 	 *

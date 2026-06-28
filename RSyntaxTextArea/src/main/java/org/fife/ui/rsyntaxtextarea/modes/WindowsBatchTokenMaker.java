@@ -69,6 +69,12 @@ public class WindowsBatchTokenMaker extends AbstractTokenMaker {
 
 
 	@Override
+	public String getBracketPairs() {
+		return "()";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "rem ", null };
 	}

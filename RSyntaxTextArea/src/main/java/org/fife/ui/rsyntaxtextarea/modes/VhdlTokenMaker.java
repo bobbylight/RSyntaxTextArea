@@ -648,6 +648,12 @@ public class VhdlTokenMaker extends AbstractJFlexTokenMaker {
 		zzStartRead = zzMarkedPos;
 	}
 
+	@Override
+	public String getBracketPairs() {
+		return "()";
+	}
+
+
 		@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "--", null };

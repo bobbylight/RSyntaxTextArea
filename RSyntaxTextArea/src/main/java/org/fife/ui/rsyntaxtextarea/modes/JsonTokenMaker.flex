@@ -126,12 +126,13 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
-	/**
-	 * Returns <code>true</code> always as C-style languages use curly braces
-	 * to denote code blocks.
-	 *
-	 * @return <code>true</code> always.
-	 */
+	@Override
+	public String getBracketPairs() {
+		return "{}[]";
+	}
+
+
+	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks() {
 		return true;
 	}

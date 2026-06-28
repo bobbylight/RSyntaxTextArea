@@ -248,4 +248,10 @@ class JsonTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}[]", createTokenMaker().getBracketPairs());
+	}
+
+
 }

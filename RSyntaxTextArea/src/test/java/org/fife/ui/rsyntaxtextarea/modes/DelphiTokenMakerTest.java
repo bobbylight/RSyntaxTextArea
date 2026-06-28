@@ -569,4 +569,10 @@ class DelphiTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"'Unterminated string"
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("()[]", createTokenMaker().getBracketPairs());
+	}
 }

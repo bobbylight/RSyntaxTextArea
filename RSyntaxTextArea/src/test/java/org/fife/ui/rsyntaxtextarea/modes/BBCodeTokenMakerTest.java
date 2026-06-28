@@ -106,4 +106,10 @@ class BBCodeTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	public void testCommon_GetLineCommentStartAndEnd() {
 		Assertions.assertNull(createTokenMaker().getLineCommentStartAndEnd(0));
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("[]", createTokenMaker().getBracketPairs());
+	}
 }

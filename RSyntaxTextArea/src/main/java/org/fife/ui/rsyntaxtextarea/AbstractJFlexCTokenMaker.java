@@ -57,6 +57,12 @@ public abstract class AbstractJFlexCTokenMaker extends AbstractJFlexTokenMaker {
 	}
 
 
+	@Override
+	public String getBracketPairs() {
+		return "{}()[]";
+	}
+
+
 	/**
 	 * Returns <code>true</code> always as C-style languages use curly braces
 	 * to denote code blocks.

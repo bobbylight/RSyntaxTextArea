@@ -2908,4 +2908,10 @@ class JSPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
+
+
 }

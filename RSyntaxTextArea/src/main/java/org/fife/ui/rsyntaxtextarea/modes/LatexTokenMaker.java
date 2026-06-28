@@ -342,6 +342,12 @@ public class LatexTokenMaker extends AbstractJFlexTokenMaker {
 	 * ${inheritDoc}
 	 */
 	@Override
+	public String getBracketPairs() {
+		return "{}[]";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "%", null };
 	}

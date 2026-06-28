@@ -286,4 +286,10 @@ class IniTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		token = token.getNextToken();
 		Assertions.assertTrue(token.is(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, "#")); // still into the string, not a comment
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("", createTokenMaker().getBracketPairs());
+	}
 }

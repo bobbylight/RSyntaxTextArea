@@ -125,6 +125,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
+	@Override
+	public String getBracketPairs() {
+		return "{}[]";
+	}
+
+
 	/**
 	 * ${inheritDoc}
 	 */

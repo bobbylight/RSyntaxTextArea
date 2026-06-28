@@ -132,4 +132,10 @@ class PlainTextTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("", createTokenMaker().getBracketPairs());
+	}
+
+
 }
