@@ -110,4 +110,10 @@ class HostsTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("", createTokenMaker().getBracketPairs());
+	}
+
+
 }

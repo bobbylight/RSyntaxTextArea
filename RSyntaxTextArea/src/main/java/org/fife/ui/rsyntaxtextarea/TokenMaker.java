@@ -180,6 +180,26 @@ public interface TokenMaker {
 
 
 	/**
+	 * Returns the bracket pairs for this language, as a string of consecutive
+	 * character pairs where each even-indexed character is an opening bracket
+	 * and each following odd-indexed character is its closing counterpart.  For
+	 * example, {@code "{}()[]"} defines three pairs.
+	 * <p>
+	 * Characters in this list must be tokenized as {@link TokenTypes#SEPARATOR}
+	 * for bracket matching to work.
+	 * <p>
+	 * The default implementation returns {@code ""} (no bracket matching).
+	 * Override this method to enable bracket matching for a specific language.
+	 *
+	 * @return The bracket pairs string.
+	 * @see TokenTypes#SEPARATOR
+	 */
+	default String getBracketPairs() {
+		return "";
+	}
+
+
+	/**
 	 * Returns whether this language is a markup language.
 	 *
 	 * @return Whether this language is markup.

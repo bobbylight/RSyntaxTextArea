@@ -127,11 +127,6 @@ public final class RSyntaxUtilities implements SwingConstants {
 	private static final char[] JS_AND = { '&', '&' };
 	private static final char[] JS_OR  = { '|', '|' };
 
-	/**
-	 * Used internally.
-	 */
-	private static final String BRACKETS = "{([})]";
-
 
 	/**
 	 * An unused constructor to prevent instantiation, and keep static analysis
@@ -413,20 +408,21 @@ public final class RSyntaxUtilities implements SwingConstants {
 			char bracket = 0;
 
 			// If the caret was at offset 0, we can't check "to its left."
+			String bracketPairs = doc.getBracketPairs();
 			if (caretPosition>=0) {
-				bracket  = doc.charAt(caretPosition);
+				bracket = doc.charAt(caretPosition);
 			}
 
 			// Try to match a bracket "to the right" of the caret if one
 			// was not found on the left.
-			int index = BRACKETS.indexOf(bracket);
+			int index = bracketPairs.indexOf(bracket);
 			if (index==-1 && caretPosition<doc.getLength()-1) {
 				bracket = doc.charAt(++caretPosition);
 			}
 
-			// First, see if the char was a bracket (one of "{[()]}").
+			// First, see if the char was a bracket
 			if (index==-1) {
-				index = BRACKETS.indexOf(bracket);
+				index = bracketPairs.indexOf(bracket);
 				if (index==-1) {
 					return input;
 				}
@@ -435,28 +431,21 @@ public final class RSyntaxUtilities implements SwingConstants {
 			// If it was, then make sure this bracket isn't sitting in
 			// the middle of a comment or string.  If it isn't, then
 			// initialize some stuff so we can continue on.
-			char bracketMatch;
-			boolean goForward;
 			Element map = doc.getDefaultRootElement();
 			int curLine = map.getElementIndex(caretPosition);
-			Element line = map.getElement(curLine);
-			int start = line.getStartOffset();
-			int end = line.getEndOffset();
 			Token token = doc.getTokenListForLine(curLine);
 			token = RSyntaxUtilities.getTokenAtOffset(token, caretPosition);
 			// All brackets are always returned as "separators."
-			if (token.getType()!=TokenTypes.SEPARATOR) {
+			if (token==null || token.getType()!=TokenTypes.SEPARATOR) {
 				return input;
 			}
 			int languageIndex = token.getLanguageIndex();
-			if (index<3) { // One of "{[("
-				goForward = true;
-				bracketMatch = BRACKETS.charAt(index + 3);
-			}
-			else { // One of ")]}"
-				goForward = false;
-				bracketMatch = BRACKETS.charAt(index - 3);
-			}
+			boolean goForward = (index%2==0);
+			char bracketMatch = bracketPairs.charAt(index^1);
+
+			Element line = map.getElement(curLine);
+			int start = line.getStartOffset();
+			int end = line.getEndOffset();
 
 			if (goForward) {
 

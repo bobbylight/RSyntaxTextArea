@@ -56,4 +56,10 @@ class LatexTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		Assertions.assertEquals("%", startAndEnd[0]);
 		Assertions.assertNull(startAndEnd[1]);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}[]", createTokenMaker().getBracketPairs());
+	}
 }

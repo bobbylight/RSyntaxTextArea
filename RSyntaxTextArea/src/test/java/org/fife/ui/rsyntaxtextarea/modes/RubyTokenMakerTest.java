@@ -531,4 +531,10 @@ class RubyTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			" \t "
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
 }

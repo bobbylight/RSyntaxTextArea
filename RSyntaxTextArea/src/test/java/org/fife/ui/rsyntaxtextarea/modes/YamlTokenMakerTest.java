@@ -173,4 +173,10 @@ class YamlTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}[]", createTokenMaker().getBracketPairs());
+	}
+
+
 }

@@ -561,4 +561,10 @@ class SASTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"\t  "
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("()", createTokenMaker().getBracketPairs());
+	}
 }

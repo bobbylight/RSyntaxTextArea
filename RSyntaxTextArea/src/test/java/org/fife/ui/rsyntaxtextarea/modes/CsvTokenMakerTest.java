@@ -157,4 +157,10 @@ class CsvTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 		Assertions.assertTrue(token.is(TokenTypes.IDENTIFIER, "\"quoted \"\" string\""));
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("", createTokenMaker().getBracketPairs());
+	}
 }

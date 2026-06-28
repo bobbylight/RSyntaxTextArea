@@ -356,4 +356,10 @@ class PythonTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"  \t  ",
 			"\t\t");
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
 }

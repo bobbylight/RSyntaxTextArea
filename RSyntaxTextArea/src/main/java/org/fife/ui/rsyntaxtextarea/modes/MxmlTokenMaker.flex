@@ -201,6 +201,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 	}
 
 
+	@Override
+	public String getBracketPairs() {
+		return "{}()[]";
+	}
+
+
 	/**
 	 * Returns whether markup close tags should be completed.  For XML, the
 	 * default value is <code>true</code>.

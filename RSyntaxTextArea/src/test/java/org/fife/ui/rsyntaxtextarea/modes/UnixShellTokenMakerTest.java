@@ -1646,4 +1646,10 @@ class UnixShellTokenMakerTest extends AbstractJFlexTokenMakerTest {
 	}
 
 
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
+
+
 }

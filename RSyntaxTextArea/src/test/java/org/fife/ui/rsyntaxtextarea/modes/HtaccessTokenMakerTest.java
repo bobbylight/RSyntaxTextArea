@@ -345,4 +345,10 @@ class HtaccessTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"\t\t"
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("", createTokenMaker().getBracketPairs());
+	}
 }

@@ -981,6 +981,12 @@ public class SASTokenMaker extends AbstractJFlexTokenMaker {
 
 
 	@Override
+	public String getBracketPairs() {
+		return "()";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "*", null };
 	}

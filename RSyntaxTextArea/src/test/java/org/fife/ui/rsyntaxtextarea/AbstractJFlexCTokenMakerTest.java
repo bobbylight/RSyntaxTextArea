@@ -240,4 +240,10 @@ class AbstractJFlexCTokenMakerTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertEquals("/**\n * \n */", textArea.getText());
 		Assertions.assertEquals(7, textArea.getCaretPosition());
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", new CTokenMaker().getBracketPairs());
+	}
 }

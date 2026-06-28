@@ -126,6 +126,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	@Override
+	public String getBracketPairs() {
+		return "()";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { ";", null };
 	}

@@ -371,6 +371,12 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	@Override
+	public String getBracketPairs() {
+		return "{}()[]";
+	}
+
+
+	@Override
 	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
 		return languageIndex==LANG_INDEX_CSS || languageIndex==LANG_INDEX_JS ||
 				languageIndex==LANG_INDEX_PHP;

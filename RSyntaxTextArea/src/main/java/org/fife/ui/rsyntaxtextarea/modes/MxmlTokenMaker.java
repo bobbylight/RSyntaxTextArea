@@ -2001,6 +2001,12 @@ public class MxmlTokenMaker extends AbstractMarkupTokenMaker {
 	 * @see #setCompleteCloseTags(boolean)
 	 */
 	@Override
+	public String getBracketPairs() {
+		return "{}()[]";
+	}
+
+
+	@Override
 	public boolean getCompleteCloseTags() {
 		return completeCloseTags;
 	}

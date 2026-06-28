@@ -83,6 +83,12 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
 
 	@Override
+	public String getBracketPairs() {
+		return "{}()[]";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return new String[] { "#", null };
 	}

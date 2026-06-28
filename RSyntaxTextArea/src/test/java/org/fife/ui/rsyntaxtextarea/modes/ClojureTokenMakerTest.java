@@ -470,4 +470,10 @@ class ClojureTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"*use-context-classloader*"
 		);
 	}
+
+
+	@Test
+	void testGetBracketPairs() {
+		Assertions.assertEquals("{}()[]", createTokenMaker().getBracketPairs());
+	}
 }

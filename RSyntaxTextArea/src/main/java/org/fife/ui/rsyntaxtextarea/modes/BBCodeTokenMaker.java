@@ -341,6 +341,12 @@ public class BBCodeTokenMaker extends AbstractMarkupTokenMaker {
 	 * @return <code>null</code> always.
 	 */
 	@Override
+	public String getBracketPairs() {
+		return "[]";
+	}
+
+
+	@Override
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
 		return null;
 	}
