@@ -8,7 +8,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import javax.swing.Action;
 import javax.swing.text.Segment;
 
 
@@ -150,55 +149,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 
 
 	/**
-	 * Returns the closest {@link TokenTypes "standard" token type} for a given
-	 * "internal" token type (e.g. one whose value is <code>&lt; 0</code>).<p>
-	 *
-	 * The default implementation returns <code>type</code> always, which
-	 * denotes that a mapping from internal token types to standard token types
-	 * is not defined; subclasses can override.
-	 *
-	 * @param type The token type.
-	 * @return The closest "standard" token type.
-	 */
-	@Override
-	public int getClosestStandardTokenTypeForInternalType(int type) {
-		return type;
-	}
-
-
-	/**
-	 * Returns whether this programming language uses curly braces
-	 * ('<code>{</code>' and '<code>}</code>') to denote code blocks.
-	 *
-	 * The default implementation returns <code>false</code>; subclasses can
-	 * override this method if necessary.
-	 *
-	 * @param languageIndex The language index at the offset in question.
-	 *        Since some <code>TokenMaker</code>s effectively have nested
-	 *        languages (such as JavaScript in HTML), this parameter tells the
-	 *        <code>TokenMaker</code> what sub-language to look at.
-	 * @return Whether curly braces denote code blocks.
-	 */
-	@Override
-	public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
-		return false;
-	}
-
-
-	/**
-	 * Returns an action to handle "insert break" key presses (i.e. Enter).
-	 * The default implementation returns <code>null</code>.  Subclasses
-	 * can override.
-	 *
-	 * @return The default implementation always returns <code>null</code>.
-	 */
-	@Override
-	public Action getInsertBreakAction() {
-		return null;
-	}
-
-
-	/**
 	 * Returns the current language index.
 	 *
 	 * @return The current language index.
@@ -209,42 +159,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	@Override
-	public int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
-
-		// Last parameter doesn't matter if we're not painting.
-		Token t = getTokenList(text, initialTokenType, 0);
-
-		while (t.getNextToken()!=null) {
-			t = t.getNextToken();
-		}
-
-		return t.getType();
-
-	}
-
-
-	@Override
-	public String[] getLineCommentStartAndEnd(int languageIndex) {
-		return null;
-	}
-
-
-	/**
-	 * Returns whether tokens of the specified type should have "mark
-	 * occurrences" enabled for the current programming language.  The default
-	 * implementation returns true if <tt>type</tt> is
-	 * {@link TokenTypes#IDENTIFIER}. Subclasses can override this method to
-	 * support other token types, such as {@link TokenTypes#VARIABLE}.
-	 *
-	 * @param type The token type.
-	 * @return Whether tokens of this type should have "mark occurrences"
-	 *         enabled.
-	 */
-	@Override
-	public boolean getMarkOccurrencesOfTokenType(int type) {
-		return type==TokenTypes.IDENTIFIER;
-	}
 
 
 	/**
@@ -268,41 +182,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-	/**
-	 * The default implementation returns <code>false</code> always.  Languages
-	 * that wish to better support auto-indentation can override this method.
-	 *
-	 * @param token The token the previous line ends with.
-	 * @return Whether the next line should be indented.
-	 */
-	@Override
-	public boolean getShouldIndentNextLineAfter(Token token) {
-		return false;
-	}
-
-
-	/**
-	 * Returns whether a character could be part of an "identifier" token
-	 * in a specific language.  The default implementation returns
-	 * <code>true</code> for letters, numbers, and certain symbols.
-	 */
-	@Override
-	public boolean isIdentifierChar(int languageIndex, char ch) {
-		return Character.isLetterOrDigit(ch) || ch=='_' || ch=='$';
-	}
-
-
-	/**
-	 * The default implementation returns <code>false</code> always.
-	 * Subclasses that are highlighting a markup language should override this
-	 * method to return <code>true</code>.
-	 *
-	 * @return <code>false</code> always.
-	 */
-	@Override
-	public boolean isMarkupLanguage() {
-		return false;
-	}
 
 
 	/**

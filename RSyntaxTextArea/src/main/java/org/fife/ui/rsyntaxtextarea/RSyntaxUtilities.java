@@ -1171,7 +1171,7 @@ return c.getLineStartOffset(line);
 	 * Returns whether the specified token is a single non-word char (e.g. not
 	 * in <code>[A-Za-z]</code>).  This is a HACK to work around the fact that
 	 * many standard token makers return things like semicolons and periods as
-	 * {@link Token#IDENTIFIER}s just to make the syntax highlighting coloring
+	 * {@link TokenTypes#IDENTIFIER}s just to make the syntax highlighting coloring
 	 * look a little better.
 	 *
 	 * @param t The token to check.  This cannot be <code>null</code>.
