@@ -361,10 +361,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/**
 	 * Creates a new <code>RSyntaxTextArea</code>.
 	 *
-	 * @param textMode Either <code>INSERT_MODE</code> or
-	 *        <code>OVERWRITE_MODE</code>.
+	 * @param textMode The text mode.
 	 */
-	public RSyntaxTextArea(int textMode) {
+	public RSyntaxTextArea(TextMode textMode) {
 		super(textMode);
 	}
 

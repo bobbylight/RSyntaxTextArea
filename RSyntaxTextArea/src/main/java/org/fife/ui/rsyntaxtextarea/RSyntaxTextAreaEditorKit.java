@@ -37,6 +37,7 @@ import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextarea.RTextAreaEditorKit;
 import org.fife.ui.rtextarea.RecordableTextAction;
+import org.fife.ui.rtextarea.TextMode;
 
 
 /**
@@ -1778,7 +1779,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 			if (!rsta.getInsertPairedCharacters() ||
 				textArea.getSelectionStart() != textArea.getSelectionEnd() ||
-				textArea.getTextMode() == RTextArea.OVERWRITE_MODE) {
+				textArea.getTextMode() == TextMode.OVERWRITE) {
 				super.actionPerformedImpl(e, textArea);
 				return;
 			}

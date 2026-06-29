@@ -2645,12 +2645,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-			int textMode = textArea.getTextMode();
-			if (textMode==RTextArea.INSERT_MODE) {
-				textArea.setTextMode(RTextArea.OVERWRITE_MODE);
+			if (textArea.getTextMode() == TextMode.INSERT) {
+				textArea.setTextMode(TextMode.OVERWRITE);
 			}
 			else {
-				textArea.setTextMode(RTextArea.INSERT_MODE);
+				textArea.setTextMode(TextMode.INSERT);
 			}
 		}
 

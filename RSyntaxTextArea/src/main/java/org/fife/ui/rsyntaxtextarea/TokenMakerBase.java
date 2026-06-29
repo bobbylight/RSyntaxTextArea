@@ -159,8 +159,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 	}
 
 
-
-
 	/**
 	 * Returns whether no tokens have been identified yet.  Should only be
 	 * called by subclasses that need to identify tokens depending on whether
@@ -180,8 +178,6 @@ public abstract class TokenMakerBase implements TokenMaker {
 		}
 		return occurrenceMarker;
 	}
-
-
 
 
 	/**
