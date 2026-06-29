@@ -55,9 +55,12 @@ public interface TokenMaker {
 	 *
 	 * @param type The token type.
 	 * @return The closest "standard" token type.  If a mapping is not defined
-	 *         for this language, then <code>type</code> is returned.
+	 *         for this language, then <code>type</code> is returned. The default
+	 *         implementation returns <code>type</code> always.
 	 */
-	int getClosestStandardTokenTypeForInternalType(int type);
+	default int getClosestStandardTokenTypeForInternalType(int type) {
+		return type;
+	}
 
 
 	/**
@@ -68,28 +71,37 @@ public interface TokenMaker {
 	 *        Since some <code>TokenMaker</code>s effectively have nested
 	 *        languages (such as JavaScript in HTML), this parameter tells the
 	 *        <code>TokenMaker</code> what sub-language to look at.
-	 * @return Whether curly braces denote code blocks.
+	 * @return Whether curly braces denote code blocks. The default
+	 *         implementation returns <code>false</code>.
 	 */
-	boolean getCurlyBracesDenoteCodeBlocks(int languageIndex);
+	default boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+		return false;
+	}
 
 
 	/**
 	 * Returns the last token on this line's type if the token is "unfinished",
-	 * or {@link Token#NULL} if it was finished.  For example, if C-style
+	 * or {@link TokenTypes#NULL} if it was finished.  For example, if C-style
 	 * syntax highlighting is being implemented, and <code>text</code>
 	 * contained a line of code that contained the beginning of a comment but
 	 * no end-comment marker ("*\/"), then this method would return
-	 * {@link Token#COMMENT_MULTILINE} for that line.  This is useful
+	 * {@link TokenTypes#COMMENT_MULTILINE} for that line.  This is useful
 	 * for doing syntax highlighting.
 	 *
 	 * @param text The line of tokens to examine.
 	 * @param initialTokenType The token type to start with (i.e., the value
 	 *        of <code>getLastTokenTypeOnLine</code> for the line before
 	 *        <code>text</code>).
-	 * @return The last token on this line's type, or {@link Token#NULL}
+	 * @return The last token on this line's type, or {@link TokenTypes#NULL}
 	 *         if the line was completed.
 	 */
-	int getLastTokenTypeOnLine(Segment text, int initialTokenType);
+	default int getLastTokenTypeOnLine(Segment text, int initialTokenType) {
+		Token t = getTokenList(text, initialTokenType, 0);
+		while (t.getNextToken() != null) {
+			t = t.getNextToken();
+		}
+		return t.getType();
+	}
 
 
 	/**
@@ -104,18 +116,23 @@ public interface TokenMaker {
 	 *         it out.  A <code>null</code> value for either means there
 	 *         is no string to add for that part.  A value of
 	 *         <code>null</code> for the array means this language
-	 *         does not support commenting/uncommenting lines.
+	 *         does not support commenting/uncommenting lines. The default
+	 *         implementation returns <code>null</code>.
 	 */
-	String[] getLineCommentStartAndEnd(int languageIndex);
+	default String[] getLineCommentStartAndEnd(int languageIndex) {
+		return null;
+	}
 
 
 	/**
 	 * Returns an action to handle "insert break" key presses (i.e. Enter).
 	 *
 	 * @return The action, or <code>null</code> if the default action should
-	 *         be used.
+	 *         be used. The default implementation returns <code>null</code>.
 	 */
-	Action getInsertBreakAction();
+	default Action getInsertBreakAction() {
+		return null;
+	}
 
 
 	/**
@@ -124,9 +141,12 @@ public interface TokenMaker {
 	 *
 	 * @param type The token type.
 	 * @return Whether tokens of this type should have "mark occurrences"
-	 *         enabled.
+	 *         enabled. The default implementation returns true only if
+	 *         the token type is <code>TokenTypes.IDENTIFIER</code>.
 	 */
-	boolean getMarkOccurrencesOfTokenType(int type);
+	default boolean getMarkOccurrencesOfTokenType(int type) {
+		return type == TokenTypes.IDENTIFIER;
+	}
 
 
 	/**
@@ -136,7 +156,7 @@ public interface TokenMaker {
 	 * is used.
 	 *
 	 * @return The occurrence marker for this language, or <code>null</code>
-	 *         for none.
+	 *         for none. The default implementation returns <code>null</code>.
 	 */
 	OccurrenceMarker getOccurrenceMarker();
 
@@ -146,9 +166,12 @@ public interface TokenMaker {
 	 * a new line inserted after that line should be indented.
 	 *
 	 * @param token The token the previous line ends with.
-	 * @return Whether the next line should be indented.
+	 * @return Whether the next line should be indented. The default implementation
+	 *         returns {@code false}.
 	 */
-	boolean getShouldIndentNextLineAfter(Token token);
+	default boolean getShouldIndentNextLineAfter(Token token) {
+		return false;
+	}
 
 
 	/**
@@ -176,7 +199,9 @@ public interface TokenMaker {
 	 * @param ch The character.
 	 * @return Whether the character could be part of an "identifier" token.
 	 */
-	boolean isIdentifierChar(int languageIndex, char ch);
+	default boolean isIdentifierChar(int languageIndex, char ch) {
+		return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
+	}
 
 
 	/**
@@ -202,9 +227,12 @@ public interface TokenMaker {
 	/**
 	 * Returns whether this language is a markup language.
 	 *
-	 * @return Whether this language is markup.
+	 * @return Whether this language is markup. The default implementation
+	 *         returns {@code false}.
 	 */
-	boolean isMarkupLanguage();
+	default boolean isMarkupLanguage() {
+		return false;
+	}
 
 
 }

@@ -28,7 +28,7 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
  * This parser knows nothing about language semantics; it uses
  * <code>RSyntaxTextArea</code>'s syntax highlighting tokens to identify
  * curly braces.  By default, it looks for single-char tokens of type
- * {@link Token#SEPARATOR}, with lexemes '<code>{</code>' or '<code>}</code>'.
+ * {@link TokenTypes#SEPARATOR}, with lexemes '<code>{</code>' or '<code>}</code>'.
  * If your {@link org.fife.ui.rsyntaxtextarea.TokenMaker} uses a different token
  * type for curly braces, you should override the {@link #isLeftCurly(Token)} and
  * {@link #isRightCurly(Token)} methods with your own definitions.  In theory,
