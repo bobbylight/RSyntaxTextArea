@@ -1194,7 +1194,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * This method overrides <code>JTextComponent</code>'s
 	 * <code>replaceSelection</code>, so that if <code>textMode</code> is
-	 * {@link #OVERWRITE_MODE}, it actually overwrites.
+	 * {@code OVERWRITE_MODE}, it actually overwrites.
 	 *
 	 * @param text The content to replace the selection with.
 	 */
@@ -1415,7 +1415,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * user toggles between insert and overwrite modes.
 	 *
 	 * @param caret The caret to use.
-	 * @see #setCaretStyle(int, CaretStyle)
+	 * @see #setCaretStyle(TextMode, CaretStyle)
 	 */
 	@Override
 	public void setCaret(Caret caret) {

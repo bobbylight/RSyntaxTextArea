@@ -49,33 +49,10 @@ import org.fife.util.SwingUtils;
 public final class RSyntaxUtilities implements SwingConstants {
 
 	/**
-	 * Integer constant representing a Windows-variant OS.
-	 */
-	public static final int OS_WINDOWS			= 1;
-
-	/**
-	 * Integer constant representing Mac OS X.
-	 */
-	public static final int OS_MAC_OSX			= 2;
-
-	/**
-	 * Integer constant representing Linux.
-	 */
-	public static final int OS_LINUX			= 4;
-
-	/**
-	 * Integer constant representing an "unknown" OS.  99.99% of the
-	 * time, this means some UNIX variant (AIX, SunOS, etc.).
-	 */
-	public static final int OS_OTHER			= 8;
-
-	/**
 	 * Used for the color of hyperlinks when a LookAndFeel uses light text
 	 * against a dark background.
 	 */
 	private static final Color LIGHT_HYPERLINK_FG = new Color(0xd8ffff);
-
-	private static final int OS = getOSImpl();
 
 	//private static final int DIGIT_MASK			= 1;
 	private static final int LETTER_MASK			= 2;
@@ -757,48 +734,6 @@ public final class RSyntaxUtilities implements SwingConstants {
 
 
 	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
-	 *
-	 * @return An integer constant representing the OS.
-	 * @see #isOsCaseSensitive()
-	 */
-	public static int getOS() {
-		return OS;
-	}
-
-
-	/**
-	 * Returns an integer constant representing the OS.  This can be handy for
-	 * special case situations such as Mac OS-X (special application
-	 * registration) or Windows (allow mixed case, etc.).
-	 *
-	 * @return An integer constant representing the OS.
-	 */
-	private static int getOSImpl() {
-		int os = OS_OTHER;
-		String osName = System.getProperty("os.name");
-		if (osName!=null) { // Should always be true.
-			osName = osName.toLowerCase();
-			if (osName.contains("windows")) {
-				os = OS_WINDOWS;
-			}
-			else if (osName.contains("mac os x")) {
-				os = OS_MAC_OSX;
-			}
-			else if (osName.contains("linux")) {
-				os = OS_LINUX;
-			}
-			else {
-				os = OS_OTHER;
-			}
-		}
-		return os;
-	}
-
-
-	/**
 	 * Returns the flags necessary to create a {@link Pattern}.
 	 *
 	 * @param matchCase Whether the pattern should be case-sensitive.
@@ -1179,17 +1114,6 @@ return c.getLineStartOffset(line);
 	 */
 	public static boolean isNonWordChar(Token t) {
 		return t.length()==1 && !RSyntaxUtilities.isLetter(t.charAt(0));
-	}
-
-
-	/**
-	 * Returns whether the OS is case-sensitive.
-	 *
-	 * @return Whether the OS is case-sensitive.
-	 * @see #getOS()
-	 */
-	public static boolean isOsCaseSensitive() {
-		return OS != RSyntaxUtilities.OS_WINDOWS && OS != RSyntaxUtilities.OS_MAC_OSX;
 	}
 
 

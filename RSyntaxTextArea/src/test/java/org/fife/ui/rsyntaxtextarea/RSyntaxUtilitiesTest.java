@@ -342,15 +342,6 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
-	void testIsOSCaseSensitive() {
-		int os = RSyntaxUtilities.getOS();
-		boolean expected = !(os == RSyntaxUtilities.OS_MAC_OSX ||
-			os == RSyntaxUtilities.OS_WINDOWS);
-		Assertions.assertEquals(expected, RSyntaxUtilities.isOsCaseSensitive());
-	}
-
-
-	@Test
 	void testPossiblyRepaintGutter() {
 		RSyntaxTextArea textArea = createTextArea();
 		new RTextScrollPane(textArea);
