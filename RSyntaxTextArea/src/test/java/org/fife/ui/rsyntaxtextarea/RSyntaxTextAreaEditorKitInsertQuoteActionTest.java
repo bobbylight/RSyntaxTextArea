@@ -6,6 +6,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.RecordableTextAction;
+import org.fife.ui.rtextarea.TextMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -111,7 +112,7 @@ class RSyntaxTextAreaEditorKitInsertQuoteActionTest extends AbstractRSyntaxTextA
 		String origContent = "one word here";
 
 		RSyntaxTextArea textArea = createTextArea(SyntaxConstants.SYNTAX_STYLE_JAVA, origContent);
-		textArea.setTextMode(RSyntaxTextArea.OVERWRITE_MODE);
+		textArea.setTextMode(TextMode.OVERWRITE);
 		textArea.setCaretPosition(origContent.indexOf("word"));
 
 		RecordableTextAction a = new RSyntaxTextAreaEditorKit.InsertQuoteAction("test",

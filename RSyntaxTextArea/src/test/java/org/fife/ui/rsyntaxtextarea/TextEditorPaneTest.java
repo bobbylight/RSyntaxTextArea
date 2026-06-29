@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 
 import org.fife.ui.SwingRunnerExtension;
+import org.fife.ui.rtextarea.TextMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,15 +31,15 @@ class TextEditorPaneTest {
 	@Test
 	void testConstructor_zeroArg() {
 		TextEditorPane textArea = new TextEditorPane();
-		Assertions.assertEquals(TextEditorPane.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(TextMode.INSERT, textArea.getTextMode());
 		Assertions.assertFalse(textArea.getLineWrap());
 	}
 
 
 	@Test
 	void testConstructor_oneArg() {
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.OVERWRITE_MODE);
-		Assertions.assertEquals(TextEditorPane.OVERWRITE_MODE, textArea.getTextMode());
+		TextEditorPane textArea = new TextEditorPane(TextMode.OVERWRITE);
+		Assertions.assertEquals(TextMode.OVERWRITE, textArea.getTextMode());
 		Assertions.assertFalse(textArea.getLineWrap());
 	}
 
@@ -47,7 +48,7 @@ class TextEditorPaneTest {
 	void testGetFileName_localFile() throws IOException {
 		File file = createTempFile();
 		FileLocation loc = FileLocation.create(file);
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, loc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, loc);
 		Assertions.assertEquals(file.getName(), textArea.getFileName());
 	}
 
@@ -58,7 +59,7 @@ class TextEditorPaneTest {
 		FileLocation spyLoc = Mockito.spy(loc);
 		InputStream testInputStream = new ByteArrayInputStream(new byte[0]);
 		Mockito.doReturn(testInputStream).when(spyLoc).getInputStream();
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, spyLoc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, spyLoc);
 		Assertions.assertEquals(loc.getFileFullPath(), textArea.getFileFullPath());
 	}
 
@@ -67,7 +68,7 @@ class TextEditorPaneTest {
 	void testGetLastSaveOrLoadTime_localFileThatExists() throws IOException {
 		File tempFile = createTempFile();
 		FileLocation loc = FileLocation.create(tempFile);
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, loc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, loc);
 		Assertions.assertEquals(tempFile.lastModified(), textArea.getLastSaveOrLoadTime());
 	}
 
@@ -84,7 +85,7 @@ class TextEditorPaneTest {
 		FileLocation spyLoc = Mockito.spy(loc);
 		InputStream testInputStream = new ByteArrayInputStream(new byte[0]);
 		Mockito.doReturn(testInputStream).when(spyLoc).getInputStream();
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, spyLoc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, spyLoc);
 		Assertions.assertEquals(TextEditorPane.LAST_MODIFIED_UNKNOWN, textArea.getLastSaveOrLoadTime());
 	}
 
@@ -137,7 +138,7 @@ class TextEditorPaneTest {
 	void testIsLocalAndExists() throws IOException {
 		File file = createTempFile();
 		FileLocation loc = FileLocation.create(file);
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, loc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, loc);
 		Assertions.assertTrue(textArea.isLocalAndExists());
 		Assertions.assertTrue(file.delete());
 		Assertions.assertFalse(textArea.isLocalAndExists());
@@ -154,7 +155,7 @@ class TextEditorPaneTest {
 		// Simulate the file's "last modified" timestamp changing
 		Mockito.doReturn(100L, 150L).when(spyLoc).getActualLastModified();
 
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, loc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, loc);
 		Assertions.assertFalse(textArea.isModifiedOutsideEditor());
 
 		try (PrintWriter w = new PrintWriter(file)) {
@@ -346,7 +347,7 @@ class TextEditorPaneTest {
 		InputStream testInputStream = new ByteArrayInputStream("Hello world".getBytes(StandardCharsets.UTF_8));
 		Mockito.doReturn(testInputStream).when(spyLoc).getInputStream();
 
-		TextEditorPane textArea = new TextEditorPane(TextEditorPane.INSERT_MODE, false, spyLoc);
+		TextEditorPane textArea = new TextEditorPane(TextMode.INSERT, false, spyLoc);
 		Assertions.assertEquals("Hello world", textArea.getText());
 
 		// Modify the text area's contents, then reload

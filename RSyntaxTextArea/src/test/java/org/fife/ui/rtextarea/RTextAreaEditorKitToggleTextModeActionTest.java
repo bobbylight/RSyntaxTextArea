@@ -26,16 +26,16 @@ class RTextAreaEditorKitToggleTextModeActionTest {
 	void testActionPerformedImpl() {
 
 		RTextArea textArea = new RTextArea("line 1\nline 2\nline 3");
-		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(TextMode.INSERT, textArea.getTextMode());
 
 		// Toggle to overwrite
 		ActionEvent e = new ActionEvent(textArea, 0, "command");
 		new RTextAreaEditorKit.ToggleTextModeAction().actionPerformedImpl(e, textArea);
-		Assertions.assertEquals(RTextArea.OVERWRITE_MODE, textArea.getTextMode());
+		Assertions.assertEquals(TextMode.OVERWRITE, textArea.getTextMode());
 
 		// And back to insert
 		new RTextAreaEditorKit.ToggleTextModeAction().actionPerformedImpl(e, textArea);
-		Assertions.assertEquals(RTextArea.INSERT_MODE, textArea.getTextMode());
+		Assertions.assertEquals(TextMode.INSERT, textArea.getTextMode());
 	}
 
 

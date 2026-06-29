@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -65,20 +66,6 @@ import org.fife.ui.rtextarea.Macro.MacroRecord;
 public class RTextArea extends RTextAreaBase implements Printable {
 
 	/**
-	 * Constant representing insert mode.
-	 *
-	 * @see #setCaretStyle(int, CaretStyle)
-	 */
-	public static final int INSERT_MODE = 0;
-
-	/**
-	 * Constant representing overwrite mode.
-	 *
-	 * @see #setCaretStyle(int, CaretStyle)
-	 */
-	public static final int OVERWRITE_MODE = 1;
-
-	/**
 	 * The property fired when the "mark all" color changes.
 	 */
 	public static final String MARK_ALL_COLOR_PROPERTY = "RTA.markAllColor";
@@ -110,10 +97,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	private static final Color DEFAULT_MARK_ALL_COLOR = new Color(0xffc800);
 
-	/**
-	 * The current text mode ({@link #INSERT_MODE} or {@link #OVERWRITE_MODE}).
-	 */
-	private int textMode;
+	private TextMode textMode;
 
 	// All macros are shared across all RTextAreas.
 	private static boolean recordingMacro;		// Whether we're recording a macro.
@@ -166,7 +150,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 	private boolean markAllOnOccurrenceSearches;
 
-	private CaretStyle[] carets; // Index 0=>insert caret, 1=>overwrite.
+	private EnumMap<TextMode, CaretStyle> carets;
 
 	private static final String MSG	= "org.fife.ui.rtextarea.RTextArea";
 
@@ -243,10 +227,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Creates a new <code>RTextArea</code>.
 	 *
-	 * @param textMode Either <code>INSERT_MODE</code> or
-	 *        <code>OVERWRITE_MODE</code>.
+	 * @param textMode The text mode.
 	 */
-	public RTextArea(int textMode) {
+	public RTextArea(TextMode textMode) {
 		setTextMode(textMode);
 	}
 
@@ -819,10 +802,10 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Returns the text mode this editor pane is currently in.
 	 *
-	 * @return Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
-	 * @see #setTextMode(int)
+	 * @return The text mode.
+	 * @see #setTextMode(TextMode)
 	 */
-	public final int getTextMode() {
+	public final TextMode getTextMode() {
 		return textMode;
 	}
 
@@ -898,12 +881,12 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		markAllHighlightPainter = new SmartHighlightPainter(
 										markAllHighlightColor);
 		setMarkAllHighlightColor(markAllHighlightColor);
-		carets = new CaretStyle[2];
-		setCaretStyle(INSERT_MODE, CaretStyle.THICK_VERTICAL_LINE_STYLE);
-		setCaretStyle(OVERWRITE_MODE, CaretStyle.BLOCK_STYLE);
+		carets = new EnumMap<>(TextMode.class);
+		setCaretStyle(TextMode.INSERT, CaretStyle.THICK_VERTICAL_LINE_STYLE);
+		setCaretStyle(TextMode.OVERWRITE, CaretStyle.BLOCK_STYLE);
 		setDragEnabled(!GraphicsEnvironment.isHeadless());
 
-		setTextMode(INSERT_MODE); // Carets array must be created first!
+		setTextMode(TextMode.INSERT); // Carets map must be populated first!
 		setMarkAllOnOccurrenceSearches(true);
 
 		// Fix the odd "Ctrl+H <=> Backspace" Java behavior.
@@ -1237,7 +1220,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		}
 
 		// If the user wants to overwrite text...
-		if (textMode==OVERWRITE_MODE && !"\n".equals(text)) {
+		if (textMode==TextMode.OVERWRITE && !"\n".equals(text)) {
 
 			Caret caret = getCaret();
 			int caretPos = caret.getDot();
@@ -1267,7 +1250,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				ble.printStackTrace();
 			}
 
-		} // End of if (textMode==OVERWRITE_MODE).
+		} // End of if (textMode==TextMode.OVERWRITE).
 
 		// Now, actually do the inserting/replacing.  Our undoManager will
 		// take care of remembering the remove/insert as atomic if we are in
@@ -1439,7 +1422,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		super.setCaret(caret);
 		if (carets!=null && // Called by setUI() before carets is initialized
 				caret instanceof ConfigurableCaret) {
-			((ConfigurableCaret)caret).setStyle(carets[getTextMode()]);
+			((ConfigurableCaret)caret).setStyle(carets.get(getTextMode()));
 		}
 	}
 
@@ -1447,15 +1430,15 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	/**
 	 * Sets the style of caret used when in insert or overwrite mode.
 	 *
-	 * @param mode Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
+	 * @param mode The text mode.
 	 * @param style The style for the caret.
 	 * @see ConfigurableCaret
 	 */
-	public void setCaretStyle(int mode, CaretStyle style) {
+	public void setCaretStyle(TextMode mode, CaretStyle style) {
 		if (style==null) {
 			style = CaretStyle.THICK_VERTICAL_LINE_STYLE;
 		}
-		carets[mode] = style;
+		carets.put(mode, style);
 		if (mode==getTextMode() && getCaret() instanceof ConfigurableCaret) {
 			// Will repaint the caret if necessary.
 			((ConfigurableCaret)getCaret()).setStyle(style);
@@ -1618,19 +1601,15 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * automatically updated to render itself appropriately for the new text
 	 * mode.
 	 *
-	 * @param mode Either {@link #INSERT_MODE} or {@link #OVERWRITE_MODE}.
+	 * @param mode The text mode.
 	 * @see #getTextMode()
 	 */
-	public void setTextMode(int mode) {
-
-		if (mode!=INSERT_MODE && mode!=OVERWRITE_MODE) {
-			mode = INSERT_MODE;
-		}
+	public void setTextMode(TextMode mode) {
 
 		if (textMode != mode) {
 			Caret caret = getCaret();
 			if (caret instanceof ConfigurableCaret) {
-				((ConfigurableCaret)caret).setStyle(carets[mode]);
+				((ConfigurableCaret)caret).setStyle(carets.get(mode));
 			}
 			textMode = mode;
 			// Prevent the caret from blinking while e.g. holding down the
