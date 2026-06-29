@@ -5,7 +5,7 @@
 package org.fife.ui.rtextarea;
 
 import org.fife.ui.SwingRunnerExtension;
-import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.ui.rsyntaxtextarea.OS;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,8 +83,8 @@ class FontUtilTest {
 
 	@Test
 	void testGetDefaultMonospacedFont_linux() {
-		try (MockedStatic<RSyntaxUtilities> utils = Mockito.mockStatic(RSyntaxUtilities.class)) {
-			utils.when(RSyntaxUtilities::getOS).thenReturn(RSyntaxUtilities.OS_LINUX);
+		try (MockedStatic<OS> utils = Mockito.mockStatic(OS.class)) {
+			utils.when(OS::get).thenReturn(OS.LINUX);
 			// Can't verify too precisely since the test can run on any OS
 			Assertions.assertNotNull(FontUtil.getDefaultMonospacedFont());
 		}
@@ -93,8 +93,8 @@ class FontUtilTest {
 
 	@Test
 	void testGetDefaultMonospacedFont_macOS() {
-		try (MockedStatic<RSyntaxUtilities> utils = Mockito.mockStatic(RSyntaxUtilities.class)) {
-			utils.when(RSyntaxUtilities::getOS).thenReturn(RSyntaxUtilities.OS_MAC_OSX);
+		try (MockedStatic<OS> utils = Mockito.mockStatic(OS.class)) {
+			utils.when(OS::get).thenReturn(OS.MAC_OS_X);
 			// Can't verify too precisely since the test can run on any OS
 			Assertions.assertNotNull(FontUtil.getDefaultMonospacedFont());
 		}
@@ -103,8 +103,8 @@ class FontUtilTest {
 
 	@Test
 	void testGetDefaultMonospacedFont_other() {
-		try (MockedStatic<RSyntaxUtilities> utils = Mockito.mockStatic(RSyntaxUtilities.class)) {
-			utils.when(RSyntaxUtilities::getOS).thenReturn(RSyntaxUtilities.OS_OTHER);
+		try (MockedStatic<OS> utils = Mockito.mockStatic(OS.class)) {
+			utils.when(OS::get).thenReturn(OS.OTHER);
 			// Can't verify too precisely since the test can run on any OS
 			Assertions.assertNotNull(FontUtil.getDefaultMonospacedFont());
 		}
@@ -113,8 +113,8 @@ class FontUtilTest {
 
 	@Test
 	void testGetDefaultMonospacedFont_windows() {
-		try (MockedStatic<RSyntaxUtilities> utils = Mockito.mockStatic(RSyntaxUtilities.class)) {
-			utils.when(RSyntaxUtilities::getOS).thenReturn(RSyntaxUtilities.OS_WINDOWS);
+		try (MockedStatic<OS> utils = Mockito.mockStatic(OS.class)) {
+			utils.when(OS::get).thenReturn(OS.WINDOWS);
 			// Can't verify too precisely since the test can run on any OS
 			Assertions.assertNotNull(FontUtil.getDefaultMonospacedFont());
 		}

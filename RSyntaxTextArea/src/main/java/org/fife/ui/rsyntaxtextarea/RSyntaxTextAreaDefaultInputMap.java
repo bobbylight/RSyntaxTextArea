@@ -51,8 +51,8 @@ public class RSyntaxTextAreaDefaultInputMap extends RTADefaultInputMap {
 		put(KeyStroke.getKeyStroke('`'),							RSyntaxTextAreaEditorKit.rstaBacktickAction);
 
 		put(KeyStroke.getKeyStroke('/'), 							RSyntaxTextAreaEditorKit.rstaCloseMarkupTagAction);
-		int os = RSyntaxUtilities.getOS();
-		if (os==RSyntaxUtilities.OS_WINDOWS || os==RSyntaxUtilities.OS_MAC_OSX) {
+		OS os = OS.get();
+		if (os == OS.WINDOWS || os == OS.MAC_OS_X) {
 			// *nix causes trouble with CloseMarkupTagAction and ToggleCommentAction.
 			// It triggers both KEY_PRESSED ctrl+'/' and KEY_TYPED '/' events when the
 			// user presses ctrl+'/', but Windows and OS X do not.  If we try to "move"

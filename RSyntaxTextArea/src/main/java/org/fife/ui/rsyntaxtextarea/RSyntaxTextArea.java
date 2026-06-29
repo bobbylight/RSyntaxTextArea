@@ -1851,7 +1851,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		// repeat for some reason, so this method gets called every 1 second
 		// or so.  We short-circuit that since some ToolTipManagers may do
 		// expensive calculations (e.g. language supports).
-		if (RSyntaxUtilities.getOS()==RSyntaxUtilities.OS_MAC_OSX) {
+		if (OS.get() == OS.MAC_OS_X) {
 			Point newLoc = e.getPoint();
 			if (newLoc!=null && newLoc.equals(cachedTipLoc)) {
 				return cachedTip;

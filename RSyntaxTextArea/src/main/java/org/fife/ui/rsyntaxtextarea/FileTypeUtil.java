@@ -113,7 +113,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 */
 	public static Pattern fileFilterToPattern(String fileFilter) {
 		String pattern = fileFilterToPatternImpl(fileFilter);
-		int flags = RSyntaxUtilities.isOsCaseSensitive() ? 0 : (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+		int flags = OS.get().isCaseSensitive() ? 0 : (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 		return Pattern.compile(pattern, flags);
 	}
 

@@ -4,7 +4,7 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
+import org.fife.ui.rsyntaxtextarea.OS;
 
 import javax.swing.text.StyleContext;
 import java.awt.*;
@@ -14,7 +14,8 @@ import java.util.Map;
 
 
 /**
- * Utility methods related to fonts.
+ * Utility methods related to fonts. Using these methods is preferred over the {@code new Font()} constructor as they
+ * ensure fallback fonts are properly configured for glyphs unsupported by the primary font.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -95,15 +96,15 @@ public final class FontUtil {
 	 */
 	public static Font getDefaultMonospacedFont() {
 
-		int os = RSyntaxUtilities.getOS();
+		OS os = OS.get();
 
-		if (os == RSyntaxUtilities.OS_MAC_OSX) {
+		if (os == OS.MAC_OS_X) {
 			return getDefaultMonospaceFontMacOS();
 		}
-		else if (os == RSyntaxUtilities.OS_WINDOWS) {
+		else if (os == OS.WINDOWS) {
 			return getDefaultMonospaceFontWindows();
 		}
-		else if (os == RSyntaxUtilities.OS_LINUX) {
+		else if (os == OS.LINUX) {
 			return getDefaultMonospaceFontLinux();
 		}
 
