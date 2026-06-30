@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.text.TabExpander;
@@ -30,18 +31,24 @@ public class DefaultTokenPainter implements TokenPainter {
 	/**
 	 * Rectangle used for filling token backgrounds.
 	 */
-	private Rectangle2D.Float bgRect;
+	private final Rectangle2D.Float bgRect;
+
+	/**
+	 * Reusable line shape for painting tab guide dots, avoiding per-dot allocation.
+	 */
+	private final Line2D.Double tabLine;
 
 	/**
 	 * Micro-optimization; buffer used to compute tab width.  If the width is
 	 * correct it's not re-allocated, to prevent lots of very small garbage.
 	 * Only used when painting tab lines.
 	 */
-	private static char[] tabBuf;
+	private char[] tabBuf;
 
 
 	DefaultTokenPainter() {
 		bgRect = new Rectangle2D.Float();
+		tabLine = new Line2D.Double();
 	}
 
 
@@ -114,7 +121,6 @@ public class DefaultTokenPainter implements TokenPainter {
 		g.setColor(color);
 		bgRect.setRect(x,y-fontAscent, width,height);
 		g.fill(bgRect);
-		// g.fillRect((int)x, (int)(y-fontAscent), (int)width, (int)height);
 	}
 
 
@@ -286,7 +292,8 @@ public class DefaultTokenPainter implements TokenPainter {
 			float y1 = y0;
 			float y2 = y0 + host.getLineHeight();
 			while (y1<y2) {
-				SwingUtils.drawLine(g, x0, y1, x0, y1);
+				tabLine.setLine(x0, y1, x0, y1);
+				g.draw(tabLine);
 				y1 += 2;
 			}
 			x0 += tabW;
