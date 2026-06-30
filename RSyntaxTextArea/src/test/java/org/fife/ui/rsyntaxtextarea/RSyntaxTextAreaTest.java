@@ -524,8 +524,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testHyperlinkForeground() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setHyperlinkForeground(Color.pink);
-		Assertions.assertEquals(Color.pink, textArea.getHyperlinkForeground());
+		textArea.setHyperlinkForeground(Color.PINK);
+		Assertions.assertEquals(Color.PINK, textArea.getHyperlinkForeground());
 	}
 
 
@@ -589,8 +589,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	void testMarkOccurrencesColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
 		textArea.setMarkOccurrences(true);
-		textArea.setMarkOccurrencesColor(Color.pink);
-		Assertions.assertEquals(Color.pink, textArea.getMarkOccurrencesColor());
+		textArea.setMarkOccurrencesColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, textArea.getMarkOccurrencesColor());
 	}
 
 
@@ -623,16 +623,16 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testMatchedBracketBGColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setMatchedBracketBGColor(Color.pink);
-		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBGColor());
+		textArea.setMatchedBracketBGColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, textArea.getMatchedBracketBGColor());
 	}
 
 
 	@Test
 	void testMatchedBracketBorderColor() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setMatchedBracketBorderColor(Color.pink);
-		Assertions.assertEquals(Color.pink, textArea.getMatchedBracketBorderColor());
+		textArea.setMatchedBracketBorderColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, textArea.getMatchedBracketBorderColor());
 	}
 
 
@@ -821,8 +821,8 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testTabLineColor() {
 		RSyntaxTextArea textArea = createTextArea();
-		textArea.setTabLineColor(Color.blue);
-		Assertions.assertEquals(Color.blue, textArea.getTabLineColor());
+		textArea.setTabLineColor(Color.BLUE);
+		Assertions.assertEquals(Color.BLUE, textArea.getTabLineColor());
 	}
 
 

@@ -35,7 +35,7 @@ public class DefaultParserNotice implements ParserNotice {
 	private static final Color[] DEFAULT_COLORS = {
 		new Color(255, 0, 128),		// Error
 		new Color(244, 200, 45),	// Warning
-		Color.gray,					// Info
+		Color.GRAY,					// Info
 	};
 
 

@@ -93,8 +93,8 @@ public final class SyntaxSchemeDemo extends JFrame implements ActionListener {
 
       // Change a few things here and there.
       SyntaxScheme scheme = textArea.getSyntaxScheme();
-      scheme.getStyle(TokenTypes.RESERVED_WORD).background = Color.pink;
-      scheme.getStyle(TokenTypes.DATA_TYPE).foreground = Color.blue;
+      scheme.getStyle(TokenTypes.RESERVED_WORD).background = Color.PINK;
+      scheme.getStyle(TokenTypes.DATA_TYPE).foreground = Color.BLUE;
       scheme.getStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE).underline = true;
       scheme.getStyle(TokenTypes.COMMENT_EOL).font = new Font("Georgia",
             Font.ITALIC, 18);

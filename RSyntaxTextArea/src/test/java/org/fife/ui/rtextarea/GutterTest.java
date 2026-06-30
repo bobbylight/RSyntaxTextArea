@@ -173,11 +173,11 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.blue;
+		Color color = Color.BLUE;
 		gutter.setActiveLineRangeColor(color);
 		Assertions.assertEquals(color, gutter.getActiveLineRangeColor());
 
-		color = Color.red;
+		color = Color.RED;
 		gutter.setActiveLineRangeColor(color);
 		Assertions.assertEquals(color, gutter.getActiveLineRangeColor());
 
@@ -255,11 +255,11 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setBorderColor(color);
 		Assertions.assertEquals(color, gutter.getBorderColor());
 
-		color = Color.green;
+		color = Color.GREEN;
 		gutter.setBorderColor(color);
 		Assertions.assertEquals(color, gutter.getBorderColor());
 
@@ -274,7 +274,7 @@ class GutterTest extends AbstractRTextAreaTest {
 
 		Assertions.assertNull(gutter.getCurrentLineNumberColor());
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setCurrentLineNumberColor(color);
 		Assertions.assertEquals(color, gutter.getCurrentLineNumberColor());
 
@@ -297,15 +297,15 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setFoldBackground(color);
 		Assertions.assertEquals(color, gutter.getFoldBackground());
 
-		color = Color.green;
+		color = Color.GREEN;
 		gutter.setFoldBackground(color);
 		Assertions.assertEquals(color, gutter.getFoldBackground());
 
-		// Sets to default - not a public value, but also not Color.green.
+		// Sets to default - not a public value, but also not Color.GREEN.
 		gutter.setFoldBackground(null);
 		Assertions.assertNotNull(gutter.getFoldBackground());
 		Assertions.assertNotEquals(color, gutter.getFoldBackground());
@@ -319,15 +319,15 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setFoldIndicatorArmedForeground(color);
 		Assertions.assertEquals(color, gutter.getFoldIndicatorArmedForeground());
 
-		color = Color.green;
+		color = Color.GREEN;
 		gutter.setFoldIndicatorArmedForeground(color);
 		Assertions.assertEquals(color, gutter.getFoldIndicatorArmedForeground());
 
-		// Sets to default - not a public value, but also not Color.green.
+		// Sets to default - not a public value, but also not Color.GREEN.
 		gutter.setFoldIndicatorArmedForeground(null);
 		Assertions.assertNotNull(gutter.getFoldIndicatorArmedForeground());
 		Assertions.assertNotEquals(color, gutter.getFoldIndicatorArmedForeground());
@@ -341,15 +341,15 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setFoldIndicatorForeground(color);
 		Assertions.assertEquals(color, gutter.getFoldIndicatorForeground());
 
-		color = Color.green;
+		color = Color.GREEN;
 		gutter.setFoldIndicatorForeground(color);
 		Assertions.assertEquals(color, gutter.getFoldIndicatorForeground());
 
-		// Sets to default - not a public value, but also not Color.green.
+		// Sets to default - not a public value, but also not Color.GREEN.
 		gutter.setFoldIndicatorForeground(null);
 		Assertions.assertNotNull(gutter.getFoldIndicatorForeground());
 		Assertions.assertNotEquals(color, gutter.getFoldIndicatorForeground());
@@ -376,11 +376,11 @@ class GutterTest extends AbstractRTextAreaTest {
 		RTextArea textArea = new RTextArea(PLAIN_TEXT);
 		Gutter gutter = new Gutter(textArea);
 
-		Color color = Color.red;
+		Color color = Color.RED;
 		gutter.setLineNumberColor(color);
 		Assertions.assertEquals(color, gutter.getLineNumberColor());
 
-		color = Color.green;
+		color = Color.GREEN;
 		gutter.setLineNumberColor(color);
 		Assertions.assertEquals(color, gutter.getLineNumberColor());
 

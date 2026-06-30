@@ -129,8 +129,8 @@ class BracketMatchingSupportTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		BracketMatchingSupport support = new BracketMatchingSupport(textArea);
 
-		support.setMatchedBracketBGColor(Color.pink);
-		Assertions.assertEquals(Color.pink, support.getMatchedBracketBGColor());
+		support.setMatchedBracketBGColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, support.getMatchedBracketBGColor());
 
 		support.setMatchedBracketBGColor(null);
 		Assertions.assertNull(support.getMatchedBracketBGColor());
@@ -143,8 +143,8 @@ class BracketMatchingSupportTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		BracketMatchingSupport support = new BracketMatchingSupport(textArea);
 
-		support.setMatchedBracketBorderColor(Color.pink);
-		Assertions.assertEquals(Color.pink, support.getMatchedBracketBorderColor());
+		support.setMatchedBracketBorderColor(Color.PINK);
+		Assertions.assertEquals(Color.PINK, support.getMatchedBracketBorderColor());
 
 		support.setMatchedBracketBorderColor(null);
 		Assertions.assertNull(support.getMatchedBracketBorderColor());

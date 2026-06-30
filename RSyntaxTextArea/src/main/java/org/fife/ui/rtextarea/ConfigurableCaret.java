@@ -492,7 +492,7 @@ public class ConfigurableCaret extends DefaultCaret {
 					case BLOCK_STYLE:
 						Color textAreaBg = textArea.getBackground();
 						if (textAreaBg==null) {
-							textAreaBg = Color.white;
+							textAreaBg = Color.WHITE;
 						}
 						g.setXORMode(textAreaBg);
 						// fills x==r.x to x==(r.x+(r.width)-1), inclusive.
@@ -510,7 +510,7 @@ public class ConfigurableCaret extends DefaultCaret {
 					case UNDERLINE_STYLE:
 						textAreaBg = textArea.getBackground();
 						if (textAreaBg==null) {
-							textAreaBg = Color.white;
+							textAreaBg = Color.WHITE;
 						}
 						g2d.setXORMode(textAreaBg);
 						SwingUtils.drawLine(g2d, r.getX(), r.getY()+r.getHeight(),

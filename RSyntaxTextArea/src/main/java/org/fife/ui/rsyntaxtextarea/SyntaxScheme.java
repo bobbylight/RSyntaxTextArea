@@ -449,7 +449,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		styles[COMMENT_MULTILINE]			= new Style(comment, null, commentFont);
 		styles[COMMENT_DOCUMENTATION]		= new Style(docComment, null, commentFont);
 		styles[COMMENT_KEYWORD]			= new Style(new Color(255,152,0), null, commentFont);
-		styles[COMMENT_MARKUP]			= new Style(Color.gray, null, commentFont);
+		styles[COMMENT_MARKUP]			= new Style(Color.GRAY, null, commentFont);
 		styles[RESERVED_WORD]				= new Style(keyword, null, keywordFont);
 		styles[RESERVED_WORD_2]			= new Style(keyword, null, keywordFont);
 		styles[FUNCTION]					= new Style(function);
@@ -463,9 +463,9 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		styles[DATA_TYPE]				= new Style(dataType, null, keywordFont);
 		styles[VARIABLE]					= new Style(variable);
 		styles[REGEX]						= new Style(regex);
-		styles[ANNOTATION]				= new Style(Color.gray);
+		styles[ANNOTATION]				= new Style(Color.GRAY);
 		styles[IDENTIFIER]				= new Style(null);
-		styles[WHITESPACE]				= new Style(Color.gray);
+		styles[WHITESPACE]				= new Style(Color.GRAY);
 		styles[SEPARATOR]				= new Style(Color.RED);
 		styles[OPERATOR]					= new Style(operator);
 		styles[PREPROCESSOR]				= new Style(preprocessor);

@@ -211,7 +211,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 
 	/**
 	 * Returns the color to use for hyperlink-style components.  This method
-	 * will return <code>Color.blue</code> unless it appears that the current
+	 * will return <code>Color.BLUE</code> unless it appears that the current
 	 * LookAndFeel uses light text on a dark background, in which case a
 	 * brighter alternative is returned.
 	 *
@@ -227,7 +227,7 @@ public final class RSyntaxUtilities implements SwingConstants {
 			fg = new JLabel().getForeground();
 		}
 
-		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.blue;
+		return isLightForeground(fg) ? LIGHT_HYPERLINK_FG : Color.BLUE;
 
 	}
 

@@ -3099,7 +3099,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public void setTabLineColor(Color c) {
 
 		if (c==null) {
-			c = Color.gray;
+			c = Color.GRAY;
 		}
 
 		if (!c.equals(tabLineColor)) {
