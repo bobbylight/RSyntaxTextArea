@@ -377,21 +377,23 @@ public final class RSyntaxUtilities implements SwingConstants {
 		}
 		input.setLocation(-1, -1);
 
+		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
+		String bracketPairs = doc.getBracketPairs();
+		if (bracketPairs.isEmpty()) {
+			return input;
+		}
+
 		try {
 
 			// Actually position just BEFORE caret.
 			int caretPosition = textArea.getCaretPosition() - 1;
-			RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 			char bracket = 0;
 
-			// If the caret was at offset 0, we can't check "to its left."
-			String bracketPairs = doc.getBracketPairs();
+			// Check "to the left" of the caret first, if possible.
+			// If that's not a bracket, check "to the right" if possible.
 			if (caretPosition>=0) {
 				bracket = doc.charAt(caretPosition);
 			}
-
-			// Try to match a bracket "to the right" of the caret if one
-			// was not found on the left.
 			int index = bracketPairs.indexOf(bracket);
 			if (index==-1 && caretPosition<doc.getLength()-1) {
 				bracket = doc.charAt(++caretPosition);
