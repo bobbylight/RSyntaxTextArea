@@ -12,6 +12,7 @@ package org.fife.ui.rsyntaxtextarea;
 import org.fife.util.SwingUtils;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import javax.swing.text.TabExpander;
@@ -66,8 +67,11 @@ public class VisibleWhitespaceTokenPainter extends DefaultTokenPainter {
 		Color fg = useSTC ? host.getSelectedTextColor() :
 			host.getForegroundForToken(token);
 		Color bg = selected ? null : host.getBackgroundForToken(token);
-		g.setFont(host.getFontForToken(token));
-		FontMetrics fm = host.getFontMetricsForToken(token);
+		Style style = host.getSyntaxScheme().getStyle(token.getType());
+		Font font = style.font != null ? style.font : host.getFont();
+		FontMetrics fm = style.fontMetrics != null ? style.fontMetrics :
+				host.getFontMetricsForTokenType(token.getType());
+		g.setFont(font);
 
 		int ascent = fm.getAscent();
 		int height = fm.getHeight();
