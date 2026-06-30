@@ -186,10 +186,10 @@ class DefaultParserNoticeTest {
 	@Test
 	void testGetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		notice.setColor(Color.yellow);
-		Assertions.assertEquals(Color.yellow, notice.getColor());
-		notice.setColor(Color.orange);
-		Assertions.assertEquals(Color.orange, notice.getColor());
+		notice.setColor(Color.YELLOW);
+		Assertions.assertEquals(Color.YELLOW, notice.getColor());
+		notice.setColor(Color.ORANGE);
+		Assertions.assertEquals(Color.ORANGE, notice.getColor());
 	}
 
 
@@ -295,10 +295,10 @@ class DefaultParserNoticeTest {
 	@Test
 	void testSetColor() {
 		notice = new DefaultParserNotice(parser, "Foo", 5);
-		notice.setColor(Color.yellow);
-		Assertions.assertEquals(Color.yellow, notice.getColor());
-		notice.setColor(Color.orange);
-		Assertions.assertEquals(Color.orange, notice.getColor());
+		notice.setColor(Color.YELLOW);
+		Assertions.assertEquals(Color.YELLOW, notice.getColor());
+		notice.setColor(Color.ORANGE);
+		Assertions.assertEquals(Color.ORANGE, notice.getColor());
 	}
 
 

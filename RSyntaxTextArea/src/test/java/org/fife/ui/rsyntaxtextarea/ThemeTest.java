@@ -85,40 +85,40 @@ class ThemeTest {
 	private void assertColorsMatchTheme1(RSyntaxTextArea textArea,
 			Gutter gutter) {
 
-		Assertions.assertEquals(Color.red, textArea.getBackground());
-		Assertions.assertEquals(Color.red, textArea.getCaretColor());
+		Assertions.assertEquals(Color.RED, textArea.getBackground());
+		Assertions.assertEquals(Color.RED, textArea.getCaretColor());
 		Assertions.assertFalse(textArea.getUseSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectionColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectedTextColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectionColor());
 		Assertions.assertTrue(textArea.getRoundedSelectionEdges());
-		Assertions.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getCurrentLineHighlightColor());
 		Assertions.assertTrue(textArea.getFadeCurrentLineHighlight());
-		Assertions.assertEquals(Color.red, textArea.getTabLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarginLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assertions.assertEquals(Color.RED, textArea.getTabLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarginLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkAllHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkOccurrencesColor());
 		Assertions.assertTrue(textArea.getPaintMarkOccurrencesBorder());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBGColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBorderColor());
 		Assertions.assertTrue(textArea.getPaintMatchedBracketPair());
 		Assertions.assertTrue(textArea.getAnimateBracketMatching());
-		Assertions.assertEquals(Color.red, textArea.getHyperlinkForeground());
+		Assertions.assertEquals(Color.RED, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
-			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.BLUE : Color.RED;
 			Assertions.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
 		}
 
-		Assertions.assertEquals(Color.red, gutter.getBackground());
-		Assertions.assertEquals(Color.red, gutter.getBorderColor());
-		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assertions.assertEquals(Color.RED, gutter.getBackground());
+		Assertions.assertEquals(Color.RED, gutter.getBorderColor());
+		Assertions.assertEquals(Color.RED, gutter.getActiveLineRangeColor());
 		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
-		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
-		Assertions.assertEquals(Color.blue, gutter.getCurrentLineNumberColor());
+		Assertions.assertEquals(Color.RED, gutter.getLineNumberColor());
+		Assertions.assertEquals(Color.BLUE, gutter.getCurrentLineNumberColor());
 		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
-		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
-		Assertions.assertEquals(Color.red, gutter.getFoldBackground());
-		Assertions.assertEquals(Color.green, gutter.getArmedFoldBackground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldIndicatorForeground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldBackground());
+		Assertions.assertEquals(Color.GREEN, gutter.getArmedFoldBackground());
 
 	}
 
@@ -130,40 +130,40 @@ class ThemeTest {
 	private void assertColorsMatchTheme1_noLineNumbers_currentFG(
 			RSyntaxTextArea textArea, Gutter gutter) {
 
-		Assertions.assertEquals(Color.red, textArea.getBackground());
-		Assertions.assertEquals(Color.red, textArea.getCaretColor());
+		Assertions.assertEquals(Color.RED, textArea.getBackground());
+		Assertions.assertEquals(Color.RED, textArea.getCaretColor());
 		Assertions.assertFalse(textArea.getUseSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectionColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectedTextColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectionColor());
 		Assertions.assertTrue(textArea.getRoundedSelectionEdges());
-		Assertions.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getCurrentLineHighlightColor());
 		Assertions.assertTrue(textArea.getFadeCurrentLineHighlight());
-		Assertions.assertEquals(Color.red, textArea.getTabLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarginLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assertions.assertEquals(Color.RED, textArea.getTabLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarginLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkAllHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkOccurrencesColor());
 		Assertions.assertTrue(textArea.getPaintMarkOccurrencesBorder());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBGColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBorderColor());
 		Assertions.assertTrue(textArea.getPaintMatchedBracketPair());
 		Assertions.assertTrue(textArea.getAnimateBracketMatching());
-		Assertions.assertEquals(Color.red, textArea.getHyperlinkForeground());
+		Assertions.assertEquals(Color.RED, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
-			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.BLUE : Color.RED;
 			Assertions.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
 		}
 
-		Assertions.assertEquals(Color.red, gutter.getBackground());
-		Assertions.assertEquals(Color.red, gutter.getBorderColor());
-		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assertions.assertEquals(Color.RED, gutter.getBackground());
+		Assertions.assertEquals(Color.RED, gutter.getBorderColor());
+		Assertions.assertEquals(Color.RED, gutter.getActiveLineRangeColor());
 		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
-		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
+		Assertions.assertEquals(Color.RED, gutter.getLineNumberColor());
 		Assertions.assertNull(gutter.getCurrentLineNumberColor());
 		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
-		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
-		Assertions.assertEquals(Color.red, gutter.getFoldBackground());
-		Assertions.assertEquals(Color.green, gutter.getArmedFoldBackground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldIndicatorForeground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldBackground());
+		Assertions.assertEquals(Color.GREEN, gutter.getArmedFoldBackground());
 
 	}
 
@@ -175,39 +175,39 @@ class ThemeTest {
 	private void assertColorsMatchTheme1_noArmedBG(RSyntaxTextArea textArea,
 										 Gutter gutter) {
 
-		Assertions.assertEquals(Color.red, textArea.getBackground());
-		Assertions.assertEquals(Color.red, textArea.getCaretColor());
+		Assertions.assertEquals(Color.RED, textArea.getBackground());
+		Assertions.assertEquals(Color.RED, textArea.getCaretColor());
 		Assertions.assertFalse(textArea.getUseSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectedTextColor());
-		Assertions.assertEquals(Color.red, textArea.getSelectionColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectedTextColor());
+		Assertions.assertEquals(Color.RED, textArea.getSelectionColor());
 		Assertions.assertTrue(textArea.getRoundedSelectionEdges());
-		Assertions.assertEquals(Color.red, textArea.getCurrentLineHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getCurrentLineHighlightColor());
 		Assertions.assertTrue(textArea.getFadeCurrentLineHighlight());
-		Assertions.assertEquals(Color.red, textArea.getTabLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarginLineColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkAllHighlightColor());
-		Assertions.assertEquals(Color.red, textArea.getMarkOccurrencesColor());
+		Assertions.assertEquals(Color.RED, textArea.getTabLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarginLineColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkAllHighlightColor());
+		Assertions.assertEquals(Color.RED, textArea.getMarkOccurrencesColor());
 		Assertions.assertTrue(textArea.getPaintMarkOccurrencesBorder());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBGColor());
-		Assertions.assertEquals(Color.red, textArea.getMatchedBracketBorderColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBGColor());
+		Assertions.assertEquals(Color.RED, textArea.getMatchedBracketBorderColor());
 		Assertions.assertTrue(textArea.getPaintMatchedBracketPair());
 		Assertions.assertTrue(textArea.getAnimateBracketMatching());
-		Assertions.assertEquals(Color.red, textArea.getHyperlinkForeground());
+		Assertions.assertEquals(Color.RED, textArea.getHyperlinkForeground());
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
-			Color expected = i==TokenTypes.IDENTIFIER ? Color.blue : Color.red;
+			Color expected = i==TokenTypes.IDENTIFIER ? Color.BLUE : Color.RED;
 			Assertions.assertEquals(expected, textArea.getSecondaryLanguageBackground(i+1));
 		}
 
-		Assertions.assertEquals(Color.red, gutter.getBackground());
-		Assertions.assertEquals(Color.red, gutter.getBorderColor());
-		Assertions.assertEquals(Color.red, gutter.getActiveLineRangeColor());
+		Assertions.assertEquals(Color.RED, gutter.getBackground());
+		Assertions.assertEquals(Color.RED, gutter.getBorderColor());
+		Assertions.assertEquals(Color.RED, gutter.getActiveLineRangeColor());
 		Assertions.assertTrue(gutter.getIconRowHeaderInheritsGutterBackground());
-		Assertions.assertEquals(Color.red, gutter.getLineNumberColor());
-		Assertions.assertEquals(Color.blue, gutter.getCurrentLineNumberColor());
+		Assertions.assertEquals(Color.RED, gutter.getLineNumberColor());
+		Assertions.assertEquals(Color.BLUE, gutter.getCurrentLineNumberColor());
 		//Assertions.assertEquals("Arial",  gutter.getLineNumberFont().getFamily()); // Arial not on CI build servers
 		Assertions.assertEquals(22,        gutter.getLineNumberFont().getSize());
-		Assertions.assertEquals(Color.red, gutter.getFoldIndicatorForeground());
-		Assertions.assertEquals(Color.red, gutter.getFoldBackground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldIndicatorForeground());
+		Assertions.assertEquals(Color.RED, gutter.getFoldBackground());
 		// Armed fold BG defaults to regular fold BG
 		Assertions.assertEquals(gutter.getFoldBackground(), gutter.getArmedFoldBackground());
 
@@ -298,40 +298,40 @@ class ThemeTest {
 
 		Font font = new Font(Font.DIALOG, Font.PLAIN, 13);
 		textArea.setFont(font);
-		textArea.setSyntaxScheme(createSyntaxScheme(font, Color.orange));
-		textArea.setBackground(Color.orange);
-		textArea.setCaretColor(Color.orange);
+		textArea.setSyntaxScheme(createSyntaxScheme(font, Color.ORANGE));
+		textArea.setBackground(Color.ORANGE);
+		textArea.setCaretColor(Color.ORANGE);
 		textArea.setUseSelectedTextColor(true);
-		textArea.setSelectedTextColor(Color.orange);
-		textArea.setSelectionColor(Color.orange);
+		textArea.setSelectedTextColor(Color.ORANGE);
+		textArea.setSelectionColor(Color.ORANGE);
 		textArea.setRoundedSelectionEdges(true);
-		textArea.setCurrentLineHighlightColor(Color.orange);
+		textArea.setCurrentLineHighlightColor(Color.ORANGE);
 		textArea.setFadeCurrentLineHighlight(true);
-		textArea.setTabLineColor(Color.orange);
-		textArea.setMarginLineColor(Color.orange);
-		textArea.setMarkAllHighlightColor(Color.pink); // orange is the default (!)
-		textArea.setMarkOccurrencesColor(Color.orange);
+		textArea.setTabLineColor(Color.ORANGE);
+		textArea.setMarginLineColor(Color.ORANGE);
+		textArea.setMarkAllHighlightColor(Color.PINK); // orange is the default (!)
+		textArea.setMarkOccurrencesColor(Color.ORANGE);
 		textArea.setPaintMarkOccurrencesBorder(!textArea.getPaintMarkOccurrencesBorder());
-		textArea.setMatchedBracketBGColor(Color.orange);
-		textArea.setMatchedBracketBorderColor(Color.orange);
+		textArea.setMatchedBracketBGColor(Color.ORANGE);
+		textArea.setMatchedBracketBorderColor(Color.ORANGE);
 		textArea.setPaintMatchedBracketPair(!textArea.getPaintMatchedBracketPair());
 		textArea.setAnimateBracketMatching(!textArea.getAnimateBracketMatching());
-		textArea.setHyperlinkForeground(Color.orange);
+		textArea.setHyperlinkForeground(Color.ORANGE);
 		for (int i=0; i<textArea.getSecondaryLanguageCount(); i++) {
-			textArea.setSecondaryLanguageBackground(i+1, Color.orange);
+			textArea.setSecondaryLanguageBackground(i+1, Color.ORANGE);
 		}
 
-		gutter.setBackground(Color.orange);
-		gutter.setBorderColor(Color.orange);
-		gutter.setActiveLineRangeColor(Color.orange);
+		gutter.setBackground(Color.ORANGE);
+		gutter.setBorderColor(Color.ORANGE);
+		gutter.setActiveLineRangeColor(Color.ORANGE);
 		gutter.setIconRowHeaderInheritsGutterBackground(!gutter.getIconRowHeaderInheritsGutterBackground());
-		gutter.setLineNumberColor(Color.orange);
-		gutter.setCurrentLineNumberColor(Color.orange);
+		gutter.setLineNumberColor(Color.ORANGE);
+		gutter.setCurrentLineNumberColor(Color.ORANGE);
 		gutter.setLineNumberFont(font);
-		gutter.setFoldIndicatorArmedForeground(Color.orange);
-		gutter.setFoldIndicatorForeground(Color.orange);
-		gutter.setFoldBackground(Color.orange);
-		gutter.setArmedFoldBackground(Color.orange);
+		gutter.setFoldIndicatorArmedForeground(Color.ORANGE);
+		gutter.setFoldIndicatorForeground(Color.ORANGE);
+		gutter.setFoldBackground(Color.ORANGE);
+		gutter.setArmedFoldBackground(Color.ORANGE);
 
 	}
 

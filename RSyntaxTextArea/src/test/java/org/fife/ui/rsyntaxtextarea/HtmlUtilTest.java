@@ -86,12 +86,12 @@ class HtmlUtilTest {
 
 	@Test
 	void testGetHexString_allGreaterThan16() {
-		Assertions.assertEquals("#ffffff", HtmlUtil.getHexString(Color.white));
+		Assertions.assertEquals("#ffffff", HtmlUtil.getHexString(Color.WHITE));
 	}
 
 	@Test
 	void testGetHexString_allLessThan16() {
-		Assertions.assertEquals("#000000", HtmlUtil.getHexString(Color.black));
+		Assertions.assertEquals("#000000", HtmlUtil.getHexString(Color.BLACK));
 	}
 
 	@Test

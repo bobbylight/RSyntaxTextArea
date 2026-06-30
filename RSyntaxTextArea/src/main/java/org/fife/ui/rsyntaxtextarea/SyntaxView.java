@@ -752,8 +752,9 @@ public class SyntaxView extends View implements TabExpander,
 
 		TokenPainter painter = host.getTokenPainter();
 		int line = linesAbove;
+		int clipBottom = (int)(clip.getY() + clip.getHeight()) + ascent;
 		//int count = 0;
-		while (y<clip.getY()+clip.getHeight() +ascent && line<lineCount) {
+		while (y < clipBottom && line < lineCount) {
 
 			Fold fold = fm.getFoldForLine(line);
 			boolean isFoldCollapsed = fold != null && fold.isCollapsed();
@@ -1002,7 +1003,7 @@ public class SyntaxView extends View implements TabExpander,
 
 			Element map = doc.getDefaultRootElement();
 			lineHeight = host.getLineHeight();
-			int lineIndex = Math.abs((y - alloc.y) / lineHeight);//metrics.getHeight() );
+			int lineIndex = (y - alloc.y) / lineHeight;//metrics.getHeight() );
 			FoldManager fm = host.getFoldManager();
 			//System.out.print("--- " + lineIndex);
 			lineIndex += fm.getHiddenLineCountAbove(lineIndex, true);
