@@ -9,7 +9,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.List;
 
@@ -22,24 +22,12 @@ import java.util.List;
  */
 class HtmlFoldParserTest {
 
-	private static final String[] SUPPORTED_LANGUAGES = {
-		SyntaxConstants.SYNTAX_STYLE_HTML,
-		SyntaxConstants.SYNTAX_STYLE_PHP,
-		SyntaxConstants.SYNTAX_STYLE_JSP,
-	};
-
-	@Test
-	void testConstructor_invalidLanguageIndex_tooSmall() {
-		Assertions.assertThrows(IllegalArgumentException.class, () ->
-			new HtmlFoldParser(-42)
-		);
-	}
-
-	@Test
-	void testConstructor_invalidLanguageIndex_tooLarge() {
-		Assertions.assertThrows(IllegalArgumentException.class, () ->
-			new HtmlFoldParser(42)
-		);
+	private static String syntaxStyle(HtmlFoldParser.Language language) {
+		return switch (language) {
+			case HTML -> SyntaxConstants.SYNTAX_STYLE_HTML;
+			case PHP -> SyntaxConstants.SYNTAX_STYLE_PHP;
+			case JSP -> SyntaxConstants.SYNTAX_STYLE_JSP;
+		};
 	}
 
 	@Test
@@ -52,7 +40,7 @@ class HtmlFoldParserTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(language);
 
-		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP);
+		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.Language.PHP);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -75,7 +63,7 @@ class HtmlFoldParserTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(language);
 
-		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP);
+		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.Language.PHP);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -96,7 +84,7 @@ class HtmlFoldParserTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(language);
 
-		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.LANGUAGE_PHP);
+		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.Language.PHP);
 		List<Fold> folds = parser.getFolds(textArea);
 		Assertions.assertEquals(0, folds.size());
 	}
@@ -111,7 +99,7 @@ class HtmlFoldParserTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(language);
 
-		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.LANGUAGE_JSP);
+		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.Language.JSP);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -132,28 +120,23 @@ class HtmlFoldParserTest {
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
 		textArea.setSyntaxEditingStyle(language);
 
-		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.LANGUAGE_JSP);
+		HtmlFoldParser parser = new HtmlFoldParser(HtmlFoldParser.Language.JSP);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(0, folds.size());
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_comments_oneLine(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_comments_oneLine(HtmlFoldParser.Language language) {
 
 		String code = "<!-- start\n" +
 			"end -->\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -166,22 +149,17 @@ class HtmlFoldParserTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_comments_twoLines(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_comments_twoLines(HtmlFoldParser.Language language) {
 
 		String code = "<!-- start\n" +
 			"a second line\n" +
 			"end -->\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -194,40 +172,30 @@ class HtmlFoldParserTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_comments_onOneLineIsNotAFold(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_comments_onOneLineIsNotAFold(HtmlFoldParser.Language language) {
 
 		String code = "<!-- all on one line -->\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 		Assertions.assertEquals(0, folds.size());
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_tags_oneLine(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_tags_oneLine(HtmlFoldParser.Language language) {
 
 		String code = "<body>\n" +
 			"</body>\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -240,22 +208,17 @@ class HtmlFoldParserTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_tags_twoLines(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_tags_twoLines(HtmlFoldParser.Language language) {
 
 		String code = "<body>\n" +
 			"this is content\n" +
 			"</body>\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 
 		Assertions.assertEquals(1, folds.size());
@@ -268,20 +231,15 @@ class HtmlFoldParserTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {
-		HtmlFoldParser.LANGUAGE_HTML,
-		HtmlFoldParser.LANGUAGE_PHP,
-		HtmlFoldParser.LANGUAGE_JSP
-	})
-	void testGetFolds_tags_onOneLineIsNotAFold(int languageIndex) {
+	@EnumSource(HtmlFoldParser.Language.class)
+	void testGetFolds_tags_onOneLineIsNotAFold(HtmlFoldParser.Language language) {
 
 		String code = "<body>foo</body>\n";
 
-		String language = SUPPORTED_LANGUAGES[languageIndex + 1];
 		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
-		textArea.setSyntaxEditingStyle(language);
+		textArea.setSyntaxEditingStyle(syntaxStyle(language));
 
-		HtmlFoldParser parser = new HtmlFoldParser(languageIndex);
+		HtmlFoldParser parser = new HtmlFoldParser(language);
 		List<Fold> folds = parser.getFolds(textArea);
 		Assertions.assertEquals(0, folds.size());
 	}

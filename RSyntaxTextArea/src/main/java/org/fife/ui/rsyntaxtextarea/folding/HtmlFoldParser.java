@@ -34,24 +34,28 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes;
 public class HtmlFoldParser implements FoldParser {
 
 	/**
-	 * Constant denoting we're folding HTML.
+	 * The markup language being folded.
 	 */
-	public static final int LANGUAGE_HTML	= -1;
+	public enum Language {
 
-	/**
-	 * Constant denoting we're folding PHP.
-	 */
-	public static final int LANGUAGE_PHP	= 0;
+		HTML(null, null),
+		PHP("<?".toCharArray(), "?>".toCharArray()),
+		JSP("<%".toCharArray(), "%>".toCharArray());
 
-	/**
-	 * Constant denoting we're folding JSP.
-	 */
-	public static final int LANGUAGE_JSP	= 1;
+		final char[] regionStart;
+		final char[] regionEnd;
+
+		Language(char[] regionStart, char[] regionEnd) {
+			this.regionStart = regionStart;
+			this.regionEnd = regionEnd;
+		}
+
+	}
 
 	/**
 	 * The language we're folding.
 	 */
-	private final int language;
+	private final Language language;
 
 	/**
 	 * The set of tags we allow to be folded.  These are tags that must have
@@ -63,16 +67,6 @@ public class HtmlFoldParser implements FoldParser {
 	//private static final char[] MARKUP_SHORT_TAG_END = "/>".toCharArray();
 	private static final char[] MLC_START = "<!--".toCharArray();
 	private static final char[] MLC_END   = "-->".toCharArray();
-
-	private static final char[] PHP_START = "<?".toCharArray(); // <? and <?php
-	private static final char[] PHP_END = "?>".toCharArray();
-
-	// Scriptlets, declarations, and expressions all start the same way.
-	private static final char[] JSP_START = "<%".toCharArray();
-	private static final char[] JSP_END = "%>".toCharArray();
-
-	private static final char[][] LANG_START = { PHP_START, JSP_START };
-	private static final char[][] LANG_END   = { PHP_END, JSP_END };
 
 	private static final char[] JSP_COMMENT_START = "<%--".toCharArray();
 	private static final char[] JSP_COMMENT_END   = "--%>".toCharArray();
@@ -102,12 +96,9 @@ public class HtmlFoldParser implements FoldParser {
 	/**
 	 * Constructor.
 	 *
-	 * @param language The language to fold, such as {@link #LANGUAGE_PHP}.
+	 * @param language The language to fold, such as {@link Language#PHP}.
 	 */
-	public HtmlFoldParser(int language) {
-		if (language<LANGUAGE_HTML || language>LANGUAGE_JSP) {
-			throw new IllegalArgumentException("Invalid language: " + language);
-		}
+	public HtmlFoldParser(Language language) {
 		this.language = language;
 	}
 
@@ -134,10 +125,10 @@ public class HtmlFoldParser implements FoldParser {
 
 					// If we're folding PHP.  Note that PHP folding can only be
 					// "one level deep," so our logic here is simple.
-					if (language>=0 && t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
+					if (language != Language.HTML && t.getType()==TokenTypes.MARKUP_TAG_DELIMITER) {
 
 						// <?, <?php, <%, <%!, ...
-						if (t.startsWith(LANG_START[language])) {
+						if (t.startsWith(language.regionStart)) {
 							if (currentFold==null) {
 								currentFold = new Fold(FoldType.CODE, textArea, t.getOffset());
 								folds.add(currentFold);
@@ -149,7 +140,7 @@ public class HtmlFoldParser implements FoldParser {
 						}
 
 						// ?> or %>
-						else if (t.startsWith(LANG_END[language]) && currentFold != null) {
+						else if (t.startsWith(language.regionEnd) && currentFold != null) {
 							int phpEnd = t.getEndOffset() - 1;
 							currentFold.setEndOffset(phpEnd);
 							Fold parentFold = currentFold.getParent();
@@ -218,7 +209,7 @@ public class HtmlFoldParser implements FoldParser {
 							}
 
 							// Starting a JSP comment that ends on a later line...
-							else if (language==LANGUAGE_JSP &&
+							else if (language == Language.JSP &&
 									t.startsWith(JSP_COMMENT_START) &&
 									!t.endsWith(JSP_COMMENT_END)) {
 								if (currentFold==null) {
