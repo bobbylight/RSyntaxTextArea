@@ -9,6 +9,7 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -134,8 +135,11 @@ public class DefaultTokenPainter implements TokenPainter {
 		Color fg = useSTC ? host.getSelectedTextColor() :
 			host.getForegroundForToken(token);
 		Color bg = selected ? null : host.getBackgroundForToken(token);
-		g.setFont(host.getFontForToken(token));
-		FontMetrics fm = host.getFontMetricsForToken(token);
+		Style style = host.getSyntaxScheme().getStyle(token.getType());
+		Font font = style.font != null ? style.font : host.getFont();
+		FontMetrics fm = style.fontMetrics != null ? style.fontMetrics :
+				host.getFontMetricsForTokenType(token.getType());
+		g.setFont(font);
 
 		for (int i=textOffs; i<end; i++) {
 			switch (text[i]) {
