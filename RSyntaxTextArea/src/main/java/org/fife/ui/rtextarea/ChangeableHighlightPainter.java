@@ -18,6 +18,7 @@ import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.SystemColor;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -213,8 +214,8 @@ public class ChangeableHighlightPainter
 
 			// Determine locations.
 			TextUI mapper = c.getUI();
-			Rectangle p0 = mapper.modelToView(c, offs0);
-			Rectangle p1 = mapper.modelToView(c, offs1);
+			Rectangle2D p0 = mapper.modelToView2D(c, offs0, Position.Bias.Forward);
+			Rectangle2D p1 = mapper.modelToView2D(c, offs1, Position.Bias.Forward);
 			Paint paint = getPaint();
 			if (paint==null) {
 				g2d.setColor(c.getSelectionColor());
@@ -224,24 +225,26 @@ public class ChangeableHighlightPainter
 			}
 
 			// Entire highlight is on one line.
-			if (p0.y == p1.y) {
+			if (p0.getY() == p1.getY()) {
 				// Standard Swing views return 0 width for chars, but ours
 				// returns the char's width.  Set this to 0 here since p1 is
 				// technically an exclusive boundary.
-				p1.width = 0;
-				Rectangle r = p0.union(p1);
-				g2d.fillRect(r.x, r.y, r.width, r.height);
+				p1.setRect(p1.getX(), p1.getY(), 0, p1.getHeight());
+				Rectangle2D r = p0.createUnion(p1);
+				g2d.fill(r);
 			}
 
 			// Highlight spans lines.
 			else {
-				int p0ToMarginWidth = alloc.x + alloc.width - p0.x;
-				g2d.fillRect(p0.x, p0.y, p0ToMarginWidth, p0.height);
-				if ((p0.y + p0.height) != p1.y) {
-					g2d.fillRect(alloc.x, p0.y + p0.height, alloc.width,
-			   					p1.y - (p0.y + p0.height));
+				double p0ToMarginWidth = alloc.x + alloc.width - p0.getX();
+				g2d.fill(new Rectangle2D.Double(p0.getX(), p0.getY(),
+								p0ToMarginWidth, p0.getHeight()));
+				if ((p0.getY() + p0.getHeight()) != p1.getY()) {
+					g2d.fill(new Rectangle2D.Double(alloc.x, p0.getY() + p0.getHeight(),
+									alloc.width, p1.getY() - (p0.getY() + p0.getHeight())));
 				}
-				g2d.fillRect(alloc.x, p1.y, (p1.x - alloc.x), p1.height);
+				g2d.fill(new Rectangle2D.Double(alloc.x, p1.getY(),
+								(p1.getX() - alloc.x), p1.getHeight()));
 			}
 
 		} catch (BadLocationException e) {
