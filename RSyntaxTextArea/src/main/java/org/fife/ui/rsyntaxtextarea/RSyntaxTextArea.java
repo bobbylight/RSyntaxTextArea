@@ -126,6 +126,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	public static final String CLOSE_CURLY_BRACES_PROPERTY				= "RSTA.closeCurlyBraces";
 	public static final String CLOSE_MARKUP_TAGS_PROPERTY				= "RSTA.closeMarkupTags";
 	public static final String CODE_FOLDING_PROPERTY					= "RSTA.codeFolding";
+	public static final String EOL_MARKER_PROPERTY						= "RSTA.eolMarker";
 	public static final String EOL_VISIBLE_PROPERTY						= "RSTA.eolMarkersVisible";
 	public static final String FOCUSABLE_TIPS_PROPERTY					= "RSTA.focusableTips";
 	public static final String FRACTIONAL_FONTMETRICS_PROPERTY			= "RSTA.fractionalFontMetrics";
@@ -200,6 +201,9 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 	/** Whether EOL markers should be visible at the end of each line. */
 	private boolean eolMarkersVisible;
+
+	/** The marker rendered at the end of each line when EOL markers are visible. */
+	private String eolMarker = "\u21b2";
 
 	/** Whether tab lines are enabled. */
 	private boolean paintTabLines;
@@ -1093,6 +1097,19 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	 */
 	public boolean getEOLMarkersVisible() {
 		return eolMarkersVisible;
+	}
+
+
+	/**
+	 * Returns the marker rendered at the end of each line when EOL markers
+	 * are visible.  The default value is {@code "\u21b2"}.
+	 *
+	 * @return The EOL marker.
+	 * @see #setEOLMarker(String)
+	 * @see #getEOLMarkersVisible()
+	 */
+	public String getEOLMarker() {
+		return eolMarker;
 	}
 
 
@@ -2487,6 +2504,29 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 			eolMarkersVisible = visible;
 			repaint();
 			firePropertyChange(EOL_VISIBLE_PROPERTY, !visible, visible);
+		}
+	}
+
+
+	/**
+	 * Sets the marker rendered at the end of each line when EOL markers are
+	 * visible.  This method fires a property change of type
+	 * {@link #EOL_MARKER_PROPERTY}.
+	 *
+	 * @param marker The new EOL marker.  This cannot be {@code null} or
+	 *        empty.
+	 * @see #getEOLMarker()
+	 * @see #setEOLMarkersVisible(boolean)
+	 */
+	public void setEOLMarker(String marker) {
+		if (marker == null || marker.isEmpty()) {
+			throw new IllegalArgumentException("marker cannot be null or empty");
+		}
+		if (!marker.equals(eolMarker)) {
+			String old = eolMarker;
+			eolMarker = marker;
+			repaint();
+			firePropertyChange(EOL_MARKER_PROPERTY, old, marker);
 		}
 	}
 

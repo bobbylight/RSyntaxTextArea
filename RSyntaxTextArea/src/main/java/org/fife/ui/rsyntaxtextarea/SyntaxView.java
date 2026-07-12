@@ -80,11 +80,6 @@ public class SyntaxView extends View implements TabExpander,
 	 */
 	private TokenImpl tempToken;
 
-	/**
-	 * Used as the default rendered EOL marker.
-	 */
-	static final String EOL_MARKER = "\u00B6";
-
 
 	/**
 	 * Constructs a new <code>SyntaxView</code> wrapped around an element.
@@ -176,7 +171,7 @@ public class SyntaxView extends View implements TabExpander,
 	static void drawEOLMarker(RSyntaxTextArea textArea, Graphics2D g, float x, float y) {
 		g.setColor(textArea.getForegroundForTokenType(TokenTypes.WHITESPACE));
 		g.setFont(textArea.getFontForTokenType(TokenTypes.WHITESPACE));
-		g.drawString(EOL_MARKER, x, y);
+		g.drawString(textArea.getEOLMarker(), x, y);
 	}
 
 
@@ -342,7 +337,7 @@ public class SyntaxView extends View implements TabExpander,
 	 * @return The width of the EOL marker.
 	 */
 	private float getEOLMarkerWidth(RSyntaxTextArea textArea) {
-		return metrics.stringWidth(EOL_MARKER);
+		return metrics.stringWidth(textArea.getEOLMarker());
 	}
 
 
