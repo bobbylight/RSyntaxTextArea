@@ -13,7 +13,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 
 
 /**
@@ -50,8 +49,7 @@ class StyledTextTransferable implements Transferable {
 	private static final DataFlavor[] FLAVORS = {
 		DataFlavor.fragmentHtmlFlavor,
 		new DataFlavor("text/rtf", "RTF"),
-		DataFlavor.stringFlavor,
-		DataFlavor.plainTextFlavor // deprecated
+		DataFlavor.stringFlavor
 	};
 
 
@@ -82,10 +80,6 @@ class StyledTextTransferable implements Transferable {
 
 		else if (flavor.equals(FLAVORS[2])) { // stringFlavor
 			return plain;
-		}
-
-		else if (flavor.equals(FLAVORS[3])) { // plainTextFlavor (deprecated)
-			return new StringReader(plain);
 		}
 
 		throw new UnsupportedFlavorException(flavor);
