@@ -372,6 +372,37 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetEOLMarker_default() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Assertions.assertEquals("\u21b2", textArea.getEOLMarker());
+	}
+
+
+	@Test
+	void testSetEOLMarker() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		textArea.setEOLMarker("\u263a");
+		Assertions.assertEquals("\u263a", textArea.getEOLMarker());
+	}
+
+
+	@Test
+	void testSetEOLMarker_null() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> textArea.setEOLMarker(null));
+	}
+
+
+	@Test
+	void testSetEOLMarker_empty() {
+		RSyntaxTextArea textArea = new RSyntaxTextArea();
+		Assertions.assertThrows(IllegalArgumentException.class,
+			() -> textArea.setEOLMarker(""));
+	}
+
+
+	@Test
 	void testGetSetRightHandSideCorrection() {
 		RSyntaxTextArea textArea = createTextArea();
 		Assertions.assertEquals(0, textArea.getRightHandSideCorrection());

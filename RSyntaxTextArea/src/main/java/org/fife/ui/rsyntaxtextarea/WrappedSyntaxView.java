@@ -40,8 +40,6 @@ import org.fife.ui.rsyntaxtextarea.folding.FoldManager;
 import org.fife.ui.rtextarea.Gutter;
 import org.fife.util.SwingUtils;
 
-import static org.fife.ui.rsyntaxtextarea.SyntaxView.EOL_MARKER;
-
 
 /**
  * The view used by {@link RSyntaxTextArea} when word wrap is enabled.
@@ -492,7 +490,10 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 * @return The width of the EOL marker.
 	 */
 	private float getEOLMarkerWidth(RSyntaxTextArea textArea) {
-		return metrics.stringWidth(EOL_MARKER);
+		if (textArea == null) {
+			textArea = (RSyntaxTextArea)getContainer();
+		}
+		return metrics.stringWidth(textArea.getEOLMarker());
 	}
 
 
