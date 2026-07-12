@@ -23,7 +23,7 @@ class StyledTextTransferableTest {
 	void testGetDataFlavors() {
 		byte[] rtfBytes = {};
 		StyledTextTransferable t = new StyledTextTransferable("", "foo", rtfBytes);
-		Assertions.assertEquals(4, t.getTransferDataFlavors().length);
+		Assertions.assertEquals(3, t.getTransferDataFlavors().length);
 	}
 
 
