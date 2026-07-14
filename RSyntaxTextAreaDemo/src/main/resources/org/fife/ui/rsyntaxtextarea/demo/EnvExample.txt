@@ -1,0 +1,18 @@
+# Application Settings
+PORT=8080
+NODE_ENV=development
+
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=super_secret_password_123
+DB_NAME=my_app_db
+
+# Third-Party API Keys
+STRIPE_API_KEY=sk_test_51Nx...
+TWILIO_AUTH_TOKEN=abc123xyz...
+
+# Feature Flags
+ENABLE_MAINTENANCE_MODE=false     # trailing comment
+STRING_VALUE="this is a string"
+SINGLE_QUOTE_STRING_VALUE='this is also a string'

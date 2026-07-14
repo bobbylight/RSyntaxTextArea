@@ -125,6 +125,12 @@ public interface SyntaxConstants {
 
 
 	/**
+	 * Style for highlighting .env files.
+	 */
+	String SYNTAX_STYLE_ENV		= "text/env";
+
+
+	/**
 	 * Style for highlighting Fortran.
 	 */
 	String SYNTAX_STYLE_FORTRAN			= "text/fortran";

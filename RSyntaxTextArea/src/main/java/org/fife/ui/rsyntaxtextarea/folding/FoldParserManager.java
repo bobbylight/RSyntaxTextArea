@@ -79,6 +79,7 @@ public final class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_CSS,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_D,					new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_DART,				new CurlyFoldParser());
+		map.put(SYNTAX_STYLE_ENV,				new LinesWithContentFoldParser());
 		map.put(SYNTAX_STYLE_GO,				new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_GROOVY,			new CurlyFoldParser());
 		map.put(SYNTAX_STYLE_HTACCESS,			new XmlFoldParser());
