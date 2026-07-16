@@ -494,7 +494,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					languageIndex = LANG_INDEX_CSS;
 				}
 				else {
-					state = TokenTypes.NULL;
+					state = YYINITIAL;
 				}
 				break;
 		}

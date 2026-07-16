@@ -311,14 +311,14 @@ public class PropertiesFileTokenMaker extends AbstractJFlexTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = TokenTypes.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = VALUE;
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

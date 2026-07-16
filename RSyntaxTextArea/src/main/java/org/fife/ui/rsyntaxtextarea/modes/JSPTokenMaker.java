@@ -7054,7 +7054,7 @@ public class JSPTokenMaker extends AbstractMarkupTokenMaker {
 					}
 				}
 				else {
-					state = TokenTypes.NULL;
+					state = YYINITIAL;
 				}
 				break;
 		}

@@ -1174,7 +1174,7 @@ public class DelphiTokenMaker extends AbstractJFlexTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

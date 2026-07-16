@@ -546,7 +546,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					}
 				}
 				else {
-					state = TokenTypes.NULL;
+					state = YYINITIAL;
 				}
 				break;
 		}
