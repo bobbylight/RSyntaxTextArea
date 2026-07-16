@@ -178,6 +178,20 @@ class RTextAreaTest {
 
 
 	@Test
+	void testGetUndoManager() {
+		final RUndoManager[] undoManager = new RUndoManager[1];
+		RTextArea textArea = new RTextArea() {
+			@Override
+			protected RUndoManager createUndoManager() {
+				RUndoManager um = new RUndoManager(this);
+				return undoManager[0] = um;
+			}
+		};
+		Assertions.assertEquals(undoManager[0], textArea.getUndoManager());
+	}
+
+
+	@Test
 	void testMarkAllOnOccurrenceSearches() {
 		RTextArea textArea = new RTextArea();
 		Assertions.assertTrue(textArea.getMarkAllOnOccurrenceSearches());

@@ -845,6 +845,17 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
+	 * Returns the undo manager used by this text area.
+	 *
+	 * @return The undo manager.
+	 * @see #createUndoManager()
+	 */
+	public RUndoManager getUndoManager() {
+		return undoManager;
+	}
+
+
+	/**
 	 * Does the actual dirty-work of replacing the selected text in this
 	 * text area (i.e., in its document).  This method provides a hook for
 	 * subclasses to handle this in a different way.
