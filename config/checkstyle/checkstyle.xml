@@ -244,6 +244,9 @@
         <!--<module name="MagicNumber"/> Unfortunately, too much noise -->
         <!--<module name="MissingSwitchDefault"/>-->
         <module name="MultipleVariableDeclarations"/>
+        <module name="OverloadMethodsDeclarationOrder">
+            <property name="orderByIncreasingParameterCount" value="true" />
+        </module>
         <module name="PatternVariableAssignment"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
