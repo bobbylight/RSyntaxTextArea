@@ -6,6 +6,7 @@ package org.fife.ui.rtextarea;
 
 import org.fife.ui.rsyntaxtextarea.OS;
 
+import javax.swing.*;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -21,6 +22,15 @@ import java.util.Map;
  * @version 1.0
  */
 public final class FontUtil {
+
+	/**
+	 * If a KV pair with this key is defined in the UI defaults as a Font,
+	 * that font will be returned by {@link #getDefaultMonospacedFont()}. Note
+	 * that if you use this method, you should consider using {@link #createFont(String, int, int)}
+	 * to ensure it has a fallback for glyphs it doesn't support.
+	 */
+	public static final String DEFAULT_FONT_KEY = "org.fife.ui.rtextarea.defaultFont";
+
 
 	/**
 	 * Private constructor to prevent instantiation.
@@ -95,6 +105,11 @@ public final class FontUtil {
 	 * @return The default font.
 	 */
 	public static Font getDefaultMonospacedFont() {
+
+		Font font = UIManager.getFont(DEFAULT_FONT_KEY);
+		if (font != null) {
+			return font;
+		}
 
 		OS os = OS.get();
 
