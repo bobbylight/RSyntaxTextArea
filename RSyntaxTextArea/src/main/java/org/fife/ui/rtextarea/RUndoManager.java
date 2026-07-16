@@ -43,6 +43,7 @@ public class RUndoManager extends UndoManager {
 	private int lastOffset;
 	private String cantUndoText;
 	private String cantRedoText;
+	private boolean enabled;
 
 	private int internalAtomicEditDepth;
 
@@ -56,6 +57,7 @@ public class RUndoManager extends UndoManager {
 	 */
 	public RUndoManager(RTextArea textArea) {
 		this.textArea = textArea;
+		this.enabled = true;
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 		cantUndoText = msg.getString("Action.CantUndo.Name");
 		cantRedoText = msg.getString("Action.CantRedo.Name");
@@ -72,6 +74,9 @@ public class RUndoManager extends UndoManager {
 	 * @see #endInternalAtomicEdit()
 	 */
 	public void beginInternalAtomicEdit() {
+		if (!enabled) {
+			return;
+		}
 		if (++internalAtomicEditDepth==1) {
 			if (compoundEdit!=null) {
 				compoundEdit.end();
@@ -87,11 +92,56 @@ public class RUndoManager extends UndoManager {
 	 * @see #beginInternalAtomicEdit()
 	 */
 	public void endInternalAtomicEdit() {
+		if (!enabled) {
+			return;
+		}
 		if (internalAtomicEditDepth>0 && --internalAtomicEditDepth==0) {
 			addEdit(compoundEdit);
 			compoundEdit.end();
 			compoundEdit = null;
 			updateActions();	// Needed to show the new display name.
+		}
+	}
+
+
+	/**
+	 * Returns whether this undo manager is recording undoable edits.
+	 *
+	 * @return Whether this undo manager is enabled.
+	 * @see #setEnabled(boolean)
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+
+	/**
+	 * Sets whether this undo manager records undoable edits.  Applications
+	 * that perform their own large-scale, high-frequency document
+	 * modifications and have no need for undo/redo on a given text area
+	 * (e.g. a scrolling, read-only log console) should call
+	 * {@code setEnabled(false)} rather than relying on
+	 * {@link #setLimit(int)}.  Contrary to what one might expect,
+	 * {@code setLimit(0)} does <em>not</em> disable undo tracking; per the
+	 * contract of {@link UndoManager#setLimit(int)}, it instead makes the
+	 * edit history unbounded, which can quickly exhaust memory.
+	 * <p>
+	 * Disabling this undo manager discards any edits already being tracked,
+	 * since they can no longer be undone or redone in a meaningful way once
+	 * tracking stops.  Re-enabling it does not restore those edits; it
+	 * simply resumes recording edits from that point forward.
+	 *
+	 * @param enabled Whether this undo manager should record undoable
+	 *        edits.
+	 * @see #isEnabled()
+	 */
+	public void setEnabled(boolean enabled) {
+		if (enabled != this.enabled) {
+			this.enabled = enabled;
+			internalAtomicEditDepth = 0;
+			compoundEdit = null;
+			discardAllEdits();
+			updateActions();
 		}
 	}
 
@@ -166,6 +216,10 @@ public class RUndoManager extends UndoManager {
 
 	@Override
 	public void undoableEditHappened(UndoableEditEvent e) {
+
+		if (!enabled) {
+			return;
+		}
 
 		boolean newLineInsertion = internalAtomicEditDepth==0 &&
 			isSingleNewLineInsertion(e);
