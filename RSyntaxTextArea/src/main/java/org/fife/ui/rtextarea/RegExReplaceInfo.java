@@ -1,8 +1,4 @@
 /*
- * 02/19/2006
- *
- * RegExReplaceInfo.java - Information about a regex text match.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

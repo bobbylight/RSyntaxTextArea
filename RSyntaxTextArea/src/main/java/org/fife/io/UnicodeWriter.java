@@ -1,8 +1,4 @@
 /*
- * 09/24/2004
- *
- * UnicodeWriter.java - Writes Unicode output with the proper BOM.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

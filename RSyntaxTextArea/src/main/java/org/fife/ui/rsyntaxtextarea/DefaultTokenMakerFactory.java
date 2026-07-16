@@ -1,8 +1,4 @@
 /*
- * 12/14/2008
- *
- * DefaultTokenMakerFactory.java - The default TokenMaker factory.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

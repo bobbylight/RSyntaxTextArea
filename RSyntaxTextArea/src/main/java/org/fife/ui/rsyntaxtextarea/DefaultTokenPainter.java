@@ -1,8 +1,4 @@
 /*
- * 03/16/2013
- *
- * DefaultTokenPainter - Standard implementation of a token painter.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

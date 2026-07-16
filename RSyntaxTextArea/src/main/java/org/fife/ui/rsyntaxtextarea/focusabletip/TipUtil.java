@@ -1,8 +1,4 @@
 /*
- * 08/13/2009
- *
- * TipUtil.java - Utility methods for homemade tool tips.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 08/26/2004
- *
- * TokenMakerBase.java - A base class for token makers.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

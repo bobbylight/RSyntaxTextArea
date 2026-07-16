@@ -1,8 +1,4 @@
 /*
- * 11/13/2008
- *
- * FileFileLocation.java - The location of a local file.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

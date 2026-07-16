@@ -1,8 +1,4 @@
 /*
- * 02/09/2025
- *
- * IconRowEvent.java - Event for IconRowHeader.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

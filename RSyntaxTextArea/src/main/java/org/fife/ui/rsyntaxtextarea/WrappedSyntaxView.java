@@ -1,9 +1,4 @@
 /*
- * 08/06/2004
- *
- * WrappedSyntaxView.java - Test implementation of WrappedSyntaxView that
- * is also aware of RSyntaxTextArea's different fonts per token type.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

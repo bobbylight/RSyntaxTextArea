@@ -1,9 +1,4 @@
 /*
- * 11/14/2003
- *
- * RPrintUtilities.java - A collection of static methods useful for printing
- * text from Swing text components.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

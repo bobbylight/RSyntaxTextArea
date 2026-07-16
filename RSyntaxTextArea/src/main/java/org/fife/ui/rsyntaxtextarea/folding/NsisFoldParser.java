@@ -1,8 +1,4 @@
 /*
- * 10/07/2012
- *
- * NsisFoldParser.java - Fold parser for NSIS.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

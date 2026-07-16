@@ -1,8 +1,4 @@
 /*
- * 07/28/2008
- *
- * RtfGenerator.java - Generates RTF via a simple Java API.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

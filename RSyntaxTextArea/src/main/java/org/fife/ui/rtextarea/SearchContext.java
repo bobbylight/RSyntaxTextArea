@@ -1,8 +1,4 @@
 /*
- * 02/17/2012
- *
- * SearchContext.java - Container for options of a search/replace operation.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 09/23/2005
- *
- * Parser.java - An interface for a parser for RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

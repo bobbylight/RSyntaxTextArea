@@ -1,9 +1,4 @@
 /*
- * 10/01/2009
- *
- * SmartHighlightPainter.java - A highlight painter whose rendered highlights
- * don't "grow" when the user appends text to the end of them.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

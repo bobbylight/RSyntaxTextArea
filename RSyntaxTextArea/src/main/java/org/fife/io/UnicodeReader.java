@@ -1,9 +1,4 @@
 /*
- * 09/23/2004
- *
- * UnicodeReader.java - A reader for Unicode input streams that is capable of
- * discerning which particular encoding is being used via the BOM.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

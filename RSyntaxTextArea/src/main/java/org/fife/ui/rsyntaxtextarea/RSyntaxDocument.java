@@ -1,9 +1,4 @@
 /*
- * 10/16/2004
- *
- * RSyntaxDocument.java - A document capable of syntax highlighting, used by
- * RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

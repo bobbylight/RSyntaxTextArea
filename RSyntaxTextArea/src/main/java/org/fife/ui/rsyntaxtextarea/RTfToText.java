@@ -1,8 +1,4 @@
 /*
- * 07/28/2008
- *
- * RtfToText.java - Returns the plain text version of RTF documents.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

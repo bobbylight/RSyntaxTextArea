@@ -1,9 +1,4 @@
 /*
- * 03/16/2013
- *
- * VisibleWhitespaceTokenPainter - Renders tokens in an instance of
- * RSyntaxTextArea, with special glyphs to denote spaces and tabs.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

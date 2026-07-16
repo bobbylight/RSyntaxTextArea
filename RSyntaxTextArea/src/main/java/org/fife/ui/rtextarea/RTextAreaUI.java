@@ -1,8 +1,4 @@
 /*
- * 04/25/2007
- *
- * RTextAreaUI.java - UI used by instances of RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

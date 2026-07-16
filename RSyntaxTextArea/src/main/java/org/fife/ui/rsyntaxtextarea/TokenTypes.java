@@ -1,8 +1,4 @@
 /*
- * 12/04/2011
- *
- * TokenTypes.java - All token types supported by RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

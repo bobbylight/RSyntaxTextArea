@@ -1,9 +1,4 @@
 /*
- * 02/06/2011
- *
- * ActiveLineRangeEvent.java - Notifies listeners of an "active line range"
- * change in an RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 02/19/2006
- *
- * SearchEngine.java - Handles find/replace operations in an RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 08/11/2009
- *
- * TaskTagParser.java - Parser that scans code comments for task tags.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

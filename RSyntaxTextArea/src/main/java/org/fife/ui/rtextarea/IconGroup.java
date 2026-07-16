@@ -1,8 +1,4 @@
 /*
- * 09/05/2004
- *
- * IconGroup.java - Class encapsulating images used for RTextArea actions.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

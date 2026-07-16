@@ -1,8 +1,4 @@
 /*
- * 07/31/2009
- *
- * AbstractParser.java - A base implementation for parsers.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

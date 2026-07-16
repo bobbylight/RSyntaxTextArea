@@ -1,8 +1,4 @@
 /*
- * 10/28/2004
- *
- * DefaultTokenFactory.java - Default token factory.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

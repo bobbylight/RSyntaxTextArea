@@ -1,9 +1,4 @@
 /*
- * 01/22/2005
- *
- * BackgroundPainterStrategy.java - Renders an RTextAreaBase's background
- * using some strategy.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

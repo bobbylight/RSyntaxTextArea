@@ -1,8 +1,4 @@
 /*
- * 11/14/2003
- *
- * RTextArea.java - An extension of JTextArea that adds many features.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

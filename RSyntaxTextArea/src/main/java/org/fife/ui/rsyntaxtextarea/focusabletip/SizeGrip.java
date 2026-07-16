@@ -1,9 +1,4 @@
 /*
- * 12/23/2008
- *
- * SizeGrip.java - A size grip component that sits at the bottom of the window,
- * allowing the user to easily resize that window.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

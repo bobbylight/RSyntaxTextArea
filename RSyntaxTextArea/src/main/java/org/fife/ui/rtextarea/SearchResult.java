@@ -1,8 +1,4 @@
 /*
- * 09/21/2013
- *
- * SearchResult - The result of a find, replace, or "mark all" operation.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 02/21/2005
- *
- * CodeTemplate.java - A "template" (macro) for commonly-typed code.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 12/01/2008
- *
- * AbstractCodeTemplate.java - Base class for code templates.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
