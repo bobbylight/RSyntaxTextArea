@@ -153,4 +153,99 @@ class RUndoManagerTest {
 
 		Assertions.assertFalse(textArea.canUndo());
 	}
+
+
+	@Test
+	void testIsEnabled_defaultsToTrue() {
+		RTextArea textArea = new RTextArea();
+		Assertions.assertTrue(textArea.getUndoManager().isEnabled());
+	}
+
+
+	@Test
+	void testSetEnabled_false_noLongerRecordsEdits() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea();
+		RUndoManager undoManager = textArea.getUndoManager();
+
+		undoManager.setEnabled(false);
+		Assertions.assertFalse(undoManager.isEnabled());
+
+		type(textArea, "foo");
+
+		Assertions.assertEquals("foo", textArea.getText());
+		Assertions.assertFalse(textArea.canUndo());
+	}
+
+
+	@Test
+	void testSetEnabled_false_discardsExistingEdits() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea();
+		RUndoManager undoManager = textArea.getUndoManager();
+
+		type(textArea, "foo");
+		Assertions.assertTrue(textArea.canUndo());
+
+		undoManager.setEnabled(false);
+		Assertions.assertFalse(textArea.canUndo());
+	}
+
+
+	@Test
+	void testSetEnabled_false_endsInProgressAtomicEdit() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea();
+		RUndoManager undoManager = textArea.getUndoManager();
+
+		textArea.beginAtomicEdit();
+		try {
+			type(textArea, "foo");
+			undoManager.setEnabled(false);
+		} finally {
+			// Should be a no-op since the manager is disabled, and must not
+			// throw despite the internal atomic edit depth being reset.
+			textArea.endAtomicEdit();
+		}
+
+		Assertions.assertFalse(textArea.canUndo());
+	}
+
+
+	@Test
+	void testSetEnabled_true_afterBeingDisabled_resumesRecordingEdits() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea();
+		RUndoManager undoManager = textArea.getUndoManager();
+
+		undoManager.setEnabled(false);
+		type(textArea, "foo");
+
+		undoManager.setEnabled(true);
+		Assertions.assertTrue(undoManager.isEnabled());
+		type(textArea, "bar");
+
+		Assertions.assertEquals("foobar", textArea.getText());
+		Assertions.assertTrue(textArea.canUndo());
+
+		textArea.undoLastAction();
+		Assertions.assertEquals("foo", textArea.getText());
+	}
+
+
+	@Test
+	void testSetEnabled_sameValue_isNoOp() throws BadLocationException {
+
+		RTextArea textArea = new RTextArea();
+		RUndoManager undoManager = textArea.getUndoManager();
+
+		type(textArea, "foo");
+		Assertions.assertTrue(textArea.canUndo());
+
+		undoManager.setEnabled(true);
+
+		Assertions.assertTrue(textArea.canUndo());
+		textArea.undoLastAction();
+		Assertions.assertEquals("", textArea.getText());
+	}
 }
