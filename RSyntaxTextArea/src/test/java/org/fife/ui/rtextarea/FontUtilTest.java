@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -108,6 +109,14 @@ class FontUtilTest {
 			// Can't verify too precisely since the test can run on any OS
 			Assertions.assertNotNull(FontUtil.getDefaultMonospacedFont());
 		}
+	}
+
+
+	@Test
+	void testGetDefaultMonospacedFont_overriddenDefault() {
+		Font font = new Font(Font.SERIF, Font.ITALIC, 5);
+		UIManager.put(FontUtil.DEFAULT_FONT_KEY, font);
+		Assertions.assertEquals(font, FontUtil.getDefaultMonospacedFont());
 	}
 
 
