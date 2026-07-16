@@ -1,9 +1,4 @@
 /*
- * 08/06/2004
- *
- * RSyntaxUtilities.java - Utility methods used by RSyntaxTextArea and its
- * views.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

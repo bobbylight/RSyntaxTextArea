@@ -1,10 +1,4 @@
 /*
- * 09/13/2005
- *
- * SquiggleUnderlineHighlightPainter.java - Highlighter that draws a squiggle
- * underline under "highlighted" text, similar to error markers in Microsoft
- * Visual Studio or Eclipse.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

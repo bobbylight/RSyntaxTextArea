@@ -1,8 +1,4 @@
 /*
- * 09/23/2005
- *
- * ParserNotice.java - A notice (i.e, and error or warning) from a parser.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

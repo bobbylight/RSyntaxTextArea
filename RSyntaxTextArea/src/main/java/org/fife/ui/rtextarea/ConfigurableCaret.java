@@ -1,8 +1,4 @@
 /*
- * 12/21/2004
- *
- * ConfigurableCaret.java - The caret used by RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

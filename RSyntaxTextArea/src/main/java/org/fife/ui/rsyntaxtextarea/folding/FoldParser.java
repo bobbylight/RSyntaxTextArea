@@ -1,8 +1,4 @@
 /*
- * 10/08/2011
- *
- * FoldParser.java - Locates folds in an RSyntaxTextArea instance.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 07/29/2009
- *
- * FocusableTip.java - A focusable tool tip, like those in Eclipse.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

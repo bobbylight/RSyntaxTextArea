@@ -1,9 +1,4 @@
 /*
- * 08/19/2004
- *
- * RecordableTextAction.java - An action that can be recorded and replayed
- * in an RTextArea macro.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,9 +1,4 @@
 /*
- * 03/26/2004
- *
- * DynamicIntArray.java - Similar to an ArrayList, but holds ints instead
- * of Objects.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

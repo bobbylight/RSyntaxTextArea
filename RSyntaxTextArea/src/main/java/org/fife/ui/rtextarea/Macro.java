@@ -1,8 +1,4 @@
 /*
- * 09/16/2004
- *
- * Macro.java - A macro as recorded/played back by an RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

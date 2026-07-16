@@ -1,8 +1,4 @@
 /*
- * 02/21/2004
- *
- * Token.java - A token used in syntax highlighting.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

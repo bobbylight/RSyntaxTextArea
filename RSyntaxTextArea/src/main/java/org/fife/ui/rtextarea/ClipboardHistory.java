@@ -1,8 +1,4 @@
 /*
- * 08/29/2014
- *
- * ClipboardHistory.java - A history of text added to the clipboard.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

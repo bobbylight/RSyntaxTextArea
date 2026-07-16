@@ -1,9 +1,4 @@
 /*
- * 11/14/2003
- *
- * RTextScrollPane.java - A JScrollPane that will only accept RTextAreas
- * so that it can display line numbers, fold indicators, and icons.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

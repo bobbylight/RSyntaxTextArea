@@ -1,8 +1,4 @@
 /*
- * 12/23/2012
- *
- * JsonFoldParser.java - Fold parser for JSON.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

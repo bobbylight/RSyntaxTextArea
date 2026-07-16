@@ -1,9 +1,4 @@
 /*
- * 09/26/2005
- *
- * ParserManager.java - Manages the parsing of an RSyntaxTextArea's document,
- * if necessary.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

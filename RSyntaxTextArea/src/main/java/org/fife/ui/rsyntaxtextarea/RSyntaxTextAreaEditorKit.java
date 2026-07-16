@@ -1,8 +1,4 @@
 /*
- * 08/29/2004
- *
- * RSyntaxTextAreaEditorKit.java - The editor kit used by RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

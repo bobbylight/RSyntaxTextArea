@@ -1,8 +1,4 @@
 /*
- * 08/16/2014
- *
- * ClipboardHistoryPopup.java - Shows clipboard history in a popup window.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

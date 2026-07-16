@@ -1,9 +1,4 @@
 /*
- * 11/25/2008
- *
- * TextEditorPane.java - A syntax highlighting text area that has knowledge of
- * the file it is editing on disk.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

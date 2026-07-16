@@ -1,8 +1,4 @@
 /*
- * 04/24/2012
- *
- * LatexFoldParser.java - Fold parser for LaTeX.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

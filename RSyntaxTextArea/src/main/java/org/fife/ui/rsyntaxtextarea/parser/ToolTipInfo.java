@@ -1,8 +1,4 @@
 /*
- * 07/29/2009
- *
- * ToolTipInfo.java - A tool tip's text and hyperlink listener.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

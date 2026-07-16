@@ -1,9 +1,4 @@
 /*
- * 02/24/2004
- *
- * SyntaxView.java - The View object used by RSyntaxTextArea when word wrap is
- * disabled.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

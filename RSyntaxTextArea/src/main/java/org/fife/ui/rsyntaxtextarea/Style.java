@@ -1,9 +1,4 @@
 /*
- * 08/06/2004
- *
- * Style.java - A set of traits for a particular token type to use while
- * painting.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

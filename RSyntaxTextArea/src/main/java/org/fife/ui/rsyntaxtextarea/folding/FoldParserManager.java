@@ -1,9 +1,4 @@
 /*
- * 10/08/2011
- *
- * FoldParserManager.java - Used by RSTA to determine what fold parser to use
- * for each language it supports.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,9 +1,4 @@
 /*
- * 06/30/2012
- *
- * RDocumentCharSequence.java - Iterator over a portion of an RTextArea's
- * document.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

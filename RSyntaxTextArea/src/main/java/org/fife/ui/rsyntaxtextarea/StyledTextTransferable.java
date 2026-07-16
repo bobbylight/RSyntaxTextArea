@@ -1,8 +1,4 @@
 /*
- * 07/28/2008
- *
- * StyledTextTransferable.java - Used during drag-and-drop to represent RTF text.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

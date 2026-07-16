@@ -1,9 +1,4 @@
 /*
- * 07/27/2009
- *
- * ParseResult.java - The result of a Parser parsing some section of an
- * RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,8 +1,4 @@
 /*
- * 04/07/2005
- *
- * RTextAreaBase.java - The base class for an RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

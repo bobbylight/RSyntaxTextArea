@@ -1,9 +1,4 @@
 /*
- * 02/05/2009
- *
- * ToolTipSupplier.java - Can provide tool tips to RTextAreas without the need
- * for subclassing.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

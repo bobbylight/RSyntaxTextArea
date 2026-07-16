@@ -1,8 +1,4 @@
 /*
- * 10/30/2011
- *
- * Theme.java - A color theme for RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

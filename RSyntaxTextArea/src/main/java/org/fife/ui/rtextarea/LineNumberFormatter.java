@@ -1,8 +1,4 @@
 /*
- * 29/07/2023
- *
- * LineNumber - Format line numbers into a comprehensible String.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

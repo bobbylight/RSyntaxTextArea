@@ -1,9 +1,4 @@
 /*
- * 07/29/2004
- *
- * RTATextTransferHandler.java - Handles the transfer of data to/from an
- * RTextArea via drag-and-drop.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

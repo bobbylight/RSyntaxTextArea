@@ -1,9 +1,4 @@
 /*
- * 02/06/2011
- *
- * ActiveLineRangeListener.java - Listens for "active line range" changes
- * in an RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

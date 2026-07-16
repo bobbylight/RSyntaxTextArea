@@ -1,8 +1,4 @@
 /*
- * 10/08/2011
- *
- * FoldType.java - Types of folds found in many programming languages.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

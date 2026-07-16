@@ -1,8 +1,4 @@
 /*
- * 10/23/2011
- *
- * XmlFoldParser.java - Fold parser for XML.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

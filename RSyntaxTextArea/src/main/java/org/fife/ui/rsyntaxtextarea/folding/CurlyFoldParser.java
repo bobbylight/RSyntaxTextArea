@@ -1,8 +1,4 @@
 /*
- * 10/08/2011
- *
- * CurlyFoldParser.java - Fold parser for languages with C-style syntax.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

@@ -1,9 +1,4 @@
 /*
- * 10/27/2004
- *
- * RSyntaxTextAreaDefaultInputMap.java - The default input map for
- * RSyntaxTextAreas.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

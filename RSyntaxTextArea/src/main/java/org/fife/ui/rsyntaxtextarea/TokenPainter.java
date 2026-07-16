@@ -1,8 +1,4 @@
 /*
- * 03/16/2013
- *
- * TokenPainter - Renders tokens in an instance of RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

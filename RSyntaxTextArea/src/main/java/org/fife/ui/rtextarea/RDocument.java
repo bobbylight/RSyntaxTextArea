@@ -1,8 +1,4 @@
 /*
- * 06/30/2012
- *
- * RDocument.java - Document class used by RTextAreas.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

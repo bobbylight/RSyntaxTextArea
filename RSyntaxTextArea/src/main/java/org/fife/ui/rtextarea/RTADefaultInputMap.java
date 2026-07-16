@@ -1,8 +1,4 @@
 /*
- * 08/19/2004
- *
- * RTADefaultInputMap.java - The default input map for RTextAreas.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

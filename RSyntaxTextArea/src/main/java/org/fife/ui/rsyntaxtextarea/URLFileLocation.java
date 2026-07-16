@@ -1,8 +1,4 @@
 /*
- * 11/13/2008
- *
- * URLFileLocation.java - The location of a file at a (remote) URL.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

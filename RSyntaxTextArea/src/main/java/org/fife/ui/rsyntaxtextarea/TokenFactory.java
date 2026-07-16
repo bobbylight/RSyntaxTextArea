@@ -1,8 +1,4 @@
 /*
- * 10/28/2004
- *
- * TokenFactory.java - Interface for a class that generates tokens of some type.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

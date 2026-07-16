@@ -1,8 +1,4 @@
 /*
- * 05/12/2010
- *
- * SearchEngineTest.java - Test cases for SearchEngine.java
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

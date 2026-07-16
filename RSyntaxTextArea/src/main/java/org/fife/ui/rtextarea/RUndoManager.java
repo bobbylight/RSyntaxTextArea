@@ -1,8 +1,4 @@
 /*
- * 12/06/2008
- *
- * RUndoManager.java - Handles undo/redo behavior for RTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

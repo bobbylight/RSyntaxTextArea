@@ -1,8 +1,4 @@
 /*
- * 03/08/2004
- *
- * SyntaxConstants.java - Constants used by RSyntaxTextArea and friends.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

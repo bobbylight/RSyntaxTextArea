@@ -1,8 +1,4 @@
 /*
- * 08/11/2009
- *
- * DocumentRange.java - A range of text in a document.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

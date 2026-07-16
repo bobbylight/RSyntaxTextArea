@@ -1,9 +1,4 @@
 /*
- * 10/08/2011
- *
- * FoldIndicator.java - Gutter component allowing the user to expand and
- * collapse folds.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

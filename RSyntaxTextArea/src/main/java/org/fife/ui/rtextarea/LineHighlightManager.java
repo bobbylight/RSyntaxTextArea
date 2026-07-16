@@ -1,8 +1,4 @@
 /*
- * 02/10/2009
- *
- * LineHighlightManager - Manages line highlights.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

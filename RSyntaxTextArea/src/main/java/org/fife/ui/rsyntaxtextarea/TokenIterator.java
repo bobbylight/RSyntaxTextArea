@@ -1,8 +1,4 @@
 /*
- * 08/28/2013
- *
- * TokenIterator.java - An iterator over the Tokens in an RSyntaxDocument.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

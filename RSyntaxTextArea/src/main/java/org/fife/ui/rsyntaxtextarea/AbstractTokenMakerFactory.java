@@ -1,8 +1,4 @@
 /*
- * 12/14/08
- *
- * AbstractTokenMakerFactory.java - Base class for TokenMaker implementations.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

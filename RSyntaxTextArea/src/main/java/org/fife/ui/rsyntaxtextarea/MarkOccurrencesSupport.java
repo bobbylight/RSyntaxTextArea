@@ -1,9 +1,4 @@
 /*
- * 01/06/2009
- *
- * MarkOccurrencesSupport.java - Handles marking all occurrences of the
- * currently selected identifier in a text area.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

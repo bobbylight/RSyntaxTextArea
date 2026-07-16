@@ -1,6 +1,4 @@
 /*
- * 12/15/2019
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

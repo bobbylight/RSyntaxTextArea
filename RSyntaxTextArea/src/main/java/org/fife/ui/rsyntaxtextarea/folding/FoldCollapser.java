@@ -1,9 +1,4 @@
 /*
- * 10/23/2011
- *
- * FoldCollapser.java - Goes through an RSTA instance and collapses folds of
- * specific types, such as comments.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

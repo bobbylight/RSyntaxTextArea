@@ -1,8 +1,4 @@
 /*
- * 02/17/2009
- *
- * IconRowHeader.java - Renders icons in the gutter.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

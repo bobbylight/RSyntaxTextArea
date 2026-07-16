@@ -1,9 +1,4 @@
 /*
- * 08/10/2009
- *
- * ErrorStrip.java - A component that can visually show Parser messages (syntax
- * errors, etc.) in an RSyntaxTextArea.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */

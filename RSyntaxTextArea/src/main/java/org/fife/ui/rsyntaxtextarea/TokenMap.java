@@ -1,9 +1,4 @@
 /*
- * 08/26/2004
- *
- * TokenMap.java - Similar to a Map in Java, only designed specifically for
- * org.fife.ui.rsyntaxtextarea.Tokens.
- *
  * This library is distributed under a modified BSD license.  See the included
  * LICENSE file for details.
  */
