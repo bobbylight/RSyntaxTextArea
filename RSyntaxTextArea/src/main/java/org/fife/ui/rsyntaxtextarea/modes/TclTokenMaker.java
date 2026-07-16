@@ -713,7 +713,7 @@ public class TclTokenMaker extends AbstractJFlexCTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = TokenTypes.NULL;
+		int state = YYINITIAL;
 
 		s = text;
 		try {

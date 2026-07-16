@@ -145,7 +145,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = TokenTypes.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case TokenTypes.COMMENT_MULTILINE:
 				state = MLC;
@@ -156,7 +156,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

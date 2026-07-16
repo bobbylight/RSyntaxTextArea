@@ -296,7 +296,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 					prevState = -initialTokenType&0xff;
 				}
 				else { // Shouldn't happen
-					state = TokenTypes.NULL;
+					state = YYINITIAL;
 				}
 		}
 

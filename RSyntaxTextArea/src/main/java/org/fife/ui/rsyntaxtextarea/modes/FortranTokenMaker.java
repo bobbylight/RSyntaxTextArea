@@ -605,7 +605,7 @@ public class FortranTokenMaker extends AbstractJFlexTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = TokenTypes.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case TokenTypes.LITERAL_STRING_DOUBLE_QUOTE:
 				state = STRING;
@@ -616,7 +616,7 @@ public class FortranTokenMaker extends AbstractJFlexTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

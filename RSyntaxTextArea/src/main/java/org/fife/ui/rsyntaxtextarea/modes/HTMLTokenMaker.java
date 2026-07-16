@@ -2270,7 +2270,7 @@ public class HTMLTokenMaker extends AbstractMarkupTokenMaker {
 					languageIndex = LANG_INDEX_CSS;
 				}
 				else {
-					state = TokenTypes.NULL;
+					state = YYINITIAL;
 				}
 				break;
 		}

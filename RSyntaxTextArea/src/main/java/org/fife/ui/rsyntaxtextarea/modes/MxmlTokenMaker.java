@@ -2058,7 +2058,7 @@ public class MxmlTokenMaker extends AbstractMarkupTokenMaker {
 		this.offsetShift = -text.offset + startOffset;
 
 		// Start off in the proper state.
-		int state = TokenTypes.NULL;
+		int state = YYINITIAL;
 		switch (initialTokenType) {
 			case TokenTypes.MARKUP_COMMENT:
 				state = COMMENT;
@@ -2109,7 +2109,7 @@ public class MxmlTokenMaker extends AbstractMarkupTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;

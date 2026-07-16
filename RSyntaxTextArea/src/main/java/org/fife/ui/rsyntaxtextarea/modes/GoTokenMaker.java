@@ -1069,7 +1069,7 @@ public class GoTokenMaker extends AbstractJFlexCTokenMaker {
 				start = text.offset;
 				break;
 			default:
-				state = TokenTypes.NULL;
+				state = YYINITIAL;
 		}
 
 		s = text;
