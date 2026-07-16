@@ -116,23 +116,6 @@ public class RtfGenerator {
 	 * @param text The text to append.
 	 * @param f The font of the text.  If this is <code>null</code>, the
 	 *        default font is used.
-	 * @param bg The background color of the text.  If this is
-	 *        <code>null</code>, the default background color is used.
-	 * @param underline Whether the text should be underlined.
-	 * @see #appendNewline()
-	 */
-	public void appendToDocNoFG(String text, Font f, Color bg,
-							boolean underline) {
-		appendToDoc(text, f, null, bg, underline, false);
-	}
-
-
-	/**
-	 * Appends styled text to the RTF document being generated.
-	 *
-	 * @param text The text to append.
-	 * @param f The font of the text.  If this is <code>null</code>, the
-	 *        default font is used.
 	 * @param fg The foreground of the text.  If this is <code>null</code>,
 	 *        the default foreground color is used.
 	 * @param bg The background color of the text.  If this is
@@ -253,6 +236,23 @@ public class RtfGenerator {
 
 		}
 
+	}
+
+
+	/**
+	 * Appends styled text to the RTF document being generated.
+	 *
+	 * @param text The text to append.
+	 * @param f The font of the text.  If this is <code>null</code>, the
+	 *        default font is used.
+	 * @param bg The background color of the text.  If this is
+	 *        <code>null</code>, the default background color is used.
+	 * @param underline Whether the text should be underlined.
+	 * @see #appendNewline()
+	 */
+	public void appendToDocNoFG(String text, Font f, Color bg,
+	                            boolean underline) {
+		appendToDoc(text, f, null, bg, underline, false);
 	}
 
 

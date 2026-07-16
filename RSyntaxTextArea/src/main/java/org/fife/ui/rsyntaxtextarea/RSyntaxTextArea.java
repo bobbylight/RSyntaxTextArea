@@ -592,34 +592,6 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 
 
 	/**
-	 * Copies the currently selected text to the system clipboard, with style
-	 * information from the specified theme.  Does nothing for {@code null} or
-	 * empty selections.
-	 *
-	 * @param theme The theme to use for the color and font information.
-	 *        This may be {@code null}, in which case this text area's
-	 *        current styles are used.
-	 * @see #copyAsStyledText()
-	 */
-	public void copyAsStyledText(Theme theme) {
-
-		// It's more performant to call the no-arg overload
-		if (theme == null) {
-			copyAsStyledText();
-			return;
-		}
-
-		Theme origTheme = new Theme(this);
-
-		theme.apply(this);
-		try {
-			copyAsStyledText();
-		} finally {
-			origTheme.apply(this);
-		}
-	}
-
-	/**
 	 * Copies the currently selected text to the system clipboard, with
 	 * any necessary style information (font, foreground color and background
 	 * color).  Does nothing for {@code null} or empty selections.
@@ -651,6 +623,35 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 			ClipboardHistory.get().add(plainText);
 		} catch (IllegalStateException ise) {
 			UIManager.getLookAndFeel().provideErrorFeedback(null);
+		}
+	}
+
+
+	/**
+	 * Copies the currently selected text to the system clipboard, with style
+	 * information from the specified theme.  Does nothing for {@code null} or
+	 * empty selections.
+	 *
+	 * @param theme The theme to use for the color and font information.
+	 *        This may be {@code null}, in which case this text area's
+	 *        current styles are used.
+	 * @see #copyAsStyledText()
+	 */
+	public void copyAsStyledText(Theme theme) {
+
+		// It's more performant to call the no-arg overload
+		if (theme == null) {
+			copyAsStyledText();
+			return;
+		}
+
+		Theme origTheme = new Theme(this);
+
+		theme.apply(this);
+		try {
+			copyAsStyledText();
+		} finally {
+			origTheme.apply(this);
 		}
 	}
 
