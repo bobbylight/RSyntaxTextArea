@@ -229,7 +229,13 @@ class FileTypeUtilTest extends AbstractRSyntaxTextAreaTest {
 
 		FileTypeUtil util = FileTypeUtil.get();
 
-		File file = new File("makefile");
+		File file = new File(".env");
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_ENV, util.guessContentType(file));
+
+		file = new File(".env.sample");
+		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_ENV, util.guessContentType(file));
+
+		file = new File("makefile");
 		Assertions.assertEquals(SyntaxConstants.SYNTAX_STYLE_MAKEFILE, util.guessContentType(file));
 
 		file = new File("test.java");
