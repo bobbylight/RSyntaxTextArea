@@ -117,4 +117,123 @@ class CurlyFoldParserTest {
 		parser.setFoldableMultiLineComments(false);
 		Assertions.assertFalse(parser.getFoldableMultiLineComments());
 	}
+
+
+	@Test
+	void testGetFolds_singleLineCurlyBlock_notFolded() {
+
+		String code = "void foo() { println(\"hi\"); }";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+
+		CurlyFoldParser parser = new CurlyFoldParser();
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(0, folds.size());
+	}
+
+
+	@Test
+	void testGetFolds_krStyleElseIsMergedIntoOneFold() {
+
+		String code = "if (a) {\n" +
+			"  doA();\n" +
+			"} else {\n" +
+			"  doB();\n" +
+			"}";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+
+		CurlyFoldParser parser = new CurlyFoldParser();
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(1, folds.size());
+
+		Fold fold = folds.getFirst();
+		Assertions.assertEquals(code.indexOf('{'), fold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf('}'), fold.getEndOffset());
+		Assertions.assertFalse(fold.getHasChildFolds());
+	}
+
+
+	@Test
+	void testGetFolds_multipleTopLevelSiblingFolds() {
+
+		String code = "void foo() {\n" +
+			"  doA();\n" +
+			"}\n" +
+			"void bar() {\n" +
+			"  doB();\n" +
+			"}\n";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+
+		CurlyFoldParser parser = new CurlyFoldParser();
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(2, folds.size());
+
+		Fold firstFold = folds.get(0);
+		Assertions.assertEquals(code.indexOf('{'), firstFold.getStartOffset());
+		Assertions.assertEquals(code.indexOf('}'), firstFold.getEndOffset());
+
+		Fold secondFold = folds.get(1);
+		Assertions.assertEquals(code.indexOf('{', firstFold.getEndOffset()), secondFold.getStartOffset());
+		Assertions.assertEquals(code.lastIndexOf('}'), secondFold.getEndOffset());
+	}
+
+
+	@Test
+	void testGetFolds_java_singleImportLine_noFoldCreated() {
+
+		String code = "import java.io.*;\n" +
+			"public class Example {}\n";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+
+		CurlyFoldParser parser = new CurlyFoldParser(true, true);
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(0, folds.size());
+	}
+
+
+	@Test
+	void testGetFolds_unclosedCurlyAtEof() {
+
+		String code = "void foo() {\n" +
+			"  doA();\n";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+
+		CurlyFoldParser parser = new CurlyFoldParser();
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(1, folds.size());
+
+		Fold fold = folds.getFirst();
+		Assertions.assertEquals(code.indexOf('{'), fold.getStartOffset());
+		Assertions.assertEquals(Integer.MAX_VALUE, fold.getEndOffset());
+	}
+
+
+	@Test
+	void testGetFolds_singleLineComment_notFolded() {
+
+		String code = "/* single line comment */\n" +
+			"void foo() {}\n";
+
+		RSyntaxTextArea textArea = new RSyntaxTextArea(code);
+		textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
+
+		CurlyFoldParser parser = new CurlyFoldParser();
+		List<Fold> folds = parser.getFolds(textArea);
+
+		Assertions.assertEquals(0, folds.size());
+	}
 }
