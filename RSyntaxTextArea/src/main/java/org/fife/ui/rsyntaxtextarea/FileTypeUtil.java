@@ -416,6 +416,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_DELPHI, "*.pas");
 		initFiltersImpl(map, SYNTAX_STYLE_DOCKERFILE, "*.dockerfile", "Dockerfile");
 		initFiltersImpl(map, SYNTAX_STYLE_DTD, "*.dtd");
+		initFiltersImpl(map, SYNTAX_STYLE_ENV, "*.env", "*.env.*");
 		initFiltersImpl(map, SYNTAX_STYLE_FORTRAN, "*.f", "*.for", "*.fort", "*.f77", "*.f90");
 		initFiltersImpl(map, SYNTAX_STYLE_GO, "*.go");
 		initFiltersImpl(map, SYNTAX_STYLE_GROOVY, "*.groovy", "*.gradle", "*.grv", "*.gy", "*.gvy", "*.gsh");
