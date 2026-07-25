@@ -441,6 +441,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_NSIS, "*.nsi");
 		initFiltersImpl(map, SYNTAX_STYLE_PERL, "*.perl", "*.pl", "*.pm");
 		initFiltersImpl(map, SYNTAX_STYLE_PHP, "*.php");
+		initFiltersImpl(map, SYNTAX_STYLE_POWERSHELL, "*.ps1", "*.psm1", "*.psd1");
 		initFiltersImpl(map, SYNTAX_STYLE_PROPERTIES_FILE, "*.properties");
 		initFiltersImpl(map, SYNTAX_STYLE_PROTO, "*.proto");
 		initFiltersImpl(map, SYNTAX_STYLE_PYTHON, "*.py");
@@ -452,6 +453,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_TCL, "*.tcl", "*.tk");
 		initFiltersImpl(map, SYNTAX_STYLE_TYPESCRIPT, "*.ts", "*.tsx");
 		initFiltersImpl(map, SYNTAX_STYLE_UNIX_SHELL, "*.sh", "*.?sh");
+		initFiltersImpl(map, SYNTAX_STYLE_VHDL, "*.vhd", "*.vhdl");
 		initFiltersImpl(map, SYNTAX_STYLE_VISUAL_BASIC, "*.vb");
 		initFiltersImpl(map, SYNTAX_STYLE_WINDOWS_BATCH, "*.bat", "*.cmd");
 		initFiltersImpl(map, SYNTAX_STYLE_XML, "*.xml", "*.xsl", "*.xsd", "*.xslt", "*.wsdl", "*.svg",
