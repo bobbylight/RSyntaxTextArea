@@ -274,6 +274,7 @@ LineComment		= ("#".*)
     "return" |
     "try" |
     "while" |
+    "with" |
     "yield"					{ addToken(TokenTypes.RESERVED_WORD); }
 
     /* Data types. */

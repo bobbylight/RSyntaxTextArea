@@ -303,6 +303,7 @@ class PythonTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"return",
 			"try",
 			"while",
+			"with",
 			"yield"
 		);
 	}
