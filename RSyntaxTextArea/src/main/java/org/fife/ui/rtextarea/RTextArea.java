@@ -1619,10 +1619,14 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				((ConfigurableCaret)caret).setStyle(carets.get(mode));
 			}
 			textMode = mode;
-			// Prevent the caret from blinking while e.g. holding down the
-			// Insert key to toggle insert/overwrite modes
-			caret.setVisible(false);
-			caret.setVisible(true);
+			// Prevent the caret from blinking while e.g. holding down the Insert key to toggle
+			// insert/overwrite modes.  Only do this if we have focus; otherwise we'd start the
+			// caret blinking on a text area that doesn't have focus. Not only is this a visual
+			// bug, but it can cause the JVM to not terminate on system exit (issue #727).
+			if (isFocusOwner()) {
+				caret.setVisible(false);
+				caret.setVisible(true);
+			}
 		}
 
 	}
