@@ -627,6 +627,13 @@ public class LineNumberList extends AbstractGutterComponent
 	 * @param line The line to repaint.
 	 */
 	private void repaintLine(int line) {
+
+		// The line may be stale, e.g. if the document just shrank (such as
+		// via setText()) while the caret was on its last line
+		if (line >= textArea.getLineCount()) {
+			return;
+		}
+
 		try {
 			int y = textArea.getInsets().top + textArea.yForLine(line);
 			repaint(0, y, cellWidth, cellHeight);

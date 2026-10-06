@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 
 /**
@@ -81,5 +83,30 @@ class LineNumberListTest extends AbstractRSyntaxTextAreaTest {
 		LineNumberList list = new LineNumberList(textArea);
 
 		list.paintComponent(createTestGraphics());
+	}
+
+
+	/**
+	 * Verifies that shrinking the document while the caret is on its last line
+	 * doesn't cause a {@code BadLocationException} to be logged from a stale
+	 * "current line" (issue 738).
+	 */
+	@Test
+	void testCaretUpdate_documentShrinksWhileCaretOnLastLine() {
+
+		RTextArea textArea = new RTextArea("This is a test\nwith 2 lines.\n");
+		new LineNumberList(textArea); // Installs a caret listener on the text area
+		textArea.setCaretPosition(textArea.getDocument().getLength());
+
+		PrintStream origErr = System.err;
+		ByteArrayOutputStream err = new ByteArrayOutputStream();
+		System.setErr(new PrintStream(err));
+		try {
+			textArea.setText("One line");
+		} finally {
+			System.setErr(origErr);
+		}
+
+		Assertions.assertEquals("", err.toString());
 	}
 }
