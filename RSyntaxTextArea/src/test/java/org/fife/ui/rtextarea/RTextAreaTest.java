@@ -342,6 +342,25 @@ class RTextAreaTest {
 
 
 	@Test
+	void testConstructor_caretNotVisibleUntilFocused() {
+		// Regression test for #727: a caret made visible at construction
+		// starts a blink timer that is never stopped, keeping the JVM alive
+		RTextArea textArea = new RTextArea("text");
+		Assertions.assertFalse(textArea.getCaret().isVisible());
+	}
+
+
+	@Test
+	void testSetTextMode_unfocused_doesNotMakeCaretVisible() {
+		RTextArea textArea = new RTextArea("text");
+		textArea.setTextMode(TextMode.OVERWRITE);
+		Assertions.assertFalse(textArea.getCaret().isVisible());
+		textArea.setTextMode(TextMode.INSERT);
+		Assertions.assertFalse(textArea.getCaret().isVisible());
+	}
+
+
+	@Test
 	void testSetActionProperties_charMnemonic_doNothingForInvalidAction() {
 		RTextArea.setActionProperties(-1, "foo", 'x', null);
 	}
