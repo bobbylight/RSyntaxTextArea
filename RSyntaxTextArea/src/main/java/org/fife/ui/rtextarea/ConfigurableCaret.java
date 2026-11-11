@@ -281,7 +281,11 @@ public class ConfigurableCaret extends DefaultCaret {
 			RTextArea textArea = getTextArea();
 			int clickCount = e.getClickCount();
 
-			if (SwingUtilities.isMiddleMouseButton(e) &&
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				// Let DefaultCaret clear its cached word-selection event between clicks.
+				super.mouseClicked(e);
+			}
+			else if (SwingUtilities.isMiddleMouseButton(e) &&
 					getPasteOnMiddleMouseClick()) {
 				if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
 					// Paste the system selection, if it exists (e.g., on UNIX
