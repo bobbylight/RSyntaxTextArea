@@ -10,7 +10,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;

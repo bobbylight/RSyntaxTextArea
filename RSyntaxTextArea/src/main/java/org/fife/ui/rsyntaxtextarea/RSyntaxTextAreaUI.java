@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.UIManager;

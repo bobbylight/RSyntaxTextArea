@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
+import java.awt.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.*;
 
 
 /**

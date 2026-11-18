@@ -4,12 +4,12 @@
  */
 package org.fife.util;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.font.TextLayout;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 
 /**
  * Utilities to handle fractional scaling on Windows by leveraging the floating point API.
@@ -76,7 +76,7 @@ public final class SwingUtils {
 	 * @see #charsWidth(FontMetrics, char[], int, int)
 	 */
 	public static float charWidth(FontMetrics fm, char c) {
-		return charsWidth(fm, new char[]{c}, 0, 1);
+		return charsWidth(fm, new char[] {c}, 0, 1);
 	}
 
 	/**

@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**

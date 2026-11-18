@@ -4,22 +4,22 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.StringReader;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.io.StringReader;
 
 
 /**

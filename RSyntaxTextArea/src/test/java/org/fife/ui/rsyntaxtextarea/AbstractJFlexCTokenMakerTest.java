@@ -4,16 +4,16 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.ActionEvent;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.modes.CTokenMaker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.event.ActionEvent;
 
 
 /**

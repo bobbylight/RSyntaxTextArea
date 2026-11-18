@@ -4,11 +4,11 @@
  */
 package org.fife;
 
-import org.fife.io.UnicodeWriter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.fife.io.UnicodeWriter;
 
 
 /**

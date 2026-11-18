@@ -8,9 +8,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.text.TabExpander;
 
 import org.fife.util.SwingUtils;
@@ -167,7 +167,7 @@ public class DefaultTokenPainter implements TokenPainter {
 		}
 
 		nextX = x + SwingUtils.charsWidth(fm, text, flushIndex, flushLen);
-		java.awt.Rectangle r = host.getMatchRectangle();
+		Rectangle r = host.getMatchRectangle();
 
 		if (flushLen>0 && nextX>=clipStart) {
 			if (bg!=null) {

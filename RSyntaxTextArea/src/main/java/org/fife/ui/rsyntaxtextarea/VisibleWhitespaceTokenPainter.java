@@ -4,13 +4,13 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.util.SwingUtils;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import javax.swing.text.TabExpander;
+
+import org.fife.util.SwingUtils;
 
 
 /**

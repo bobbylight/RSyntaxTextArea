@@ -5,12 +5,12 @@
 package org.fife.ui.rsyntaxtextarea.folding;
 
 
+import java.util.List;
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 /**
  * Unit tests for the {@code PythonFoldParser} class.

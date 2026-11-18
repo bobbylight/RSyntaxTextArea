@@ -13,10 +13,10 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
-
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -1227,7 +1227,7 @@ public class Gutter extends JPanel {
 		}
 
 		@Override
-		public void componentResized(java.awt.event.ComponentEvent e) {
+		public void componentResized(ComponentEvent e) {
 			revalidate();
 		}
 

@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.rtextarea.AbstractRTextAreaTest;
-import org.fife.ui.rtextarea.RTextArea;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
+import org.fife.ui.rtextarea.AbstractRTextAreaTest;
+import org.fife.ui.rtextarea.RTextArea;
 
 
 /**

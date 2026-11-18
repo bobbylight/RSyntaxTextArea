@@ -4,11 +4,6 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.ui.SwingRunnerExtension;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.io.ByteArrayInputStream;
@@ -17,6 +12,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fife.ui.SwingRunnerExtension;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 
 /**

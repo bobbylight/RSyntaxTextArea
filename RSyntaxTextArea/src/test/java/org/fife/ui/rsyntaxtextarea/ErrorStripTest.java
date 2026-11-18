@@ -4,6 +4,9 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
 import org.fife.ui.rtextarea.SmartHighlightPainter;
@@ -12,9 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.*;
-import java.awt.event.MouseEvent;
 
 
 /**

@@ -4,16 +4,16 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
-import org.fife.ui.rsyntaxtextarea.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import javax.swing.text.Segment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
+import javax.swing.text.Segment;
+
+import org.fife.ui.rsyntaxtextarea.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 /**

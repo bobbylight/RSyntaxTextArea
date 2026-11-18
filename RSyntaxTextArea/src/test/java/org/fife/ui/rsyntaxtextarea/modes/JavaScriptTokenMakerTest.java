@@ -61,8 +61,6 @@ class JavaScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	private static final int JS_E4X_CDATA_TOKEN_TYPE = JavaScriptTokenMaker.INTERNAL_E4X_MARKUP_CDATA;
 
-	private static final int JS_E4X_COMMENT_TOKEN_TYPE = JavaScriptTokenMaker.INTERNAL_E4X_COMMENT;
-
 	@BeforeEach
 	void setUp() {
 		JavaScriptTokenMaker.setE4xSupported(false);

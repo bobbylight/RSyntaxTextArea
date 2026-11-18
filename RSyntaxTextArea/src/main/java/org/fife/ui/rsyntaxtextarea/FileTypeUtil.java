@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import javax.swing.text.BadLocationException;
 import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import javax.swing.text.BadLocationException;
 
 
 /**

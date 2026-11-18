@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -663,9 +662,9 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * fires a property change event of type {@link #ENCODING_PROPERTY}.
 	 *
 	 * @param encoding The new encoding.
-	 * @throws UnsupportedCharsetException If the encoding is not supported.
 	 * @throws NullPointerException If <code>encoding</code> is
 	 *         <code>null</code>.
+	 * @throws UnsupportedCharsetException If the encoding is not supported.
 	 * @see #getEncoding()
 	 */
 	public void setEncoding(String encoding) {
@@ -693,10 +692,10 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * dirty flag when the line separator is changed.
 	 *
 	 * @param separator The new line separator.
-	 * @throws NullPointerException If <code>separator</code> is
-	 *         <code>null</code>.
 	 * @throws IllegalArgumentException If <code>separator</code> is not one
 	 *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+	 * @throws NullPointerException If <code>separator</code> is
+	 *         <code>null</code>.
 	 * @see #getLineSeparator()
 	 */
 	public void setLineSeparator(String separator) {
@@ -715,10 +714,10 @@ public class TextEditorPane extends RSyntaxTextArea implements
 	 * @param separator The new line separator.
 	 * @param setDirty Whether the dirty flag should be set if the line
 	 *        separator is changed.
-	 * @throws NullPointerException If <code>separator</code> is
-	 *         <code>null</code>.
 	 * @throws IllegalArgumentException If <code>separator</code> is not one
 	 *         of "<code>\n</code>", "<code>\r\n</code>" or "<code>\r</code>".
+	 * @throws NullPointerException If <code>separator</code> is
+	 *         <code>null</code>.
 	 * @see #getLineSeparator()
 	 */
 	public void setLineSeparator(String separator, boolean setDirty) {

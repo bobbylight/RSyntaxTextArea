@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rtextarea;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 /**
  * A dummy icon implementation for test purposes.

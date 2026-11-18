@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@link RtfGenerator} class.

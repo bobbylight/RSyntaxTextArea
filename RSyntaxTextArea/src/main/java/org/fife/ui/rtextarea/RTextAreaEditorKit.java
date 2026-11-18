@@ -15,7 +15,6 @@ import java.io.Reader;
 import java.text.BreakIterator;
 import java.text.DateFormat;
 import java.util.Date;
-
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JViewport;
@@ -354,9 +353,9 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	 * @param doc The destination for the insertion.
 	 * @param pos The location in the document to place the
 	 *        content &gt;= 0.
-	 * @throws IOException on any I/O error
 	 * @throws BadLocationException if pos represents an invalid
 	 *         location within the document.
+	 * @throws IOException on any I/O error
 	*/
 	@Override
 	public void read(Reader in, Document doc, int pos)

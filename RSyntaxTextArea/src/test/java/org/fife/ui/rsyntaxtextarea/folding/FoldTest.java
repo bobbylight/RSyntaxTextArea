@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea.folding;
 
+import javax.swing.text.BadLocationException;
+
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.BadLocationException;
 
 /**
  * Unit tests for the {@link Fold} class.

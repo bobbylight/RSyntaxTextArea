@@ -5,7 +5,6 @@
 package org.fife.ui.rsyntaxtextarea.templates;
 
 import java.io.Serializable;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

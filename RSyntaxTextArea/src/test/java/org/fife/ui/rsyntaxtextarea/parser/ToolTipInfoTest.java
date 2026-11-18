@@ -7,7 +7,6 @@ package org.fife.ui.rsyntaxtextarea.parser;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 

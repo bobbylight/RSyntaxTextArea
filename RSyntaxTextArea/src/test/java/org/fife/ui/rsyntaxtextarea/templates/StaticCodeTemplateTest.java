@@ -5,13 +5,13 @@
 package org.fife.ui.rsyntaxtextarea.templates;
 
 
+import javax.swing.text.BadLocationException;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.text.BadLocationException;
 
 /**
  * Unit tests for the {@code StaticCodeTemplate} class.

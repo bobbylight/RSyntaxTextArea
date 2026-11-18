@@ -4,14 +4,14 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.event.ActionEvent;
+import java.util.Collections;
+import javax.swing.text.DefaultEditorKit;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.text.DefaultEditorKit;
-import java.awt.event.ActionEvent;
-import java.util.Collections;
 
 
 /**

@@ -5,10 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
+import javax.swing.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.*;
 
 /**
  * Unit tests for the {@code PopupWindowDecorator} class.

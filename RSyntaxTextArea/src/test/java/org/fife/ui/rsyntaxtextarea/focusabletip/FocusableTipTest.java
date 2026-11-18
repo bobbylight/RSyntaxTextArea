@@ -5,6 +5,14 @@
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -12,14 +20,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import javax.swing.event.HyperlinkListener;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 
 /**
  * Unit tests for the {@link FocusableTip} class.

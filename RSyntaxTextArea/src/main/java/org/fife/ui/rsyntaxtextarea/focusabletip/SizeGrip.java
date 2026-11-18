@@ -12,7 +12,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;

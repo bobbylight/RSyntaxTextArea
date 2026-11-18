@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import javax.swing.text.TabExpander;
 import java.awt.geom.Rectangle2D;
+import javax.swing.text.TabExpander;
 
 
 /**

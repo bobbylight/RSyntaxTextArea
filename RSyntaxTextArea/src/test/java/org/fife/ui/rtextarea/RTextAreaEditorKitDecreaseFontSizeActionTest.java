@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
 
 
 /**

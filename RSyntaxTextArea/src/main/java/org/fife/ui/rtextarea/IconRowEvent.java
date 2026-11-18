@@ -5,8 +5,8 @@
 
 package org.fife.ui.rtextarea;
 
-import javax.swing.text.BadLocationException;
 import java.util.EventObject;
+import javax.swing.text.BadLocationException;
 
 /**
  * Defines an event pertaining to changes in a {@link IconRowHeader}.

@@ -66,8 +66,6 @@ class TypeScriptTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 
 	private static final int TS_E4X_CDATA_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_E4X_MARKUP_CDATA;
 
-	private static final int TS_E4X_COMMENT_TOKEN_TYPE = TypeScriptTokenMaker.INTERNAL_IN_E4X_COMMENT;
-
 
 	@BeforeEach
 	void setUp() {

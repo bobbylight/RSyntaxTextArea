@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
@@ -1068,7 +1067,7 @@ return c.getLineStartOffset(line);
 	public static boolean isLetter(char ch) {
 		// We need the first condition as it could be that ch>255 (and thus
 		// not a valid index into our table).
-		return (ch<='z') && (DATA_TABLE[ch]&LETTER_MASK)>0;
+		return (ch<='z') && (DATA_TABLE[ch] &LETTER_MASK)>0;
 	}
 
 
@@ -1081,7 +1080,7 @@ return c.getLineStartOffset(line);
 	public static boolean isLetterOrDigit(char ch) {
 		// We need the first condition as it could be that ch>255 (and thus
 		// not a valid index into our table).
-		return (ch<='z') && (DATA_TABLE[ch]&LETTER_OR_DIGIT_MASK)>0;
+		return (ch<='z') && (DATA_TABLE[ch] &LETTER_OR_DIGIT_MASK)>0;
 	}
 
 
@@ -1347,7 +1346,7 @@ return c.getLineStartOffset(line);
 	}
 
 	/**
-	 * Does the supplied metrics represent a monospaced font, ie a font where all characters are equally wide?
+	 * Returns whether the supplied metrics represent a monospaced font (one where all characters are equally wide).
 	 *
 	 * @param fontMetrics the metrics to use for checking character widths
 	 * @return boolean

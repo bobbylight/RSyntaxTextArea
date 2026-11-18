@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.xml.parsers.*;
@@ -150,7 +149,7 @@ public class Theme {
 		int count = textArea.getSecondaryLanguageCount();
 		secondaryLanguages = new Color[count];
 		for (int i=0; i<count; i++) {
-			secondaryLanguages[i]= textArea.getSecondaryLanguageBackground(i+1);
+			secondaryLanguages[i] = textArea.getSecondaryLanguageBackground(i+1);
 		}
 
 		scheme = textArea.getSyntaxScheme();

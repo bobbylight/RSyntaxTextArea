@@ -7,7 +7,6 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-
 import javax.swing.JPanel;
 
 

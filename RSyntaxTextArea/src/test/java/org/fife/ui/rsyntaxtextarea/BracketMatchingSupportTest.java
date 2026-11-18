@@ -4,17 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JViewport;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.JFrame;
-import javax.swing.JViewport;
-import java.awt.Color;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 
 
 /**
@@ -372,7 +370,7 @@ class BracketMatchingSupportTest extends AbstractRSyntaxTextAreaTest {
 			frame.setVisible(true);
 
 			// Scroll down so the match (on line 0) is above the visible area.
-			viewport.setViewPosition(new java.awt.Point(0, 60));
+			viewport.setViewPosition(new Point(0, 60));
 
 			textArea.setCaretPosition(CARET_AFTER_OUTER_OPEN_BRACE);
 			BracketMatchingSupport support = new BracketMatchingSupport(textArea);

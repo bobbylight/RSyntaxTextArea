@@ -5,11 +5,11 @@
 
 package org.fife.ui.rtextarea;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@link IconRowEvent} class.

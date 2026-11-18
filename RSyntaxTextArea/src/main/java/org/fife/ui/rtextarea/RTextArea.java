@@ -16,7 +16,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.plaf.TextUI;

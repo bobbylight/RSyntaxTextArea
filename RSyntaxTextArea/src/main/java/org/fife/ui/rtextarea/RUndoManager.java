@@ -5,7 +5,6 @@
 package org.fife.ui.rtextarea;
 
 import java.util.ResourceBundle;
-
 import javax.swing.Action;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;

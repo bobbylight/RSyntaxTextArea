@@ -4,19 +4,19 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.swing.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.RTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.io.InputStream;
 
 
 /**

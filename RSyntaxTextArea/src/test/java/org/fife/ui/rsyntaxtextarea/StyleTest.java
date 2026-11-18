@@ -5,10 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
+import java.awt.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
 
 /**
  * Unit tests for the {@link Style} class.

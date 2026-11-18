@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.DefaultHighlighter;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker;
@@ -22,12 +26,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.DefaultHighlighter;
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

@@ -4,12 +4,12 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import javax.swing.text.BadLocationException;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rtextarea.EmptyTestIcon;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.text.BadLocationException;
 
 
 /**

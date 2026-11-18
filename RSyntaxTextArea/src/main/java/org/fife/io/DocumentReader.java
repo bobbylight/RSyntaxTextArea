@@ -5,7 +5,6 @@
 package org.fife.io;
 
 import java.io.Reader;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;

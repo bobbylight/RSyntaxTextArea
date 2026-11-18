@@ -141,7 +141,7 @@ public class TokenMap {
 					offset1 = start;
 					length = length1;
 					while (length-- > 0) {
-						if (array1[offset1++]!=array2[offset2++]) {
+						if (array1[offset1++] !=array2[offset2++]) {
 							token = token.nextToken;
 							continue mainLoop;
 						}

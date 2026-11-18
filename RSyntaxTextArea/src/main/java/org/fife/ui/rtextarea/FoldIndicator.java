@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.MouseInputAdapter;

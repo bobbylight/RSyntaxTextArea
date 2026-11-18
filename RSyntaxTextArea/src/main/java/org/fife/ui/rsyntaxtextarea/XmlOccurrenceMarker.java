@@ -6,7 +6,6 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 

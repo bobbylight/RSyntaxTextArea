@@ -12,10 +12,10 @@ import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.ResourceBundle;
 import java.util.Stack;
-
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
@@ -801,7 +801,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// calls revalidate() which won't repaint the scroll pane
 				// if scrollbars don't change, which is why we need this.
 				Component parent = rsta.getParent();
-				if (parent instanceof javax.swing.JViewport) {
+				if (parent instanceof JViewport) {
 					parent = parent.getParent();
 					if (parent instanceof JScrollPane) {
 						parent.repaint();
@@ -925,16 +925,16 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 			end = i+s.count;
 			if (end>i) {
 				// If the first character is a tab, remove it.
-				if (s.array[i]=='\t') {
+				if (s.array[i] =='\t') {
 					doc.remove(start, 1);
 				}
 				// Otherwise, see if the first character is a space.  If it
 				// is, remove all contiguous whitespaces at the beginning of
 				// this line, up to the tab size.
-				else if (s.array[i]==' ') {
+				else if (s.array[i] ==' ') {
 					i++;
 					int toRemove = 1;
-					while (i<end && s.array[i]==' ' && toRemove<tabSize) {
+					while (i<end && s.array[i] ==' ' && toRemove<tabSize) {
 						i++;
 						toRemove++;
 					}
@@ -1456,7 +1456,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				// calls revalidate() which won't repaint the scroll pane
 				// if scrollbars don't change, which is why we need this.
 				Component parent = rsta.getParent();
-				if (parent instanceof javax.swing.JViewport) {
+				if (parent instanceof JViewport) {
 					parent = parent.getParent();
 					if (parent instanceof JScrollPane) {
 						parent.repaint();
@@ -1508,6 +1508,9 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 		}
 
 		/**
+		 * Returns the first location in the string past <code>pos</code> that is
+		 * not a whitespace char.
+		 *
 		 * @return The first location in the string past <code>pos</code> that
 		 *         is NOT a whitespace char, or <code>-1</code> if only
 		 *         whitespace chars follow <code>pos</code> (or it is the end
@@ -2263,7 +2266,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 				String t = doc.getText(start,
 					elem.getEndOffset()-start-1).trim();
 				if (!t.startsWith(startEnd[0]) ||
-					(startEnd[1]!=null && !t.endsWith(startEnd[1]))) {
+					(startEnd[1] !=null && !t.endsWith(startEnd[1]))) {
 					doAdd = true;
 					break;
 				}
@@ -2283,7 +2286,7 @@ public class RSyntaxTextAreaEditorKit extends RTextAreaEditorKit {
 
 		private void handleAddLineCommentToLine(Element elem, Document doc,
 									String[] startEnd) throws BadLocationException {
-			if (startEnd[1]!=null) {
+			if (startEnd[1] !=null) {
 				int end = elem.getEndOffset() - 1;
 				doc.insertString(end, startEnd[1], null);
 			}
