@@ -7,17 +7,15 @@ package org.fife.ui.rtextarea;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**

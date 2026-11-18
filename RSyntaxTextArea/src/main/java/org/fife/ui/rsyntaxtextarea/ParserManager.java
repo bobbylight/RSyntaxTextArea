@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;

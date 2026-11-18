@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.HyperlinkEvent;
@@ -825,7 +824,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-			if (listeners[i]==ActiveLineRangeListener.class) {
+			if (listeners[i] ==ActiveLineRangeListener.class) {
 				if (e==null) {
 					e = new ActiveLineRangeEvent(this, min, max);
 				}
@@ -857,7 +856,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-			if (listeners[i]==HyperlinkListener.class) {
+			if (listeners[i] ==HyperlinkListener.class) {
 				((HyperlinkListener)listeners[i+1]).hyperlinkUpdate(e);
 			}
 		}

@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;

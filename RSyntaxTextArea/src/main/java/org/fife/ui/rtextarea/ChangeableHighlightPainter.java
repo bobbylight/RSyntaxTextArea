@@ -28,7 +28,7 @@ import javax.swing.text.View;
 
 /**
  * An extension of <code>LayerPainter</code> that allows the user to
- * change several of its properties:
+ * change several of its properties. These are:
  *
  * <ul>
  *   <li>Its color/fill style (can use a <code>GradientPaint</code>, for

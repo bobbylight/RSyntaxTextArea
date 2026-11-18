@@ -4,15 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.*;
+import java.awt.Point;
+import javax.swing.*;
+import javax.swing.text.*;
+
 import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.Point;
 
 
 /**

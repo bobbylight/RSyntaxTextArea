@@ -4,15 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea.focusabletip;
 
+import java.io.IOException;
+import java.net.URI;
+import javax.swing.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.net.URI;
 
 
 /**

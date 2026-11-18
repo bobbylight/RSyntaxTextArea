@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;

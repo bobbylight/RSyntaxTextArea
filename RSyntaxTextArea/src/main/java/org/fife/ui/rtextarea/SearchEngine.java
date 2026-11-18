@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
@@ -421,11 +420,11 @@ public final class SearchEngine {
 	 *         of the match.  If it is non-<code>null</code>, an object with
 	 *         information about the match and the morphed string to replace
 	 *         it with.  If no match is found, <code>null</code> is returned.
-	 * @throws PatternSyntaxException If <code>regEx</code> is an invalid
-	 *         regular expression.
 	 * @throws IndexOutOfBoundsException If <code>replaceStr</code> references
 	 *         an invalid group (less than zero or greater than the number of
 	 *         groups matched).
+	 * @throws PatternSyntaxException If <code>regEx</code> is an invalid
+	 *         regular expression.
 	 * @see #getNextMatchPos
 	 */
 	private static Object getNextMatchPosRegExImpl(String regEx,
@@ -484,11 +483,11 @@ public final class SearchEngine {
 	 * @param context The search options.
 	 * @return A <code>RegExReplaceInfo</code> object describing how to
 	 *         implement the replacement operation.
-	 * @throws PatternSyntaxException If the search text is an invalid regular
-	 *         expression.
 	 * @throws IndexOutOfBoundsException If the replacement text references an
 	 *         invalid group (less than zero or greater than the number of
 	 *         groups matched).
+	 * @throws PatternSyntaxException If the search text is an invalid regular
+	 *         expression.
 	 * @see #getNextMatchPos
 	 */
 	private static RegExReplaceInfo getRegExReplaceInfo(CharSequence searchIn,
@@ -768,11 +767,11 @@ public final class SearchEngine {
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
 	 * @return The result of the operation.
-	 * @throws PatternSyntaxException If this is a regular expression search
-	 *         but the search text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
 	 *         but the replacement text references an invalid group (less than
 	 *         zero or greater than the number of groups matched).
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
@@ -855,11 +854,11 @@ public final class SearchEngine {
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
 	 * @return The result of the operation.
-	 * @throws PatternSyntaxException If this is a regular expression search
-	 *         but the search text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
 	 *         but the replacement text references an invalid group (less than
 	 *         zero or greater than the number of groups matched).
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the search text is an invalid regular expression.
 	 * @see #replaceAll(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */
@@ -937,11 +936,11 @@ public final class SearchEngine {
 	 * @param textArea The text area in which to search.
 	 * @param context What to search for and all search options.
 	 * @return The result of the operation.
-	 * @throws PatternSyntaxException If this is a regular expression search
-	 *         but the replacement text is an invalid regular expression.
 	 * @throws IndexOutOfBoundsException If this is a regular expression search
 	 *         but the replacement text references an invalid group (less than
 	 *         zero or greater than the number of groups matched).
+	 * @throws PatternSyntaxException If this is a regular expression search
+	 *         but the replacement text is an invalid regular expression.
 	 * @see #replace(RTextArea, SearchContext)
 	 * @see #find(JTextArea, SearchContext)
 	 */

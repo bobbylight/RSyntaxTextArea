@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.plaf.TextUI;
 import javax.swing.plaf.basic.BasicTextUI.BasicHighlighter;
 import javax.swing.text.BadLocationException;

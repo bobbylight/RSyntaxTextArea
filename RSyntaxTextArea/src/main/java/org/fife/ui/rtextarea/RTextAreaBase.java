@@ -4,8 +4,6 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.util.SwingUtils;
-
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Font;
@@ -19,7 +17,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
@@ -28,6 +25,8 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+
+import org.fife.util.SwingUtils;
 
 
 /**

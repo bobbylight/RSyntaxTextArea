@@ -4,14 +4,14 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import java.awt.*;
 
 
 /**

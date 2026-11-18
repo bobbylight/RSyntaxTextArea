@@ -6,7 +6,6 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-
 import javax.swing.KeyStroke;
 
 import org.fife.ui.rtextarea.RTADefaultInputMap;

@@ -4,15 +4,15 @@
  */
 package org.fife.ui.rtextarea;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.*;
 
 
 /**
@@ -874,7 +874,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-			if (listeners[i]== IconRowListener.class) {
+			if (listeners[i] == IconRowListener.class) {
 				// Lazily create the event:
 				if (e == null) {
 					e = new IconRowEvent(source, iconInfo, line);
@@ -902,7 +902,7 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-			if (listeners[i]== IconRowListener.class) {
+			if (listeners[i] == IconRowListener.class) {
 				// Lazily create the event:
 				if (e == null) {
 					e = new IconRowEvent(source, iconInfo, line);

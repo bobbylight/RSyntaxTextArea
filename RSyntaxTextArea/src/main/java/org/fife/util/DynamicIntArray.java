@@ -153,7 +153,7 @@ public class DynamicIntArray implements Serializable {
 	 */
 	public boolean contains(int integer) {
 		for (int i=0; i<size; i++) {
-			if (data[i]==integer) {
+			if (data[i] ==integer) {
 				return true;
 			}
 		}

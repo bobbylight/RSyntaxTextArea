@@ -4,6 +4,9 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
+import java.awt.event.ActionEvent;
+import javax.swing.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -13,9 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 
 /**

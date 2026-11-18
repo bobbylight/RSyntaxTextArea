@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the {@link RtfToText} class.

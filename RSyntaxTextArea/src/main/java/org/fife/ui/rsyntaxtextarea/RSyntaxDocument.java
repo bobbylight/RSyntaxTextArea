@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
-
 import javax.swing.Action;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;

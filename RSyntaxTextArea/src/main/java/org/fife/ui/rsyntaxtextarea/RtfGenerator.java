@@ -262,8 +262,8 @@ public class RtfGenerator {
 	 *   <li>'\', '{' and '}' are changed to "\\", "\{" and "\}"
 	 * </ul>
 	 *
-	 * @param text The text to append (with tab chars substituted).
 	 * @param sb The buffer to append to.
+	 * @param text The text to append (with tab chars substituted).
 	 */
 	private void escapeAndAdd(StringBuilder sb, String text) {
 		int count = text.length();

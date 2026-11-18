@@ -4,6 +4,9 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+import javax.swing.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.OS;
 import org.junit.jupiter.api.Assertions;
@@ -11,9 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-
-import javax.swing.*;
-import java.awt.*;
 
 
 /**

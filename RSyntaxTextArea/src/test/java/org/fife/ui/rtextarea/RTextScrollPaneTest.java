@@ -5,11 +5,11 @@
 package org.fife.ui.rtextarea;
 
 
+import java.awt.*;
+import javax.swing.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.*;
-import java.awt.*;
 
 /**
  * Unit tests for the {@code RTextScrollPane} class.

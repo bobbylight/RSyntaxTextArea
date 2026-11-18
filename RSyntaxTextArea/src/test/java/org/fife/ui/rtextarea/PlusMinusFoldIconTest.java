@@ -4,13 +4,13 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.*;
 
 
 /**

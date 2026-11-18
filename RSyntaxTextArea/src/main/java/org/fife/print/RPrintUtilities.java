@@ -7,7 +7,6 @@ package org.fife.print;
 import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
-
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
@@ -31,7 +30,7 @@ public abstract class RPrintUtilities {
 	private static Element rootElement;			// The first Element (line) in the current document.
 
 	// The characters at which to break a line if implementing word wrap.
-	private static final char [] BREAK_CHARS = { ' ', '\t', ',', '.', ';', '?', '!' };
+	private static final char[] BREAK_CHARS = { ' ', '\t', ',', '.', ';', '?', '!' };
 
 	// These variables are 'global' because RPrintTabExpander uses them.
 

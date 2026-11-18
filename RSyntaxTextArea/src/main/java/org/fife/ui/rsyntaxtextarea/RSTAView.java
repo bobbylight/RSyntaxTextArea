@@ -5,7 +5,6 @@
 package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.Rectangle;
-
 import javax.swing.text.BadLocationException;
 
 

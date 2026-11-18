@@ -4,10 +4,10 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import javax.swing.text.TabExpander;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.TabExpander;
 
 /**
  * Unit tests for the {@link TokenUtils} class.

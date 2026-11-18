@@ -7,7 +7,6 @@ package org.fife.ui.rsyntaxtextarea;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Timer;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;

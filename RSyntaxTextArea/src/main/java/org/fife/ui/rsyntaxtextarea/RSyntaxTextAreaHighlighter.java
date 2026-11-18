@@ -10,7 +10,6 @@ import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;

@@ -6,7 +6,6 @@ package org.fife.ui.rsyntaxtextarea.folding;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

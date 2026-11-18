@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

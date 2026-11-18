@@ -5,7 +5,6 @@
 package org.fife.ui.rtextarea;
 
 import java.awt.*;
-
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
 

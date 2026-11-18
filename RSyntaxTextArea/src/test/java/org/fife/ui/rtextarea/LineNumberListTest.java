@@ -4,6 +4,10 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -11,10 +15,6 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 
 /**

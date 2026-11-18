@@ -5,10 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
+import java.awt.datatransfer.DataFlavor;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.awt.datatransfer.DataFlavor;
 
 /**
  * Unit tests for the {@link StyledTextTransferable} class.

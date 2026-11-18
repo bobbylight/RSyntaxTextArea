@@ -5,7 +5,6 @@
 package org.fife.ui.rsyntaxtextarea.parser;
 
 import java.io.IOException;
-
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.xml.parsers.FactoryConfigurationError;

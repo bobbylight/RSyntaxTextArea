@@ -4,8 +4,8 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import javax.swing.text.TabExpander;
 import java.awt.*;
+import javax.swing.text.TabExpander;
 
 
 /**

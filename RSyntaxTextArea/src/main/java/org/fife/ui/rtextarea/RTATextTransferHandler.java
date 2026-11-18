@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringBufferInputStream;
 import java.io.StringReader;
-
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;

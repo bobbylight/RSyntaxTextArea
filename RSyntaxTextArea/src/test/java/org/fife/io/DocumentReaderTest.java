@@ -4,10 +4,10 @@
  */
 package org.fife.io;
 
+import javax.swing.text.PlainDocument;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.PlainDocument;
 
 
 /**

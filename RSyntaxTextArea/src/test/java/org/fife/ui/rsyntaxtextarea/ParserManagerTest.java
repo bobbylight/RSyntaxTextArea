@@ -4,16 +4,16 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
 
 
 /**

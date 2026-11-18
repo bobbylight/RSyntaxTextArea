@@ -11,12 +11,12 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
-
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicEditorPaneUI;
 import javax.swing.text.html.HTMLDocument;
 
 import org.fife.ui.rsyntaxtextarea.HtmlUtil;
@@ -219,7 +219,7 @@ public final class TipUtil {
 		if (isNimbus) {
 			Color selBG = textArea.getSelectionColor();
 			Color selFG = textArea.getSelectedTextColor();
-			textArea.setUI(new javax.swing.plaf.basic.BasicEditorPaneUI());
+			textArea.setUI(new BasicEditorPaneUI());
 			textArea.setSelectedTextColor(selFG);
 			textArea.setSelectionColor(selBG);
 		}

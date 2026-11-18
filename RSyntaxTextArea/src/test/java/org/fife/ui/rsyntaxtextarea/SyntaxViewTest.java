@@ -4,15 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Position;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Position;
-import java.awt.*;
 
 
 /**

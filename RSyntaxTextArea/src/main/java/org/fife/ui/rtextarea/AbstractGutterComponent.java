@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.View;

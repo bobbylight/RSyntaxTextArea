@@ -19,15 +19,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javax.swing.JComponent;
-import javax.swing.text.JTextComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.text.JTextComponent;
 
 import org.fife.ui.rsyntaxtextarea.PopupWindowDecorator;
 

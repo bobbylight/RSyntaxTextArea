@@ -4,14 +4,14 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.ui.rsyntaxtextarea.OS;
-
-import javax.swing.*;
-import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
+import javax.swing.text.StyleContext;
+
+import org.fife.ui.rsyntaxtextarea.OS;
 
 
 /**

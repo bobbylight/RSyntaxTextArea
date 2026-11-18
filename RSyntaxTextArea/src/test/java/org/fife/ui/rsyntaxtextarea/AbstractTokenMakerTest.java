@@ -5,10 +5,10 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
+import javax.swing.text.Segment;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.Segment;
 
 /**
  * Unit tests for the {@code AbstractTokenMaker} class.

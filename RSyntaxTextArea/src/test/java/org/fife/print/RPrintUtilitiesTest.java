@@ -4,16 +4,16 @@
  */
 package org.fife.print;
 
+import java.awt.*;
+import java.awt.print.PageFormat;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
-import java.awt.*;
-import java.awt.print.PageFormat;
 
 
 /**

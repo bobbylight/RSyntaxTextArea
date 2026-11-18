@@ -5,14 +5,14 @@
 package org.fife.ui.rtextarea;
 
 
+import java.awt.*;
+import java.util.List;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.View;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.BadLocationException;
-import javax.swing.text.View;
-import java.awt.*;
-import java.util.List;
 
 /**
  * Unit tests for the {@code RTextAreaHighlighter} class.

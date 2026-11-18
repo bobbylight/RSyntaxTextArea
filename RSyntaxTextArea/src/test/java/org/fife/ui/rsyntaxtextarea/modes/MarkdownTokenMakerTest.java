@@ -4,13 +4,13 @@
  */
 package org.fife.ui.rsyntaxtextarea.modes;
 
+import javax.swing.text.Segment;
+
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.Segment;
 
 
 /**

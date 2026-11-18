@@ -13,9 +13,9 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -156,8 +156,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 		int length = styles.length;
 		for (int i=0; i<length; i++) {
-			if (styles[i]==null) {
-				if (otherSchemes[i]!=null) {
+			if (styles[i] ==null) {
+				if (otherSchemes[i] !=null) {
 					return false;
 				}
 			}
@@ -467,7 +467,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		styles[MARKUP_TAG_DELIMITER]		= new Style(Color.RED);
 		styles[MARKUP_TAG_NAME]			= new Style(Color.BLUE);
 		styles[MARKUP_TAG_ATTRIBUTE]		= new Style(new Color(63,127,127));
-		styles[MARKUP_TAG_ATTRIBUTE_VALUE]= new Style(literalString);
+		styles[MARKUP_TAG_ATTRIBUTE_VALUE] = new Style(literalString);
 		styles[MARKUP_COMMENT]              = new Style(markupComment, null, commentFont);
 		styles[MARKUP_DTD]              = new Style(function);
 		styles[MARKUP_PROCESSING_INSTRUCTION] = new Style(preprocessor);
@@ -482,7 +482,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 		// Issue #34: If an application modifies TokenTypes to add new built-in
 		// token types, we'll get NPEs if not all styles are initialized.
 		for (int i=0; i<styles.length; i++) {
-			if (styles[i]==null) {
+			if (styles[i] ==null) {
 				styles[i] = new Style();
 			}
 		}
@@ -543,7 +543,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
 	/**
 	 * Returns this syntax highlighting scheme as a comma-separated list of
-	 * values as follows:
+	 * values. The values are as follows:
 	 * <ul>
 	 *   <li>If a color is non-null, it is added as a 24-bit integer
 	 *      of the form <code>((r&lt;*lt;16) | (g&lt;*lt;8) | (b))</code>; if

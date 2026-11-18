@@ -4,16 +4,15 @@
  */
 package org.fife.ui.rtextarea;
 
-import org.fife.util.SwingUtils;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.text.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.*;
 import javax.swing.plaf.basic.*;
+import javax.swing.text.*;
+
+import org.fife.util.SwingUtils;
 
 
 /**

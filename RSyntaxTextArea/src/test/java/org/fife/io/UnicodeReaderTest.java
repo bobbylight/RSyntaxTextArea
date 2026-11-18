@@ -4,14 +4,14 @@
  */
 package org.fife.io;
 
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Unit tests for the {@code UnicodeReader} class.

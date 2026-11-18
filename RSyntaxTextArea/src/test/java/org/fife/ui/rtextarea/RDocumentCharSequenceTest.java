@@ -4,11 +4,11 @@
  */
 package org.fife.ui.rtextarea;
 
+import javax.swing.text.BadLocationException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.BadLocationException;
 
 /**
  * Unit tests for the {@code RDocumentCharSequence} class.

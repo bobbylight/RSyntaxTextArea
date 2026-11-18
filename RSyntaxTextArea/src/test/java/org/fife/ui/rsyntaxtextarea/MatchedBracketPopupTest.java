@@ -5,12 +5,12 @@
 package org.fife.ui.rsyntaxtextarea;
 
 
+import java.awt.*;
+import javax.swing.*;
+
 import org.fife.ui.SwingRunnerExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import javax.swing.*;
-import java.awt.*;
 
 
 /**

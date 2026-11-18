@@ -4,16 +4,15 @@
  */
 package org.fife.ui.rsyntaxtextarea;
 
-import org.fife.util.SwingUtils;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
 import javax.swing.text.Utilities;
+
+import org.fife.util.SwingUtils;
 
 
 /**
@@ -327,7 +326,7 @@ public class TokenImpl implements Token {
 		}
 		final int start = textOffset + textCount - ch.length;
 		for (int i=0; i<ch.length; i++) {
-			if (text[start+i]!=ch[i]) {
+			if (text[start+i] !=ch[i]) {
 				return false;
 			}
 		}
@@ -499,7 +498,7 @@ public class TokenImpl implements Token {
 		float x = startX;
 
 		while (i<stop) {
-			if (text[i]=='\t') {
+			if (text[i] =='\t') {
 				x = e.nextTabStop(x, 0);
 			}
 			else {
@@ -588,7 +587,7 @@ public class TokenImpl implements Token {
 	public boolean is(char[] lexeme) {
 		if (textCount==lexeme.length) {
 			for (int i=0; i<textCount; i++) {
-				if (text[textOffset+i]!=lexeme[i]) {
+				if (text[textOffset+i] !=lexeme[i]) {
 					return false;
 				}
 			}
@@ -602,7 +601,7 @@ public class TokenImpl implements Token {
 	public boolean is(int type, char[] lexeme) {
 		if (this.getType()==type && textCount==lexeme.length) {
 			for (int i=0; i<textCount; i++) {
-				if (text[textOffset+i]!=lexeme[i]) {
+				if (text[textOffset+i] !=lexeme[i]) {
 					return false;
 				}
 			}
@@ -665,7 +664,7 @@ public class TokenImpl implements Token {
 
 	@Override
 	public boolean isSingleChar(char ch) {
-		return textCount==1 && text[textOffset]==ch;
+		return textCount==1 && text[textOffset] ==ch;
 	}
 
 
@@ -894,7 +893,7 @@ public class TokenImpl implements Token {
 	public boolean startsWith(char[] chars) {
 		if (chars.length<=textCount){
 			for (int i=0; i<chars.length; i++) {
-				if (text[textOffset+i]!=chars[i]) {
+				if (text[textOffset+i] !=chars[i]) {
 					return false;
 				}
 			}
