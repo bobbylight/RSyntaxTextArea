@@ -132,6 +132,32 @@ class ConfigurableCaretTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testMouseClicked_repeatedDoubleClickWithoutMovingMouse() {
+
+		RTextArea textArea = createTextArea("foo bar");
+		ConfigurableCaret caret = (ConfigurableCaret)textArea.getCaret();
+
+		for (int i = 0; i < 3; i++) {
+			click(caret, textArea, 1);
+			Assertions.assertNull(textArea.getSelectedText());
+			click(caret, textArea, 2);
+			Assertions.assertEquals("foo", textArea.getSelectedText());
+		}
+	}
+
+
+	private static void click(ConfigurableCaret caret, RTextArea textArea, int clickCount) {
+		long when = System.currentTimeMillis();
+		caret.mousePressed(new MouseEvent(textArea, MouseEvent.MOUSE_PRESSED,
+			when, 0, 2, 2, clickCount, false, MouseEvent.BUTTON1));
+		caret.mouseReleased(new MouseEvent(textArea, MouseEvent.MOUSE_RELEASED,
+			when, 0, 2, 2, clickCount, false, MouseEvent.BUTTON1));
+		caret.mouseClicked(new MouseEvent(textArea, MouseEvent.MOUSE_CLICKED,
+			when, 0, 2, 2, clickCount, false, MouseEvent.BUTTON1));
+	}
+
+
+	@Test
 	void testMouseClicked_doNothing_eventAlreadyConsumed() {
 
 		RTextArea textArea = new RTextArea();
