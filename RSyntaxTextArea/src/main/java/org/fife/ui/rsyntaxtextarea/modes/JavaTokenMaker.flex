@@ -73,6 +73,419 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 	/**
+	 * Java has several context-sensitive keywords that are only keywords in
+	 * very specific constructs.  Highlight them conservatively to avoid
+	 * false positives for methods and fields such as "open()" or "record".
+	 */
+	private int getContextualTokenType(char[] array, int start, int end,
+			int tokenType) {
+
+		if (isToken(array, start, end, "yield")) {
+			return isYieldKeyword(array, start) ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "open")) {
+			// Be conservative: treat as keyword if we can't verify context (e.g., next line)
+			// This handles "open\nmodule" formatting
+			int next = findNextNonWhitespaceSkipComments(array, end + 1);
+			if (next < 0) {
+				// Next token not on this line - conservatively treat as keyword
+				return tokenType;
+			}
+			return nextTokenEquals(array, end, "module") ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "module")) {
+			// Be conservative: treat as keyword if we can't verify context (e.g., module name on next line)
+			// This handles "module\n    com.example {}" formatting
+			if (!nextTokenStartsIdentifier(array, end)) {
+				// Next token not on this line or not an identifier - conservatively treat as keyword
+				return isModuleKeyword(array, start) ? tokenType : TokenTypes.IDENTIFIER;
+			}
+			return isModuleKeyword(array, start) ? tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "sealed") ||
+				isToken(array, start, end, "non-sealed")) {
+			return nextClassOrInterfaceKeyword(array, end) ?
+					tokenType : TokenTypes.IDENTIFIER;
+		}
+
+		if (isToken(array, start, end, "exports") ||
+				isToken(array, start, end, "opens") ||
+				isToken(array, start, end, "permits") ||
+				isToken(array, start, end, "provides") ||
+				isToken(array, start, end, "record") ||
+				isToken(array, start, end, "requires") ||
+				isToken(array, start, end, "to") ||
+				isToken(array, start, end, "transitive") ||
+				isToken(array, start, end, "uses") ||
+				isToken(array, start, end, "var") ||
+				isToken(array, start, end, "with")) {
+			// Check if used as method/field name (preceded by '.' or followed by '(')
+			int prev = findPreviousNonWhitespace(array, start - 1);
+			if (prev >= s.offset && array[prev] == '.') {
+				return TokenTypes.IDENTIFIER;
+			}
+			int next = findNextNonWhitespaceSkipComments(array, end + 1);
+			if (next >= 0 && array[next] == '(') {
+				return TokenTypes.IDENTIFIER;
+			}
+			// Otherwise treat as keyword (conservative for module declarations, etc.)
+			return tokenType;
+		}
+
+		return tokenType;
+	}
+
+
+	private int findNextNonWhitespace(char[] array, int pos) {
+		int end = s.offset + s.count;
+		while (pos < end && Character.isWhitespace(array[pos])) {
+			pos++;
+		}
+		return pos < end ? pos : -1;
+	}
+
+
+	private int findNextNonWhitespaceSkipComments(char[] array, int pos) {
+		int end = s.offset + s.count;
+		while (pos < end) {
+			if (Character.isWhitespace(array[pos])) {
+				pos++;
+				continue;
+			}
+			// Skip single-line comments
+			if (pos + 1 < end && array[pos] == '/' && array[pos + 1] == '/') {
+				// Skip to end of line (which is end of segment in this tokenizer)
+				return -1;
+			}
+			// Skip multi-line comments
+			if (pos + 1 < end && array[pos] == '/' && array[pos + 1] == '*') {
+				pos += 2;
+				boolean foundClosing = false;
+				while (pos + 1 < end) {
+					if (array[pos] == '*' && array[pos + 1] == '/') {
+						pos += 2;
+						foundClosing = true;
+						break;
+					}
+					pos++;
+				}
+				// If comment is unterminated at end of line, treat as end-of-line
+				if (!foundClosing) {
+					return -1;
+				}
+				continue;
+			}
+			return pos;
+		}
+		return -1;
+	}
+
+
+	private int findPreviousNonWhitespaceSkipComments(char[] array, int pos) {
+		while (pos >= s.offset) {
+			if (Character.isWhitespace(array[pos])) {
+				pos--;
+				continue;
+			}
+			// Skip multi-line comments (work backwards from */)
+			if (pos > s.offset && array[pos] == '/' && array[pos - 1] == '*') {
+				// Found end of comment, skip backwards to find matching start
+				// Java block comments don't nest, so find the first /*
+				pos -= 2;
+				while (pos > s.offset) {
+					if (array[pos] == '*' && pos > s.offset && array[pos - 1] == '/') {
+						// Found /* - this is the start of the comment
+						pos -= 2;
+						break;
+					}
+					pos--;
+				}
+				if (pos < s.offset) {
+					// Didn't find matching start on this line
+					return -1;
+				}
+				continue;
+			}
+			return pos;
+		}
+		return pos;
+	}
+
+
+	private int findPreviousNonWhitespace(char[] array, int pos) {
+		while (pos >= s.offset && Character.isWhitespace(array[pos])) {
+			pos--;
+		}
+		return pos;
+	}
+
+
+	private boolean isToken(char[] array, int start, int end, String lexeme) {
+		if (end - start + 1 != lexeme.length()) {
+			return false;
+		}
+		for (int i = 0; i < lexeme.length(); i++) {
+			if (array[start + i] != lexeme.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	private boolean isYieldKeywordAtLineStart(char[] array, int start) {
+		int next = findNextNonWhitespaceSkipComments(array, start + "yield".length());
+		if (next < 0) {
+			// No token after yield on this line - conservatively treat as keyword
+			// This handles "yield\n    someValue" formatting
+			return true;
+		}
+		char ch = array[next];
+		// yield is a keyword if followed by a value/expression (including '(' for yield (expr))
+		// not if followed by ':' or ';' (those would make it an identifier/label)
+		return ch != ':' && ch != ';';
+	}
+
+
+	private boolean isYieldKeyword(char[] array, int start) {
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
+		if (prev < s.offset) {
+			return isYieldKeywordAtLineStart(array, start);
+		}
+		// yield is a keyword in statement contexts: after ':', '{', ';', ')', '}', or 'else'
+		// The ')' case handles control flow like "if (cond) yield value;"
+		// The '}' case handles "case 0: { ... } yield 1;"
+		// The 'else' case handles "if (c) yield 1; else yield 2;"
+		char prevChar = array[prev];
+		if (prevChar == ':' || prevChar == '{' || prevChar == ';' || prevChar == ')' || prevChar == '}') {
+			return true;
+		}
+		// Check if preceded by 'else' keyword
+		if (previousTokenEquals(array, start, "else")) {
+			return true;
+		}
+		return false;
+	}
+
+
+	private boolean isModuleKeyword(char[] array, int start) {
+		// module is a keyword when:
+		// 1. It's the first token on the line, OR
+		// 2. It's preceded by "open", OR
+		// 3. It's preceded by ')' (end of annotation like @Deprecated), OR
+		// 4. It's preceded by '@' identifier (bare annotation like @Deprecated)
+		if (noPreviousToken(array, start)) {
+			return true;
+		}
+		if (previousTokenEquals(array, start, "open")) {
+			return true;
+		}
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
+		if (prev >= s.offset) {
+			// Check for closing paren of annotation
+			if (array[prev] == ')') {
+				return true;
+			}
+			// Check for bare annotation (e.g., @Deprecated module) or qualified (e.g., @com.acme.Visible module)
+			// Look for identifier or qualified name preceded by @
+			if (Character.isJavaIdentifierPart(array[prev])) {
+				int tokenStart = prev;
+				while (tokenStart > s.offset && (Character.isJavaIdentifierPart(array[tokenStart - 1]) || array[tokenStart - 1] == '.')) {
+					tokenStart--;
+				}
+				// Check if there's an @ before this identifier/qualified name
+				if (tokenStart > s.offset) {
+					int beforeId = findPreviousNonWhitespaceSkipComments(array, tokenStart - 1);
+					if (beforeId >= s.offset && array[beforeId] == '@') {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks if the next keyword after the given position is "class" or "interface",
+	 * skipping over modifiers (abstract, final, static, etc.), annotations, and comments.
+	 * This is used for sealed/non-sealed keyword detection.
+	 */
+	private boolean nextClassOrInterfaceKeyword(char[] array, int end) {
+		int pos = findNextNonWhitespaceSkipComments(array, end + 1);
+		// Conservative: if next token not on current line, treat as keyword to handle line breaks
+		if (pos < 0) {
+			return true;
+		}
+		while (pos >= 0) {
+			// Skip annotations (@...)
+			if (array[pos] == '@') {
+				// Skip the @ symbol
+				pos = findNextNonWhitespaceSkipComments(array, pos + 1);
+				if (pos < 0 || !Character.isJavaIdentifierStart(array[pos])) {
+					return false;
+				}
+				// Skip the annotation name (including qualified names like @com.acme.Anno)
+				while (pos < s.offset + s.count && (Character.isJavaIdentifierPart(array[pos]) || array[pos] == '.')) {
+					pos++;
+				}
+				// Skip annotation parameters if present
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				if (pos >= 0 && array[pos] == '(') {
+					// Skip to closing paren, handling strings and comments
+					int depth = 1;
+					pos++;
+					while (pos < s.offset + s.count && depth > 0) {
+						// Skip string literals
+						if (array[pos] == '"') {
+							pos++;
+							while (pos < s.offset + s.count && array[pos] != '"') {
+								if (array[pos] == '\\' && pos + 1 < s.offset + s.count) {
+									pos += 2; // Skip escaped character
+								} else {
+									pos++;
+								}
+							}
+							pos++; // Skip closing quote
+							continue;
+						}
+						// Skip character literals
+						if (array[pos] == '\'') {
+							pos++;
+							while (pos < s.offset + s.count && array[pos] != '\'') {
+								if (array[pos] == '\\' && pos + 1 < s.offset + s.count) {
+									pos += 2; // Skip escaped character
+								} else {
+									pos++;
+								}
+							}
+							pos++; // Skip closing quote
+							continue;
+						}
+						// Skip single-line comments
+						if (pos + 1 < s.offset + s.count && array[pos] == '/' && array[pos + 1] == '/') {
+							// Skip to end of line
+							break;
+						}
+						// Skip multi-line comments
+						if (pos + 1 < s.offset + s.count && array[pos] == '/' && array[pos + 1] == '*') {
+							pos += 2;
+							while (pos + 1 < s.offset + s.count) {
+								if (array[pos] == '*' && array[pos + 1] == '/') {
+									pos += 2;
+									break;
+								}
+								pos++;
+							}
+							continue;
+						}
+						// Count parentheses
+						if (array[pos] == '(') {
+							depth++;
+						} else if (array[pos] == ')') {
+							depth--;
+						}
+						pos++;
+					}
+					// If annotation parameters wrap lines, treat conservatively as keyword
+					if (depth > 0) {
+						return true;
+					}
+				}
+				// Continue to next token after annotation (guard against negative pos)
+				if (pos < 0) {
+					return true;
+				}
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				continue;
+			}
+
+			if (!Character.isJavaIdentifierStart(array[pos])) {
+				return false;
+			}
+			// Find the end of this identifier
+			int tokenStart = pos;
+			while (pos < s.offset + s.count && Character.isJavaIdentifierPart(array[pos])) {
+				pos++;
+			}
+			int tokenEnd = pos - 1;
+
+			// Check if it's "class" or "interface"
+			if (isToken(array, tokenStart, tokenEnd, "class") ||
+					isToken(array, tokenStart, tokenEnd, "interface")) {
+				return true;
+			}
+
+			// Check if it's a modifier we should skip
+			if (isToken(array, tokenStart, tokenEnd, "abstract") ||
+					isToken(array, tokenStart, tokenEnd, "final") ||
+					isToken(array, tokenStart, tokenEnd, "static") ||
+					isToken(array, tokenStart, tokenEnd, "public") ||
+					isToken(array, tokenStart, tokenEnd, "protected") ||
+					isToken(array, tokenStart, tokenEnd, "private") ||
+					isToken(array, tokenStart, tokenEnd, "strictfp")) {
+				// Skip this modifier and continue looking
+				pos = findNextNonWhitespaceSkipComments(array, pos);
+				continue;
+			}
+
+			// Found something that's not a modifier or class/interface
+			return false;
+		}
+		return false;
+	}
+
+
+	private boolean nextTokenEquals(char[] array, int end, String lexeme) {
+		int next = findNextNonWhitespaceSkipComments(array, end + 1);
+		if (next < 0 || !Character.isJavaIdentifierStart(array[next])) {
+			return false;
+		}
+		int tokenEnd = next + lexeme.length();
+		if (tokenEnd > s.offset + s.count) {
+			return false;
+		}
+		for (int i = 0; i < lexeme.length(); i++) {
+			if (array[next + i] != lexeme.charAt(i)) {
+				return false;
+			}
+		}
+		return tokenEnd == s.offset + s.count ||
+				!Character.isJavaIdentifierPart(array[tokenEnd]);
+	}
+
+
+	private boolean nextTokenStartsIdentifier(char[] array, int end) {
+		int next = findNextNonWhitespaceSkipComments(array, end + 1);
+		return next >= 0 && Character.isJavaIdentifierStart(array[next]);
+	}
+
+
+	private boolean noPreviousToken(char[] array, int start) {
+		return findPreviousNonWhitespaceSkipComments(array, start - 1) < s.offset;
+	}
+
+
+	private boolean previousTokenEquals(char[] array, int start, String lexeme) {
+		int prev = findPreviousNonWhitespaceSkipComments(array, start - 1);
+		if (prev < 0 || !Character.isJavaIdentifierPart(array[prev])) {
+			return false;
+		}
+		int tokenStart = prev;
+		while (tokenStart > s.offset &&
+				Character.isJavaIdentifierPart(array[tokenStart - 1])) {
+			tokenStart--;
+		}
+		return isToken(array, tokenStart, prev, lexeme);
+	}
+
+
+	/**
 	 * Adds the token specified to the current linked list of tokens.
 	 *
 	 * @param tokenType The token's type.
@@ -120,6 +533,11 @@ import org.fife.ui.rsyntaxtextarea.*;
 	@Override
 	public void addToken(char[] array, int start, int end, int tokenType,
 						int startOffset, boolean hyperlink) {
+		if (tokenType == TokenTypes.DATA_TYPE ||
+				tokenType == TokenTypes.RESERVED_WORD ||
+				tokenType == TokenTypes.RESERVED_WORD_2) {
+			tokenType = getContextualTokenType(array, start, end, tokenType);
+		}
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
 		zzStartRead = zzMarkedPos;
 	}
