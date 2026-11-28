@@ -6,6 +6,7 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import java.awt.Point;
+import java.util.function.IntUnaryOperator;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -340,6 +341,36 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testIsMonospaced_allCharsSameWidth() {
+		FontMetrics fm = new StubFontMetrics(ch -> 7);
+		Assertions.assertTrue(RSyntaxUtilities.isMonospaced(fm));
+	}
+
+
+	@Test
+	void testIsMonospaced_letterDiffersInWidth() {
+		FontMetrics fm = new StubFontMetrics(ch -> ch == 'W' ? 12 : 7);
+		Assertions.assertFalse(RSyntaxUtilities.isMonospaced(fm));
+	}
+
+
+	@Test
+	void testIsMonospaced_digitDiffersInWidth() {
+		FontMetrics fm = new StubFontMetrics(ch -> ch == '1' ? 4 : 7);
+		Assertions.assertFalse(RSyntaxUtilities.isMonospaced(fm));
+	}
+
+
+	@Test
+	void testIsMonospaced_onlyLettersAndDigitsAreConsidered() {
+		// Punctuation, whitespace, and control chars having different widths
+		// doesn't matter
+		FontMetrics fm = new StubFontMetrics(ch -> Character.isLetterOrDigit(ch) ? 7 : 3);
+		Assertions.assertTrue(RSyntaxUtilities.isMonospaced(fm));
+	}
+
+
+	@Test
 	void testPossiblyRepaintGutter() {
 		RSyntaxTextArea textArea = createTextArea();
 		new RTextScrollPane(textArea);
@@ -498,6 +529,25 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 		RSyntaxTextArea textArea = createTextArea();
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 		Assertions.assertEquals("{}()[]", doc.getBracketPairs());
+	}
+
+
+	/**
+	 * Font metrics whose character widths are determined by a function.
+	 */
+	private static final class StubFontMetrics extends FontMetrics {
+
+		private final IntUnaryOperator widthFunc;
+
+		StubFontMetrics(IntUnaryOperator widthFunc) {
+			super(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+			this.widthFunc = widthFunc;
+		}
+
+		@Override
+		public int charWidth(char ch) {
+			return widthFunc.applyAsInt(ch);
+		}
 	}
 
 
