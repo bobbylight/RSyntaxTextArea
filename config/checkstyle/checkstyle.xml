@@ -40,6 +40,7 @@
         <property name="basedir" value="${basedir}"/>
     -->
 
+    <property name="charset" value="UTF-8"/>
     <property name="fileExtensions" value="java"/>
     <property name="tabWidth" value="4"/>
 
@@ -115,6 +116,7 @@
         -->
         <module name="SummaryJavadoc"/> <!-- Replaces JavadocStyle, removed in Checkstyle 14 -->
         <module name="AtclauseOrder"/>
+        <module name="InappropriateJavadocBlockTagsOnField"/>
         <module name="InappropriateJavadocBlockTagsOnType"/>
         <module name="InvalidJavadocPosition"/>
         <module name="InappropriateJavadocBlockTagsOnPackage"/>
@@ -295,10 +297,12 @@
         <!-- See https://checkstyle.sourceforge.io/checks/misc/index.html -->
         <module name="ArrayBracketNoWhitespace"/>
         <module name="ArrayTypeStyle"/>
-<!--        <module name="AvoidEscapedUnicodeCharacters"/> TODO -->
+        <module name="AvoidEscapedUnicodeCharacters">
+            <property name="allowByTailComment" value="true"/> <!-- Escapes need a trailing comment showing the char or its Unicode name -->
+        </module>
         <module name="CommentsIndentation"/>
         <!--<module name="FinalParameters"/>-->
-<!--        <module name="MultilineCommentLeadingAsteriskPresence"/> TODO -->
+        <module name="MultilineCommentLeadingAsteriskPresence"/>
         <module name="NumericalPrefixesInfixesSuffixesCharacterCase"/>
         <!-- <module name="TodoComment"/> -->
         <module name="UnnecessaryTypeArgumentsWithRecordPattern"/>

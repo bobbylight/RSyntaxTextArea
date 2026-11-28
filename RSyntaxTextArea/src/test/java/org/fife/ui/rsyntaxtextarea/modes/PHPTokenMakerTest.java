@@ -330,9 +330,9 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 
 	}
 
-	/* Not in PHPTokenMaker ???
 	@Test
-	public void testPhp_EolComments_URL() {
+	@Disabled("URLs in EOL comments are not yet hyperlinked in PHPTokenMaker")
+	void testPhp_EolComments_URL() {
 
 		String[] eolCommentLiterals = {
 			"// Hello world https://www.sas.com",
@@ -354,7 +354,6 @@ class PHPTokenMakerTest extends AbstractJFlexTokenMakerTest {
 		}
 
 	}
-	*/
 
 
 	@Test

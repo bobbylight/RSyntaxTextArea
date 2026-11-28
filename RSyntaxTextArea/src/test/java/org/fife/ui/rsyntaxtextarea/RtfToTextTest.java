@@ -28,7 +28,7 @@ class RtfToTextTest {
 		"}";
 
 	// Note the two Japanese characters aren't separated by a space, space denotes end of control char
-	private static final String SIMPLE_TEXT = "This line is the default color \u30ab\u30ab\n" +
+	private static final String SIMPLE_TEXT = "This line is the default color \u30ab\u30ab\n" + // カカ
 		"\tThis line is red\n" +
 		"This line is the default color";
 

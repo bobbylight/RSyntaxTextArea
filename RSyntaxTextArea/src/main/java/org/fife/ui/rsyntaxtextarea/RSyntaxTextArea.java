@@ -202,7 +202,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private boolean eolMarkersVisible;
 
 	/** The marker rendered at the end of each line when EOL markers are visible. */
-	private String eolMarker = "\u21b2";
+	private String eolMarker = "\u21b2"; // DOWNWARDS ARROW WITH TIP LEFTWARDS
 
 	/** Whether tab lines are enabled. */
 	private boolean paintTabLines;

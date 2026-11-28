@@ -956,8 +956,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 							String dotChars = doc.getText(dot, 2);
 							char c0 = dotChars.charAt(0);
 							char c1 = dotChars.charAt(1);
-							if (c0 >= '\uD800' && c0 <= '\uDBFF' &&
-								c1 >= '\uDC00' && c1 <= '\uDFFF') {
+							if (Character.isHighSurrogate(c0) && Character.isLowSurrogate(c1)) {
 								delChars = 2;
 							}
 						}
@@ -1015,8 +1014,7 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 							String dotChars = doc.getText(dot - 2, 2);
 							char c0 = dotChars.charAt(0);
 							char c1 = dotChars.charAt(1);
-							if (c0 >= '\uD800' && c0 <= '\uDBFF' &&
-								c1 >= '\uDC00' && c1 <= '\uDFFF') {
+							if (Character.isHighSurrogate(c0) && Character.isLowSurrogate(c1)) {
 								delChars = 2;
 							}
 						}

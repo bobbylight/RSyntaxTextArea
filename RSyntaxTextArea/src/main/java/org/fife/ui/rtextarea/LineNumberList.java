@@ -397,16 +397,6 @@ public class LineNumberList extends AbstractGutterComponent
 		}
 		final int rhsBorderWidth = getRhsBorderWidth();
 
-		/*
-		// Highlight the current line's line number, if desired.
-		if (textArea.getHighlightCurrentLine() && currentLine>=topLine &&
-		currentLine<=bottomLine) {
-			g.setColor(textArea.getCurrentLineHighlightColor());
-			g.fillRect(0,actualTopY+(currentLine-topLine)*cellHeight,
-			cellWidth,cellHeight);
-		}
-		*/
-
 		// Paint line numbers
 		boolean ltr = getComponentOrientation().isLeftToRight();
 		if (ltr) {
@@ -557,15 +547,6 @@ public class LineNumberList extends AbstractGutterComponent
 		while (y < visibleBottom) {
 
 			r = LineNumberList.getChildViewBounds(v, topLine, visibleEditorRect);
-
-			/*
-			// Highlight the current line's line number, if desired.
-			if (currentLineHighlighted && topLine==currentLine) {
-				g.setColor(textArea.getCurrentLineHighlightColor());
-				g.fillRect(0,y, width,(r.y+r.height)-y);
-				g.setColor(getForeground());
-			}
-			*/
 
 			// Paint the line number.
 			int index = (topLine+1) + getLineNumberingStartIndex() - 1;
