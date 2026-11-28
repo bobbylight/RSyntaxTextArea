@@ -31,7 +31,7 @@ class RtfGeneratorTest {
 
 	// Note the two Japanese characters aren't separated by a space, space denotes end of control char
 	private static final List<String> SIMPLE_TEXT = Arrays.asList(
-		"This line is the default color \u30ab\u30ab\n",
+		"This line is the default color \u30ab\u30ab\n", // カカ
 		"\tThis line is red\n",
 		"This line is the default color"
 	);
@@ -51,7 +51,7 @@ class RtfGeneratorTest {
 	@Test
 	void testNon7BitAscii() {
 		RtfGenerator generator = new RtfGenerator(Color.WHITE);
-		generator.appendToDoc("\u6c49", null, null, null);
+		generator.appendToDoc("\u6c49", null, null, null); // 汉
 		String rtf = generator.getRtf();
 		int firstNewline = rtf.indexOf('\n');
 		int secondNewline = rtf.indexOf('\n', firstNewline + 1);

@@ -1154,15 +1154,6 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 				p0 = (p == p0) ? ++p : p;
 				//System.err.println("... ... ... new p0==" + p0);
 			}
-			/*
-			int numLines = 0;
-			try {
-				numLines = textArea.getLineCount();
-			} catch (BadLocationException ble) {
-				ble.printStackTrace();
-			}
-			//System.err.println(">> >> calculated # of lines for this view (" + line + "/" + numLines + ": " + nlines);
-			*/
 			return nlines;
 		}
 

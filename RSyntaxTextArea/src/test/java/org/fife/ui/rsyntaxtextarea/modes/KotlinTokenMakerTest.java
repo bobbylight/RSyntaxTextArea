@@ -731,7 +731,7 @@ class KotlinTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		assertAllTokensOfType(TokenTypes.IDENTIFIER,
 			"foo",
 			// Cyrillic chars - most Unicode chars are valid identifier chars
-			"\u0438\u0439"
+			"\u0438\u0439" // ий
 		);
 	}
 

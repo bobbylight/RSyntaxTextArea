@@ -198,8 +198,8 @@ class UnicodeWriterTest {
 
 		File file = createTempFile();
 
-		String testContent =
-			"\u0030\u0030\u0034\u0065\u0032\u0064";
+		// ASCII, a BMP char (U+4E2D) and a surrogate pair (U+1F600 GRINNING FACE)
+		String testContent = "x\u4e2d\uD83D\uDE00"; // x, 中, GRINNING FACE
 		char[] chars = testContent.toCharArray();
 
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
@@ -237,8 +237,8 @@ class UnicodeWriterTest {
 
 		File file = createTempFile();
 
-		String testContent =
-			"\u0030\u0030\u0034\u0065\u0032\u0064";
+		// ASCII, a BMP char (U+4E2D) and a surrogate pair (U+1F600 GRINNING FACE)
+		String testContent = "x\u4e2d\uD83D\uDE00"; // x, 中, GRINNING FACE
 
 		try (UnicodeWriter w = new UnicodeWriter(file.getAbsolutePath(), "UTF-16BE")) {
 			w.write(testContent, 0, testContent.length());

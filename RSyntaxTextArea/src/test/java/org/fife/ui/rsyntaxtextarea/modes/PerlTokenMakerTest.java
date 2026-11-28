@@ -10,6 +10,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenMaker;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -381,9 +382,9 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		}
 	}
 
-	/* TODO: Start highlighting these!
 	@Test
-	public void testHexLiterals() {
+	@Disabled("TODO: Start highlighting hex literals")
+	void testHexLiterals() {
 
 		String code = "0x1 0xfe 0x333333333333 0X1 0Xfe 0X33333333333 0xFE 0XFE " +
 				"0x1l 0xfel 0x333333333333l 0X1l 0Xfel 0X33333333333l 0xFEl 0XFEl " +
@@ -411,10 +412,9 @@ class PerlTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 			token = token.getNextToken();
 		}
 
-		Assertions.assertTrue(token.getType() == TokenTypes.NULL);
+		Assertions.assertEquals(TokenTypes.NULL, token.getType());
 
 	}
-	*/
 
 	@Test
 	void testStandardFunctions() {

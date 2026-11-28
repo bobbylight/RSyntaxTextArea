@@ -370,15 +370,15 @@ class RSyntaxTextAreaTest extends AbstractRSyntaxTextAreaTest {
 	@Test
 	void testGetEOLMarker_default() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		Assertions.assertEquals("\u21b2", textArea.getEOLMarker());
+		Assertions.assertEquals("\u21b2", textArea.getEOLMarker()); // DOWNWARDS ARROW WITH TIP LEFTWARDS
 	}
 
 
 	@Test
 	void testSetEOLMarker() {
 		RSyntaxTextArea textArea = new RSyntaxTextArea();
-		textArea.setEOLMarker("\u263a");
-		Assertions.assertEquals("\u263a", textArea.getEOLMarker());
+		textArea.setEOLMarker("\u263a"); // WHITE SMILING FACE
+		Assertions.assertEquals("\u263a", textArea.getEOLMarker()); // WHITE SMILING FACE
 	}
 
 

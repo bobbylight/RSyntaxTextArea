@@ -162,11 +162,9 @@ public class RTADefaultInputMap extends InputMap {
 		/* resides.  You can add the macro actions yourself into an          */
 		/* application if you want.  They may become standard in the future  */
 		/* if I can find a way to implement them that I like.                */
-		/*
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_R,      defaultModifier|shift),	RTextAreaEditorKit.rtaBeginRecordingMacroAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_S,      defaultModifier|shift),	RTextAreaEditorKit.rtaEndRecordingMacroAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_M,      defaultModifier|shift),	RTextAreaEditorKit.rtaPlaybackLastMacroAction);
-		*/
+		//put(KeyStroke.getKeyStroke(KeyEvent.VK_R,      defaultModifier|shift),	RTextAreaEditorKit.rtaBeginRecordingMacroAction);
+		//put(KeyStroke.getKeyStroke(KeyEvent.VK_S,      defaultModifier|shift),	RTextAreaEditorKit.rtaEndRecordingMacroAction);
+		//put(KeyStroke.getKeyStroke(KeyEvent.VK_M,      defaultModifier|shift),	RTextAreaEditorKit.rtaPlaybackLastMacroAction);
 
 	}
 

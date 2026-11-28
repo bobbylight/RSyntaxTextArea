@@ -583,15 +583,6 @@ public class IconRowHeader extends AbstractGutterComponent implements MouseListe
 			r = getChildViewBounds(v, topLine, visibleEditorRect);
 			//int lineEndY = r.y+r.height;
 
-			/*
-			// Highlight the current line's line number, if desired.
-			if (currentLineHighlighted && topLine==currentLine) {
-				g.setColor(textArea.getCurrentLineHighlightColor());
-				g.fillRect(0,y, width,lineEndY-y);
-				g.setColor(getForeground());
-			}
-			*/
-
 			// Possibly paint an icon.
 			if (currentIcon>-1) {
 				// We want to paint the last icon added for this line.

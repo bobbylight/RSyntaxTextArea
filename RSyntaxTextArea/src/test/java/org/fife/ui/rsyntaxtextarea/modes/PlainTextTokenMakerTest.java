@@ -74,7 +74,7 @@ class PlainTextTokenMakerTest extends AbstractJFlexTokenMakerTest {
 			"foo999",
 			"912",
 			"FooBar",
-			"unn\u00f6tig"
+			"unn\u00f6tig" // unnötig
 		);
 	}
 
