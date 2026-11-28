@@ -6,6 +6,7 @@ package org.fife.ui.rtextarea;
 
 import java.awt.*;
 
+import org.fife.ui.SerializationTestUtil;
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.AbstractRSyntaxTextAreaTest;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -66,6 +67,55 @@ class ChangeableHighlightPainterTest extends AbstractRSyntaxTextAreaTest {
 		Assertions.assertFalse(painter.getRoundedEdges());
 		painter.setRoundedEdges(true);
 		Assertions.assertTrue(painter.getRoundedEdges());
+	}
+
+
+	@Test
+	void testSerialization_colorPaint() throws Exception {
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter(
+			Color.RED, true, 0.5f);
+
+		ChangeableHighlightPainter copy = SerializationTestUtil.roundTrip(painter);
+
+		Assertions.assertEquals(Color.RED, copy.getPaint());
+		Assertions.assertTrue(copy.getRoundedEdges());
+		Assertions.assertEquals(0.5f, copy.getAlpha(), 0.00001);
+	}
+
+
+	@Test
+	void testSerialization_nullPaint() throws Exception {
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter();
+
+		ChangeableHighlightPainter copy = SerializationTestUtil.roundTrip(painter);
+
+		Assertions.assertNull(copy.getPaint());
+		Assertions.assertFalse(copy.getRoundedEdges());
+		Assertions.assertEquals(1f, copy.getAlpha(), 0.00001);
+	}
+
+
+	@Test
+	void testSerialization_nonColorPaint_serializedAsSelectionColor() throws Exception {
+		Paint gradient = new GradientPaint(0, 0, Color.RED, 10, 10, Color.BLUE);
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter(gradient);
+
+		ChangeableHighlightPainter copy = SerializationTestUtil.roundTrip(painter);
+
+		Color expected = new Color(SystemColor.textHighlight.getRGB());
+		Assertions.assertEquals(expected, copy.getPaint());
+	}
+
+
+	@Test
+	void testSerialization_deserializedPainterCanPaint() throws Exception {
+		ChangeableHighlightPainter painter = new ChangeableHighlightPainter(
+			Color.RED, false, 0.5f);
+		ChangeableHighlightPainter copy = SerializationTestUtil.roundTrip(painter);
+
+		// The transient AlphaComposite must be recreated lazily
+		RSyntaxTextArea textArea = createTextArea();
+		copy.paint(createTestGraphics(), 0, 5, textArea.getBounds(), textArea);
 	}
 
 

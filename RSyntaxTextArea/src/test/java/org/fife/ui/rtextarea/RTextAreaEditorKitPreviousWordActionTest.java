@@ -67,6 +67,30 @@ class RTextAreaEditorKitPreviousWordActionTest {
 
 
 	@Test
+	void testActionPerformedImpl_noSelection_inLeadingWhitespace_goesToStart() {
+
+		RTextArea textArea = new RTextArea("   abc");
+		textArea.setCaretPosition(2);
+
+		new RTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(null, textArea);
+
+		Assertions.assertEquals(0, textArea.getCaretPosition());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_noSelection_atStartOfDocument_doesNothing() {
+
+		RTextArea textArea = new RTextArea("abc def");
+		textArea.setCaretPosition(0);
+
+		new RTextAreaEditorKit.PreviousWordAction("foo", false).actionPerformedImpl(null, textArea);
+
+		Assertions.assertEquals(0, textArea.getCaretPosition());
+	}
+
+
+	@Test
 	void testGetMacroID() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.PreviousWordAction("foo", true).getMacroID());

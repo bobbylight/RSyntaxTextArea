@@ -1,6 +1,6 @@
 # RSyntaxTextArea
 ![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/gradle.yml/badge.svg)
-![Java Build](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/codeql-analysis.yml/badge.svg)
+![CodeQL](https://github.com/bobbylight/RSyntaxTextArea/actions/workflows/github-code-scanning/codeql/badge.svg)
 ![Maven Central](https://maven-badges.sml.io/sonatype-central/com.fifesoft/rsyntaxtextarea/badge.svg)
 [![codecov](https://codecov.io/gh/bobbylight/RSyntaxTextArea/graph/badge.svg?token=6YxJwHpfCp)](https://codecov.io/gh/bobbylight/RSyntaxTextArea)
 

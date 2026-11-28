@@ -219,6 +219,119 @@ class RSyntaxUtilitiesTest extends AbstractRSyntaxTextAreaTest {
 
 
 	@Test
+	void testGetNextVisualPositionFrom_north_usesMagicCaretPosition() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextArea("abcdef\nabcdef");
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int secondLineStart = textArea.getLineStartOffset(1);
+
+		// Caret is at the start of line 2, but the magic caret position says
+		// the user "wants" to be at the x-location of the end of line 1
+		int lineOneEnd = textArea.getLineEndOffset(0) - 1;
+		Rectangle lineOneEndBounds = textArea.modelToView2D(lineOneEnd).getBounds();
+		textArea.getCaret().setMagicCaretPosition(lineOneEndBounds.getLocation());
+
+		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(secondLineStart, Position.Bias.Forward,
+			textArea.getBounds(), SwingConstants.NORTH, new Position.Bias[1], view);
+		Assertions.assertEquals(lineOneEnd, nextPos);
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_noPosition() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextArea("abc\ndef");
+		Rectangle bounds = textArea.getBounds();
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int docEnd = textArea.getDocument().getLength();
+
+		Assertions.assertEquals(docEnd, RSyntaxUtilities.getNextVisualPositionFrom(-1,
+			Position.Bias.Forward, bounds, SwingConstants.NORTH, new Position.Bias[1], view));
+		Assertions.assertEquals(0, RSyntaxUtilities.getNextVisualPositionFrom(-1,
+			Position.Bias.Forward, bounds, SwingConstants.SOUTH, new Position.Bias[1], view));
+		Assertions.assertEquals(docEnd, RSyntaxUtilities.getNextVisualPositionFrom(-1,
+			Position.Bias.Forward, bounds, SwingConstants.WEST, new Position.Bias[1], view));
+		Assertions.assertEquals(0, RSyntaxUtilities.getNextVisualPositionFrom(-1,
+			Position.Bias.Forward, bounds, SwingConstants.EAST, new Position.Bias[1], view));
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_invalidDirection() {
+
+		RSyntaxTextArea textArea = createTextArea();
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+
+		Assertions.assertThrows(IllegalArgumentException.class, () ->
+			RSyntaxUtilities.getNextVisualPositionFrom(0, Position.Bias.Forward,
+				textArea.getBounds(), SwingConstants.CENTER, new Position.Bias[1], view));
+	}
+
+
+	/**
+	 * Returns a text area whose first line starts a fold that is collapsed.
+	 */
+	private static RSyntaxTextArea createTextAreaWithCollapsedFold(String code) {
+		RSyntaxTextArea textArea = createTextArea(code);
+		textArea.getFoldManager().getFold(0).setCollapsed(true);
+		return textArea;
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_right_skipsCollapsedFold() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextAreaWithCollapsedFold("a {\n  b;\n  c;\n}\nd");
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int firstLineEnd = textArea.getLineEndOffset(0) - 1;
+
+		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(firstLineEnd, Position.Bias.Forward,
+			textArea.getBounds(), SwingConstants.EAST, new Position.Bias[1], view);
+		Assertions.assertEquals(textArea.getLineStartOffset(4), nextPos);
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_right_collapsedFoldAtEndOfDocument() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextAreaWithCollapsedFold("a {\n  b;\n}");
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int firstLineEnd = textArea.getLineEndOffset(0) - 1;
+
+		// Everything after the first line is hidden, so the caret stays put
+		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(firstLineEnd, Position.Bias.Forward,
+			textArea.getBounds(), SwingConstants.EAST, new Position.Bias[1], view);
+		Assertions.assertEquals(firstLineEnd, nextPos);
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_left_skipsCollapsedFold() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextAreaWithCollapsedFold("a {\n  b;\n  c;\n}\nd");
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int lastLineStart = textArea.getLineStartOffset(4);
+
+		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(lastLineStart, Position.Bias.Forward,
+			textArea.getBounds(), SwingConstants.WEST, new Position.Bias[1], view);
+		Assertions.assertEquals(textArea.getLineEndOffset(0) - 1, nextPos);
+	}
+
+
+	@Test
+	void testGetNextVisualPositionFrom_left_foldsExpanded() throws BadLocationException {
+
+		RSyntaxTextArea textArea = createTextArea("a {\n  b;\n  c;\n}\nd");
+		View view = textArea.getUI().getRootView(textArea).getView(0);
+		int lastLineStart = textArea.getLineStartOffset(4);
+
+		int nextPos = RSyntaxUtilities.getNextVisualPositionFrom(lastLineStart, Position.Bias.Forward,
+			textArea.getBounds(), SwingConstants.WEST, new Position.Bias[1], view);
+		Assertions.assertEquals(lastLineStart - 1, nextPos);
+	}
+
+
+	@Test
 	void testGetPreviousImportantToken_error_negativeLine() {
 		RSyntaxTextArea textArea = createTextArea("line one");
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();

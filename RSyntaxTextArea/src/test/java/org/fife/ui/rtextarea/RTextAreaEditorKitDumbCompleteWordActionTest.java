@@ -21,6 +21,92 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class RTextAreaEditorKitDumbCompleteWordActionTest {
 
 
+	private static RTextArea createTextArea(String text) {
+		RTextArea textArea = new RTextArea(text);
+		textArea.setCaretPosition(text.length());
+		return textArea;
+	}
+
+
+	@Test
+	void testActionPerformedImpl_completesFromPreviousWords() {
+
+		RTextArea textArea = createTextArea("foobar food fo");
+		DumbCompleteWordAction action = new DumbCompleteWordAction();
+
+		// Closest previous match first
+		action.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foobar food food", textArea.getText());
+		Assertions.assertEquals(16, textArea.getCaretPosition());
+
+		// Invoking again cycles to the next-closest match
+		action.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foobar food foobar", textArea.getText());
+
+		// No more matches - nothing changes
+		action.actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foobar food foobar", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_noMatch() {
+		RTextArea textArea = createTextArea("abc xy");
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("abc xy", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_prefixIsWhitespace() {
+		RTextArea textArea = createTextArea("foo ");
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foo ", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_prefixIsPunctuation() {
+		RTextArea textArea = createTextArea("foo f.");
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foo f.", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_caretAtStartOfDocument() {
+		RTextArea textArea = createTextArea("foo f");
+		textArea.setCaretPosition(0);
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foo f", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_notEditable() {
+		RTextArea textArea = createTextArea("foo f");
+		textArea.setEditable(false);
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foo f", textArea.getText());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_notEnabled() {
+		RTextArea textArea = createTextArea("foo f");
+		textArea.setEnabled(false);
+		new DumbCompleteWordAction().actionPerformedImpl(null, textArea);
+		Assertions.assertEquals("foo f", textArea.getText());
+	}
+
+
+	@Test
+	void testGetMacroID() {
+		Assertions.assertEquals(RTextAreaEditorKit.rtaDumbCompleteWordAction,
+			new DumbCompleteWordAction().getMacroID());
+	}
+
+
 	@Test
 	void testGetWordStart() throws Exception {
 

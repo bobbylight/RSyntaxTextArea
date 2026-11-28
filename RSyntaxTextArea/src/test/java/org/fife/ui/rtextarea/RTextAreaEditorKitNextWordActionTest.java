@@ -67,6 +67,42 @@ class RTextAreaEditorKitNextWordActionTest {
 
 
 	@Test
+	void testActionPerformedImpl_noSelection_atEndOfLine_goesToNextLine() {
+
+		RTextArea textArea = new RTextArea("line 1\nline 2");
+		textArea.setCaretPosition(textArea.getText().indexOf('\n'));
+
+		new RTextAreaEditorKit.NextWordAction("foo", false).actionPerformedImpl(null, textArea);
+
+		Assertions.assertEquals(textArea.getText().indexOf('\n') + 1, textArea.getCaretPosition());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_noSelection_lastWordInDocument_goesToEnd() {
+
+		RTextArea textArea = new RTextArea("abc def");
+		textArea.setCaretPosition(4);
+
+		new RTextAreaEditorKit.NextWordAction("foo", false).actionPerformedImpl(null, textArea);
+
+		Assertions.assertEquals(7, textArea.getCaretPosition());
+	}
+
+
+	@Test
+	void testActionPerformedImpl_noSelection_atEndOfDocument_doesNothing() {
+
+		RTextArea textArea = new RTextArea("abc def");
+		textArea.setCaretPosition(7);
+
+		new RTextAreaEditorKit.NextWordAction("foo", false).actionPerformedImpl(null, textArea);
+
+		Assertions.assertEquals(7, textArea.getCaretPosition());
+	}
+
+
+	@Test
 	void testGetMacroID() {
 		Assertions.assertEquals("foo",
 			new RTextAreaEditorKit.NextWordAction("foo", true).getMacroID());

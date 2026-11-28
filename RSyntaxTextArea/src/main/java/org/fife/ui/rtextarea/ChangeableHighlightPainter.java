@@ -45,9 +45,11 @@ public class ChangeableHighlightPainter
 
 
 	/**
-	 * The <code>Paint</code>/<code>Color</code> of this highlight.
+	 * The <code>Paint</code>/<code>Color</code> of this highlight.  This is
+	 * serialized manually (as a <code>Color</code>) since most
+	 * <code>Paint</code> implementations aren't serializable.
 	 */
-	private Paint paint;
+	private transient Paint paint;
 
 	/**
 	 * Whether selections have rounded edges.
