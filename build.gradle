@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.spotbugs' version '6.5.13'
+    id 'com.github.spotbugs' version '6.5.15'
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
 
@@ -31,7 +31,7 @@ allprojects {
     }
 
     wrapper {
-        gradleVersion = '9.9.1'
+        gradleVersion = '9.9.3'
     }
 }
 
@@ -88,7 +88,7 @@ subprojects {
         testImplementation platform('org.junit:junit-bom:6.1.3')
         testImplementation 'org.junit.jupiter:junit-jupiter'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-        testImplementation 'org.mockito:mockito-core:5.24.0'
+        testImplementation 'org.mockito:mockito-core:5.25.0'
     }
 
     compileJava {
