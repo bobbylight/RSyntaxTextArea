@@ -6,9 +6,12 @@ package org.fife.ui.rsyntaxtextarea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.List;
+import javax.swing.JComponent;
 
 import org.fife.ui.SwingRunnerExtension;
 import org.fife.ui.rsyntaxtextarea.parser.*;
+import org.fife.ui.rtextarea.DocumentRange;
 import org.fife.ui.rtextarea.SmartHighlightPainter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -187,6 +190,182 @@ class ErrorStripTest extends AbstractRSyntaxTextAreaTest {
 	void testSetMarkerToolTipProvider_notNull() {
 		ErrorStrip.ErrorStripMarkerToolTipProvider provider = notices -> "test";
 		strip.setMarkerToolTipProvider(provider);
+	}
+
+
+	/**
+	 * Creates an error strip for a text area with three lines of text.  The
+	 * strip is made displayable so that it listens for property changes on
+	 * the text area.
+	 */
+	private static ErrorStrip createStrip(RSyntaxTextArea textArea) {
+		ErrorStrip strip = new ErrorStrip(textArea);
+		strip.addNotify();
+		return strip;
+	}
+
+
+	private static RSyntaxTextArea createThreeLineTextArea() {
+		return createTextArea("line one\nline two foo\nline three foo");
+	}
+
+
+	private static String getMarkerToolTip(ErrorStrip strip, int index) {
+		return ((JComponent)strip.getComponent(index)).getToolTipText();
+	}
+
+
+	private static void parse(RSyntaxTextArea textArea, Parser parser) {
+		textArea.addParser(parser);
+		textArea.forceReparsing(parser);
+	}
+
+
+	@Test
+	void testMarkerToolTip_singleNotice() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		parse(textArea, new NoticeParser(new int[] { 1 }, "only notice"));
+		ErrorStrip strip = createStrip(textArea);
+
+		Assertions.assertEquals(1, strip.getComponentCount());
+		Assertions.assertEquals("only notice", getMarkerToolTip(strip, 0));
+	}
+
+
+	@Test
+	void testMarkerToolTip_multipleNoticesOnSameLine() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		parse(textArea, new NoticeParser(new int[] { 1, 1 }, "first", "second"));
+		ErrorStrip strip = createStrip(textArea);
+
+		Assertions.assertEquals(1, strip.getComponentCount());
+		String expected = "<html>Multiple markers at this line:<br>" +
+			"&nbsp;&nbsp;&nbsp;- first<br>" +
+			"&nbsp;&nbsp;&nbsp;- second<br>";
+		Assertions.assertEquals(expected, getMarkerToolTip(strip, 0));
+	}
+
+
+	@Test
+	void testMarkerToolTip_markAllOccurrence() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		Assertions.assertEquals(0, strip.getComponentCount());
+
+		int offs = textArea.getText().indexOf("foo");
+		textArea.markAll(List.of(new DocumentRange(offs, offs + 3)));
+
+		Assertions.assertEquals(1, strip.getComponentCount());
+		Assertions.assertEquals("Occurrence of \"foo\"", getMarkerToolTip(strip, 0));
+	}
+
+
+	@Test
+	void testMarkerToolTip_customProvider() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		parse(textArea, new NoticeParser(new int[] { 1, 1 }, "first", "second"));
+		ErrorStrip strip = createStrip(textArea);
+		strip.setMarkerToolTipProvider(notices -> notices.size() + " notices");
+
+		Assertions.assertEquals("2 notices", getMarkerToolTip(strip, 0));
+	}
+
+
+	@Test
+	void testPropertyChange_parserNoticesChanged_refreshesMarkers() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		Assertions.assertEquals(0, strip.getComponentCount());
+
+		parse(textArea, new NoticeParser(new int[] { 0, 2 }, "one", "two"));
+
+		Assertions.assertEquals(2, strip.getComponentCount());
+	}
+
+
+	@Test
+	void testPropertyChange_markAllChanged_refreshesMarkersIfShowMarkAll() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		int offs = textArea.getText().indexOf("foo");
+		int offs2 = textArea.getText().lastIndexOf("foo");
+
+		textArea.markAll(List.of(new DocumentRange(offs, offs + 3),
+			new DocumentRange(offs2, offs2 + 3)));
+
+		Assertions.assertEquals(2, strip.getComponentCount());
+	}
+
+
+	@Test
+	void testPropertyChange_markAllChanged_ignoredIfNotShowMarkAll() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		strip.setShowMarkAll(false);
+		int offs = textArea.getText().indexOf("foo");
+
+		textArea.markAll(List.of(new DocumentRange(offs, offs + 3)));
+
+		Assertions.assertEquals(0, strip.getComponentCount());
+	}
+
+
+	@Test
+	void testPropertyChange_markOccurrencesToggled_refreshesMarkers() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		int offs = textArea.getText().indexOf("foo");
+
+		// Add a "mark all" highlight without the strip noticing, then verify
+		// toggling "mark occurrences" causes a refresh that picks it up
+		strip.setShowMarkAll(false);
+		textArea.markAll(List.of(new DocumentRange(offs, offs + 3)));
+		Assertions.assertEquals(0, strip.getComponentCount());
+		strip.setShowMarkAll(true);
+		Assertions.assertEquals(1, strip.getComponentCount());
+		strip.removeAll();
+
+		textArea.setMarkOccurrences(!textArea.getMarkOccurrences());
+		Assertions.assertEquals(1, strip.getComponentCount());
+	}
+
+
+	@Test
+	void testPropertyChange_markOccurrencesToggled_ignoredIfNotShowMarkedOccurrences() {
+		RSyntaxTextArea textArea = createThreeLineTextArea();
+		ErrorStrip strip = createStrip(textArea);
+		int offs = textArea.getText().indexOf("foo");
+		textArea.markAll(List.of(new DocumentRange(offs, offs + 3)));
+		strip.setShowMarkedOccurrences(false);
+		strip.removeAll();
+
+		textArea.setMarkOccurrences(!textArea.getMarkOccurrences());
+
+		Assertions.assertEquals(0, strip.getComponentCount());
+	}
+
+
+	/**
+	 * A parser that returns notices with the given messages on the given lines.
+	 */
+	private static final class NoticeParser extends AbstractParser {
+
+		private final int[] lines;
+		private final String[] messages;
+
+		NoticeParser(int[] lines, String... messages) {
+			this.lines = lines;
+			this.messages = messages;
+		}
+
+		@Override
+		public ParseResult parse(RSyntaxDocument doc, String style) {
+			DefaultParseResult result = new DefaultParseResult(this);
+			for (int i = 0; i < lines.length; i++) {
+				result.addNotice(new DefaultParserNotice(this, messages[i], lines[i]));
+			}
+			return result;
+		}
 	}
 
 

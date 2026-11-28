@@ -84,6 +84,62 @@ class TokenImplTest {
 	}
 
 
+	/**
+	 * Creates a linked list of tokens of the specified types.
+	 *
+	 * @param types The token types.
+	 * @return The first token in the list.
+	 */
+	private static TokenImpl createTokenList(int... types) {
+		char[] ch = "abcdefghij".toCharArray();
+		TokenImpl first = null;
+		TokenImpl prev = null;
+		for (int i = 0; i < types.length; i++) {
+			TokenImpl t = new TokenImpl(ch, i, i, i, types[i], 0);
+			if (prev == null) {
+				first = t;
+			}
+			else {
+				prev.setNextToken(t);
+			}
+			prev = t;
+		}
+		return first;
+	}
+
+
+	@Test
+	void testGetLastPaintableToken_singleToken() {
+		TokenImpl token = createTokenList(TokenTypes.IDENTIFIER);
+		Assertions.assertSame(token, token.getLastPaintableToken());
+	}
+
+
+	@Test
+	void testGetLastPaintableToken_allPaintable() {
+		TokenImpl token = createTokenList(TokenTypes.RESERVED_WORD,
+			TokenTypes.WHITESPACE, TokenTypes.IDENTIFIER);
+		Token expected = token.getNextToken().getNextToken();
+		Assertions.assertSame(expected, token.getLastPaintableToken());
+	}
+
+
+	@Test
+	void testGetLastPaintableToken_endsWithNullToken() {
+		TokenImpl token = createTokenList(TokenTypes.RESERVED_WORD,
+			TokenTypes.IDENTIFIER, TokenTypes.NULL);
+		Token expected = token.getNextToken();
+		Assertions.assertSame(expected, token.getLastPaintableToken());
+	}
+
+
+	@Test
+	void testGetLastPaintableToken_firstTokenNotPaintable() {
+		TokenImpl token = createTokenList(TokenTypes.NULL);
+		Assertions.assertNull(token.getLastPaintableToken());
+	}
+
+
 	@Test
 	void testGetHTMLRepresentation_fallsBackToTextAreaFont() {
 
