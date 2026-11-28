@@ -250,7 +250,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 		if (prev < s.offset) {
 			return isYieldKeywordAtLineStart(array, start);
 		}
-		// yield is a keyword in statement contexts: after ':', '{', ';', ')', '}', or 'else'
+		// yield is a keyword in statement contexts: after ':', '{', ';', ')', '}', 'else', or 'do'
 		// The ')' case handles control flow like "if (cond) yield value;"
 		// The '}' case handles "case 0: { ... } yield 1;"
 		// The 'else' case handles "if (c) yield 1; else yield 2;"
@@ -258,11 +258,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 		if (prevChar == ':' || prevChar == '{' || prevChar == ';' || prevChar == ')' || prevChar == '}') {
 			return true;
 		}
-		// Check if preceded by 'else' keyword
-		if (previousTokenEquals(array, start, "else")) {
-			return true;
-		}
-		return false;
+		return previousTokenEquals(array, start, "else") ||
+				previousTokenEquals(array, start, "do");
 	}
 
 

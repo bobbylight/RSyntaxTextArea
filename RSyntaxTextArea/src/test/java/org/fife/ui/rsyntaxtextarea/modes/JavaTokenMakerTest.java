@@ -885,6 +885,10 @@ class JavaTokenMakerTest extends AbstractCDerivedTokenMakerTest {
 		// yield in a block is a keyword
 		assertTokenTypeForLexeme("case 1 -> { yield 42; }", "yield",
 			TokenTypes.RESERVED_WORD_2);
+		assertTokenTypeForLexeme("case 1 -> { do yield 1; while (false); }", "yield",
+			TokenTypes.RESERVED_WORD_2);
+		assertTokenTypeForLexeme("case 1 -> { do /* comment */ yield 1; while (false); }", "yield",
+			TokenTypes.RESERVED_WORD_2);
 		// yield after -> without block is an identifier/expression
 		assertTokenTypeForLexeme("case 0 -> yield;", "yield",
 			TokenTypes.IDENTIFIER);
