@@ -227,12 +227,7 @@ public abstract class RTextAreaBase extends JTextArea {
 		int newDocumentLength = getDocument().getLength();
 
 		// Place the caret back in its proper position.
-		if (caretPosition<newDocumentLength) {
-			setCaretPosition(caretPosition);
-		}
-		else {
-			setCaretPosition(newDocumentLength-1);
-		}
+		setCaretPosition(Math.min(caretPosition, newDocumentLength));
 
 	}
 
